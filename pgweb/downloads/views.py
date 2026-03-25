@@ -67,7 +67,7 @@ def ftpbrowser(request, subpath):
     # redirect the user
     canonpath = canonpath.strip('/')
     if subpath != canonpath:
-        return HttpResponseRedirect('/ftp/' + canonpath)
+        return HttpResponseRedirect('https://www.postgresql.org/ftp/' + canonpath)
 
     node = allnodes[subpath]
     del allnodes

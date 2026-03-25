@@ -70,7 +70,7 @@ urlpatterns = [
 
     re_path(r'^community/$', pgweb.core.views.community),
     re_path(r'^community/contributors/$', pgweb.contributors.views.completelist),
-    re_path(r'^community/lists/$', RedirectView.as_view(url='/list/', permanent=True)),
+    re_path(r'^community/lists/$', RedirectView.as_view(url='https://www.postgresql.org/list/', permanent=True)),
     re_path(r'^community/lists/subscribe/$', RedirectView.as_view(url='https://lists.postgresql.org/', permanent=True)),
 
     re_path(r'^community/lists/listinfo/$', pgweb.lists.views.listinfo),

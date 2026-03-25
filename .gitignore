@@ -2,3 +2,11 @@ external/
 *.pyc
 .idea/
 .DS_Store
+CLAUDE.md
+.claude/
+.venv/
+tmp/
+pgweb-static/
+data/docs/
+
+settings_local.py
