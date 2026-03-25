@@ -1,232 +1,221 @@
 {%extends "base/page.html"%}
-{% block title %}Related Projects{% endblock %}
+{% block title %}相关项目{% endblock %}
 {% block contents %}
 
 <div class="row">
   <div class="col-md-10">
-    <h1>Related Projects</h1>
+    <h1>相关项目</h1>
     <p>
-      There are a variety of projects that help provide infrastructure and resources
-      across the community. These projects range from providing event management
-      software that is used by many of the <a href="/about/events/">PostgreSQL community events</a>,
-      to package management, to even the <a href="/">PostgreSQL.org</a> website
-      itself!
+      社区中有许多项目为整个社区提供基础设施和资源支持。这些项目涵盖范围广泛，
+      从为许多 <a href="/about/events/">PostgreSQL 社区活动</a>提供活动管理软件，
+      到软件包管理，甚至包括 <a href="/">PostgreSQL.org</a> 网站本身！
     </p>
     <p>
-      Much like the core PostgreSQL software, these projects rely on the support of
-      contributors for new features and ongoing maintenance. There are written in a
-      variety of programming languages (or in some cases, natural languages!) and
-      are all ways for people to provide meaningful contributions to the PostgreSQL
-      community. In addition to what each project provides, there are instructions
-      for how you can start contributing to the project.
+      与 PostgreSQL 核心软件一样，这些项目依赖贡献者的支持来开发新功能并进行
+      持续维护。它们使用多种编程语言编写（在某些情况下，还涉及自然语言翻译！），
+      都是人们为 PostgreSQL 社区做出有意义贡献的途径。除了每个项目本身的功能介绍外，
+      还提供了如何开始参与项目贡献的说明。
     </p>
     <p>
-      If you believe a project belongs on this list, please send an email to
-      <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www@lists.postgresql.org</a>.
+      如果您认为某个项目应该出现在此列表中，请发送邮件至
+      <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www@lists.postgresql.org</a>。
     </p>
 
-    <h2>Website Infrastructure</h2>
+    <h2>网站基础设施</h2>
 
     <h3>pgweb</h3>
     <p>
-      "pgweb" is the base code for the <a href="/">postgresql.org</a> website
-      and serves as both a content management system and an authentication
-      provider for many other PostgreSQL family websites.
+      "pgweb" 是 <a href="/">postgresql.org</a> 网站的基础代码，
+      既是内容管理系统，也是许多其他 PostgreSQL 系列网站的身份认证提供方。
     </p>
     <p>
-      The PostgreSQL website is split into a dynamic and static part:
+      PostgreSQL 网站分为动态部分和静态部分：
     </p>
     <ul>
-      <li><a href="https://git.postgresql.org/gitweb/?p=pgweb.git;a=summary">Dynamic content repository</a></li>
-      <li><a href="https://git.postgresql.org/gitweb/?p=pgweb-static.git;a=summary">Static files repository</a></li>
+      <li><a href="https://git.postgresql.org/gitweb/?p=pgweb.git;a=summary">动态内容仓库</a></li>
+      <li><a href="https://git.postgresql.org/gitweb/?p=pgweb-static.git;a=summary">静态文件仓库</a></li>
     </ul>
     <p>
-      The site itself runs on the  <a href="https://www.djangoproject.com/">Django</a>
-      web framework. You can get involved in this project by communicating on
-      the <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> mailing
-      list.
+      该网站运行在 <a href="https://www.djangoproject.com/">Django</a>
+      Web 框架上。您可以通过
+      <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> 邮件列表
+      参与该项目。
     </p>
 
     <h3>Planet PostgreSQL</h3>
     <p>
-      <a href="https://planet.postgresql.org">Planet PostgreSQL</a> is a blog
-      aggregator for individual blogs where people publish content about
-      PostgreSQL, the PostgreSQL community, and PostgreSQL-related projects. It
-      includes aggregation and distribution software, as well as tools to help
-      with moderation.
+      <a href="https://planet.postgresql.org">Planet PostgreSQL</a> 是一个博客
+      聚合平台，汇集了人们发布的关于 PostgreSQL、PostgreSQL 社区以及
+      PostgreSQL 相关项目的博客内容。它包括聚合与分发软件，以及用于
+      辅助审核的工具。
     </p>
     <ul>
-      <li><a href="https://git.postgresql.org/gitweb/?p=hamn.git;a=summary">Planet PostgreSQL repository</a></li>
+      <li><a href="https://git.postgresql.org/gitweb/?p=hamn.git;a=summary">Planet PostgreSQL 仓库</a></li>
       <li><a href="https://planet.postgresql.org">Planet PostgreSQL</a></li>
     </ul>
     <p>
-      You can get involved in this project by communicating on the
-      <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> mailing
-      list.
+      您可以通过
+      <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> 邮件列表
+      参与该项目。
     </p>
 
-    <h2>Mailing List Infrastructure</h2>
+    <h2>邮件列表基础设施</h2>
 
     <h3>pglister</h3>
     <p>
-      The PostgreSQL mailing list system is powered by "pglister":
+      PostgreSQL 邮件列表系统由 "pglister" 驱动：
     </p>
     <ul>
-      <li><a href="https://git.postgresql.org/gitweb/?p=pglister.git;a=summary">pglister main repository</a></li>
-      <li><a href="https://lists.postgresql.org/">Mailing lists</a></li>
+      <li><a href="https://git.postgresql.org/gitweb/?p=pglister.git;a=summary">pglister 主仓库</a></li>
+      <li><a href="https://lists.postgresql.org/">邮件列表</a></li>
     </ul>
 
     <h3>pgarchives</h3>
     <p>
-      The "pgarchives" codebase powers the display for the PostgreSQL mailing
-      list archives, which are an essential part of the development workflow for
-      the PostgreSQL project.
+      "pgarchives" 代码库驱动 PostgreSQL 邮件列表归档的展示功能，
+      它是 PostgreSQL 项目开发工作流程的重要组成部分。
     </p>
     <ul>
-      <li><a href="https://git.postgresql.org/gitweb/?p=pgarchives.git;a=summary">pgarchives main repository</a></li>
-      <li><a href="https://www.postgresql.org/list/">Mailing list archives</a></li>
+      <li><a href="https://git.postgresql.org/gitweb/?p=pgarchives.git;a=summary">pgarchives 主仓库</a></li>
+      <li><a href="https://www.postgresql.org/list/">邮件列表归档</a></li>
     </ul>
     <p>
-      You can get involved with these projects by communicating on
-      the <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> mailing
-      list.
+      您可以通过
+      <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> 邮件列表
+      参与这些项目。
     </p>
 
-    <h2>Development Tools</h2>
+    <h2>开发工具</h2>
 
-    <h3>PostgreSQL Build Farm</h3>
+    <h3>PostgreSQL 构建农场</h3>
     <p>
-      The PostgreSQL Build Farm tests the current PostgreSQL code, and all supported versions, on a great number of devices provided by the community:
+      PostgreSQL 构建农场在社区提供的大量设备上测试当前的 PostgreSQL 代码及所有受支持的版本：
       <ul>
-        <li><a href="https://buildfarm.postgresql.org/">Build Farm website</a></li>
-        <li><a href="https://github.com/PGBuildFarm/server-code">Build Farm server code repository</a></li>
-        <li><a href="https://github.com/PGBuildFarm/client-code">Build Farm client code repository</a></li>
-        <li><a href="https://wiki.postgresql.org/wiki/PostgreSQL_Buildfarm_Howto">How to run your own buildfarm member</a></li>
+        <li><a href="https://buildfarm.postgresql.org/">构建农场网站</a></li>
+        <li><a href="https://github.com/PGBuildFarm/server-code">构建农场服务端代码仓库</a></li>
+        <li><a href="https://github.com/PGBuildFarm/client-code">构建农场客户端代码仓库</a></li>
+        <li><a href="https://wiki.postgresql.org/wiki/PostgreSQL_Buildfarm_Howto">如何运行自己的构建农场成员</a></li>
       </ul>
-      For Buildfarm related discussions, use the <a href="mailto:buildfarm-members@lists.postgresql.org">buildfarm-members</a> mailing list.
+      构建农场相关讨论请使用 <a href="mailto:buildfarm-members@lists.postgresql.org">buildfarm-members</a> 邮件列表。
     </p>
 
     <h3>Commitfest</h3>
     <p>
-      PostgreSQL uses a unique system for managing "Commitfests", which is a
-      single development cycle. People who use the Commitfest app discuss their
-      patches on the  <a href="mailto:pgsql-hackers@lists.postgresql.org">pgsql-hackers</a>
-      mailing list.
+      PostgreSQL 使用一套独特的系统来管理 "Commitfest"（提交节），即
+      单个开发周期。使用 Commitfest 应用的人员在
+      <a href="mailto:pgsql-hackers@lists.postgresql.org">pgsql-hackers</a>
+      邮件列表上讨论他们的补丁。
     </p>
     <ul>
-      <li><a href="https://commitfest.postgresql.org/">Commitfest website</a></li>
-      <li><a href="https://git.postgresql.org/gitweb/?p=pgcommitfest2.git;a=summary">pgcommitfest main repository</a></li>
+      <li><a href="https://commitfest.postgresql.org/">Commitfest 网站</a></li>
+      <li><a href="https://git.postgresql.org/gitweb/?p=pgcommitfest2.git;a=summary">pgcommitfest 主仓库</a></li>
     </ul>
     <p>
-      You can get involved in this project by communicating on
-      the <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> mailing
-      list.
+      您可以通过
+      <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> 邮件列表
+      参与该项目。
     </p>
 
 
-    <h3>PostgreSQL Performance Farm</h3>
+    <h3>PostgreSQL 性能农场</h3>
     <p>
-      The PostgreSQL Performance Farm gathers performance data:
+      PostgreSQL 性能农场用于收集性能数据：
     </p>
     <ul>
-      <li><a href="https://github.com/PGPerfFarm/pgperffarm">Performance Farm code repository</a></li>
+      <li><a href="https://github.com/PGPerfFarm/pgperffarm">性能农场代码仓库</a></li>
     </ul>
     <p>
-      You can get involved in this project by communicating on
-      the <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> mailing
-      list.
+      您可以通过
+      <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www</a> 邮件列表
+      参与该项目。
     </p>
 
-    <h2>Package Management</h2>
+    <h2>软件包管理</h2>
 
     <h3><a href="https://apt.postgresql.org">apt.postgresql.org</a></h3>
     <p>
-      The APT repository provides PostgreSQL packages for Debian/Ubuntu based
-      systems:
+      APT 仓库为基于 Debian/Ubuntu 的系统提供 PostgreSQL 软件包：
     </p>
     <ul>
-      <li><a href="https://wiki.postgresql.org/wiki/Apt">Wiki page with details</a></li>
+      <li><a href="https://wiki.postgresql.org/wiki/Apt">包含详细信息的 Wiki 页面</a></li>
     </ul>
     <p>
-      You can get involved in this project by communicating on
-      the <a href="mailto:pgsql-pkg-debian@lists.postgresql.org">pgsql-pkg-debian</a>
-      mailing list.
+      您可以通过
+      <a href="mailto:pgsql-pkg-debian@lists.postgresql.org">pgsql-pkg-debian</a>
+      邮件列表参与该项目。
     </p>
 
     <h3><a href="https://yum.postgresql.org">yum.postgresql.org</a></h3>
     <p>
-      The YUM repository provides PostgreSQL packages for Red Hat/Rocky/AlmaLinux/Fedora
-      based systems (and derivatives):
+      YUM 仓库为基于 Red Hat/Rocky/AlmaLinux/Fedora 的系统（及其衍生版）
+      提供 PostgreSQL 软件包：
     </p>
     <ul>
-      <li><a href="https://yum.postgresql.org/">Website with details</a></li>
-      <li><a href="https://github.com/pgdg-packaging/pgdg-rpms/issues">Issue tracker</a></li>
+      <li><a href="https://yum.postgresql.org/">包含详细信息的网站</a></li>
+      <li><a href="https://github.com/pgdg-packaging/pgdg-rpms/issues">问题跟踪器</a></li>
     </ul>
     <p>
-      You can get involved in this project by communicating on
-      the <a href="mailto:pgsql-pkg-yum@lists.postgresql.org">pgsql-pkg-yum</a>
-      mailing list.
+      您可以通过
+      <a href="mailto:pgsql-pkg-yum@lists.postgresql.org">pgsql-pkg-yum</a>
+      邮件列表参与该项目。
     </p>
 
     <h3><a href="https://zypp.postgresql.org">zypp.postgresql.org</a></h3>
     <p>
-      The Zypper repository provides PostgreSQL packages for Suse Enterprise Linux:
+      Zypper 仓库为 Suse Enterprise Linux 提供 PostgreSQL 软件包：
     </p>
     <ul>
-      <li><a href="https://zypp.postgresql.org/">Website with details</a></li>
-      <li><a href="https://github.com/pgdg-packaging/pgdg-rpms/issues">Issue tracker</a></li>
+      <li><a href="https://zypp.postgresql.org/">包含详细信息的网站</a></li>
+      <li><a href="https://github.com/pgdg-packaging/pgdg-rpms/issues">问题跟踪器</a></li>
     </ul>
     <p>
-      You can get involved in this project by communicating on
-      the <a href="mailto:pgsql-pkg-yum@lists.postgresql.org">pgsql-pkg-yum</a>
-      mailing list.
+      您可以通过
+      <a href="mailto:pgsql-pkg-yum@lists.postgresql.org">pgsql-pkg-yum</a>
+      邮件列表参与该项目。
     </p>
 
-    <h2>Event Management</h2>
+    <h2>活动管理</h2>
 
-    <h3>pgeu conference system</h3>
+    <h3>pgeu 会议系统</h3>
     <p>
-      The "pgeu-system" powers a number of PostgreSQL conferences, including:
+      "pgeu-system" 为多个 PostgreSQL 会议提供支持，包括：
     </p>
     <ul>
-      <li><a href="https://www.postgresql.eu/events/">PostgreSQL Europe events</a></li>
-      <li><a href="https://postgresql.us/events/">United States PostgreSQL Association events</a></li>
-      <li><a href="https://www.pgcon.org/">PGCon - PostgreSQL Conference for Users and Developers</a></li>
-      <li><a href="https://www.bsdcan.org/">BSDCan - The BSD Conference</a></li>
+      <li><a href="https://www.postgresql.eu/events/">PostgreSQL 欧洲活动</a></li>
+      <li><a href="https://postgresql.us/events/">美国 PostgreSQL 协会活动</a></li>
+      <li><a href="https://www.pgcon.org/">PGCon - PostgreSQL 用户与开发者大会</a></li>
+      <li><a href="https://www.bsdcan.org/">BSDCan - BSD 大会</a></li>
     </ul>
     <p>
-      The conference system runs on the  <a href="https://www.djangoproject.com/">django web framework</a>, and is Open Source with a <a href="https://git.postgresql.org/gitweb/?p=pgeu-system.git;a=blob_plain;f=LICENSE;hb=HEAD">MIT License</a>.
+      该会议系统运行在 <a href="https://www.djangoproject.com/">Django Web 框架</a>上，是采用 <a href="https://git.postgresql.org/gitweb/?p=pgeu-system.git;a=blob_plain;f=LICENSE;hb=HEAD">MIT 许可证</a>的开源软件。
     </p>
     <p>
-      The code is hosted on git.postgresql.org, and mirrored to GitHub:
+      代码托管在 git.postgresql.org 上，并镜像到 GitHub：
     </p>
     <ul>
-      <li><a href="https://git.postgresql.org/gitweb/?p=pgeu-system.git;a=summary">pgeu-system main repository</a></li>
-      <li><a href="https://github.com/pgeu/pgeu-system">GitHub mirror</a></li>
+      <li><a href="https://git.postgresql.org/gitweb/?p=pgeu-system.git;a=summary">pgeu-system 主仓库</a></li>
+      <li><a href="https://github.com/pgeu/pgeu-system">GitHub 镜像</a></li>
     </ul>
     <p>
-      The GitHub mirror can be used to submit Issues and Pull Requests. You can
-      get involved in this project by communicating on the
+      GitHub 镜像可用于提交 Issue 和 Pull Request。您可以通过
       <a href="mailto:pgeu-system@lists.postgresql.eu">pgeu-system@lists.postgresql.eu</a>
-      mailing list.
+      邮件列表参与该项目。
     </p>
 
 
-    <h2>Advocacy</h2>
+    <h2>宣传推广</h2>
 
-    <h3>Press Releases</h3>
+    <h3>新闻稿</h3>
     <p>
-      The press release repository contains archives of major PostgreSQL
-      releases, their press kits, and translations, as well as the periodic
-      minor updates.
+      新闻稿仓库包含 PostgreSQL 主版本发布的存档、新闻资料包及其翻译，
+      以及定期的小版本更新。
     </p>
     <ul>
-      <li><a href="https://git.postgresql.org/gitweb/?p=press.git;a=summary">Press Kit repository</a></li>
+      <li><a href="https://git.postgresql.org/gitweb/?p=press.git;a=summary">新闻资料包仓库</a></li>
     </ul>
     <p>
-      If you are interested in becoming a press release translator, you can get
-      involved in this project by sending an email to
-      <a href="mailto:press@postgresql.org">press@postgresql.org</a>.
+      如果您有兴趣成为新闻稿翻译者，可以发送邮件至
+      <a href="mailto:press@postgresql.org">press@postgresql.org</a> 参与该项目。
     </p>
 
   </div>

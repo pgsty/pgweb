@@ -1,7 +1,7 @@
 {% extends "base/page.html" %}
 {% load pgfilters %}
 
-{%block title%}Release Notes{%endblock%}
+{%block title%}发布说明{%endblock%}
 
 {% block contents %}
 {% regroup releases by major as release_groups %}
@@ -9,9 +9,9 @@
 <div id="release-notes" class="row">
     <div class="col-md-9">
       <section>
-        <h1>Release Notes <i class="far fa-file-alt"></i></h1>
+        <h1>发布说明 <i class="far fa-file-alt"></i></h1>
       </section>
-      <p>Below is the complete archive of release notes for every version of PostgreSQL.</p>
+      <p>以下是 PostgreSQL 所有版本的完整发布说明归档。</p>
         {% for release_group in release_groups %}
           {% with major_version=release_group.grouper %}
        <details class="release-notes-list">

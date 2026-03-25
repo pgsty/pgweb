@@ -1,44 +1,27 @@
-Please ensure you have read the
-<a href="/docs/current/bug-reporting.html">bug reporting guidelines</a>
-before reporting a bug. In particular, please re-read the
-<a href="/docs/current/">documentation</a> to verify that what you are
-trying is possible. If the documentation is not clear, please report that, too;
-it is a documentation bug. If a program does something different from what the
-documentation says, that is also a bug.</p>
+请确保您在报告 Bug 之前已阅读
+<a href="/docs/current/bug-reporting.html">Bug 报告指南</a>。特别是，请重新阅读
+<a href="/docs/current/">文档</a>以确认您尝试的操作是可行的。如果文档不清楚，请也报告该问题；
+这属于文档 Bug。如果程序的行为与文档描述不符，这也是一个 Bug。</p>
 
-<p>Poor performance is not necessarily a bug. Read the documentation or ask on
-one of the <a href="/list/">mailing lists</a> for help in tuning
-your applications. Failing to comply to the SQL standard is not necessarily a
-bug either, unless compliance for the specific feature is explicitly claimed.</p>
+<p>低性能不一定是 Bug。请阅读文档或在
+<a href="https://www.postgresql.org/list/">邮件列表</a>中寻求帮助来调优您的应用程序。不符合 SQL 标准也不一定是 Bug，除非明确声明了对特定功能的合规性。</p>
 
-<p>Before you continue, check on the
-<a href="https://wiki.postgresql.org/wiki/Todo">TODO list</a> and in the
-<a href="https://wiki.postgresql.org/wiki/Category:FAQ">FAQ</a> to see if your bug is already known. If you cannot
-decode the information on the TODO list, report your problem so we can clarify
-the TODO list.</p>
+<p>在继续之前，请查看
+<a href="https://wiki.postgresql.org/wiki/Todo">TODO 列表</a>和
+<a href="https://wiki.postgresql.org/wiki/Category:FAQ">FAQ</a>，确认您的 Bug 是否已被记录。如果您无法理解 TODO 列表中的信息，请报告您的问题，以便我们完善 TODO 列表。</p>
 
-<p><strong>If you believe you have found a security issue, please send an email to
-<a href="mailto:security@postgresql.org">security@postgresql.org</a></strong>. All
-other bugs will be forwarded to the
-<a href="/list/pgsql-bugs/">pgsql-bugs</a> mailing
-list where they will be publicly archived.</p>
+<p><strong>如果您认为发现了安全问题，请发送电子邮件至
+<a href="mailto:security@postgresql.org">security@postgresql.org</a></strong>。所有其他 Bug 将被转发到
+<a href="https://www.postgresql.org/list/pgsql-bugs/">pgsql-bugs</a> 邮件列表，并将被公开存档。</p>
 
-<p>Make sure you are running the latest available minor release for your major
-<a href="/support/versioning/">version</a> before reporting a bug. The current
-list of supported versions is
-{%for ver in supportedversions%}{{ver}}{%if not forloop.last%}, {%endif%}{%endfor%}.
+<p>请确保在报告 Bug 之前，您正在运行所用主要
+<a href="/support/versioning/">版本</a>的最新可用小版本。当前支持的版本列表为
+{%for ver in supportedversions%}{{ver}}{%if not forloop.last%}, {%endif%}{%endfor%}。
 </p>
 
-<p>This bug report form should only be used for reporting bugs and problems
-with the PostgreSQL database.  Problems with database connectors such as ODBC
-and JDBC, graphical administration tools such as pgAdmin or other external
-projects <strong>should not be reported here</strong>; please report to those projects
-directly.  For products closely connected with PostgreSQL, there may be an
-appropriate <a href='/list/'>mailing list</a> available.
+<p>此 Bug 报告表单仅应用于报告 PostgreSQL 数据库的 Bug 和问题。数据库连接器（如 ODBC 和 JDBC）、图形化管理工具（如 pgAdmin）或其他外部项目的问题<strong>不应在此报告</strong>；请直接向相关项目报告。对于与 PostgreSQL 密切相关的产品，可能有合适的<a href='https://www.postgresql.org/list/'>邮件列表</a>可用。
 
 <p>
-By submitting a bug through this form you agree that all contents of the bug report,
-including your personal information as listed, will be posted to the <strong>public</strong>
-<a href="/list/pgsql-bugs/">pgsql-bugs</a> mailing list, and archived in the
-<strong>public</strong> list archives.
+通过此表单提交 Bug，即表示您同意 Bug 报告的所有内容（包括您列出的个人信息）将被发布到<strong>公开的</strong>
+<a href="https://www.postgresql.org/list/pgsql-bugs/">pgsql-bugs</a> 邮件列表，并存档在<strong>公开的</strong>列表归档中。
 </p>

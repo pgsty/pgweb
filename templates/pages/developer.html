@@ -1,64 +1,38 @@
 {%extends "base/page.html"%}
-{%block title%}Developers{%endblock%}
+{%block title%}开发者{%endblock%}
 {%block contents%}
-<h1>Developers <i class="fa fa-code"></i></h1>
+<h1>开发者 <i class="fa fa-code"></i></h1>
 
-<h2>Who are we?</h2>
+<h2>我们是谁？</h2>
 
-<p>A PostgreSQL database developer is someone who is actually working on the project, not someone using it to develop
-an application or a website. We don't hire programmers, we reach across the Internet, drawing the best database
-developers in the world to PostgreSQL. Read about the <a href="/community/contributors/">people behind PostgreSQL</a> and
-check out the <a href="/files/community/conference06/conference_group.html">group picture</a> from the 2006
-PostgreSQL Anniversary Summit.
+<p>PostgreSQL 数据库开发者是真正参与项目开发的人，而非使用它来开发应用或网站的人。我们不雇佣程序员，而是通过互联网，将世界上最优秀的数据库开发者汇聚到 PostgreSQL 项目中。了解 <a href="/community/contributors/">PostgreSQL 背后的人</a>，并查看 2006 年 PostgreSQL 周年峰会的<a href="/files/community/conference06/conference_group.html">合影</a>。
 </p>
 
-<h2>What will you find here?</h2>
+<h2>这里有什么？</h2>
 
-<p>The information available in this section will mainly interest PostgreSQL developers. Here you'll find the
-<a href="/developer/roadmap/">roadmap</a> with current <a href="https://wiki.postgresql.org/wiki/Todo">TODO list</a>, <a href="/developer/coding/">coding</a> and
-<a href="/developer/testing/">testing</a> information, <a href="https://commitfest.postgresql.org">CommitFests</a>, <a href="/list/">mailing lists</a>, and
-the developer <a href="https://wiki.postgresql.org/wiki/Developer_FAQ">FAQ</a>. Keep in mind the information available here is not
-necessarily available in the release version of PostgreSQL - it may not yet even be in the development version.
+<p>本栏目的信息主要面向 PostgreSQL 开发者。在这里，您可以找到<a href="/developer/roadmap/">路线图</a>及当前的 <a href="https://wiki.postgresql.org/wiki/Todo">TODO 列表</a>、<a href="/developer/coding/">编码</a>和<a href="/developer/testing/">测试</a>信息、<a href="https://commitfest.postgresql.org">CommitFests</a>、<a href="https://www.postgresql.org/list/">邮件列表</a>以及开发者 <a href="https://wiki.postgresql.org/wiki/Developer_FAQ">FAQ</a>。请注意，这里提供的信息不一定包含在 PostgreSQL 的发行版本中——甚至可能尚未进入开发版本。
 </p>
 
-<h2>How to get involved</h2>
+<h2>如何参与</h2>
 <p>
-  A few resources to help you get involved in PostgreSQL development are:
+  以下是一些帮助您参与 PostgreSQL 开发的资源：
 </p>
 <ul>
-  <li>Read the <a href="https://wiki.postgresql.org/wiki/Developer_FAQ#How_do_I_get_involved_in_PostgreSQL_development.3F">Developer FAQ</a>.</li>
-  <li>Read the <a href="https://www.postgresql.org/list/pgsql-hackers/">pgsql-hackers archives</a> about topics, and optionally <a href="https://lists.postgresql.org/">subscribe</a> to the list.</li>
-  <li>Join the <a rel="nofollow" href="https://discord.gg/bx2G9KWyrY">PostgreSQL Hacking Discord</a>.</li>
+  <li>阅读<a href="https://wiki.postgresql.org/wiki/Developer_FAQ#How_do_I_get_involved_in_PostgreSQL_development.3F">开发者 FAQ</a>。</li>
+  <li>浏览 <a href="https://www.postgresql.org/list/pgsql-hackers/">pgsql-hackers 归档</a>中的相关话题，也可以选择<a href="https://lists.postgresql.org/">订阅</a>该邮件列表。</li>
+  <li>加入 <a rel="nofollow" href="https://discord.gg/bx2G9KWyrY">PostgreSQL Hacking Discord</a>。</li>
 </ul>
 
-<h2>What is a CommitFest?</h2>
+<h2>什么是 CommitFest？</h2>
 
-A <a href="https://commitfest.postgresql.org">CommitFest</a> is a period during
-the PostgreSQL feature development where
-<a href="https://wiki.postgresql.org/wiki/Committers">committers</a> and
-<a href="/community/contributors/">contributors</a> focus on
-<a href="https://wiki.postgresql.org/wiki/Reviewing_a_Patch">reviewing</a>,
-<a href="/developer/testing/">testing</a>, and getting patches committed.
-Patches are registered in the
-<a href="https://commitfest.postgresql.org">CommitFest application</a>,
-which PostgreSQL developers use to track the patch status.
+<a href="https://commitfest.postgresql.org">CommitFest</a> 是 PostgreSQL 特性开发过程中的一个阶段，在此期间，<a href="https://wiki.postgresql.org/wiki/Committers">提交者</a>和<a href="/community/contributors/">贡献者</a>集中精力进行<a href="https://wiki.postgresql.org/wiki/Reviewing_a_Patch">审查</a>、<a href="/developer/testing/">测试</a>以及提交补丁。补丁在 <a href="https://commitfest.postgresql.org">CommitFest 应用</a>中注册，PostgreSQL 开发者使用该应用来跟踪补丁状态。
 
-There are typically 5 CommitFests in a major release cycle: July, September,
-November, January, and March. The March CommitFest is the final CommitFest in a
-major release, which is followed by "feature freeze" and the beginning of the
-<a href="/developer/beta/">beta</a> period. A
-"<a href="https://wiki.postgresql.org/wiki/CommitFest_Checklist">CommitFest Manager</a>"
-manages a CommitFest and has responsibilities to help manage the list of
-patches.
+在一个大版本发布周期中，通常有 5 个 CommitFest：七月、九月、十一月、一月和三月。三月的 CommitFest 是大版本发布周期中的最后一个，之后将进入"特性冻结"阶段，并开始 <a href="/developer/beta/">Beta</a> 测试期。"<a href="https://wiki.postgresql.org/wiki/CommitFest_Checklist">CommitFest 管理者</a>"负责管理 CommitFest，并承担管理补丁列表的职责。
 
-Anyone can participate in a CommitFest and it is a great way to get started
-contributing to PostgreSQL. You can submit a patch to be included in a
-CommitFest, sign up to review a patch, or become a CommitFest Manager
-(though CommitFest Managers tend to have some level of experience in the
-community).
+任何人都可以参与 CommitFest，这也是开始为 PostgreSQL 做贡献的绝佳方式。您可以提交补丁以纳入 CommitFest，报名审查补丁，或者成为 CommitFest 管理者（不过 CommitFest 管理者通常需要具备一定的社区经验）。
 
-<h2>Google Summer of Code Program</h2>
+<h2>Google 编程之夏</h2>
 
-<p>The PostgreSQL Project is a proud participant in Google's Summer of Code program. If you are interested in working on a PostgreSQL related project, please check out our <a href="https://wiki.postgresql.org/wiki/GSoC">Summer of Code</a> page.</p>
+<p>PostgreSQL 项目自豪地参与了 Google 编程之夏计划。如果您有兴趣参与 PostgreSQL 相关项目，请查看我们的 <a href="https://wiki.postgresql.org/wiki/GSoC">Summer of Code</a> 页面。</p>
 
 {%endblock%}

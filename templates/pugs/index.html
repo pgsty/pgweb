@@ -1,11 +1,11 @@
 {%extends "base/page.html"%}
-{%block title%}Local PostgreSQL User Groups{%endblock%}
+{%block title%}PostgreSQL 本地用户组{%endblock%}
 {%block contents%}
-<h1>Local User Groups <i class="fa fa-users"></i></h1>
+<h1>本地用户组 <i class="fa fa-users"></i></h1>
 
-<p>The PostgreSQL community is proud to have many local chapters that advocate and educate users about PostgreSQL.  Below is a list of PostgreSQL User Groups (PUGs) sorted by country and local area.</p>
-<p>If you would like to start a PostgreSQL User Group, please send an email to <a href="mailto:usergroups@postgresql.org">usergroups@postgresql.org</a> and describe the PUG that you want to create. If a PUG already exists in your area, follow the URLs below to find out how to attend and participate.</p>
-<p>PostgreSQL User Groups must follow the <a href="/about/policies/user-groups/">Recognised PostgreSQL User Group</a> policy.</p>
+<p>PostgreSQL 社区很自豪地拥有许多本地分会，致力于推广和教育用户使用 PostgreSQL。以下是按国家和地区排列的 PostgreSQL 用户组（PUG）列表。</p>
+<p>如果您想创建一个 PostgreSQL 用户组，请发送电子邮件至 <a href="mailto:usergroups@postgresql.org">usergroups@postgresql.org</a>，描述您想要创建的 PUG。如果您所在的地区已有 PUG，请通过以下链接了解如何参加和参与。</p>
+<p>PostgreSQL 用户组必须遵守<a href="/about/policies/user-groups/">认可的 PostgreSQL 用户组</a>政策。</p>
 
 {% for pug_group in pug_list %}
   <h2>{{ pug_group.country }}</h2>
@@ -21,10 +21,10 @@
         </a>
       {% endif %}
       {% if pug.website_url %}
-        (<a href="{{ pug.website_url }}" target="_blank" rel="noopener">website</a>)
+        (<a href="{{ pug.website_url }}" target="_blank" rel="noopener">网站</a>)
       {% endif %}
       {% if pug.mailing_list_url %}
-        (<a href="{{ pug.mailing_list_url }}" target="_blank" rel="noopener">mailing list</a>)
+        (<a href="{{ pug.mailing_list_url }}" target="_blank" rel="noopener">邮件列表</a>)
       {% endif %}
     </li>
   {% endfor %}

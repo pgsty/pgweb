@@ -1,13 +1,11 @@
 {%extends "base/page.html"%}
-{%block title%}Contributing Sponsors{%endblock%}
+{%block title%}贡献赞助者{%endblock%}
 {%block contents%}
 
-<h1>Contributing Sponsors <i class="fa fa-users"></i></h1>
+<h1>贡献赞助者 <i class="fa fa-users"></i></h1>
 
-<p>The following is a categorized list of significant contributing sponsors to PostgreSQL. These are
-  sponsors who contribute their employee time to furthering the PostgreSQL project.
-  Sponsors are listed in no particular order within each section, with just the location of the head
-  office for each company shown.</p>
+<p>以下是 PostgreSQL 重要贡献赞助者的分类列表。这些赞助者贡献其员工时间来推动 PostgreSQL 项目的发展。
+  各部分中的赞助者不按特定顺序排列，仅显示各公司总部所在地。</p>
 
 {% for sponsor in sponsors %}
   {% ifchanged sponsor.sponsortype %}
@@ -34,8 +32,8 @@
     </tbody>
   </table>
 
-<h2>Sponsorship Recognition</h2>
+<h2>赞助认可</h2>
 <p>
-  Sponsorship recognition is wholly determined by the <a href="/about/policies/sponsorship/">Sponsorship Committee</a> and was last updated in March, 2023.
+  赞助认可完全由<a href="/about/policies/sponsorship/">赞助委员会</a>决定，最近一次更新于 2023 年 3 月。
 </p>
 {%endblock%}

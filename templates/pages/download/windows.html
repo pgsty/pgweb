@@ -1,64 +1,53 @@
 {%extends "base/page.html"%}
-{%block title%}Windows installers{%endblock%}
+{%block title%}Windows 安装程序{%endblock%}
 {%block contents%}
 
-<h1>Windows installers <img class="logo" src="/media/img/windows.svg" alt="Windows Logo" /></h1>
+<h1>Windows 安装程序 <img class="logo" src="/media/img/windows.svg" alt="Windows Logo" /></h1>
 
-<h2>Interactive installer by EDB</h2>
+<h2>EDB 交互式安装程序</h2>
 
 <p>
-<a href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads"> Download the installer</a>
- certified by EDB for all supported Postgres versions.
+<a href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads">下载安装程序</a>，由 EDB 认证，支持所有受支持的 Postgres 版本。
 </p>
 
 <p>
-  <strong>Note!</strong> This installer is hosted by EDB and not on the PostgreSQL community servers.
-  If you have issues with the website it's hosted on, please contact
-  <a href="mailto:webmaster@enterprisedb.com">webmaster@enterprisedb.com</a>.
+  <strong>注意！</strong>此安装程序托管在 EDB 上，而非 PostgreSQL 社区服务器上。如果您在托管网站上遇到问题，请联系
+  <a href="mailto:webmaster@enterprisedb.com">webmaster@enterprisedb.com</a>。
 </p>
 
 <p>
-  This installer includes:
+  此安装程序包含：
 </p>
 
 <ul>
-  <li>The PostgreSQL server</li>
-  <li>pgAdmin, a graphical tool for managing and developing your databases</li>
-  <li>StackBuilder, a package manager for downloading and installing 
-    additional PostgreSQL tools and drivers. Stackbuilder includes management,
-    integration, migration, replication, geospatial, connectors and other tools.</li>
-</ul>  
+  <li>PostgreSQL 服务器</li>
+  <li>pgAdmin，用于管理和开发数据库的图形化工具</li>
+  <li>StackBuilder，用于下载和安装额外 PostgreSQL 工具和驱动程序的包管理器。StackBuilder 包含管理、集成、迁移、复制、地理空间、连接器和其他工具。</li>
+</ul>
 
 <p>
-This installer can run in graphical or silent install modes.
+此安装程序可以在图形化或静默安装模式下运行。
 </p>
 
 <p>
-The Windows installer is designed to be a straightforward, fast way to get up and running with
-Postgres. In the unlikely event that you have issues with the installer,
-please report them on the <a href="https://github.com/EnterpriseDB/edb-installers/issues">
-installer Github page</a>. Issues with the installed packages should be reported to the
-appropriate project directly.
+Windows 安装程序旨在提供一种简单、快速的方式来安装和运行 Postgres。如果您在安装程序方面遇到问题（这种情况不太可能发生），请在
+<a href="https://github.com/EnterpriseDB/edb-installers/issues">安装程序 Github 页面</a>上报告。已安装软件包的问题应直接向相应项目报告。
 </p>
 
 <p>
-Advanced users can also download a
-<a href="https://www.enterprisedb.com/download-postgresql-binaries">zip archive</a>
-of the binaries, without the installer.
-This download is intended for users who wish to include Postgres as part of another application installer.
+高级用户还可以下载不含安装程序的
+<a href="https://www.enterprisedb.com/download-postgresql-binaries">zip 压缩包</a>（仅二进制文件）。此下载适用于希望将 Postgres 作为其他应用程序安装程序一部分的用户。
 </p>
 
-<h3>Platform support</h3>
+<h3>平台支持</h3>
 
-<p>The installers are tested by EDB on the following platforms.
-    They can generally be expected to run on other comparable versions,
-    for example, desktop releases of Windows:</p>
+<p>安装程序由 EDB 在以下平台上测试。通常也可以在其他类似版本上运行，例如 Windows 桌面版：</p>
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Postgres Version</th>
-      <th>64 Bit Windows Platforms</th>
+      <th>Postgres 版本</th>
+      <th>64 位 Windows 平台</th>
     </tr>
   </thead>
   <tbody>

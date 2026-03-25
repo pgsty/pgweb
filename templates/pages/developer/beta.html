@@ -1,68 +1,56 @@
 {%extends "base/page.html"%}
-{%block title%}Beta Information{%endblock%}
+{%block title%}Beta 信息{%endblock%}
 {%block contents%}
-<h1>Beta Information <i class="fa fa-code"></i></h1>
+<h1>Beta 信息 <i class="fa fa-code"></i></h1>
 
-<p>PostgreSQL beta and release candidate releases are pre-release testing
-    versions before the community makes a new release generally available. They
-    are feature-frozen (i.e. no new features are added), and we release these to
-    the public for testing before our final release. PostgreSQL beta and
-    release candidate release are <strong>not meant for use in production
-    systems</strong>.</p>
+<p>PostgreSQL 的 beta 和候选发布版本是社区在正式发布新版本之前的预发布测试版本。
+    它们已经冻结功能（即不再添加新功能），我们将这些版本发布给公众，以便在最终发布之前进行测试。
+    PostgreSQL 的 beta 和候选发布版本<strong>不适用于生产系统</strong>。</p>
 
-<p>Betas and release candidates are made available to the community in order to
-    perform testing before the initial release. They are especially helpful
-    for developers of platforms, drivers, tools, and utilities which depend upon
-    PostgreSQL in order to prepare for changes in the new version. A release
-    candidate should be identical to the initial release of a new major version
-    of PostgreSQL, though additional changes could be made before the release is
-    made generally available.</p>
+<p>Beta 和候选发布版本提供给社区，以便在初始发布之前进行测试。
+    它们对于依赖 PostgreSQL 的平台、驱动程序、工具和实用程序的开发人员尤其有用，
+    可以帮助他们为新版本中的变更做好准备。候选发布版本应与 PostgreSQL 新主版本的初始发布相同，
+    但在正式发布之前仍可能进行额外的更改。</p>
 
-<p>The stability of each PostgreSQL release greatly depends on the community to
-    test the upcoming version with your workloads and testing tools in order to
-    find bugs and regressions before the initial release. The quality of user
-    testing helps determine when we can make a final release.</p>
+<p>每个 PostgreSQL 版本的稳定性在很大程度上取决于社区使用您的工作负载和测试工具
+    对即将发布的版本进行测试，以便在初始发布之前发现缺陷和回归问题。
+    用户测试的质量决定了我们何时可以进行最终发布。</p>
 
-<p>The PostgreSQL Global Development Group strongly advises against using beta
-    versions of PostgreSQL in production installations or active development
-    projects. While the PostgreSQL code is continuously subject to a number of
-    automated and manual tests, beta releases might have serious bugs. Features
-    are subject to changes that are backwards incompatible at any time during
-    the development of the betas, and could possibly be removed altogether.</p>
+<p>PostgreSQL 全球开发组强烈建议不要在生产环境或活跃的开发项目中使用 PostgreSQL 的 beta 版本。
+    虽然 PostgreSQL 代码持续经受大量自动化和手动测试，但 beta 版本可能存在严重缺陷。
+    在 beta 开发期间，功能可能随时发生不向后兼容的变更，甚至可能被完全移除。</p>
 
 <p>
-  <strong>PostgreSQL 18 is released</strong>. The first beta of version 19
-  is not yet available for testing. Beta testing of version 19 will begin in
-  May 2026.
+  <strong>PostgreSQL 18 已发布</strong>。版本 19 的第一个 beta 尚未提供测试。
+  版本 19 的 beta 测试将于 2026 年 5 月开始。
 </p>
 
 {% comment %}
 <p>
-  The current beta release is <strong>PostgreSQL 18 RC 1</strong>.  For more
-  information on the current beta release and how to test, please view the links
-  below.
+  当前的 beta 发布版本是 <strong>PostgreSQL 18 RC 1</strong>。有关当前 beta 版本的更多信息
+  以及如何进行测试，请查看以下链接。
 </p>
 
 <ul>
   <li>
     <a href="/about/news/postgresql-18-rc-1-released-3130/">
-      PostgreSQL 18 RC 1 Release Announcement
+      PostgreSQL 18 RC 1 发布公告
     </a>
   </li>
   <li>
-    <a href="/ftp/source/v18rc1/">Download PostgreSQL 18 RC 1 source code</a>
+    <a href="https://www.postgresql.org/ftp/source/v18rc1/">下载 PostgreSQL 18 RC 1 源代码</a>
   </li>
   <li>
-    <a href="/docs/18/">PostgreSQL 18 Documentation</a>
+    <a href="/docs/18/">PostgreSQL 18 文档</a>
   </li>
   <li>
-    <a href="/docs/18/release-18.html">PostgreSQL 18 Release Notes</a>
+    <a href="/docs/18/release-18.html">PostgreSQL 18 发行说明</a>
   </li>
   <li>
-    <a href="https://wiki.postgresql.org/wiki/PostgreSQL_18_Open_Items">PostgreSQL 18 Open Items</a>
+    <a href="https://wiki.postgresql.org/wiki/PostgreSQL_18_Open_Items">PostgreSQL 18 待解决事项</a>
   </li>
   <li>
-    <a href="https://wiki.postgresql.org/wiki/HowToBetaTest" target="_blank" rel="noopener">A Guide to PostgreSQL Beta Testing</a>
+    <a href="https://wiki.postgresql.org/wiki/HowToBetaTest" target="_blank" rel="noopener">PostgreSQL Beta 测试指南</a>
   </li>
 </ul>
 {% endcomment %}

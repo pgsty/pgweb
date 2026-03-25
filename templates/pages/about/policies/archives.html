@@ -1,61 +1,49 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}Archives Policy{%endblock%}
+{%block title%}归档政策{%endblock%}
 {%block contents%}
 
-<h1>Archives Policy <i class="fas fa-gavel"></i></h1>
+<h1>归档政策 <i class="fas fa-gavel"></i></h1>
 
-<p><em>Last updated: February 6, 2019. {%git_changes_link%}</em></p>
+<p><em>最后更新：2019年2月6日。{%git_changes_link%}</em></p>
 
-<p>The PostgreSQL <a href="/list/">mailing lists</a> are archived at
-    www.postgresql.org. This site is intended to provide an accurate
-    representation of the activity on the lists, and as such will not be
-    modified.</p>
+<p>PostgreSQL <a href="https://www.postgresql.org/list/">邮件列表</a>在
+    www.postgresql.org 上进行归档。本站旨在提供对列表活动的准确记录，因此不会进行修改。</p>
 
-<h2>Why won't you remove my post?</h2>
+<h2>为什么不删除我的帖子？</h2>
 
-<p>There are a number of reasons why we will not remove or modify messages in
-    the archives:</p>
+<p>我们不会删除或修改归档中的消息，原因如下：</p>
 
 <ul>
-    <li>We want the archives to accurately represent the history of our public
-        mailing lists.
+    <li>我们希望归档能够准确地反映我们公共邮件列表的历史。
     </li>
-    <li>Messages posted to our mailing lists are archived by other organisations
-        outside of our control, as well as in every list subscriber's inbox.
-        Removing a message from our archives would only be the tip of the
-        iceberg.
+    <li>发送到我们邮件列表的消息也被我们无法控制的其他组织归档，
+        以及每个列表订阅者的收件箱中。从我们的归档中删除消息只是冰山一角。
     </li>
-    <li>Due to the way the archives are stored and occasionally regenerated from
-        archived mailbox files, there is no way to permanently modify a message.
+    <li>由于归档的存储方式以及偶尔从归档邮箱文件重新生成的方式，
+        没有办法永久修改消息。
     </li>
-    <li>We have limited volunteer resources to run the project (and no
-        non-volunteer resources) and would prefer to use those resources to
-        produce great database management software than to rewrite history.
+    <li>我们运行项目的志愿者资源有限（且没有非志愿者资源），
+        我们更愿意将这些资源用于开发出色的数据库管理软件，而不是改写历史。
     </li>
 </ul>
 
-<h2>E-Mail Disclaimers and Licencing</h2>
+<h2>电子邮件免责声明和许可</h2>
 
-<p>Some companies or organization add footers to outgoing e-mail messages with
-    that group's e-mail policies, such as this simple example:</p>
+<p>一些公司或组织会在发出的电子邮件中添加包含该组织电子邮件政策的页脚，
+    例如以下简单示例：</p>
 
-<blockquote>This e-mail is confidential and only for use by the intended
-    recipient.
+<blockquote>本电子邮件为机密信息，仅供预期收件人使用。
 </blockquote>
 
-<p>These disclaimers are incompatible with sending messages to the PostgreSQL
-    mailing lists. When the mailing list is the "intended recipient", that
-    includes all of its current subscribers and the archives. These archives are
-    public, archived, and searchable; they cannot be made confidential.</p>
+<p>这些免责声明与向 PostgreSQL 邮件列表发送消息不兼容。
+    当邮件列表是"预期收件人"时，这包括其所有当前订阅者和归档。
+    这些归档是公开的、已归档的且可搜索的；它们无法被设为机密。</p>
 
-<p>By choosing to send messages to a PostgreSQL mailing list, you are implicitly
-    granting your permission for that message to be archived in that fashion,
-    regardless of any e-mail disclaimer it might have. Additionally, source code
-    submissions to mailing lists such as pgsql-hackers are considered
-    submissions to the PostgreSQL project, falling under the project's
-    <a href="/about/licence/">PostgreSQL licence</a>. Please make sure you have
-    permission to share information with these lists before sending your
-    message.</p>
+<p>通过选择向 PostgreSQL 邮件列表发送消息，您默示授权该消息以上述方式进行归档，
+    无论其可能包含的任何电子邮件免责声明。此外，向 pgsql-hackers 等邮件列表提交的源代码
+    被视为向 PostgreSQL 项目的提交，适用项目的
+    <a href="/about/licence/">PostgreSQL 许可证</a>。请确保您有权在发送消息之前
+    与这些列表共享信息。</p>
 
 {%endblock%}

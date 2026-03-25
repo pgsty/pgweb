@@ -1,18 +1,16 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}Contributor Profiles{%endblock%}
+{%block title%}贡献者档案{%endblock%}
 {%block contents%}
-<h1>PostgreSQL Contributor Profiles <i class="fa fa-users"></i></h1>
+<h1>PostgreSQL 贡献者档案 <i class="fa fa-users"></i></h1>
 
-<p>These are the fine people that make PostgreSQL what it is today!</p>
+<p>正是这些杰出的人们成就了今天的 PostgreSQL！</p>
 
 <p>
-    For a list of all code contributions to a specific release, see the
-  <a href="/docs/release/">Release Notes</a> for released versions of PostgreSQL.
+    如需查看特定版本的所有代码贡献列表，请参阅已发布 PostgreSQL 版本的<a href="/docs/release/">发布说明</a>。
 </p>
 <p>
-    Existing contributors can update their information in their
-    <a href="/account/profile/">user profile</a>.
+    现有贡献者可以在其<a href="/account/profile/">用户档案</a>中更新个人信息。
 </p>
 
 {%for t in contributortypes%}
@@ -23,8 +21,8 @@
   <thead>
     {%if t.detailed%}
     <tr>
-     <th scope="col">Contributor</th>
-     <th scope="col">Contribution</th>
+     <th scope="col">贡献者</th>
+     <th scope="col">贡献</th>
     </tr>
     {%endif%}
   </thead>
@@ -64,12 +62,11 @@
 </table>
 {%endfor%}
 
-<p>All contributors are listed in alphabetical order.
-  To suggest additions or corrections to this list, please email the
-  <a href="/about/governance/contributors/">Contributors Committee</a> at
-  <a href="mailto:contributors@postgresql.org">contributors@postgresql.org</a>.
-    See the <a href="/about/policies/contributors/">Recognized Contributors Policy</a>
-    for more information on becoming a recognized contributor.
+<p>所有贡献者按字母顺序排列。
+  如需建议添加或更正此列表，请发送邮件至
+  <a href="/about/governance/contributors/">贡献者委员会</a>
+  <a href="mailto:contributors@postgresql.org">contributors@postgresql.org</a>。
+    有关成为认可贡献者的更多信息，请参阅<a href="/about/policies/contributors/">认可贡献者政策</a>。
 </p>
 
 {%endblock%}

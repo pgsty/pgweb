@@ -1,28 +1,24 @@
 {%extends "base/page.html"%}
 {%block contents%}
-<h1>Sign in <i class="fas fa-sign-in-alt"></i></h1>
+<h1>登录 <i class="fas fa-sign-in-alt"></i></h1>
 <p>
 {%if sitename%}
-The website you are trying to log in to ({{sitename}}) is using the
-postgresql.org community login system. In this system you create a
-central account that is used to log into most postgresql.org services.
-Once you are logged into this account, you will automatically be
-logged in to the associated postgresql.org services.
+您正在尝试登录的网站（{{sitename}}）使用的是 postgresql.org 社区登录系统。
+在此系统中，您需要创建一个中心账户，用于登录大多数 postgresql.org 服务。
+一旦登录该账户，您将自动登录到关联的 postgresql.org 服务。
 {%else%}
-Please log in to your community account to reach this area.
+请登录您的社区账户以访问此区域。
 {%endif%}
 </p>
 <p>
-If you do not already have an account,
-you can either <a href="/account/signup/">create</a>
-a dedicated account, or use one of the third party sign-in systems below.
+如果您还没有账户，
+可以<a href="/account/signup/">创建</a>一个专用账户，或使用下方的第三方登录系统。
 </p>
 
-<h2>Community account sign-in</h2>
+<h2>社区账户登录</h2>
 <p>
-If you have a postgresql.org community account with a password, please
-use the form below to sign in. If you have one but have lost your
-password, you can use the <a href="/account/reset/">password reset</a> form.
+如果您拥有带密码的 postgresql.org 社区账户，请使用下方表单登录。
+如果您忘记了密码，可以使用<a href="/account/reset/">密码重置</a>表单。
 </p>
 
 {%if form.non_field_errors%}
@@ -32,24 +28,24 @@ password, you can use the <a href="/account/reset/">password reset</a> form.
 {%endif%}
 <form action="." method="post" id="login-form">{% csrf_token %}
   <div class="form-group">
-    <input type="text" class="form-control" name="username" id="id_username" placeholder="Username or email address" autofocus />
+    <input type="text" class="form-control" name="username" id="id_username" placeholder="用户名或电子邮件地址" autofocus />
   </div>
   <div class="form-group">
-    <input type="password" class="form-control" name="password" id="id_password" placeholder="Password"/>
+    <input type="password" class="form-control" name="password" id="id_password" placeholder="密码"/>
     <input type="hidden" name="this_is_the_login_form" value="1" />
     <input type="hidden" name="next" value="{{next}}" />
   </div>
   <div class="submit-row">
-    <input class="btn btn-primary" type="submit" value="Community Sign-In">
+    <input class="btn btn-primary" type="submit" value="社区账户登录">
   </div>
 </form>
 
 {%if oauth_providers%}
-<h2>Third party sign in</h2>
+<h2>第三方登录</h2>
 <form method="post" action="/account/login/oauth/">
   <input type="hidden" name="next" value="{{next}}" />
 {%for p,d in oauth_providers%}
-  <p><button type="submit" name="submit" value="{{p}}" class="imagebutton"><img src="/media/img/misc/btn_login_{{p}}.png" alt="Sign in with {{p|capfirst}}"></button></p>
+  <p><button type="submit" name="submit" value="{{p}}" class="imagebutton"><img src="/media/img/misc/btn_login_{{p}}.png" alt="使用 {{p|capfirst}} 登录"></button></p>
 {%endfor%}
 </form>
 {%endif%}

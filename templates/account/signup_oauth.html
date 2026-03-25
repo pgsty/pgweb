@@ -1,23 +1,21 @@
 {%extends "base/form.html"%}
 {%block pre_form_header%}
 <p>
-  We find no account associated with your email address {{email}}.
+  我们未找到与您的电子邮件地址 {{email}} 关联的账户。
 </p>
 
 <p>
-  If your account is under a different name, please
-  <a href="?do_abort=1">cancel</a> this sign-in and sign in with the
-  appropriate account instead.
+  如果您的账户使用了其他名称，请
+  <a href="?do_abort=1">取消</a>此次登录，并使用相应的账户重新登录。
 </p>
 
 <p>
-  If you wish to sign up for a new account, please select a username
-  and verify the other details:
+  如果您希望注册一个新账户，请选择一个用户名并确认其他信息：
 </p>
 {% endblock %}
 
 {%block post_form%}
 <p>
-  <a href="?do_abort=1"><button>Cancel signup and log in with another account</button></a>
+  <a href="?do_abort=1"><button>取消注册并使用其他账户登录</button></a>
 </p>
 {%endblock%}

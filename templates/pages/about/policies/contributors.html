@@ -1,111 +1,78 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}Recognized Contributors Policy{%endblock%}
+{%block title%}认可贡献者政策{%endblock%}
 {%block contents%}
 
-<h1>Recognized Contributors Policy <i class="fas fa-gavel"></i></h1>
+<h1>认可贡献者政策 <i class="fas fa-gavel"></i></h1>
 
 <p>
-  The PostgreSQL <a href="/community/contributors/">Contributor Profiles</a>
-  page includes people who have made substantial, long-term contributions of
-  time and effort to the PostgreSQL project. One-time-only or short-term
-  contributions are not usually considered adequate for listing, unless they
-  involve quite large amounts of code and time.
+  PostgreSQL <a href="/community/contributors/">贡献者简介</a>页面列出了对 PostgreSQL 项目做出了实质性、长期时间和精力贡献的人员。一次性或短期的贡献通常不被视为足以列入，除非涉及相当大量的代码和时间。
 </p>
 
 <p>
-  For a list of all code contributions to a specific release, see the
-  <a href="/docs/release/">Release Notes</a> for released versions of
-  PostgreSQL.
+  有关特定版本的所有代码贡献列表，请参阅已发布的 PostgreSQL 版本的<a href="/docs/release/">发行说明</a>。
 </p>
 
 <p>
-  Financial contributions get listed on the
-  <a href="/about/sponsors/">Sponsors</a> pages, not here.
+  资金贡献列在<a href="/about/sponsors/">赞助商</a>页面上，而非此处。
 </p>
 
-<h2>Contributors levels</h2>
+<h2>贡献者级别</h2>
 
-<h3>Current Contributors</h3>
+<h3>当前贡献者</h3>
 <p>
-  The <a href="/community/contributors/">Contributor Profiles</a> page
-  lists Core Team members and two levels of PostgreSQL Contributors:
+  <a href="/community/contributors/">贡献者简介</a>页面列出了核心团队成员以及两个级别的 PostgreSQL 贡献者：
 </p>
 <ul>
-  <li><strong>Core Team</strong>: people on the
-      <a href="/developer/core/">PostgreSQL Core Team</a>
+  <li><strong>核心团队</strong>：<a href="/developer/core/">PostgreSQL 核心团队</a>的成员
   </li>
-  <li><strong>Major Contributors</strong>: individuals who have provided
-      a sustained stream of contributions, having substantial positive
-      impact on the development of the PostgreSQL Community, over many years.
+  <li><strong>重要贡献者</strong>：多年来持续提供贡献、对 PostgreSQL 社区发展产生重大积极影响的个人。
   </li>
-  <li><strong>Significant Contributors</strong>: individuals who have provided a sustained
-       stream of notable contributions in recent years.
+  <li><strong>显著贡献者</strong>：近年来持续提供显著贡献的个人。
   </li>
 </ul>
 
-<h3>Past Contributors</h3>
+<h3>往届贡献者</h3>
 <p>
-  This section lists people who were in the Core Team, Major Contributor,
-  or Significant Contributor sections, but who have stepped down or stopped
-  contributing for an extended period of time.
+  本节列出曾在核心团队、重要贡献者或显著贡献者部分中出现，但已退出或长期停止贡献的人员。
 </p>
 <ul>
-  <li><strong>Past Major Contributors</strong>: previous Major Contributors and
-    previous Core Team members</li>
-  <li><strong>Past Contributors</strong>: previous Significant Contributors</li>
+  <li><strong>往届重要贡献者</strong>：前重要贡献者和前核心团队成员</li>
+  <li><strong>往届贡献者</strong>：前显著贡献者</li>
 </ul>
 
-<h2>Types of Contributions</h2>
+<h2>贡献类型</h2>
 
 <p>
-  Contributions to the PostgreSQL Project that may be considered by the
-  committee include, but are not limited to:
+  委员会可能考虑的对 PostgreSQL 项目的贡献包括但不限于：
 </p>
 <ul>
-  <li>Code: Author, review, test, and/or commit patches that are pushed
-      to the primary PostgreSQL git repository, and/or to closely related
-      external projects such as PostGIS, pgjdbc, PGAdmin</li>
-  <li>Translation: user facing messages in source code, documentation</li>
-  <li>Community mailing list participation: report bugs, suggest features,
-      contribute to ongoing discussions, answer questions, list moderation</li>
-  <li>Governance of the PostgreSQL project or community recognized NPOs:
-      Core Team, NPO Board of Directors, NPO Officers, NPO Committees</li>
-  <li>Maintenance and operation of community controlled infrastructure:
-      Sysadmin Team, Web Team</li>
-  <li>Other Community recognized committee participation:
-      Security, Code of Conduct</li>
-  <li>Management of the development process and software lifecycle:
-      Commitfest managers, Release Management Team, Release Team,
-      Packagers, Buildfarm animal maintenance</li>
-  <li>Organization and execution of community recognized conferences:
-      Organizing committee, Selection Committee, Speakers, Volunteers</li>
-  <li>Open Education: PostgreSQL related Blogs, articles, uncompensated
-      training/tutorials</li>
-  <li>Open Support (in addition to community mailing lists):
-      #postgresql IRC channel, Postgres slack channel, Stack Overflow
+  <li>代码：编写、审查、测试和/或提交推送到 PostgreSQL 主 git 仓库以及/或密切相关的外部项目（如 PostGIS、pgjdbc、PGAdmin）的补丁</li>
+  <li>翻译：源代码中面向用户的消息、文档</li>
+  <li>社区邮件列表参与：报告 bug、建议功能、参与正在进行的讨论、回答问题、列表管理</li>
+  <li>PostgreSQL 项目或社区认可的 NPO 的治理：核心团队、NPO 董事会、NPO 官员、NPO 委员会</li>
+  <li>社区控制的基础设施的维护和运营：系统管理团队、网站团队</li>
+  <li>其他社区认可的委员会参与：安全委员会、行为准则委员会</li>
+  <li>开发流程和软件生命周期管理：Commitfest 管理者、发布管理团队、发布团队、打包者、Buildfarm 动物维护</li>
+  <li>社区认可的会议的组织和执行：组织委员会、选拔委员会、演讲者、志愿者</li>
+  <li>开放教育：PostgreSQL 相关的博客、文章、无偿培训/教程</li>
+  <li>开放支持（社区邮件列表之外）：#postgresql IRC 频道、Postgres slack 频道、Stack Overflow
   </li>
 </ul>
-<p> If there is a type of contribution that you feel should be listed here or
-  expanded upon, email
-  <a href="mailto:contributors@postgresql.org">contributors@postgresql.org</a>.
+<p>如果您认为有某种类型的贡献应在此列出或进一步说明，请发送邮件至
+  <a href="mailto:contributors@postgresql.org">contributors@postgresql.org</a>。
 </p>
 
-<h2>Nominating New Recognized Contributors</h2>
+<h2>提名新的认可贡献者</h2>
 <p>
-  If you want to nominate a PostgreSQL contributor who you think is making sustained
-  contributions of the type described here, email a description of their
-  contributions to the
-  <a href="/about/governance/contributors/">Contributors Committee</a> at
-  <a href="mailto:contributors@postgresql.org">contributors@postgresql.org</a>.
+  如果您想提名一位您认为正在做出此处所述类型的持续贡献的 PostgreSQL 贡献者，请将其贡献描述通过电子邮件发送给
+  <a href="/about/governance/contributors/">贡献者委员会</a>，邮箱为
+  <a href="mailto:contributors@postgresql.org">contributors@postgresql.org</a>。
 </p>
 
-<h2>Contributors Committee Governance</h2>
+<h2>贡献者委员会治理</h2>
 <p>
-  The governance of the 
-  <a href="/about/governance/contributors/">Contributors Committee</a> is
-  described on the <a href="/about/governance/contributors/">Contributors Committee</a>
-  page.
+  <a href="/about/governance/contributors/">贡献者委员会</a>的治理在<a href="/about/governance/contributors/">贡献者委员会</a>页面上有详细说明。
 </p>
 
 {%endblock%}

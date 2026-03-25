@@ -1,127 +1,112 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}Recognised PostgreSQL User Groups{%endblock%}
+{%block title%}认可的 PostgreSQL 用户组{%endblock%}
 {%block contents%}
 
-<h1>Recognised PostgreSQL User Groups <i class="fas fa-gavel"></i></h1>
+<h1>认可的 PostgreSQL 用户组 <i class="fas fa-gavel"></i></h1>
 
-<p><em>Last updated: November 19, 2020 {%git_changes_link%}</em></p>
+<p><em>最后更新：2020年11月19日 {%git_changes_link%}</em></p>
 
 <p>
-  Recognised PostgreSQL User Groups, aka "PUGs", may
-  be listed on the <a href="/community/user-groups/">PostgreSQL Website</a> as
-  such. To become recognised as PostgreSQL User Group, the user group must
-  self-certify that they meet the criteria below, aimed at ensuring they meet
-  the standards of openness expected in the PostgreSQL Community.
+  认可的 PostgreSQL 用户组，又称"PUG"，可以作为
+  <a href="/community/user-groups/">PostgreSQL 网站</a>上的认可用户组列出。
+  要成为认可的 PostgreSQL 用户组，用户组必须自我证明其满足以下标准，
+  这些标准旨在确保其达到 PostgreSQL 社区期望的开放性要求。
 </p>
 
 <p>
-  Use of the terms "MAY", "MUST", "MUST NOT", "SHOULD" and "SHOULD NOT" in the
-  criteria below should be interpreted per
-  <a href="https://www.ietf.org/rfc/rfc2119.txt" target="_blank" rel="noopener">RFC2119</a>,
-  where:
+  以下标准中"MAY"、"MUST"、"MUST NOT"、"SHOULD"和"SHOULD NOT"等术语的使用
+  应按照 <a href="https://www.ietf.org/rfc/rfc2119.txt" target="_blank" rel="noopener">RFC2119</a>
+  进行解释，其中：
 </p>
 
 <ul>
-  <li>MUST and MUST NOT are requirements, and</li>
-  <li>MAY, SHOULD, and SHOULD NOT are optional, recommended guidelines.</li>
+  <li>MUST 和 MUST NOT 是强制性要求，</li>
+  <li>MAY、SHOULD 和 SHOULD NOT 是可选的推荐指南。</li>
 </ul>
 
-<h3>General</h3>
+<h3>一般规定</h3>
 
 <ul>
   <li>
-    The PostgreSQL User Group MUST be primarily focused on PostgreSQL and
-    related technologies. PostgreSQL User Groups that target a broad range of
-    database products are not eligible as PostgreSQL User Groups.
+    PostgreSQL 用户组必须（MUST）主要专注于 PostgreSQL 及相关技术。
+    以广泛的数据库产品为目标的 PostgreSQL 用户组不具备成为 PostgreSQL 用户组的资格。
   </li>
   <li>
-    PostgreSQL User Groups are for the entire PostgreSQL community and are
-    public in nature. There MUST NOT be any requirement of a Non-Disclosure
-    Agreement (NDA) or similar contract for an attendee to attend the Meetup.
+    PostgreSQL 用户组面向整个 PostgreSQL 社区，且具有公开性质。
+    参加聚会不得（MUST NOT）要求签署保密协议（NDA）或类似合同。
   </li>
   <li>
-    The PostgreSQL User Group MUST adopt and follow an appropriate Code of
-    Conduct to ensure a safe and enjoyable environment for anyone who wishes to
-    participate.
+    PostgreSQL 用户组必须（MUST）采纳并遵循适当的行为准则，
+    以确保为所有希望参与的人提供安全、愉快的环境。
     <ul>
       <li>
-        The PostgreSQL User Group SHOULD adopt the
-        <a href="/about/policies/coc/">PostgreSQL Code of Conduct</a>.
+        PostgreSQL 用户组应当（SHOULD）采纳
+        <a href="/about/policies/coc/">PostgreSQL 行为准则</a>。
       </li>
     </ul>
   </li>
   <li>
-    The PostgreSQL User Group MUST have at least one event every two calendar
-    years in order to maintain its recognition as a PostgreSQL User Group.
+    PostgreSQL 用户组必须（MUST）每两个日历年至少举办一次活动，
+    以维持其作为 PostgreSQL 用户组的认可状态。
   </li>
   <li>
-    The <a href="/developer/core/">PostgreSQL Core Team</a> reserves the right
-    to recognise, not recognise, or rescind a previous recognition for any
-    PostgreSQL User Group without justification.
+    <a href="/developer/core/">PostgreSQL 核心团队</a>保留对任何
+    PostgreSQL 用户组进行认可、不予认可或撤销先前认可的权利，且无需说明理由。
   </li>
-  <li>These criteria MAY be reviewed and potentially updated at any time.</li>
+  <li>这些标准可以（MAY）随时审查并可能更新。</li>
 </ul>
 
-<h3>Organisers</h3>
+<h3>组织者</h3>
 
 <ul>
-  <li>The PostgreSQL User Group Organizers MUST be individuals.</li>
+  <li>PostgreSQL 用户组的组织者必须（MUST）是个人。</li>
   <li>
-    The PostgreSQL User Group Organizers MUST be listed on the membership site
-    for the PostgreSQL User Group.
+    PostgreSQL 用户组的组织者必须（MUST）在用户组的成员网站上列出。
   </li>
   <li>
-    The PostgreSQL User Group Organizers SHOULD NOT consist of 50% or more of
-    the same company or group of companies under the same ultimate ownership or
-    management.
+    PostgreSQL 用户组的组织者不应（SHOULD NOT）有50%或以上来自同一公司
+    或在同一最终所有权或管理层下的一组公司。
   </li>
 </ul>
 
-<h3>Events</h3>
+<h3>活动</h3>
 
 <ul>
   <li>
-    Anyone MAY submit a PostgreSQL-related talk proposal. The Organizers SHOULD
-    choose to accept or reject the talk proposal based on a simple majority
-    vote.
+    任何人都可以（MAY）提交 PostgreSQL 相关的演讲提案。
+    组织者应当（SHOULD）通过简单多数投票来选择接受或拒绝演讲提案。
   </li>
   <li>
-    Anyone MAY offer to host a PostgreSQL User Group. The meeting space SHOULD
-    be in the region represented by the PostgreSQL User Group. The Organizers
-    SHOULD choose to accept or reject the space based on a simple majority vote.
+    任何人都可以（MAY）提供 PostgreSQL 用户组的举办场地。
+    聚会场所应当（SHOULD）位于该 PostgreSQL 用户组所代表的地区内。
+    组织者应当（SHOULD）通过简单多数投票来选择接受或拒绝场地。
   </li>
   <li>
-    A Speaker MUST disclose in advance if the primary content of their talk
-    involves a closed-source product or a project that is not directly related
-    to PostgreSQL.
+    演讲者必须（MUST）提前披露其演讲的主要内容是否涉及闭源产品或与
+    PostgreSQL 无直接关系的项目。
   </li>
   <li>
-    Organizations MAY promote their business at a PostgreSQL User Group event
-    if:
+    组织可以（MAY）在 PostgreSQL 用户组活动中推广其业务，条件是：
     <ul>
       <li>
-        Their business SHOULD help drive further adoption of PostgreSQL AND
+        其业务应当（SHOULD）有助于推动 PostgreSQL 的进一步采用，且
       </li>
       <li>
-        Any content presented at the PostgreSQL User Group MUST be technical in
-        nature.
+        在 PostgreSQL 用户组中展示的任何内容必须（MUST）是技术性质的。
       </li>
     </ul>
   </li>
 </ul>
 
-<h3>Sponsorship</h3>
+<h3>赞助</h3>
 
 <ul>
   <li>
-    The PostgreSQL User Group group MUST disclose on its web page any
-    organizations that provide financial or in-kind sponsorship to the Community
-    User Group.
+    PostgreSQL 用户组必须（MUST）在其网页上披露向社区用户组提供资金或实物赞助的任何组织。
   </li>
   <li>
-    The PostgreSQL User Group SHOULD mention any Sponsors in the introductions
-    of the user group meeting.
+    PostgreSQL 用户组应当（SHOULD）在用户组聚会的介绍中提及任何赞助商。
   </li>
 </ul>
 {%endblock%}

@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
 
-{% block title %}Documentation: {{page.display_version}}: {{page.title}}{% endblock %}
+{% block title %}文档：{{page.display_version}}：{{page.title}}{% endblock %}
 
 {% block extrahead %}
 {%if not page.version.supported%}  <meta name="robots" content="nofollow" />{%endif%}
@@ -18,18 +18,18 @@
               <div class="row">
                 <div class="col">
                   <div>
-                    <a href="/docs/" title="Documentation">Documentation</a> &rarr; <a href="/docs/{{page.display_version}}/{{doc_index_filename}}">PostgreSQL {{page.display_version}}</a>{%if loaddate%} ({{loaddate|date:"Y-m-d H:i:s"}}{%if loadgit%} - git commit <a href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h={{loadgit}}">{{loadgit}}</a>{%endif%}){%endif%}
+                    <a href="/docs/" title="文档">文档</a> &rarr; <a href="/docs/{{page.display_version}}/{{doc_index_filename}}">PostgreSQL {{page.display_version}}</a>{%if loaddate%} ({{loaddate|date:"Y-m-d H:i:s"}}{%if loadgit%} - git commit <a href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h={{loadgit}}">{{loadgit}}</a>{%endif%}){%endif%}
                   </div>
                 </div>
               </div>
               {% if supported_versions %}
                 <div class="row">
                   <div class="col">
-                    Supported Versions:
+                    受支持版本：
                       {% for ver in supported_versions %}
                         {% if not forloop.first %} / {% endif %}
                         {% if ver.version.current %}
-                          <a href="/docs/current/{{ver.file}}" title="PostgreSQL {{ver.display_version}} - {{page.title}}" {% if ver.version == page.version %}class="docs-version-selected"{% endif %}>Current</a>
+                          <a href="/docs/current/{{ver.file}}" title="PostgreSQL {{ver.display_version}} - {{page.title}}" {% if ver.version == page.version %}class="docs-version-selected"{% endif %}>当前版本</a>
                           (<a href="/docs/{{ver.display_version}}/{{ver.file}}" title="PostgreSQL {{ver.display_version}} - {{page.title}}" {% if ver.version == page.version %}class="docs-version-selected"{% endif %}>{{ver.display_version}}</a>)
                         {% else %}
                           <a href="/docs/{{ver.display_version}}/{{ver.file}}" title="PostgreSQL {{ver.display_version}} - {{page.title}}" {% if ver.version == page.version %}class="docs-version-selected"{% endif %}>{{ver.display_version}}</a>
@@ -41,7 +41,7 @@
               {% if devel_versions %}
                 <div class="row">
                   <div class="col">
-                    Development Versions:
+                    开发版本：
                     {% for ver in devel_versions %}
                       {% if not forloop.first %} / {% endif %}
                       <a href="/docs/{{ver.display_version}}/{{ver.file}}" title="PostgreSQL {{ver.display_version}} - {{page.title}}" {% if ver.version == page.version %}class="docs-version-selected"{% endif %} rel="nofollow">{{ver.display_version}}</a>
@@ -52,7 +52,7 @@
               {% if unsupported_versions %}
                 <div class="row">
                   <div class="col-12">
-                    Unsupported versions:
+                    不受支持的版本：
                     {% for ver in unsupported_versions %}
                       {% if not forloop.first %} / {% endif %}
                       <a href="/docs/{{ver.display_version}}/{{ver.file}}" title="PostgreSQL {{ver.display_version}} - {{page.title}}" {% if ver.version == page.version %}class="docs-version-selected"{% endif %} rel="nofollow">{{ver.display_version}}</a>
@@ -65,7 +65,7 @@
               <form id="docSearchForm" role="search" method="get" action="/search/">
                 <input type="hidden" name="u" value="/docs/{{page.display_version}}/" />
                 <div class="input-group">
-                  <input type="text" id="q" name="q" class="form-control" placeholder="Search the documentation for..."/>
+                  <input type="text" id="q" name="q" class="form-control" placeholder="搜索文档..."/>
                   <span class="input-group-btn">
                     <button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
                   </span>
@@ -75,10 +75,8 @@
           </div>
 {%if not page.version.supported%}
 	  <div class="text-center alert-warning">
-	    This documentation is for an unsupported version of PostgreSQL.<br/>
-	    You may want to view the same page for the
-	    <a href="/docs/current/{{page.file}}" title="PostgreSQL {{page.version.display_version}} - {{page.title}}">current</a>
-	    version, or one of the other supported versions listed above instead.
+	    此文档适用于不受支持的 PostgreSQL 版本。<br/>
+	    您可能需要查看<a href="/docs/current/{{page.file}}" title="PostgreSQL {{page.version.display_version}} - {{page.title}}">当前版本</a>的相同页面，或上面列出的其他受支持版本。
 	  </div>
 {%endif%}
           <div id="docContent">
@@ -86,13 +84,9 @@
           </div>
           {% if page.version.supported %}
             <div id="docComments">
-              <h2>Submit correction</h2>
+              <h2>提交更正</h2>
               <p>
-              If you see anything in the documentation that is not correct, does not match
-              your experience with the particular feature or requires further clarification,
-              please use
-              <a href="/account/comments/new/{{page.version.numtree|default:"devel"}}/{{page.file}}/" rel="nofollow">this form</a>
-              to report a documentation issue.
+              如果您发现文档中有不正确的内容、与您使用特定功能的经验不符或需要进一步说明，请使用<a href="/account/comments/new/{{page.version.numtree|default:"devel"}}/{{page.file}}/" rel="nofollow">此表单</a>来报告文档问题。
               </p>
             </div>
           {% endif %}

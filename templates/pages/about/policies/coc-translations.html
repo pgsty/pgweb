@@ -1,65 +1,52 @@
 {%extends "base/cocpage.html"%}
 {%load pgfilters%}
-{%block title%}Code of Conduct Translation &amp; Approval Process{%endblock%}
+{%block title%}行为准则翻译与审批流程{%endblock%}
 {%block cocmain%}
 
-<h1>Code of Conduct Translation &amp; Approval Process <i class="fas fa-gavel"></i></h1>
+<h1>行为准则翻译与审批流程 <i class="fas fa-gavel"></i></h1>
 
-<p><em>Last updated: February 26, 2021. {%git_changes_link%}</em></p>
+<p><em>最后更新：2021年2月26日。{%git_changes_link%}</em></p>
 
 <p>
-  The PostgreSQL <a href="/about/policies/coc_committee/">Code of Conduct Committee</a>
-  manages the process for approving translations of the <a href="/about/policies/coc/">Code of Conduct</a>
-  from English into other languages, and for updating the translations when the
-  policy is revised.
+  PostgreSQL <a href="/about/policies/coc_committee/">行为准则委员会</a>负责管理将<a href="/about/policies/coc/">行为准则</a>从英语翻译成其他语言的审批流程，以及在政策修订时更新翻译。
 </p>
 
 <ol>
   <li>
-    The proposed translation should be reviewed by at least one other fluent
-    speaker of the language prior to submitting it to the Committee.
+    在提交给委员会之前，拟议的翻译应至少由另一位该语言的流利使用者审阅。
   </li>
   <li>
-    The proposed translation is sent to the Committee
-    (<a href="mailto:coc@postgresql.org">coc@postgresql.org</a>) as follows:
+    拟议的翻译应按照以下方式发送给委员会（<a href="mailto:coc@postgresql.org">coc@postgresql.org</a>）：
     <ul>
-      <li>The document should be submitted as both .txt and .pdf</li>
-      <li>The email should include the name(s) of the initial translator(s)</li>
-      <li>The email should include the name(s) of the reviewer(s)</li>
+      <li>文件应同时以 .txt 和 .pdf 格式提交</li>
+      <li>邮件应包含初始翻译者的姓名</li>
+      <li>邮件应包含审阅者的姓名</li>
     </ul>
   </li>
   <li>
-    The Committee will review the information, and contact the submitter for any
-    additional information needed.
+    委员会将审查相关信息，并联系提交者获取所需的任何补充信息。
   </li>
   <li>
-    Once the Committee has completed its review, the translation is submitted
-    for discussion to the ~general list, with a one week deadline for comments.
+    委员会完成审查后，翻译将提交至 ~general 邮件列表进行讨论，评论截止期为一周。
   </li>
   <li>
-    Any comments or suggestions for revisions are sent to the submitter for
-    consideration. If an updated version is needed, the updated version would be
-    posted to the <a href="mailto:pgsql-general@lists.postgresql.org">pgsql-general</a>
-    mailing list for a one week comment period.
+    任何评论或修改建议将发送给提交者供其考虑。如果需要更新版本，更新版本将发布到
+    <a href="mailto:pgsql-general@lists.postgresql.org">pgsql-general</a>
+    邮件列表，评论期为一周。
   </li>
   <li>
-    If there are no comments or revisions to make, the translation is sent to
-    <a href="mailto:pgsql-general@lists.postgresql.org">pgsql-www</a> to be
-    added to the website.
+    如果没有评论或需要修改的内容，翻译将发送至
+    <a href="mailto:pgsql-general@lists.postgresql.org">pgsql-www</a> 以添加到网站。
   </li>
   <li>
-    Once the new translation is posted, the Committee posts a message to the
-    <a href="/about/newsarchive/">PostgreSQL news announcements</a>.
+    新翻译发布后，委员会将在
+    <a href="/about/newsarchive/">PostgreSQL 新闻公告</a>中发布消息。
   </li>
   <li>
-    The Committee maintains a list of all current translations, and will work
-    with the original translators to update the policy as needed. If the
-    original translator is unavailable to do the update, the Committee will
-    post for a volunteer to do so.
+    委员会维护所有当前翻译的列表，并将与原始翻译者合作，根据需要更新政策。如果原始翻译者无法进行更新，委员会将发布志愿者招募信息。
   </li>
   <li>
-    Out-of-date policies will be marked as such on the website while the
-    updates are pending.
+    在更新待处理期间，过时的政策将在网站上标注为过时。
   </li>
 </ol>
 {%endblock%}

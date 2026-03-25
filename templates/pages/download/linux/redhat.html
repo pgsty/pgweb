@@ -1,13 +1,13 @@
 {%extends "base/page.html"%}
-{%block title%}Linux downloads (Red Hat family){%endblock%}
+{%block title%}Linux 下载（Red Hat 系列）{%endblock%}
 {%block extrahead%}
 <script type="text/javascript" src="/download/js/yum.js?{{gitrev}}"></script>
 {%endblock%}
 {%block contents%}
 
-<h1>Linux downloads (Red Hat family) <img class="logo" src="/media/img/redhat.svg" alt="Red Hat Logo" /></h1>
+<h1>Linux 下载（Red Hat 系列） <img class="logo" src="/media/img/redhat.svg" alt="Red Hat Logo" /></h1>
 <p>
-The Red Hat family of distributions includes:
+Red Hat 系列发行版包括：
 </p>
 <p>
   <ul>
@@ -17,26 +17,22 @@ The Red Hat family of distributions includes:
     <li>Fedora</li>
   </ul>
 </p>
-<p>and others.</p>
+<p>以及其他。</p>
 <p>
-PostgreSQL is available on these platforms by default. However,
-each version of the platform normally "snapshots" a specific version of
-PostgreSQL that is then supported throughout the lifetime of this platform.
-Since this can often mean a different version than preferred, the PostgreSQL
-project provides a <a href="#yum">repository</a> of packages of all
-supported versions for the most common distributions.
+这些平台默认提供 PostgreSQL。但是，每个版本的平台通常会"快照"一个特定版本的
+PostgreSQL，并在该平台的整个生命周期内提供支持。
+由于这通常意味着提供的版本并非用户所需，PostgreSQL
+项目为最常见的发行版提供了一个包含所有受支持版本的<a href="#yum">软件包仓库</a>。
 </p>
 
 <a name="yum"></a>
 <h2>PostgreSQL Yum Repository</h2>
 <p>
-The <a href="https://yum.postgresql.org" target="_blank" rel="noopener">PostgreSQL Yum Repository</a> will integrate
-with your normal systems and patch management, and provide automatic
-updates for all supported versions of PostgreSQL throughout the support
-<a href="/support/versioning/">lifetime</a> of PostgreSQL.
+<a href="https://yum.postgresql.org" target="_blank" rel="noopener">PostgreSQL Yum Repository</a> 将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持
+<a href="/support/versioning/">生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
 </p>
 <p>
-The PostgreSQL Yum Repository currently supports:
+PostgreSQL Yum Repository 目前支持：
 </p>
 <p>
   <ul>
@@ -46,23 +42,21 @@ The PostgreSQL Yum Repository currently supports:
     <li>Fedora<sup>*</sup></li>
   </ul>
 </p>
-<p><strong><sup>*</sup>Note</strong>: due to the shorter support cycle
-on Fedora, all supported versions of PostgreSQL are not available on this platform. We do not recommend
-using Fedora for server deployments.
+<p><strong><sup>*</sup>注意</strong>：由于 Fedora 的支持周期较短，并非所有受支持的 PostgreSQL 版本都能在该平台上使用。我们不建议将 Fedora 用于服务器部署。
 </p>
 <p>
-The PostgreSQL Yum Repository recently <a href="https://yum.postgresql.org/news/postgresql-rpms-multiple-rhel-minor-versions/" target="blank">supports
-the last two minor releases of RHEL and its derivatives</a>, like RHEL 10.0
-and 10.1.
+PostgreSQL Yum Repository 最近开始<a href="https://yum.postgresql.org/news/postgresql-rpms-multiple-rhel-minor-versions/" target="blank">支持
+RHEL 及其衍生发行版的最近两个小版本</a>，例如 RHEL 10.0
+和 10.1。
 </p>
 <p>
-To use the PostgreSQL Yum Repository, follow these steps:
+要使用 PostgreSQL Yum Repository，请按以下步骤操作：
 </p>
 <ol>
-  <li>Select platform: <select id="platform" class="custom-select"></select></li>
-  <li>Select architecture: <select id="arch" class="custom-select"></select></li>
-  <li>Select version: <select id="version" class="custom-select"></select><br/></li>
-  <li>Copy, paste and run the relevant parts of the setup script:
+  <li>选择平台： <select id="platform" class="custom-select"></select></li>
+  <li>选择架构： <select id="arch" class="custom-select"></select></li>
+  <li>选择版本： <select id="version" class="custom-select"></select><br/></li>
+  <li>复制、粘贴并运行安装脚本的相关部分：
     <div class="pg-script-container">
         <pre id="script-box" class="code"></pre>
         <button id="copy-btn-root" class="pg-script-copy-btn pg-script-copy-btn-root" title="Copy to clipboard (without sudo, for root)"><i class="fas fa-terminal"></i></button>
@@ -71,10 +65,10 @@ To use the PostgreSQL Yum Repository, follow these steps:
   </li>
 </ol>
 
-<h2>Included in Distribution</h2>
+<h2>发行版自带</h2>
 <p>
-These distributions all include PostgreSQL by default. To install
-PostgreSQL from these repositories, use the <var>dnf</var> command on RHEL and Fedora:
+这些发行版默认都包含 PostgreSQL。要从这些仓库安装
+PostgreSQL，请在 RHEL 和 Fedora 上使用 <var>dnf</var> 命令：
 </p>
 <p>
 <code>
@@ -82,14 +76,13 @@ dnf install postgresql-server
 </code>
 </p>
 <p>
-Which version of PostgreSQL you get will depend on the version of
-the distribution:
+您获得的 PostgreSQL 版本取决于发行版的版本：
 </p>
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Distribution</th>
-      <th>Version</th>
+      <th>发行版</th>
+      <th>版本</th>
     </tr>
   </thead>
   <tbody>
@@ -116,43 +109,38 @@ the distribution:
   </tbody>
 </table>
 <p>
-Other Red Hat family distributions may ship a different version of
-PostgreSQL by default, check with your distribution vendor to be sure.
+其他 Red Hat 系列发行版可能默认提供不同版本的
+PostgreSQL，请向您的发行版供应商确认。
 </p>
 
 <p>
-The repository contains many different packages including third party
-addons. The most common and important packages are (substitute the
-version number as required):
+该仓库包含许多不同的软件包，包括第三方扩展。最常见和最重要的软件包如下（请根据需要替换版本号）：
 </p>
 <table class="table table-striped">
   <tbody>
     <tr>
      <th scope="row">postgresql-client</th>
-     <td>libraries and client binaries</td>
+     <td>客户端库和客户端程序</td>
     </tr>
     <tr>
      <th scope="row">postgresql-server</th>
-     <td>core database server</td>
+     <td>核心数据库服务器</td>
     </tr>
     <tr>
      <th scope="row">postgresql-contrib</th>
-     <td>additional supplied modules</td>
+     <td>额外提供的模块</td>
     </tr>
     <tr>
      <th scope="row">postgresql-devel</th>
-     <td>libraries and headers for C language development</td>
+     <td>C 语言开发库和头文件</td>
     </tr>
   </tbody>
 </table>
 
-<h3>Post-installation</h3>
+<h3>安装后配置</h3>
 <p>
-Due to policies for Red Hat family distributions, the PostgreSQL installation
-will not be enabled for automatic start or have the database initialized
-automatically. To make your database installation complete, you need to
-perform the following steps, based on your distribution:
-<h4>For RHEL / Rocky Linux / AlmaLinux 10, 9, 8 or Fedora 41 and later derived distributions:</h4>
+由于 Red Hat 系列发行版的策略，PostgreSQL 安装后不会自动启用开机启动，数据库也不会自动初始化。要完成数据库安装，您需要根据您的发行版执行以下步骤：
+<h4>适用于 RHEL / Rocky Linux / AlmaLinux 10、9、8 或 Fedora 41 及更高版本的衍生发行版：</h4>
 <pre class="code">
   postgresql-setup --initdb
   systemctl enable postgresql.service
@@ -160,11 +148,10 @@ perform the following steps, based on your distribution:
 </pre>
 </p>
 
-<h2>Direct RPM download</h2>
+<h2>直接下载 RPM</h2>
 <p>
-If you cannot, or do not want to, use the yum based installation method,
-all the RPMs that are in the yum repository are available for
-<a href="https://yum.postgresql.org/rpmchart/">direct download</a>
-and manual installation as well.
+如果您无法或不想使用基于 yum 的安装方式，yum 仓库中的所有 RPM 包也可以
+<a href="https://yum.postgresql.org/rpmchart/">直接下载</a>
+并手动安装。
 </p>
 {%endblock%}

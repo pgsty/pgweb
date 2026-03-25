@@ -10,15 +10,15 @@
 {{ security_patch.details|markdown }}
 {% endif %}
 
-<h2>Version Information</h2>
+<h2>版本信息</h2>
 
 <table class="table">
   <thead>
     <tr>
-      <th>Affected Version</th>
-      <th>Fixed In</th>
+      <th>影响版本</th>
+      <th>修复于</th>
       {% if security_patch.newspost %}
-      <th>Fix Published</th>
+      <th>修复发布</th>
       {% endif %}
   </thead>
   <tbody>
@@ -53,8 +53,7 @@
 </table>
 
 <p>
-  For more information about <a href="/support/versioning/">PostgreSQL versioning</a>,
-  please visit the <a href="/support/versioning/">versioning page</a>.
+  有关 <a href="/support/versioning/">PostgreSQL 版本策略</a>的更多信息，请访问<a href="/support/versioning/">版本策略页面</a>。
 </p>
 
 {% if security_patch.cvssscore >= 0 %}
@@ -63,15 +62,15 @@
 <table class="table">
   <tbody>
     <tr>
-      <th>Overall Score</th>
+      <th>总分</th>
       <td><strong>{{ security_patch.cvssscore }}</strong></td>
     </tr>
     <tr>
-      <th>Component</th>
+      <th>组件</th>
       <td>{{ security_patch.component }}</td>
     </tr>
     <tr>
-      <th>Vector</th>
+      <th>向量</th>
       <td>
         <a href="https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector={{ security_patch.cvssvector }}&version=3.0" target="_blank" rel="noopener noreferer">
           {{ security_patch.cvssvector }}
@@ -82,15 +81,14 @@
 </table>
 {% endif %}
 
-<h2>Reporting Security Vulnerabilities</h2>
+<h2>报告安全漏洞</h2>
 
 <p>
-  If you wish to report a new security vulnerability in PostgreSQL, please
-  send an email to
-  <a href="mailto:security@postgresql.org">security@postgresql.org</a>.
+  如果您希望报告 PostgreSQL 中的新安全漏洞，请发送电子邮件至
+  <a href="mailto:security@postgresql.org">security@postgresql.org</a>。
 </p>
 
 <p>
-  For reporting non-security bugs, please see the <a href="/account/submitbug/">Report a Bug</a> page.
+  如需报告非安全性 Bug，请参阅<a href="/account/submitbug/">报告 Bug</a> 页面。
 </p>
 {%endblock%}

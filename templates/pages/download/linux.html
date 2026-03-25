@@ -1,27 +1,24 @@
 {%extends "base/page.html"%}
-{%block title%}Linux downloads (other){%endblock%}
+{%block title%}Linux 下载（其他）{%endblock%}
 {%block contents%}
 
-<h1>Linux downloads <img class="logo" src="/media/img/linux.svg" alt="Linux Logo" /></h1>
+<h1>Linux 下载 <img class="logo" src="/media/img/linux.svg" alt="Linux Logo" /></h1>
 <p>
-Please select your distribution below:
+请选择您的发行版：
 </p>
 
 <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/debian/">Debian<br/><img class="logo" src="/media/img/debian.svg" alt="Debian Logo" /></a>
 <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/redhat">Red Hat/Rocky/AlmaLinux<br/><img class="logo" src="/media/img/redhat.svg" alt="Red Hat Logo" /></a>
 <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/suse">SUSE<br/><img class="logo" src="/media/img/suse.png" alt="SUSE Logo" /></a>
 <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/ubuntu">Ubuntu<br/><img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu Logo" /></a>
-<a role="button" class="btn btn-outline-dark btn-download" href="#generic">Other Linux<br/><img class="logo" src="/media/img/linux.svg" alt="Linux Logo" /></a>
+<a role="button" class="btn btn-outline-dark btn-download" href="#generic">其他 Linux<br/><img class="logo" src="/media/img/linux.svg" alt="Linux Logo" /></a>
 
 <a name="generic"></a>
-<h2>Generic linux distributions</h2>
+<h2>通用 Linux 发行版</h2>
 <p>
-PostgreSQL is available integrated with the package management on most
-Linux platforms. When available, this is the recommended way to install
-PostgreSQL, since it provides proper integration with the operating system,
-including automatic patching and other management functionality.
+PostgreSQL 已集成在大多数 Linux 平台的包管理系统中。如果可用，这是推荐的安装方式，因为它能与操作系统正确集成，包括自动补丁更新和其他管理功能。
 </p>
 <p>
-In other cases, most Linux systems also make it easy to build from source.
+在其他情况下，大多数 Linux 系统也可以很方便地从源代码构建。
 </p>
 {%endblock%}

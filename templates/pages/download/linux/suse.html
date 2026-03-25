@@ -1,35 +1,28 @@
 {%extends "base/page.html"%}
-{%block title%}Linux downloads (SUSE){%endblock%}
+{%block title%}Linux 下载（SUSE）{%endblock%}
 {%block contents%}
 
-<h1>Linux downloads (SUSE) <img class="logo" src="/media/img/suse.png" alt="SUSE Logo" /></h1>
+<h1>Linux 下载（SUSE） <img class="logo" src="/media/img/suse.png" alt="SUSE Logo" /></h1>
 <p>
-PostgreSQL is available in all SUSE versions by default. However,
-SUSE Linux "snapshots" a specific version of PostgreSQL
-that is then supported throughout the lifetime of that SUSE version.
+所有 SUSE 版本默认都提供 PostgreSQL。但是，SUSE Linux 会"快照"一个特定版本的 PostgreSQL，并在该 SUSE 版本的整个生命周期内提供支持。
 </p>
 <a name="zypper"></a><h2>PostgreSQL RPM Repository</h2>
 <p>
-This repository will integrate with your normal systems and patch management,
-and provide automatic updates for PostgreSQL 13	+ throughout
-the support <a href="/support/versioning/">lifetime</a> of PostgreSQL.
+该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持<a href="/support/versioning/">生命周期</a>内为 PostgreSQL 13+ 提供自动更新。
 </p>
 <p>
-The PostgreSQL RPM repository currently supports SUSE Enterprise Linux 15 SP7.
-Also PostgreSQL packages are update for SLES 12 SP5.
+PostgreSQL RPM 仓库目前支持 SUSE Enterprise Linux 15 SP7。同时也为 SLES 12 SP5 更新 PostgreSQL 软件包。
 </p>
 <p>
-To use the SUSE RPM repository, please follow these <a href="https://zypp.postgresql.org/howtozypp">instructions</a>.
+要使用 SUSE RPM 仓库，请按照此<a href="https://zypp.postgresql.org/howtozypp">说明</a>操作。
 </p>
 
-<h2>Included in distribution</h2>
+<h2>发行版自带</h2>
 <p>
-RPMs for SUSE Linux and openSUSE are available from the
+SUSE Linux 和 openSUSE 的 RPM 包可从
 <a href="https://build.opensuse.org/" target="_blank" rel="noopener">openSUSE Build Service</a>
-in the project <em>server:database:postgresql</em>.
-Platform-specific RPM packages are available for PostgreSQL
-as well as a variety of related software.
-Use the <a href="https://software.opensuse.org/search" target="_blank" rel="noopener">search facility</a>
-to find suitable packages. Documentation is also available there.
+的 <em>server:database:postgresql</em> 项目中获取。
+提供了针对特定平台的 PostgreSQL RPM 包以及各种相关软件。
+请使用<a href="https://software.opensuse.org/search" target="_blank" rel="noopener">搜索功能</a>查找合适的软件包。文档也可在该处获取。
 </p>
 {%endblock%}

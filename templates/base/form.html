@@ -1,9 +1,9 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}{{operation|default:"Edit"}} {{formitemtype}}{%endblock%}
+{%block title%}{{operation|default:"编辑"}} {{formitemtype}}{%endblock%}
 {%block contents%}
 {%block pre_form_header%}{%endblock%}
-<h1>{% if formtitle %}{{ formtitle|safe }}{% else %}{{operation|default:"Edit"}} {{formitemtype}}{% endif %}</h1>
+<h1>{% if formtitle %}{{ formtitle|safe }}{% else %}{{operation|default:"编辑"}} {{formitemtype}}{% endif %}</h1>
 {%if form_intro%}
 <p>
 {{form_intro|safe}}

@@ -1,108 +1,108 @@
 {%extends "base/page.html"%}
-{%block title%}About{%endblock%}
+{%block title%}关于{%endblock%}
 {%block contents%}
 
-<h1>About <img class="logo" src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo" /></h1>
+<h1>关于 <img class="logo" src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo" /></h1>
 
-<h2>What is PostgreSQL?</h2>
-<p>PostgreSQL is a powerful, open source object-relational database system that uses and extends the SQL language combined with many features that safely store and scale the most complicated data workloads.  The origins of PostgreSQL date back to 1986 as part of the <a href="/docs/current/history.html">POSTGRES</a> project at the University of California at Berkeley and has nearly 40 years of active development on the core platform.</p>
-<p>PostgreSQL has earned a strong reputation for its proven architecture, reliability, data integrity, robust feature set, extensibility, and the dedication of the open source community behind the software to consistently deliver performant and innovative solutions.  PostgreSQL runs on <a href="/download/">all major operating systems</a>, has been <a href="https://en.wikipedia.org/wiki/ACID" target="_blank" rel="noopener">ACID</a>-compliant since 2001, and has powerful add-ons such as the popular <a href="https://postgis.net/" target="_blank" rel="noopener">PostGIS</a> geospatial database extender. It is no surprise that PostgreSQL has become the open source relational database of choice for many people and organisations.</p>
-<p><a href="/docs/current/tutorial.html">Getting started</a> with using PostgreSQL has never been easier - pick a project you want to build, and let PostgreSQL safely and robustly store your data.</p>
+<h2>什么是 PostgreSQL？</h2>
+<p>PostgreSQL 是一个强大的开源对象关系数据库系统，它使用并扩展了 SQL 语言，结合了许多功能，能够安全地存储和扩展最复杂的数据工作负载。PostgreSQL 的起源可以追溯到 1986 年，作为加州大学伯克利分校 <a href="/docs/current/history.html">POSTGRES</a> 项目的一部分，其核心平台已有近 40 年的积极开发历史。</p>
+<p>PostgreSQL 凭借其经过验证的架构、可靠性、数据完整性、强大的功能集、可扩展性，以及开源社区持续交付高性能创新解决方案的奉献精神，赢得了良好的声誉。PostgreSQL 可在<a href="/download/">所有主流操作系统</a>上运行，自 2001 年以来一直符合 <a href="https://en.wikipedia.org/wiki/ACID" target="_blank" rel="noopener">ACID</a> 标准，并拥有强大的附加组件，如广受欢迎的 <a href="https://postgis.net/" target="_blank" rel="noopener">PostGIS</a> 地理空间数据库扩展。PostgreSQL 成为众多个人和组织首选的开源关系数据库，这并不令人意外。</p>
+<p>使用 PostgreSQL <a href="/docs/current/tutorial.html">入门</a>从未如此简单——选择一个你想要构建的项目，让 PostgreSQL 安全、稳健地存储你的数据。</p>
 
-<h2>Why use PostgreSQL?</h2>
+<h2>为什么使用 PostgreSQL？</h2>
 <p>
-  PostgreSQL comes with <a href="/about/featurematrix/">many features</a> aimed to help developers build applications, administrators to protect data integrity and build fault-tolerant environments, and help you manage your data no matter how big or small the dataset.  In addition to being <a href="/about/license/">free and open source</a>, PostgreSQL is highly extensible. For example, you can define your own data types, build out custom functions, even write code from <a href="/docs/current/xplang.html">different programming languages</a> without recompiling your database!
+  PostgreSQL 拥有<a href="/about/featurematrix/">众多功能</a>，旨在帮助开发者构建应用程序，帮助管理员保护数据完整性并构建容错环境，无论数据集大小如何，都能帮助你管理数据。除了<a href="/about/license/">免费和开源</a>之外，PostgreSQL 还具有高度可扩展性。例如，你可以定义自己的数据类型、构建自定义函数，甚至使用<a href="/docs/current/xplang.html">不同的编程语言</a>编写代码，而无需重新编译数据库！
 </p>
-<p>PostgreSQL tries to conform with the <a href="/docs/current/features.html">SQL standard</a> where such conformance does not contradict traditional features or could lead to poor architectural decisions. Many of the features required by the SQL standard are supported, though sometimes with slightly differing syntax or function. Further moves towards conformance can be expected over time. As of the version 18 release in September 2025, PostgreSQL conforms to at least 170 of the 177 mandatory features for SQL:2023 Core conformance. As of this writing, no relational database meets full conformance with this standard.
+<p>PostgreSQL 力求符合 <a href="/docs/current/features.html">SQL 标准</a>，前提是这种一致性不会与传统功能相矛盾或导致不良的架构决策。SQL 标准要求的许多功能都已得到支持，尽管有时语法或函数略有不同。随着时间的推移，预计将进一步向标准靠拢。截至 2025 年 9 月发布的版本 18，PostgreSQL 至少符合 SQL:2023 核心一致性的 177 项强制功能中的 170 项。截至撰写本文时，没有任何关系数据库完全符合该标准。
 </p>
-<p>Below is an inexhaustive list of various features found in PostgreSQL, with more being added in every <a href="/developer/roadmap/">major release</a>:
+<p>以下是 PostgreSQL 中各种功能的不完全列表，每个<a href="/developer/roadmap/">主要版本</a>都会添加更多功能：
 </p>
 <ul>
   <li>
-    <strong>Data Types</strong>
+    <strong>数据类型</strong>
     <ul>
-      <li>Primitives: Integer, Numeric, String, Boolean</li>
-      <li>Structured: Date/Time, Array, Range / Multirange, UUID</li>
-      <li>Document: JSON/JSONB, XML, Key-value (Hstore)</li>
-      <li>Geometry: Point, Line, Circle, Polygon</li>
-      <li>Customizations: Composite, Custom Types</li>
+      <li>基础类型：Integer，Numeric，String，Boolean</li>
+      <li>结构化类型：Date/Time，Array，Range / Multirange，UUID</li>
+      <li>文档类型：JSON/JSONB，XML，Key-value（Hstore）</li>
+      <li>几何类型：Point，Line，Circle，Polygon</li>
+      <li>自定义类型：Composite，Custom Types</li>
     </ul>
   </li>
   <li>
-    <strong>Data Integrity</strong>
+    <strong>数据完整性</strong>
     <ul>
-      <li>UNIQUE, NOT NULL</li>
-      <li>Primary Keys</li>
-      <li>Foreign Keys</li>
-      <li>Exclusion Constraints</li>
-      <li>Explicit Locks, Advisory Locks</li>
+      <li>UNIQUE，NOT NULL</li>
+      <li>主键</li>
+      <li>外键</li>
+      <li>排他约束</li>
+      <li>显式锁、咨询锁</li>
     </ul>
   </li>
   <li>
-    <strong>Concurrency, Performance</strong>
+    <strong>并发与性能</strong>
     <ul>
-      <li>Indexing: B-tree, Multicolumn, Expressions, Partial</li>
-      <li>Advanced Indexing: GiST, SP-Gist, KNN Gist, GIN, BRIN, Covering indexes, Bloom filters</li>
-      <li>Sophisticated query planner / optimizer, index-only scans, multicolumn statistics</li>
-      <li>Transactions, Nested Transactions (via savepoints)</li>
-      <li>Multi-Version concurrency Control (MVCC)</li>
-      <li>Parallelization of read queries and building B-tree indexes</li>
-      <li>Table partitioning</li>
-      <li>All transaction isolation levels defined in the SQL standard, including Serializable</li>
-      <li>Just-in-time (JIT) compilation of expressions</li>
-      <li>Asynchronous I/O (AIO)</li>
+      <li>索引：B-tree，多列，表达式，部分索引</li>
+      <li>高级索引：GiST，SP-GiST，KNN GiST，GIN，BRIN，覆盖索引，布隆过滤器</li>
+      <li>复杂的查询规划器/优化器，仅索引扫描，多列统计信息</li>
+      <li>事务、嵌套事务（通过保存点）</li>
+      <li>多版本并发控制（MVCC）</li>
+      <li>读查询和构建 B-tree 索引的并行化</li>
+      <li>表分区</li>
+      <li>SQL 标准中定义的所有事务隔离级别，包括可串行化</li>
+      <li>即时编译（JIT）表达式</li>
+      <li>异步 I/O（AIO）</li>
     </ul>
   </li>
   <li>
-    <strong>Reliability, Disaster Recovery</strong>
+    <strong>可靠性与灾难恢复</strong>
     <ul>
-      <li>Write-ahead Logging (WAL)</li>
-      <li>Replication: Asynchronous, Synchronous, Logical</li>
-      <li>Point-in-time-recovery (PITR), active standbys</li>
-      <li>Tablespaces</li>
+      <li>预写式日志（WAL）</li>
+      <li>复制：异步、同步、逻辑</li>
+      <li>时间点恢复（PITR），活跃备库</li>
+      <li>表空间</li>
     </ul>
   </li>
   <li>
-    <strong>Security</strong>
+    <strong>安全性</strong>
     <ul>
-      <li>Authentication: GSSAPI, SSPI, LDAP, SCRAM-SHA-256, Certificate, OAuth 2.0, and more</li>
-      <li>Robust access-control system</li>
-      <li>Column and row-level security</li>
-      <li>Multi-factor authentication with certificates and an additional method</li>
+      <li>认证：GSSAPI，SSPI，LDAP，SCRAM-SHA-256，Certificate，OAuth 2.0 等</li>
+      <li>强大的访问控制系统</li>
+      <li>列级和行级安全性</li>
+      <li>使用证书和附加方法的多因素认证</li>
     </ul>
   </li>
   <li>
-    <strong>Extensibility</strong>
+    <strong>可扩展性</strong>
     <ul>
-      <li>Stored functions and procedures</li>
-      <li>Procedural Languages: PL/pgSQL, Perl, Python, and Tcl. There are other languages available through extensions, e.g. Java, JavaScript (V8), R, Lua, and Rust</li>
-      <li>SQL/JSON constructors, query functions, path expressions, and JSON_TABLE</li>
-      <li>Foreign data wrappers: connect to other databases or streams with a standard SQL interface</li>
-      <li>Customizable storage interface for tables</li>
-      <li>Many extensions that provide additional functionality, including PostGIS</li>
+      <li>存储函数和过程</li>
+      <li>过程语言：PL/pgSQL，Perl，Python 和 Tcl。还有其他语言可通过扩展获得，例如 Java，JavaScript（V8），R，Lua 和 Rust</li>
+      <li>SQL/JSON 构造器、查询函数、路径表达式和 JSON_TABLE</li>
+      <li>外部数据包装器：通过标准 SQL 接口连接其他数据库或数据流</li>
+      <li>可自定义的表存储接口</li>
+      <li>许多提供附加功能的扩展，包括 PostGIS</li>
     </ul>
   </li>
   <li>
-    <strong>Internationalisation, Text Search</strong>
+    <strong>国际化与文本搜索</strong>
     <ul>
-      <li>Support for international character sets, e.g. through ICU collations</li>
-      <li>Case-insensitive and accent-insensitive collations</li>
-      <li>Full-text search</li>
+      <li>支持国际字符集，例如通过 ICU 排序规则</li>
+      <li>不区分大小写和不区分重音的排序规则</li>
+      <li>全文搜索</li>
     </ul>
   </li>
 </ul>
-<p>There are many more features that you can discover in the PostgreSQL <a href="/docs/">documentation</a>.  Additionally, PostgreSQL is highly extensible: many features, such as indexes, have defined APIs so that you can build out with PostgreSQL to solve your challenges.</p>
-<p>PostgreSQL has been proven to be highly scalable both in the sheer quantity of data it can manage and in the number of concurrent users it can accommodate. There are active PostgreSQL clusters in production environments that manage many terabytes of data, and specialized systems that manage petabytes.</p>
+<p>你还可以在 PostgreSQL <a href="/docs/">文档</a>中发现更多功能。此外，PostgreSQL 具有高度可扩展性：许多功能（如索引）都定义了 API，以便你可以利用 PostgreSQL 来解决你的挑战。</p>
+<p>PostgreSQL 已被证明在其能够管理的数据量和能够容纳的并发用户数方面都具有高度可伸缩性。生产环境中有活跃的 PostgreSQL 集簇管理着数 TB 的数据，还有专门的系统管理着 PB 级别的数据。</p>
 
-<h2>Any questions?</h2>
+<h2>有问题？</h2>
 <p>
-  The first place to go to for any questions on PostgreSQL is its <a href="/docs/">world-renowned documentation</a>, which discusses how to use PostgreSQL in-depth.
+  有关 PostgreSQL 的任何问题，首先应查阅其<a href="/docs/">享誉全球的文档</a>，其中深入讨论了如何使用 PostgreSQL。
 </p>
 <p>
-  We also have many <strong><a href="/list/">mailing lists</a></strong> where you can connect and participate in the <a href="/community/">community</a>. There are also many <a href="/about/events/">events</a> and <a href="/community/user-groups/">local user groups</a> where you can connect with other PostgreSQL users.
+  我们还有许多<strong><a href="https://www.postgresql.org/list/">邮件列表</a></strong>，你可以在其中连接并参与<a href="/community/">社区</a>。还有许多<a href="/about/events/">活动</a>和<a href="/community/user-groups/">本地用户组</a>，你可以在其中与其他 PostgreSQL 用户交流。
 </p>
 
-<h2>Our users <i class="fa fa-heart"></i> us</h2>
+<h2>用户喜爱我们 <i class="fa fa-heart"></i></h2>
 
 <div class="row">
 	<div class="col-md-8 col-center m-auto">
@@ -133,34 +133,34 @@
 	</div>
 </div>
 
-<h2>What's a database project without statistics?</h2>
+<h2>没有统计数据的数据库项目算什么？</h2>
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-3 feature-grid">
-      <h3>35+ Years Development</h3>
+      <h3>35+ 年持续开发</h3>
     </div>
     <div class="col-sm-3 feature-grid">
-      <h3>725+ Contributors</h3>
+      <h3>725+ 位贡献者</h3>
     </div>
     <div class="col-sm-3 feature-grid">
-      <h3>61,000+ Commits</h3>
+      <h3>61,000+ 次提交</h3>
     </div>
     <div class="col-sm-3 feature-grid">
-      <h3>70+ Local User Groups</h3>
+      <h3>70+ 个本地用户组</h3>
     </div>
   </div>
   <div class="row">
     <div class="col-sm-3 feature-grid">
-      <h3>1,780,000+ Lines of C</h3>
+      <h3>1,780,000+ 行 C 代码</h3>
     </div>
     <div class="col-sm-3 feature-grid">
-      <h3>720+ Events</h3>
+      <h3>720+ 场活动</h3>
     </div>
     <div class="col-sm-3 feature-grid">
-      <h3>Millions of Happy Users</h3>
+      <h3>数百万满意的用户</h3>
     </div>
     <div class="col-sm-3 feature-grid">
-      <h3>&#8734; Data Stored</h3>
+      <h3>&#8734; 数据存储</h3>
     </div>
   </div>
 </div>

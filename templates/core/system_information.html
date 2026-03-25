@@ -1,14 +1,14 @@
 {%extends "base/page.html"%}
-{%block title%}System information{%endblock%}
+{%block title%}系统信息{%endblock%}
 {%block contents%}
-<h1>System Information</h1>
+<h1>系统信息</h1>
 
 <p>
-Page generated on server: {{server}}<br/>
-Page generated at: {% now "r" %}<br/>
-Cache server: {{cache_server}}<br/>
-Client IP: {{client_ip}}<br/>
-Django version: {{django_version}}<br/>
+页面生成服务器：{{server}}<br/>
+页面生成时间：{% now "r" %}<br/>
+缓存服务器：{{cache_server}}<br/>
+客户端 IP：{{client_ip}}<br/>
+Django 版本：{{django_version}}<br/>
 </p>
 
 {%endblock%}

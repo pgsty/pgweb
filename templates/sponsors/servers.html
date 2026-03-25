@@ -1,24 +1,23 @@
 {%extends "base/page.html"%}
-{%block title%}Server Sponsors{%endblock%}
+{%block title%}服务器赞助者{%endblock%}
 {%block contents%}
 
-<h1>Server Sponsors <i class="fas fa-server"></i></h1>
+<h1>服务器赞助者 <i class="fas fa-server"></i></h1>
 
 <p>
-The servers that power the services of <a href="/">www.postgresql.org</a> are provided by
-different companies and organisations around the world.
+为 <a href="/">www.postgresql.org</a> 提供服务支持的服务器由世界各地不同的公司和组织提供。
 </p>
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Name</th>
-    	<th>Provider</th>
-    	<th>Dedicated</th>
-    	<th>Specs</th>
-    	<th>OS</th>
-    	<th>Location</th>
-    	<th>Usage</th>
+      <th>名称</th>
+    	<th>提供者</th>
+    	<th>专用</th>
+    	<th>规格</th>
+    	<th>操作系统</th>
+    	<th>位置</th>
+    	<th>用途</th>
     </tr>
   </thead>
   <tbody>
@@ -40,13 +39,12 @@ different companies and organisations around the world.
   </tbody>
 </table>
 
-<h2>Additional Hosting Services</h2>
+<h2>额外托管服务</h2>
 
 {# Image included to meet the requirements of the Fastly agreement #}
 <a href="https://www.fastly.com/"><img class="organisation-logo" src="/media/img/about/sponsors/logo_fastly.png" alt="Fastly" /></a>
-<p>In addition to the servers listed above, the PostgreSQL Project is grateful to 
-    <a href="https://www.fastly.com/">Fastly</a> for providing CDN and other 
-    services at no cost.
+<p>除上述服务器外，PostgreSQL 项目感谢
+    <a href="https://www.fastly.com/">Fastly</a> 免费提供 CDN 及其他服务。
 </p>
 
 {%endblock%}

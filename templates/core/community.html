@@ -1,28 +1,28 @@
 {%extends "base/page.html"%}
-{%block title%}Community{%endblock%}
+{%block title%}社区{%endblock%}
 {%block contents%}
   <div class="row">
     <div class="col-md-8">
-      <h1>Community <i class="fa fa-users"></i></h1>
+      <h1>社区 <i class="fa fa-users"></i></h1>
       <p>
-        PostgreSQL is well-supported by its active community. There are more than a dozen <a href="https://lists.postgresql.org/">mailing lists</a> available, categorized into topics like:
+        PostgreSQL 拥有一个活跃且强大的社区支持。社区提供了十余个<a href="https://lists.postgresql.org/">邮件列表</a>，涵盖以下主题：
       </p>
         <ul>
-          <li><a href="/list/pgsql-announce/">Announcements</a></li>
-          <li><a href="/list/pgsql-hackers/">PostgreSQL development</a></li>
-          <li><a href="/list/pgsql-general/">General PostgreSQL Support</a></li>
-          <li><a href="/list/pgsql-jobs/">Jobs</a></li>
+          <li><a href="https://www.postgresql.org/list/pgsql-announce/">公告</a></li>
+          <li><a href="https://www.postgresql.org/list/pgsql-hackers/">PostgreSQL 开发</a></li>
+          <li><a href="https://www.postgresql.org/list/pgsql-general/">PostgreSQL 通用支持</a></li>
+          <li><a href="https://www.postgresql.org/list/pgsql-jobs/">职位</a></li>
         </ul>
       <p>
-        and more. We also have many local <a href="/community/user-groups/">PostgreSQL User Groups</a> all over the world, and there is also an active <a href="/community/irc/">IRC</a><!--&amp; <a href="https://join.slack.com/t/postgresteam/shared_invite/zt-1qj14i9sj-E9WqIFlvcOiHsEk2yFEMjA" target="_blank" rel="noopener">Slack</a>--> community.
+        以及更多。我们在世界各地还拥有许多本地 <a href="/community/user-groups/">PostgreSQL 用户组</a>，同时也有活跃的 <a href="/community/irc/">IRC</a><!--&amp; <a href="https://join.slack.com/t/postgresteam/shared_invite/zt-1qj14i9sj-E9WqIFlvcOiHsEk2yFEMjA" target="_blank" rel="noopener">Slack</a>--> 社区。
       </p>
       <p>
-        There are also links to <a href="/community/international/">international sites</a> that contain PostgreSQL information in various languages.
+        这里还提供了包含多种语言 PostgreSQL 信息的<a href="/community/international/">国际化站点</a>链接。
       </p>
-      <p>People in the PostgreSQL community also contribute to:</p>
+      <p>PostgreSQL 社区成员还积极贡献于：</p>
       <ul>
-        <li><a href="https://planet.postgresql.org/" target="_blank" rel="noopener">Planet PostgreSQL</a>, an aggregator of blogs covering many topics around PostgreSQL</li>
-        <li><a href="https://wiki.postgresql.org" target="_blank" rel="noopener">PostgreSQL Wiki</a>, our wiki, hosting user generated content as well as information for how to contribute code to PostgreSQL</li>
+        <li><a href="https://planet.postgresql.org/" target="_blank" rel="noopener">Planet PostgreSQL</a>，一个涵盖 PostgreSQL 众多话题的博客聚合平台</li>
+        <li><a href="https://wiki.postgresql.org" target="_blank" rel="noopener">PostgreSQL Wiki</a>，我们的维基站点，托管用户生成的内容以及如何为 PostgreSQL 贡献代码的相关信息</li>
       </ul>
     </div>
     <div class="col-md-4">
@@ -36,26 +36,26 @@
           {%endfor%}
         </tbody>
       </table>
-     <a href="https://planet.postgresql.org"><button type="button" class="btn btn-primary">More</button></a>
+     <a href="https://planet.postgresql.org"><button type="button" class="btn btn-primary">更多</button></a>
     </div>
   </div>
   <div class="row">
     <div class="col-md-8">
-      <h2>External Resources</h2>
+      <h2>外部资源</h2>
       <ul>
-        <li><a href="https://www.pg-forum.de/" target="_blank" rel="noopener">pg-forum.de</a>, a German PostgreSQL forum.</li>
+        <li><a href="https://www.pg-forum.de/" target="_blank" rel="noopener">pg-forum.de</a>，一个德语 PostgreSQL 论坛。</li>
       </ul>
       <p>
-        Please send appropriate links to
+        请将相关链接发送至
         <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www@lists.postgresql.org</a>
-        for possible inclusion on this page. Note that
+        以便考虑收录到本页面。请注意，
         <a href="mailto:pgsql-www@lists.postgresql.org">pgsql-www@lists.postgresql.org</a>
-        is a publicly archived mailing list.
+        是一个公开存档的邮件列表。
       </p>
     </div>
     {% comment %}
     <div class="col-md-4">
-      <h2>Survey</h2>
+      <h2>调查</h2>
       {% if survey %}
         <h3>{{survey.question}}</h3>
         <form method="post" action="/community/survey/vote/{{survey.id}}/"><!-- CSRF exempt -->
@@ -68,10 +68,10 @@
             {%endfor%}
           </fieldset>
           <div class="form-row">
-            <input class="btn btn-primary" type="submit" name="submit" value="Vote!" />
+            <input class="btn btn-primary" type="submit" name="submit" value="投票！" />
           </div>
           <div class="form-row">
-            <a href="/community/survey/{{survey.id}}-{{survey|slugify}}/"><button type="button" class="btn btn-primary">View Results</button></a>
+            <a href="/community/survey/{{survey.id}}-{{survey|slugify}}/"><button type="button" class="btn btn-primary">查看结果</button></a>
           </div>
         </form>
       {% endif %}

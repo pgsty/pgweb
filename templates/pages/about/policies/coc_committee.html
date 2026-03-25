@@ -1,150 +1,87 @@
 {%extends "base/cocpage.html"%}
 {%load pgfilters%}
-{%block title%}Code of Conduct Committee{%endblock%}
+{%block title%}行为准则委员会{%endblock%}
 {%block cocmain%}
 
-<h1>Code of Conduct Committee <i class="fas fa-users"></i></h1>
+<h1>行为准则委员会 <i class="fas fa-users"></i></h1>
 
-<p><em>Last updated: January 5, 2026. {%git_changes_link%}</em></p>
+<p><em>最后更新：2026年1月5日。{%git_changes_link%}</em></p>
 
-<h3>Contact</h3>
+<h3>联系方式</h3>
 
 <p>
-  You can contact the <a href="/about/policies/coc/">Code of Conduct</a>
-  Committee at <a href="mailto:coc@postgresql.org">coc@postgresql.org</a>.
+  您可以通过 <a href="mailto:coc@postgresql.org">coc@postgresql.org</a> 联系<a href="/about/policies/coc/">行为准则</a>委员会。
 </p>
 
-<h3>Current Members</h3>
+<h3>现任成员</h3>
 
 <table class="table table-striped cocc-table">
   <tbody>
     <tr>
       <td>Chris Travers<br/><em>chris.travers (at) gmail.com</em></td>
       <td>
-        Chris Travers has 25 years of experience with PostgreSQL in many roles
-        from DBA to developer and is active on commitfiests.
-        He also actively presents at conferences around the world.  He is deeply
-        committed to helping expand Postgres worldwide.  He has been involved in
-        leading other open source software projects through the years, including
-        LedgerSMB which he helped found. He currently lives in Indonesia for
-        family reasons and believes in helping ensure that the PostgreSQL
-        community and we can come together across diverse cultural and other
-        backgrounds in our community to build the economic commons that
-        economically support so many of us.
+        Chris Travers 拥有25年的 PostgreSQL 经验，担任过从 DBA 到开发者的多种角色，并积极参与 commitfest。他还经常在世界各地的会议上发表演讲。他致力于帮助在全球范围内推广 Postgres。多年来，他曾参与领导其他开源软件项目，包括他帮助创立的 LedgerSMB。他目前因家庭原因居住在印度尼西亚，并致力于帮助确保 PostgreSQL 社区能够跨越多元的文化和其他背景共同合作，构建在经济上支持着我们许多人的经济共同体。
       </td>
     </tr>
     <tr>
-      <td>Floor Drees (Chair)<br/><em>floordrees (at) gmail.com</em></td>
+      <td>Floor Drees（主席）<br/><em>floordrees (at) gmail.com</em></td>
       <td>
-        Floor Drees is a Principal Program Manager at EDB, a member of the
-        PostgreSQL Europe Diversity Committee, a CloudNativePG contributor,
-        and an organizer for PGDay Lowlands. She's also a co-chair for the
-        DevOpsDays organisation.
+        Floor Drees 是 EDB 的首席项目经理、PostgreSQL Europe 多元化委员会成员、CloudNativePG 贡献者以及 PGDay Lowlands 的组织者。她还是 DevOpsDays 组织的联合主席。
       </td>
     </tr>
     <tr>
       <td>Gary Evans<br/><em>garyevans.pg (at) gmail.com</em></td>
       <td>
-        Gary Evans is based in Australia and works extensively with enterprise
-        PostgreSQL deployments, supporting organisations adopting PostgreSQL at
-        scale while engaging closely with the open-source community. His work
-        sits at the intersection of enterprise users and community practices,
-        with a focus on professionalism, clear communication, and respectful
-        collaboration. He helps organise PGDownUnder and contributes talks and
-        participation at events such as FOSSASIA and various PostgreSQL Day
-        (PGDay) events. He brings practical experience from leading distributed
-        teams and handling sensitive issues, with a strong commitment to
-        maintaining a safe, fair, and inclusive environment within the
-        PostgreSQL community.
+        Gary Evans 常驻澳大利亚，主要从事企业级 PostgreSQL 部署工作，支持组织大规模采用 PostgreSQL，同时与开源社区保持紧密联系。他的工作处于企业用户和社区实践的交汇点，注重专业性、清晰的沟通和尊重的协作。他参与组织 PGDownUnder，并在 FOSSASIA 和各种 PostgreSQL Day（PGDay）活动上发表演讲和参与活动。他在领导分布式团队和处理敏感问题方面拥有丰富的实践经验，坚定致力于在 PostgreSQL 社区内维护安全、公平和包容的环境。
       </td>
     </tr>
     <tr>
       <td>Hari Kiran<br/><em>hari.sysdba (at) gmail.com </em></td>
       <td>
-        Hari Kiran is a PostgreSQL Evangelist at pgEdge and OpenSource DB,
-        working with Customers on Distributed Multi-master PostgreSQL solutions.
-        With extensive experience in the PostgreSQL ecosystem, Hari is
-        passionate about helping businesses migrate to scalable and resilient
-        Postgres architectures. A strong advocate for community building, Hari
-        has played a key role in organizing and sponsoring PostgreSQL events,
-        such as PGDay Hyderabad 2024 and PGConf India. He is committed to
-        fostering growth and innovation within the Postgres community, combining
-        technical expertise with a forward-looking vision for the future of
-        open-source databases.
+        Hari Kiran 是 pgEdge 和 OpenSource DB 的 PostgreSQL 布道者，与客户合作开展分布式多主 PostgreSQL 解决方案。凭借在 PostgreSQL 生态系统中的丰富经验，Hari 热衷于帮助企业迁移到可扩展和高弹性的 Postgres 架构。作为社区建设的坚定倡导者，Hari 在组织和赞助 PostgreSQL 活动方面发挥了关键作用，例如 PGDay Hyderabad 2024 和 PGConf India。他致力于促进 Postgres 社区的成长和创新，将技术专长与对开源数据库未来的前瞻性愿景相结合。
       </td>
     </tr>
     <tr>
       <td>Karen Riggs<br/><em>kr17ggs (at) gmail.com</em></td>
       <td>
-        Karen Riggs is now retired, but formerly worked in an operations and HR
-        role for 2nd Quadrant until the acquisition by EDB. She then spent 6
-        months with EDB helping with the staff & financial transition. Before
-        her work in the tech industry she spent 12 years in the NHS (National
-        Health Service) as an Assistant Practitioner. Karen is based in the UK,
-        and attends the annual PostgreSQL Europe Conference to meet with
-        community members in-person.
+        Karen Riggs 现已退休，此前在 2nd Quadrant 担任运营和人力资源职务，直到被 EDB 收购。之后她在 EDB 工作了6个月，协助员工和财务过渡。在进入科技行业之前，她在 NHS（英国国家医疗服务体系）担任助理从业者12年。Karen 常驻英国，每年参加 PostgreSQL Europe 会议与社区成员面对面交流。
       </td>
     </tr>
     <tr>
       <td>Michael Goldberg<br/><em>mic.goldberg (at) gmail.com </em></td>
       <td>
-        Michael Goldberg is a co-organizer of PGDay Israel conferences since
-        2017, co-founder of PostgreSQL Israeli Community, member of PG BootCamp
-        initiative, PostgreSQL translator, part of the PostgreSQL press releases
-        translation team, and maintainer of the PostgreSQL Israel and PGDay
-        Israel websites. Michael is the Containers Product Architect at Spot by
-        Netapp.
+        Michael Goldberg 自2017年起担任 PGDay Israel 会议的联合组织者，是 PostgreSQL 以色列社区的联合创始人、PG BootCamp 倡议的成员、PostgreSQL 翻译者、PostgreSQL 新闻稿翻译团队的成员，以及 PostgreSQL Israel 和 PGDay Israel 网站的维护者。Michael 是 Spot by Netapp 的容器产品架构师。
       </td>
     </tr>
     <tr>
       <td>Pavel Luzanov<br/><em>pavel.luzanov (at) gmail.com </em></td>
       <td>
-        Pavel Luzanov has been working with PostgreSQL at Postgres Professional
-        since 2015. Before that, he spent over 20 years working with Oracle DBMS
-        as an application developer, architect and project manager. At Postgres
-        Professional, he specializes in educational projects: training courses,
-        certification exams, blogging, books. Pavel is a regular speaker at the
-        PGConf.Russia series of conferences.
+        Pavel Luzanov 自2015年起在 Postgres Professional 从事 PostgreSQL 相关工作。在此之前，他作为应用开发者、架构师和项目经理，拥有超过20年的 Oracle DBMS 工作经验。在 Postgres Professional，他专注于教育项目：培训课程、认证考试、博客、书籍。Pavel 是 PGConf.Russia 系列会议的定期演讲者。
       </td>
     </tr>
     <tr>
       <td>Semab Tariq<br/><em>semab.tariq1 (at) gmail.com</em></td>
       <td>
-        Semab Tariq is a Senior PostgreSQL Consultant at Stormatics, bringing
-        over 8 years of experience in DevOps, software packaging, and machine
-        learning. He began his career as a DevOps Engineer, focusing on the
-        packaging of numerous PostgreSQL-related tools. His contributions
-        include building and releasing PostgreSQL community installers for
-        Windows, macOS, and Linux, as well as PgAdmin installers during his
-        tenure at 2ndQuadrant and later at EnterpriseDB. In addition to his
-        consulting work, Semab is an active member of the PostgreSQL community.
-        He frequently speaks at international PostgreSQL conferences, writes
-        technical blogs, and conducts webinars to share his expertise.
+        Semab Tariq 是 Stormatics 的高级 PostgreSQL 顾问，在 DevOps、软件打包和机器学习方面拥有超过8年的经验。他的职业生涯始于 DevOps 工程师，专注于众多 PostgreSQL 相关工具的打包。他的贡献包括在 2ndQuadrant 和后来在 EnterpriseDB 任职期间，构建和发布了适用于 Windows、macOS 和 Linux 的 PostgreSQL 社区安装程序以及 PgAdmin 安装程序。除了咨询工作外，Semab 还是 PostgreSQL 社区的活跃成员。他经常在国际 PostgreSQL 会议上发言、撰写技术博客并举办网络研讨会分享他的专业知识。
       </td>
     </tr>
     <tr>
       <td>Simon Pane<br/><em>simon.pane (at) strategicdbs.com</em></td>
       <td>
-        Simon Pane works as a Principal Consultant for Pythian, specializing in
-        PostgreSQL and Oracle on-premises and in the cloud.  Simon is located in
-        Canada and has been working with relational databases for over 25 years.
-        As well as having been heavily involved in the community as a regular
-        presenter and blogger, he is a past user-group Board Director and has
-        served as a volunteer member of several formal industry and community
-        Advisory Boards.
+        Simon Pane 在 Pythian 担任首席顾问，专注于本地和云端的 PostgreSQL 和 Oracle。Simon 常驻加拿大，拥有超过25年的关系数据库工作经验。他深入参与社区活动，经常发表演讲和撰写博客，曾担任用户组董事会董事，并作为志愿者在多个正式的行业和社区咨询委员会中任职。
       </td>
     </tr>
   </tbody>
 </table>
 
-<h3>Past Members</h3>
+<h3>往届成员</h3>
 
 <ul>
   <li>Aleksandra Abramova (2022&ndash;2024)</li>
   <li>Anastasia Lubennikova (2020&ndash;2022)</li>
   <li>Anthony Nowocien (2022&ndash;2024)</li>
   <li>Carole Arnaud (2019&ndash;2021)</li>
-  <li>Eliza Bennett (2022&ndash;2024; Chair, 2023&ndash;2024)</li>
+  <li>Eliza Bennett (2022&ndash;2024；主席，2023&ndash;2024)</li>
   <li>Fábio Telles Rodriguez (2020&ndash;2021)</li>
   <li>Ilaria Battiston (2021&ndash;2023)</li>
   <li>Ilya Kosmodemiansky (2018&ndash;2020)</li>
@@ -152,12 +89,12 @@
   <li>Jonathan Katz (2018&ndash;2020)</li>
   <li>L&aelig;titia Avrot (2018&ndash;2019)</li>
   <li>Lucie Šimečková (2021&ndash;2024)</li>
-  <li>Michael Goldberg (2020&ndash;2023; 2024&ndash;; Chair, 2022&ndash;2023)</li>
+  <li>Michael Goldberg (2020&ndash;2023；2024&ndash;；主席，2022&ndash;2023)</li>
   <li>Sergei Kim (2024&ndash;2025)</li>
   <li>Sonia Valeja (2024&ndash;2025)</li>
-  <li>Stacey Haysler (Chair, 2018&ndash;2021)</li>
+  <li>Stacey Haysler（主席，2018&ndash;2021）</li>
   <li>Stefan Fercot (2021&ndash;2023)</li>
-  <li>Umair Shahid (2019&ndash;2022; Chair, 2021&ndash;2022)</li>
+  <li>Umair Shahid (2019&ndash;2022；主席，2021&ndash;2022)</li>
   <li>Vik Fearing (2018&ndash;2019)</li>
 </ul>
 

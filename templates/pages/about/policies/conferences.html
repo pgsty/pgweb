@@ -1,78 +1,76 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}Community Conference Recognition{%endblock%}
+{%block title%}社区会议认可{%endblock%}
 {%block contents%}
 
-<h1>Community Conference Recognition <i class="fas fa-gavel"></i></h1>
+<h1>社区会议认可 <i class="fas fa-gavel"></i></h1>
 
-<p><em>Last updated: September 21, 2023. {%git_changes_link%} <a href="https://git.postgresql.org/gitweb/?p=pgweb.git;a=history;f=templates/pages/community/recognition.html">View</a> history before December 8, 2020.</em></p>
+<p><em>最后更新：2023年9月21日。{%git_changes_link%} <a href="https://git.postgresql.org/gitweb/?p=pgweb.git;a=history;f=templates/pages/community/recognition.html">查看</a> 2020年12月8日之前的历史。</em></p>
 
-<p>The Community Conference Recognition programme is a voluntary scheme under which submitters of events to the <a href="/about/events/">PostgreSQL Website listings</a> may self-assess their entry against the criteria below, and if they comply may market their event as a PostgreSQL Community event.</p>
+<p>社区会议认可计划是一项自愿方案，向 <a href="/about/events/">PostgreSQL 网站活动列表</a>提交活动的提交者可以根据以下标准进行自我评估，如果符合要求，可以将其活动宣传为 PostgreSQL 社区活动。</p>
 
-<p>Events that do not meet the criteria will still be welcomed (where appropriate under the <a href="https://wiki.postgresql.org/wiki/NewsEventsApproval#Approving_Events_and_Event-Related_News_.28excluding_training.29" target="_blank" rel="noopener">general listing policies</a>) - for example, events organised by a single company which may still be valuable for people to attend, but are not necessarily what we would consider fully "open."</p>
+<p>不满足标准的活动仍然会被接受（在<a href="https://wiki.postgresql.org/wiki/NewsEventsApproval#Approving_Events_and_Event-Related_News_.28excluding_training.29" target="_blank" rel="noopener">一般列表政策</a>允许的情况下）——例如，由单一公司组织的活动虽然可能仍然值得参加，但不一定是我们认为完全"开放"的活动。</p>
 
-<p>Use of the terms "MUST", "MUST NOT", "SHOULD" and "SHOULD NOT" in the criteria below should be interpreted per <a href="https://www.ietf.org/rfc/rfc2119.txt" target="_blank" rel="noopener">RFC2119</a>.</p>
+<p>以下标准中使用的"必须（MUST）"、"不得（MUST NOT）"、"应当（SHOULD）"和"不应（SHOULD NOT）"等术语的解释应遵循 <a href="https://www.ietf.org/rfc/rfc2119.txt" target="_blank" rel="noopener">RFC2119</a>。</p>
 
-<h3>General</h3>
+<h3>总则</h3>
 <ul>
-  <li>The event MUST be primarily focused on PostgreSQL and targeted at existing and/or potential developers and users of PostgreSQL.</li>
-  <li>The event MUST adopt and follow an appropriate Code of Conduct to ensure a safe and enjoyable environment for anyone who wishes to attend.</li>
-  <li>The event website, advertisements, notices, and any other related material MUST fully comply with the <a href="/about/policies/trademarks/">PostgreSQL Trademark Policy</a> or receive permission from the <a href="https://www.postgres.ca/">PostgreSQL Community Association</a>.</li>
-  <li>The <a href="/developer/core/">PostgreSQL Core Team</a> reserves the right to recognise, not recognise, or rescind a previous recognition for any event without justification.</li>
-  <li>Information that is required to be publicly disclosed MUST be available on the website of the event, or, if it is not possible to publish to the event’s website, MUST be made available in the <a href="/about/events/">PostgreSQL Website events list</a>.</li>
-  <li>Events are self-certified as complying with these criteria when <a href="/about/events/">listed on the PostgreSQL Website</a>. If an event is self-certified by the organisers and later found not to comply with the criteria, the <a href="/developer/core/">PostgreSQL Core Team</a> reserves the right to rescind the recognition of the event as a community event and, where appropriate, take further action up to a permanent ban on future event listings from the organisers.</li>
-  <li>These criteria may be reviewed and potentially updated at any time.</li>
+  <li>活动必须主要聚焦于 PostgreSQL，并面向 PostgreSQL 的现有和/或潜在开发者和用户。</li>
+  <li>活动必须采纳并遵循适当的行为准则，以确保为所有希望参加的人提供安全且愉快的环境。</li>
+  <li>活动网站、广告、通知以及任何其他相关材料必须完全遵守 <a href="/about/policies/trademarks/">PostgreSQL 商标政策</a>，或获得 <a href="https://www.postgres.ca/">PostgreSQL 社区协会</a>的许可。</li>
+  <li><a href="/developer/core/">PostgreSQL 核心团队</a>保留对任何活动进行认可、不予认可或撤销先前认可的权利，无需提供理由。</li>
+  <li>需要公开披露的信息必须在活动网站上提供，或者如果无法在活动网站上发布，则必须在 <a href="/about/events/">PostgreSQL 网站活动列表</a>中提供。</li>
+  <li>活动在<a href="/about/events/">PostgreSQL 网站上列出</a>时，由组织者自行认证符合这些标准。如果活动经组织者自行认证后被发现不符合标准，<a href="/developer/core/">PostgreSQL 核心团队</a>保留撤销该活动作为社区活动认可的权利，并在适当情况下采取进一步措施，包括永久禁止组织者未来的活动列表。</li>
+  <li>这些标准可能随时被审查和更新。</li>
 </ul>
 
-<h3>Organisers</h3>
+<h3>组织者</h3>
 <ul>
-  <li>The organizing committee (also referred to as a steering committee) MUST be fully disclosed on the event website OR the PostgreSQL Website event listing.</li>
-  <li>The organizing committee SHOULD NOT consist of more than 50% members from a single company or group of companies under the same ultimate ownership or management.</li>
-  <li>Any benefits granted to the companies that employ the organisers MUST be considered sponsorship benefits.</li>
+  <li>组织委员会（也称为指导委员会）必须在活动网站或 PostgreSQL 网站活动列表中完整披露。</li>
+  <li>组织委员会不应由来自同一公司或同一最终所有权或管理下的公司集团的成员超过50%。</li>
+  <li>授予组织者所在公司的任何福利必须视为赞助福利。</li>
   <li>
-    The organizing committee MUST either:
+    组织委员会必须满足以下条件之一：
     <ul>
-      <li>Establish a code of conduct committee. The code of conduct committee MUST include at least one person who is not on the organizing committee. The membership of the code of conduct committee MUST be published. OR</li>
-      <li>Adopt the <a href="/about/policies/coc/">PostgreSQL Code of Conduct</a> and refer code of conduct complaints to the <a href="/about/policies/coc_committee/">PostgreSQL Code of Conduct Committee</a>.</li>
+      <li>设立行为准则委员会。行为准则委员会必须包含至少一名不在组织委员会中的成员。行为准则委员会的成员名单必须公布。或者</li>
+      <li>采纳 <a href="/about/policies/coc/">PostgreSQL 行为准则</a>，并将行为准则投诉提交给 <a href="/about/policies/coc_committee/">PostgreSQL 行为准则委员会</a>。</li>
     </ul>
   </li>
 </ul>
 
-<h3>Talk Selection</h3>
+<h3>演讲选拔</h3>
 <ul>
-  <li>The talk selection committee MUST be fully disclosed on the event website.</li>
-  <li>The talk selection committee MUST NOT consist of 50% or more members from a single company or group of companies under the same ultimate ownership or management.</li>
-  <li>All members of the talk committee MUST have an equal vote.</li>
-  <li>The Call For Papers MUST be open for anyone to submit.</li>
-  <li>Solicited or sponsor presentations may bypass the normal talk selection process, but MUST be approved by a majority of the talk selection committee.</li>
-  <li>The full talk selection process and voting system MUST be fully disclosed to all members of the talk selection committee.</li>
-  <li>Details of the talk selection process and how results were obtained MUST be provided to the <a href="/developer/core/">PostgreSQL Core Team</a> on request.</li>
+  <li>演讲选拔委员会必须在活动网站上完整披露。</li>
+  <li>演讲选拔委员会不得由来自同一公司或同一最终所有权或管理下的公司集团的成员达到或超过50%。</li>
+  <li>演讲委员会的所有成员必须拥有平等的投票权。</li>
+  <li>征稿（Call For Papers）必须向所有人开放提交。</li>
+  <li>受邀或赞助商演讲可以绕过正常的演讲选拔流程，但必须获得演讲选拔委员会多数成员的批准。</li>
+  <li>完整的演讲选拔流程和投票系统必须向演讲选拔委员会的所有成员完整披露。</li>
+  <li>演讲选拔流程的详细信息及结果的获取方式必须在 <a href="/developer/core/">PostgreSQL 核心团队</a>要求时提供。</li>
 </ul>
 
-<h3>Sponsorship</h3>
+<h3>赞助</h3>
 <ul>
-  <li>The sponsorship terms and/or prospectus MUST be published on the event website for public review.</li>
-  <li>All sponsors of the same level or type MUST be treated equally; they MUST be offered the same benefits at the same cost as all others.</li>
-  <li>Changes to the benefits offered SHOULD NOT be made following publication, and MUST NOT be made following the first executed sponsor agreement.</li>
-  <li>There SHOULD NOT be an exclusive top sponsorship level.</li>
-  <li>Sponsor benefits for all levels or types SHOULD include a listing on the event website. Ordering of the sponsor listing MUST be in randomised or predictable order with text stating how they are ordered, grouped by level or type of sponsorship.</li>
-  <li>Sponsorship opportunities SHOULD be open to all, offered on a first-come, first-served basis. Limits on the number of any given level or type of sponsorship may be set.</li>
-  <li>Only recognised sponsors may exhibit at the event, or be listed on the event website or other materials.</li>
+  <li>赞助条款和/或赞助说明书必须在活动网站上公开发布以供公众查阅。</li>
+  <li>所有相同级别或类型的赞助商必须被平等对待；他们必须获得与其他赞助商相同费用的相同权益。</li>
+  <li>发布后不应更改所提供的权益，且在第一份赞助协议执行后不得更改。</li>
+  <li>不应设置独占性的最高赞助级别。</li>
+  <li>所有级别或类型的赞助商权益应包括在活动网站上的列表。赞助商列表的排序必须以随机或可预测的顺序排列，并附上说明排序方式的文字，按赞助级别或类型分组。</li>
+  <li>赞助机会应向所有人开放，以先到先得的方式提供。可以对任何给定级别或类型的赞助数量设置限制。</li>
+  <li>只有获认可的赞助商才可以在活动中展出，或在活动网站或其他材料中列出。</li>
 </ul>
 
-<h3>Financial</h3>
+<h3>财务</h3>
 <ul>
-  <li>The event organisers MUST provide copies of financial records to the <a href="/developer/core/">PostgreSQL Core Team</a> or their nominated representative for review if requested. Any financial statements shared with the Core Team will not be distributed by the Core Team to any 3rd parties without written permission from the event organisers or where required by court order or other forms of legal authority.</li>
+  <li>如有要求，活动组织者必须向 <a href="/developer/core/">PostgreSQL 核心团队</a>或其指定代表提供财务记录副本以供审查。与核心团队共享的任何财务报表，未经活动组织者书面许可或法院命令或其他形式的法律授权要求，核心团队不会向任何第三方分发。</li>
   <li>
-    A statement on the event website MUST indicate where any profits from the event will go, which specifically MUST support PostgreSQL community activities, either through:
+    活动网站上的声明必须说明活动利润的去向，具体必须支持 PostgreSQL 社区活动，通过以下方式之一：
     <ol>
-      <li>a <a href="/about/policies/npos/">recognized PostgreSQL Nonprofit Organisation</a></li>
-      <li>a detailed list of how the profits will support
-      ongoing PostgreSQL Global Development Group development</li>
-      <li>to the future growth and expansion of the event, OR</li>
-      <li>a
-      PostgreSQL-related activity that supports the community at-large
-      that can be validated by the PostgreSQL Core Team</li>
+      <li><a href="/about/policies/npos/">获认可的 PostgreSQL 非营利组织</a></li>
+      <li>详细列出利润将如何支持 PostgreSQL 全球开发组的持续开发</li>
+      <li>用于活动的未来增长和扩展，或者</li>
+      <li>支持整个社区的 PostgreSQL 相关活动，
+      且可由 PostgreSQL 核心团队验证</li>
     </ol>
   </li>
 </ul>

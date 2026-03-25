@@ -1,14 +1,14 @@
 {%extends "base/form.html"%}
 {%block post_form%}
 {%if notices%}
-<h2>Moderation notices</h2>
+<h2>审核通知</h2>
 <p>
-  This {{formitemtype}} has previously received the following moderation notices:
+  此{{formitemtype}}之前收到了以下审核通知：
 </p>
 <table>
   <tr>
-    <th>Date</th>
-    <th>Note</th>
+    <th>日期</th>
+    <th>备注</th>
   </tr>
 {%for n in notices%}
   <tr valign="top">

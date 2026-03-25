@@ -1,25 +1,25 @@
 {%extends "base/page.html"%}
-{%block title%}Documentation{%endblock%}
+{%block title%}文档{%endblock%}
 {%block contents%}
 
   <div class="row">
     <div class="col-md-9">
       <section>
-        <h1>Documentation <i class="far fa-file-alt"></i></h1>
+        <h1>文档 <i class="far fa-file-alt"></i></h1>
       </section>
       <p>
-       <a class="btn btn-primary btn-double-width" href="/docs/current/">View the manual</a>
+       <a class="btn btn-primary btn-double-width" href="/docs/current/">查看手册</a>
       </p>
 
-      <h2>Manuals <i class="fas fa-book"></i></h2>
+      <h2>手册 <i class="fas fa-book"></i></h2>
       <p>
-       You can view the manual for an older version or download a PDF of a manual from the below table.
+       您可以从下表查看旧版本的手册或下载手册的 PDF 版本。
       </p>
       <table class="table table-striped">
        <thead>
 	<tr>
-	 <th class="w-25">Online Version</th>
-	 <th>PDF Version</th>
+	 <th class="w-25">在线版本</th>
+	 <th>PDF 版本</th>
 	</tr>
        </thead>
        <tbody>
@@ -28,7 +28,7 @@
 	 <td>
 	  <a href="/docs/{{v.numtree}}/index.html">{{v.treestring}}</a>
     {% if v.current %}
-      / <a href="/docs/current/index.html">Current</a>
+      / <a href="/docs/current/index.html">当前版本</a>
     {% endif %}
 	 </td>
 	 <td>
@@ -36,31 +36,30 @@
 	  {%if v.a4pdf%}<a href="/files/documentation/pdf/{{v.numtree}}/postgresql-{{v.numtree}}-A4.pdf">A4 PDF</a> <span class="txtMediumGrey">({{v.a4pdf|filesizeformat}})</span>{%endif%}
 	  {%if v.a4pdf and v.uspdf%}&bull;{%endif%}
 	  {%if v.uspdf%}<a href="/files/documentation/pdf/{{v.numtree}}/postgresql-{{v.numtree}}-US.pdf">US PDF</a> <span class="txtMediumGrey">({{v.uspdf|filesizeformat}})</span>{%endif%}
-	  {%else%}PDF version not available
+	  {%else%}PDF 版本不可用
 	  {%endif%}
 	</tr>
 	{%endfor%}
 	<tr>
-	 <td><a href="/docs/devel/index.html">Development snapshot</a></td>
-	 <td>PDF version not available</td>
+	 <td><a href="/docs/devel/index.html">开发快照</a></td>
+	 <td>PDF 版本不可用</td>
 	</tr>
        </tbody>
       </table>
 
       <p>
-       Looking for documentation for an older, unsupported, version? Check the
-       <a href="/docs/manuals/archive/">archive</a> of older manuals.
+       需要查看更旧的、不再受支持的版本的文档？请查看<a href="/docs/manuals/archive/">旧版手册归档</a>。
       </p>
     </div>
     <div class="col-md-3">
       <section>
-        <h2>Translated Manuals</h2>
+        <h2>翻译版手册</h2>
       </section>
       <ul>
-       <li><a href="http://www.postgres.cn/docs" target="_blank" rel="noopener">Chinese</a></li>
-       <li><a href="https://docs.postgresql.fr" target="_blank" rel="noopener">French</a></li>
-       <li><a href="https://www.postgresql.jp/document/" target="_blank" rel="noopener">Japanese</a></li>
-       <li><a href="https://postgrespro.ru/docs/postgresql" target="_blank" rel="noopener">Russian</a></li>
+       <li><a href="http://www.postgres.cn/docs" target="_blank" rel="noopener">中文</a></li>
+       <li><a href="https://docs.postgresql.fr" target="_blank" rel="noopener">法语</a></li>
+       <li><a href="https://www.postgresql.jp/document/" target="_blank" rel="noopener">日语</a></li>
+       <li><a href="https://postgrespro.ru/docs/postgresql" target="_blank" rel="noopener">俄语</a></li>
       </ul>
     </div>
   </div>

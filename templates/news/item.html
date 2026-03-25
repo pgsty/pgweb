@@ -3,7 +3,7 @@
 {%block title%}{{obj.title}}{%endblock%}
 {%block contents%}
 <h1>{{obj.title}}</h1>
-<div class="newsdate">Posted on <strong>{{obj.displaydate}}</strong>{% if obj.org.name != '_migrated' %} by {{ obj.org.name }}{% endif %}</div>
+<div class="newsdate">发布于 <strong>{{obj.displaydate}}</strong>{% if obj.org.name != '_migrated' %}，{{ obj.org.name }}{% endif %}</div>
 <div class="newstags newsdate">{%for t in obj.tags.all%}
 <span class="badge badge-pill badge-secondary"><i class="fa fa-tag"></i> {{t}}</span>
 {%endfor%}
@@ -11,7 +11,6 @@
 
 {{obj.content|markdown}}
 {%if obj.is_migrated%}
-<p><em>This post has been migrated from a previous version of the PostgreSQL
-website. We apologise for any formatting issues caused by the migration.</em></p>
+<p><em>此文章已从旧版 PostgreSQL 网站迁移。对于迁移导致的任何格式问题，我们深表歉意。</em></p>
 {%endif%}
 {%endblock%}

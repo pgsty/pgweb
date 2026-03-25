@@ -1,12 +1,12 @@
 {%extends "base/page.html"%}
 {% load pgmarkdown %}
-{%block title%}Feature Description{%endblock%}
+{%block title%}特性描述{%endblock%}
 {%block contents%}
-<h1>Feature Description</h1>
+<h1>特性描述</h1>
 <h2>{{feature.name}}</h2>
 <p>
 {% if feature.description|slice:":8" == "https://" %}
-  For more information, please visit : <a href="{{ feature.description }}">{{ feature.description }}</a>
+  更多信息，请访问：<a href="{{ feature.description }}">{{ feature.description }}</a>
 {% else %}
   {{ feature.description|markdown }}
 {% endif %}

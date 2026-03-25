@@ -1,23 +1,21 @@
 {%extends "base/page.html"%}
-{%block title%}Downloads{%endblock%}
+{%block title%}下载{%endblock%}
 {%block extrahead%}
 <script type="text/javascript" src="/media/js/download.js?{{gitrev}}"></script>
 {%endblock%}
 {%block contents%}
 
-<h1>Downloads <i class="fa fa-download"></i></h1>
+<h1>下载 <i class="fa fa-download"></i></h1>
 
-<h2>PostgreSQL Downloads</h2>
+<h2>PostgreSQL 下载</h2>
 
 <p>
-PostgreSQL is available for download as ready-to-use packages or installers for
-various platforms, as well as a source code archive if you want to build it
-yourself.
+PostgreSQL 提供各平台的即用安装包或安装程序，以及源代码归档，供您自行构建。
 </p>
 
-<h3>Packages and Installers</h3>
+<h3>安装包与安装程序</h3>
 
-<p>Select your operating system family:</p>
+<p>选择您的操作系统：</p>
 
 <a role="button" id="btn-download-linux" class="btn btn-outline-dark btn-download" href="/download/linux/">
   Linux<br/>
@@ -42,7 +40,7 @@ yourself.
 
 <!-- sub-navigation for Linux distributions -->
 <div id="download-subnav-linux" class="download-subnav">
-  <p>Select your Linux distribution:</p>
+  <p>选择您的 Linux 发行版：</p>
   <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/debian/">
     Debian<br/>
     <img class="logo" src="/media/img/debian.svg" alt="Debian Logo" />
@@ -60,58 +58,53 @@ yourself.
     <img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu Logo" />
   </a>
   <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/#generic">
-    Other Linux<br/>
+    其他 Linux<br/>
     <img class="logo" src="/media/img/linux.svg" alt="Linux Logo" />
   </a>
 </div>
 
 <!-- sub-navigation for BSD distributions -->
 <div id="download-subnav-bsd" class="download-subnav">
-  <p>Select your BSD operating system:</p>
+  <p>选择您的 BSD 操作系统：</p>
   <a role="button" class="btn btn-outline-dark btn-download" href="/download/openbsd/">OpenBSD<br/><img class="logo" src="/media/img/openbsd.gif" alt="OpenBSD Logo" /></a>
   <a role="button" class="btn btn-outline-dark btn-download" href="/download/freebsd/">FreeBSD<br/><img class="logo" src="/media/img/freebsd.svg" alt="FreeBSD Logo" /></a>
   <a role="button" class="btn btn-outline-dark btn-download" href="/download/netbsd/">NetBSD<br/><img class="logo" src="/media/img/netbsd.svg" alt="NetBSD Logo" /></a>
 </div>
 
-<h3>Source code</h3>
+<h3>源代码</h3>
 
 <p>
-The source code can be found in the main <a href="/ftp/source/">file browser</a>
-or you can access the source control repository directly
-at <a href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=summary" target="_blank" rel="noopener">git.postgresql.org</a>.
-Instructions for building from source can be found in the
-<a href="/docs/current/installation.html">documentation</a>.
+源代码可以在主<a href="https://www.postgresql.org/ftp/source/">文件浏览器</a>中找到，您也可以直接访问源代码仓库
+<a href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=summary" target="_blank" rel="noopener">git.postgresql.org</a>。
+从源代码构建的说明可以在<a href="/docs/current/installation.html">文档</a>中找到。
 </p>
 
-<h3>Beta/RC Releases and development snapshots (unstable)</h3>
+<h3>Beta/RC 版本及开发快照（不稳定）</h3>
 
 <p>
-There are source code and binary <a href="/download/snapshots/">packages</a>
-of beta and release candidates, and of the current development code available
-for testing and evaluation of new features. Note that these builds should
-be used <strong>for testing purposes only</strong>, and not for production systems.
+这里提供 Beta 和候选发布版本以及当前开发代码的源代码和二进制<a href="/download/snapshots/">安装包</a>，可用于测试和评估新功能。请注意，这些构建<strong>仅用于测试目的</strong>，不应用于生产系统。
 </p>
 
-<h2>3rd party distributions</h2>
+<h2>第三方发行版</h2>
 
-<h3>Ready to run stacks</h3>
+<h3>开箱即用的技术栈</h3>
+    <p>
+'LAPP'、'MAPP' 和 'WAPP'（Linux/Mac/Windows + Apache + PHP + PostgreSQL）技术栈可从
+<a href="https://bitnami.com/tag/postgresql">BitNami</a> 获取。
+</p>
 <p>
-'LAPP', 'MAPP' and 'WAPP' (Linux/Mac/Windows + Apache + PHP + PostgreSQL)
-stacks are available from
-<a href="https://bitnami.com/tag/postgresql">BitNami</a>.
+    'PIGSTY'（开箱即用的企业级 PG 发行版）可以从 <a href="https://pigsty.io">Pigsty</a> 处获取。
 </p>
 
-<h2>Additional Software</h2>
+<h2>额外软件</h2>
 
-<h3>Software Catalogue</h3>
+<h3>软件目录</h3>
 
-<p>There is much software available that is not bundled with PostgreSQL. The <a href="/download/product-categories">Software
-Catalogue</a> offers a listing of many commercial and Open Source applications, interfaces and extensions to PostgreSQL
-that you may find useful.</p>
+<p>有许多未与 PostgreSQL 捆绑的软件可供使用。<a href="/download/product-categories">软件目录</a>提供了许多商业和开源应用程序、接口以及 PostgreSQL 扩展的列表，您可能会觉得有用。</p>
 
-<p>If you wish to have your product listed in the catalogue, please fill out this <a href="/account/products/new/">form</a>.</p>
+<p>如果您希望将您的产品列入目录，请填写此<a href="/account/products/new/">表单</a>。</p>
 
-<h2>File Browser</h2>
-<p>You can download most of the software we publish from a mirror site using our <a href="/ftp/">File Browser</a>.</p>
+<h2>文件浏览器</h2>
+<p>您可以通过我们的<a href="https://www.postgresql.org/ftp/">文件浏览器</a>从镜像站点下载我们发布的大部分软件。</p>
 
 {%endblock%}

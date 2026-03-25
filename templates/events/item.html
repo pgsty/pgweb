@@ -3,20 +3,17 @@
 {%block title%}{{obj.title}}{%endblock%}
 {%block contents%}
 <h1>{{obj.title}}</h1>
-<div class="eventdate">Date: <strong>{{obj.displaydate|safe}}</strong></div>
-<div>Location: {{obj.locationstring}}</div>
-{%if obj.language%}<div>Language: {{obj.language}}</div>{%endif%}
-{%if obj.badged%}<img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event">  This event is recognised under the <a href="/about/policies/conferences/">community event guidelines</a>.{%endif%}
+<div class="eventdate">日期：<strong>{{obj.displaydate|safe}}</strong></div>
+<div>地点：{{obj.locationstring}}</div>
+{%if obj.language%}<div>语言：{{obj.language}}</div>{%endif%}
+{%if obj.badged%}<img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event">  此活动已按照<a href="/about/policies/conferences/">社区活动准则</a>获得认可。{%endif%}
 {{obj.details|markdown}}
 {%if obj.has_organisation%}
-<p>Posted by {{obj.org}}{%if obj.org.email%} ({{obj.org.email}}){%endif%}.</p>
+<p>发布者：{{obj.org}}{%if obj.org.email%}（{{obj.org.email}}）{%endif%}</p>
 {%else%}
-<p><em>This event has been migrated from a previous version of the PostgreSQL
-website. We apologise for any formatting issues caused by the migration.</em></p>
+<p><em>此活动已从旧版 PostgreSQL 网站迁移。对于迁移导致的任何格式问题，我们深表歉意。</em></p>
 {%endif%}
 <p>
-<em><strong>Note:</strong> The PostgreSQL Global Development Group does not endorse any
-events run by third parties. No guarantee of the quality of events is offered
-whatsoever.</em>
+<em><strong>注意：</strong>PostgreSQL 全球开发组不为任何第三方举办的活动背书。我们不对活动的质量做任何保证。</em>
 </p>
 {%endblock%}

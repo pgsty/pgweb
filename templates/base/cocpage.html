@@ -6,19 +6,19 @@
 {%block cocmain%}{%endblock%}
   </div>
   <div class="col-lg-3">
-    <h1>Translations</h1>
+    <h1>翻译</h1>
     <ul>
       <li><span lang="en"><a href="/about/policies/coc/">English</a></span></li>
 {%for l in "pages/about/policies/coc"|list_templates|sort_lower%}
       <li><span lang="{{l}}"><a href="/about/policies/coc/{{l}}/">{{l|languagename}}</a></span></li>
 {%endfor%}
-      <li><a href="/about/policies/coc-translations/">How to Translate</a></li>
+      <li><a href="/about/policies/coc-translations/">如何翻译</a></li>
     </ul>
-    <h1>Committee</h1>
+    <h1>委员会</h1>
     <ul>
-      <li><a href="/about/policies/coc_committee/">Current committee</a></li>
+      <li><a href="/about/policies/coc_committee/">当前委员会</a></li>
     </ul>
-    <h1>Annual Reports</h1>
+    <h1>年度报告</h1>
     <ul>
 {% for t in "pages/about/policies/coc/reports"|list_templates|sort_lower:True %}
       <li><a href="/about/policies/coc/reports/{{t}}/">{{t}}</a></li>

@@ -1,17 +1,17 @@
 {%extends "base/base.html" %}
 {% load pgfilters %}
-{%block title%}The world's most advanced open source database{%endblock%}
+{%block title%}世界上最先进的开源数据库{%endblock%}
 {%block meta%}
-  <meta name="description" content="The official site for PostgreSQL, the world's most advanced open source database" />
+  <meta name="description" content="PostgreSQL 官方网站，世界上最先进的开源数据库" />
 {%endblock%}
 {%block layoutblock%}
 <div class="jumbotron jumbotron-fluid pg-jumbotron">
   <div class="container">
-    <h1 class="text-white pg-jumbotron-header">PostgreSQL: The World's Most Advanced Open Source Relational Database</h1>
+    <h1 class="text-white pg-jumbotron-header">PostgreSQL：世界上最先进的开源关系型数据库</h1>
     <div class="row">
       <div class="col text-center">
-        <a class="btn btn-light btn-rounded" role="button" href="/download/">Download <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-        <a class="btn btn-light btn-rounded" role="button" href="/about/">New to PostgreSQL?</a>
+        <a class="btn btn-light btn-rounded" role="button" href="/download/">下载 <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+        <a class="btn btn-light btn-rounded" role="button" href="/about/">初识 PostgreSQL？</a>
       </div>
     </div>
   </div>
@@ -24,67 +24,54 @@
     <!-- Feature -->
     <div class="col-lg-6 feature">
       <img src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo">
-      <h2>New to PostgreSQL?</h2>
+      <h2>初识 PostgreSQL？</h2>
       <div class="text">
         <p>
-          PostgreSQL is a powerful, open source object-relational database system with over 35 years of active development
-          that has earned it a strong reputation for reliability, feature robustness, and performance.
+          PostgreSQL 是一个强大的开源对象关系型数据库系统，经过 35 年以上的活跃开发，在可靠性、功能健壮性和性能方面赢得了良好的声誉。
         </p>
         <p>
-          There is a wealth of information to be found describing how to <a href="/download/">install</a> and <a href="/docs/">use</a> PostgreSQL through the <a href="/docs/">official documentation</a>.
-          The <a href="/community/">open source community</a>
-          provides many helpful places to become familiar with PostgreSQL,
-          discover how it works, and find career opportunities. Learn more on
-          how to <a href="/community/">engage with the community</a>.
+          <a href="/docs/">官方文档</a>中有大量关于如何<a href="/download/">安装</a>和<a href="/docs/">使用</a> PostgreSQL 的信息。
+          <a href="/community/">开源社区</a>提供了许多有用的渠道，帮助您熟悉 PostgreSQL、了解其工作原理并寻找职业机会。进一步了解如何<a href="/community/">参与社区</a>。
         </p>
       </div>
-      <a href="/about/" title="Learn More"><button type="button" class="btn btn-center btn-primary btn-inline-block">Learn More</button></a>
-      <a href="/about/featurematrix/" title="Feature Matrix"><button type="button" class="btn btn-center btn-primary btn-inline-block">Feature Matrix</button></a>
-      <a href="/about/governance/" title="Governance"><button type="button" class="btn btn-center btn-primary btn-inline-block">Governance</button></a>
+      <a href="/about/" title="了解更多"><button type="button" class="btn btn-center btn-primary btn-inline-block">了解更多</button></a>
+      <a href="/about/featurematrix/" title="特性矩阵"><button type="button" class="btn btn-center btn-primary btn-inline-block">特性矩阵</button></a>
+      <a href="/about/governance/" title="项目治理"><button type="button" class="btn btn-center btn-primary btn-inline-block">项目治理</button></a>
     </div>
     <!-- END Feature -->
 
     <!-- Feature -->
     <div class="col-lg-6 feature">
       <i class="fas fa-download"></i>
-      <h2>Latest Releases</h2>
+      <h2>最新版本</h2>
       <div class="text">
         <p>
           <strong>
             2026-02-26 -
             <a href="/about/news/postgresql-183-179-1613-1517-and-1422-released-3246/">
-              PostgreSQL 18.3, 17.9, 16.13, 15.17, and 14.22 Released!
+              PostgreSQL 18.3、17.9、16.13、15.17 和 14.22 发布！
             </a>
           </strong>
         </p>
         <p>
-          The PostgreSQL Global Development Group has
-          <a href="/download/">released an update</a> to all supported versions
-          of PostgreSQL, including 18.3, 17.9, 16.13, 15.17, and 14.22.
-          This is an out-of-cycle release that fixes
-          <a href="/about/news/out-of-cycle-release-scheduled-for-february-26-2026-3241/">several regressions</a>
-          reported after the last update release.
+          PostgreSQL 全球开发组已<a href="/download/">发布更新</a>，覆盖所有受支持的版本，包括 18.3、17.9、16.13、15.17 和 14.22。
+          这是一次计划外的发布，修复了上次更新发布后报告的<a href="/about/news/out-of-cycle-release-scheduled-for-february-26-2026-3241/">若干回归问题</a>。
         </p>
         <p>
-          For the more information about this release, please review the
-          <a href="/docs/release/">release notes</a>. You can download
-          PostgreSQL from the <a href="/download/">download</a> page.
+          有关本次发布的更多信息，请查阅<a href="/docs/release/">发布说明</a>。您可以从<a href="/download/">下载</a>页面获取 PostgreSQL。
         </p>
         <p>
-          For more information on PostgreSQL 18, the latest major version of
-          PostgreSQL, please see the <a href="/about/press/"></a>full press release</a>
-          and <a href="/about/press/">translations of the release announcement</a>
-          in the <a href="/about/press/">press kit</a>.
+          有关 PostgreSQL 18（PostgreSQL 最新主要版本）的更多信息，请参阅<a href="/about/press/">完整新闻稿</a>以及<a href="/about/press/">新闻资料包</a>中的<a href="/about/press/">发布公告译文</a>。
         </p>
         <ul>
           {% for v in versions %}
-            <li class="{% cycle '' 'pg-bg-gray' %}"><strong>{{ v.numtree }}.{{ v.latestminor }}</strong> &middot; {{ v.reldate|date:"Y-m-d" }} &middot; <a href="/docs/{{ v.numtree }}/{{ v.relnotes }}">Notes</a></li>
+            <li class="{% cycle '' 'pg-bg-gray' %}"><strong>{{ v.numtree }}.{{ v.latestminor }}</strong> &middot; {{ v.reldate|date:"Y-m-d" }} &middot; <a href="/docs/{{ v.numtree }}/{{ v.relnotes }}">说明</a></li>
           {% endfor %}
         </ul>
       </div>
-      <a href="/download/" title="Download"><button type="button" class="btn btn-center btn-primary">Download</button></a>
-      <a href="/support/versioning/" title="Why Upgrade?"><button type="button" class="btn btn-center btn-outline-secondary btn-inline-block">Why Upgrade?</button></a>
-      <a href="/support/security/" title="Security"><button type="button" class="btn btn-center btn-outline-secondary btn-inline-block">Security</button></a>
+      <a href="/download/" title="下载"><button type="button" class="btn btn-center btn-primary">下载</button></a>
+      <a href="/support/versioning/" title="为什么要升级？"><button type="button" class="btn btn-center btn-outline-secondary btn-inline-block">为什么要升级？</button></a>
+      <a href="/support/security/" title="安全"><button type="button" class="btn btn-center btn-outline-secondary btn-inline-block">安全</button></a>
     </div>
     <!-- END Feature -->
 
@@ -95,7 +82,7 @@
     <!-- Feature -->
     <div class="col-lg-6 feature">
       <i class="fas fa-calendar-alt"></i>
-      <h2>Upcoming Events</h2>
+      <h2>近期活动</h2>
       <div class="text">
         <ul>
           {% for event in events %}
@@ -109,27 +96,27 @@
         </ul>
         <p>
           <img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event">
-          indicates that an event is recognised under the <a href="/about/policies/conferences/">community event guidelines</a> and is directly helping the PostgreSQL community.
+          表示该活动已按照<a href="/about/policies/conferences/">社区活动准则</a>获得认可，并直接有助于 PostgreSQL 社区。
         </p>
       </div>
-      <a href="/about/events/" title="Check Schedule"><button type="button" class="btn btn-center btn-primary btn-inline-block">Check Schedule</button></a>
-      <a href="/account/events/new/" title="Add Your Event"><button type="button" class="btn btn-center btn-primary btn-inline-block">Add Your Event</button></a>
+      <a href="/about/events/" title="查看日程"><button type="button" class="btn btn-center btn-primary btn-inline-block">查看日程</button></a>
+      <a href="/account/events/new/" title="提交您的活动"><button type="button" class="btn btn-center btn-primary btn-inline-block">提交您的活动</button></a>
     </div>
     <!-- END Feature -->
     <!-- Feature -->
     <div class="col-lg-6 feature">
       <i class="fas fa-envelope"></i>
-      <h2>Mailing Lists</h2>
+      <h2>邮件列表</h2>
       <div class="text">
         <p>
-          The PostgreSQL <a href="https://lists.postgresql.org" target="_blank" rel="noopener">mailing lists</a> enable you to interact with active community participants on subjects related to the development of PostgreSQL, discovering how to use PostgreSQL, or learning about upcoming events and product releases.
+          PostgreSQL <a href="https://lists.postgresql.org" target="_blank" rel="noopener">邮件列表</a>使您能够与活跃的社区成员就 PostgreSQL 开发、使用方法、近期活动和产品发布等主题进行交流。
         </p>
         <p>
-          In order to manage your mailing list subscription, you need a <a href="/account/">PostgreSQL community account</a>. <a href="/account/">Signing up</a> is easy and gives you direct access to the <a href="/community/">global PostgreSQL community</a>.
+          要管理您的邮件列表订阅，您需要一个 <a href="/account/">PostgreSQL 社区账户</a>。<a href="/account/">注册</a>非常简单，可以让您直接参与<a href="/community/">全球 PostgreSQL 社区</a>。
         </p>
       </div>
-      <a href="https://lists.postgresql.org" title="Subscribe"><button type="button" class="btn btn-center btn-primary btn-inline-block">Subscribe</button></a>
-      <a href="https://www.postgresql.org/list/" title="View Archives"><button type="button" class="btn btn-center btn-outline-secondary btn-inline-block">View Archives</button></a>
+      <a href="https://lists.postgresql.org" title="订阅"><button type="button" class="btn btn-center btn-primary btn-inline-block">订阅</button></a>
+      <a href="https://www.postgresql.org/list/" title="查看归档"><button type="button" class="btn btn-center btn-outline-secondary btn-inline-block">查看归档</button></a>
     </div>
     <!-- END Feature -->
   </div>
@@ -140,12 +127,12 @@
   <div class="row">
     <div class="col-lg-6 cta cta-3"></div>
     <div class="col-lg-6 cta-text">
-      <h2>Learning Opportunities Ahead</h2>
+      <h2>学习机会就在前方</h2>
       <p class="text-left">
-        Want to learn more about PostgreSQL and help build the community? Come to one of the many events, local user groups, &amp; training sessions where you can meet experienced PostgreSQL users and enhance your database skills.
+        想要深入了解 PostgreSQL 并参与社区建设？来参加众多活动、本地用户组和培训课程吧。</br>在这里您可以结识经验丰富的 PostgreSQL 用户，提升数据库技能。
       </p>
-      <a href="/about/events/" title="Browse Events"><button type="button" class="btn btn-light btn-rounded">Browse Events</button></a>
-      <a href="/community/user-groups/" title="Browse User Groups"><button type="button" class="btn btn-light btn-rounded">Browse User Groups</button></a>
+      <a href="/about/events/" title="浏览活动"><button type="button" class="btn btn-light btn-rounded">浏览活动</button></a>
+      <a href="/community/user-groups/" title="浏览用户组"><button type="button" class="btn btn-light btn-rounded">浏览用户组</button></a>
     </div>
   </div>
 </div>
@@ -154,12 +141,12 @@
 <div class="container">
   <div class="row">
     <div class="col-lg-7">
-      <h2 class="centered-lines">Latest News</h2>
+      <h2 class="centered-lines">最新动态</h2>
       <!-- Featured Post -->
         <header>
           <h3>
             <a href="/about/news/postgresql-183-179-1613-1517-and-1422-released-3246/">
-              PostgreSQL 18.3, 17.9, 16.13, 15.17, and 14.22 Released!
+              PostgreSQL 18.3、17.9、16.13、15.17 和 14.22 发布！
             </a>
           </h3>
           <ul class="meta">
@@ -168,23 +155,18 @@
           </ul>
         </header>
         <p>
-          The PostgreSQL Global Development Group has
-          <a href="/download/">released an update</a> to all supported versions
-          of PostgreSQL, including 18.3, 17.9, 16.13, 15.17, and 14.22.
-          This is an out-of-cycle release that fixes
-          <a href="/about/news/out-of-cycle-release-scheduled-for-february-26-2026-3241/">several regressions</a>
-          reported after the last update release. You can find
-          details on the fixes in the <a href="/docs/release/">release notes</a>.
+          PostgreSQL 全球开发组已<a href="/download/">发布更新</a>，覆盖所有受支持的版本，包括 18.3、17.9、16.13、15.17 和 14.22。
+          这是一次计划外的发布，修复了上次更新发布后报告的<a href="/about/news/out-of-cycle-release-scheduled-for-february-26-2026-3241/">若干回归问题</a>。您可以在<a href="/docs/release/">发布说明</a>中找到修复的详细信息。
         </p>
         <ul class="bold">
-          <li><a href="/about/news/postgresql-183-179-1613-1517-and-1422-released-3246/">Release Announcement</a></li>
-          <li><a href="/docs/release/">Release Notes</a></li>
-          <li><a href="/about/press/">PostgreSQL 18 Press Kit</a></li>
-          <li><a href="/support/versioning/">Versioning Policy</a>
-          <li><a href="/download/">Download</a></li>
+          <li><a href="/about/news/postgresql-183-179-1613-1517-and-1422-released-3246/">发布公告</a></li>
+          <li><a href="/docs/release/">发布说明</a></li>
+          <li><a href="/about/press/">PostgreSQL 18 媒体资料包</a></li>
+          <li><a href="/support/versioning/">版本策略</a>
+          <li><a href="/download/">下载</a></li>
         </ul>
-        <a href="/about/newsarchive/" title="Archives"><button type="button" class="btn btn-primary btn-center btn-inline-block">Browse Archives</button></a>
-        <a href="/account/news/new/" title="Submit News"><button type="button" class="btn btn-primary btn-center btn-inline-block">Submit News</button></a>
+        <a href="/about/newsarchive/" title="归档"><button type="button" class="btn btn-primary btn-center btn-inline-block">浏览归档</button></a>
+        <a href="/account/news/new/" title="提交新闻"><button type="button" class="btn btn-primary btn-center btn-inline-block">提交新闻</button></a>
     </div>
     <div class="col-lg-5">
       <div class="sidebar">
@@ -195,7 +177,7 @@
             <li>
               <h3><a href="/about/news/{{ n.title|slugify }}-{{ n.id }}/">{{ n.title }}</a></h3>
               <ul class="meta">
-                <li><i class="far fa-clock"></i>&nbsp;{{ n.displaydate }} by {{ n.org.name }}</li>
+                <li><i class="far fa-clock"></i>&nbsp;{{ n.displaydate }}，{{ n.org.name }}</li>
               </ul>
             </li>
           {% endfor %}
@@ -209,7 +191,7 @@
  <div class="container margin">
    <div class="row">
      <div class="col-md-12">
-       <h2 class="centered-lines"><span>PLANET POSTGRESQL</span></h2>
+       <h2 class="centered-lines"><span>PLANET POSTGRESQL</span></h2><!-- Planet PostgreSQL 博客聚合 -->
        <div class="feature"><i class="fas fa-globe"></i></div>
     </div>
    </div>
@@ -231,7 +213,7 @@
    <!-- END First Row Planet PostgreSQL -->
    <div class="row">
      <div class="col-sm-12">
-       <a href="https://planet.postgresql.org" title="Browse Archives" target="_blank" rel="noopener"><button type="button" class="btn btn-center btn-primary">Browse Archives</button></a>
+       <a href="https://planet.postgresql.org" title="浏览归档" target="_blank" rel="noopener"><button type="button" class="btn btn-center btn-primary">浏览归档</button></a>
      </div>
    </div>
  </div>
@@ -239,11 +221,12 @@
  <div class="container-fluid">
    <div class="row">
      <div class="col-lg-6 cta-text">
-       <h2>Seeing unexpected behavior?</h2>
+       <h2>遇上异常表现？</h2>
        <p>
-         The PostgreSQL community takes pride in releasing software that reliably stores your data. If you believe you've discovered a bug, please click the button below and follow the instructions on how to submit a bug.
+         PostgreSQL 社区以发布能够可靠存储您数据的软件为荣。</br>
+           如果您发现了 Bug，欢迎点击下方按钮并按说明提交 Bug 报告。
        </p>
-       <a href="/account/submitbug/" title="Submit a Bug"><button type="button" class="btn btn-light btn-rounded">Submit a Bug</button></a>
+       <a href="https://www.postgresql.org/account/submitbug/" title="提交 Bug"><button type="button" class="btn btn-light btn-rounded">提交 Bug</button></a>
      </div>
      <div class="col-lg-6 cta cta-2"></div>
    </div>

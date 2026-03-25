@@ -1,67 +1,57 @@
 {%extends "base/page.html"%}
-{%block title%}macOS packages{%endblock%}
+{%block title%}macOS 安装包{%endblock%}
 {%block contents%}
 
-<h1><span class="text-lowercase">mac</span>OS packages <img class="logo" src="/media/img/apple.png" alt="Apple Logo" /></h1>
+<h1><span class="text-lowercase">mac</span>OS 安装包 <img class="logo" src="/media/img/apple.png" alt="Apple Logo" /></h1>
 
-<p>You can get macOS PostgreSQL packages from several sources.</p>
+<p>您可以从多个来源获取 macOS PostgreSQL 安装包。</p>
 
-<h2>Interactive installer by EDB</h2>
+<h2>EDB 交互式安装程序</h2>
 
 <p>
-<a href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads"> Download the installer</a>
-certified by EDB for all supported Postgres versions.
+<a href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads">下载安装程序</a>，由 EDB 认证，支持所有受支持的 Postgres 版本。
 </p>
 
 <p>
-  <strong>Note!</strong> This installer is hosted by EDB and not on the PostgreSQL community servers.
-  If you have issues with the website it's hosted on, please contact
-  <a href="mailto:webmaster@enterprisedb.com">webmaster@enterprisedb.com</a>.
+  <strong>注意！</strong>此安装程序托管在 EDB 上，而非 PostgreSQL 社区服务器上。如果您在托管网站上遇到问题，请联系
+  <a href="mailto:webmaster@enterprisedb.com">webmaster@enterprisedb.com</a>。
 </p>
 
 <p>
-This installer includes:
+此安装程序包含：
 </p>
 
 <ul>
-  <li>The Postgres server</li>
-  <li>pgAdmin, a graphical tool for managing and developing your databases</li>
-  <li>StackBuilder, a package manager for downloading and installing 
-    additional PostgreSQL tools and drivers. Stackbuilder includes management,
-    integration, migration, replication, geospatial, connectors and other tools.</li>
-</ul>  
+  <li>Postgres 服务器</li>
+  <li>pgAdmin，用于管理和开发数据库的图形化工具</li>
+  <li>StackBuilder，用于下载和安装额外 PostgreSQL 工具和驱动程序的包管理器。StackBuilder 包含管理、集成、迁移、复制、地理空间、连接器和其他工具。</li>
+</ul>
 
 <p>
-This installer can run in graphical, command line, or silent install modes.
+此安装程序可以在图形化、命令行或静默安装模式下运行。
 </p>
 
 <p>
-The macOS installer is designed to be a straightforward, fast way to get up and running with
-PostgreSQL. In the unlikely event that you have issues with the installer,
-please report them on the <a href="https://github.com/EnterpriseDB/edb-installers/issues">
-installer Github page</a>. Issues with the installed packages should be reported to the
-appropriate project directly.
+macOS 安装程序旨在提供一种简单、快速的方式来安装和运行 PostgreSQL。如果您在安装程序方面遇到问题（这种情况不太可能发生），请在
+<a href="https://github.com/EnterpriseDB/edb-installers/issues">安装程序 Github 页面</a>上报告。已安装软件包的问题应直接向相应项目报告。
 </p>
 
 <p>
-Advanced users can also download a
-<a href="https://www.enterprisedb.com/download-postgresql-binaries">zip archive</a>
-of the binaries, without the installer.
-This download is intended for users who wish to include Postgres as part of another application installer.
+高级用户还可以下载不含安装程序的
+<a href="https://www.enterprisedb.com/download-postgresql-binaries">zip 压缩包</a>（仅二进制文件）。此下载适用于希望将 Postgres 作为其他应用程序安装程序一部分的用户。
 </p>
 
-<h3>Platform support</h3>
+<h3>平台支持</h3>
 
 <p>
-  The installers are tested by EDB on the following platforms.
-  They will generally work on newer versions of macOS as well:
+  安装程序由 EDB 在以下平台上测试。通常也可以在更新版本的 macOS 上运行：
 </p>
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th scope="col">Postgres Version</th>
-      <th scope="col">64-bit macOS Platforms</th>
+      <th scope="col">Postgres 版本</th>
+      <th scope="col">64 位 macOS 平台</th>
     </tr>
   </thead>
   <tbody>
@@ -94,16 +84,13 @@ This download is intended for users who wish to include Postgres as part of anot
 
 <h2>Postgres.app</h2>
 <p>
-<a href="https://postgresapp.com">Postgres.app</a> is a simple, native macOS app that runs in the menubar without the need of an installer. Open the app, and you have a PostgreSQL server
-ready and awaiting new connections. Close the app, and the server shuts down.
+<a href="https://postgresapp.com">Postgres.app</a> 是一个简单的原生 macOS 应用程序，在菜单栏中运行，无需安装程序。打开应用程序，即可获得一个就绪并等待新连接的 PostgreSQL 服务器。关闭应用程序，服务器即会关闭。
 </p>
 
 <h2>Homebrew</h2>
 
 <p>
-PostgreSQL can also be installed on macOS using
-<a href="https://brew.sh">Homebrew</a>. For example, to install PostgreSQL 15,
-you can use the following command:
+也可以使用 <a href="https://brew.sh">Homebrew</a> 在 macOS 上安装 PostgreSQL。例如，要安装 PostgreSQL 15，可以使用以下命令：
 </p>
 
 <p>
@@ -113,38 +100,28 @@ you can use the following command:
 </p>
 
 <p>
-  You can use <a href="https://formulae.brew.sh">Homebrew Formulae</a> to
-  search for PostgreSQL and other packages. To find a specific major version of
-  PostgreSQL, search for <code>postgresql@NN</code>, where <code>NN</code>
-  represents the major version. For example,
-  <a href="https://formulae.brew.sh/formula/postgresql@15"><code>postgresql@15</code></a>.
+  您可以使用 <a href="https://formulae.brew.sh">Homebrew Formulae</a> 搜索 PostgreSQL 和其他软件包。要查找特定的 PostgreSQL 主版本，请搜索 <code>postgresql@NN</code>，其中 <code>NN</code> 代表主版本号。例如，<a href="https://formulae.brew.sh/formula/postgresql@15"><code>postgresql@15</code></a>。
 </p>
 
 <h2>MacPorts</h2>
 
 <p>
-PostgreSQL packages are also available for macOS from the
-<a href="https://www.macports.org/">MacPorts Project</a>. Please see the
-MacPorts documentation for information on how to install ports.
+也可以从 <a href="https://www.macports.org/">MacPorts Project</a> 获取 macOS 上的 PostgreSQL 软件包。请参阅 MacPorts 文档以了解如何安装 ports。
 </p>
 
 <p>
-A list of
-<a href="https://www.macports.org/ports.php?by=name&substr=postgresql">PostgreSQL packages</a>
-can be found using the portfiles search tool on the MacPorts website.
+可以在 MacPorts 网站上使用 portfiles 搜索工具查找
+<a href="https://www.macports.org/ports.php?by=name&substr=postgresql">PostgreSQL 软件包</a>列表。
 </p>
 
 <h2>Fink</h2>
 
 <p>
-PostgreSQL packages are available for macOS from the
-<a href="https://www.finkproject.org/">Fink Project</a>.
-Please see the Fink documentation for information on how to install packages.
+可以从 <a href="https://www.finkproject.org/">Fink Project</a> 获取 macOS 上的 PostgreSQL 软件包。请参阅 Fink 文档以了解如何安装软件包。
 </p>
 
 <p>
-A list of
-<a href="https://pdb.finkproject.org/pdb/browse.php?summary=postgresql">PostgreSQL packages</a>
-can be found using the package search tool on the Fink website.
+可以在 Fink 网站上使用软件包搜索工具查找
+<a href="https://pdb.finkproject.org/pdb/browse.php?summary=postgresql">PostgreSQL 软件包</a>列表。
 </p>
 {%endblock%}

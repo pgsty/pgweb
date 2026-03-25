@@ -1,31 +1,27 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}Project Name{%endblock%}
+{%block title%}项目名称{%endblock%}
 {%block contents%}
 
-<h1>Project Name <i class="fas fa-gavel"></i></h1>
+<h1>项目名称 <i class="fas fa-gavel"></i></h1>
 
-<p><em>Last updated: July 5, 2018. {%git_changes_link%}</em></p>
+<p><em>最后更新：2018年7月5日。{%git_changes_link%}</em></p>
 
-<h2>"PostgreSQL" versus "Postgres"</h2>
+<h2>"PostgreSQL" 与 "Postgres"</h2>
 
-<p>The name Postgres is an accepted alias for the PostgreSQL project. However it
-    is an alias or nickname and is not the official name of the project. Per
-    Dave Page, PostgreSQL Core Team:</p>
+<p>Postgres 是 PostgreSQL 项目的一个公认别名。但它只是别名或昵称，
+    并非项目的官方名称。引用 PostgreSQL 核心团队成员 Dave Page 的话：</p>
 
 <blockquote>
   <p>
-    Following recent discussions on a name change for the project, it has become
-    clear that consensus within the community will never be reached. In light of
-    this, the core team have discussed the matter in depth and decided that the
-    project shall continue to use the name PostgreSQL, but accept the use of
-    Postgres as an alias.
+    在最近关于项目改名的讨论之后，很明显社区内部永远不会达成共识。
+    鉴于此，核心团队对此事进行了深入讨论，并决定项目将继续使用 PostgreSQL 这一名称，
+    但接受 Postgres 作为别名使用。
   </p>
-  <p>Regards, Dave</p>
+  <p>此致，Dave</p>
 </blockquote>
 
-<p>Ref: <a
-        href="https://www.postgresql.org/message-id/473D7617.6070900@postgresql.org">Project
-    name - statement from the core team</a>.</p>
+<p>参考：<a
+        href="https://www.postgresql.org/message-id/473D7617.6070900@postgresql.org">项目名称——核心团队的声明</a>。</p>
 
 {%endblock%}

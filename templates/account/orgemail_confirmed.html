@@ -1,11 +1,10 @@
 {%extends "base/page.html"%}
-{%block title%}Email confirmed{%endblock%}
+{%block title%}邮箱已确认{%endblock%}
 {%block contents%}
 <p>
-  The email <em>{{email}}</em> has been confirmed for use in <em>{{org.name}}</em>,
-  and can now be used for submitting news.
+  邮箱 <em>{{email}}</em> 已确认用于 <em>{{org.name}}</em>，现在可以用于提交新闻。
 </p>
 <p>
-  <a class="btn btn-primary" href="/account/organisations/{{org.id}}/">Return to organisation</a>
+  <a class="btn btn-primary" href="/account/organisations/{{org.id}}/">返回组织</a>
 </p>
 {%endblock%}

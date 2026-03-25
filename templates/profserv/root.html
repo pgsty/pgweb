@@ -4,16 +4,14 @@
 <h1>{{title}}  <i class="fa fa-question-circle"></i></h1>
 
 {%if support%}
-<p>Commercial support is available from many different companies providing professional services
-to the PostgreSQL community.</p>
+<p>众多为 PostgreSQL 社区提供专业服务的公司可提供商业支持。</p>
 {%else%}
-<p>Many companies provide hosting solutions based on PostgreSQL. Some also provide complete
-solutions including support contracts.</p>
+<p>许多公司提供基于 PostgreSQL 的托管方案，部分公司还提供包含支持合同的完整解决方案。</p>
 {%endif%}
 
-<p>If your company would like to be listed here, please fill out this <a href="/account/services/new/">form</a>.</p>
+<p>如果您的公司希望在此列出，请填写此<a href="/account/services/new/">表单</a>。</p>
 
-<p>Please select a region:</p>
+<p>请选择地区：</p>
 
 <ul>
 {%for rl, rn in regions%}

@@ -7,7 +7,7 @@
 {% endif %}
 {% endblock extrahead %}
 
-{%block title%}Release Notes{%endblock%}
+{%block title%}发布说明{%endblock%}
 
 {% block contents %}
 {% regroup release_notes by major as release_note_groups %}
@@ -15,7 +15,7 @@
 <div id="release-notes" class="row">
     <div class="col-md-10">
       <section>
-        <h1>Release Notes <i class="far fa-file-alt"></i></h1>
+        <h1>发布说明 <i class="far fa-file-alt"></i></h1>
         <h2>
           {% if major_version == 0 %}Postgres95{% else %}PostgreSQL{% endif %}
           {{ major_version }}.{{ minor_version|release_notes_pg_minor_version:major_version }}
@@ -28,21 +28,21 @@
         <div class="col-md-3">
 	  {%if previous_minor_release is not None %}
             <a href="/docs/release/{{ major_version }}.{{ previous_minor_release|release_notes_pg_minor_version:major_version }}/">
-              Previous
+              上一版
             </a>
           {% endif %}
         </div>
         <div class="col-md-6 text-center">
           <p>
             <a href="/docs/release/">
-              Return to the Release Notes Archive
+              返回发布说明归档
             </a>
           </p>
         </div>
         <div class="col-md-3 text-right">
 	   {% if next_minor_release is not None %}
             <a href="/docs/release/{{ major_version }}.{{ next_minor_release|release_notes_pg_minor_version:major_version }}/">
-              Next
+              下一版
             </a>
           {% endif %}
         </div>
@@ -50,7 +50,7 @@
     </div>
     <div class="col-md-2 version-list">
       <section>
-        <h2>Versions</h2>
+        <h2>版本</h2>
       </section>
       <ul>
         {% for r in available_minor_versions %}

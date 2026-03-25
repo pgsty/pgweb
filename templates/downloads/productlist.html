@@ -1,11 +1,11 @@
 {%extends "base/page.html"%}
 {%load pgmarkdown%}
-{%block title%}Software Catalogue - {{category.catname}}{%endblock%}
+{%block title%}软件目录 - {{category.catname}}{%endblock%}
 {%block contents%}
 
-<h1>Software Catalogue - {{category.catname}}</h1>
+<h1>软件目录 - {{category.catname}}</h1>
 
-<p>{{productcount}} product(s) were found in this category.</p>
+<p>{{productcount}} 个产品在此分类中。</p>
 <p>{{category.blurb|safe}}</p>
 
 {% for product in products %}
@@ -13,10 +13,10 @@
   <table class="table table-striped product-table">
     <thead>
       <tr>
-        <th scope="col">Description</th>
-        <th scope="col">License</th>
-        <th scope="col">Pricing</th>
-        <th scope="col">Publisher</th>
+        <th scope="col">描述</th>
+        <th scope="col">许可证</th>
+        <th scope="col">价格</th>
+        <th scope="col">发行商</th>
         <th scope="col">&nbsp;</th>
       </tr>
     </thead>
@@ -26,15 +26,13 @@
         <td>{{product.licencetype}}</td>
         <td>{{product.price}}</td>
         <td><a href="{{product.org.url}}" target="_blank" rel="noopener nofollow">{{product.org.name}}</a></td>
-        <td><a href="{{product.url}}" target="_blank" rel="noopener nofollow">View</a></td>
+        <td><a href="{{product.url}}" target="_blank" rel="noopener nofollow">查看</a></td>
       </tr>
     </tbody>
   </table>
   <hr />
 {% endfor %}
 
-<p><em><strong>Note:</strong> The PostgreSQL Global Development Group do not endorse or
-recommend any products listed, and cannot vouch for the quality or reliability
-of any of them.</em></p>
+<p><em><strong>注意：</strong>PostgreSQL 全球开发组不为所列的任何产品做背书或推荐，也无法保证其中任何产品的质量或可靠性。</em></p>
 
 {%endblock%}

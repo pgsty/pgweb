@@ -1,19 +1,14 @@
 {%extends "base/page.html"%}
-{%block title%}Cross Site Request Detected{%endblock%}
+{%block title%}检测到跨站请求{%endblock%}
 {%block contents%}
-<h1>Cross Site Request Detected</h1>
+<h1>检测到跨站请求</h1>
 <p>
-Your request to access this resource failed because the system detected
-a Cross Site Request. This is either caused by a legitimate attempt to
-inject data, or by your system not being configured to allow validation
-of the request.
+您访问此资源的请求失败，因为系统检测到跨站请求。这可能是由于合法的数据注入尝试，也可能是由于您的系统未配置为允许验证该请求。
 </p>
 <p>
-The most common reason for this error is that your browser
-<strong>does not allow cookies</strong> on this request. Cookies are required for the
-cross site protection to work.
+此错误最常见的原因是您的浏览器在此请求中<strong>不允许 Cookie</strong>。跨站保护功能需要 Cookie 才能正常工作。
 </p>
 <p>
-The internal reason given was: <em>{{reason}}</em>
+内部原因：<em>{{reason}}</em>
 </p>
 {%endblock%}

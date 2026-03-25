@@ -1,336 +1,277 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}Funds Group{%endblock%}
+{%block title%}资金小组{%endblock%}
 
 {%block contents%}
-<h1>PostgreSQL Funds Group <i class="far fa-money-bill-alt"></i></h1>
+<h1>PostgreSQL 资金小组 <i class="far fa-money-bill-alt"></i></h1>
 
-<p><em>Last updated: March 1, 2019. {%git_changes_link%}</em></p>
+<p><em>最后更新：2019年3月1日。{%git_changes_link%}</em></p>
 
-<h2 id="charter">Charter</h2>
+<h2 id="charter">章程</h2>
 
 <p>
-  <strong>Governance Charter of the Relationship</strong> between the PostgreSQL
-  project and Software in the Public Interest, Inc.
+  PostgreSQL 项目与 Software in the Public Interest, Inc. 之间关系的<strong>治理章程</strong>。
 </p>
 
-<h3>Core Team Membership</h3>
+<h3>核心团队成员</h3>
 
 <p>
-  The <a href="/developer/core/">Core Team</a> of the PostgreSQL project
-  consists of the people currently listed on the
-  <a href="/community/contributors/">contributors page</a>.
+  PostgreSQL 项目的<a href="/developer/core/">核心团队</a>由<a href="/community/contributors/">贡献者页面</a>上当前列出的人员组成。
 </p>
 
-<p>The Core Team appoints its own members.</p>
+<p>核心团队自行任命其成员。</p>
 
-<h3>Fundraising Group Membership</h3>
+<h3>筹资小组成员</h3>
 
 <p>
-  The Fundraising Group (a.k.a. Funds Group) of the PostgreSQL project initially
-  consisted of the members of The PostgreSQL Foundation Inc. that were active at
-  the time of its termination. Thereafter, the Fundraising Group appoints its
-  own members using the normal procedures for proposals and votes, as described
-  below. The current membership is shown
-  <a href="https://wiki.postgresql.org/wiki/PGFGMembers">here</a>.
+  PostgreSQL 项目的筹资小组（即资金小组）最初由 The PostgreSQL Foundation Inc. 终止时仍活跃的成员组成。此后，筹资小组按照下文所述的提案和投票正常程序自行任命其成员。当前成员名单见<a href="https://wiki.postgresql.org/wiki/PGFGMembers">此处</a>。
 </p>
 
-<h3>Fundraising Group Elected Positions</h3>
+<h3>筹资小组选举职位</h3>
 
 <p>
-  The Fundraising Group elects an SPI Liaison and an Deputy SPI Liaison. The
-  appointments are subject to the veto of the Core Team. The appointments do not
-  have an explicit duration, but either may be replaced at any time using the
-  normal procedures for proposals and votes, as described below.
+  筹资小组选举一名 SPI 联络人和一名副 SPI 联络人。任命须经核心团队批准（核心团队有否决权）。任命没有明确的期限，但任何一方均可随时通过下文所述的提案和投票正常程序进行更换。
 </p>
 
 <p>
-  The duty of the SPI Liaison is primarily to represent the interests and
-  decisions of the Fundraising Group to SPI. Additionally the SPI Liaison will
-  submit to SPI on an ongoing basis a list of persons eligible for automatic SPI
-  contributing membership in recognition of their contributions to the
-  PostgreSQL project.
+  SPI 联络人的职责主要是向 SPI 代表筹资小组的利益和决定。此外，SPI 联络人将持续向 SPI 提交有资格获得 SPI 自动贡献成员资格的人员名单，以表彰他们对 PostgreSQL 项目的贡献。
 </p>
 
 <p>
-  The duty of the Deputy SPI Liaison is to perform the duties of the SPI Liaison
-  in the case that the SPI Liaison is unavailable for a non-trivial amount of
-  time, or upon explicit request of the SPI Liaison or the Fundraising Group.
+  副 SPI 联络人的职责是在 SPI 联络人长时间不可用的情况下，或应 SPI 联络人或筹资小组的明确请求时，履行 SPI 联络人的职责。
 </p>
 
-<h3>Proposals and Voting</h3>
+<h3>提案和投票</h3>
 
 <p>
-  Proposals must be made explicitly via email on the funds group
-  <a href="mailto:funds-group@lists.postgresql.org">mailing list</a>, and be
-  seconded prior to discussion and voting.
+  提案必须通过电子邮件在资金小组<a href="mailto:funds-group@lists.postgresql.org">邮件列表</a>上明确提出，并在讨论和投票前获得附议。
 </p>
 
 <p>
-  Decisions require discussion and voting in accordance with
-  <a href="#votes">how the fundraising group votes</a> in order to be valid.
+  决定需要根据<a href="#votes">筹资小组投票方式</a>进行讨论和投票方可生效。
 </p>
 
-<h2 id="votes">Voting</h2>
+<h2 id="votes">投票</h2>
 
-<h3>Methods</h3>
+<h3>方式</h3>
 
 <p>
-  Votes may be collected using either of two methods:
+  投票可以使用以下两种方式之一进行：
 </p>
 
 <ul>
   <li>
-    Openly on the mailing list
+    在邮件列表上公开投票
     <ul>
       <li>
-        Anything reasonably clear as to the vote is acceptable, e.g.
+        任何能清楚表达投票意向的方式均可接受，例如：
         <ul>
-          <li><strong>Yes</strong>: yes/+1/aye/yea/affirmative</li>
-          <li><strong>No</strong>: no/-1/nay,negative</li>
-          <li><strong>Abstain</strong>: abstain/0/pass</li>
+          <li><strong>赞成</strong>：yes/+1/aye/yea/affirmative</li>
+          <li><strong>反对</strong>：no/-1/nay/negative</li>
+          <li><strong>弃权</strong>：abstain/0/pass</li>
         </ul>
       </li>
     </ul>
   </li>
-  <li>Confidentially via private email to 2 selected members (Vote Collectors)</li>
+  <li>通过私人电子邮件向2名指定成员（投票收集员）保密投票</li>
 </ul>
 
-<h3>Open Voting Details</h3>
+<h3>公开投票细则</h3>
 
 <p>
-  If the vote is determined to be done with the Open Voting method, all votes
-  will be sent directly to the mailing list. Voting results should be summarized
-  by the member making the motion once the voting period is closed. Any member
-  can review the openly available votes for verification of the results.
+  如果确定采用公开投票方式，所有投票将直接发送到邮件列表。投票期结束后，提出动议的成员应汇总投票结果。任何成员都可以审核公开的投票以验证结果。
 </p>
 
-<h3>Confidential Voting Details</h3>
+<h3>保密投票细则</h3>
 
 <p>
-  If the vote is determined to be done with the Confidential Voting method, the
-  member who makes the motion may propose the Vote Collectors. The Vote
-  Collectors must agree to this responsibility. If they reject the request,
-  other members must be selected until 2 are found which agree. If no members
-  are specifically selected, the default Vote Collectors are the SPI Liaison and
-  the Alternate SPI Liaison.
+  如果确定采用保密投票方式，提出动议的成员可以提议投票收集员。投票收集员必须同意承担此职责。如果他们拒绝请求，必须另行选择成员，直到找到2名同意的成员。如果未特别选择成员，默认投票收集员为 SPI 联络人和副 SPI 联络人。
 </p>
 
 <ul>
   <li>
-    Members will send their ballot to both Vote Collectors using the email
-    address subscribed to the Funds Group mailing list
+    成员将使用订阅资金小组邮件列表的电子邮件地址将选票发送给两位投票收集员
   </li>
-  <li>Both Vote Collectors will tabulate the votes independently</li>
+  <li>两位投票收集员将独立统计选票</li>
   <li>
-    Votes which do not appear on both lists will be discarded after contacting
-    the member involved to allow them to re-vote. Although not required, email
-    voting should utilize use PGP to sign the vote if possible.
+    未同时出现在两份名单上的选票将在联系相关成员允许其重新投票后作废。虽非必须，但电子邮件投票应尽可能使用 PGP 对选票进行签名。
   </li>
   <li>
-    Ballots are confidential. They may not be shared except by the Vote
-    Collectors for verification purposes.
+    选票是保密的。除投票收集员出于验证目的外，不得分享。
   </li>
   <li>
-    The Vote Collectors should post an email to the Funds Group mailing list no
-    later then 24 hours before the end of the vote, listing who has voted, as a
-    reminder to all to vote and notification those whose ballot may not have
-    been received.
+    投票收集员应在投票结束前不迟于24小时向资金小组邮件列表发送电子邮件，列出已投票的人员，作为对所有人投票的提醒以及通知选票可能未被收到的成员。
   </li>
   <li>
-    The vote results should be posted to the mailing list within 24 hours of the
-    vote closing.
+    投票结果应在投票结束后24小时内发布到邮件列表。
   </li>
 </ul>
 
-<h3>Process</h3>
+<h3>流程</h3>
 
-<h4>Fund Requests</h4>
+<h4>资金请求</h4>
 
 <ul>
   <li>
-    <a href="#requests">Fund requests</a> must be for reimbursement of
-    expenditures which generally fit within the
-    <a href="#requests">funding request guidelines</a>.
+    <a href="#requests">资金请求</a>必须用于报销通常符合<a href="#requests">资金请求指南</a>的支出。
   </li>
   <li>
-    <a href="#requests">Fund requests</a> less than or equal to $1000 USD may go
-    through the following special process:
+    金额不超过1000美元的<a href="#requests">资金请求</a>可以通过以下特殊流程处理：
     <ul>
       <li>
-        Any member may forward the request to the Funds Group mailing list, or
-        the request might come directly to the list via moderation
+        任何成员可以将请求转发到资金小组邮件列表，或者请求可能通过审核直接发送到列表
       </li>
       <li>
-        If there are no objections, the Liaison may approve and fund the request
-        after 72 hours
+        如果没有异议，联络人可以在72小时后批准并拨付请求
       </li>
       <li>
-        If there are any objections the request must be processed as any other
-        motion, as discussed below
+        如果有任何异议，请求必须作为其他动议按照下文讨论的方式处理
       </li>
     </ul>
   </li>
   <li>
-    <a href="#requests">Fund requests</a> greater than $1000 USD must be
-    processed as any other motion, as discussed below
+    金额超过1000美元的<a href="#requests">资金请求</a>必须作为其他动议按照下文讨论的方式处理
   </li>
 </ul>
 
-<h4>Motions</h4>
+<h4>动议</h4>
 
 <ul>
-  <li>All current members of the Funds Group may submit a motion</li>
-  <li>Any other current member must second all motions</li>
-  <li>All current members of the Funds Group are eligible to vote</li>
+  <li>资金小组的所有现任成员均可提出动议</li>
+  <li>任何其他现任成员必须对所有动议进行附议</li>
+  <li>资金小组的所有现任成员均有投票资格</li>
   <li>
-    Debate:
+    辩论：
     <ul>
-      <li>Shall commence once the motion is seconded</li>
-      <li>Shall take place on the mailing list</li>
+      <li>动议获得附议后开始</li>
+      <li>在邮件列表上进行</li>
       <li>
-        Shall end no sooner than 72 hours after the motion was seconded, unless
-        a longer debate period was specifically requested as part of the motion
-        (in no case shall debate be less than 72 hours)
+        自动议获得附议后不得少于72小时结束，除非动议中特别要求了更长的辩论期（任何情况下辩论不得少于72小时）
       </li>
       <li>
-        May be extended through a no-debate motion which is seconded and
-        approved via the Open Voting method
+        可以通过一项无辩论动议进行延长，该动议须经附议并通过公开投票方式批准
       </li>
     </ul>
   </li>
   <li>
-    Votes:
+    投票：
     <ul>
-      <li>Shall take place on the mailing list or privately as discussed below</li>
+      <li>在邮件列表上或按下文讨论的方式私下进行</li>
       <li>
-        Quorum is 5 voting members, or (TRUNCATE(TRUNCATE(N/3)/2)*2) + 1 where N
-        is the number of active members, whichever is larger -- for example,
-        with 18 active members, (TRUNCATE(TRUNCATE(N/3)/2)*2) + 1 = 7, so the
-        quorum is 7
+        法定人数为5名投票成员，或 (TRUNCATE(TRUNCATE(N/3)/2)*2) + 1（其中 N 为活跃成员数），取较大值——例如，有18名活跃成员时，(TRUNCATE(TRUNCATE(N/3)/2)*2) + 1 = 7，因此法定人数为7
       </li>
-      <li>Determined by a simple majority vote, of the voting members</li>
+      <li>由投票成员的简单多数决定</li>
       <li>
-        Allow the option to "abstain" -- votes of "abstain" are counted as
-        participating for quorum purposes
+        允许选择"弃权"——"弃权"票在法定人数方面计为参与
       </li>
       <li>
-        Will remain open for 72 hours from the end of debate, unless a longer
-        voting period was specifically requested as part of the motion (in no
-        case shall voting be less than 72 hours)
+        自辩论结束后保持开放72小时，除非动议中特别要求了更长的投票期（任何情况下投票不得少于72小时）
       </li>
     </ul>
   </li>
   <li>
-    Method
+    方式
     <ul>
-      <li>The voting method may be determined by the member who makes the motion</li>
+      <li>投票方式可由提出动议的成员决定</li>
       <li>
-        If no voting method is thus determined, the vote takes place using the
-        Open Voting method, on the mailing list
+        如果未指定投票方式，则在邮件列表上采用公开投票方式进行
       </li>
       <li>
-        Only one method will be used per vote.
+        每次投票只使用一种方式。
       </li>
     </ul>
   </li>
 </ul>
 
-<h2 id="requests">Funding Requests</h2>
+<h2 id="requests">资金请求</h2>
 
-<h3>Requesting Funding</h3>
+<h3>请求资金</h3>
 
-<h4>Types of Fund Requests</h4>
+<h4>资金请求类型</h4>
 
-<p>Examples of <a href="">Funds Group</a> fund requests:</p>
+<p><a href="">资金小组</a>资金请求示例：</p>
 
 <ul>
   <li>
-    Travel to technical conferences or tradeshows
+    参加技术会议或展会的差旅
     <ul>
       <li>
-        We have provided funds to assist speakers of various PostgreSQL related
-        conferences with their travel expenses
+        我们已为各种 PostgreSQL 相关会议的演讲者提供差旅费用资助
       </li>
     </ul>
   </li>
-  <li>Swag (T-shirts, folders, flyers, etc.)</li>
+  <li>周边物品（T恤、文件夹、传单等）</li>
   <li>
-    Cost of operations
+    运营成本
     <ul>
       <li>
-        PostgreSQL community infrastructure (for web, email, git, etc.)
+        PostgreSQL 社区基础设施（用于 web、电子邮件、git 等）
       </li>
     </ul>
   </li>
-  <li>Professional services (video editing, graphics)</li>
+  <li>专业服务（视频编辑、平面设计）</li>
 </ul>
 
-<h4>How to Request Funds</h4>
+<h4>如何请求资金</h4>
 
 <p>
-  To request funding, send an email to
+  要请求资金，请发送电子邮件至
   <a href="mailto:funds-group@lists.postgresql.org">funds-group@lists.postgresql.org</a>
-  describing:
+  ，描述：
 </p>
 
 <ul>
-  <li>What you are seeking funds for</li>
-  <li>Total estimated amount of requested funds</li>
+  <li>您为何请求资金</li>
+  <li>请求资金的预估总额</li>
 </ul>
 
-<h3>What is Considered for Funding Approval</h3>
+<h3>资金批准的考量因素</h3>
 
-<p>If requesting funds to provide a talk:</p>
+<p>如果请求资金用于提供演讲：</p>
 
 <ul>
-  <li>Where the talk is being held</li>
-  <li>Expected attendance to the talk</li>
-  <li>Cost</li>
-  <li>Will you provide the talk under a FOSS or Creative Commons license</li>
+  <li>演讲在哪里举行</li>
+  <li>演讲的预期参加人数</li>
+  <li>费用</li>
+  <li>您是否会在 FOSS 或 Creative Commons 许可证下提供演讲内容</li>
 </ul>
 
-<p>If requesting funds for an event:</p>
+<p>如果请求资金用于活动：</p>
 
 <ul>
-  <li>Are you charging for the event</li>
-  <li>Where are the proceeds going</li>
-  <li>What will the result of the event be?</li>
-  <li>What is the benefit to the community?</li>
+  <li>活动是否收费</li>
+  <li>收入将用于何处</li>
+  <li>活动的预期成果是什么？</li>
+  <li>对社区有什么益处？</li>
 </ul>
 
-<h3>Professional Services Funding</h3>
+<h3>专业服务资金</h3>
 
 <p>
-  Funding requests will be evaluated, if for professional services such as video
-  editing, graphics design etc., according to the following (not necessarily
-  complete) set of criteria:
+  如果资金请求用于专业服务（如视频编辑、平面设计等），将根据以下（不一定完整的）标准进行评估：
 </p>
 
 <ul>
-  <li>What is the benefit to the community</li>
+  <li>对社区有什么益处</li>
   <li>
-    At least one competitive bid
+    至少一个竞争性报价
     <ul>
-      <li>References for each vendor</li>
-      <li>Your recommendation for which vendor to select and why</li>
+      <li>每个供应商的参考资料</li>
+      <li>您对选择哪个供应商的建议及原因</li>
     </ul>
   </li>
   <li>
-    Provide an estimate from the selected vendor in writing
+    提供所选供应商的书面报价
     <ul>
-      <li>The estimate should include exactly what will be provided</li>
-      <li>How much wiggle room we have (executive edits, moves, adds, changes)</li>
-      <li>When the services will be delivered</li>
-      <li>What the deliverable is</li>
+      <li>报价应包括将提供的确切内容</li>
+      <li>我们有多大的调整空间（执行编辑、移动、添加、更改）</li>
+      <li>服务何时交付</li>
+      <li>交付物是什么</li>
     </ul>
   </li>
 </ul>
 
 <p>
-  We are <strong>not</strong> necessarily looking for the cheapest solution, but
-  rather the overall <strong>best</strong> solution. We may be willing to pay
-  more if a particular provider has a significantly superior track record (for
-  example).
+  我们<strong>不一定</strong>寻求最便宜的方案，而是寻求总体<strong>最优</strong>方案。如果某个供应商拥有明显优越的业绩记录（例如），我们可能愿意支付更多费用。
 </p>
 {%endblock%}

@@ -1,8 +1,8 @@
 {%extends "base/page.html"%}
 {%load pgmarkdown%}
-{%block title%}News Archive{%if tag%} - {{tag.name}}{%endif%}{%endblock%}
+{%block title%}新闻归档{%if tag%} - {{tag.name}}{%endif%}{%endblock%}
 {%block contents%}
-<h1><a href="/about/newsarchive/">News Archive</a>{%if tag%} - {{tag.name}}{%endif%} <i class="far fa-newspaper"></i></h1>
+<h1><a href="/about/newsarchive/">新闻归档</a>{%if tag%} - {{tag.name}}{%endif%} <i class="far fa-newspaper"></i></h1>
 
 <p>
 {%for t in newstags%}<span class="newstag"><a class="btn btn-primary" href="/about/newsarchive/{{t.urlname}}/"><i class="fa fa-tag"></i> {{t.name}}</a></span> {%endfor%}
@@ -10,19 +10,18 @@
 
 {%for obj in news %}
 <h2 class="news"><a href="/about/news/{{obj.title|slugify}}-{{obj.id}}/">{{obj.title}}</a></h2>
-<div class="newsdate">Posted on <strong>{{obj.displaydate}}</strong>{% if obj.org.name != '_migrated' %} by {{ obj.org.name }}{% endif %}
+<div class="newsdate">发布于 <strong>{{obj.displaydate}}</strong>{% if obj.org.name != '_migrated' %}，{{ obj.org.name }}{% endif %}
 {%for t in obj.tags.all%}<span class="badge badge-pill badge-secondary"><i class="fa fa-tag"></i> {{t}}</span> {%endfor%}
 </div>
 {{obj.content|markdown|striptags|truncatewords:20}}
-<p><a href="/about/news/{{obj.title|slugify}}-{{obj.id}}/">Read more...</a></p>
+<p><a href="/about/news/{{obj.title|slugify}}-{{obj.id}}/">阅读更多...</a></p>
 {%endfor%}
 
 {%if paginator%}
-<a class="btn btn-primary" href="/about/newsarchive/{{tag.urlname|default:"-"}}/{{paginator}}/">Older news...</a>
+<a class="btn btn-primary" href="/about/newsarchive/{{tag.urlname|default:"-"}}/{{paginator}}/">更早的新闻...</a>
 {%endif%}
 
 <p>
-  News articles are either from the PostgreSQL project or contributeed by other related organisations. If you wish to share news
-  related to PostgreSQL, you may <a href="/account/news/new/">submit</a> your own articles for consideration after logging in.
+  新闻文章来自 PostgreSQL 项目或其他相关组织投稿。如果您希望分享与 PostgreSQL 相关的新闻，可以在登录后<a href="/account/news/new/">提交</a>您自己的文章以供审核。
 </p>
 {%endblock%}

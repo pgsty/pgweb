@@ -1,8 +1,8 @@
 {%extends "base/page.html"%}
-{%block title%}Search results{%endblock%}
+{%block title%}搜索结果{%endblock%}
 {%block contents%}
 
-<h1>Site Search <i class="fas fa-link"></i></h1>
+<h1>站内搜索 <i class="fas fa-link"></i></h1>
 <form method="get" action="/search/">
   {%if suburl%}
    <input type="hidden" name="u" value="{{suburl}}">
@@ -10,7 +10,7 @@
   <div class="row">
     <div class="col-lg-6">
       <div class="input-group">
-        <input type="text" name="q" value="{{query}}" class="form-control" placeholder="Search for...">
+        <input type="text" name="q" value="{{query}}" class="form-control" placeholder="搜索...">
         <span class="input-group-btn">
           <button class="btn btn-default" type="submit">
             <i class="fas fa-search"></i>
@@ -26,17 +26,17 @@
 {%else%}
 <!-- docbot goes here -->
 {%if hitcount == 0 %}
- <p>Your search for <strong>{{query}}</strong> returned no hits.</p>
+ <p>您搜索的 <strong>{{query}}</strong> 没有返回结果。</p>
 {%else%}
- <h2>Results {{firsthit}}-{{lasthit}} of {%if hitcount == 1000%}more than 1000{%else%}{{hitcount}}{%endif%}.</h2>
- {%if pagelinks %}Result pages: {{pagelinks|safe}}<br/><br/>{%endif%}
+ <h2>结果 {{firsthit}}-{{lasthit}}，共 {%if hitcount == 1000%}超过 1000{%else%}{{hitcount}}{%endif%} 条。</h2>
+ {%if pagelinks %}结果页： {{pagelinks|safe}}<br/><br/>{%endif%}
  {%for hit in hits %}
   {{forloop.counter0|add:firsthit}}. <a href="{{hit.url}}">{{hit.title}}</a> [{{hit.rank|floatformat:2}}]<br/>
   <div>...{{hit.abstract|safe}}...</div>
   <a href="{{hit.url}}">{{hit.url}}</a><br/>
   <br/>
  {%endfor%}
- {%if pagelinks %}Result pages: {{pagelinks|safe}}<br/><br/>{%endif%}
+ {%if pagelinks %}结果页： {{pagelinks|safe}}<br/><br/>{%endif%}
 {%endif%}
 {%endif%}
 {%endblock%}

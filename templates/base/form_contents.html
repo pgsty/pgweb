@@ -2,7 +2,7 @@
 <form class="form-horizontal" method="post" action=".">{%if not nocsrf%}{% csrf_token %}{%endif%}
   {%if form.errors %}
     <div class="alert alert-danger">
-      Please correct the errors below, and re-submit the form.
+      请修正以下错误，然后重新提交表单。
     </div>
   {%endif%}
 {%for e in form.non_field_errors %}
@@ -23,8 +23,8 @@
 {%include "base/form_field.html" %}
   {%endfor%}
 {%endif%}
-  <button type="submit" class="btn btn-primary">{{savebutton|default:"Save"}}</button>
+  <button type="submit" class="btn btn-primary">{{savebutton|default:"保存"}}</button>
 {%if deletebutton%}
-  <button type="submit" name="delete" value="delete" class="btn btn-secondary" data-confirm="Are you sure you want to permanently delete this draft?">{{deletebutton}}</button>
+  <button type="submit" name="delete" value="delete" class="btn btn-secondary" data-confirm="您确定要永久删除此草稿吗？">{{deletebutton}}</button>
 {%endif%}
 </form>

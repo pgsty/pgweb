@@ -1,12 +1,10 @@
 {%extends "base/page.html"%}
-{%block title%}Bug report{%endblock%}
+{%block title%}Bug 报告{%endblock%}
 {%block contents%}
-<h1>Bug report <i class="fas fa-bug"></i></h1>
+<h1>Bug 报告 <i class="fas fa-bug"></i></h1>
 <p>
-Your bug report has been received, and given id #{{bugid}}. It has been posted
-to the <a href="/list/pgsql-bugs/">pgsql-bugs</a>
-mailinglist and will show up there as soon as it has cleared the moderator
-queue. A copy of the report has also been sent to your mailbox. If you need
-to add any further information to the report, please reply to that mail.
+您的 Bug 报告已收到，编号为 #{{bugid}}。该报告已发布到
+<a href="https://www.postgresql.org/list/pgsql-bugs/">pgsql-bugs</a>
+邮件列表，通过审核后将在列表中显示。报告的副本也已发送到您的邮箱。如果您需要补充更多信息，请回复该邮件。
 </p>
 {%endblock%}

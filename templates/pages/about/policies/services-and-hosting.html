@@ -1,126 +1,100 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}Professional Services and Hosting Approval Policy{%endblock%}
+{%block title%}专业服务与托管审批政策{%endblock%}
 {%block contents%}
 
-<h1>Professional Services and Hosting Approval Policy <i class="fas fa-gavel">
+<h1>专业服务与托管审批政策 <i class="fas fa-gavel">
     </i></h1>
 
-<p><em>Last updated: May 19, 2012. {%git_changes_link%}</em></p>
+<p><em>最后更新：2012年5月19日。{%git_changes_link%}</em></p>
 
-<h2>Policies for Approving Professional Services and Hosting Services</h2>
+<h2>专业服务和托管服务的审批政策</h2>
 
-<h3>General Rules</h3>
+<h3>一般规则</h3>
 
-<p>The www.postgresql.org home page contains Professional Services and Hosting
-    (in general, Services) listings which are maintained entirely for the
-    benefit of the PostgreSQL community. As this space would be quite valuable
-    if commercially available, our admins have the authority to be restrictive
-    about what they allow on the home page.</p>
+<p>www.postgresql.org 主页上包含专业服务和托管（统称为"服务"）列表，
+    这些列表完全是为了 PostgreSQL 社区的利益而维护的。由于这些空间如果商业化将具有相当的价值，
+    因此我们的管理员有权对主页上允许展示的内容进行严格限制。</p>
 
-<p>All Services to be approved must include the following information:</p>
+<p>所有待批准的服务必须包含以下信息：</p>
 
 <ul>
-    <li>Company Name</li>
-    <li>Accurate and complete contact information, including e-mail, web, phone,
-        and address of registered office
+    <li>公司名称</li>
+    <li>准确、完整的联系信息，包括电子邮件、网站、电话和注册办公地址
     </li>
-    <li>A 15 to 50 word summary of the company's services which provides some
-        detail about which specific services the company offers for PostgreSQL.
+    <li>一段15至50字的公司服务摘要，详细说明公司为 PostgreSQL 提供的具体服务。
     </li>
-    <li>Geographic location information</li>
+    <li>地理位置信息</li>
 </ul>
 
-<p>Further, the web site you link to in the listing must somewhere mention
-    PostgreSQL as an offered service or platform. If PostgreSQL is not mentioned
-    anywhere on your website, then your listing will not be approved.</p>
+<p>此外，您在列表中链接的网站必须在某处提到 PostgreSQL 作为所提供的服务或平台。
+    如果您的网站上没有任何地方提及 PostgreSQL，您的列表将不会被批准。</p>
 
-<p>Also, do not list your company in every single geographic region unless you
-    are a truly worldwide company (e.g. IBM, Akamai). This may be reason to
-    reject your listing.</p>
+<p>另外，除非您是真正的全球性公司（例如 IBM、Akamai），否则不要将您的公司列在每一个地理区域中。
+    这可能成为拒绝您的列表的理由。</p>
 
-<p>Other General Rules include:</p>
+<p>其他一般规则包括：</p>
 
 <ul>
-    <li>All services must be related to PostgreSQL in some direct and obvious
-        way.
+    <li>所有服务必须以某种直接且明显的方式与 PostgreSQL 相关。
     </li>
-    <li>Link-only listings (no description or details) will never be
-        acceptable.
+    <li>仅含链接的列表（无描述或详细信息）永远不会被接受。
     </li>
-    <li>The WWW admin group of the PostgreSQL project may permanently ban any
-        organization which is the cause of substantiated complaints about
-        accuracy, ethics or legality from members of our community.
+    <li>PostgreSQL 项目的 WWW 管理员组可以永久禁止任何因我们社区成员提出的关于准确性、
+        道德或合法性的实质性投诉而被投诉的组织。
     </li>
-    <li>The WWW team makes no promises about timely approval of announcements.
-        If publication on a specific day is critical to you, you will need to
-        contact the pgsql-www mailing list or a core team member prior to the
-        submission.
+    <li>WWW 团队不保证及时审批公告。如果在特定日期发布对您至关重要，
+        您需要在提交之前联系 pgsql-www 邮件列表或核心团队成员。
     </li>
 </ul>
 
-<h3>Professional Services and Listings</h3>
+<h3>专业服务与列表</h3>
 
-<p>For Professional Services, the "provides support and services" check box must
-    be checked. Fill out the following form blanks with the listed information.
-    Incomplete submissions may be rejected.</p>
+<p>对于专业服务，必须勾选"提供支持和服务"复选框。
+    请使用以下列出的信息填写相应的表单字段。不完整的提交可能会被拒绝。</p>
 
 <ul>
-    <li>URL: your (or your company's) website, it must contain information about
-        the PostgreSQL services you provide.
+    <li>URL：您（或您公司的）网站，其中必须包含关于您提供的 PostgreSQL 服务的信息。
     </li>
-    <li>Number of Employees: number of staff you have doing PostgreSQL support
-        or consulting.
+    <li>员工人数：您有多少名员工从事 PostgreSQL 支持或咨询工作。
     </li>
-    <li>Hours: the hours support is available. Suggested options include
-        "Business Hours (time zone)", "24x7", "As Arranged"
+    <li>服务时间：支持服务的可用时间。建议选项包括"工作时间（时区）"、"24x7"、"按约定"。
     </li>
-    <li>Languages: what human languages you provide support and services in,
-        e.g. Spanish, English, Japanese, etc.
+    <li>语言：您提供支持和服务所使用的人类语言，例如西班牙语、英语、日语等。
     </li>
-    <li>Customer Example: if available</li>
-    <li>Experience: detail of your staff's PostgreSQL and related technology
-        experience only.
+    <li>客户案例：如有。</li>
+    <li>经验：仅需填写您员工的 PostgreSQL 及相关技术经验详情。
     </li>
 </ul>
 
-<h3>Hosting Listings</h3>
+<h3>托管列表</h3>
 
-<p>If you offer web hosting for PostgreSQL applications, please check the
-    "Provides hosting of PostgreSQL databases"</p>
+<p>如果您为 PostgreSQL 应用提供网络托管服务，请勾选"提供 PostgreSQL 数据库托管"。</p>
 
-<p>Supported Interfaces should detail what programming languages (e.g. Perl,
-    Java, Ruby, etc.) and/or what database applications (e.g. Drupal, xTuple,
-    OpenACS, etc.) you specifically have support for. Also include any notes in
-    this space about limitations or special features of your PostgreSQL
-    hosting.</p>
+<p>支持的接口应详细说明您具体支持的编程语言（例如 Perl、Java、Ruby 等）
+    和/或数据库应用（例如 Drupal、xTuple、OpenACS 等）。
+    同时在此处注明关于您的 PostgreSQL 托管的任何限制或特色功能。</p>
 
-<p>Your web site must specifically list PostgreSQL as a supported hosted
-    application if you list the other applications which you support on your
-    hosting platform.</p>
+<p>如果您在托管平台上列出了支持的其他应用，则您的网站必须明确将 PostgreSQL
+    列为支持的托管应用。</p>
 
-<h3>Removal</h3>
+<h3>移除</h3>
 
-<p>Professional Services and Hosting listings are offered purely and entirely
-    for the benefit of our not-for-profit member community. Postgresql.org is
-    not an advertising service or publication. If our admins feel that your
-    listing is inconsistent with the good of our community, your listing may be
-    removed for any reason, or no reason.</p>
+<p>专业服务和托管列表纯粹且完全是为了我们非营利成员社区的利益而提供的。
+    Postgresql.org 不是广告服务或出版物。如果我们的管理员认为您的列表不符合社区利益，
+    您的列表可能因任何原因或无需任何原因而被移除。</p>
 
-<p>Specific reasons which are likely to get your listing removed include:</p>
+<p>可能导致您的列表被移除的具体原因包括：</p>
 
 <ul>
-    <li>Community member complaints about the quality of your services</li>
-    <li>Community member reports that your company cannot be contacted</li>
-    <li>Failure to list PostgreSQL services or hosting as available on your web
-        site
+    <li>社区成员对您的服务质量的投诉</li>
+    <li>社区成员报告无法联系到您的公司</li>
+    <li>未在您的网站上将 PostgreSQL 服务或托管列为可用服务
     </li>
-    <li>Use of postgresql.org, its mailing lists, or associated forums and
-        communications for aggressive or cold-call sales campaigns
+    <li>利用 postgresql.org、其邮件列表或相关论坛和通信渠道进行激进的或主动的推销活动
     </li>
 </ul>
 
-<p>If your listing is removed, the admins will usually notify you of the reason
-    for removal, though such notice is not guaranteed.</p>
+<p>如果您的列表被移除，管理员通常会通知您移除原因，但不保证一定会通知。</p>
 
 {%endblock%}

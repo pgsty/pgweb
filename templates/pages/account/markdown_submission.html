@@ -1,44 +1,33 @@
 {%extends "base/page.html"%}
-{%block title%}Markdown submission{%endblock%}
+{%block title%}Markdown 提交{%endblock%}
 {%block contents%}
-<h1>Markdown submission</h1>
+<h1>Markdown 提交</h1>
 
 <p>
- Some forms on the postgresql.org website allows you to submit text
- in <em>markdown</em> format. This is a simple markup format that lets
- you do basic formatting inline.
+ postgresql.org 网站上的部分表单允许您以 <em>markdown</em> 格式提交文本。这是一种简单的标记格式，可以让您进行基本的内联排版。
 </p>
 
 <p>
- You can find a basic introduction to markdown at
- <a href="https://www.markdownguide.org/">markdownguide.org</a>.
+ 您可以在 <a href="https://www.markdownguide.org/">markdownguide.org</a> 上找到 markdown 的基本介绍。
 </p>
 
 <p>
- This site
- supports <a href="https://www.markdownguide.org/basic-syntax/">basic</a>
- markdown syntax with the following exceptions:
+ 本站支持 <a href="https://www.markdownguide.org/basic-syntax/">基本</a> markdown 语法，但有以下例外：
 </p>
 
 <ul>
- <li>Images are not allowed</li>
- <li>Relative links are not allowed, only absolute links</li>
- <li>Links to any protocol other than <em>http</em>, <em>https</em>
-  or <em>mailto</em> are not allowed.</li>
- <li>Inline HTML may be used, but it is only allowed to use the same
-  tags and attributes produced by markdown. It is strongly
-  recommended to use vanilla markdown.</li>
+ <li>不允许使用图片</li>
+ <li>不允许使用相对链接，仅允许绝对链接</li>
+ <li>不允许链接到 <em>http</em>、<em>https</em> 或 <em>mailto</em> 以外的协议。</li>
+ <li>可以使用内联 HTML，但只允许使用与 markdown 生成的相同标签和属性。强烈建议使用原生 markdown。</li>
 </ul>
 
-<h2>Preview</h2>
+<h2>预览</h2>
 <p>
- The <em>live preview</em> of markdown fields does not work on
- Internet Explorer.
+ markdown 字段的<em>实时预览</em>在 Internet Explorer 上无法使用。
 </p>
 <p>
- The preview is updated asynchronously, so there may be a few seconds
- delay between making a change and the preview updating, depending on
- network speed.
+ 预览是异步更新的，因此在进行更改后，预览更新可能会有几秒钟的延迟，具体取决于网络速度。
 </p>
 
 {%endblock%}

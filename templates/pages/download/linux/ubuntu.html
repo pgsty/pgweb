@@ -1,23 +1,19 @@
 {%extends "base/page.html"%}
-{%block title%}Linux downloads (Ubuntu){%endblock%}
+{%block title%}Linux 下载（Ubuntu）{%endblock%}
 {%block extrahead%}
 <script type="text/javascript" src="/media/js/download.js?{{gitrev}}"></script>
 {%endblock%}
 {%block contents%}
 
-<h1>Linux downloads (Ubuntu) <img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu Logo" /></h1>
+<h1>Linux 下载（Ubuntu） <img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu Logo" /></h1>
 <p>
-PostgreSQL is available in all Ubuntu versions by default. However, Ubuntu
-"snapshots" a specific version of PostgreSQL that is then supported throughout
-the lifetime of that Ubuntu version.
-The PostgreSQL project maintains an <a href="#apt">Apt repository</a> with all supported
-of PostgreSQL available.
+所有 Ubuntu 版本默认都提供 PostgreSQL。但是，Ubuntu 会"快照"一个特定版本的 PostgreSQL，并在该 Ubuntu 版本的整个生命周期内提供支持。
+PostgreSQL 项目维护了一个 <a href="#apt">Apt 仓库</a>，提供所有受支持的 PostgreSQL 版本。
 </p>
 
-<h2>Included in Distribution</h2>
+<h2>发行版自带</h2>
 <p>
-Ubuntu includes PostgreSQL by default. To install PostgreSQL on Ubuntu,
-use the <code>apt</code> (or other apt-driving) command:
+Ubuntu 默认包含 PostgreSQL。要在 Ubuntu 上安装 PostgreSQL，请使用 <code>apt</code>（或其他 apt 驱动的）命令：
 </p>
 <pre class="code">
 apt install postgresql
@@ -26,14 +22,10 @@ apt install postgresql
 <a name="apt"></a>
 <h2>PostgreSQL Apt Repository</h2>
 <p>
-If the version included in your version of Ubuntu is not the one you want,
-you can use the <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt Repository</a>. This repository will integrate
-with your normal systems and patch management, and provide automatic
-updates for all supported versions of PostgreSQL throughout the support
-<a href="/support/versioning/">lifetime</a> of PostgreSQL.
+如果您的 Ubuntu 版本中包含的 PostgreSQL 版本不是您想要的，可以使用 <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt Repository</a>。该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持<a href="/support/versioning/">生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
 </p>
 <p>
-The PostgreSQL Apt repository supports the current versions of Ubuntu:
+PostgreSQL Apt 仓库支持以下 Ubuntu 当前版本：
 </p>
 <ul>
   <li>resolute (26.04, LTS)</li>
@@ -42,7 +34,7 @@ The PostgreSQL Apt repository supports the current versions of Ubuntu:
   <li>jammy (22.04, LTS)</li>
 </ul>
 <p>
-on the following architectures:
+支持以下架构：
 </p>
 <ul>
   <li>amd64</li>
@@ -51,7 +43,7 @@ on the following architectures:
 </ul>
 
 <p>
-Automated repository configuration:
+自动仓库配置：
 </p>
 
 <div class="pg-script-container">
@@ -62,7 +54,7 @@ sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh</pre>
 </div>
 
 <p>
-To manually configure the Apt repository, follow these steps:
+要手动配置 Apt 仓库，请按以下步骤操作：
 </p>
 
 <div class="pg-script-container">
@@ -81,7 +73,7 @@ sudo apt update</pre>
     <button id="copy-btn2" class="pg-script-copy-btn" title="Copy to clipboard"><i class="far fa-copy"></i></button>
 </div>
 
-Install PostgreSQL: (replace "18" by the version you want)
+安装 PostgreSQL：（将 "18" 替换为您想要的版本）
 
 <div class="pg-script-container">
     <pre id="script-box3" class="code">sudo apt install postgresql-18</pre>
@@ -90,38 +82,35 @@ Install PostgreSQL: (replace "18" by the version you want)
 </div>
 
 <p>
-For more information about the apt repository, including answers to frequent
-questions, please see the
-<a href="https://wiki.postgresql.org/wiki/Apt" target="_blank" rel="noopener">PostgreSQL Apt Repository wiki page</a>.
+有关 apt 仓库的更多信息，包括常见问题的解答，请参阅
+<a href="https://wiki.postgresql.org/wiki/Apt" target="_blank" rel="noopener">PostgreSQL Apt Repository wiki 页面</a>。
 </p>
 
-<h2>Packages</h2>
+<h2>软件包</h2>
 <p>
-The repository contains many different packages including third party
-addons. The most common and important packages are (substitute the
-version number as required):
+该仓库包含许多不同的软件包，包括第三方扩展。最常见和最重要的软件包如下（请根据需要替换版本号）：
 </p>
 <table class="table table-striped">
   <tbody>
     <tr>
      <th scope="row">postgresql-client-18</th>
-     <td>client libraries and client binaries</td>
+     <td>客户端库和客户端程序</td>
     </tr>
     <tr>
      <th scope="row">postgresql-18</th>
-     <td>core database server</td>
+     <td>核心数据库服务器</td>
     </tr>
     <tr>
      <th scope="row">postgresql-doc-18</th>
-     <td>documentation</td>
+     <td>文档</td>
     </tr>
     <tr>
      <th scope="row">libpq-dev</th>
-     <td>libraries and headers for C language frontend development</td>
+     <td>C 语言前端开发库和头文件</td>
     </tr>
     <tr>
      <th scope="row">postgresql-server-dev-18</th>
-     <td>libraries and headers for C language backend development</td>
+     <td>C 语言后端开发库和头文件</td>
     </tr>
   </tbody>
 </table>

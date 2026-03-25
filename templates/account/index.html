@@ -1,31 +1,26 @@
 {%extends "base/page.html"%}
-{%block title%}Your account{%endblock%}
+{%block title%}您的账户{%endblock%}
 {%block contents%}
-<h1>Your account <i class="far fa-address-card"></i></h1>
+<h1>您的账户 <i class="far fa-address-card"></i></h1>
 <p>
-From this section, you can manage all information on this site connected
-to your PostgreSQL community account. Other than your basic profile
-information, this includes news and events, professional services and
-comments. Note that most of the data you submit to this site needs to be
-approved by a moderator before it's published.
+在此部分，您可以管理与您的 PostgreSQL 社区账户关联的所有站点信息。
+除了基本的个人资料信息外，还包括新闻和活动、专业服务及评论。
+请注意，您提交到本站的大部分数据需要经过管理员审核后才能发布。
 </p>
 <p>
-To submit a new record, or to edit an existing record, select the
-type of record in the menu on the left.
+要提交新记录或编辑现有记录，请在左侧菜单中选择记录类型。
 </p>
 
-<h2>Permissions model</h2>
+<h2>权限模型</h2>
 <p>
-News, Events, Products and Professional Services are attached to an
-Organisation. One or more persons can be given permissions to manage
-the data for an organisation. If you do not have permissions for an
-organisation and think you should have, you need to contact the current
-managers for that organisation. You can find a list of organisations
-and managers <a href="orglist/">here</a>.
+新闻、活动、产品和专业服务隶属于某个组织。
+一个或多个用户可以被授予管理某个组织数据的权限。
+如果您没有某个组织的权限但认为应当拥有，请联系该组织的现有管理员。
+您可以在<a href="orglist/">此处</a>查看组织和管理员列表。
 </p>
 
 {% for cat in modobjects %}
-<h2>Items {{cat.title}}</h2>
+<h2>{{cat.title}}的项目</h2>
 {%for l in cat.objects %}
 {%if l %}
 <h3><a href="/account/edit/{{l.editurl}}/">{{l.title}}</a></h3>

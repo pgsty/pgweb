@@ -1,43 +1,40 @@
 {%extends "base/page.html"%}
-{%block title%}Your account{%endblock%}
+{%block title%}您的账户{%endblock%}
 {%block contents%}
-<h1>{{title|title}}s <i class="fas fa-th-list"></i></h1>
+<h1>{{title|title}} <i class="fas fa-th-list"></i></h1>
 <p>
-  The following {{title}}s are associated with an organisation you are a manager for.
+  以下{{title}}与您管理的组织相关联。
 </p>
 
 {%if objects.inprogress %}
-<h3>Not submitted for moderation</h3>
+<h3>未提交审核</h3>
 <p>
-  You can edit these {{title}}s an unlimited number of times, but they will not
-  be published until they are submitted for moderation and approved.
+  您可以不限次数地编辑这些{{title}}，但在提交审核并获批之前，它们不会被发布。
 </p>
 <ul>
   {%for o in objects.inprogress %}
-    <li><a href="/account/{{suburl}}/{{o.id}}/">{{o}}</a> &mdash; (<a href="/account/{{suburl}}/{{o.id}}/submit/">Submit for moderation</a>)</li>
+    <li><a href="/account/{{suburl}}/{{o.id}}/">{{o}}</a> &mdash; (<a href="/account/{{suburl}}/{{o.id}}/submit/">提交审核</a>)</li>
   {%endfor%}
 </ul>
 <p>
-  <strong>Note</strong>: Each individual {{title}} needs to be submitted for moderation.
+  <strong>注意</strong>：每个{{title}}都需要单独提交审核。
 </p>
 {%endif%}
 
 {% if objects.unapproved %}
-<h3>Waiting for moderator approval</h3>
+<h3>等待审核员批准</h3>
 <p>
-  These {{title}}s are pending moderator approval. As soon as a moderator has reviewed them,
-  they will be published.
+  这些{{title}}正在等待审核员批准。审核员审核完毕后，它们将被发布。
 {%if not tristate%}
-  You can make further changes to them while you wait for moderator approval.
+  在等待审核员批准期间，您可以对其进行进一步修改。
 {%else%}
-  If you withdraw a submission, it will return to <i>Not submitted</i> status and you can make
-  further changes.
+  如果您撤回提交，它将返回<i>未提交</i>状态，届时您可以进行进一步修改。
 {%endif%}
 </p>
 <ul>
   {%for o in objects.unapproved %}
 {%if tristate%}
-    <li>{{o}} (<a href="/account/{{suburl}}/{{o.id}}/withdraw/">Withdraw</a>)</li>
+    <li>{{o}} (<a href="/account/{{suburl}}/{{o.id}}/withdraw/">撤回</a>)</li>
 {%else%}{# one-step approval allows editing in unapproved state #}
     <li><a href="/account/{{suburl}}/{{o.id}}/">{{o}}</a></li>
 {%endif%}
@@ -46,17 +43,16 @@
 {% endif %}
 
 {% if objects.approved %}
-<h3>Approved</h3>
+<h3>已批准</h3>
 {%if not editapproved%}
 <p>
-  These {{title}}s are approved and published, and can no longer be edited. If you need to make
-  any changes to these objects, please contact
-  <a href="mailto:webmaster@postgresql.org">webmaster@postgresql.org</a>.
+  这些{{title}}已获批准并已发布，无法再编辑。如需对这些对象进行任何更改，请联系
+  <a href="mailto:webmaster@postgresql.org">webmaster@postgresql.org</a>。
 </p>
 {%else%}
 <p>
-  These objects are approved and published, but you can still edit them. Any changes you make
-  will notify moderators, who may decide to reject the object based on the changes.
+  这些对象已获批准并已发布，但您仍然可以编辑它们。您所做的任何更改都会通知审核员，
+  审核员可能会根据更改内容决定驳回该对象。
 </p>
 {%endif%}
 <ul>
@@ -74,7 +70,7 @@
 <p>{{submit_header|safe}}</p>
 {%endif%}
 <p>
-  <a class="btn btn-primary" href="/account/{{suburl}}/new/">Submit {{title}}</a>
+  <a class="btn btn-primary" href="/account/{{suburl}}/new/">提交{{title}}</a>
 </p>
 
 {%endblock%}

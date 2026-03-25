@@ -1,76 +1,58 @@
 {%extends "base/page.html"%}
-{%block title%}Development snapshots (unstable){%endblock%}
+{%block title%}开发快照（不稳定）{%endblock%}
 {%block contents%}
 
-<h1>Beta/RC Releases and Development snapshots (unstable) <img class="logo" src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo" /></h1>
+<h1>Beta/RC 版本及开发快照（不稳定） <img class="logo" src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo" /></h1>
 
 <p>
-Beta and Release Candidate packages are built prior to the release of
-new major versions of PostgreSQL. They are not built continually.
-</p>
-
-<p>
-Development snapshots are built from the latest source code and
-beta/rc versions that the developers are working on.
-These are 'bleeding edge' versions of PostgreSQL and
-<span class="text-danger font-weight-bold">should not be used in production systems</span>
-as they have had little or no testing or quality control.
+Beta 和候选发布（Release Candidate）安装包在 PostgreSQL 新主要版本发布之前构建，不会持续构建。
 </p>
 
 <p>
-The latest development version of the documentation is also
-<a href="/docs/devel/index.html">available online</a>.
-</p>
-
-<h2>Source code</h2>
-
-<p>
-Beta and Release Candidate tarballs are <a href="/ftp/source/">made available
-alongside</a> the release tarballs during the final phases of the development
-cycle of new major versions of PostgreSQL.
+开发快照基于开发者正在开发的最新源代码和 Beta/RC 版本构建。
+这些是 PostgreSQL 的"前沿"版本，
+<span class="text-danger font-weight-bold">不应在生产系统中使用</span>，因为它们几乎没有经过测试或质量控制。
 </p>
 
 <p>
-Source code tarballs are built automatically every night on the official
-PostgreSQL development server. The
-<a href="/ftp/snapshot/dev/">development snapshot</a> is taken from the
-head of the git repository, and includes the new features being worked
-on for the next release. There are also "branch tip" snapshots built from
-all supported <a href="/ftp/snapshot/">stable branches</a>, which contains
-all bugfixes that are scheduled for the next release.
+最新的开发版文档也<a href="/docs/devel/index.html">在线可用</a>。
 </p>
 
-<h2>Red Hat, Rocky Linux, AlmaLinux and Fedora</h2>
+<h2>源代码</h2>
+
 <p>
-RPMs for Red Hat, Rocky Linux, AlmaLinux and, Fedora are available from the
-<a href="https://yum.postgresql.org/">PostgreSQL Yum repository</a>.
-</p>
-<p>
-To setup the repository for these versions, follow the same instructions
-as for the <a href="/download/linux/redhat/">normal</a> yum repository on these
-platforms.
+在 PostgreSQL 新主要版本开发周期的最后阶段，Beta 和候选发布的源码包会与发布版源码包<a href="https://www.postgresql.org/ftp/source/">一同提供</a>。
 </p>
 
-<h2>Debian and Ubuntu Linux</h2>
 <p>
-DEBs for Debian and Ubuntu are available from the
-<a href="https://apt.postgresql.org">PostgreSQL APT Repository</a>
-repository.
-</p>
-<p>
-To setup the repository for these distributions, follow the instructions
-on <a href="/download/linux/debian/">Linux Downloads (Debian)</a> or <a href="/download/linux/ubuntu/">Linux Downloads (Ubuntu)</a>.
+源代码压缩包每晚在 PostgreSQL 官方开发服务器上自动构建。<a href="https://www.postgresql.org/ftp/snapshot/dev/">开发快照</a>取自 git 仓库的最新提交，包含正在为下一个版本开发的新功能。还有从所有受支持的<a href="https://www.postgresql.org/ftp/snapshot/">稳定分支</a>构建的"分支最新"快照，其中包含计划在下一个版本中发布的所有错误修复。
 </p>
 
-<h2>Installers</h2>
+<h2>Red Hat、Rocky Linux、AlmaLinux 和 Fedora</h2>
 <p>
-Installers for Windows and Mac are available <a
-href="https://www.enterprisedb.com/products-services-training/pgdevdownload">
-here</a> (offsite link). These installers also include pgAdmin and are
-published by EDB.
+适用于 Red Hat、Rocky Linux、AlmaLinux 和 Fedora 的 RPM 包可从
+<a href="https://yum.postgresql.org/">PostgreSQL Yum 仓库</a>获取。
 </p>
 <p>
-Only Beta and Release Candidate packages are available as installers.
+要为这些版本设置仓库，请按照这些平台上<a href="/download/linux/redhat/">常规</a> Yum 仓库的相同说明操作。
+</p>
+
+<h2>Debian 和 Ubuntu Linux</h2>
+<p>
+适用于 Debian 和 Ubuntu 的 DEB 包可从
+<a href="https://apt.postgresql.org">PostgreSQL APT 仓库</a>获取。
+</p>
+<p>
+要为这些发行版设置仓库，请按照 <a href="/download/linux/debian/">Linux 下载（Debian）</a>或 <a href="/download/linux/ubuntu/">Linux 下载（Ubuntu）</a>上的说明操作。
+</p>
+
+<h2>安装程序</h2>
+<p>
+适用于 Windows 和 Mac 的安装程序可在<a
+href="https://www.enterprisedb.com/products-services-training/pgdevdownload">此处</a>获取（外部链接）。这些安装程序还包含 pgAdmin，由 EDB 发布。
+</p>
+<p>
+仅 Beta 和候选发布版本提供安装程序。
 </p>
 
 {%endblock%}

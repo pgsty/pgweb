@@ -1,11 +1,10 @@
 {%extends "base/form.html"%}
-{%block title%}Confirm {{objtype}} submission{%endblock%}
+{%block title%}确认提交{{objtype}}{%endblock%}
 {%block contents%}
-<h1>Confirm {{objtype}} submission</h1>
+<h1>确认提交{{objtype}}</h1>
 
 <p>
-  You are about to submit the following {{objtype}} for moderation. Note that once submitted,
-  the contents can no longer be changed.
+  您即将提交以下{{objtype}}进行审核。请注意，一旦提交，内容将无法再修改。
 </p>
 {%if obj.extramodnotice %}
 <p>
@@ -13,7 +12,7 @@
 </p>
 {%endif%}
 
-<h2>Your {{objtype}}</h2>
+<h2>您的{{objtype}}</h2>
 {%for fld, title, contents, mdcontents, note in preview %}
 <div class="row">
   <div class="col-sm-2 col-form-label"><strong>{{title}}</strong></div>
@@ -30,8 +29,8 @@
 </div>
 {%endfor%}
 
-<h2>Confirm</h2>
-{%include "base/form_contents.html" with savebutton="Submit for moderation"%}
+<h2>确认</h2>
+{%include "base/form_contents.html" with savebutton="提交审核"%}
 
 {%endblock%}
 

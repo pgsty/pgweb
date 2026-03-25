@@ -1,48 +1,48 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}Recognised PostgreSQL Nonprofit Organisations{%endblock%}
+{%block title%}认可的 PostgreSQL 非营利组织{%endblock%}
 {%block contents%}
 
-<h1>Recognised PostgreSQL Nonprofit Organisations <i class="fas fa-gavel"></i></h1>
+<h1>认可的 PostgreSQL 非营利组织 <i class="fas fa-gavel"></i></h1>
 
-<p><em>Last updated: January 7, 2025. {%git_changes_link%} <a href="https://git.postgresql.org/gitweb/?p=pgweb.git;a=history;f=templates/pages/community/recognition.html">View</a> history before December 8, 2020.</em></p>
+<p><em>最后更新：2025年1月7日。{%git_changes_link%} <a href="https://git.postgresql.org/gitweb/?p=pgweb.git;a=history;f=templates/pages/community/recognition.html">查看</a> 2020年12月8日之前的历史。</em></p>
 
-<p>Recognised PostgreSQL Nonprofit Organisations (NPOs) will be listed on the <a href="/community/recognised-npos/">PostgreSQL Website</a> as such. To become recognised as an NPO, the organisation must self-certify that they meet the criteria below, aimed at ensuring they meet the standards of openness expected in the PostgreSQL Community.
+<p>认可的 PostgreSQL 非营利组织（NPO）将作为认可组织列于 <a href="/community/recognised-npos/">PostgreSQL 网站</a>上。要获得 NPO 认可，组织必须自我认证其满足以下标准，这些标准旨在确保其符合 PostgreSQL 社区所期望的开放性标准。
 </p>
 <p>
-  Use of the terms "MUST", "MUST NOT", "SHOULD" and "SHOULD NOT" in the criteria below should be interpreted per <a href="https://www.ietf.org/rfc/rfc2119.txt" target="_blank" rel="noopener">RFC2119</a>.
+  以下标准中"MUST"、"MUST NOT"、"SHOULD"和"SHOULD NOT"等术语的使用应按照 <a href="https://www.ietf.org/rfc/rfc2119.txt" target="_blank" rel="noopener">RFC2119</a> 进行解释。
 </p>
 
-<h3>General</h3>
+<h3>通用要求</h3>
 
 <ul>
-  <li>A Code of Conduct SHOULD be adopted and apply to all members and directors.</li>
-  <li>The organisation MUST be registered as a Non Profit Organisation in the territory in which it operates.</li>
-  <li>No payments may be made to directors or members for their service with the exception of reimbursement of expenses incurred on the organisation's business, and sponsorship of conference attendance where deemed appropriate to help ensure the success of an event.</li>
-  <li>The organisation MUST work towards the betterment of the PostgreSQL Project and/or community. It may not participate in any activities which may bring the project into disrepute or otherwise work against the interests of the project or the community.</li>
-  <li>The <a href="/developer/core/">PostgreSQL Core Team</a> may recognise, not recognise, or rescind a previous recognition of any organisation without justification, regardless of whether or not the criteria above are met.</li>
-  <li>These criteria may be reviewed and potentially updated at any time.</li>
+  <li>应当（SHOULD）采用行为准则，并适用于所有成员和董事。</li>
+  <li>组织必须（MUST）在其运营所在地区注册为非营利组织。</li>
+  <li>不得向董事或成员支付任何服务报酬，但报销因组织事务产生的费用以及在适当情况下赞助参加会议以帮助确保活动成功除外。</li>
+  <li>组织必须（MUST）致力于改善 PostgreSQL 项目和/或社区。不得参与任何可能损害项目声誉或以其他方式损害项目或社区利益的活动。</li>
+  <li><a href="/developer/core/">PostgreSQL 核心团队</a>可以认可、不认可或撤销对任何组织的先前认可，无需提供理由，无论上述标准是否满足。</li>
+  <li>这些标准可能随时被审查和更新。</li>
 </ul>
 
-<h3>Membership</h3>
+<h3>成员资格</h3>
 <ul>
-  <li>Membership MUST be open to anyone, limited only to the geographic area in which the NPO operates or a specific spoken language, if desired.</li>
-  <li>Membership MUST be at zero cost or a nominal cost (up to US $50 per year) to allow participation from any interested community members.</li>
-  <li>Corporate memberships may be allowed, at higher cost than individual membership if desired, provided the same membership terms are available to any company.</li>
-  <li>Membership MUST be renewed at least once every three years. "Lifetime" memberships MUST NOT be allowed.</li>
+  <li>成员资格必须（MUST）对任何人开放，仅可限制于 NPO 运营所在的地理区域或特定语言（如有需要）。</li>
+  <li>成员资格必须（MUST）免费或仅收取象征性费用（每年不超过50美元），以允许任何有兴趣的社区成员参与。</li>
+  <li>可以允许企业会员资格，如有需要可以收取高于个人会员的费用，但必须向任何公司提供相同的会员条款。</li>
+  <li>成员资格必须（MUST）至少每三年更新一次。不得（MUST NOT）允许"终身"会员资格。</li>
 </ul>
 
-<h3>Directors</h3>
+<h3>董事</h3>
 <ul>
-  <li>The board of directors MUST be elected by the membership, and all members including any corporate members MUST have an equal vote.</li>
-  <li>The board of directors SHOULD NOT consist of 50% or more directors working for the same company or group of companies under the same ultimate ownership or management, a situation which MUST be actively avoided as much as is possible. Should such a situation arise, for example, following the resignation of a director, an election SHOULD be held as soon as possible to restore the balance of the board.</li>
-  <li>Director terms MUST last no longer than three years without re-election. A limit on the number of terms served may be set. "Lifetime" directorships MUST NOT be allowed.</li>
+  <li>董事会必须（MUST）由成员选举产生，所有成员（包括任何企业成员）必须（MUST）拥有平等的投票权。</li>
+  <li>董事会不应（SHOULD NOT）由50%或更多在同一公司或同一最终所有权或管理层下的公司集团工作的董事组成，必须（MUST）尽可能积极避免此种情况。如果此种情况发生（例如由于某位董事辞职），应当（SHOULD）尽快举行选举以恢复董事会的平衡。</li>
+  <li>董事任期不得（MUST）超过三年而不进行重新选举。可以设定任期届数限制。不得（MUST NOT）允许"终身"董事职位。</li>
 </ul>
 
-<h3>Vetting</h3>
+<h3>审查</h3>
 <ul>
-  <li>Voting for the board of directors MUST be done in a way that may be externally vetted.</li>
-  <li>Financial reports MUST be published at least annually for review by the membership.</li>
-  <li>The organisation MUST make its financial reports and voting processes and records available to the <a href="/developer/core/">PostgreSQL Core Team</a> or their nominated representative for review if requested.</li>
+  <li>董事会投票必须（MUST）以可进行外部审查的方式进行。</li>
+  <li>财务报告必须（MUST）至少每年发布一次，供成员审查。</li>
+  <li>如果收到请求，组织必须（MUST）向 <a href="/developer/core/">PostgreSQL 核心团队</a>或其指定代表提供财务报告、投票流程和记录以供审查。</li>
 </ul>
 {%endblock%}

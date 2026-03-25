@@ -1,89 +1,73 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}@postgresql Twitter Account Policy{%endblock%}
+{%block title%}@postgresql Twitter 账户政策{%endblock%}
 {%block contents%}
 
-<h1>@postgresql Twitter Account Policy <i class="fas fa-gavel"></i></h1>
+<h1>@postgresql Twitter 账户政策 <i class="fas fa-gavel"></i></h1>
 
-<p><em>Last updated: January 19, 2018. {%git_changes_link%}</em></p>
+<p><em>最后更新：2018年1月19日。{%git_changes_link%}</em></p>
 
-<p>This policy applies to the manual use of the @postgresql Twitter account.</p>
+<p>本政策适用于 @postgresql Twitter 账户的人工使用。</p>
 
 <ul>
-    <li>Tweets are allowed which relate to approved News & Events as defined in
-        the News and Events Approval Policies (a.k.a. the -announce policy),
-        provided that the tweets are:
+    <li>允许发布与新闻和事件审批政策（又称 -announce 政策）中定义的已批准新闻和事件相关的推文，
+        前提是推文符合以下条件：
         <ul>
-            <li>Of a reasonable frequency (as defined by the moderators, with
-                the following guidelines):
+            <li>频率合理（由审核员定义，参考以下指南）：
             </li>
-            <li>Tweets/Re-tweets about Core and "Family" News are not
-                frequency-limited.
+            <li>关于核心新闻和"家族"新闻的推文/转推不受频率限制。
             </li>
-            <li>Tweets/Re-tweets about Proprietary & External OSS Project News
-                should not be more than weekly.
+            <li>关于专有产品和外部开源项目新闻的推文/转推不应超过每周一次。
             </li>
-            <li>Tweets/Re-tweets about the activity of a PostgreSQL recognized
-                community conference or event should not be more than daily.
+            <li>关于 PostgreSQL 认可的社区会议或活动动态的推文/转推不应超过每天一次。
             </li>
-            <li>Tweets/Re-tweets about the activity of a particular Open Source
-                & Database Conference or Event should not be more than weekly.
+            <li>关于特定开源和数据库会议或活动动态的推文/转推不应超过每周一次。
             </li>
-            <li>Tweets/Re-tweets about finding information contained on a
-                website within the PostgreSQL infrastructure are not frequency
-                limited.
+            <li>关于查找 PostgreSQL 基础设施内网站所含信息的推文/转推不受频率限制。
             </li>
         </ul>
     </li>
-    <li>Are not commercial in nature (Tweets about a given organization
-        sponsoring a conference are ok, tweets which are attempting to solicit
-        sponsorship for an event are not).
+    <li>不得具有商业性质（关于某组织赞助会议的推文是可以的，
+        但试图为活动征集赞助的推文则不可以）。
     </li>
 </ul>
 
-<p>In addition to approved News & Events, these kinds of Events may also be
-    tweet'd about, following the same guidelines set forth above:</p>
+<p>除已批准的新闻和事件外，以下类型的事件也可以发推，
+    并遵循上述相同指南：</p>
 
 <ul>
-    <li>Local PostgreSQL User Group (PUG) meetings and related efforts to
-        establish PUGs. PUGs are encouraged to have their own Twitter handle
-        which @postgresql will retweets appropriate tweets from.
+    <li>本地 PostgreSQL 用户组（PUG）聚会以及建立 PUG 的相关工作。
+        鼓励 PUG 拥有自己的 Twitter 账号，@postgresql 会转推其中适当的推文。
     </li>
-    <li>PostgreSQL Weekly news (weekly tweet highlighting the -announce post).
+    <li>PostgreSQL 每周新闻（每周推文突出显示 -announce 帖子）。
     </li>
-    <li>Tweets/Re-tweets are also allowed for acceptable blog posts, media
-        coverage, and tweets about PostgreSQL, provided these are not commercial
-        in nature, using the same guidelines as set forth in the Planet
-        PostgreSQL policy.
+    <li>对于可接受的博客文章、媒体报道以及关于 PostgreSQL 的推文，也允许发推/转推，
+        前提是这些内容不具有商业性质，并遵循与 Planet PostgreSQL 政策中相同的指南。
     </li>
 </ul>
 
-<p>Replies to mentions are also allowed when and if appropriate, per these
-    guidelines:</p>
+<p>在适当的情况下，也允许回复提及，遵循以下指南：</p>
 
 <ul>
-    <li>Acceptable:
+    <li>可接受的：
         <ul>
-            <li>Answering a PostgreSQL-specific question to provide help.</li>
-            <li>Providing a helpful suggestion or comment.</li>
-            <li>Professional discussion regarding specific technical aspects of
-                PostgreSQL as compared to other products or projects.
+            <li>回答 PostgreSQL 相关的具体问题以提供帮助。</li>
+            <li>提供有益的建议或评论。</li>
+            <li>关于 PostgreSQL 与其他产品或项目的具体技术方面的专业讨论。
             </li>
         </ul>
     </li>
 
-    <li>Not acceptable:
+    <li>不可接受的：
         <ul>
-            <li>Off-topic tweets which are not related to PostgreSQL.</li>
-            <li>Degrading or attacking other products, projects, or
-                individuals.
+            <li>与 PostgreSQL 无关的离题推文。</li>
+            <li>贬低或攻击其他产品、项目或个人。
             </li>
-            <li>Unprofessional behavior of any kind.</li>
+            <li>任何形式的不专业行为。</li>
         </ul>
     </li>
 </ul>
 
-<p>Tweets should follow the same guidelines as one would use when posting to the
-    project mailing lists.</p>
+<p>推文应遵循在项目邮件列表上发帖时所使用的相同指南。</p>
 
 {%endblock%}

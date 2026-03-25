@@ -1,25 +1,23 @@
 {%extends "base/page.html"%}
-{%block title%}Committers{%endblock%}
+{%block title%}提交者{%endblock%}
 {%block contents%}
 
-<h1>Committers <i class="fa fa-users"></i></h1>
+<h1>提交者 <i class="fa fa-users"></i></h1>
 
 <p>
-  This is the current list of people with access to push to the
-  <a href="https://git.postgresql.org/gitweb/?p=postgresql.git">git repository</a>.
-  For technical details on how committing works, see
-  <a href="https://wiki.postgresql.org/wiki/Committing_with_Git">Committing with Git</a>.
-  This is just a list of people who currently have access to push to git; for
-  information on current and previous contributors, see the contributor profiles
-  section of the web site.
+  以下是当前有权向
+  <a href="https://git.postgresql.org/gitweb/?p=postgresql.git">git 仓库</a>推送代码的人员列表。
+  有关提交工作流程的技术细节，请参阅
+  <a href="https://wiki.postgresql.org/wiki/Committing_with_Git">使用 Git 提交</a>。
+  这仅是当前有权向 git 推送代码的人员列表；有关当前和以往贡献者的信息，
+  请查看网站的贡献者简介部分。
 </p>
 
-<h2>Committers</h2>
+<h2>提交者</h2>
 
 <p>
-  The names are listed here in order of first commit or when added
-  as a committer, oldest first; this isn't intended to imply anything
-  about depth of contribution.
+  此处的名单按首次提交或被添加为提交者的时间排序，最早的排在前面；
+  这并不意味着对贡献深度有任何暗示。
 </p>
 <ul>
   <li>Bruce Momjian</li>
@@ -55,45 +53,39 @@
   <li>Jacob Champion</li>
 </ul>
 
-<h2>Notes on the Commit Log</h2>
+<h2>关于提交日志的说明</h2>
 <p>
-  Hundreds of developers have successfully contributed work to PostgreSQL
-  over decades, many acting as individuals, though also many representing
-  academic institutions and both user and vendor companies. Both the "Author"
-  and "Committer" fields of such patches will reflect the committer. The actual
-  author of a patch, if different, is generally listed in the commit message;
-  reviewers or others who contributed ideas or otherwise helped with the patch
-  may also be listed. Many patches, in the form in which they are committed,
-  are the work of multiple people: original author or authors, reviewer(s),
-  and/or committer. As a result, no simple analysis of duration or depth of
-  contribution over time is possible from the commit log. The project operates
-  a system of careful peer review and even committers have their work checked
-  by other committers and the community as a whole.
+  数十年来，数百名开发者成功地为 PostgreSQL 做出了贡献，
+  其中许多是以个人身份参与，也有许多代表学术机构以及用户和厂商公司。
+  此类补丁的"Author"和"Committer"字段都将显示提交者。
+  补丁的实际作者（如果不同）通常会在提交消息中注明；
+  审阅者或其他贡献了想法或以其他方式协助补丁的人也可能被列出。
+  许多补丁在提交时是多人协作的成果：原始作者、审阅者和/或提交者。
+  因此，无法仅从提交日志中对贡献的持续时间或深度进行简单分析。
+  该项目运行着严格的同行评审系统，即使是提交者，其工作也会由其他提交者和整个社区进行审查。
 </p>
 
-<h2>New Committers and Removing Committers</h2>
+<h2>新增提交者与移除提交者</h2>
 <p>
-  New committers are added approximately annually after discussions
-  and vote among the existing committers. Contributors to PostgreSQL
-  are selected to be committers based on the following loose criteria:
+  新的提交者大约每年在现有提交者讨论和投票后增加。
+  PostgreSQL 的贡献者根据以下大致标准被选为提交者：
 </p>
 <ul>
-  <li>several years of substantial contributions to the project</li>
-  <li>multiple and continuing code contributions</li>
-  <li>responsibility for maintenance of one or more areas of the codebase</li>
-  <li>track record of reviewing and helping other contributors with their patches</li>
-  <li>high quality code contributions which require very little revision or correction for commit</li>
-  <li>demonstrated understanding of the process and criteria for patch acceptance</li>
+  <li>对项目有数年的实质性贡献</li>
+  <li>持续进行多项代码贡献</li>
+  <li>负责维护代码库中的一个或多个领域</li>
+  <li>有审阅和帮助其他贡献者处理补丁的良好记录</li>
+  <li>提交的高质量代码几乎不需要修改或纠正即可合入</li>
+  <li>对补丁接受的流程和标准有充分理解</li>
 </ul>
 <p>
-  Generally, new committers are selected March or April and announced on the
-  <a href="/list/pgsql-hackers/">Hackers mailing list</a>.
+  通常，新提交者在每年三月或四月被选出，并在
+  <a href="https://www.postgresql.org/list/pgsql-hackers/">Hackers 邮件列表</a>上公布。
 </p>
 
 <p>
-  Committers who have become inactive and have not contributed significantly
-  to the PostgreSQL project in several years are removed as committers. Again,
-  the review process for this is approximately annual.
+  已经不活跃且数年来未对 PostgreSQL 项目做出重大贡献的提交者将被移除提交权限。
+  同样，此审查过程大约每年进行一次。
 </p>
 
 {%endblock%}

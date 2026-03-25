@@ -1,246 +1,128 @@
 {%extends "base/cocpage.html"%}
 {%load pgfilters%}
-{%block title%}Code of Conduct{%endblock%}
+{%block title%}行为准则{%endblock%}
 {%block cocmain%}
-    <h1>Code of Conduct <i class="fas fa-gavel"></i></h1>
+    <h1>行为准则 <i class="fas fa-gavel"></i></h1>
 
-    <p><em>Last updated: February 19, 2025. {%git_changes_link%}</em></p>
+    <p><em>最后更新：2025年2月19日。{%git_changes_link%}</em></p>
 
 
-    <h2>Introduction</h2>
+    <h2>引言</h2>
 
-    <p>The PostgreSQL Project prides itself on the quality of our code and our work,
-        and the technical and professional accomplishments of our community. We
-        expect everyone who participates to conduct themselves in a professional
-        manner, acting with common courtesy and in the common interest, with respect
-        for all users and developers.</p>
+    <p>PostgreSQL 项目以我们代码和工作的质量以及社区的技术和专业成就为荣。我们期望每一位参与者都以专业的方式行事，秉持基本的礼貌和共同利益，尊重所有用户和开发者。</p>
 
-    <p>To that end, we have established this Code of Conduct for community
-        interaction and participation in the project’s work and the community at
-        large. This Code is meant to cover all interaction between community
-        members, whether or not it takes place within postgresql.org infrastructure,
-        so long as there is not another Code of Conduct that takes precedence (such
-        as a conference's Code of Conduct).</p>
+    <p>为此，我们制定了本行为准则，用于规范社区互动以及参与项目工作和更广泛社区活动中的行为。本准则旨在涵盖社区成员之间的所有互动，无论其是否发生在 postgresql.org 基础设施上，但如果存在另一份优先适用的行为准则（例如某会议的行为准则），则以该准则为准。</p>
 
-    <h2>Inclusivity and Appropriate Conduct</h2>
+    <h2>包容性与恰当行为</h2>
 
-    <p>The PostgreSQL Project is open to participation by anyone with an interest in
-        working with PostgreSQL, regardless of their level of experience with the
-        software, or with technology in general. We encourage development and
-        contributions from all users, whatever their background may be.</p>
+    <p>PostgreSQL 项目欢迎任何有兴趣使用 PostgreSQL 的人参与，无论其软件使用经验或技术水平如何。我们鼓励所有用户参与开发和贡献，不论其背景如何。</p>
 
-    <p>We encourage thoughtful, constructive discussion of the software and this
-        community, their current state, and possible directions for development. The
-        focus of our discussions should be the code and related technology,
-        community projects, and infrastructure.</p>
+    <p>我们鼓励对软件和社区及其现状以及可能的发展方向进行深思熟虑的、建设性的讨论。讨论的重点应当是代码和相关技术、社区项目以及基础设施。</p>
 
-    <p>Personal attacks and negative comments on personal characteristics are
-        unacceptable, and will not be permitted. Examples of personal
-        characteristics include, but are not limited to age, race, national origin
-        or ancestry, religion, gender, or sexual orientation.</p>
+    <p>人身攻击和针对个人特征的负面评论是不可接受的，也不会被允许。个人特征包括但不限于年龄、种族、国籍或民族、宗教、性别或性取向。</p>
 
-    <p>Additional behaviors which are also violations of this code of conduct
-        include, but are not limited to, threats of violence against an individual
-        or group, threats of professional, community, and/or project sabotage,
-        unwelcome sexual attentions in any form, engaging in behavior that may
-        bring the PostgreSQL project into disrepute, and refusing to cease
-        inappropriate conduct when requested to do so.</p>
+    <p>以下行为同样违反本行为准则，包括但不限于：对个人或群体的暴力威胁，对专业、社区和/或项目的破坏威胁，任何形式的不受欢迎的性关注，可能损害 PostgreSQL 项目声誉的行为，以及在被要求停止不当行为后拒绝停止。</p>
 
-    <h2>Retaliation</h2>
+    <h2>报复</h2>
 
-    <p>It is also expressly forbidden for anyone to retaliate against a person who
-        brings a complaint under this Code of Conduct, or who assists in
-        investigating such a complaint. Retaliation may take the form of, among
-        other actions:</p>
+    <p>任何人对依据本行为准则提出投诉的人或协助调查此类投诉的人进行报复，是明确禁止的。报复行为可能采取以下形式，包括但不限于：</p>
 
     <ul>
-        <li>further personal attacks (public or private);</li>
-        <li>actions which undermine an individual's professional status and/or
-            status with their employer, coworkers, clients, or community;</li>
-        <li>actions which threaten the individual's privacy, physical person,
-            well-being, home, and/or family.</li>
+        <li>进一步的人身攻击（公开或私下）；</li>
+        <li>损害个人的专业地位和/或其在雇主、同事、客户或社区中的地位的行为；</li>
+        <li>威胁个人隐私、人身安全、健康、住所和/或家庭的行为。</li>
     </ul>
 
-    <p>Acts of retaliation will be treated in the same manner as any other violation
-        of this Code of Conduct.</p>
+    <p>报复行为将与任何其他违反本行为准则的行为以同样方式处理。</p>
 
-    <h2>Code of Conduct Committee</h2>
+    <h2>行为准则委员会</h2>
 
-    <p>The Core Team will appoint a Code of Conduct Committee to receive and
-        investigate all complaints, and a Chair for that Committee. Any member of
-        the community may volunteer to be on the Committee, with the exception of
-        Core Team members. As the Core Team oversees the Committee, Core Team
-        members will not serve on the Committee to prevent conflicts of interest.
-        The membership list of the Committee will be publicly available at all times
-        and can be viewed <a href="/about/policies/coc_committee/">here</a>.</p>
+    <p>核心团队将任命一个行为准则委员会来接收和调查所有投诉，并为该委员会指定一名主席。社区的任何成员都可以自愿加入委员会，但核心团队成员除外。由于核心团队负责监督委员会，核心团队成员不得在委员会中任职以避免利益冲突。委员会的成员名单将始终公开，可在<a href="/about/policies/coc_committee/">此处</a>查看。</p>
 
-    <p>The Committee membership will be refreshed on an annual basis. The Core Team
-        or the Committee Chair will announce the opening and closing dates of the
-        annual membership selection process through the usual community channels of
-        communication.</p>
+    <p>委员会成员将每年更新一次。核心团队或委员会主席将通过常规的社区沟通渠道公布年度成员遴选流程的开始和截止日期。</p>
 
-    <p>Any community member who would like to serve on the Committee will complete
-        an initial questionnaire for review by the Core Team and the current
-        Committee. The current Committee members will review the candidates, and
-        conduct interviews if needed. The current Committee will make
-        recommendations, and the Core Team will choose the new members for the
-        Committee.</p>
+    <p>任何希望在委员会中任职的社区成员都需要填写一份初始问卷，供核心团队和现任委员会审核。现任委员会成员将审核候选人，并在需要时进行面试。现任委员会将提出建议，核心团队将选择委员会的新成员。</p>
 
-    <p>The Committee may have a transition period of up to one month to allow
-        transfer of knowledge and responsibilities between the retiring members
-        and the new members.</p>
+    <p>委员会可以有最长一个月的过渡期，以便在卸任成员和新成员之间进行知识和职责交接。</p>
 
-    <p>While there is no specified number of Committee members who may serve at any
-        one time, the Committee will consist of at least four individuals at all
-        times. A term for a Committee member is one (1) year. A Committee member
-        may serve no more than three (3) terms consecutively.</p>
+    <p>虽然对同时任职的委员会成员人数没有明确规定，但委员会始终至少由四名成员组成。委员会成员的任期为一（1）年。委员会成员连续任职不得超过三（3）届。</p>
 
-    <p>The Core Team may relieve a Committee member of their duties if the Core
-        Team believes that member is not meeting the responsibilities of their
-        position.</p>
+    <p>如果核心团队认为某委员会成员未能履行其职位职责，核心团队可以解除该成员的职务。</p>
 
-    <p>The Committee may also approach the Core Team to coordinate removal of a
-        member on their own initiative if such person is unable or unwilling to
-        fulfill the responsibilities of their position.</p>
+    <p>如果某成员无法或不愿履行其职位职责，委员会也可以主动联系核心团队协调解除该成员的职务。</p>
 
-    <h2>Reporting</h2>
+    <h2>举报</h2>
 
-    <p>If you are the recipient of inappropriate behavior, or witness such behavior,
-        please report it promptly to the Code of Conduct Committee at
-        <a href="mailto:coc@postgresql.org">coc@postgresql.org</a>. In the
-        unfortunate event that you wish to make a complaint against some member of
-        the Committee, you may instead contact any of the other Committee member(s)
-        individually.</p>
+    <p>如果您是不当行为的受害者或目击者，请及时向行为准则委员会举报，邮箱为
+        <a href="mailto:coc@postgresql.org">coc@postgresql.org</a>。如果不幸需要对委员会某成员提出投诉，您可以单独联系其他委员会成员。</p>
 
-    <p>In your report, please include as much detail as possible:</p>
+    <p>在您的举报中，请尽可能提供详细信息：</p>
 
     <ul>
-        <li>a description of the incident;</li>
-        <li>the timing of events;</li>
-        <li>screen shots of any electronic discussions;</li>
-        <li>names, and if possible, contact information for any witnesses; and,</li>
-        <li>any other information which you think would be helpful in the investigation.</li>
+        <li>事件描述；</li>
+        <li>事件发生的时间；</li>
+        <li>任何电子讨论的截图；</li>
+        <li>证人的姓名，如可能，还包括联系方式；以及</li>
+        <li>您认为有助于调查的任何其他信息。</li>
     </ul>
 
-    <h2>Handling of Complaints</h2>
+    <h2>投诉处理</h2>
 
-    <p>The Committee will promptly acknowledge and investigate each reported
-        incident. With the cooperation of all parties, the Committee will aim to
-        complete the investigation in a period of two weeks from the receipt of the
-        complaint.</p>
+    <p>委员会将及时确认并调查每一起举报事件。在各方的配合下，委员会将力争在收到投诉后两周内完成调查。</p>
 
-    <p>Incident reports and investigation activities will be kept confidential to
-        the extent possible, consistent with the need to conduct an adequate
-        investigation.</p>
+    <p>事件报告和调查活动将在可能的范围内保密，同时确保能够进行充分的调查。</p>
 
-    <p>The Committee will inform the complainant and the alleged violator of their
-        decision at that time. If the investigation is still ongoing, the Committee
-        will give the parties a status report and an estimated completion date.</p>
+    <p>委员会将在做出决定时通知投诉人和被指控的违规者。如果调查仍在进行中，委员会将向各方提供状态报告和预计完成日期。</p>
 
-    <p>A lack of cooperation could prolong the investigation. The Committee will
-        make every effort to complete the investigation and deliver the results to
-        the complainant and the alleged violator as soon as practicable, notifying
-        them of its decision when the investigation is completed.</p>
+    <p>缺乏配合可能会延长调查时间。委员会将尽一切努力完成调查，并尽快将结果告知投诉人和被指控的违规者，在调查完成时通知他们决定。</p>
 
-    <p>In the event of a complaint by or against a CoC Committee member or Core Team
-        member, the complaint handling will proceed as usual, with the exception
-        that the person who is involved in the complaint will be excluded from the
-        proceedings in their role on the Committee or Core Team.</p>
+    <p>如果投诉涉及行为准则委员会成员或核心团队成员，投诉处理将照常进行，但涉及投诉的人员将被排除在委员会或核心团队的角色之外，不参与相关程序。</p>
 
-    <p>Possible results include, but are not limited to:</p>
+    <p>可能的处理结果包括但不限于：</p>
 
     <ul>
-        <li>A determination of no violation of the Code of Conduct;</li>
-        <li>A private reprimand with specific guidance on acceptable behavior to the
-            individual(s) involved;</li>
-        <li>A public reprimand with specific guidance on acceptable behavior to the
-            individual(s);</li>
-        <li>A temporary or permanent ban from some or all community-managed spaces,
-            including, but not limited to, community mailing lists, forums, IRC, and
-            loss of commit privileges;</li>
-        <li>A determination for a public and/or private apology.</li>
+        <li>裁定未违反行为准则；</li>
+        <li>对相关个人进行私下训诫，并提供关于可接受行为的具体指导；</li>
+        <li>对相关个人进行公开训诫，并提供关于可接受行为的具体指导；</li>
+        <li>暂时或永久禁止进入部分或全部社区管理空间，包括但不限于社区邮件列表、论坛、IRC，以及撤销提交权限；</li>
+        <li>要求进行公开和/或私下道歉。</li>
     </ul>
 
-    <p>Because of the seriousness of a determination involving a temporary or
-        permanent ban, and the associated technical and infrastructure actions
-        required by such a result, such a finding would be subject to review by the
-        Core Team before the involved parties are informed of the decision. If the
-        Core Team disagrees with the Committee's finding, the Core Team would
-        present its reasoning to the Committee. The Committee would consider the
-        Core Team's recommendations, and engage in further discussion if needed.
-        If the Core Team and Committee cannot agree on a determination, the Core
-        Team's decision would prevail.</p>
+    <p>由于涉及暂时或永久禁令的裁定的严重性，以及此类结果所需的相关技术和基础设施操作，此类裁定须经核心团队审核后方可通知相关方。如果核心团队不同意委员会的裁定，核心团队将向委员会说明其理由。委员会将考虑核心团队的建议，并在需要时进行进一步讨论。如果核心团队和委员会无法就裁定达成一致，核心团队的决定将占主导。</p>
 
-    <p>The Committee may determine that a violation of this policy was inadvertent,
-        perhaps arising from cultural differences (for example, use of a slang term
-        which is harmless in one language and offensive in another) or a misguided
-        attempt at humor. Such cases will be treated as opportunities for education
-        rather than reprimand. If the Committee determines that a reported incident
-        falls into the category of inadvertent violation, the Committee will decide
-        whether the incident is likely to be repeated by others, and, if so, share
-        the information in a general way with the community to prevent further
-        incidents.</p>
+    <p>委员会可能认定违反本政策是无意的，可能源于文化差异（例如，使用在一种语言中无害但在另一种语言中具有冒犯性的俚语）或不当的幽默尝试。此类情况将被视为教育机会而非处罚。如果委员会认定举报事件属于无意违规的范畴，委员会将决定该事件是否可能被他人重复，如果是，将以一般方式与社区分享相关信息以防止进一步事件的发生。</p>
 
-    <p>If either party feels the determination is incorrect, an appeal may be filed
-        with the Committee within one week of its decision. The appeal should
-        include new information, sources, witnesses, etc. to provide the Committee
-        with additional information to re-consider the incident.</p>
+    <p>如果任何一方认为裁定不正确，可在委员会做出决定后一周内提出上诉。上诉应包括新的信息、来源、证人等，以便委员会重新审视该事件。</p>
 
-    <p>Records of incident reports, investigations, Committee decisions, and all
-        related matters will be retained for a period of three calendar years from
-        the date of the last item in the incident file. The Committee will take
-        suitable measures to ensure the confidentiality of all reports and
-        discussions.</p>
+    <p>事件报告、调查、委员会决定及所有相关事项的记录将自事件档案中最后一项的日期起保留三个日历年。委员会将采取适当措施确保所有报告和讨论的保密性。</p>
 
-    <p>The Committee will produce an annual report summarizing the types of
-        complaints received and the actions taken to address the complaints by the
-        end of the first quarter of each year for the prior year, and share that
-        report with the community. The complaints and actions will be anonymized to
-        protect the identities of all involved parties.</p>
+    <p>委员会将在每年第一季度结束前编制一份年度报告，总结上一年收到的投诉类型和所采取的措施，并与社区分享该报告。投诉和措施将进行匿名处理，以保护所有相关方的身份。</p>
 
-    <h2>Acting in Good Faith</h2>
+    <h2>善意行事</h2>
 
-    <p>Anyone filing a complaint concerning an incident is expected to be acting in
-        good faith and have reasonable grounds for believing the information
-        disclosed indicates a violation of this policy. Any allegations that prove
-        not to be substantiated, and which prove to have been made maliciously or
-        knowingly to be false, will be viewed as a serious community offense and a
-        violation of this Code of Conduct.</p>
+    <p>任何就某事件提出投诉的人都应秉持善意，并有合理依据相信所披露的信息表明存在违反本政策的行为。任何被证明缺乏事实依据、且被证明出于恶意或故意虚假的指控，将被视为严重的社区违规行为和违反本行为准则的行为。</p>
 
-    <h2>Updates to the Code of Conduct</h2>
+    <h2>行为准则的更新</h2>
 
-    <p>The Committee and/or the Core Team will consider updates to this Code of
-        Conduct as needed, and at least once per year, based on incidents reported,
-        recommendations from legal professionals, suggestions from community
-        members, community cultural developments, or other events which create a
-        need for revision.</p>
+    <p>委员会和/或核心团队将根据需要（至少每年一次）考虑更新本行为准则，依据包括已举报的事件、法律专业人士的建议、社区成员的建议、社区文化发展或其他需要修订的事件。</p>
 
-    <p>Community members who have a suggestion for a revision to the Code of Conduct
-        may submit their ideas to the Committee via email to
-        <a href="mailto:coc@postgresql.org">coc@postgresql.org</a>.</p>
+    <p>对行为准则有修订建议的社区成员可通过电子邮件将其想法提交给委员会，邮箱为
+        <a href="mailto:coc@postgresql.org">coc@postgresql.org</a>。</p>
 
-    <h2>Conferences and Events</h2>
+    <h2>会议和活动</h2>
 
-    <p>The project encourages each event organizer to create and maintain a Code of
-        Conduct for their event. Those Codes of Conduct may or may not be identical
-        to this Code of Conduct. Each event organizer is responsible for handling
-        inappropriate conduct at their event in a prompt and objective manner.</p>
+    <p>项目鼓励每位活动组织者为其活动创建和维护一份行为准则。这些行为准则可以与本行为准则相同，也可以不同。每位活动组织者有责任及时、客观地处理其活动中的不当行为。</p>
 
-    <h2>Conclusion</h2>
+    <h2>结语</h2>
 
-    <p>We encourage appropriate and collegial relationships among community members;
-        however, members must be sensitive to conduct that may be considered
-        offensive by fellow members and must refrain from engaging in such
-        conduct.</p>
+    <p>我们鼓励社区成员之间建立恰当和融洽的关系；但是，成员必须注意可能被其他成员视为冒犯的行为，并避免从事此类行为。</p>
 
-    <p>In all interactions with the community, use your professional judgment, and
-        keep the discussion focused on moving our project and our community forward
-        in a positive direction for all.</p>
+    <p>在与社区的所有互动中，请运用您的专业判断，并将讨论的重点放在推动我们的项目和社区朝着对所有人都积极的方向前进上。</p>
 
-    <h2>Licence</h2>
+    <h2>许可证</h2>
 
     <p>
-        The PostgreSQL Code of Conduct is released under the
-        <a href="/about/licence/">PostgreSQL Licence</a>.
+        PostgreSQL 行为准则在
+        <a href="/about/licence/">PostgreSQL 许可证</a>下发布。
     </p>
 {%endblock%}

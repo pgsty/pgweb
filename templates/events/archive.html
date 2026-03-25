@@ -5,13 +5,11 @@
 
 <h1>{{title}} <i class="fas fa-calendar-alt"></i></h1>
 <p>
-<em><strong>Note:</strong> The PostgreSQL Global Development Group does not endorse any
-events run by third parties. No guarantee of the quality of events is offered
-whatsoever.</em>
+<em><strong>注意：</strong>PostgreSQL 全球开发组不为任何第三方举办的活动背书。我们不对活动的质量做任何保证。</em>
 </p>
 <p>
   <img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event">
-  indicates that an event is recognised under the <a href="/about/policies/conferences/">community event guidelines</a> and is directly helping the PostgreSQL community.
+  表示该活动已按照<a href="/about/policies/conferences/">社区活动准则</a>获得认可，并直接有助于 PostgreSQL 社区。
 </p>
 {%for event in events %}
 <hr class="eventseparator">
@@ -21,18 +19,17 @@ whatsoever.</em>
   {% endif %}
   <a href="/about/event/{{event.title|slugify}}-{{event.id}}/">{{event.title}}</a>
 </div>
-<div>Date: <strong class="event-highlight">{{event.displaydate|safe}}</strong></div>
-<div>Location: <strong class="event-highlight">{{event.locationstring}}</strong></div>
-{%if event.language%}<div>Language: <strong class="event-highlight">{{event.language}}</strong></div>{%endif%}
+<div>日期：<strong class="event-highlight">{{event.displaydate|safe}}</strong></div>
+<div>地点：<strong class="event-highlight">{{event.locationstring}}</strong></div>
+{%if event.language%}<div>语言：<strong class="event-highlight">{{event.language}}</strong></div>{%endif%}
 <div class="newseventwrap">
 {{event.summary|markdown|striptags}}
 </div>
 {%endfor%}
 
-<p><a class="btn btn-primary" href="/about/{{ archive|yesno:"events,eventarchive"}}/">{{ archive|yesno:"Upcoming,Past"}} events</a></p>
+<p><a class="btn btn-primary" href="/about/{{ archive|yesno:"events,eventarchive"}}/">{{ archive|yesno:"近期,往期"}}活动</a></p>
 
 <p>
-  Events are organized by PostgreSQL related associations or third parties. If you wish to list an event related to
-  PostgreSQL, you may <a href="/account/events/new/">submit</a> your own events for consideration after logging in.
+  活动由 PostgreSQL 相关协会或第三方举办。如果您希望列出与 PostgreSQL 相关的活动，可以登录后<a href="/account/events/new/">提交</a>您自己的活动以供审核。
 </p>
 {%endblock%}

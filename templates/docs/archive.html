@@ -1,17 +1,17 @@
 {%extends "base/page.html"%}
-{%block title%}Manual Archive{%endblock%}
+{%block title%}手册归档{%endblock%}
 {%block contents%}
 
-<h1>Manual Archive <i class="fas fa-book"></i></h1>
+<h1>手册归档 <i class="fas fa-book"></i></h1>
 
-<p>Following are links to manuals (both online and printable versions) for PostgreSQL releases that are no longer supported.
-If you are still using any of these releases, you are strongly advised to upgrade.</p>
+<p>以下是不再受支持的 PostgreSQL 版本的手册链接（包括在线版和可打印版本）。
+如果您仍在使用这些版本，我们强烈建议您进行升级。</p>
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th class="w-25">Online Version</th>
-      <th>PDF Version</th>
+      <th class="w-25">在线版本</th>
+      <th>PDF 版本</th>
     </tr>
   </thead>
   <tbody>
@@ -25,7 +25,7 @@ If you are still using any of these releases, you are strongly advised to upgrad
 	  {%if v.a4pdf%}<a href="/files/documentation/pdf/{{v.numtree}}/postgresql-{{v.numtree}}-A4.pdf">A4 PDF</a> <span class="txtMediumGrey">({{v.a4pdf|filesizeformat}})</span>{%endif%}
 	  {%if v.a4pdf and v.uspdf%} &bull; {%endif%}
 	  {%if v.uspdf%}<a href="/files/documentation/pdf/{{v.numtree}}/postgresql-{{v.numtree}}-US.pdf">US PDF</a> <span class="txtMediumGrey">({{v.uspdf|filesizeformat}})</span>{%endif%}
-	  {%else%}PDF version not available
+	  {%else%}PDF 版本不可用
 	  {%endif%}
       </td>
 		</tr>

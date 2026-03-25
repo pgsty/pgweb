@@ -1,54 +1,41 @@
 {%extends "base/page.html"%}
-{%block title%}Security Information{%endblock%}
+{%block title%}安全信息{%endblock%}
 {%block contents%}
 
-<h1>Security Information <i class="fas fa-lock"></i></h1>
+<h1>安全信息 <i class="fas fa-lock"></i></h1>
 
 <p>
-  The PostgreSQL Global Development Group (PGDG) takes security seriously. This
-  allows our users to place their trust in PostgreSQL for protecting their
-  mission-critical data.
+  PostgreSQL 全球开发组（PGDG）高度重视安全问题。这使我们的用户能够信赖 PostgreSQL 来保护他们的关键业务数据。
 </p>
 
 <p>
-  The PostgreSQL Global Development Group follows a model that shares
-  responsibility between PostgreSQL itself and its deployment environment,
-  including hardware, operating system, and the application layer
-  (programming language, frameworks and client libraries). The PostgreSQL
-  documentation provides info on the inherent security features of PostgreSQL
-  and how to securely configure and run PostgreSQL.
+  PostgreSQL 全球开发组遵循一种在 PostgreSQL 本身及其部署环境（包括硬件、操作系统和应用层——编程语言、框架和客户端库）之间共担责任的模型。PostgreSQL 文档提供了关于 PostgreSQL 内置安全特性以及如何安全配置和运行 PostgreSQL 的信息。
 </p>
 
 <p>
-  Security vulnerabilities can exist both in PostgreSQL and software within the
-  PostgreSQL ecosystem, including client libraries, extensions, installers,
-  and other utilities. This page walks through what is considered a security
-  vulnerability in PostgreSQL, how to report PostgreSQL security
-  vulnerabilities, and how fixes for security vulnerabilities are released.
+  安全漏洞可能存在于 PostgreSQL 本身以及 PostgreSQL 生态系统中的软件中，包括客户端库、扩展、安装程序和其他实用工具。本页介绍了什么被视为 PostgreSQL 的安全漏洞、如何报告 PostgreSQL 安全漏洞，以及安全漏洞的修复是如何发布的。
 </p>
 
 <p>
-  Please note that the PostgreSQL Project does not offer bug bounties.
+  请注意，PostgreSQL 项目不提供漏洞赏金。
 </p>
 
-<h2>CVE Numbering Authority</h2>
+<h2>CVE 编号机构</h2>
 
 <p>
-  The PostgreSQL Project is a CVE Numbering Authority (CNA), working with Red Hat
-  as our CNA Root. This allows us to assign our own CVE numbers and publish CVE
-  records for PostgreSQL and closely related projects.
+  PostgreSQL 项目是一个 CVE 编号机构（CNA），与 Red Hat 作为我们的 CNA Root 合作。这使我们能够为 PostgreSQL 及密切相关的项目分配自己的 CVE 编号并发布 CVE 记录。
 </p>
 
 <p>
-  We will currently assign CVE numbers for the following projects upon request to
-  <a href="mailto:cna@postgresql.org">cna@postgresql.org</a>:
+  目前，我们可以应请求为以下项目分配 CVE 编号，请发送邮件至
+  <a href="mailto:cna@postgresql.org">cna@postgresql.org</a>：
 </p>
 
 <ul>
   <li><a href="https://www.postgresql.org/">PostgreSQL</a></li>
-  <li><a href="https://yum.postgresql.org/">PostgreSQL RPM packaging</a></li>
-  <li><a href="https://apt.postgresql.org/">PostgreSQL DEB packaging</a></li>
-  <li><a href="https://github.com/EnterpriseDB/edb-installers">PostgreSQL Windows/macOS installers (EDB)</a></li>
+  <li><a href="https://yum.postgresql.org/">PostgreSQL RPM 打包</a></li>
+  <li><a href="https://apt.postgresql.org/">PostgreSQL DEB 打包</a></li>
+  <li><a href="https://github.com/EnterpriseDB/edb-installers">PostgreSQL Windows/macOS 安装程序（EDB）</a></li>
   <li><a href="https://jdbc.postgresql.org/">pgJDBC</a></li>
   <li><a href="https://odbc.postgresql.org/">psqlODBC</a></li>
   <li><a href="https://www.pgadmin.org/">pgAdmin</a></li>
@@ -57,172 +44,135 @@
 </ul>
 
 <p>
-  Additional projects may request inclusion on the list above by emailing
-  <a href="mailto:cna@postgresql.org">cna@postgresql.org</a>.
+  其他项目可以通过发送邮件至
+  <a href="mailto:cna@postgresql.org">cna@postgresql.org</a> 申请加入上述列表。
 </p>
 
 <p>
-  <strong>NOTE:</strong> The security team will only assign CVEs to projects
-  when requested by members of the project. If you think you've found a security
-  issue in a project other than PostgreSQL or its packages and installers,
-  please contact the security team for that project. See below for more details.
+  <strong>注意：</strong>安全团队仅在项目成员请求时才会为项目分配 CVE。如果您认为在 PostgreSQL 或其软件包和安装程序之外的项目中发现了安全问题，请联系该项目的安全团队。详见下文了解更多详情。
 </p>
 
-<h2>What is a Security Vulnerability in PostgreSQL?</h2>
+<h2>什么是 PostgreSQL 的安全漏洞？</h2>
 
 <p>
-  A security vulnerability in PostgreSQL is an issue that allows a user to gain
-  access to privileges or data that they do not have permission to use, or
-  allows a user to execute arbitrary code through a PostgreSQL process.
+  PostgreSQL 中的安全漏洞是指允许用户获取其无权使用的权限或数据，或允许用户通过 PostgreSQL 进程执行任意代码的问题。
 </p>
 
 <p>
-  The PostgreSQL Security Team does not consider reports on actions a PostgreSQL
-  superuser takes to be a security vulnerability. However, a report on an
-  unprivileged user escalating to superuser generally qualifies as valid.
+  PostgreSQL 安全团队不认为 PostgreSQL 超级用户执行的操作构成安全漏洞。但是，非特权用户提升为超级用户的报告通常被视为有效的安全漏洞。
 </p>
 
 <p>
-  The PostgreSQL Security Team typically does not consider a denial-of-service
-  on a PostgreSQL server from an authenticated, valid SQL statement to be a
-  security vulnerability. A denial-of-service issue of this nature could still
-  be a <a href="/account/submitbug/">bug</a>, and we encourage you to report it
-  on the <a href="/account/submitbug/">Report a Bug</a> page.
+  PostgreSQL 安全团队通常不认为通过经过身份验证的有效 SQL 语句对 PostgreSQL 服务器造成的拒绝服务属于安全漏洞。此类拒绝服务问题仍可能是一个 <a href="/account/submitbug/">Bug</a>，我们鼓励您在<a href="/account/submitbug/">报告 Bug</a> 页面进行报告。
 </p>
 
 <p>
-  Please do not report the lack of DMARC on postgresql.org mailing lists. This
-  is by design.
+  请不要报告 postgresql.org 邮件列表缺少 DMARC 的问题。这是设计使然。
 </p>
 
-<h2>Reporting a PostgreSQL Security Vulnerability</h2>
+<h2>报告 PostgreSQL 安全漏洞</h2>
 
 <p>
-  For security vulnerabilities in PostgreSQL or any of the installers linked
-  from the <a href="/download/">PostgreSQL download page</a>, please email
-  <a href="mailto:security@postgresql.org">security@postgresql.org</a>.
-</p>
-
-<p>
-  For reporting non-security bugs, please visit the
-  <a href="/account/submitbug/">Report a Bug</a> page.
+  对于 PostgreSQL 或从 <a href="/download/">PostgreSQL 下载页面</a>链接的任何安装程序中的安全漏洞，请发送邮件至
+  <a href="mailto:security@postgresql.org">security@postgresql.org</a>。
 </p>
 
 <p>
-  If you are unsure if an issue is a security vulnerability, please err on the
-  side of caution and email
-  <a href="mailto:security@postgresql.org">security@postgresql.org</a>.
+  如需报告非安全相关的 Bug，请访问<a href="/account/submitbug/">报告 Bug</a> 页面。
 </p>
 
-<h2>Reporting non-PostgreSQL Security Vulnerabilities</h2>
+<p>
+  如果您不确定某个问题是否属于安全漏洞，请本着谨慎的原则发送邮件至
+  <a href="mailto:security@postgresql.org">security@postgresql.org</a>。
+</p>
+
+<h2>报告非 PostgreSQL 安全漏洞</h2>
 
 <p>
-  Please see below for how you can report security vulnerabilities in
-  PostgreSQL-related projects:
+  以下是如何报告 PostgreSQL 相关项目安全漏洞的方式：
 </p>
 
 <ul>
   <li>
-    For security vulnerabilities in the <a href="https://jdbc.postgresql.org">PostgreSQL JDBC Driver</a>,
-    please email
-    <a href="mailto:pgsql-jdbc-security@lists.postgresql.org">pgsql-jdbc-security@lists.postgresql.org</a>.
+    对于 <a href="https://jdbc.postgresql.org">PostgreSQL JDBC Driver</a> 的安全漏洞，请发送邮件至
+    <a href="mailto:pgsql-jdbc-security@lists.postgresql.org">pgsql-jdbc-security@lists.postgresql.org</a>。
   </li>
   <li>
-    For security vulnerabilities in <a href="https://www.pgadmin.org/">pgAdmin</a>,
-    please email <a href="mailto:security@pgadmin.org">security@pgadmin.org</a>.
+    对于 <a href="https://www.pgadmin.org/">pgAdmin</a> 的安全漏洞，请发送邮件至
+    <a href="mailto:security@pgadmin.org">security@pgadmin.org</a>。
   </li>
   <li>
-    If you wish to report a security vulnerability for any other open source project in
-    the PostgreSQL ecosystem (e.g. a driver, an extension, or an installer) and
-    need a secure communication channel, please email
-    <a href="mailto:security@postgresql.org">security@postgresql.org</a>.
+    如果您希望报告 PostgreSQL 生态系统中其他开源项目（例如驱动程序、扩展或安装程序）的安全漏洞，且需要安全的通信渠道，请发送邮件至
+    <a href="mailto:security@postgresql.org">security@postgresql.org</a>。
   </li>
 </ul>
 
-<h2>PostgreSQL Security Releases</h2>
+<h2>PostgreSQL 安全更新发布</h2>
 
 <p>
-  The PostgreSQL Project releases security fixes as part of
-  <a href="/support/versioning/">minor version updates</a>. You are always
-  advised to use the latest minor version available, as it will contain other
-  non-security related fixes.
+  PostgreSQL 项目将安全修复作为<a href="/support/versioning/">小版本更新</a>的一部分发布。建议您始终使用最新的小版本，因为它还包含其他非安全相关的修复。
 </p>
 
 <p>
-  A new PostgreSQL major release, which contains new features, has every prior
-  security fix.
+  包含新功能的 PostgreSQL 大版本发布会包含所有先前的安全修复。
 </p>
 
 <p>
-  If you find a security vulnerability in PostgreSQL, the PostgreSQL Security
-  Team will credit you in the release notes and register a CVE for the
-  vulnerability. <strong>Please do not register a CVE independently of the
-  PostgreSQL Security Team</strong>.
+  如果您在 PostgreSQL 中发现了安全漏洞，PostgreSQL 安全团队将在发布说明中对您进行致谢，并为该漏洞注册 CVE。<strong>请不要在 PostgreSQL 安全团队之外独立注册 CVE</strong>。
 </p>
 
-<h2>PostgreSQL Security Notifications</h2>
+<h2>PostgreSQL 安全通知</h2>
 
 <p>
-  To receive notifications about security releases or other security
-  related news, you can subscribe to
-  the <a href="/list/">pgsql-announce</a> mailing list. If you set your
-  subscription to only include the tag <em>Security</em>, it will
-  exclude all other announcements that are sent to this list.
+  要接收有关安全发布或其他安全相关新闻的通知，您可以订阅 <a href="https://www.postgresql.org/list/">pgsql-announce</a> 邮件列表。如果您将订阅设置为仅包含 <em>Security</em> 标签，则会排除发送到此列表的所有其他公告。
 </p>
 
-<h2>Known PostgreSQL Security Vulnerabilities</h2>
+<h2>已知 PostgreSQL 安全漏洞</h2>
 
 <p>
-  The PostgreSQL Global Development Group believes that accuracy, completeness
-  and availability of security information is essential for our users. We choose
-  to pool all information on this one page, allowing easy searching for security
-  vulnerabilities over a range of criteria.  This includes:
+  PostgreSQL 全球开发组（PGDG）认为安全信息的准确性、完整性和可用性对我们的用户至关重要。我们选择将所有信息汇集在此页面上，便于按多种条件搜索安全漏洞。包括：
 </p>
 
 <ul>
-  <li>Which major versions a security vulnerability is present in</li>
-  <li>Which minor version update releases a security vulnerability is fixed in</li>
-  <li>Whether an exploit requires a valid login</li>
-  <li>CVSS score</li>
+  <li>安全漏洞存在于哪些大版本中</li>
+  <li>安全漏洞在哪些小版本更新中得到修复</li>
+  <li>利用漏洞是否需要有效的登录凭证</li>
+  <li>CVSS 评分</li>
 </ul>
 
 <p>
-  You can find more detailed information about a security vulnerability by
-  clicking on the links in the table below.
+  您可以通过点击下表中的链接查找安全漏洞的更多详细信息。
 </p>
 
 <h3>
-  Known PostgreSQL Security Vulnerabilities in
-  {%if version%}PostgreSQL {{version.numtree}}{%else%}Supported Versions{%endif%}
+  {%if version%}PostgreSQL {{version.numtree}}{%else%}受支持版本{%endif%}中已知的 PostgreSQL 安全漏洞
 </h3>
 
 {%if version and not version.supported%}
 <div class="border border-danger text-danger text-center mb-3">
-  <h1 class="text-danger">UNSUPPORTED VERSION</h1>
+  <h1 class="text-danger">不受支持的版本</h1>
   <p>
-    You are currently viewing PostgreSQL security vulnerabilities for an
-    unsupported version. If you are still using PostgreSQL {{version.numtree}},
-    you should upgrade as soon as possible.
+    您当前正在查看不受支持版本的 PostgreSQL 安全漏洞。如果您仍在使用 PostgreSQL {{version.numtree}}，应尽快升级。
   </p>
 </div>
 {% endif %}
 
 <p>
-  You can filter the view of patches to show just patches for version:<br />
+  您可以按版本过滤补丁视图，仅显示特定版本的补丁：<br />
   {%for v in supported%}
     <a href="/support/security/{{v.numtree}}/">{{v.numtree}}</a>{%if not forloop.last%} -{%endif%}
   {%endfor%}
-  - <a href="/support/security/">all</a>
+  - <a href="/support/security/">全部</a>
 </p>
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Reference</th>
-      <th>Affected</th>
-      <th>Fixed</th>
-      <th><a href="#comp">Component</a> & CVSS v3 Base Score</th>
-      <th>Description</th>
+      <th>参考</th>
+      <th>影响版本</th>
+      <th>修复版本</th>
+      <th><a href="#comp">组件</a>与 CVSS v3 基础评分</th>
+      <th>描述</th>
     </tr>
   </thead>
   <tbody>
@@ -230,80 +180,77 @@
       <tr>
         <td>
           {%if p.cve%}<span class="nobr"><a href="/support/security/CVE-{{ p.cve }}/">CVE-{{p.cve}}</a></span><br/>{%endif%}
-          {%if p.newspost%}<a href="/about/news/{{p.newspost.title|slugify}}-{{p.newspost.id}}/">Announcement</a><br/>{%endif%}
+          {%if p.newspost%}<a href="/about/news/{{p.newspost.title|slugify}}-{{p.newspost.id}}/">公告</a><br/>{%endif%}
         </td>
         <td>{{p.affected|join:", "}}</td>
         <td>{{p.fixed|join:", "}}</td>
         <td>{{p.component}}<br/>
           {%if p.cvssscore >= 0%}<a href="https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector={{p.cvssvector}}">{{p.cvssscore}}</a><br/><span class="cvssvector">{{p.cvssvector}}</span>
     {%else%}Legacy: {{p.legacyscore}}{%endif%}</td>
-        <td>{{p.description}}<br/><br/><a href="/support/security/CVE-{{ p.cve }}/">more details</a></td>
+        <td>{{p.description}}<br/><br/><a href="/support/security/CVE-{{ p.cve }}/">更多详情</a></td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
 
-<h3>Unsupported versions</h3>
+<h3>不受支持的版本</h3>
 
 <p>
-  You can also view archived security patches for unsupported versions. Note that no further
-  security patches are made available for these versions as they are end of life.<br/>
+  您还可以查看不受支持版本的已归档安全补丁。请注意，这些版本已停止维护，不再提供进一步的安全补丁。<br/>
   {%for v in unsupported%}
     <a href="/support/security/{{v.numtree}}/">{{v.numtree}}</a>{%if not forloop.last%} -{%endif%}
   {%endfor%}
 </p>
 
-<h3 id="comp">Components</h3>
+<h3 id="comp">组件</h3>
 
 <p>
-  The following component references are used in the above table:
+  以下组件引用用于上表中：
 </p>
 
 <table class="table table-striped">
   <thead>
     <tr>
-      <th>Component</th>
-      <th>Description</th>
+      <th>组件</th>
+      <th>描述</th>
     </tr>
   </thead>
   <tbody>
       <tr>
-       <td>core server</td>
-       <td>This vulnerability exists in the core server product.</td>
+       <td>核心服务器</td>
+       <td>此漏洞存在于核心服务器产品中。</td>
       </tr>
 
       <tr>
-       <td>client</td>
-       <td>This vulnerability exists in a client library or client application only.</td>
+       <td>客户端</td>
+       <td>此漏洞仅存在于客户端库或客户端应用程序中。</td>
       </tr>
 
       <tr>
-       <td>contrib module</td>
-       <td>This vulnerability exists in a contrib module. Contrib modules are not installed by default when PostgreSQL is installed from source. They may be installed by binary packages.</td>
+       <td>contrib 模块</td>
+       <td>此漏洞存在于 contrib 模块中。从源代码安装 PostgreSQL 时，默认不会安装 contrib 模块。它们可能通过二进制包安装。</td>
       </tr>
 
       <tr>
-       <td>client contrib module</td>
-       <td>This vulnerability exists in a contrib module used on the client only.</td>
+       <td>客户端 contrib 模块</td>
+       <td>此漏洞存在于仅在客户端使用的 contrib 模块中。</td>
       </tr>
 
       <tr>
-       <td>packaging</td>
-       <td>This vulnerability exists in PostgreSQL binary packaging, e.g. an installer or RPM.</td>
+       <td>打包</td>
+       <td>此漏洞存在于 PostgreSQL 二进制打包中，例如安装程序或 RPM。</td>
       </tr>
   </tbody>
 </table>
 
-<h2>The PostgreSQL Security Team</h2>
+<h2>PostgreSQL 安全团队</h2>
 
 <p>
-  The PostgreSQL Security Team is made up of a group of contributors to the
-  PostgreSQL project who have experience in different aspects of database and
-  information security.
+  PostgreSQL 安全团队由一组在数据库和信息安全各方面具有经验的 PostgreSQL 项目贡献者组成。
 </p>
 
 <p>
-  You can find a list of members on the security team here:
+  以下是安全团队成员列表：
 </p>
 
 <ul>
