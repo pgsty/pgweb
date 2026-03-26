@@ -29,14 +29,14 @@
  <p>您搜索的 <strong>{{query}}</strong> 没有返回结果。</p>
 {%else%}
  <h2>结果 {{firsthit}}-{{lasthit}}，共 {%if hitcount == 1000%}超过 1000{%else%}{{hitcount}}{%endif%} 条。</h2>
- {%if pagelinks %}结果页： {{pagelinks|safe}}<br/><br/>{%endif%}
+ {%if pagelinks %}结果页：{{pagelinks|safe}}<br/><br/>{%endif%}
  {%for hit in hits %}
   {{forloop.counter0|add:firsthit}}. <a href="{{hit.url}}">{{hit.title}}</a> [{{hit.rank|floatformat:2}}]<br/>
   <div>...{{hit.abstract|safe}}...</div>
   <a href="{{hit.url}}">{{hit.url}}</a><br/>
   <br/>
  {%endfor%}
- {%if pagelinks %}结果页： {{pagelinks|safe}}<br/><br/>{%endif%}
+ {%if pagelinks %}结果页：{{pagelinks|safe}}<br/><br/>{%endif%}
 {%endif%}
 {%endif%}
 {%endblock%}

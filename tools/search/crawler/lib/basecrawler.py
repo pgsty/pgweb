@@ -26,12 +26,13 @@ def override_create_connection(hostname, ipaddr):
 
 
 class BaseSiteCrawler(object):
-    def __init__(self, hostname, dbconn, siteid, serverip=None, https=False):
+    def __init__(self, hostname, dbconn, siteid, serverip=None, https=False, local_baseurl=None):
         self.hostname = hostname
         self.dbconn = dbconn
         self.siteid = siteid
         self.serverip = serverip
         self.https = https
+        self.local_baseurl = local_baseurl
         self.pages_crawled = {}
         self.pages_new = 0
         self.pages_updated = 0
@@ -52,7 +53,7 @@ class BaseSiteCrawler(object):
         self.init_crawl()
 
         # Fire off worker threads
-        for x in range(5):
+        for x in range(2):
             t = threading.Thread(name="Indexer %s" % x,
                                  target=lambda: self.crawl_from_queue())
             t.daemon = True
@@ -188,14 +189,17 @@ class BaseSiteCrawler(object):
             if url in self.scantimes:
                 headers["If-Modified-Since"] = formatdate(time.mktime(self.scantimes[url].timetuple()))
 
-            if self.serverip and False:
+            if self.local_baseurl:
+                fetch_url = '{}{}'.format(self.local_baseurl, url)
+            elif self.serverip and False:
                 connectto = self.serverip
                 headers['Host'] = self.hostname
+                fetch_url = '{}://{}{}'.format(self.https and 'https' or 'http', connectto, url)
             else:
-                connectto = self.hostname
+                fetch_url = '{}://{}{}'.format(self.https and 'https' or 'http', self.hostname, url)
 
             resp = requests.get(
-                '{}://{}{}'.format(self.https and 'https' or 'http', connectto, url),
+                fetch_url,
                 headers=headers,
                 timeout=10,
             )

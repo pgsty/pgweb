@@ -61,30 +61,48 @@ class SitemapParser(object):
 
 
 class SitemapSiteCrawler(BaseSiteCrawler):
-    def __init__(self, hostname, dbconn, siteid, serverip, https=False):
+    def __init__(self, hostname, dbconn, siteid, serverip, https=False, local_baseurl=None):
         super(SitemapSiteCrawler, self).__init__(hostname, dbconn, siteid, serverip, https)
+        self.local_baseurl = local_baseurl
 
     def init_crawl(self):
         # Fetch the sitemap. We ignore robots.txt in this case, and
         # assume it's always under /sitemap.xml
-        r = requests.get("https://%s/sitemap.xml" % self.hostname)
+        if self.local_baseurl:
+            sitemap_url = "%s/sitemap.xml" % self.local_baseurl
+        elif self.https:
+            sitemap_url = "https://%s/sitemap.xml" % self.hostname
+        else:
+            sitemap_url = "http://%s/sitemap.xml" % self.hostname
+        r = requests.get(sitemap_url)
         if r.status_code != 200:
             raise Exception("Could not load sitemap: %s" % r.status_code)
 
         p = SitemapParser()
         p.parse(r.text)
 
-        # Attempt to fetch a sitempa_internal.xml. This is used to index
+        # Attempt to fetch a sitemap_internal.xml. This is used to index
         # pages on our internal search engine that we don't want on
         # Google. They should also be excluded from default search
         # results (unless searching with a specific suburl)
-        r = requests.get("https://%s/sitemap_internal.xml" % self.hostname)
+        if self.local_baseurl:
+            internal_url = "%s/sitemap_internal.xml" % self.local_baseurl
+        else:
+            internal_url = "https://%s/sitemap_internal.xml" % self.hostname
+        r = requests.get(internal_url)
         if r.status_code == 200:
             p.parse(r.text, True)
 
         for url, prio, lastmod, internal in p.urls:
-            # Advance 8 characters - length of https://.
-            url = url[len(self.hostname) + 8:]
+            # Extract path from full URL (handle both http and https)
+            # URL format: http(s)://hostname/path
+            if url.startswith('https://'):
+                url = url[8:]
+            elif url.startswith('http://'):
+                url = url[7:]
+            # Remove hostname part
+            if '/' in url:
+                url = url[url.index('/'):]
             if lastmod:
                 if url in self.scantimes:
                     if lastmod < self.scantimes[url]:

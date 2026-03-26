@@ -1,55 +1,59 @@
 {% extends "pages/about/press/presskit18/base.html" %}
 
 {% block presskit_content %}
-<p><strong>2025 年 9 月 25 日</strong> - <a href="https://www.postgresql.org">PostgreSQL 全球开发组</a>宣布<a href="https://www.postgresql.org/docs/18/release-18.html">PostgreSQL 18</a>正式发布，作为世界上最先进的开源数据库，PostgreSQL 18 是目前的最新版本。</p>
-<p>PostgreSQL 18 通过全新的 I/O 子系统提升了各种规模工作负载的性能，在从存储读取数据时实现了高达 3 倍的性能提升，并增加了可使用索引的查询数量。该版本降低了主版本升级的影响，加速了升级速度，并缩短了升级完成后达到预期性能所需的时间。开发者也能从PostgreSQL 18的功能中获益，包括可在查询时动态计算值的虚拟生成列，以及提升数据库易用性并能为UUID提供更优索引和读取性能的 <code>uuidv7()</code> 函数。PostgreSQL 18 支持 OAuth 2.0 身份验证，使其更易于与单点登录（SSO）系统集成。</p>
-<p>PostgreSQL 核心团队成员 Jonathan Katz 表示，“全球开源社区的共同努力铸就了每一次 PostgreSQL 版本的发布，并持续带来符合用户数据场景的功能。PostgreSQL 18 延续了该项目长久以来提供可靠、稳健数据管理体验的深厚传统，并进一步扩展了其可支持的工作负载范围。”</p>
-<p>PostgreSQL是一个创新的数据管理系统，以其可靠性和健壮性著称，得益于全球开发者社区近30年的开源开发，已经成为各种规模组织的首选开源关系型数据库。</p>
+<p><strong>2025 年 9 月 25 日</strong> - <a href="https://www.postgresql.org">PostgreSQL 全球开发组</a>今日宣布发布 <a href="https://www.postgresql.org/docs/18/release-18.html">PostgreSQL 18</a>，这是世界上最先进的开源数据库的最新版本。</p>
+<p>PostgreSQL 18 通过全新的 I/O 子系统提升了各类工作负载的性能；在从存储读取数据时，性能提升最高可达 3 倍，同时还扩大了能够利用索引的查询范围。此版本降低了主版本升级带来的扰动，加快了升级速度，并缩短了升级完成后恢复到预期性能所需的时间。开发者也能从 PostgreSQL 18 中直接受益，例如可在查询时计算数值的虚拟生成列，以及能够为 UUID 带来更佳索引与读取性能的 <code>uuidv7()</code> 函数。借助对 OAuth 2.0 身份验证的支持，PostgreSQL 18 也更易于与单点登录（SSO）系统集成。</p>
+<p>PostgreSQL 核心团队成员 Jonathan Katz 表示：“全球开源社区的持续投入塑造了每一次 PostgreSQL 发布，并不断交付契合用户数据场景的功能。PostgreSQL 18 延续了该项目长期以来可靠、稳健的数据管理传统，同时继续扩展其可支持的工作负载范围。”</p>
+<p>PostgreSQL 是一个以可靠性、健壮性和可扩展性著称的创新型数据管理系统。得益于全球开发者社区近 30 年的开源开发积累，它已成为各类组织首选的开源关系型数据库。</p>
 
-<h3 id="异步-io-简介">异步 I/O 简介</h3>
-<p>PostgreSQL 此前依赖操作系统的预读机制来加速数据检索。然而，操作系统无法感知数据库特有的访问模式，难以准确预测所需数据，导致在许多工作负载场景下性能欠佳。</p>
-<p>PostgreSQL 18 引入了新的异步 I/O (AIO) 子系统来解决这一局限。AIO 允许 PostgreSQL 并发地发出多个 I/O 请求，而不是等待每个请求顺序完成，从而增强了现有的预读能力并提高整体吞吐量。PostgreSQL 18 支持的 AIO 操作包括顺序扫描、位图堆扫描和清理（VACUUM）。基准测试显示，在某些场景下性能提升高达 3 倍。</p>
-<p>新的<a href="https://www.postgresql.org/docs/18/runtime-config-resource.html#GUC-IO-METHOD"><code>io_method</code></a>参数允许用户在 <code>worker</code> 和 <code>io_uring</code> 等 AIO 方法之间切换，也可以通过设置 <code>sync</code> 参数保持 PostgreSQL 现有行为。AIO 带来了更丰富的调优维度，详细配置请参考<a href="https://www.postgresql.org/docs/18/runtime-config-resource.html#RUNTIME-CONFIG-RESOURCE-IO">官方文档</a>。</p>
+<h3 id="异步-io-简介">引入异步 I/O</h3>
+<p>过去，PostgreSQL 主要依赖操作系统的预读机制来加速数据获取。然而，操作系统无法洞察数据库特有的访问模式，因此并不总能准确预判所需数据，这在许多工作负载下都会造成性能损失。</p>
+<p>PostgreSQL 18 引入了新的异步 I/O（AIO）子系统来解决这一限制。AIO 允许 PostgreSQL 并发发出多个 I/O 请求，而不是顺序等待每个请求完成，从而扩展了现有预读能力并提升整体吞吐量。PostgreSQL 18 当前支持的 AIO 操作包括顺序扫描、位图堆扫描和 vacuum。基准测试表明，在某些场景下性能提升最高可达 3 倍。</p>
+<p>新的 <a href="https://www.postgresql.org/docs/18/runtime-config-resource.html#GUC-IO-METHOD"><code>io_method</code></a> 配置项允许用户在 <code>worker</code> 和 <code>io_uring</code> 等 AIO 方法之间切换，也可以选择 <code>sync</code> 来保持 PostgreSQL 现有行为。随着 AIO 引入，相关可调参数也更加丰富，详情请参考<a href="https://www.postgresql.org/docs/18/runtime-config-resource.html#RUNTIME-CONFIG-RESOURCE-IO">官方文档</a>。</p>
 
-<h3 id="升级提速且性能跃升">升级提速且性能跃升</h3>
-<p>PostgreSQL 的一项关键特性是生成并存储<a href="https://www.postgresql.org/docs/18/planner-stats.html">统计信息</a>，有助于 PostgreSQL 选择最优的查询计划。在 PostgreSQL 18 之前，这些统计信息无法在<a href="https://www.postgresql.org/docs/18/pgupgrade.html">主版本升级</a>过程中保留，导致高负载系统在<a href="https://www.postgresql.org/docs/18/sql-analyze.html"><code>ANALYZE</code></a>完成前查询性能骤降。PostgreSQL 18 引入了在主版本升级时保留规划器统计信息的能力，这有助于升级后的集群更快地达到预期性能。</p>
-<p>此外，主版本升级工具<a href="https://www.postgresql.org/docs/18/pgupgrade.html"><code>pg_upgrade</code></a>在 PostgreSQL 18 中迎来多项增强，例如当数据库包含大量表和序列等对象时，升级速度显著提升。此版本还支持通过 <code>--jobs</code> 参数配置并行检查，并新增了 <code>--swap</code> 参数，通过直接交换升级目录的方式替代原有的复制、克隆或链接文件操作。</p>
+<h3 id="升级提速且性能跃升">升级更快，升级后性能恢复也更快</h3>
+<p>PostgreSQL 的一项关键能力是生成并保存<a href="https://www.postgresql.org/docs/18/planner-stats.html">统计信息</a>，以帮助优化器选择更高效的查询计划。在 PostgreSQL 18 之前，这些统计信息无法在<a href="https://www.postgresql.org/docs/18/pgupgrade.html">主版本升级</a>过程中保留，导致高负载系统在<a href="https://www.postgresql.org/docs/18/sql-analyze.html"><code>ANALYZE</code></a>完成前查询性能明显下降。PostgreSQL 18 新增了在主版本升级中保留规划器统计信息的能力，使升级后的集簇能够更快恢复到预期性能。</p>
+<p>此外，执行主版本升级的工具 <a href="https://www.postgresql.org/docs/18/pgupgrade.html"><code>pg_upgrade</code></a> 在 PostgreSQL 18 中也获得了多项增强。例如，当数据库包含大量表、序列等对象时，升级速度会更快。此版本还允许通过 <code>--jobs</code> 参数并行执行检查，并新增了 <code>--swap</code> 参数，通过交换升级目录来替代复制、克隆或链接文件的方式。</p>
 
-<h3 id="查询与整体性能提升">查询与整体性能提升</h3>
-<p>PostgreSQL 18 通过一系列能自动提升工作负载速度的功能，进一步提升了查询性能。此版本引入了对<a href="https://www.postgresql.org/docs/18/indexes-multicolumn.html">多列 B-tree 索引</a>上的“跳跃扫描”查找，可缩短在查询中省略一个或多个前缀索引列等值（<code>=</code>）条件时的执行时间。它还可以优化 <code>WHERE</code> 子句中使用 <code>OR</code> 条件的查询，使其有效利用索引，大幅提升执行速度。此外，PostgreSQL 对表连接的执行计划和处理进行了多项改进，包括提升哈希连接性能、允许合并连接使用增量排序等。PostgreSQL 18 还支持<a href="https://www.postgresql.org/docs/18/gin.html">GIN 索引</a>的并行构建，与 B-tree 和<a href="https://www.postgresql.org/docs/current/brin.html">BRIN 索引</a>索引一样具备该能力。</p>
-<p>该版本还进一步增强了 PostgreSQL 对硬件加速的支持，包括为 <code>popcount</code> 函数添加对 ARM NEON 和 SVE CPU 内置指令集的支持，该函数被<a href="https://www.postgresql.org/docs/18/functions-bitstring.html"><code>bit_count</code></a>和其他内部功能使用。</p>
+<h3 id="查询与整体性能提升">查询与整体性能增强</h3>
+<p>PostgreSQL 18 进一步提升了查询性能，并通过一系列可自动生效的优化让工作负载运行得更快。此版本在<a href="https://www.postgresql.org/docs/18/indexes-multicolumn.html">多列 B-tree 索引</a>上引入了“跳跃扫描”能力，可提升查询在缺少一个或多个前缀索引列等值条件（<code>=</code>）时的执行效率。它还能够优化 <code>WHERE</code> 子句中包含 <code>OR</code> 条件的查询，使其更好地利用索引，从而显著缩短执行时间。PostgreSQL 18 还在表连接的规划与执行方面做出多项改进，包括提升哈希连接性能，以及允许合并连接使用增量排序等。此外，<a href="https://www.postgresql.org/docs/18/gin.html">GIN 索引</a>现在也支持并行构建，与 B-tree 和<a href="https://www.postgresql.org/docs/current/brin.html">BRIN 索引</a>一道具备这一能力。</p>
+<p>该版本还继续增强 PostgreSQL 对硬件加速的支持，例如为 <code>popcount</code> 函数加入了对 ARM NEON 与 SVE CPU 内置指令的支持，而该函数会被 <a href="https://www.postgresql.org/docs/18/functions-bitstring.html"><code>bit_count</code></a> 等内部能力使用。</p>
 
-<h3 id="提升开发者体验">提升开发者体验</h3>
-<p>PostgreSQL 18 引入了<a href="https://www.postgresql.org/docs/18/sql-createtable.html#SQL-CREATETABLE-PARMS-GENERATED-STORED">虚拟生成列</a>，其数值在查询时实时计算而非直接存储，现已成为生成列的默认选项。此外，存储型生成列现已支持逻辑复制。</p>
-<p>该版本新增了在<a href="https://www.postgresql.org/docs/18/dml-returning.html"><code>RETURNING</code> 子句</a>中同时访问修改前（<code>OLD</code>）与当前（<code>NEW</code>）数值的能力，适用于 <code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code> 和 <code>MERGE</code> 命令。 PostgreSQL 18 还通过<a href="https://www.postgresql.org/docs/18/functions-uuid.html#FUNC_UUID_GEN_TABLE"><code>uuidv7()</code></a>函数新增了 UUIDv7 生成功能，可生成按时间戳排序的随机 UUID，有助于优化缓存策略。<a href="https://www.postgresql.org/docs/18/functions-uuid.html#FUNC_UUID_GEN_TABLE"><code>uuidv4()</code></a>也作为 <code>gen_random_uuid()</code> 的别名被引入到PostgreSQL 18 。</p>
-<p>PostgreSQL 18 新增了对时间范围约束的支持：通过 <code>WITHOUT OVERLAPS</code> 子句，可在主键（<code>PRIMARY KEY</code>）和唯一（<code>UNIQUE</code>）约束中定义不重叠的范围；通过 PERIOD 子句，可为外键（<code>FOREIGN KEY</code>）约束定义<a href="https://www.postgresql.org/docs/18/sql-createtable.html#SQL-CREATETABLE-PARMS-UNIQUE">时间区间</a>关系。</p>
-<p>最后，PostgreSQL 18 引入了<a href="https://www.postgresql.org/docs/18/sql-createforeigntable.html"><code>CREATE FOREIGN TABLE ... LIKE</code></a>命令，可依据本地表的定义更便捷地创建外部表的模式结构。</p>
+<h3 id="提升开发者体验">持续强化开发者体验</h3>
+<p>PostgreSQL 18 引入了<a href="https://www.postgresql.org/docs/18/sql-createtable.html#SQL-CREATETABLE-PARMS-GENERATED-STORED">虚拟生成列</a>，它在查询时计算数值而不是直接存储，并已成为生成列的默认选项。此外，存储型生成列现在也可以参与逻辑复制。</p>
+<p>此版本还新增了在 <a href="https://www.postgresql.org/docs/18/dml-returning.html"><code>RETURNING</code> 子句</a> 中同时访问修改前（<code>OLD</code>）与当前（<code>NEW</code>）数值的能力，适用于 <code>INSERT</code>、<code>UPDATE</code>、<code>DELETE</code> 和 <code>MERGE</code> 命令。PostgreSQL 18 还通过 <a href="https://www.postgresql.org/docs/18/functions-uuid.html#FUNC_UUID_GEN_TABLE"><code>uuidv7()</code></a> 新增 UUIDv7 生成能力，可生成按时间戳排序的随机 UUID，以支持更好的缓存策略。与此同时，<a href="https://www.postgresql.org/docs/18/functions-uuid.html#FUNC_UUID_GEN_TABLE"><code>uuidv4()</code></a> 也已作为 <code>gen_random_uuid()</code> 的别名提供。</p>
+<p>PostgreSQL 18 还增加了<a href="https://www.postgresql.org/docs/18/sql-createtable.html#SQL-CREATETABLE-PARMS-UNIQUE">时态约束</a>支持。借助 <code>WITHOUT OVERLAPS</code> 子句，可在 <code>PRIMARY KEY</code> 与 <code>UNIQUE</code> 约束中对范围建立不重叠约束；借助 <code>PERIOD</code> 子句，则可在 <code>FOREIGN KEY</code> 约束上定义时间约束关系。</p>
+<p>最后，PostgreSQL 18 通过 <a href="https://www.postgresql.org/docs/18/sql-createforeigntable.html"><code>CREATE FOREIGN TABLE ... LIKE</code></a> 命令，让用户能够基于本地表定义，更方便地创建外部表的模式结构。</p>
 
 <h3 id="文本处理增强">文本处理增强</h3>
-<p>PostgreSQL 18 通过多项新特性使文本处理更简单、更快速。此版本新增了<a href="https://www.postgresql.org/docs/18/collation.html#COLLATION-MANAGING-STANDARD"><code>PG_UNICODE_FAST</code></a>排序规则，该规则在提供完整的Unicode大小写转换语义的同时，显著提升了多种比较操作的性能，涵盖 <code>upper</code> 和 <code>lower</code> 字符串比较函数，以及用于大小写不敏感比较的新<a href="https://www.postgresql.org/docs/18/functions-string.html#FUNCTIONS-STRING-OTHER"><code>casefold</code></a>函数。此外，PostgreSQL 18 现在支持对使用<a href="https://www.postgresql.org/docs/18/collation.html#COLLATION-NONDETERMINISTIC">非确定性排序规则</a>的文本进行 <code>LIKE</code> 比较，简化了复杂模式匹配的实现。本版本还调整了<a href="https://www.postgresql.org/docs/18/textsearch.html">全文检索</a>的实现机制，使其采用数据库集群的默认排序提供程序，而非始终依赖 libc，这一变化可能导致在运行<a href="https://www.postgresql.org/docs/18/pgupgrade.html"><code>pg_upgrade</code></a>后，需要为所有<a href="https://www.postgresql.org/docs/18/textsearch-tables.html#TEXTSEARCH-TABLES-INDEX">全文检索</a>及<a href="https://www.postgresql.org/docs/18/pgtrgm.html#PGTRGM-INDEX"><code>pg_trgm</code></a>索引执行重建操作。</p>
+<p>PostgreSQL 18 通过多项增强，使文本处理更简单也更高效。此版本新增了 <a href="https://www.postgresql.org/docs/18/collation.html#COLLATION-MANAGING-STANDARD"><code>PG_UNICODE_FAST</code></a> 排序规则，它在提供完整 Unicode 大小写转换语义的同时，可显著加速多种比较操作，包括 <code>upper</code> 与 <code>lower</code> 字符串比较函数，以及新的大小写不敏感比较函数 <a href="https://www.postgresql.org/docs/18/functions-string.html#FUNCTIONS-STRING-OTHER"><code>casefold</code></a>。此外，PostgreSQL 18 现已支持在使用<a href="https://www.postgresql.org/docs/18/collation.html#COLLATION-NONDETERMINISTIC">非确定性排序规则</a>的文本上执行 <code>LIKE</code> 比较，从而简化更复杂的模式匹配。此版本还调整了<a href="https://www.postgresql.org/docs/18/textsearch.html">全文检索</a>的实现方式，使其使用数据库集簇的默认排序提供程序，而不再始终依赖 libc；这意味着在执行<a href="https://www.postgresql.org/docs/18/pgupgrade.html"><code>pg_upgrade</code></a>之后，您可能需要重新构建所有<a href="https://www.postgresql.org/docs/18/textsearch-tables.html#TEXTSEARCH-TABLES-INDEX">全文检索</a>与 <a href="https://www.postgresql.org/docs/18/pgtrgm.html#PGTRGM-INDEX"><code>pg_trgm</code></a> 索引。</p>
+
+<h3 id="认证与安全特性">认证与安全特性</h3>
+<p>PostgreSQL 18 引入了 <a href="https://www.postgresql.org/docs/18/auth-oauth.html"><code>oauth</code> 认证</a>，使用户能够通过 PostgreSQL 扩展所支持的 OAuth 2.0 机制完成身份验证。此外，PostgreSQL 18 还增加了对 <a href="https://www.postgresql.org/docs/18/pgcrypto.html#PGCRYPTO-OPENSSL-SUPPORT-FUNCS">FIPS 模式</a>的校验支持，并新增了 <a href="https://www.postgresql.org/docs/18/runtime-config-connection.html#GUC-SSL-TLS13-CIPHERS"><code>ssl_tls13_ciphers</code></a> 参数，用于配置服务端 TLS v1.3 密码套件。</p>
+<p>此版本将 <code>md5</code> 密码认证标记为弃用，并将在未来版本中移除。如果您仍需使用 PostgreSQL 的密码认证，请改用 <a href="https://www.postgresql.org/docs/18/auth-password.html">SCRAM 认证</a>。PostgreSQL 18 还为 <a href="https://www.postgresql.org/docs/18/postgres-fdw.html"><code>postgres_fdw</code></a> 与 <a href="https://www.postgresql.org/docs/18/dblink.html"><code>dblink</code></a> 增加了 SCRAM 透传认证支持，以便连接远程 PostgreSQL 实例。此外，<a href="https://www.postgresql.org/docs/18/pgcrypto.html"><code>pgcrypto</code></a> 现已支持 <a href="https://www.postgresql.org/docs/18/pgcrypto.html#PGCRYPTO-CRYPT-ALGORITHMS">基于 SHA-2 的密码哈希加密</a>。</p>
 
 <h3 id="复制">复制</h3>
-<p>PostgreSQL 18 支持在日志和<a href="https://www.postgresql.org/docs/18/monitoring-stats.html#MONITORING-PG-STAT-SUBSCRIPTION-STATS"><code>pg_stat_subscription_stats</code></a>视图中报告逻辑复制写入冲突。此外，<a href="https://www.postgresql.org/docs/18/sql-createsubscription.html"><code>CREATE SUBSCRIPTION</code></a>现默认使用并行流式方式来应用事务，有助于提升复制性能。<a href="https://www.postgresql.org/docs/18/app-pgcreatesubscriber.html"><code>pg_createsubscriber</code></a>工具新增了 <code>--all</code> 参数，可以通过一条命令为实例中的所有数据库创建逻辑副本。 PostgreSQL 18 持自动<a href="https://www.postgresql.org/docs/18/runtime-config-replication.html#GUC-IDLE-REPLICATION-SLOT-TIMEOUT">删除空闲复制槽</a>，避免在发布服务器上积压过多WAL日志。</p>
+<p>PostgreSQL 18 支持在日志以及 <a href="https://www.postgresql.org/docs/18/monitoring-stats.html#MONITORING-PG-STAT-SUBSCRIPTION-STATS"><code>pg_stat_subscription_stats</code></a> 视图中报告逻辑复制写入冲突。此外，<a href="https://www.postgresql.org/docs/18/sql-createsubscription.html"><code>CREATE SUBSCRIPTION</code></a> 现在默认使用并行流式方式应用事务，有助于提升复制性能。<a href="https://www.postgresql.org/docs/18/app-pgcreatesubscriber.html"><code>pg_createsubscriber</code></a> 工具新增了 <code>--all</code> 参数，可通过一条命令为实例中的所有数据库创建逻辑副本。PostgreSQL 18 还支持自动<a href="https://www.postgresql.org/docs/18/runtime-config-replication.html#GUC-IDLE-REPLICATION-SLOT-TIMEOUT">删除空闲复制槽</a>，以帮助避免在发布端积压过多 WAL 文件。</p>
 
 <h3 id="维护与可观测性">维护与可观测性</h3>
-<p>PostgreSQL 18 改进了<a href="https://www.postgresql.org/docs/18/routine-vacuuming.html">vacuum</a>策略，通过在常规 vacuum 期间主动冻结更多页面来减少开销，并在需要激进清理的情况下提供了帮助。</p>
-<p>PostgreSQL 18 为<a href="https://www.postgresql.org/docs/18/using-explain.html"><code>EXPLAIN</code></a>命令提供了更详细的执行信息，自此版本起，在执行 <code>EXPLAIN ANALYZE</code> 时会自动显示访问的缓冲区数量（数据存储的基本单位）。此外，<code>EXPLAIN ANALYZE</code> 现在会显示索引扫描期间发生的索引查找次数，而 <code>EXPLAIN ANALYZE VERBOSE</code> 则会包含 CPU、WAL 和平均读取统计信息。PostgreSQL 18 还在<a href="https://www.postgresql.org/docs/18/monitoring-stats.html#MONITORING-PG-STAT-ALL-TABLES-VIEW"><code>pg_stat_all_tables</code></a>视图增加了有关 VACUUM 及相关操作耗时统计，以及按连接统计的 I/O 和 WAL 使用情况数据。</p>
+<p>PostgreSQL 18 改进了其 <a href="https://www.postgresql.org/docs/18/routine-vacuuming.html">vacuum</a> 策略，通过在常规 vacuum 过程中主动冻结更多页面来减少开销，并在需要激进清理的场景下提供更好的支持。</p>
+<p>PostgreSQL 18 为 <a href="https://www.postgresql.org/docs/18/using-explain.html"><code>EXPLAIN</code></a> 提供了更丰富的执行细节。自此版本起，执行 <code>EXPLAIN ANALYZE</code> 时会自动显示访问的缓冲区数量（数据存储的基本单位）。此外，<code>EXPLAIN ANALYZE</code> 现在会展示索引扫描期间的索引查找次数，而 <code>EXPLAIN ANALYZE VERBOSE</code> 则会包含 CPU、WAL 和平均读取统计信息。PostgreSQL 18 还在 <a href="https://www.postgresql.org/docs/18/monitoring-stats.html#MONITORING-PG-STAT-ALL-TABLES-VIEW"><code>pg_stat_all_tables</code></a> 中增加了 vacuum 及相关操作耗时，以及按连接统计的 I/O 与 WAL 使用情况等信息。</p>
 
 <h3 id="其他重要变更">其他重要变更</h3>
-<p>通过 PostgreSQL 18 <a href="https://www.postgresql.org/docs/18/app-initdb.html"><code>initdb</code></a>初始化的数据库， 现在默认启用页校验和 (page checksums)。这会影响从未启用校验和的集群升级，在使用<a href="https://www.postgresql.org/docs/18/pgupgrade.html"><code>pg_upgrade</code></a>时需要使用 <code>--no-data-checksums</code> 参数创建一个新的 PostgreSQL 18 集群。</p>
-<p>PostgreSQL 18推出了新版（3.2）的PostgreSQL通信协议，这是自2003年PostgreSQL 7.4发布以来的首个重大更新。目前，<a href="https://www.postgresql.org/docs/18/libpq-connect.html"><code>libpq</code></a>库仍默认使用3.0版本协议，而客户端工具（如驱动程序、连接池、代理服务器等）将逐步增加对新协议版本的支持。</p>
+<p>通过 PostgreSQL 18 的 <a href="https://www.postgresql.org/docs/18/app-initdb.html"><code>initdb</code></a> 初始化的数据库，现在默认启用页校验和（page checksums）。这会影响从未启用校验和的集簇升级；如果使用 <a href="https://www.postgresql.org/docs/18/pgupgrade.html"><code>pg_upgrade</code></a> 进行升级，则需要使用 <code>--no-data-checksums</code> 选项创建新的 PostgreSQL 18 集簇。</p>
+<p>PostgreSQL 18 还引入了新的 PostgreSQL 通信协议版本（3.2），这是自 PostgreSQL 7.4（2003 年）以来首次引入新协议版本。当前，<a href="https://www.postgresql.org/docs/18/libpq-connect.html"><code>libpq</code></a> 仍默认使用 3.0 版协议，而驱动程序、连接池、代理等客户端工具将逐步增加对新协议版本的支持。</p>
 
 <h3 id="其他功能">其他功能</h3>
-<p>PostgreSQL 18还新增了许多其他新功能和改进，这些可能对您的使用场景有所帮助。请查看<a href="https://www.postgresql.org/docs/18/release-18.html">发布说明</a>，以获取完整的新功能和更改列表。</p>
+<p>PostgreSQL 18 还新增了许多其他功能与改进，可能同样适用于您的使用场景。完整的新功能与变更列表，请参阅<a href="https://www.postgresql.org/docs/18/release-18.html">发布说明</a>。</p>
 
 <h3 id="关于-postgresql">关于 PostgreSQL</h3>
-<p><a href="https://www.postgresql.org">PostgreSQL</a>是世界上最先进的开源数据库，拥有一个数以千计的用户、贡献者、公司和组织组成的全球社区。PostgreSQL起源于加利福尼亚大学伯克利分校，已经有超过40年的历史，并且以无与伦比的速度持续发展。PostgreSQL成熟的特性不仅与顶尖商业数据库系统相媲美，而且在高级数据库功能、可扩展性、安全性和稳定性方面超越了它们。</p>
+<p><a href="https://www.postgresql.org">PostgreSQL</a> 是世界上最先进的开源数据库，拥有一个由数千名用户、贡献者、公司和组织组成的全球社区。PostgreSQL 起源于加利福尼亚大学伯克利分校，建立在超过 40 年的工程积累之上，并始终保持着无与伦比的发展速度。PostgreSQL 成熟的特性集不仅可与顶尖商业数据库系统相媲美，而且在高级数据库功能、可扩展性、安全性与稳定性方面更进一步。</p>
 
 <h3 id="链接">链接</h3>
 <ul>
 <li><a href="https://www.postgresql.org/download/">下载</a></li>
-<li><a href="https://www.postgresql.org/docs/18/release-18.html">发行说明</a></li>
-<li><a href="https://www.postgresql.org/about/press/">新闻资料</a></li>
+<li><a href="https://www.postgresql.org/docs/18/release-18.html">发布说明</a></li>
+<li><a href="https://www.postgresql.org/about/press/">新闻资料包</a></li>
 <li><a href="https://www.postgresql.org/support/security/">安全页面</a></li>
 <li><a href="https://www.postgresql.org/support/versioning/">版本策略</a></li>
 <li><a href="https://www.postgresql.org/about/contact/">联系我们</a></li>
@@ -60,38 +64,38 @@
 
 {% block presskit_about %}
 <h2 id="关于-postgresql">关于 PostgreSQL</h2>
-<p><a href="https://www.postgresql.org">PostgreSQL</a>是世界上最先进的开源数据库，拥有一个数以千计的用户、贡献者、公司和组织组成的全球社区。PostgreSQL起源于加利福尼亚大学伯克利分校，已经有超过40年的历史，并且以无与伦比的速度持续发展。PostgreSQL成熟的特性不仅与顶尖商业数据库系统相媲美，而且在高级数据库功能、可扩展性、安全性和稳定性方面超越了它们。</p>
+<p><a href="https://www.postgresql.org">PostgreSQL</a> 是世界上最先进的开源数据库，拥有一个由数千名用户、贡献者、公司和组织组成的全球社区。PostgreSQL 起源于加利福尼亚大学伯克利分校，建立在超过 40 年的工程积累之上，并始终保持着无与伦比的发展速度。PostgreSQL 成熟的特性集不仅可与顶尖商业数据库系统相媲美，而且在高级数据库功能、可扩展性、安全性与稳定性方面更进一步。</p>
 {% endblock presskit_about %}
 
 {% block presskit_features %}
 <h2 id="更多功能">更多功能</h2>
-<p>关于上述功能和其他功能的解释，请参见以下资源：</p>
+<p>有关上述功能及其他改进的详细说明，请参见以下资源：</p>
 <ul>
-<li><a href="https://www.postgresql.org/docs/18/release-18.html">发行说明</a></li>
+<li><a href="https://www.postgresql.org/docs/18/release-18.html">发布说明</a></li>
 <li><a href="https://www.postgresql.org/about/featurematrix/">功能列表</a></li>
 </ul>
 {% endblock presskit_features %}
 
 {% block presskit_download %}
 <h2 id="下载方式">下载方式</h2>
-<p>您可以通过以下几种方式下载 PostgreSQL 18，包括：</p>
+<p>您可以通过以下方式获取 PostgreSQL 18：</p>
 <ul>
-<li><a href="https://www.postgresql.org/download/">官方下载页面</a>，包含<a href="https://www.postgresql.org/download/windows/">Windows</a>、<a href="https://www.postgresql.org/download/linux/">Linux</a>、<a href="https://www.postgresql.org/download/macosx/">macOS</a> 等多个平台的安装程序和工具。</li>
+<li><a href="https://www.postgresql.org/download/">官方下载页面</a>，其中包含 <a href="https://www.postgresql.org/download/windows/">Windows</a>、<a href="https://www.postgresql.org/download/linux/">Linux</a>、<a href="https://www.postgresql.org/download/macosx/">macOS</a> 等多个平台的安装程序与工具。</li>
 <li><a href="https://www.postgresql.org/ftp/source/v18.0">源代码</a></li>
 </ul>
-<p>更多工具和扩展可在<a href="http://pgxn.org/">PostgreSQL Extension Network</a>获取。</p>
+<p>更多工具与扩展可在 <a href="http://pgxn.org/">PostgreSQL Extension Network</a> 获取。</p>
 
 {% endblock presskit_download %}
 
 {% block presskit_docs %}
 <h2 id="文档">文档</h2>
-<p>PostgreSQL 18 附带了HTML文档和手册，您也可以在线浏览<a href="https://www.postgresql.org/docs/18/">HTML</a>和<a href="https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-US.pdf">PDF</a>格式的文档。</p>
+<p>PostgreSQL 18 附带 HTML 文档与手册页，您也可以在线浏览 <a href="https://www.postgresql.org/docs/18/">HTML</a> 与 <a href="https://www.postgresql.org/files/documentation/pdf/18/postgresql-18-US.pdf">PDF</a> 格式的文档。</p>
 
 {% endblock presskit_docs %}
 
 {% block presskit_licence %}
 <h2 id="许可证">许可证</h2>
-<p>PostgreSQL 使用<a href="https://www.postgresql.org/about/licence/">PostgreSQL 许可证</a>，这是一种类似 BSD 的“宽松”许可证。这种经<a href="http://www.opensource.org/licenses/postgresql/">OSI认证的许可证</a>因其灵活性和对商业友好而受到广泛赞誉，因为它不限制在商业和专有应用程序中使用PostgreSQL。加上多公司支持和代码的公共所有权，该许可证使PostgreSQL非常受欢迎，因为供应商希望在自己的产品中嵌入数据库，而无需担心费用、供应商锁定或许可条款变更。</p>
+<p>PostgreSQL 使用 <a href="https://www.postgresql.org/about/licence/">PostgreSQL 许可证</a>，这是一种类似 BSD 的宽松许可证。该许可证已获 <a href="http://www.opensource.org/licenses/postgresql/">OSI 认证</a>，因其灵活且适合商业使用而广受赞誉，因为它不限制 PostgreSQL 在商业和专有应用中的使用。再加上多家公司支持以及代码公共所有权，这使 PostgreSQL 对希望在自身产品中嵌入数据库的厂商极具吸引力，无需担心费用、供应商锁定或许可条款变化。</p>
 {% endblock presskit_licence %}
 
 {% block presskit_contact %}
@@ -108,13 +112,12 @@
 
 {% block presskit_images %}
 <h2 id="图像和标志">图像和标志</h2>
-<p>Postgres、PostgreSQL和大象标志（Slonik）都是<a href="https://www.postgres.ca">PostgreSQL 社区协会</a>的注册商标。如果您希望使用这些标志，您必须遵守<a href="https://www.postgresql.org/about/policies/trademarks/">商标政策</a>。</p>
+<p>Postgres、PostgreSQL 和大象标志（Slonik）均为 <a href="https://www.postgres.ca">PostgreSQL 社区协会</a> 的注册商标。如果您希望使用这些标志，必须遵守<a href="https://www.postgresql.org/about/policies/trademarks/">商标政策</a>。</p>
 {% endblock presskit_images %}
 
 {% block presskit_corporate %}
 <h2 id="企业支持和捐赠">企业支持和捐赠</h2>
-<p>PostgreSQL得到了许多公司的支持，他们赞助开发人员，提供托管资源，并给予我们财务支持。请查看我们的<a href="https://www.postgresql.org/about/sponsors/">赞助商</a>页面，了解这些项目的支持者。</p>
-<p>还有大量<a href="https://www.postgresql.org/support/professional_support/">提供PostgreSQL支持的公司</a>，包括个人顾问和跨国公司。</p>
-<p>如果您希望对PostgreSQL全球开发组或其中一个公认的社群非营利组织进行捐赠，请访问我们的<a href="https://www.postgresql.org/about/donate/">捐赠</a>页面。</p>
+<p>PostgreSQL 得到了众多公司的支持，这些公司赞助开发人员、提供托管资源，并给予项目财务支持。请查看我们的<a href="https://www.postgresql.org/about/sponsors/">赞助商</a>页面，了解项目的重要支持者。</p>
+<p>此外，还有大量<a href="https://www.postgresql.org/support/professional_support/">提供 PostgreSQL 支持服务的公司</a>，从个人顾问到跨国企业均有覆盖。</p>
+<p>如果您希望向 PostgreSQL 全球开发组或其中一个获认可的社区非营利组织捐赠，请访问我们的<a href="https://www.postgresql.org/about/donate/">捐赠</a>页面。</p>
 {% endblock presskit_corporate %}
-

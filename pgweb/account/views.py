@@ -6,6 +6,7 @@ from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from pgweb.util.decorators import login_required, script_sources, frame_sources, content_sources, queryparams
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
@@ -405,9 +406,10 @@ def login(request):
                                            'oauth_providers': [(k, v) for k, v in sorted(settings.OAUTH.items())],
                                        })(request)
 
-
+@require_http_methods(["GET", "POST"])
 def logout(request):
-    return authviews.logout_then_login(request, login_url='/')
+    django_logout(request)
+    return HttpResponseRedirect('/')
 
 
 def changepwd(request):

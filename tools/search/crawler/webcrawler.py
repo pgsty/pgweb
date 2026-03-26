@@ -19,7 +19,10 @@ def doit():
 
     # Start by indexing the main website
     log("Starting indexing of main website")
-    SitemapSiteCrawler("www.postgresql.org", conn, 1, cp.get("search", "frontendip"), True).crawl()
+    local_baseurl = cp.get("search", "local_baseurl") if cp.has_option("search", "local_baseurl") else None
+    hostname = cp.get("search", "web")  # pg.center
+    https = cp.get("search", "https").lower() == 'true' if cp.has_option("search", "https") else True
+    SitemapSiteCrawler(hostname, conn, 1, cp.get("search", "frontendip"), https, local_baseurl).crawl()
     conn.commit()
 
     # Skip id=1, which is the main site..
