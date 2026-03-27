@@ -80,9 +80,9 @@ PostgreSQL 全球开发组在主要版本首次发布后提供 5 年的支持。
       <tr>
        <td>{{v.numtree}}</td>
        <td>{{v.numtree}}.{{v.latestminor}}</td>
-       <td>{{v.supported|yesno:"Yes,No"}}</td>
-       <td>{{v.firstreldate|date:"F j, Y"}}</td>
-       <td>{{v.eoldate|date:"F j, Y"}}</td>
+       <td>{{v.supported|yesno:"是,否"}}</td>
+       <td>{{v.firstreldate|date:"Y-m-d"}}</td>
+       <td>{{v.eoldate|date:"Y-m-d"}}</td>
       </tr>
     {%endfor%}
   </tbody>

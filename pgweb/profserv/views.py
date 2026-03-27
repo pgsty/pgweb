@@ -5,19 +5,19 @@ from pgweb.util.contexts import render_pgweb
 from .models import ProfessionalService
 
 regions = (
-    ('africa', 'Africa'),
-    ('asia', 'Asia'),
-    ('europe', 'Europe'),
-    ('northamerica', 'North America'),
-    ('oceania', 'Oceania'),
-    ('southamerica', 'South America'),
+    ('africa', '非洲'),
+    ('asia', '亚洲'),
+    ('europe', '欧洲'),
+    ('northamerica', '北美洲'),
+    ('oceania', '大洋洲'),
+    ('southamerica', '南美洲'),
 )
 
 
 def root(request, servtype):
-    title = servtype == 'support' and 'Professional Services' or 'Hosting Providers'
-    what = servtype == 'support' and 'support' or 'hosting'
     support = servtype == 'support'
+    title = support and '专业服务' or '托管方案'
+    what = support and 'support' or 'hosting'
     return render_pgweb(request, 'support', 'profserv/root.html', {
         'title': title,
         'support': support,
@@ -32,10 +32,10 @@ def region(request, servtype, regionname):
         raise Http404
     regname = regname[0]
 
-    what = servtype == 'support' and 'support' or 'hosting'
-    whatname = servtype == 'support' and 'Professional Services' or 'Hosting Providers'
-    title = "%s - %s" % (whatname, regname)
     support = servtype == 'support'
+    what = support and 'support' or 'hosting'
+    whatname = support and '专业服务' or '托管方案'
+    title = "%s - %s" % (whatname, regname)
 
     # DB model is a bit funky here, so use the extra-where functionality to filter properly.
     # Field names are cleaned up earlier, so it's safe against injections.
