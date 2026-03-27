@@ -3,12 +3,12 @@
 {%block title%}特性描述{%endblock%}
 {%block contents%}
 <h1>特性描述</h1>
-<h2>{{feature.name}}</h2>
+<h2>{{feature.display_name}}</h2>
 <p>
-{% if feature.description|slice:":8" == "https://" %}
-  更多信息，请访问：<a href="{{ feature.description }}">{{ feature.description }}</a>
+{% if feature.display_description|slice:":8" == "https://" %}
+  更多信息，请访问：<a href="{{ feature.display_description }}">{{ feature.display_description }}</a>
 {% else %}
-  {{ feature.description|markdown }}
+  {{ feature.display_description|markdown }}
 {% endif %}
 </p>
 {%endblock%}

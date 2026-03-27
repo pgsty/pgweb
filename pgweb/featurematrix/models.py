@@ -21,7 +21,7 @@ class FeatureGroup(models.Model):
     @property
     def columns(self):
         # Return a list of all the columns for the matrix
-        return [b for a, b in versions]
+        return [field.verbose_name for field in Feature._meta.fields if field.name.startswith('v')]
 
 
 class Feature(models.Model):
@@ -52,6 +52,7 @@ class Feature(models.Model):
     v15 = models.IntegerField(verbose_name="15", null=False, blank=False, default=0, choices=choices)
     v16 = models.IntegerField(verbose_name="16", null=False, blank=False, default=0, choices=choices)
     v17 = models.IntegerField(verbose_name="17", null=False, blank=False, default=0, choices=choices)
+    v18 = models.IntegerField(verbose_name="18", null=False, blank=False, default=0, choices=choices)
 
     purge_urls = ('/about/featurematrix/.*', )
 

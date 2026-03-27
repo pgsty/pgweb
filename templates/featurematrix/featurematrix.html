@@ -32,9 +32,9 @@ body:has(input#toggle_{{ version.numtree|cut:"." }}:checked) table.matrix td:nth
 </p>
 <h3>分组</h3>
 <ul>
-{% for group in matrix.keys %}
+{% for group in groups %}
   <li>
-    <a href="#{{group|slugify}}">{{group}}</a>
+    <a href="#{{group.slug}}">{{ group.display_name }}</a>
   </li>
 {% endfor %}
 </ul>
@@ -52,9 +52,9 @@ body:has(input#toggle_{{ version.numtree|cut:"." }}:checked) table.matrix td:nth
   </div>
 </div>
 
-{% for group, features in matrix.items %}
+{% for group in groups %}
   <h2>
-    <a name="{{group|slugify}}">{{ group }}</a>
+    <a name="{{group.slug}}">{{ group.display_name }}</a>
   </h2>
   <table class="table table-striped table-sm matrix">
     <thead>
@@ -66,15 +66,15 @@ body:has(input#toggle_{{ version.numtree|cut:"." }}:checked) table.matrix td:nth
       </tr>
     </thead>
     <tbody>
-      {%for feature in features%}
+      {%for feature in group.features %}
         <tr valign="top">
-          <th scope="row" {%if feature.description %}title="{{ feature.description|truncatewords:15 }}"{% endif %}>
-            {% if feature.description %}
-              <a href="detail/{{ feature.name|slugify }}/">{{feature.name}}</a>
+          <th scope="row" {%if feature.display_description %}title="{{ feature.display_description|truncatewords:15 }}"{% endif %}>
+            {% if feature.display_description %}
+              <a href="detail/{{ feature.slug }}/">{{feature.display_name}}</a>
 	    {% elif feature.url %}
-              <a href="{{ feature.url }}">{{feature.name}}</a>
+              <a href="{{ feature.url }}">{{feature.display_name}}</a>
             {%else%}
-              {{feature.name}}
+              {{feature.display_name}}
             {%endif%}
           </th>
           {%for col in feature.columns%}
