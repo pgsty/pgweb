@@ -100,6 +100,7 @@ urlpatterns = [
     re_path(r'^about/servers/$', pgweb.sponsors.views.servers),
 
     re_path(r'^robots.txt$', pgweb.core.views.robots),
+    re_path(r'^favicon\.ico$', RedirectView.as_view(url='/media/favicon.ico', permanent=True)),
 
     ###
     # RSS feeds

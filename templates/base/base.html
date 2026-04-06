@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh">
  <head>
-  <title>PostgreSQL: {%block title%}{%endblock%}</title>
+  <title>{%block fulltitle%}PostgreSQL: {%block title%}{%endblock%}{%endblock%}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="Content-Type" content="text/xhtml; charset=utf-8" />
   {%block meta%}{%endblock%} {# used for custom meta tags such as description which we don't want for every page #}
@@ -17,7 +17,8 @@
   <meta property="og:site_name" content="{{og.sitename|default:"PostgreSQL"}}" />{%endif%}
   <link href="/media/css/fontawesome.css?{{gitrev}}" rel="stylesheet">
   <link rel="stylesheet" href="/media/css/bootstrap-4.4.1.min.css">
-  <link rel="shortcut icon" href="/favicon.ico" />
+  <link rel="icon" type="image/x-icon" href="/media/favicon.ico?{{gitrev}}" />
+  <link rel="shortcut icon" href="/media/favicon.ico?{{gitrev}}" />
   {%if newstags %}
   {%comment%}Default RSS links are only shown on pages that have newstags set{%endcomment%}
   <link rel="alternate" type="application/rss+xml" title="All PostgreSQL News" href="/news.rss" />

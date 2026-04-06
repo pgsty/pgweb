@@ -3,6 +3,7 @@ external/
 .idea/
 .DS_Store
 CLAUDE.md
+AGENTS.md
 .claude/
 .venv/
 tmp/

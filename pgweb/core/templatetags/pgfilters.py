@@ -8,6 +8,7 @@ from decimal import Decimal
 import os
 from pathlib import Path
 import json
+import re
 import pynliner
 import babel
 
@@ -56,18 +57,25 @@ def label_class(value, arg):
     return value.label_tag(attrs={'class': arg})
 
 
+def _split_planet_title(title):
+    parts = re.split(r'\s*[:：]\s*', title, maxsplit=1)
+    if len(parts) == 2:
+        return parts[0].strip(), parts[1].strip()
+    return '', title.strip()
+
+
 @register.filter()
 def planet_author(obj):
     # takes a ImportedRSSItem object from a Planet feed and extracts the author
     # information from the title
-    return obj.title.split(':')[0]
+    return _split_planet_title(obj.title)[0]
 
 
 @register.filter()
 def planet_title(obj):
     # takes a ImportedRSSItem object from a Planet feed and extracts the info
     # specific to the title of the Planet entry
-    return ":".join(obj.title.split(':')[1:])
+    return _split_planet_title(obj.title)[1]
 
 
 @register.filter(name='dictlookup')

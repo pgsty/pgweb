@@ -1,6 +1,6 @@
 {%extends "base/base.html" %}
 {% load pgfilters %}
-{%block title%}世界上最先进的开源数据库{%endblock%}
+{%block title%}中文网：世界上最先进的开源数据库{%endblock%}
 {%block meta%}
   <meta name="description" content="PostgreSQL 官方网站，世界上最先进的开源数据库" />
 {%endblock%}
@@ -203,7 +203,9 @@
           <div class="text-center">
             <h3><a href="{{ post.url }}">{{ post|planet_title }}</a></h3>
             <ul class="meta">
+              {% if post|planet_author %}
               <li><i class="far fa-comments"></i>&nbsp;{{ post|planet_author }}</li>
+              {% endif %}
               <li><i class="far fa-clock"></i>&nbsp;{{ post.date }}</li>
             </ul>
           </div>
