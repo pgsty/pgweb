@@ -28,16 +28,7 @@ sitenav = {
             {'title': '安装包', 'link': '/download/'},
             {'title': '源代码', 'link': 'https://www.postgresql.org/ftp/source/'}
         ]},
-        {'title': '软件目录', 'link': '/download/product-categories/', 'submenu': [
-            {'title': '管理/开发工具', 'link': '/download/products/1-administration-development-tools/'},
-            {'title': '驱动程序与接口', 'link': '/download/products/2-drivers-and-interfaces/'},
-            {'title': '集群/复制', 'link': '/download/products/3-clustering-replication/'},
-            {'title': '过程语言', 'link': '/download/products/4-procedural-languages/'},
-            {'title': '报表工具', 'link': '/download/products/5-reporting-tools/'},
-            {'title': 'PostgreSQL 扩展', 'link': '/download/products/6-postgresql-extensions/'},
-            {'title': 'PostgreSQL 应用软件', 'link': '/download/products/7-applications/'},
-            {'title': 'PostgreSQL 内核分支', 'link': '/download/products/8-postgresql-derived-servers/'},
-        ]},
+        {'title': '软件目录', 'link': '/download/product-categories/'},
         {'title': '扩展目录', 'link': 'https://pigsty.cc/ext'},
         {'title': '文件浏览器', 'link': 'https://www.postgresql.org/ftp/'},
     ],

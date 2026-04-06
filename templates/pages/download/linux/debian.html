@@ -114,4 +114,12 @@ sudo apt update</pre>
     </tr>
   </tbody>
 </table>
+
+<h2>PostgreSQL APT 仓库中国镜像</h2>
+<p>
+如果您位于中国大陆，可以优先使用 <a href="https://mirrors.aliyun.com/postgresql/repos/apt/" target="_blank" rel="noopener">阿里云 PostgreSQL APT 镜像</a>。</br>
+您也可以使用 <a href="https://pigsty.cc/docs/pig" target="_blank" rel="noopener">pig</a> 命令行工具来添加 PGDG APT 仓库，它会自动根据所在区域选择合适的镜像。
+</p>
+<pre class="code">curl https://repo.pigsty.cc/pig | bash
+pig repo add pgdg</pre>
 {%endblock%}

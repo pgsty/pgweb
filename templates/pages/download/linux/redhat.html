@@ -154,4 +154,12 @@ PostgreSQL，请向您的发行版供应商确认。
 <a href="https://yum.postgresql.org/rpmchart/">直接下载</a>
 并手动安装。
 </p>
+
+<h2>PostgreSQL Yum 仓库中国镜像</h2>
+<br>
+    如果您位于中国大陆，可以考虑使用 <a href="https://mirrors.aliyun.com/postgresql/repos/yum/" target="_blank" rel="noopener">阿里云 PostgreSQL Yum 镜像</a>。</br>
+您也可以使用 <a href="https://pigsty.cc/docs/pig" target="_blank" rel="noopener">pig</a> 命令行工具来添加 PGDG Yum 仓库，它会自动根据所在区域选择合适的镜像。
+</p>
+<pre class="code">curl https://repo.pigsty.cc/pig | bash
+pig repo add pgdg</pre>
 {%endblock%}

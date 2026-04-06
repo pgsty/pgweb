@@ -20,7 +20,7 @@ apt install postgresql
 </pre>
 
 <a name="apt"></a>
-<h2>PostgreSQL Apt Repository</h2>
+<h2>PostgreSQL APT 仓库</h2>
 <p>
 如果您的 Ubuntu 版本中包含的 PostgreSQL 版本不是您想要的，可以使用 <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt Repository</a>。该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持<a href="/support/versioning/">生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
 </p>
@@ -58,16 +58,16 @@ sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh</pre>
 </p>
 
 <div class="pg-script-container">
-    <pre id="script-box2" class="code"># Import the repository signing key:
+    <pre id="script-box2" class="code"># 导入仓库签名公钥:
 sudo apt install curl ca-certificates
 sudo install -d /usr/share/postgresql-common/pgdg
 sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc
 
-# Create the repository configuration file:
+# 创建仓库配置文件
 . /etc/os-release
 sudo sh -c "echo 'deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $VERSION_CODENAME-pgdg main' > /etc/apt/sources.list.d/pgdg.list"
 
-# Update the package lists:
+# 更新软件包列表
 sudo apt update</pre>
     <button id="copy-btn2-root" class="pg-script-copy-btn pg-script-copy-btn-root" title="Copy to clipboard (without sudo, for root)"><i class="fas fa-terminal"></i></button>
     <button id="copy-btn2" class="pg-script-copy-btn" title="Copy to clipboard"><i class="far fa-copy"></i></button>
@@ -114,4 +114,12 @@ sudo apt update</pre>
     </tr>
   </tbody>
 </table>
+
+<h2>PostgreSQL Apt 仓库中国镜像</h2>
+<p>
+如果您位于中国大陆，可以优先使用 <a href="https://mirrors.aliyun.com/postgresql/repos/apt/" target="_blank" rel="noopener">阿里云 PostgreSQL APT 镜像</a>。</br>
+您也可以使用 <a href="https://pigsty.cc/docs/pig" target="_blank" rel="noopener">pig</a> 命令行工具来添加 PGDG APT 仓库，它会自动根据所在区域选择合适的镜像。
+</p>
+<pre class="code">curl https://repo.pigsty.cc/pig | bash
+pig repo add pgdg</pre>
 {%endblock%}

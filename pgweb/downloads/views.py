@@ -7,6 +7,8 @@ from django.conf import settings
 import os
 import pickle as pickle
 import json
+import re
+from urllib.request import urlopen
 
 from pgweb.util.decorators import nocache
 from pgweb.util.contexts import render_pgweb
@@ -15,6 +17,9 @@ from pgweb.util.misc import varnish_purge, version_sort
 
 from pgweb.core.models import Version
 from .models import Category, Product, StackBuilderApp
+
+YUM_JSON_BOOTSTRAP_URL = 'https://www.postgresql.org/download/js/yum.js'
+YUM_JSON_RE = re.compile(r'^var repodata = (.*);$', re.MULTILINE)
 
 
 #######
@@ -192,10 +197,42 @@ def mirrorselect(request, path):
     return HttpResponseRedirect("https://ftp.postgresql.org/pub/%s" % path)
 
 
+def _load_yum_json():
+    try:
+        with open(settings.YUM_JSON) as f:
+            return f.read()
+    except FileNotFoundError:
+        pass
+
+    # Local development often starts without the generated yum metadata file.
+    # Bootstrap it from the official site so the Red Hat download page still works.
+    with urlopen(YUM_JSON_BOOTSTRAP_URL, timeout=10) as response:
+        body = response.read().decode('utf8')
+
+    match = YUM_JSON_RE.search(body)
+    if not match:
+        raise ValueError("Failed to extract yum metadata from %s" % YUM_JSON_BOOTSTRAP_URL)
+
+    jsonstr = match.group(1)
+    json.loads(jsonstr)
+
+    target_dir = os.path.dirname(settings.YUM_JSON)
+    if target_dir:
+        os.makedirs(target_dir, exist_ok=True)
+
+    with open("%s.new" % settings.YUM_JSON, "w") as f:
+        f.write(jsonstr)
+    os.rename("%s.new" % settings.YUM_JSON, settings.YUM_JSON)
+
+    return jsonstr
+
+
 # Render javascript for yum downloads
 def yum_js(request):
-    with open(settings.YUM_JSON) as f:
-        jsonstr = f.read()
+    try:
+        jsonstr = _load_yum_json()
+    except Exception as e:
+        return HttpServerError(request, "Failed to load yum repository information: %s" % e)
     return render(request, 'downloads/js/yum.js', {
         'json': jsonstr,
         'supported_versions': ','.join([str(v.numtree) for v in Version.objects.filter(supported=True)]),

@@ -9,5 +9,7 @@ AGENTS.md
 tmp/
 pgweb-static/
 data/docs/
+data/yum.json
+data/ftpsite.pickle
 
 settings_local.py

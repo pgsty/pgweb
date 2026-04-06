@@ -14,7 +14,7 @@ function get_platform_name(plat, ver) {
     }
     else if (plat == 'F')
 	return "Fedora";
-    return "Undefined distribution";
+    return "未知发行版";
 }
 
 function get_rpm_prefix(plat) {
@@ -59,12 +59,35 @@ function get_platform_text(p) {
     return get_platform_name(a[0], a[1]) + ' version ' + a[1];
 }
 
+function get_supported_platforms() {
+  return Object.keys(repodata['platforms']).sort().filter((plat) => {
+    return repodata['platforms'][plat].some((entry) => {
+      return entry['versions'].some((version) => supported_versions.includes(parseInt(version)));
+    });
+  });
+}
+
+function get_supported_arches(plat) {
+  return repodata['platforms'][plat]
+    .filter((entry) => entry['versions'].some((version) => supported_versions.includes(parseInt(version))))
+    .sort((a, b) => a['arch'].localeCompare(b['arch']));
+}
+
+function get_supported_versions_for_arch(plat, arch) {
+  for (const a in repodata['platforms'][plat]) {
+    if (repodata['platforms'][plat][a]['arch'] === arch) {
+      return repodata['platforms'][plat][a]['versions'].filter((version) => supported_versions.includes(parseInt(version)));
+    }
+  }
+  return [];
+}
+
 window.onload = function() {
   const platbox = document.getElementById('platform');
-  const platkeys = Object.keys(repodata['platforms']).sort();
+  const platkeys = get_supported_platforms();
 
   let opt = document.createElement('option');
-  opt.text = '* Select your platform';
+  opt.text = '* 选择操作系统平台';
   opt.value = "-1";
   platbox.add(opt);
 
@@ -92,13 +115,14 @@ function platChanged() {
   }
 
  let opt = document.createElement('option');
- opt.text = '* Select your architecture';
+ opt.text = '* 选择系统架构';
  opt.value = "-1";
  archbox.add(opt);
 
-  for (const a in repodata['platforms'][plat].sort((a, b) => a['arch'].localeCompare(b['arch']))) {
+  const arches = get_supported_arches(plat);
+  for (const a in arches) {
      opt = document.createElement('option');
-     opt.text = opt.value = repodata['platforms'][plat][a]['arch'];
+     opt.text = opt.value = arches[a]['arch'];
      archbox.add(opt);
   }
 
@@ -120,24 +144,16 @@ function archChanged() {
   }
 
  let opt = document.createElement('option');
- opt.text = '* Select your required PostgreSQL version';
+ opt.text = '* 选择需要的 PostgreSQL 大版本';
  opt.value = "-1";
  verbox.add(opt);
 
- let versions = []
- for (const a in repodata['platforms'][plat]) {
-   if (repodata['platforms'][plat][a]['arch'] === arch) {
-     versions = repodata['platforms'][plat][a]['versions']
-     break
-   }
- }
+ let versions = get_supported_versions_for_arch(plat, arch);
 
   for (const a in versions.sort()) {
-    if (supported_versions.includes(parseInt(versions[a]))) {
-      opt = document.createElement('option');
-      opt.text = opt.value = versions[a];
-      verbox.add(opt);
-    }
+    opt = document.createElement('option');
+    opt.text = opt.value = versions[a];
+    verbox.add(opt);
   }
 
   verChanged();
@@ -161,18 +177,18 @@ function verChanged() {
   var url = 'https://download.postgresql.org/pub/repos/yum/reporpms/' + plat + '-' + arch + '/pgdg-' + get_rpm_prefix(plat) +'-repo-latest.noarch.rpm';
 
   var installer = get_installer(plat);
-  scriptBox.innerHTML = '# Install the repository RPM:\n';
+  scriptBox.innerHTML = '# 安装仓库本身的 RPM:\n';
   scriptBox.innerHTML += 'sudo ' + installer + ' install -y ' + url + '\n\n';
 
   if (disable_module_on(plat)) {
-    scriptBox.innerHTML += '# Disable the built-in PostgreSQL module:\n';
+    scriptBox.innerHTML += '# 禁用内置的 PostgreSQL 模块：\n';
     scriptBox.innerHTML += 'sudo dnf -qy module disable postgresql\n\n';
   }
 
-  scriptBox.innerHTML += '# Install PostgreSQL:\n';
+  scriptBox.innerHTML += '# 安装 PostgreSQL：\n';
   scriptBox.innerHTML += 'sudo ' + installer + ' install -y postgresql' + shortver + '-server\n\n';
 
-  scriptBox.innerHTML += '# Optionally initialize the database and enable automatic start:\n';
+  scriptBox.innerHTML += '# 【可选】初始化数据库并打开自动启动：\n';
   if (uses_systemd(plat)) {
     var setupcmd = 'postgresql-' + shortver + '-setup';
     if (ver < 10) {
