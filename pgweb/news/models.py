@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import date
+from django.core.exceptions import ValidationError
 from pgweb.core.models import Organisation, OrganisationEmail
 from pgweb.core.text import ORGANISATION_HINT_TEXT
 from pgweb.util.moderation import TristateModerateModel, ModerationState, TwoModeratorsMixin
@@ -32,7 +33,7 @@ class NewsArticle(TwoModeratorsMixin, TristateModerateModel):
     date = models.DateField(null=False, blank=False, default=date.today, db_index=True)
     title = models.CharField(max_length=200, null=False, blank=False)
     content = models.TextField(null=False, blank=False)
-    tweeted = models.BooleanField(null=False, blank=False, default=False)
+    postedto = models.JSONField(null=False, blank=True, default=dict)
     tags = models.ManyToManyField(NewsTag, blank=False, help_text="Select the tags appropriate for this post")
 
     account_edit_suburl = 'news'
@@ -113,3 +114,18 @@ class NewsArticle(TwoModeratorsMixin, TristateModerateModel):
             return 'Content preview'
         elif f == 'permanenturl':
             return 'Permanent URL'
+
+
+class PinnedNewsArticle(models.Model):
+    pinnedarticle = models.ForeignKey(NewsArticle, null=True, blank=True, on_delete=models.SET_NULL)
+    pinnedtoproviders = models.JSONField(null=False, blank=True, default=dict)
+
+    def save(self, *args, **kwargs):
+        if not self.pk and PinnedNewsArticle.objects.exists():
+            raise ValidationError("Only one PinnedNewsArticle may exist!")
+        return super().save(*args, **kwargs)
+
+    def __str__(self):
+        if self.pinnedarticle:
+            return str(self.pinnedarticle)
+        return 'No article currently pinned'

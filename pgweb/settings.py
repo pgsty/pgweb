@@ -126,8 +126,16 @@ INSTALLED_APPS = [
 ]
 
 # Default format for date/time (as it changes between machines)
+# Keep in sync with util/formats/en/formats.py
 DATETIME_FORMAT = "Y-m-d H:i:s"
 DATE_FORMAT = "Y-m-d"
+TIME_FORMAT = "H:i:s"
+
+FORMAT_MODULE_PATH = "pgweb.util.formats"
+
+
+# Django now needs these settings in a module, so duplicate them in both the
+# module and in settings.py to be on the safe side.
 
 # Configure recaptcha. Most details contain keys and are thus handled
 # in settings_local.py. Override NOCAPTCHA to actually use them.
@@ -175,6 +183,15 @@ SEARCH_DSN = "dbname=pgsearch"                              # database for searc
 FRONTEND_SMTP_RELAY = "magus.postgresql.org"                # Where to relay user generated email
 OAUTH = {}                                                  # OAuth providers and keys
 PGDG_ORG_ID = -1                                            # id of the PGDG organisation entry
+
+# Mastodon configuration is done using manage.py social_register
+MASTODON_BASEURL = None
+MASTODON_CLIENTID = None
+MASTODON_CLIENTSECRET = None
+MASTODON_TOKEN = None
+# Bluesky is configured in settings_local.py
+BLUESKY_USER = None
+BLUESKY_PASSWORD = None                                     # NOTE! This should be an "app password", not the main password!
 
 # For debug toolbar, can then be fully configured in settings_local.py
 DEBUG_TOOLBAR = False
