@@ -1,11 +1,10 @@
 {% extends "pages/about/press/presskit13/base.html" %}
 
 {% block presskit_content %}
-<h1>PostgreSQL 13 Released!</h1>
+<h1>PostgreSQL 13 正式发布！</h1>
 
 <p>
-  PostgreSQL 全球开发组今天宣布 <a href="/docs/13/release-13.html">PostgreSQL 13</a> 正式发布，
-作为世界上<a href="https://www.postgresql.org">最先进的开源数据库</a>，PostgresSQL 13是目前的最新版本
+  PostgreSQL 全球开发组今天宣布 <a href="/docs/13/release-13.html">PostgreSQL 13</a> 正式发布。作为世界上<a href="https://www.postgresql.org">最先进的开源数据库</a>，PostgreSQL 13 是目前的最新版本。
 </p>
 
 <p>
@@ -13,21 +12,21 @@
 </p>
 
 <p>
-  PostgreSQL 13 除了具有强烈要求的功能（如<a href="/docs/13/sql-vacuum.html">并行清理</a>和<a href="/docs/13/runtime-config-query.html#GUC-ENABLE-INCREMENTAL-SORT">增量排序</a>）外，还为不同大小的负载提供了更好的数据管理体验。此版本针对日常管理进行了优化，为应用程序开发人员提供了更多便利，并增强了安全性。
+  PostgreSQL 13 除了具有备受期待的功能（如<a href="/docs/13/sql-vacuum.html">并行 vacuum</a>和<a href="/docs/13/runtime-config-query.html#GUC-ENABLE-INCREMENTAL-SORT">增量排序</a>）外，还为不同大小的负载提供了更好的数据管理体验。此版本针对日常管理进行了优化，为应用程序开发人员提供了更多便利，并增强了安全性。
 </p>
 
 <p>
-  “PostgreSQL 13 展示了我们全球社区在增强世界上最先进的开源关系数据库功能方面的协作和奉献精神。”, PostgreSQL 核心团队成员 Peter Eisentraut 说, “每个发行版所带来的创新以及其在可靠性和稳定性方面的声誉，这是为什么越来越多的人选择在其应用程序中使用 PostgreSQL 的原因”。
+  “PostgreSQL 13 展示了我们全球社区在增强世界上最先进的开源关系数据库功能方面的协作和奉献精神。每个版本所带来的创新，以及它在可靠性和稳定性方面的声誉，都是越来越多的人选择在其应用程序中使用 PostgreSQL 的原因。” PostgreSQL 核心团队成员 Peter Eisentraut 说。
 </p>
 
 <p>
-  <a href="https://www.postgresql.org">PostgreSQL</a> 是一种创新的数据管理系统，以其可靠性和健壮性著称，得益于<a href="/community/">全球开发者社区</a> 超过25年的开源开发，它已成为各种规模组织首选的开源关系型数据库。
+  <a href="https://www.postgresql.org">PostgreSQL</a> 是一种创新的数据管理系统，以其可靠性和健壮性著称。得益于<a href="/community/">全球开发者社区</a>超过 25 年的开源开发，它已成为各种规模组织首选的开源关系型数据库。
 </p>
 
 <h3 id="-">持续的性能提升</h3>
 
 <p>
-  在先前 PostgreSQL 版本的基础上，PostgreSQL 13 可以有效地处理标准数据库索引 <a href="/docs/13/btree-implementation.html#BTREE-DEDUPLICATION">B-tree 中的重复数据</a>。这降低了 B-tree 索引所需的总体使用空间，同时提高了整体查询性能。
+  在先前 PostgreSQL 版本的基础上，PostgreSQL 13 可以有效地处理标准数据库索引 <a href="/docs/13/btree-implementation.html#BTREE-DEDUPLICATION">B-树中的重复数据</a>。这降低了 B-树索引所需的总体使用空间，同时提高了整体查询性能。
 </p>
 
 <p>
@@ -41,15 +40,15 @@
 <h3 id="-">管理优化</h3>
 
 <p>
-  <a href="/docs/13/routine-vacuuming.html">清理（Vacuuming）</a> 是 PostgreSQL 管理的重要部分，它使数据库能够在更新和删除行之后回收存储空间。尽管之前的 PostgreSQL 版本已经完成了减轻清理开销的工作，但是清理过程也可能带来管理上的挑战。
+  <a href="/docs/13/routine-vacuuming.html">vacuum</a> 是 PostgreSQL 管理的重要部分，它使数据库能够在更新和删除行之后回收存储空间。尽管之前的 PostgreSQL 版本已经完成了减轻 vacuum 开销的工作，但是 vacuum 过程也可能带来管理上的挑战。
 </p>
 
 <p>
-  PostgreSQL 13 通过引入<a href="/docs/13/sql-vacuum.html">索引的并行清理</a>来继续改进清理系统。除了它提供的清理性能优势外，由于管理员可以选择要运行的并行 Worker 进程的数量，因此可以针对特定工作负载调整此新功能的使用。除了这些性能带来的好处之外，数据插入现在还可以触发自动清理过程。
+  PostgreSQL 13 通过引入<a href="/docs/13/sql-vacuum.html">索引的并行 vacuum</a>来继续改进 vacuum 体系。除了它提供的 vacuum 性能优势外，由于管理员可以选择要运行的并行 Worker 进程的数量，因此可以针对特定工作负载调整此新功能的使用。除了这些性能带来的好处之外，数据插入现在还可以触发 autovacuum 过程。
 </p>
 
 <p>
-  <a href="/docs/13/warm-standby.html#STREAMING-REPLICATION-SLOTS">复制槽（Replication slots）</a> 用于防止预写日志（WAL）在备库收到之前被删除，可以在 PostgreSQL 13 中进行调整以指定<a href="/docs/13/runtime-config-replication.html#GUC-MAX-SLOT-WAL-KEEP-SIZE">要保留的 WAL 文件的最大数量</a>，并有助于避免磁盘空间不足的错误。
+  <a href="/docs/13/warm-standby.html#STREAMING-REPLICATION-SLOTS">复制槽（Replication slots）</a> 用于防止预写式日志（WAL）在备库收到之前被删除，可以在 PostgreSQL 13 中进行调整以指定<a href="/docs/13/runtime-config-replication.html#GUC-MAX-SLOT-WAL-KEEP-SIZE">要保留的 WAL 文件的最大数量</a>，并有助于避免磁盘空间不足的错误。
 </p>
 
 <p>

@@ -9,7 +9,7 @@
 <h3 id="improved-sort-performance-and-compression">排序性能与压缩能力提升</h3>
 <p>在这一最新版本中，PostgreSQL 改进了其内存与磁盘<a href="https://www.postgresql.org/docs/15/queries-order.html">排序</a>算法。基准测试表明，根据被排序的数据类型不同，速度提升可达 25% 到 400%。在 PostgreSQL 15 中，将 <code>row_number()</code>、<code>rank()</code>、<code>dense_rank()</code> 和 <code>count()</code> 用作<a href="https://www.postgresql.org/docs/15/functions-window.html">窗口函数</a>时，也能获得性能收益。使用 <a href="https://www.postgresql.org/docs/15/queries-select-lists.html#QUERIES-DISTINCT"><code>SELECT DISTINCT</code></a> 的查询现在还可以<a href="https://www.postgresql.org/docs/15/parallel-query.html">并行执行</a>。</p>
 <p>在上一版 PostgreSQL 对异步远程查询支持的基础上，<a href="https://www.postgresql.org/docs/15/postgres-fdw.html">PostgreSQL 外部数据包装器</a> <a href="https://www.postgresql.org/docs/15/postgres-fdw.html"><code>postgres_fdw</code></a> 现已支持<a href="https://www.postgresql.org/docs/15/postgres-fdw.html#id-1.11.7.47.11.7">异步提交</a>。</p>
-<p>PostgreSQL 15 的性能改进同样扩展到了归档与备份能力。PostgreSQL 15 为<a href="https://www.postgresql.org/docs/15/runtime-config-wal.html#GUC-WAL-COMPRESSION">预写日志（WAL）文件压缩</a>增加了 LZ4 与 Zstandard（zstd）支持，这在某些工作负载下可以同时带来空间与性能收益。在部分操作系统上，PostgreSQL 15 还支持<a href="https://www.postgresql.org/docs/15/runtime-config-wal.html#GUC-RECOVERY-PREFETCH">预取 WAL 引用的页面</a>，以帮助缩短恢复时间。PostgreSQL 的内建备份命令 <a href="https://www.postgresql.org/docs/15/app-pgbasebackup.html"><code>pg_basebackup</code></a> 现在支持服务器端备份压缩，可在 gzip、LZ4 和 zstd 之间选择。PostgreSQL 15 还支持<a href="https://www.postgresql.org/docs/15/archive-modules.html">使用自定义模块进行归档</a>，从而避免调用 shell 命令带来的额外开销。</p>
+<p>PostgreSQL 15 的性能改进同样扩展到了归档与备份能力。PostgreSQL 15 为<a href="https://www.postgresql.org/docs/15/runtime-config-wal.html#GUC-WAL-COMPRESSION">预写式日志（WAL）文件压缩</a>增加了 LZ4 与 Zstandard（zstd）支持，这在某些工作负载下可以同时带来空间与性能收益。在部分操作系统上，PostgreSQL 15 还支持<a href="https://www.postgresql.org/docs/15/runtime-config-wal.html#GUC-RECOVERY-PREFETCH">预取 WAL 引用的页面</a>，以帮助缩短恢复时间。PostgreSQL 的内建备份命令 <a href="https://www.postgresql.org/docs/15/app-pgbasebackup.html"><code>pg_basebackup</code></a> 现在支持服务器端备份压缩，可在 gzip、LZ4 和 zstd 之间选择。PostgreSQL 15 还支持<a href="https://www.postgresql.org/docs/15/archive-modules.html">使用自定义模块进行归档</a>，从而避免调用 shell 命令带来的额外开销。</p>
 
 <h3 id="expressive-developer-features">更具表现力的开发者特性</h3>
 <p>PostgreSQL 15 包含符合 SQL 标准的 <a href="https://www.postgresql.org/docs/15/sql-merge.html"><code>MERGE</code></a> 命令。借助 <code>MERGE</code>，用户可以在单条 SQL 语句中编写包含 <code>INSERT</code>、<code>UPDATE</code> 和 <code>DELETE</code> 操作的条件式逻辑。</p>
@@ -20,13 +20,13 @@
 <p>PostgreSQL 15 为管理<a href="https://www.postgresql.org/docs/15/logical-replication.html">逻辑复制</a>提供了更高灵活性。此版本为<a href="https://www.postgresql.org/docs/15/logical-replication-publication.html">发布端</a>引入了<a href="https://www.postgresql.org/docs/15/logical-replication-row-filter.html">行过滤</a>和<a href="https://www.postgresql.org/docs/15/logical-replication-col-lists.html">列列表</a>能力，让用户可以只复制表中的部分数据。PostgreSQL 15 还增加了多项<a href="https://www.postgresql.org/docs/15/logical-replication-conflicts.html">冲突管理</a>能力，包括跳过重放冲突事务，以及在检测到错误时自动禁用订阅。此外，此版本也支持在逻辑复制中使用两阶段提交（2PC）。</p>
 
 <h3 id="logging-and-configuration-enhancements">日志与配置增强</h3>
-<p>PostgreSQL 15 引入了一种新的日志格式：<a href="https://www.postgresql.org/docs/15/runtime-config-logging.html#RUNTIME-CONFIG-LOGGING-JSONLOG"><code>jsonlog</code></a>。该格式以定义明确的 JSON 结构输出日志数据，从而使 PostgreSQL 日志能够更方便地接入结构化日志系统。</p>
-<p>此版本还为数据库管理员提供了更高的 PostgreSQL 配置管理灵活性，支持向用户授予修改服务器级配置参数的权限。此外，用户现在还可以借助 <a href="https://www.postgresql.org/docs/15/app-psql.html"><code>psql</code></a> 命令行工具中的 <code>\dconfig</code> 命令，快速查询配置相关信息。</p>
+<p>PostgreSQL 15 引入了一种新的日志格式：<a href="https://www.postgresql.org/docs/15/runtime-config-logging.html#RUNTIME-CONFIG-LOGGING-JSONLOG"><code>jsonlog</code></a>。该格式以预定义的 JSON 结构输出日志数据，使 PostgreSQL 日志更便于接入结构化日志系统。</p>
+<p>此版本还为数据库管理员提供了更灵活的 PostgreSQL 配置管理方式，允许向用户授予修改服务器级配置参数的权限。此外，用户现在还可以借助 <a href="https://www.postgresql.org/docs/15/app-psql.html"><code>psql</code></a> 命令行工具中的 <code>\dconfig</code> 命令，快速查询配置相关信息。</p>
 
 <h3 id="other-notable-changes">其他重要变化</h3>
 <p>PostgreSQL 的<a href="https://www.postgresql.org/docs/15/monitoring-stats.html">服务器级统计信息</a>现在被收集到共享内存中，从而移除了统计收集进程，也不再需要周期性地将这些数据写入磁盘。</p>
 <p>PostgreSQL 15 现在允许将 <a href="https://www.postgresql.org/docs/15/collation.html">ICU 排序规则</a> 设为整个集簇或单个数据库的默认排序规则。</p>
-<p>此版本还新增了一个内建扩展 <a href="https://www.postgresql.org/docs/15/pgwalinspect.html"><code>pg_walinspect</code></a>，使用户可以直接通过 SQL 接口检查预写日志文件的内容。</p>
+<p>此版本还新增了一个内建扩展 <a href="https://www.postgresql.org/docs/15/pgwalinspect.html"><code>pg_walinspect</code></a>，使用户可以直接通过 SQL 接口检查预写式日志文件的内容。</p>
 <p>PostgreSQL 15 还允许<a href="https://www.postgresql.org/docs/15/ddl-schemas.html#DDL-SCHEMAS-PATTERNS">从 <code>public</code>（即默认）模式中撤销除数据库所有者之外所有用户的 <code>CREATE</code> 权限</a>。</p>
 <p>PostgreSQL 15 删除了长期弃用的“独占备份”模式，同时也移除了 PL/Python 对 Python 2 的支持。</p>
 
@@ -55,7 +55,7 @@
 <p>有关上述功能及其他改进的详细说明，请参阅以下资源：</p>
 <ul>
 <li><a href="https://www.postgresql.org/docs/15/release-15.html">发布说明</a></li>
-<li><a href="https://www.postgresql.org/about/featurematrix/">功能列表</a></li>
+<li><a href="https://www.postgresql.org/about/featurematrix/">特性矩阵</a></li>
 </ul>
 {% endblock presskit_features %}
 

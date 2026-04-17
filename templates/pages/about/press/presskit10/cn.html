@@ -1,5 +1,5 @@
 {%extends "base/page.html"%}
-{%block title%}PostgreSQL 10 0 版本发布说明{%endblock%}
+{%block title%}PostgreSQL 10.0 版本发布说明{%endblock%}
 {%block contents%}
 
 <div><span>This page in: </span>
@@ -39,29 +39,29 @@
 
 <a name="original_release"></a><h2>新版本发布说明</h2>
 
-<p>2017-10-05 -  Postgresql 全球开发组今天宣布，PostgreSQL 10 正式发布，Postgresql 作为世界上最先进的开源关系型数据库，10 是迄今为止的最新版本。</p>
+<p>2017-10-05 - PostgreSQL 全球开发组今天宣布，PostgreSQL 10 正式发布。PostgreSQL 作为世界上最先进的开源关系型数据库，10 是迄今为止的最新版本。</p>
 
 <p>作为现代工作负载 (modern workloads)，其关键特性之一便是具备横跨多节点处理数据，从而达到更快访问、管理与分析数据的能力，即数据可被“分而治之（divide and conquer）”。
-Postgresql 10.0 版本所具备的重要改进，如逻辑复制、显示声明的表分区功能与改进后的并行查询功能等，高效地实现了“分而治之 (divide and conquer)”。</p>
+PostgreSQL 10.0 版本所具备的重要改进，如逻辑复制、显式声明的表分区功能与改进后的并行查询功能等，高效地实现了“分而治之 (divide and conquer)”。</p>
 
 <p>“我们的开发社区着重构建那些可充分适用于现代基础网络架构（modern infrastructure setups）的核心特性，”
-  <a href="/">PostgreSQL 全球开发组</a> 的<a href="/developer/core/">核心组</a>成员之一 Magnus Hagander 先生说道。
+  <a href="/">PostgreSQL 全球开发组</a> 的<a href="/developer/core/">核心团队</a>成员之一 Magnus Hagander 先生说道。
 
-  “对逻辑复制和改进后的并行查询等功能的研发，代表着社区多年的努力成果，也表明随着技术需求的发展, 社区会继续努力以确保 Postgres 的领导地位。”
+  “对逻辑复制和改进后的并行查询等功能的研发，代表着社区多年的努力成果，也表明随着技术需求的发展，社区会继续努力以确保 PostgreSQL 的领导地位。”
 </p>
 
 <p>PostgreSQL 10 也标志着 PostgreSQL 的版本号更新实现了到"x.y"的转变。这意味着下一次小版本的 PostgreSQL 将是 10.1，而下个大版本将是11。</p>
 
 <b>逻辑复制-用于分发数据的发布/订阅（publish/subscribe）框架</b>
 
-<p>PostgreSQL 10 的逻辑复制对现有的 Postgresql 复制特性进行了扩展，新版本的逻辑复制可以将单个数据库级别或者表级别的改动（modifications）发送至不同的 Postgresql 数据库。
+<p>PostgreSQL 10 的逻辑复制对现有的 PostgreSQL 复制特性进行了扩展，新版本的逻辑复制可以将单个数据库级别或者表级别的改动（modifications）发送至不同的 PostgreSQL 数据库。
 这意味着用户可以细粒度地将数据变化发送到不同的数据库集群（database clusters），甚至在大版本升级期间，实现零停机（zero-downtime）。</p>
 
 <p>"自9.3 版本发布后，Yandex 公司便广泛使用 PostgreSQL 数据库产品，现在我们惊讶于 PostgreSQL 10，因为10 版本终于给我们带来了翘首以盼的分区功能和内置的逻辑复制。
 这将会使得 PostgreSQL 应用到 Yandex 公司更多的服务上，"
 来自 <a href="https://www.yandex.com/" target="_blank" rel="noopener">Yandex 公司</a> 的 DBA 团队负责人 Vladimir Borodin 表示。</p>
 
-<b>显示声明的表分区功能 - 更加方便地进行数据分区</b>
+<b>显式声明的表分区功能 - 更加方便地进行数据分区</b>
 
 <p>PostgreSQL 中的表分区功能早已存在多年，不过表分区功能的正常使用却要求用户维护一套具有一定复杂度的分区规则和触发器，用以保证分区机制正常运行。
 PostgreSQL 10 版本引入了新的表分区的语法，这允许用户更加方便地进行创建与维护范围类型的分区和列表类型的分区。
@@ -85,14 +85,14 @@ PostgreSQL 10 版本引入了新的表分区的语法，这允许用户更加方
 <p>"PostgreSQL 10.0 版本中的同步复制的优选提交（Quorum Commit，即通过读写副本数的优化来平衡读写性能）功能，
 从应用程序的角度给了我们更多的选择，以几乎零停机的代价来扩展我们基础设施的能力。
 这允许我们可以连续发布或是更新数据库基础设施而不必忍受长时间停机维护的代价,"
-<a href="https://www.simple.com/" target="_blank" rel="noopener">Simplem 金融公司</a> 的高级基础设施工程师 Curt Micol 先生说道。</p>
+<a href="https://www.simple.com/" target="_blank" rel="noopener">Simple Finance</a> 的高级基础设施工程师 Curt Micol 先生说道。</p>
 
 <b>SCRAM-SHA-256 安全认证机制 - 让你的数据存取更安全</b>
 
-<p>SCRAM 安全认证算法在 <a href="https://tools.ietf.org/html/rfc5802" target="_blank" rel="noopener">RFC5802]</a> 进行了详细的定义，它是通过提供一个强加密的框架来改进密码的安全存储和传输的协议。
+<p>SCRAM 安全认证算法在 <a href="https://tools.ietf.org/html/rfc5802" target="_blank" rel="noopener">RFC5802</a> 中有详细定义，它通过提供一种用于强密码协商的框架，来改进密码的安全存储和传输。
 PostgreSQL 10 版本引入的 SCRAM-SHA-256 安全认证方法，
-在 <a href="https://tools.ietf.org/html/rfc7677" target="_blank" rel="noopener">RFC7677</a>
-中有详细定义，它可以提供比现在基于 MD5加密算法更好的安全性。</p>
+ 在 <a href="https://tools.ietf.org/html/rfc7677" target="_blank" rel="noopener">RFC7677</a>
+中有详细定义，它可以提供比当前基于 MD5 的认证机制更好的安全性。</p>
 
 <a name="features"></a><h2>有关新特性的更多信息</h2>
 <p>
@@ -109,7 +109,7 @@ PostgreSQL 10 版本引入的 SCRAM-SHA-256 安全认证方法，
 <a name="download"></a><h2>下载</h2>
 <ul>
   <li><a href="/download">下载页面</a>有含 Windows、Linux、macOS、BSD 和 Solaris 平台下的安装包及其他工具</li>
-  <li><a href="https://www.postgresql.org/ftp/source/v10.0">源代码</a></li>
+<li><a href="https://www.postgresql.org/ftp/source/v10.0">源代码</a></li>
   <li><a href="https://hub.docker.com/_/postgres/">Postgres Docker 虚拟环境安装包</a></li>
   <li><a href="http://pgxn.org">PostgreSQL 扩展模块网站</a></li>
 </ul>
@@ -171,7 +171,7 @@ PostgreSQL 的名称和标识现在是属于 PostgreSQL 加拿大联合社区的
 <a name="about"></a><h2>关于 PostgreSQL 数据库</h2>
 <p>
 PostgreSQL 是最先进的开源关系型数据库，它的全球社区是一个由数千名用户、开发人员、公司或其他组织而组成。
-PostgreSQL 项目有30年以上的历史，起源于加利福利亚的伯克利大学，经历了无数次开发升级。
+PostgreSQL 项目已有 30 多年的历史，起源于加利福尼亚大学伯克利分校，经历了无数次开发升级。
 PostgreSQL 的专业特性不仅包含顶级商业数据库系统的功能特性，更是在高级数据库功能、数据库扩展性、数据库安全性和稳定性方面超过了它们。
 若想获取到更多关于 PostgreSQL 的信息或者加入到 PostgreSQL 社区，请浏览 <a href="https://www.postgresql.org">PostgreSQL.org</a> 网站。
 </p>
@@ -179,9 +179,9 @@ PostgreSQL 的专业特性不仅包含顶级商业数据库系统的功能特性
 <a name="quoted_companies"></a><h2>相关商业公司信息和反馈</h2>
 <p>“PG 开发者社区一直以来，着重构建那些可充分适用于现代基础网络架构（modern infrastructure setups）的新特性”
 <a href="https://www.postgresql.org/">PostgreSQL 全球开发组</a> 的
-<a href="https://www.postgresql.org/developer/core/">核心组</a>成员之一 Magnus Hagander 先生表示。
+<a href="https://www.postgresql.org/developer/core/">核心团队</a>成员之一 Magnus Hagander 先生表示。
 
-“对逻辑复制和改进后的并行查询等功能的研发，代表着社区多年的努力成果，也表明随着技术需求的发展, 社区会继续努力以确保 Postgres 的领导地位。”
+“对逻辑复制和改进后的并行查询等功能的研发，代表着社区多年的努力成果，也表明随着技术需求的发展，社区会继续努力以确保 PostgreSQL 的领导地位。”
 </p>
 
 <p>"自9.3 版本发布后，Yandex 公司便广泛使用 PostgreSQL 数据库产品，现在我们惊讶于 PostgreSQL 10，因为10 版本终于给我们带来了翘首以盼的分区功能和内置的逻辑复制。这将会使得 PostgreSQL 应用到 Yandex 公司更多的服务上，" 来自 <a href="https://www.yandex.com/" target="_blank" rel="noopener">Yandex 公司</a> 的

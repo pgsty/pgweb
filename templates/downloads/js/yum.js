@@ -56,7 +56,7 @@ function uses_systemd(plat) {
 
 function get_platform_text(p) {
     const a = p.split('-');
-    return get_platform_name(a[0], a[1]) + ' version ' + a[1];
+    return get_platform_name(a[0], a[1]) + ' 版本 ' + a[1];
 }
 
 function get_supported_platforms() {
@@ -168,7 +168,7 @@ function verChanged() {
   if (!ver || ver === "-1") {
      document.getElementById('copy-btn').style.display = 'none';
      document.getElementById('copy-btn-root').style.display = 'none';
-     scriptBox.innerHTML = 'Select platform, architecture, and version above';
+     scriptBox.innerHTML = '请先在上方选择平台、架构和版本';
      return;
   }
 

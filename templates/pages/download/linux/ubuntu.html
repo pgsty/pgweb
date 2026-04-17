@@ -20,7 +20,7 @@ apt install postgresql
 </pre>
 
 <a name="apt"></a>
-<h2>PostgreSQL APT 仓库</h2>
+<h2>PostgreSQL Apt Repository</h2>
 <p>
 如果您的 Ubuntu 版本中包含的 PostgreSQL 版本不是您想要的，可以使用 <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt Repository</a>。该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持<a href="/support/versioning/">生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
 </p>
@@ -29,7 +29,7 @@ PostgreSQL Apt 仓库支持以下 Ubuntu 当前版本：
 </p>
 <ul>
   <li>resolute (26.04, LTS)</li>
-  <li>questing (25.10, non-LTS)</li>
+  <li>questing (25.10，非 LTS)</li>
   <li>noble (24.04, LTS)</li>
   <li>jammy (22.04, LTS)</li>
 </ul>
@@ -38,8 +38,8 @@ PostgreSQL Apt 仓库支持以下 Ubuntu 当前版本：
 </p>
 <ul>
   <li>amd64</li>
-  <li>arm64 (LTS releases only)</li>
-  <li>ppc64el (LTS releases only)</li>
+  <li>arm64（仅限 LTS 版本）</li>
+  <li>ppc64el（仅限 LTS 版本）</li>
 </ul>
 
 <p>
@@ -49,8 +49,8 @@ PostgreSQL Apt 仓库支持以下 Ubuntu 当前版本：
 <div class="pg-script-container">
     <pre id="script-box" class="code">sudo apt install -y postgresql-common
 sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh</pre>
-    <button id="copy-btn-root" class="pg-script-copy-btn pg-script-copy-btn-root" title="Copy to clipboard (without sudo, for root)"><i class="fas fa-terminal"></i></button>
-    <button id="copy-btn" class="pg-script-copy-btn" title="Copy to clipboard"><i class="far fa-copy"></i></button>
+    <button id="copy-btn-root" class="pg-script-copy-btn pg-script-copy-btn-root" title="复制到剪贴板（不使用 sudo，供 root 使用）"><i class="fas fa-terminal"></i></button>
+    <button id="copy-btn" class="pg-script-copy-btn" title="复制到剪贴板"><i class="far fa-copy"></i></button>
 </div>
 
 <p>
@@ -69,20 +69,20 @@ sudo sh -c "echo 'deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresq
 
 # 更新软件包列表
 sudo apt update</pre>
-    <button id="copy-btn2-root" class="pg-script-copy-btn pg-script-copy-btn-root" title="Copy to clipboard (without sudo, for root)"><i class="fas fa-terminal"></i></button>
-    <button id="copy-btn2" class="pg-script-copy-btn" title="Copy to clipboard"><i class="far fa-copy"></i></button>
+    <button id="copy-btn2-root" class="pg-script-copy-btn pg-script-copy-btn-root" title="复制到剪贴板（不使用 sudo，供 root 使用）"><i class="fas fa-terminal"></i></button>
+    <button id="copy-btn2" class="pg-script-copy-btn" title="复制到剪贴板"><i class="far fa-copy"></i></button>
 </div>
 
 安装 PostgreSQL：（将 "18" 替换为您想要的版本）
 
 <div class="pg-script-container">
     <pre id="script-box3" class="code">sudo apt install postgresql-18</pre>
-    <button id="copy-btn3-root" class="pg-script-copy-btn pg-script-copy-btn-root" title="Copy to clipboard (without sudo, for root)"><i class="fas fa-terminal"></i></button>
-    <button id="copy-btn3" class="pg-script-copy-btn" title="Copy to clipboard"><i class="far fa-copy"></i></button>
+    <button id="copy-btn3-root" class="pg-script-copy-btn pg-script-copy-btn-root" title="复制到剪贴板（不使用 sudo，供 root 使用）"><i class="fas fa-terminal"></i></button>
+    <button id="copy-btn3" class="pg-script-copy-btn" title="复制到剪贴板"><i class="far fa-copy"></i></button>
 </div>
 
 <p>
-有关 apt 仓库的更多信息，包括常见问题的解答，请参阅
+有关 Apt 仓库的更多信息，包括常见问题的解答，请参阅
 <a href="https://wiki.postgresql.org/wiki/Apt" target="_blank" rel="noopener">PostgreSQL Apt Repository wiki 页面</a>。
 </p>
 

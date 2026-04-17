@@ -16,7 +16,7 @@
 <p>此外，执行主版本升级的工具 <a href="https://www.postgresql.org/docs/18/pgupgrade.html"><code>pg_upgrade</code></a> 在 PostgreSQL 18 中也获得了多项增强。例如，当数据库包含大量表、序列等对象时，升级速度会更快。此版本还允许通过 <code>--jobs</code> 参数并行执行检查，并新增了 <code>--swap</code> 参数，通过交换升级目录来替代复制、克隆或链接文件的方式。</p>
 
 <h3 id="查询与整体性能提升">查询与整体性能增强</h3>
-<p>PostgreSQL 18 进一步提升了查询性能，并通过一系列可自动生效的优化让工作负载运行得更快。此版本在<a href="https://www.postgresql.org/docs/18/indexes-multicolumn.html">多列 B-tree 索引</a>上引入了“跳跃扫描”能力，可提升查询在缺少一个或多个前缀索引列等值条件（<code>=</code>）时的执行效率。它还能够优化 <code>WHERE</code> 子句中包含 <code>OR</code> 条件的查询，使其更好地利用索引，从而显著缩短执行时间。PostgreSQL 18 还在表连接的规划与执行方面做出多项改进，包括提升哈希连接性能，以及允许合并连接使用增量排序等。此外，<a href="https://www.postgresql.org/docs/18/gin.html">GIN 索引</a>现在也支持并行构建，与 B-tree 和<a href="https://www.postgresql.org/docs/current/brin.html">BRIN 索引</a>一道具备这一能力。</p>
+<p>PostgreSQL 18 进一步提升了查询性能，并通过一系列可自动生效的优化让工作负载运行得更快。此版本在<a href="https://www.postgresql.org/docs/18/indexes-multicolumn.html">多列 B-树索引</a>上引入了“跳跃扫描”能力，可提升查询在缺少一个或多个前缀索引列等值条件（<code>=</code>）时的执行效率。它还能够优化 <code>WHERE</code> 子句中包含 <code>OR</code> 条件的查询，使其更好地利用索引，从而显著缩短执行时间。PostgreSQL 18 还在表连接的规划与执行方面做出多项改进，包括提升哈希连接性能，以及允许合并连接使用增量排序等。此外，<a href="https://www.postgresql.org/docs/18/gin.html">GIN 索引</a>现在也支持并行构建，与 B-树和<a href="https://www.postgresql.org/docs/current/brin.html">BRIN 索引</a>一道具备这一能力。</p>
 <p>该版本还继续增强 PostgreSQL 对硬件加速的支持，例如为 <code>popcount</code> 函数加入了对 ARM NEON 与 SVE CPU 内置指令的支持，而该函数会被 <a href="https://www.postgresql.org/docs/18/functions-bitstring.html"><code>bit_count</code></a> 等内部能力使用。</p>
 
 <h3 id="提升开发者体验">持续强化开发者体验</h3>

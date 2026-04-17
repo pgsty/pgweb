@@ -3,9 +3,9 @@
 {% block presskit_language %}- Chinese{% endblock presskit_language %}
 
 {% block presskit_content %}
-<p>2018-10-18，全球开发组今天宣布，PostgreSQL 11 正式发布，Postgresql 作为世界上最先进的开源关系型数据库，11.0是迄今为止的最新版本。</p>
+<p>2018-10-18，全球开发组今天宣布，PostgreSQL 11 正式发布。PostgreSQL 作为世界上最先进的开源关系型数据库，11.0 是迄今为止的最新版本。</p>
 
-<p>PostgreSQL 11 重点对系统性能进行提升，特别是在对大数据集和高计算负载的情况下进行了增强。尤其是 PostgreSQL 11 对表分区的功能进行了重大的改变和提升，增加了内置事务管理的存储过程，，提升了并行查询能力和并行数据定义能力，也引入了 JIT 编译来加速查询中的表达式的计算执行。</p>
+<p>PostgreSQL 11 重点提升了系统性能，尤其是在大数据集和高计算负载场景下。它对表分区功能进行了重大改进，增加了支持事务管理的存储过程，提升了并行查询和并行数据定义能力，并引入 JIT 编译来加速查询中表达式的执行。</p>
 
 <p>“对 PostgreSQL 11，我们的开发社区聚焦于提升 PostgreSQL 管理大数据集的新特性的开发”，
 <a href="https://www.postgresql.org">PostgreSQL 全球开发组</a> 的 <a href="https://www.postgresql.org/developer/core/">核心开发成员</a>  Bruce
@@ -17,7 +17,7 @@ Momjian 说道，“在已被证明 PostgreSQL 擅长于事务类负载的基础
 
 <h3 id="">增强的健壮性和分区表性能的提升</h3>
 
-<p>PostgreSQL 11 在目前版本已有了按值列表或是按范围作为分区键值的分区表功能外，又增加了按哈希键值分区的功能，也称之为“Hash 分区”。PostgreSQL 11 还通过在分区功能中使用外部数据封装器 <a href="https://www.postgresql.org/docs/current/postgres-fdw.html">postgres_fdw</a> 的功能，也进一步提升了数据聚合能力。</p>
+<p>PostgreSQL 11 在目前版本已有了按值列表或是按范围作为分区键值的分区表功能外，又增加了按哈希键值分区的功能，也称之为“Hash 分区”。PostgreSQL 11 还通过在分区功能中使用外部数据包装器 <a href="https://www.postgresql.org/docs/current/postgres-fdw.html">postgres_fdw</a> 的功能，也进一步提升了数据聚合能力。</p>
 
 <p>为了帮助管理分区，PostgreSQL 11 引入了将不含有分区键值的记录自动转入缺省分区的功能，并增加了在（主表）执行创建主键、外键、索引和触发器时，会将这些操作全部自动复制给所有分区表的功能。另外 PostgreSQL 11 现在也支持当记录中的分区键值字段被更新后，会自动将该记录移至新的正确的分区表中的功能。</p>
 
@@ -33,7 +33,7 @@ Momjian 说道，“在已被证明 PostgreSQL 擅长于事务类负载的基础
 
 <p>PostgreSQL 11 提升了并行查询的性能，通过更加有效的分区数据扫描，在并行顺序扫描和哈希聚合方面性能有了更大的改进。即使是组成 UNION 的查询子句不能并行处理时，PostgreSQL 现在也可以对使用 <code>UNION</code> 的 SELECT 查询并行处理。</p>
 
-<p>PostgreSQL 11 也对几种数据集的定义指令增加了并行处理功能，最显著的就是通过 <code>CREATE INDEX</code>  指令创建的 B-Tree 索引。其他几种支持并行化操作的还有 <code>CREATE TABLE .. AS</code>、<code>SELECT INTO</code>、<code>CREATE MATERIALIZED VIEW</code> 等创建表和物化视图的操作。</p>
+<p>PostgreSQL 11 也对几种数据集的定义指令增加了并行处理功能，最显著的就是通过 <code>CREATE INDEX</code>  指令创建的 B-树索引。其他几种支持并行化操作的还有 <code>CREATE TABLE .. AS</code>、<code>SELECT INTO</code>、<code>CREATE MATERIALIZED VIEW</code> 等创建表和物化视图的操作。</p>
 
 <h3 id="jit">表达式的 (JIT) 编译</h3>
 
@@ -48,7 +48,7 @@ Momjian 说道，“在已被证明 PostgreSQL 擅长于事务类负载的基础
 <ul>
 <li>改变 <code>ALTER TABLE .. ADD COLUMN .. DEFAULT ..</code> 指令在带有非 <code>NULL</code> 缺省值时需要重写整个表的操作，新的变化对这样的指令带来了极大的性能量级提升；</li>
 
-<li>“覆盖索引”操作，允许用户在创建一个索引通过使用 <code>INCLUDE</code> 选项来增加额外字段，这样会对无 B-tree 索引列的查询来使用 Index-Only 的扫描有很大好处；</li>
+<li>“覆盖索引”操作，允许用户在创建一个索引通过使用 <code>INCLUDE</code> 选项来增加额外字段，这样会对无 B-树索引列的查询来使用 Index-Only 的扫描有很大好处；</li>
 
 <li>更多的窗口函数功能，包括允许 <code>RANGE</code> 来使用 <code>PRECEDING</code> / <code>FOLLOWING</code> 和 <code>GROUPS</code>，窗口的非包含功能等；</li>
 
@@ -62,5 +62,5 @@ Momjian 说道，“在已被证明 PostgreSQL 擅长于事务类负载的基础
 {% block presskit_about %}
 <h2 id="postgresql">关于 PostgreSQL</h2>
 
-<p><a href="https://www.postgresql.org">PostgreSQL</a> 是最先进的开源关系型数据库，它的全球社区是一个由数千名用户、开发人员、公司或其他组织而组成。PostgreSQL 项目有30年以上的历史，起源于加利福利亚的伯克利大学，经历了无数次开发升级。PostgreSQL 的专业特性不仅包含顶级商业数据库系统的功能特性，更是在高级数据库功能、数据库扩展性、数据库安全性和稳定性方面超过了它们。若想获取到更多关于 PostgreSQL 的信息或者加入到 PostgreSQL 社区，请浏览 <a href="https://www.postgresql.org">PostgreSQL.org</a> 网站。</p>
+<p><a href="https://www.postgresql.org">PostgreSQL</a> 是最先进的开源关系型数据库，它的全球社区是一个由数千名用户、开发人员、公司或其他组织组成的群体。PostgreSQL 项目有30年以上的历史，起源于加利福尼亚大学伯克利分校，经历了无数次开发升级。PostgreSQL 的专业特性不仅包含顶级商业数据库系统的功能特性，更是在高级数据库功能、数据库扩展性、数据库安全性和稳定性方面超过了它们。若想获取到更多关于 PostgreSQL 的信息或者加入到 PostgreSQL 社区，请浏览 <a href="https://www.postgresql.org">PostgreSQL.org</a> 网站。</p>
 {% endblock presskit_about %}

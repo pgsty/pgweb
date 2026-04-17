@@ -3,83 +3,59 @@
 {% block presskit_content %}
 <h1>PostgreSQL 12 版本发布!</h1>
 
-<p>PostgreSQL 全球开发组今天宣布，世界上功能最为强大的开源数据库发布 PostgreSQL 12 版本发布。</p>
+<p>PostgreSQL 全球开发组今天宣布发布 PostgreSQL 12，这是世界上最先进的开源数据库的最新版本。</p>
 
-<p>PostgreSQL 12 版在各方面都得到了加强，包括显著地提升查询性能，特别是对大数据集，总的空间利用率方面。</p>
+<p>PostgreSQL 12 的增强包括查询性能的显著提升，尤其是在更大的数据集上，以及整体空间利用率的改善。此版本为应用开发者提供了新的能力，例如 SQL/JSON 路径表达式支持、公共表表达式（<code>WITH</code> 查询）执行方式的优化，以及生成列。PostgreSQL 社区继续支持 PostgreSQL 的可扩展性和稳健性，并在国际化、认证以及更易于管理 PostgreSQL 的方式上进一步增强。此版本还引入了可插拔的表存储接口，允许开发者创建自己的数据存储方法。</p>
 
-<p>这个版本为应用程序开发人员提供了更多的功能，比如对 SQL/JSON 路径表达式的支持，优化公共表达式（<code>WITH</code> 查询）的执行，以及对生成列的支持等。
-PostgreSQL 除了持续对 PostgreSQL 系统的可扩展性、稳健性进行开发外，还更多地在本地化、授权控制以及更加容易的管理进行增强。这个版本也引入了
-可插拨的表存取接口，来允许开发者在表的创建和使用时使用不同的存取方式。</p>
+<p>PostgreSQL 全球开发组核心团队成员 Dave Page 表示：“PostgreSQL 背后的开发者社区为 PostgreSQL 12 贡献了诸多功能，让用户几乎无需额外投入就能获得性能和空间管理方面的收益，同时还改进了企业级认证、管理功能和 SQL/JSON 支持。”他说：“此版本延续了 PostgreSQL 一贯在生产环境中灵活、可靠、稳定的声誉，同时让大规模和小规模数据库工作负载都更易于管理。”</p>
 
-<p>“在 PostgreSQL 后面的开发者社区为 PostgreSQL 12 版所作的大量工作，让我们用户可以以较小的成本换来性能和空间管理等储特性，包括企业级安全、
-后台管理和 SQL/JSON 支持等功能”，作为全球开发组核心成员之一的 Dave Page 说道，“这个版本延续了 PostgreSQL 一直以来的对大大小小各级别数据量
-的轻松管理，同时在生产环境中的兼具灵活性、可靠性，赢得了长期的声誉”。</p>
-
-<p>得益于超过20年以上的开源产品开发，PostgreSQL 已成长为各种大小规模组织喜爱的开源关系数据库产品。系统持续得到行业的认可，2017、2018连
-续2年被 DB-Engines 评选为 “年度优秀数据库” ,2019年度又被 OSCON 国际开源组织评为“终身成就奖”的开源产品。</p>
-
+<p>得益于超过 20 年的开源开发，PostgreSQL 已成长为各类组织首选的开源关系数据库。该项目持续获得行业认可，包括连续第二年被 DB-Engines 评为“年度数据库管理系统”，并在 OSCON 2019 获得“终身成就”开源奖。</p>
 
 <h3>全面的性能提升</h3>
 
-<p>PostgreSQL 12 版本在性能和易维护性方面有了显著的增强，尤其是对索引和分区子系统。</p>
+<p>PostgreSQL 12 为其索引系统和分区功能提供了显著的性能和维护增强。</p>
 
-<p>PostgreSQL 12 版对标准索引类型 B 树索引进行了优化，以使其可以可以更好地处理索引更新频率较高类型的负载的的总体性能，使用最常使用的 TPC-C
-性能测试，PostgreSQL 12 版平均可以提升约40%的空间利用率和查询性能。</p>
+<p>B-树索引，PostgreSQL 中的标准索引类型，在 PostgreSQL 12 中得到优化，以更好地处理索引经常被修改的工作负载。使用 TPC-C 基准测试，PostgreSQL 12 平均将空间利用率降低了约 40%，并整体提升了查询性能。</p>
 
-<p>对分区表的查询也得到了较大改进，特别是对那些有数千个分区的表，而结果只需从几个有限的分区提取数据的查询。PostgreSQL 12 版对通过 INSERT
-和 <code>COPY</code> 指令将数据加入分区表的操作，也有加强，包括现在可以在不阻塞查询的情况下增加新的分区。</p>
+<p>分区表上的查询也有明显改进，特别是针对拥有数千个分区、但只需要从有限子集提取数据的表。PostgreSQL 12 还改进了通过 <code>INSERT</code> 和 <code>COPY</code> 向分区表添加数据的性能，并支持在不阻塞查询的情况下向表附加新分区。</p>
 
-<p>另外，PostgreSQL 12 版对索引的优化也提升了总体的性能，包括生成 GiST、GIN 或 SP-GiST 索引的 WAL 日志的负载显著减少，在 GiST 类型索引上创
-建 <code>INCLUDE</code> 选项的包含索引，SP-GiST 索引现在支持&lt;-&gt;距离操作的 K-NN（即相邻最近）查询，以及 <code>CREATE STATISTICS</code> 指令现在支持最常用值 MCV
-的统计来帮助那些字段值非均匀分布的查询生成更优化的查询计划。</p>
+<p>PostgreSQL 12 还带来了其他索引增强，进一步改善整体性能，包括降低 GiST、GIN 和 SP-GiST 索引类型生成预写式日志（WAL）的开销，支持在 GiST 索引上创建覆盖索引（<code>INCLUDE</code> 子句），支持使用距离运算符（<code>&lt;-&gt;</code>）对 SP-GiST 索引执行 K 最近邻查询，以及让 <code>CREATE STATISTICS</code> 现在支持最常见值（MCV）统计，从而帮助在列分布不均匀时生成更好的查询计划。</p>
 
-<p>通过使用 LLVM，从 PostgreSQL 11 版引入的 JIT 即时编译，现在在 PostgreSQL 12 版中缺省已是启用状态，JIT 即时编译对带有 WHERE 条件、对象列表、
-聚合以及一些内部操作都会提供性能上的帮助。当然，用户在安装或是编译时需要包含 LLVM 模块。</p>
+<p>使用 LLVM 的即时编译（JIT）在 PostgreSQL 11 中引入，现在在 PostgreSQL 12 中默认启用。JIT 编译可以为 <code>WHERE</code> 子句、目标列表、聚合和某些内部操作中的表达式执行带来性能收益，前提是您的 PostgreSQL 安装在编译或打包时包含 LLVM。</p>
 
 <h3>对 SQL 标准一致性和功能的增强</h3>
 
-<p>PostgreSQL 一直以来以其对 SQL 标准符合性而著称，这也是其名称由 POSTGRES 改为 PostgreSQL 的一个小原因。PostgreSQL 12 版又增加了几个新特性
-来持续实现对 SQL 标准的符合性的强化。</p>
+<p>PostgreSQL 一直以来以其对 SQL 标准的符合性而著称，这也是其名称由 POSTGRES 改为 PostgreSQL 的原因之一。PostgreSQL 12 又增加了几个新特性，继续推进对 SQL 标准的实现，并增强了功能。</p>
 
-<p>PostgreSQL 12 版加入了对 JSON 文档进行查询时使用 JSON 路径表达式的功能，这也是 SQL/JSON 中定义的规范。对使用 JSONB 格式保存的文档，这些查
-询可以利用已有的索引机制来高效地提取数据。</p>
+<p>PostgreSQL 12 加入了使用 SQL/JSON 标准中定义的 JSON 路径表达式对 JSON 文档进行查询的功能。对于使用 JSONB 格式存储的文档，这些查询可以利用现有索引机制高效地提取数据。</p>
 
-<p>公共表达式，也称之为 WITH 查询，在 PostgreSQL 12 版中可以实现非物化操作处理，这对很多现在已有的查询有很大帮助。目前在这个版本中，WITH
-查询的前提条件是非递归查询并且仅可被外层查询引用一次。</p>
+<p>公共表表达式，也称为 <code>WITH</code> 查询，在 PostgreSQL 12 中可以自动内联，这反过来可以帮助提升许多现有查询的性能。在此版本中，如果 <code>WITH</code> 查询不是递归的、不包含任何副作用，而且只在查询后面的部分被引用一次，就可以被内联。</p>
 
-<p>PostgreSQL 12 版也引入了“生成列”功能，这也是 SQL 标准中的要求，这些字段值是通过同一表中其它列计算而来的。在这一版本中，PostgreSQL 支
-持“保存生成列值”的功能，即将这些计算出来的数据存储在磁盘上。</p>
+<p>PostgreSQL 12 还引入了“生成列”功能，这也是 SQL 标准中的要求。这类列的值由同一表中其他列的内容计算得出。在这一版本中，PostgreSQL 支持“存储生成列”，即将计算结果存储在磁盘上。</p>
 
 <h3>本地化</h3>
 
-<p>PostgreSQL 12 版扩充了对 ICU 排序规则的支持，允许用户自行定义非标准的排序方式，比如允许大小写不敏感或是按口音不敏感的比较规则。</p>
+<p>PostgreSQL 12 通过支持用户定义的“非确定性排序规则”扩充了对 ICU 排序规则的支持，例如可用于大小写不敏感或重音不敏感的比较。</p>
 
-<h3>授权控制</h3>
+<h3>认证</h3>
 
-<p>PostgreSQL 通过再次扩展了一些的安全方面的功能来强化了它本来就很稳健的权限控制。这个版本中通过 GSSAPI 接口支持客户端和服务端的双向加密，
-如果在编译时加入 OpenLDAP 模块，PostgreSQL 也支持搜索 LDAP 服务器的功能。</p>
+<p>PostgreSQL 通过若干增强扩展了其稳健的认证方式支持，提供了更多安全性和功能。此版本引入了通过 GSSAPI 接口进行认证时的客户端和服务端加密，以及在 PostgreSQL 使用 OpenLDAP 编译时发现 LDAP 服务器的能力。</p>
 
-<p>另外，PostgreSQL 12 版现在支持多约束的授权方式。如在使用 <code>scram-sha-256</code> 的授权方式，PostgreSQL 服务器现在可以强制一个客户端在提供
-用户名、使用 <code>clientcert=verify-full</code> 选项，再必须提供有效的 SSL 证书的方式来强化安全授权。</p>
+<p>此外，PostgreSQL 12 现在支持一种多因素认证形式。PostgreSQL 服务器现在可以要求认证客户端使用 <code>clientcert=verify-full</code> 选项提供有效的 SSL 证书，并将其与单独的认证方式（例如 <code>scram-sha-256</code>）结合使用。</p>
 
 <h3>系统管理</h3>
 
-<p>PostgreSQL 12 版的 <code>REINDEX CONCURRENTLY</code> 指令可以在不影响新的索引写入的前提下让用户执行重那建索引操作，这有助于用户实现不停机对
-较大索引的重建。</p>
+<p>PostgreSQL 12 通过 <code>REINDEX CONCURRENTLY</code> 命令引入了无需阻塞索引写入即可重建索引的能力，这有助于用户避免长时间索引重建带来的停机。</p>
 
-<p>还有，PostgreSQL 12 版通过使用 <code>pg_checksums</code> 指令对停机的 PostgreSQL 来开启或关闭页校验功能，该功能有助于检查已写入磁盘的数据一致性，
-而以前版本中该操作仅允许在 <code>initdb</code> 的阶段来执行。</p>
+<p>另外，PostgreSQL 12 现在可以使用 <code>pg_checksums</code> 命令在离线集簇中启用或禁用页校验和。此前，页校验和这一用于帮助验证写入磁盘数据完整性的功能，只能在使用 <code>initdb</code> 初始化 PostgreSQL 集簇时启用。</p>
 
-<p>浏览完整的全部新特性或是改进功能列表，请参阅：<a href="/docs/12/release-12.html">https://www.postgresql.org/docs/12/release-12.html</a></p>
+<p>如需查看此版本包含的完整功能列表，请阅读 <a href="/docs/12/release-12.html">发布说明</a>，其地址为：<a href="/docs/12/release-12.html">https://www.postgresql.org/docs/12/release-12.html</a></p>
 {% endblock presskit_content %}
 
 {% block presskit_about %}
 <h2>关于 PostgreSQL</h2>
 
 <p>
-  <a href="/">PostgreSQL</a> 是世界上最先进的开源关系型数据库，它的全球社区是一个由数千名用户、开发人员、公司或其他组织而组成。PostgreSQL 项目
-有30年以上的历史，起源于加利福利亚的伯克利大学，经历了无数次开发升级。PostgreSQL 的专业特性不仅包含顶级商业数据库系统的功能
-特性，更是在高级数据库功能、数据库扩展性、数据库安全性和稳定性方面超过了它们。若想获取到更多关于 PostgreSQL 的信息或者加入到
-PostgreSQL 社区，请浏览 <a href="/">PostgreSQL.org</a> 网站。
+  <a href="/">PostgreSQL</a> 是世界上最先进的开源关系数据库，拥有一个由数千名用户、开发者、公司和组织组成的全球社区。PostgreSQL 项目已经有 30 多年的历史，起源于加利福尼亚大学伯克利分校，并经历了持续的开发演进。PostgreSQL 的特性集不仅可与顶级商业数据库系统相媲美，而且在高级数据库功能、扩展性、安全性和稳定性方面更进一步。若想了解更多关于 PostgreSQL 的信息，或加入 PostgreSQL 社区，请访问 <a href="/">PostgreSQL.org</a>。
 </p>
 {% endblock presskit_about %}
