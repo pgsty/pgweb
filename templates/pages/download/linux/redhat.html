@@ -99,12 +99,12 @@ dnf install postgresql-server
      <td>15, 13, 12, 10 and 9.6 via modules</td>
     </tr>
     <tr>
-     <th scope="row">Fedora 43</th>
+     <th scope="row">Fedora 44</th>
      <td>18</td>
     </tr>
     <tr>
-     <th scope="row">Fedora 42</th>
-     <td>16</td>
+     <th scope="row">Fedora 43</th>
+     <td>18</td>
     </tr>
   </tbody>
 </table>
@@ -140,7 +140,7 @@ PostgreSQL，请向您的发行版供应商确认。
 <h3>安装后配置</h3>
 <p>
 由于 Red Hat 系列发行版的策略，PostgreSQL 安装后不会自动启用开机启动，数据库也不会自动初始化。要完成数据库安装，您需要根据您的发行版执行以下步骤：
-<h4>适用于 RHEL / Rocky Linux / AlmaLinux 10、9、8 或 Fedora 42 及更高版本的衍生发行版：</h4>
+<h4>适用于 RHEL / Rocky Linux / AlmaLinux 10、9、8 或 Fedora 43 及更高版本的衍生发行版：</h4>
 <pre class="code">
   postgresql-setup --initdb
   systemctl enable postgresql.service
