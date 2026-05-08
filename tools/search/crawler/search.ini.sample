@@ -1,4 +1,4 @@
 [search]
-db=dbname=search
+db=dbname=pgweb
 web=www.postgresql.org
 frontendip=1.2.3.4
