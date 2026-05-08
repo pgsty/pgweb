@@ -1,17 +1,31 @@
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponsePermanentRedirect
-from django.template.defaultfilters import slugify
+from django.template.defaultfilters import slugify, strip_tags
 
 from pgweb.util.contexts import render_pgweb
+from pgweb.util.markup import pgmarkdown
 from pgweb.util.moderation import ModerationState
 
 from .models import NewsArticle, NewsTag
 
 import datetime
 import json
+import re
 
 # Number of items per page in the news archive
 NEWS_ITEMS_PER_PAGE = 10
+
+re_cjk = re.compile(r'[\u4e00-\u9fff]')
+re_whitespace = re.compile(r'\s+')
+
+
+def _news_meta_description(news):
+    content = strip_tags(pgmarkdown(news.content or '', allow_relative_links=True))
+    content = re_whitespace.sub(' ', content).strip()
+    if re_cjk.search(content):
+        return content
+
+    return '{}。查看 PostgreSQL 中文社区新闻、公告与版本更新。'.format(news.title)
 
 
 def archive(request, tag=None, paginator=None):
@@ -56,9 +70,9 @@ def item(request, itemid, slug=None):
             'author': news.org.name if news.org.name != '_migrated' else '',
             'time': datetime.datetime.combine(news.date, datetime.datetime.min.time()),
             'title': news.title,
-            'description': news.content,
+            'description': _news_meta_description(news),
             'noimage': news.org.mailtemplate == 'default',  # For now, control image by "using a custom logo"
-            'sitename': 'PostgreSQL News',
+            'sitename': 'PostgreSQL 新闻',
         }
     })
 

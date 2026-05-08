@@ -76,17 +76,17 @@ def home(request):
     planet = ImportedRSSItem.objects.filter(feed__internalname="planet").order_by("-posttime", "-id")[:9]
 
     return render(request, 'index.html', {
-        'title': 'The world\'s most advanced open source database',
+        'title': 'PostgreSQL 中文社区：世界上最先进的开源数据库',
         'news': news,
         'events': events,
         'versions': versions,
         'planet': planet,
         'og': {
             'url': '/',
-            'author': 'PostgreSQL Global Development Group',
-            'time': datetime.now(),
-            'title': 'PostgreSQL',
-            'description': "The world's most advanced open source database.",
+            'type': 'website',
+            'title': 'PostgreSQL 中文社区',
+            'description': 'PostgreSQL 中文社区网站，提供 PostgreSQL 新闻、文档、下载、版本信息、社区活动与技术资源。',
+            'sitename': 'PostgreSQL 中文社区',
         },
     })
 
@@ -159,6 +159,7 @@ def fallback(request, url):
 
 # robots.txt
 def robots(request):
+    site_root = settings.SITE_ROOT.rstrip('/')
     return HttpResponse("""User-agent: *
 Disallow: /admin/
 Disallow: /account/
@@ -170,11 +171,12 @@ Disallow: /message-id/flat/
 Disallow: /message-id/resend/
 Disallow: /message-id/mbox/
 
-Sitemap: https://www.postgresql.org/sitemap.xml
-""", content_type='text/plain')
+Sitemap: {}/sitemap.xml
+""".format(site_root), content_type='text/plain')
 
 
 def _make_sitemap(pagelist):
+    site_root = settings.SITE_ROOT.rstrip('/')
     resp = HttpResponse(content_type='text/xml')
     x = PgXmlHelper(resp)
     x.startDocument()
@@ -183,7 +185,7 @@ def _make_sitemap(pagelist):
     for p in pagelist:
         pages += 1
         x.startElement('url', {})
-        x.add_xml_element('loc', 'https://www.postgresql.org/%s' % urllib.parse.quote(p[0]))
+        x.add_xml_element('loc', '{}{}'.format(site_root, urllib.parse.quote('/' + p[0].lstrip('/'))))
         if len(p) > 1 and p[1]:
             x.add_xml_element('priority', str(p[1]))
         if len(p) > 2 and p[2]:

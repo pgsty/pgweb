@@ -7,25 +7,27 @@
   {%block meta%}{%endblock%} {# used for custom meta tags such as description which we don't want for every page #}
   <meta name="theme-color" content="#336791"/>
   <meta name="copyright" content="The PostgreSQL Global Development Group" />{%if og%}
-  <meta property="og:url" content="https://www.postgresql.org{{og.url}}" />
-  <meta property="og:type" content="article" />
+{%if og.description%}  <meta name="description" content="{{og.description|striptags|truncatechars:"180"}}" />{%endif%}
+  <meta property="og:url" content="{{link_root}}{{og.url}}" />
+  <meta property="og:type" content="{{og.type|default:"article"}}" />
 {%if og.author%}  <meta property="article:author" content="{{og.author}}" />{%endif%}
-  <meta property="article:published_time" content="{{og.time|date:"c"}}" />
-{%if not og.noimage%}  <meta property="og:image" content="https://www.postgresql.org/media/img/about/press/elephant.png" />{%endif%}
+{%if og.time%}  <meta property="article:published_time" content="{{og.time|date:"c"}}" />{%endif%}
+{%if not og.noimage%}  <meta property="og:image" content="{{link_root}}/media/img/about/press/elephant.png" />{%endif%}
   <meta property="og:title" content="{{og.title}}" />
-  <meta property="og:description" content="{{og.description|truncatewords:"20"}}" />
-  <meta property="og:site_name" content="{{og.sitename|default:"PostgreSQL"}}" />{%endif%}
+{%if og.description%}  <meta property="og:description" content="{{og.description|striptags|truncatechars:"220"}}" />
+  <meta name="twitter:description" content="{{og.description|striptags|truncatechars:"180"}}" />{%endif%}
+  <meta property="og:site_name" content="{{og.sitename|default:"PostgreSQL 中文站"}}" />{%endif%}
   <link href="/media/css/fontawesome.css?{{gitrev}}" rel="stylesheet">
   <link rel="stylesheet" href="/media/css/bootstrap-4.4.1.min.css">
   <link rel="icon" type="image/x-icon" href="/media/favicon.ico?{{gitrev}}" />
   <link rel="shortcut icon" href="/media/favicon.ico?{{gitrev}}" />
   {%if newstags %}
   {%comment%}Default RSS links are only shown on pages that have newstags set{%endcomment%}
-  <link rel="alternate" type="application/rss+xml" title="All PostgreSQL News" href="/news.rss" />
+  <link rel="alternate" type="application/rss+xml" title="所有 PostgreSQL 新闻" href="/news.rss" />
   {%for t in newstags%}
-    <link rel="alternate" type="application/rss+xml" title="PostgreSQL News about {{t.name}}" href="/news/{{t.urlname}}.rss" />
+    <link rel="alternate" type="application/rss+xml" title="PostgreSQL {{t.name}} 新闻" href="/news/{{t.urlname}}.rss" />
   {%endfor%}
-  <link rel="alternate" type="application/rss+xml" title="PostgreSQL Events" href="/events.rss" />
+  <link rel="alternate" type="application/rss+xml" title="PostgreSQL 活动" href="/events.rss" />
   {%endif%}
   <link rel="stylesheet" type="text/css" href="/dyncss/base.css?{{gitrev}}">
 

@@ -140,14 +140,8 @@ def _get_gitrev():
 # all general pages will need it since it's used to render the css urls)
 def PGWebContextProcessor(request):
     gitrev = SimpleLazyObject(_get_gitrev)
-    if request.is_secure():
-        return {
-            'link_root': settings.SITE_ROOT,
-            'do_esi': settings.DO_ESI,
-            'gitrev': gitrev,
-        }
-    else:
-        return {
-            'gitrev': gitrev,
-            'do_esi': settings.DO_ESI,
-        }
+    return {
+        'link_root': settings.SITE_ROOT.rstrip('/'),
+        'do_esi': settings.DO_ESI,
+        'gitrev': gitrev,
+    }

@@ -42,7 +42,14 @@
 	{%endfor%}
 	<tr>
 	 <td><a href="/docs/devel/index.html">开发快照</a></td>
-	 <td>PDF 版本不可用</td>
+	 <td>
+	  {%if devel_a4pdf or devel_uspdf%}
+	  {%if devel_a4pdf%}<a href="/files/documentation/pdf/19/postgresql-19-A4.pdf">A4 PDF</a> <span class="txtMediumGrey">({{devel_a4pdf|filesizeformat}})</span>{%endif%}
+	  {%if devel_a4pdf and devel_uspdf%}&bull;{%endif%}
+	  {%if devel_uspdf%}<a href="/files/documentation/pdf/19/postgresql-19-US.pdf">US PDF</a> <span class="txtMediumGrey">({{devel_uspdf|filesizeformat}})</span>{%endif%}
+	  {%else%}PDF 版本不可用
+	  {%endif%}
+	 </td>
 	</tr>
        </tbody>
       </table>

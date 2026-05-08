@@ -5,7 +5,7 @@
 {% block extrahead %}
 {%if not page.version.supported%}  <meta name="robots" content="nofollow" />{%endif%}
 {% if canonical_version %}
-  <link rel="canonical" href="https://www.postgresql.org/docs/{{ canonical_version }}/{{ page.file }}" />
+  <link rel="canonical" href="{{link_root}}/docs/{{ canonical_version }}/{{ page.file }}" />
 {% endif %}
 {% endblock %}
 

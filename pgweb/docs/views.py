@@ -21,6 +21,25 @@ from .models import DocPage, DocPageRedirect
 from .forms import DocCommentForm
 
 
+re_cjk = re.compile(r'[\u4e00-\u9fff]')
+re_whitespace = re.compile(r'\s+')
+
+
+def _clean_meta_description(text):
+    return re_whitespace.sub(' ', text or '').strip()
+
+
+def _doc_meta_description(page, contentpreview):
+    contentpreview = _clean_meta_description(contentpreview)
+    if re_cjk.search(contentpreview):
+        return contentpreview
+
+    return 'PostgreSQL {} 官方文档：{}。查看 PostgreSQL 手册、SQL 命令、配置说明和数据库管理参考。'.format(
+        page.display_version(),
+        page.title.strip(),
+    )
+
+
 def _versioned_404(msg, version):
     r = HttpResponseNotFound(msg)
     r['xkey'] = 'pgdocs_{}'.format(version)
@@ -163,8 +182,8 @@ def docpage(request, version, filename):
             'url': '/docs/{}/{}'.format(page.display_version(), page.file),
             'time': page.version.docsloaded,
             'title': page.title.strip(),
-            'description': contentpreview,
-            'sitename': 'PostgreSQL Documentation',
+            'description': _doc_meta_description(page, contentpreview),
+            'sitename': 'PostgreSQL 中文文档',
         }
     })
     r['xkey'] = 'pgdocs_{}'.format(page.display_version())
@@ -219,6 +238,8 @@ def root(request):
     versions = Version.objects.filter(Q(supported=True) | Q(testing__gt=0, tree__gt=0)).order_by('-tree')
     r = render_pgweb(request, 'docs', 'docs/index.html', {
         'versions': [_VersionPdfWrapper(v) for v in versions],
+        'devel_a4pdf': _find_devel_pdf('A4'),
+        'devel_uspdf': _find_devel_pdf('US'),
     })
     r['xkey'] = 'pgdocs_all pgdocs_pdf'
     return r
@@ -251,6 +272,13 @@ class _VersionPdfWrapper(object):
             return os.stat('%s/documentation/pdf/%s/postgresql-%s-%s.pdf' % (settings.STATIC_CHECKOUT, self.__version.numtree, self.__version.numtree, pagetype)).st_size
         except Exception as e:
             return 0
+
+
+def _find_devel_pdf(pagetype):
+    try:
+        return os.stat('%s/documentation/pdf/19/postgresql-19-%s.pdf' % (settings.STATIC_CHECKOUT, pagetype)).st_size
+    except Exception:
+        return 0
 
 
 def manuals(request):
