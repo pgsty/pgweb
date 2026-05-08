@@ -171,6 +171,9 @@ urlpatterns = [
     # Crash testing URL :-)
     re_path(r'^crashtest/$', pgweb.misc.views.crashtest),
 
+    # Static files from the local static/ directory, keeping the public /files/ URL.
+    re_path(r'^files/(?P<path>.*)$', pgweb.core.views.static_file),
+
     # Fallback for static pages, must be at the bottom
     re_path(r'^(.*)/$', pgweb.core.views.fallback),
 ]

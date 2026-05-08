@@ -2,6 +2,7 @@
 
 import os
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
+BASE_DIR = os.path.abspath(os.path.join(PROJECT_ROOT, os.pardir))
 
 DEBUG = False
 
@@ -158,7 +159,7 @@ CSRF_COOKIE_HTTPONLY = SESSION_COOKIE_HTTPONLY
 SITE_ROOT = "https://www.postgresql.org"                     # Root of working URLs
 FTP_PICKLE = "/usr/local/pgweb/ftpsite.pickle"              # Location of file with current contents from ftp site
 YUM_JSON = "/usr/local/pgweb/external/yum.json"
-STATIC_CHECKOUT = "/usr/local/pgweb-static"                 # Location of a checked out pgweb-static project
+STATIC_CHECKOUT = os.path.join(BASE_DIR, "static")          # Location of static files served under /files/
 NOTIFICATION_EMAIL = "someone@example.com"                  # Address to send notifications *to*
 NOTIFICATION_FROM = "someone@example.com"                   # Address to send notifications *from*
 ACCOUNTS_NOREPLY_FROM = "someone@example.com"               # Address to send account messages from

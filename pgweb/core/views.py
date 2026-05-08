@@ -6,6 +6,7 @@ from django.template import TemplateDoesNotExist, loader
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.tokens import default_token_generator
+from django.views.static import serve as serve_static
 from pgweb.util.decorators import login_required, content_sources
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_exempt
@@ -155,6 +156,10 @@ def fallback(request, url):
     c = PGWebContextProcessor(request)
     c.update({'navmenu': get_nav_menu(navsect)})
     return HttpResponse(t.render(c))
+
+
+def static_file(request, path):
+    return serve_static(request, path, document_root=settings.STATIC_CHECKOUT)
 
 
 # robots.txt

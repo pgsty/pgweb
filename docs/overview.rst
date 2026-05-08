@@ -37,12 +37,10 @@ django and not with pgweb.
 
 Non-web content
 ---------------
-Non-web content, such as PDF files and other static data, is handled
-in it's own git repository, in order to keep the size of the main
-repository down (since some of these files can be very large). The
-repository is named pgweb-static.git, and also located on
-git.postgresql.org. These files should be made visible through the
-webserver at the /files/ url.
+Non-web content, such as PDF files and other static data, is kept out
+of the main git repository in the local static/ directory. Deployment
+can populate this directory with rsync or another file copy mechanism.
+These files are served by the Django application at the /files/ url.
 
 Batch jobs and integrations
 ---------------------------
