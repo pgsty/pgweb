@@ -101,6 +101,12 @@
 Be careful if you unapprove it!
 </p>
 {%endif%}
+
+{% if embargo %}
+<h3 class="moderror">发布禁发时段</h3>
+<p>当前禁发时段持续至 {{ embargo.duration.upper }}。现在获批的条目将在禁发结束后自动发布。</p>
+{% endif %}
+
 {% for field in form %}
       <div class="form-row{% if field.errors %} errors{% endif %}">
         <div class="modadmfield">

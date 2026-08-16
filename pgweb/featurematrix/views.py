@@ -9,9 +9,7 @@ import yaml
 from pgweb.util.contexts import render_pgweb
 from pgweb.util.decorators import content_sources
 from pgweb.util.decorators import xkey
-
 from pgweb.core.models import Version
-
 
 log = logging.getLogger(__name__)
 

@@ -10,15 +10,22 @@ import re
 
 from pgweb.util.widgets import TemplateRenderWidget
 from pgweb.util.db import exec_to_dict
-from pgweb.account.views import OAUTH_PASSWORD_STORE
 
 from .models import CommunityAuthSite, CommunityAuthOrg, SecondaryEmail
+from .models import OAUTH_PASSWORD_STORE
 
 
 class CommunityAuthSiteAdminForm(forms.ModelForm):
     class Meta:
         model = CommunityAuthSite
         exclude = ()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['org'].widget.can_add_related = False
+        self.fields['org'].widget.can_change_related = False
+        self.fields['require_groups'].widget.can_add_related = False
 
     def clean_cryptkey(self):
         x = None
@@ -62,6 +69,7 @@ class CommunityAuthSiteAdminForm(forms.ModelForm):
 
 class CommunityAuthSiteAdmin(admin.ModelAdmin):
     list_display = ('name', 'cooloff_hours', 'push_changes', 'push_ssh', 'version', 'org')
+    filter_horizontal = ('require_groups', )
     form = CommunityAuthSiteAdminForm
 
 

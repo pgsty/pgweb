@@ -1,6 +1,11 @@
 from django.utils.functional import SimpleLazyObject
 from django.shortcuts import render
 from django.conf import settings
+from django.core.cache import cache
+
+
+TOPBAR_CACHE_KEY = 'pgweb:topbar-news'
+_CACHE_MISS = object()
 
 # This is the whole site navigation structure. Stick in a smarter file?
 sitenav = {
@@ -42,7 +47,7 @@ sitenav = {
         {'title': '教程与其他资源', 'link': '/docs/online-resources/'},
         {'title': 'FAQ', 'link': '/docs/faq/'},
         {'title': 'Wiki', 'link': 'https://wiki.postgresql.org'},
-        {'title': '三方文档', 'link': 'https://pigsty.cc' , 'submenu': [
+        {'title': '三方文档', 'link': 'https://pigsty.cc', 'submenu': [
             {'title': 'pigsty 文档', 'link': 'https://pigsty.cc/docs/'},
             {'title': 'pig cli 文档', 'link': 'https://pigsty.cc/docs/pig'},
             {'title': 'pg 扩展文档', 'link': 'https://pigsty.cc/ext/e/'},
@@ -138,10 +143,39 @@ def _get_gitrev():
 # the current git revision. git revision is returned as a lazy object so
 # we don't spend effort trying to load it if we don't need it (though
 # all general pages will need it since it's used to render the css urls)
+#
+def _get_topbar_news():
+    from pgweb.news.models import PinnedNewsArticle
+
+    cached = cache.get(TOPBAR_CACHE_KEY, _CACHE_MISS)
+    if cached is not _CACHE_MISS:
+        return cached or None
+
+    pinned = (
+        PinnedNewsArticle.objects.select_related('pinnedarticle')
+        .only('pinnedarticle__id', 'pinnedarticle__date', 'pinnedarticle__title')
+        .first()
+    )
+    article = pinned.pinnedarticle if pinned else None
+    result = None
+    if article:
+        result = {
+            'date': article.date,
+            'title': article.title,
+            'permanenturl': article.permanenturl,
+        }
+    cache.set(TOPBAR_CACHE_KEY, result or False, settings.TOPBAR_CACHE_SECONDS)
+    return result
+
+
+# Topbar news is lazy so requests that do not render the global header avoid
+# the query. pg.center does not use ESI, so keep a short application cache as
+# well instead of querying PinnedNewsArticle for every page.
 def PGWebContextProcessor(request):
     gitrev = SimpleLazyObject(_get_gitrev)
     return {
         'link_root': settings.SITE_ROOT.rstrip('/'),
         'do_esi': settings.DO_ESI,
         'gitrev': gitrev,
+        'topbarnews': SimpleLazyObject(_get_topbar_news),
     }

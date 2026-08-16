@@ -4,7 +4,7 @@ from django import forms
 from pgweb.util.admin import PgwebAdmin
 from pgweb.util.moderation import ModerationState
 from pgweb.core.models import OrganisationEmail
-from .models import NewsArticle, NewsTag, PinnedNewsArticle
+from .models import NewsArticle, NewsTag, PinnedNewsArticle, NewsPostingEmbargo
 
 from datetime import datetime, timedelta
 
@@ -14,8 +14,10 @@ class NewsArticleAdminForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        if self.instance:
+        if self.instance and self.instance.pk:
             self.fields['email'].queryset = OrganisationEmail.objects.filter(org=self.instance.org, confirmed=True)
+        else:
+            self.fields['email'].queryset = OrganisationEmail.objects.filter(pk=-1)
 
 
 class NewsArticleAdmin(PgwebAdmin):
@@ -56,6 +58,11 @@ class NewsTagAdmin(PgwebAdmin):
     filter_horizontal = ('allowed_orgs', )
 
 
+class NewsPostingEmbargoAdmin(admin.ModelAdmin):
+    list_display = ('duration', 'description')
+
+
 admin.site.register(NewsArticle, NewsArticleAdmin)
 admin.site.register(NewsTag, NewsTagAdmin)
 admin.site.register(PinnedNewsArticle, PinnedNewsArticleAdmin)
+admin.site.register(NewsPostingEmbargo, NewsPostingEmbargoAdmin)

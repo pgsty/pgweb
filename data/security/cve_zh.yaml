@@ -1,0 +1,261 @@
+CVE-2026-6464:
+  title: PostgreSQL psql 的 COPY FROM STDIN 提前失败时会把数据行当作 psql 命令执行
+  description: >-
+    PostgreSQL psql 的 COPY 命令若纳入不可信数据，服务器管理员可能通过注入错误，诱使 psql
+    把数据行作为命令执行。如果 COPY FROM STDIN 或 \copy FROM STDIN 在服务器表示已准备接收输入行之前失败，
+    psql 就会把后续内联数据行当作 psql 命令处理；指定文件名的 COPY FROM 不受影响。服务器管理员本身
+    无法控制这些数据行，因此完整利用通常需要攻击者同时控制服务器与数据行。另一种可能是，攻击者仅控制数据行，
+    再借助一个其无法控制但恰好发生的错误完成攻击。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-6469:
+  title: PostgreSQL ALTER TABLE ALTER TYPE 会重置扩展统计对象的所有者
+  description: >-
+    PostgreSQL 的 ALTER TABLE ALTER TYPE 命令会错误地把依赖的扩展统计对象所有权转给当前用户。
+    这会让表所有者不当地获得执行 DROP STATISTICS 和 ALTER STATISTICS 的权限，同时让原统计对象所有者
+    失去这些权限。由于 DROP TABLE 本来就能删除统计对象，这一问题在许多所有权安排下并不会带来额外能力。
+    PostgreSQL 18.5、17.11、16.15、15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-6470:
+  title: PostgreSQL 未检查类型的 USAGE 权限
+  description: >-
+    PostgreSQL 的部分 DDL 命令缺少授权检查，允许对象创建者通过建立对某个类型的依赖，阻止该类型执行
+    ALTER 或 DROP，从而造成拒绝服务。许多 DDL 操作已经检查 USAGE 权限，但把类型指定为范围类型的子类型，
+    以及在 SQL 表达式中引用该类型时没有检查。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-6471:
+  title: PostgreSQL 逻辑解码可通过 dlopen 加载任意文件
+  description: >-
+    PostgreSQL 逻辑解码缺少授权检查，持有 REPLICATION 权限的非超级用户可通过选择逻辑解码插件，
+    让服务器使用 dlopen 加载数据库服务操作系统账户可见的任意文件，进而以该账户身份执行任意代码。
+    PostgreSQL 18.5、17.11、16.15、15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-6472:
+  title: PostgreSQL CREATE TYPE 未检查多重范围类型所在 schema 的 CREATE 权限
+  description: >-
+    PostgreSQL CREATE TYPE 缺少授权检查，允许对象创建者劫持其他通过 search_path
+    查找用户定义类型（包括扩展所定义类型）的查询，从而使受害者执行攻击者选择的任意 SQL
+    函数。PostgreSQL 18.4、17.10、16.14、15.18 和 14.23 之前的版本受此问题影响。
+CVE-2026-6473:
+  title: PostgreSQL 服务器因整数回绕而分配过小的内存
+  description: >-
+    PostgreSQL 服务器的多项功能存在整数回绕，允许无特权数据库用户使服务器分配过小的内存并越界写入，
+    进而可能以数据库服务所使用的操作系统用户身份执行任意代码。若应用将 GB 级用户输入传给相关数据库函数，
+    输入提供者可能触发段错误。PostgreSQL 18.4、17.10、16.14、15.18 和 14.23
+    之前的版本受此问题影响。
+CVE-2026-6474:
+  title: PostgreSQL timeofday() 可能泄露部分服务器内存
+  description: >-
+    PostgreSQL timeofday() 函数中由外部控制的格式字符串，允许攻击者通过特制的时区名称读取部分服务器内存。
+    PostgreSQL 18.4、17.10、16.14、15.18 和 14.23 之前的版本受此问题影响。
+CVE-2026-6475:
+  title: PostgreSQL pg_basebackup 与 pg_rewind 可覆盖源端超级用户指定的无关文件
+  description: >-
+    PostgreSQL pg_basebackup 的 plain 格式及 pg_rewind 会跟随符号链接，使源端超级用户能够覆盖本地文件，
+    例如通过覆盖 /var/lib/postgres/.bashrc 劫持操作系统账户。由于 shared_preload_libraries
+    等功能，在这些命令后启动服务器本就隐含信任源端超级用户；因此，只有在命令执行后、服务器启动前采取相关操作
+    （例如将文件移到另一台虚拟机或创建虚拟机快照）时，此攻击才具有实际影响。PostgreSQL 18.4、17.10、
+    16.14、15.18 和 14.23 之前的版本受此问题影响。
+CVE-2026-6476:
+  title: PostgreSQL pg_createsubscriber 可通过订阅名称实施 SQL 注入
+  description: >-
+    PostgreSQL pg_createsubscriber 中的 SQL 注入允许拥有 pg_create_subscription 权限的攻击者
+    以超级用户身份执行任意 SQL；攻击会在下次运行 pg_createsubscriber 时生效。在主版本 17 和 18 中，
+    PostgreSQL 18.4 与 17.10 之前的小版本受此问题影响，PostgreSQL 17 之前的版本不受影响。
+CVE-2026-6477:
+  title: PostgreSQL libpq 的 lo_* 函数可让服务器超级用户覆盖客户端栈内存
+  description: >-
+    PostgreSQL libpq 的 lo_export()、lo_read()、lo_lseek64() 和 lo_tell64()
+    使用了本质上不安全的 PQfn(..., result_is_int=0, ...)，使服务器超级用户能够用任意长度的响应覆盖客户端栈缓冲区。
+    与 gets() 类似，该调用会把由服务器决定的任意长度数据写入大小未指定的缓冲区。由于 psql 的 \lo_export
+    命令和 pg_dump 都会调用 lo_read()，服务器超级用户可覆盖 pg_dump 或 psql 的栈内存。
+    PostgreSQL 18.4、17.10、16.14、15.18 和 14.23 之前的版本受此问题影响。
+CVE-2026-6478:
+  title: PostgreSQL 可通过隐蔽计时信道泄露 MD5 哈希口令
+  description: >-
+    PostgreSQL 身份认证在比较 MD5 哈希口令时存在隐蔽计时信道，攻击者可据此恢复足以完成认证的用户凭据。
+    所有受支持版本默认使用的 scram-sha-256 口令不受影响，但从 PostgreSQL 13 或更早版本升级而来的数据库
+    仍可能保留 MD5 哈希口令。PostgreSQL 18.4、17.10、16.14、15.18 和 14.23
+    之前的版本受此问题影响。
+CVE-2026-6479:
+  title: PostgreSQL SSL/GSS 初始化因递归失控导致拒绝服务
+  description: >-
+    PostgreSQL 的 SSL 与 GSS 协商存在不受控制的递归，能够连接 PostgreSQL AF_UNIX 套接字的攻击者
+    可持续造成拒绝服务。若 SSL 与 GSS 均被禁用，能够访问 PostgreSQL TCP 套接字的攻击者也可发动同类攻击。
+    PostgreSQL 18.4、17.10、16.14、15.18 和 14.23 之前的版本受此问题影响。
+CVE-2026-6575:
+  title: PostgreSQL pg_restore_attribute_stats 接受可使查询规划越界读取统计数组的值
+  description: >-
+    PostgreSQL 函数 pg_restore_attribute_stats() 存在缓冲区越界读取：它会接受长度不匹配的数组值，
+    导致查询规划过程读取其中一个数组末尾之后的内存。表维护者可借此推断该数组末尾之后的内存值。
+    在主版本 18 中，PostgreSQL 18.4 之前的小版本受此问题影响，PostgreSQL 18 之前的版本不受影响。
+CVE-2026-6637:
+  title: PostgreSQL refint 存在栈缓冲区溢出与 SQL 注入
+  description: >-
+    PostgreSQL 的 refint 模块存在栈缓冲区溢出，允许无特权数据库用户以数据库服务所使用的操作系统用户身份
+    执行任意代码。另有一种独立攻击：若应用把用户可控列声明为 refint 级联主键，并允许用户控制该列的更新，
+    SQL 注入可使主键更新值的提供者以执行该更新的数据库用户身份运行任意 SQL。PostgreSQL 18.4、17.10、
+    16.14、15.18 和 14.23 之前的版本受此问题影响。
+CVE-2026-6638:
+  title: PostgreSQL REFRESH PUBLICATION 可通过表名实施 SQL 注入
+  description: >-
+    PostgreSQL 逻辑复制的 ALTER SUBSCRIPTION ... REFRESH PUBLICATION 存在 SQL 注入，
+    订阅端表的创建者可使用订阅所配置的发布端凭据执行任意 SQL；攻击会在下次 REFRESH PUBLICATION 时生效。
+    在主版本 16、17 和 18 中，PostgreSQL 18.4、17.10 和 16.14 之前的小版本受此问题影响，
+    PostgreSQL 16 之前的版本不受影响。
+CVE-2026-14662:
+  title: PostgreSQL tsvector 与 tsquery 因整数回绕而分配过小的内存
+  description: >-
+    PostgreSQL 的 tsvector 与 tsquery 数据类型函数存在整数回绕，无特权数据库用户可通过特制的大型输入，
+    使服务器分配过小的内存并越界写入，进而可能以数据库服务所使用的操作系统用户身份执行任意代码。
+    这些类型通常由应用逻辑生成，而不是直接取自应用用户，因此应用用户借助应用作为通道攻击数据库的可能性较低。
+    CVE-2026-6473 修复过类似问题。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-14663:
+  title: PostgreSQL pgcrypto 对 OpenSSL 已禁用的加密算法静默使用明文
+  description: >-
+    PostgreSQL pgcrypto 在使用已被禁用的加密算法时会把数据以明文形式存储，用户可直接观察错误生成的“密文”
+    恢复明文。哪些算法被禁用取决于 OpenSSL 的版本与配置。如果应用接受加密数据作为输入，即使提供错误密钥，
+    解密也会成功，从而连修改检测码（MDC）所提供的有限保护也会失效。受影响的函数包括 pgp_sym_encrypt、
+    pgp_sym_decrypt、pgp_pub_encrypt、pgp_pub_decrypt，以及对应的 bytea 版本。
+    PostgreSQL 18.5、17.11、16.15、15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-14664:
+  title: PostgreSQL 正则表达式堆缓冲区溢出可导致任意代码执行
+  description: >-
+    PostgreSQL 正则表达式处理存在堆缓冲区溢出，查询编写者可通过未通过编码校验的文本，以数据库服务所使用的
+    操作系统用户身份执行任意代码。该问题与 CVE-2026-2006 同源，但此次触发原因是数据经 pg_wchar
+    往返转换时出现了未预期的增长。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-14666:
+  title: PostgreSQL 行级安全缓存会忽略角色变更
+  description: >-
+    PostgreSQL 未完整跟踪角色成员关系、角色属性与数据库所有权的变化，导致这些变化本应选用不同策略时，
+    查询仍可能因复用执行计划而继续使用缓存中的旧行级安全策略。旧策略会一直生效，直到其他事件使缓存失效，
+    或连接终止并结束会话。用户因此可能继续完成刚刚还被允许、但现已禁止的读取与修改。攻击者必须针对具体应用
+    撤销权限的方式及其按角色设置的行级安全策略设计攻击。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-14668:
+  title: PostgreSQL ctid 选择率估算器类型混淆可泄露任意内存信息
+  description: >-
+    PostgreSQL ctid 数据类型的选择率估算器存在输入类型混淆，对象创建者可传入特制的非 ctid 输入，
+    查看由任意一段 4 字节内存值计算出的结果。虽然该计算会损失精度，但看起来仍可能恢复相当一部分内存值。
+    PostgreSQL 18.5、17.11、16.15、15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-14669:
+  title: PostgreSQL to_char 堆缓冲区溢出可导致任意代码执行
+  description: >-
+    PostgreSQL to_char(timestamptz) 存在堆缓冲区溢出，能够选择时区的一方可通过超长的 POSIX 时区缩写，
+    以数据库服务所使用的操作系统用户身份执行任意代码。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-14670:
+  title: PostgreSQL PL/Perl 绑定对象堆缓冲区溢出可导致任意代码执行
+  description: >-
+    PostgreSQL PL/Perl 返回绑定哈希（tied hash）时存在堆缓冲区溢出，函数所有者可通过特制的函数体，
+    以数据库服务所使用的操作系统用户身份执行任意代码。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-14671:
+  title: PostgreSQL refint 执行计划缓存类型混淆可导致任意代码执行
+  description: >-
+    PostgreSQL 的 refint 模块存在类型混淆，对象创建者可借此以数据库服务所使用的操作系统用户身份执行任意代码。
+    该修复最初来自一份非安全缺陷报告，并以“refint: Remove plan cache.”为主题进入 Git 仓库，
+    当时没有标注 CVE 编号。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-14672:
+  title: PostgreSQL 非默认 scram_iterations 会通过响应差异暴露用户是否存在
+  description: >-
+    PostgreSQL SCRAM 身份认证存在可观察的响应差异，未认证用户可根据 SCRAM 迭代次数判断某个用户是否存在。
+    只有被探测用户使用非默认 scram_iterations 时才可利用，因为对不存在用户返回的认证挑战会报告默认迭代次数。
+    在主版本 16 至 18 中，PostgreSQL 18.5、17.11 和 16.15 之前的小版本受此问题影响；
+    PostgreSQL 16 之前的版本不受影响。
+CVE-2026-14673:
+  title: PostgreSQL amcheck 未清除不可信的 search_path
+  description: >-
+    PostgreSQL amcheck 使用了不可信的搜索路径。拥有 amcheck 函数 EXECUTE 权限的用户，可在调用函数前设置
+    恶意 search_path，以依赖搜索路径的表达式索引所有者身份执行任意函数。在主版本 18、16、15 和 14 中，
+    PostgreSQL 18.5、16.15、15.19 和 14.24 之前的小版本受此问题影响；PostgreSQL 17 不受影响。
+CVE-2026-14676:
+  title: PostgreSQL pg_stat_statements 堆缓冲区溢出可导致任意代码执行
+  description: >-
+    PostgreSQL pg_stat_statements 存在堆缓冲区溢出，查询编写者可通过包含数组常量的特制查询，
+    以数据库服务所使用的操作系统用户身份执行任意代码。在主版本 18 中，PostgreSQL 18.5 之前的小版本
+    受此问题影响；PostgreSQL 18 之前的版本不受影响。
+CVE-2026-14677:
+  title: PostgreSQL 32 位 PL/Tcl 与 PL/Perl 因整数回绕而分配过小的内存
+  description: >-
+    PostgreSQL 32 位构建中的 PL/Tcl 与 PL/Perl 存在整数回绕，对象创建者可通过特制的函数体，
+    使服务器分配过小的内存并越界写入，进而可能以数据库服务所使用的操作系统用户身份执行任意代码。
+    CVE-2026-6473 修复过类似问题。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-14678:
+  title: PostgreSQL pg_trgm 的 picksplit 会读取缓冲区末尾之后的数据
+  description: >-
+    PostgreSQL pg_trgm 索引的 picksplit 函数存在缓冲区越界读取，会读取堆缓冲区末尾之后的数据。
+    表维护者可能通过索引分裂选择这一有损信号，推断有限的内存值。PostgreSQL 18.5、17.11、16.15、15.19
+    和 14.24 之前的版本受此问题影响。
+CVE-2026-14679:
+  title: PostgreSQL 参数匹配的栈缓冲区溢出可向服务器内存写入 0x0 与 0x1
+  description: >-
+    PostgreSQL 参数名匹配存在栈缓冲区溢出，对象创建者可通过 OUT 参数数量造成尚不明确的影响。
+    该攻击只能写入值为 0x0 和 0x1 的字节。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-14680:
+  title: PostgreSQL 可通过 internal 类型参数触发类型混淆
+  description: >-
+    PostgreSQL 的 internal 数据类型参数存在类型混淆，任何用户都可通过调用带有该参数类型的函数，
+    以数据库服务所使用的操作系统用户身份执行任意代码。internal 类型代表一组彼此不兼容、且不应从 SQL
+    直接访问的数据结构；系统原本试图阻止此类函数调用，但防护仍有缺口。PostgreSQL 18.5、17.11、16.15、
+    15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-14681:
+  title: PostgreSQL 同时使用 SSL 时未正确强制实施 GSSAPI 加密
+  description: >-
+    PostgreSQL 的 GSSAPI 支持未正确强制消息完整性，用户可通过初始的直接 TLS 连接，在违反 pg_hba.conf
+    规则的情况下协商 GSSAPI。即使 pg_hba.conf 看似要求 GSSAPI，连接仍可能只通过 TLS 加密交换数据；
+    如果 TLS 设置比 GSS 设置宽松，连接就可能在保护较弱的情况下继续。在主版本 17 和 18 中，
+    PostgreSQL 18.5 与 17.11 之前的小版本受此问题影响；PostgreSQL 17 之前的版本不受影响。
+CVE-2026-15741:
+  title: PostgreSQL 反解析表达式时可通过 EXTRACT 参数实施 SQL 注入
+  description: >-
+    PostgreSQL 的 EXTRACT() 表达式反解析存在 SQL 注入，对象所有者可通过恶意对象定义，以超级用户身份
+    执行任意 SQL。该问题广泛影响表达式反解析的使用者，包括 pg_dump、psql 的 \sf 等命令，
+    以及非核心工具中的类似用法。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-15742:
+  title: PostgreSQL fuzzystrmatch 因整数回绕可向近乎任意地址写入
+  description: >-
+    PostgreSQL fuzzystrmatch 存在整数回绕，用户可向极大范围的地址写入数据，并通过向 SQL 函数
+    levenshtein() 或 levenshtein_less_equal() 提供极端输入，以数据库服务所使用的操作系统用户身份
+    执行任意代码。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-16238:
+  title: PostgreSQL pg_restore_attribute_stats() 类型混淆可导致任意代码执行
+  description: >-
+    PostgreSQL pg_restore_attribute_stats() 存在类型混淆，对象创建者可通过混淆范围值与多重范围值，
+    以数据库服务所使用的操作系统用户身份执行任意代码。在主版本 18 中，PostgreSQL 18.5 之前的小版本
+    受此问题影响；PostgreSQL 18 之前的版本不受影响。
+CVE-2026-16239:
+  title: PostgreSQL 游标 CLOSE 与 DECLARE 的类型混淆可导致任意代码执行
+  description: >-
+    PostgreSQL 的 portal／游标生命周期存在类型混淆，用户可用不同类型重新创建游标或其他 portal，
+    以数据库服务所使用的操作系统用户身份执行任意代码。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-16241:
+  title: PostgreSQL ECPG 整数下溢可使客户端崩溃
+  description: >-
+    PostgreSQL ECPG 存在整数下溢，数据库服务器管理员可发送缺少必需前缀的 bytea 值，暂时拒绝 ECPG
+    客户端服务。客户端会使用攻击者既不知道也无法控制的字节覆盖一大片内存区域，通常只会触发 SIGSEGV；
+    极少数情况下，这种写入也可能对特定客户端的数据完整性造成影响。PostgreSQL 18.5、17.11、16.15、
+    15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-18024:
+  title: PostgreSQL ascii() 函数会读取缓冲区末尾之后的数据
+  description: >-
+    PostgreSQL 的 ascii() SQL 函数存在缓冲区越界读取，用户可通过特制的文本值，泄露某次特定内存分配
+    末尾之后最多 3 个字节。该问题与 CVE-2026-2006 属于同一类缺陷，但影响较小。
+    PostgreSQL 18.5、17.11、16.15、15.19 和 14.24 之前的版本受此问题影响。
+CVE-2026-18408:
+  title: PostgreSQL psql 的 \unrestrict 可让来源服务器超级用户在客户端执行任意代码
+  description: >-
+    PostgreSQL pg_dump 纳入不可信数据时，恶意的来源服务器超级用户可利用 psql \restrict 元命令的输入展开，
+    注入在恢复时执行的任意代码，并以运行 psql 恢复转储的客户端操作系统账户身份执行。针对 CVE-2025-8714
+    的修复引入了 \restrict 与 \unrestrict 来阻止此类攻击，但 \unrestrict 本身已经足以完成攻击。
+    pg_dumpall 同样受影响；使用 pg_restore 生成纯文本格式转储时也会受影响。非核心组件若使用 \restrict
+    也可能受影响，但目前尚未发现此类用法。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。
+CVE-2026-19385:
+  title: PostgreSQL pg_dump 堆缓冲区溢出可导致任意代码执行
+  description: >-
+    PostgreSQL pg_dump 处理超长函数转换列表时存在堆缓冲区溢出，对象创建者可通过特制的转换列表，
+    以运行 pg_dump 的操作系统用户身份执行任意代码。PostgreSQL 18.5、17.11、16.15、15.19 和 14.24
+    之前的版本受此问题影响。

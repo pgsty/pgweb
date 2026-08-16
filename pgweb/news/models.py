@@ -1,10 +1,16 @@
 from django.db import models
-from datetime import date
-from django.core.exceptions import ValidationError
+from django.core.validators import ValidationError
+from django.template.defaultfilters import slugify
+from django.contrib.postgres.fields import DateTimeRangeField
+from django.contrib.postgres.constraints import ExclusionConstraint
+from django.contrib.postgres.fields import RangeOperators
+from django.conf import settings
+
+from datetime import date, datetime
+
 from pgweb.core.models import Organisation, OrganisationEmail
 from pgweb.core.text import ORGANISATION_HINT_TEXT
 from pgweb.util.moderation import TristateModerateModel, ModerationState, TwoModeratorsMixin
-from django.template.defaultfilters import slugify
 
 from .util import send_news_email, render_news_template, embed_images_in_html
 
@@ -52,6 +58,9 @@ class NewsArticle(TwoModeratorsMixin, TristateModerateModel):
         yield '/news/.*.rss'
         # FIXME: when to expire the front page?
         yield '/$'
+        # If this is the pinned article, we need to purge the include
+        if self.pinnednewsarticle_set.exists():
+            yield '/include/topbar/'
 
     def __str__(self):
         return "%s: %s" % (self.date, self.title)
@@ -82,6 +91,9 @@ class NewsArticle(TwoModeratorsMixin, TristateModerateModel):
 
     class Meta:
         ordering = ('-date',)
+        indexes = [
+            models.Index(name="idx_news_modstate_not_approved", fields=['modstate', ], condition=~models.Q(modstate=ModerationState.APPROVED)),
+        ]
 
     @classmethod
     def get_formclass(self):
@@ -91,10 +103,17 @@ class NewsArticle(TwoModeratorsMixin, TristateModerateModel):
     @property
     def block_edit(self):
         # Don't allow editing of news articles that have been published
-        return self.modstate in (ModerationState.PENDING, ModerationState.APPROVED)
+        return self.modstate in (
+            ModerationState.PENDING,
+            ModerationState.APPROVED,
+            ModerationState.EMBARGOED,
+        )
 
     def on_approval(self, request):
         send_news_email(self)
+
+    def check_embargo(self):
+        return NewsPostingEmbargo.objects.filter(duration__contains=datetime.now()).first()
 
     def render_preview_field(self, fieldname, val):
         if fieldname == 'content':
@@ -117,15 +136,45 @@ class NewsArticle(TwoModeratorsMixin, TristateModerateModel):
 
 
 class PinnedNewsArticle(models.Model):
+    uniqueness = models.GeneratedField(expression=models.Value(1), output_field=models.IntegerField(), db_persist=True, unique=True)
     pinnedarticle = models.ForeignKey(NewsArticle, null=True, blank=True, on_delete=models.SET_NULL)
     pinnedtoproviders = models.JSONField(null=False, blank=True, default=dict)
+
+    purge_urls = ('/include/topbar/', )
 
     def save(self, *args, **kwargs):
         if not self.pk and PinnedNewsArticle.objects.exists():
             raise ValidationError("Only one PinnedNewsArticle may exist!")
-        return super().save(*args, **kwargs)
+        result = super().save(*args, **kwargs)
+        from django.core.cache import cache
+        from pgweb.util.contexts import TOPBAR_CACHE_KEY
+        cache.delete(TOPBAR_CACHE_KEY)
+        return result
 
     def __str__(self):
         if self.pinnedarticle:
             return str(self.pinnedarticle)
         return 'No article currently pinned'
+
+
+class NewsPostingEmbargo(models.Model):
+    duration = DateTimeRangeField("禁发时段", null=False, blank=False)
+    description = models.CharField(max_length=200, null=False, blank=False,
+                                   verbose_name="说明",
+                                   help_text="说明文字会向提交者和审核员显示，请勿填写敏感信息。")
+
+    class Meta:
+        verbose_name = "新闻发布禁发时段"
+        verbose_name_plural = "新闻发布禁发时段"
+        ordering = ('duration', )
+        constraints = (
+            ExclusionConstraint(
+                name='unique_duration',
+                expressions=[
+                    ('duration', RangeOperators.OVERLAPS),
+                ],
+            ),
+        )
+
+    def __str__(self):
+        return str(self.duration)

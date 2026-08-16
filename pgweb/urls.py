@@ -40,7 +40,7 @@ urlpatterns = [
     re_path(r'^about/news/taglist.json/$', pgweb.news.views.taglist_json),
     re_path(r'^about/events/$', pgweb.events.views.main),
     re_path(r'^about/eventarchive/$', pgweb.events.views.archive),
-    re_path(r'^about/event/(?P<itemid>\d+)(<?P<slug>-.*)?/$', pgweb.events.views.item),
+    re_path(r'^about/event/(?P<itemid>\d+)(?P<slug>-.*)?/$', pgweb.events.views.item),
     re_path(r'^about/event/(?P<slug>[^/]+)-(?P<itemid>\d+)/$', pgweb.events.views.item),
     re_path(r'^about/featurematrix/$', pgweb.featurematrix.views.root),
     re_path(r'^about/featurematrix/detail/(\d+)/$', pgweb.featurematrix.views.detail_legacy),
@@ -56,7 +56,10 @@ urlpatterns = [
     re_path(r'^download/uploadyum/', pgweb.downloads.views.uploadyum),
     re_path(r'^download/js/yum.js', pgweb.downloads.views.yum_js),
 
+    re_path(r'^developer/beta/$', pgweb.core.views.beta_testing),
+
     re_path(r'^docs/$', pgweb.docs.views.root),
+    path(r'docs/books/', pgweb.docs.views.books),
     re_path(r'^docs/manuals/$', pgweb.docs.views.manuals),
     re_path(r'^docs/manuals/archive/$', pgweb.docs.views.manualarchive),
     re_path(r'^docs/release/$', pgweb.docs.views.release_notes_list),

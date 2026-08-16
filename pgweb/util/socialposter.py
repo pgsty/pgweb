@@ -99,11 +99,9 @@ class Mastodon(SocialPoster):
     def register(self, clientname):
         toadd = io.StringIO()
 
-        if (
-            getattr(self.settings, 'MASTODON_BASEURL', None) is None
-            or getattr(self.settings, 'MASTODON_CLIENTID', None) is None
-            or getattr(self.settings, 'MASTODON_CLIENTSECRET', None) is None
-        ):
+        if (getattr(self.settings, 'MASTODON_BASEURL', None) is None or
+                getattr(self.settings, 'MASTODON_CLIENTID', None) is None or
+                getattr(self.settings, 'MASTODON_CLIENTSECRET', None) is None):
             while True:
                 baseurl = input("Enter base URL (e.g. https://mastodon.social): ").rstrip('/')
                 parsed = urlparse(baseurl)

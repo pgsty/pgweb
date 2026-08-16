@@ -1,5 +1,10 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
+
+
+# The value we store in user.password for oauth logins. This is
+# a value that must not match any hashers.
+OAUTH_PASSWORD_STORE = 'oauth_signin_account_no_password'
 
 
 class CommunityAuthOrg(models.Model):
@@ -29,6 +34,8 @@ class CommunityAuthSite(models.Model):
                                        help_text="Supports receiving http POSTs with changes to accounts")
     push_ssh = models.BooleanField(null=False, blank=False, default=False,
                                    help_text="Wants to receive SSH keys in push changes")
+    require_groups = models.ManyToManyField(Group, blank=True,
+                                            help_text="登录用户必须至少属于下列一个用户组")
 
     def __str__(self):
         return self.name

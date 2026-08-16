@@ -18,7 +18,9 @@
       {%for entry in app.entries%}
       <tr class="row{%cycle '1' '2'%}">
 	<td class="nowrap"><a href="{{entry.url}}">{{entry.title}}</a></td>
-{%if entry.twomoderators%}
+{%if entry.embargoed %}
+	<td width="100%">已批准，正在等待发布禁发时段结束。</td>
+{%elif entry.twomoderators%}
 	<td width="100%">{{entry.twomoderators}}</td>
 {%endif%}
       </tr>

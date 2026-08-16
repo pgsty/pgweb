@@ -1,0 +1,35 @@
+{%extends "base/page.html"%}
+{%block title%}PostgreSQL 图书{%endblock%}
+{%block contents%}
+<h1>PostgreSQL 图书 <i class="fas fa-book"></i></h1>
+
+<p>以下书目由 PostgreSQL 社区维护，按出版时间从新到旧排列。书名与作者信息保留出版物原文。</p>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>封面</th>
+      <th>图书信息</th>
+    </tr>
+  </thead>
+    <tbody>
+{% for book in books %}
+      <tr>
+        <td>
+{% if book.url %}<a href="{{ book.url }}" target="_blank" rel="noopener">{% endif %}
+          <img class="bookcover" src="/media/img/empty.png" alt="{{ book.title }} 封面" style="background-position-x: {% widthratio forloop.counter0 1 -131 %}px">
+{% if book.url %}</a>{% endif %}
+        </td>
+        <td>
+          <strong>书名</strong>：{{ book.title }}<br />
+          <strong>作者</strong>：{{ book.author }}<br />
+          <strong>语言</strong>：{{ book.language_zh }}<br />
+          <strong>出版时对应版本</strong>：PostgreSQL {{ book.version }}<br />
+          <strong>载体</strong>：{{ book.format_zh }}<br />
+          <strong>出版时间</strong>：{{ book.published_zh }}
+        </td>
+      </tr>
+{% endfor %}
+  </tbody>
+</table>
+{%endblock%}

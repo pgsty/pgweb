@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.admin',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'pgweb.core.apps.CoreAppConfig',
     'pgweb.mailqueue',
     'pgweb.account',
@@ -116,7 +117,7 @@ INSTALLED_APPS = [
     'pgweb.contributors',
     'pgweb.profserv',
     'pgweb.lists',
-    'pgweb.security',
+    'pgweb.security.apps.SecurityAppConfig',
     'pgweb.sponsors',
     'pgweb.survey',
     'pgweb.misc',
@@ -124,6 +125,7 @@ INSTALLED_APPS = [
     'pgweb.search',
     'pgweb.pugs',
     'pgweb.util',
+    'pgweb.release.apps.ReleaseAppConfig',
 ]
 
 # Default format for date/time (as it changes between machines)
@@ -177,6 +179,12 @@ FTP_MASTERS = ()                                            # A tuple containing
                                                             # trusted to upload ftp structure data
 VARNISH_PURGERS = ()                                        # Extra servers that can do varnish purges through our queue
 DO_ESI = False                                              # Generate ESI tags
+TOPBAR_CACHE_SECONDS = 60                                   # Short cache for the database-driven top bar
+RELEASE_AUTO_PROCESS = False                                # Never mutate release data merely because migrations ran
+RELEASE_SEND_ANNOUNCEMENT_EMAIL = False                     # Email remains an explicit editorial action on pg.center
+SECURITY_CVE_AUTOLOAD = False                               # Run the CNA loader explicitly after review
+SECURITY_CVE_OVERWRITE_TEXT = False                         # Preserve locally translated CVE text by default
+SECURITY_CVE_PRUNE_MISSING = False                          # Never delete local CVEs merely because a JSON file is absent
 ARCHIVES_SEARCH_SERVER = "archives.postgresql.org"          # Where to post REST request for archives search
 ARCHIVES_SEARCH_PLAINTEXT = False                           # Contact ARCHIVES_SEARCH_SERVER with http instead of https
 ARCHIVES_FRONT_ADDRESS = "https://www.postgresql.org"       # Domain to read archives messages

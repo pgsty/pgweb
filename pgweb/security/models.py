@@ -1,14 +1,15 @@
 from django.db import models
-from django.core.validators import ValidationError
+from django.db.models import Func, F, Value
+from django.db.models.functions import Cast
+from django.core.validators import ValidationError, RegexValidator
 
 import re
 
 from pgweb.core.models import Version
 from pgweb.news.models import NewsArticle
+from pgweb.security.validators import CvssValidator
 
 import cvss
-
-vector_choices = {k: list(v.items()) for k, v in list(cvss.constants3.METRICS_VALUE_NAMES.items())}
 
 component_choices = (
     ('core server', 'Core server product'),
@@ -19,54 +20,25 @@ component_choices = (
     ('other', 'Other'),
 )
 
-
-re_cve = re.compile(r'^(\d{4})-(\d{4,7})$')
-
-
-def cve_validator(val):
-    if not re_cve.match(val):
-        raise ValidationError("Enter CVE in format (YYYY-NNNN (up to 7 N) without the CVE text")
-
-
-def make_cvenumber(cve):
-    """
-    creates a ``cvenumber`` from a CVE ID string (e.g. YYYY-DDDDD).
-
-    raises a validation error if the CVE ID string is invalid
-    """
-    m = re_cve.match(cve)
-    if not m:
-        raise ValidationError("Invalid CVE")
-    return 100000 * int(m.groups(0)[0]) + int(m.groups(0)[1])
-
-
-def other_vectors_validator(val):
-    if val != val.upper():
-        raise ValidationError("Vector must be uppercase")
-
-    try:
-        for vector in val.split('/'):
-            k, v = vector.split(':')
-            if k not in cvss.constants3.METRICS_VALUES:
-                raise ValidationError("Metric {0} is unknown".format(k))
-            if k in ('AV', 'AC', 'PR', 'UI', 'S', 'C', 'I', 'A'):
-                raise ValidationError("Metric {0} must be specified in the dropdowns".format(k))
-            if v not in cvss.constants3.METRICS_VALUES[k]:
-                raise ValidationError("Metric {0} has unknown value {1}. Valind ones are: {2}".format(
-                    k, v,
-                    ", ".join(list(cvss.constants3.METRICS_VALUES[k].keys())),
-                ))
-    except ValidationError:
-        raise
-    except Exception as e:
-        raise ValidationError("Failed to parse vectors: %s" % e)
+cve_regexp = r'^\d{4}-\d{4,5}$'
+cvss_vector_regexp = r'^CVSS:3.1/AV:(.)/AC:(.)/PR:(.)/UI:(.)/S:(.)/C:(.)/I:(.)/A:(.)$'
 
 
 class SecurityPatch(models.Model):
     public = models.BooleanField(null=False, blank=False, default=False)
     newspost = models.ForeignKey(NewsArticle, null=True, blank=True, on_delete=models.CASCADE)
-    cve = models.CharField(max_length=32, null=False, blank=True, validators=[cve_validator, ])
-    cvenumber = models.IntegerField(null=False, blank=False, db_index=True)
+    cve = models.CharField(max_length=32, null=False, blank=True, unique=True, validators=[
+        RegexValidator(cve_regexp, 'Enter CVE in format (YYYY-NNNNN (up to 5 N) without the CVE text'),
+    ])
+    cvenumber = models.GeneratedField(
+        expression=(
+            Cast(Func(F('cve'), Value('-'), Value(1), function='split_part'), output_field=models.IntegerField()) * 100000 +
+            Cast(Func(F('cve'), Value('-'), Value(2), function='split_part'), output_field=models.IntegerField())
+        ),
+        output_field=models.IntegerField(),
+        db_persist=True,
+        unique=True,
+    )
     detailslink = models.URLField(null=False, blank=True)
     description = models.TextField(null=False, blank=False)
     details = models.TextField(blank=True, null=True, help_text="Additional details about the security patch")
@@ -74,61 +46,62 @@ class SecurityPatch(models.Model):
 
     versions = models.ManyToManyField(Version, through='SecurityPatchVersion')
 
-    vector_av = models.CharField(max_length=1, null=False, blank=True, verbose_name="Attack Vector", choices=vector_choices['AV'])
-    vector_ac = models.CharField(max_length=1, null=False, blank=True, verbose_name="Attack Complexity", choices=vector_choices['AC'])
-    vector_pr = models.CharField(max_length=1, null=False, blank=True, verbose_name="Privileges Required", choices=vector_choices['PR'])
-    vector_ui = models.CharField(max_length=1, null=False, blank=True, verbose_name="User Interaction", choices=vector_choices['UI'])
-    vector_s = models.CharField(max_length=1, null=False, blank=True, verbose_name="Scope", choices=vector_choices['S'])
-    vector_c = models.CharField(max_length=1, null=False, blank=True, verbose_name="Confidentiality Impact", choices=vector_choices['C'])
-    vector_i = models.CharField(max_length=1, null=False, blank=True, verbose_name="Integrity Impact", choices=vector_choices['I'])
-    vector_a = models.CharField(max_length=1, null=False, blank=True, verbose_name="Availability Impact", choices=vector_choices['A'])
+    vector = models.CharField(max_length=100, null=False, blank=True, verbose_name="CVSS vector", validators=[
+        RegexValidator(cvss_vector_regexp, 'Enter a valid CVSS vector, including version (3.1)'),
+        CvssValidator,
+    ])
+
     legacyscore = models.CharField(max_length=1, null=False, blank=True, verbose_name='Legacy score', choices=(('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D')))
 
     def purge_urls(self):
         yield '/support/security/CVE-%s/' % self.cve
         yield '/support/security/'
 
-    def save(self, force_insert=False, force_update=False):
-        # Calculate a number from the CVE, that we can use to sort by. We need to
-        # do this, because CVEs can have 4 or 5 digit second parts...
-        if self.cve == '':
-            self.cvenumber = 0
-        else:
-            # note that the make_cvenumber function can raise a validation error
-            # if the value of CVE is not a valid CVE identifier
-            self.cvenumber = make_cvenumber(self.cve)
-        super(SecurityPatch, self).save(force_insert, force_update)
-
     def __str__(self):
         return self.cve
 
     @property
     def cvssvector(self):
-        if not self.vector_av:
+        if not self.vector:
             return None
-        s = 'AV:{0}/AC:{1}/PR:{2}/UI:{3}/S:{4}/C:{5}/I:{6}/A:{7}'.format(
-            self.vector_av, self.vector_ac, self.vector_pr, self.vector_ui,
-            self.vector_s, self.vector_c, self.vector_i, self.vector_a)
-        return s
+        return self.vector.split('/', 1)[1]  # Strip out the CVSS version (for now)
 
     @property
     def cvssscore(self):
         try:
-            c = cvss.CVSS3("CVSS:3.0/" + self.cvssvector)
+            c = cvss.CVSS3(self.vector)
             return c.base_score
         except Exception:
             return -1
 
-    @property
-    def cvelink(self):
-        return "https://access.redhat.com/security/cve/CVE-{0}".format(self.cve)
-
     class Meta:
         verbose_name_plural = 'Security patches'
         ordering = ('-cvenumber',)
+        constraints = (
+            models.CheckConstraint(
+                name='validate_cve_format',
+                condition=Func(F('cve'), Value(cve_regexp), function='regexp_like', output_field=models.BooleanField()),
+            ),
+            models.CheckConstraint(
+                name='validate_cvss_vector',
+                condition=models.Q(vector="") | Func(F('vector'), Value(cvss_vector_regexp), function='regexp_like', output_field=models.BooleanField()),
+            ),
+            models.CheckConstraint(
+                name='validate_component',
+                condition=models.Q(component__in=[c[0] for c in component_choices]),
+            )
+        )
 
 
 class SecurityPatchVersion(models.Model):
-    patch = models.ForeignKey(SecurityPatch, null=False, blank=False, on_delete=models.CASCADE)
-    version = models.ForeignKey(Version, null=False, blank=False, on_delete=models.CASCADE)
+    patch = models.ForeignKey(SecurityPatch, null=False, blank=False, on_delete=models.CASCADE, db_index=True)
+    version = models.ForeignKey(Version, null=False, blank=False, on_delete=models.CASCADE, db_index=True)
     fixed_minor = models.IntegerField(null=False, blank=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(name="unique_patch_version", fields=['patch', 'version']),
+        ]
+
+    def purge_urls(self):
+        yield '/support/security/{}/'.format(self.version.numtree)

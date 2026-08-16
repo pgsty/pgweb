@@ -21,6 +21,20 @@
 </p>
 {%endif%}
 
+{% if embargoes %}
+{%if objects.unapproved or objects.embargoed %}
+<h3>发布禁发时段</h3>
+<p>
+  当前安排了发布禁发时段。在这些时段内获批的{{title}}将暂缓发布，并在禁发时段结束后自动发布。
+</p>
+<ul>
+{% for e in embargoes %}
+  <li>{{ e.duration.lower|date:"Y-m-d H:i" }} - {{ e.duration.upper|date:"Y-m-d H:i" }}: {{ e.description }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+{% endif %}
+
 {% if objects.unapproved %}
 <h3>等待审核员批准</h3>
 <p>
@@ -42,8 +56,22 @@
 </ul>
 {% endif %}
 
-{% if objects.approved %}
+{% if objects.embargoed or objects.approved %}
 <h3>已批准</h3>
+{% endif %}
+
+{% if objects.embargoed %}
+<p>
+  这些{{title}}已获批准，但仍需等待发布禁发时段结束。禁发结束后，它们将很快自动发布。
+</p>
+<ul>
+  {%for o in objects.embargoed %}
+    <li>{{o}}</li>
+  {%endfor%}
+</ul>
+{% endif %}
+
+{% if objects.approved %}
 {%if not editapproved%}
 <p>
   这些{{title}}已获批准并已发布，无法再编辑。如需对这些对象进行任何更改，请联系

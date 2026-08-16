@@ -14,6 +14,7 @@ from django.contrib.auth import logout as django_logout
 from django.conf import settings
 from django.db import transaction, connection
 from django.db.models import Q, Prefetch
+from django.db.backends.postgresql.psycopg_any import DateTimeTZRange
 
 import base64
 import urllib.parse
@@ -32,7 +33,7 @@ from pgweb.util.helpers import HttpSimpleResponse, simple_form
 from pgweb.util.moderation import ModerationState
 from pgweb.util.markup import pgmarkdown
 
-from pgweb.news.models import NewsArticle
+from pgweb.news.models import NewsArticle, NewsPostingEmbargo
 from pgweb.events.models import Event
 from pgweb.core.models import Organisation, UserProfile, ModerationNotification
 from pgweb.core.models import OrganisationEmail
@@ -41,6 +42,7 @@ from pgweb.downloads.models import Product
 from pgweb.profserv.models import ProfessionalService
 
 from .models import CommunityAuthSite, CommunityAuthConsent, SecondaryEmail
+from .models import OAUTH_PASSWORD_STORE
 from .forms import PgwebAuthenticationForm, ConfirmSubmitForm
 from .forms import CommunityAuthConsentForm
 from .forms import SignupForm, SignupOauthForm
@@ -55,10 +57,6 @@ from pgweb.util.moderation import get_moderation_model_from_suburl
 from pgweb.mailqueue.util import send_simple_mail
 
 log = logging.getLogger(__name__)
-
-# The value we store in user.password for oauth logins. This is
-# a value that must not match any hashers.
-OAUTH_PASSWORD_STORE = 'oauth_signin_account_no_password'
 
 
 def _modobjs(qs):
@@ -105,6 +103,9 @@ objtypes = {
         'objects': lambda u: NewsArticle.objects.filter(org__managers=u),
         'tristate': True,
         'editapproved': False,
+        'embargoes': lambda: NewsPostingEmbargo.objects.filter(
+            duration__overlap=DateTimeTZRange(datetime.now(), None),
+        ),
     },
     'events': {
         'title': 'event',
@@ -157,7 +158,7 @@ def profile(request):
     if request.method == 'POST':
         # Process this form
         userform = UserForm(can_change_email, secondaryaddresses, data=request.POST, instance=request.user)
-        profileform = UserProfileForm(data=request.POST, instance=profile)
+        profileform = UserProfileForm(request.user, data=request.POST, instance=profile)
         secondaryemailform = AddEmailForm(request.user, data=request.POST)
         if contrib:
             contribform = ContributorForm(data=request.POST, instance=contrib)
@@ -202,7 +203,7 @@ def profile(request):
     else:
         # Generate form
         userform = UserForm(can_change_email, secondaryaddresses, instance=request.user)
-        profileform = UserProfileForm(instance=profile)
+        profileform = UserProfileForm(request.user, instance=profile)
         secondaryemailform = AddEmailForm(request.user)
         if contrib:
             contribform = ContributorForm(instance=contrib)
@@ -240,6 +241,7 @@ def listobjects(request, objtype):
             'approved': o['objects'](request.user).filter(modstate=ModerationState.APPROVED),
             'unapproved': o['objects'](request.user).filter(modstate=ModerationState.PENDING),
             'inprogress': o['objects'](request.user).filter(modstate=ModerationState.CREATED),
+            'embargoed': o['objects'](request.user).filter(modstate=ModerationState.EMBARGOED),
         }
     else:
         objects = {
@@ -254,6 +256,7 @@ def listobjects(request, objtype):
         'submit_header': o.get('submit_header', None),
         'suburl': objtype,
         'tristate': o.get('tristate', False),
+        'embargoes': o.get('embargoes', []),
     })
 
 
@@ -406,6 +409,7 @@ def login(request):
                                            'oauth_providers': [(k, v) for k, v in sorted(settings.OAUTH.items())],
                                        })(request)
 
+
 @require_http_methods(["GET", "POST"])
 def logout(request):
     django_logout(request)
@@ -427,6 +431,8 @@ def resetpwd(request):
     # recover. So implement our own, since it's quite the trivial feature.
     if request.method == "POST":
         try:
+            if 'email' not in request.POST:
+                return HttpResponse("Email must be specified", status=400)
             u = User.objects.get(email__iexact=request.POST['email'])
             if u.password == OAUTH_PASSWORD_STORE:
                 return HttpSimpleResponse(request, "Account error", "This account cannot change password as it's connected to a third party login site.")
@@ -677,11 +683,16 @@ def communityauth(request, siteid):
             },
         )(request)
 
-    # When we reach this point, the user *has* already been authenticated.
-    # The request variable "su" *may* contain a suburl and should in that
-    # case be passed along to the site we're authenticating for. And of
-    # course, we fill a structure with information about the user.
+    # At this point, the user has been authenticated.
 
+    # If this site is group-restricted, verify it
+    if site.require_groups.exists() and not site.require_groups.filter(id__in=request.user.groups.all()).exists():
+        return render_pgweb(request, 'account', 'account/communityauth_nogroup.html', {
+            'site': site,
+        })
+
+    # Make sure we have some data to fill in before we redirect, so downstream consumers
+    # don't need to verify that.
     if request.user.first_name == '' or request.user.last_name == '' or request.user.email == '':
         return render_pgweb(request, 'account', 'account/communityauth_noinfo.html', {
         })

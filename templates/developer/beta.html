@@ -20,38 +20,39 @@
     虽然 PostgreSQL 代码持续经受大量自动化和手动测试，但 beta 版本可能存在严重缺陷。
     在 beta 开发期间，功能可能随时发生不向后兼容的变更，甚至可能被完全移除。</p>
 
-<p>
-  <strong>PostgreSQL 18 已发布</strong>。版本 19 的第一个 beta 尚未提供测试。
-  版本 19 的 beta 测试将于 2026 年 5 月开始。
-</p>
+{% if not betaversion %}
+  <p>
+    <strong>PostgreSQL {{ currentversion.numtree }} 已发布</strong>。
+    PostgreSQL {{ currentversion.numtree|add:1 }} 的首个 Beta 版本尚未开放测试。
+  </p>
+{% else %}
 
-{% comment %}
-<p>
-  当前的 beta 发布版本是 <strong>PostgreSQL 18 RC 1</strong>。有关当前 beta 版本的更多信息
-  以及如何进行测试，请查看以下链接。
-</p>
+  <p>
+    当前的测试版本是 <strong>PostgreSQL {{ betaversion.versionstring_spaced }}</strong>。
+    有关当前版本及测试方法的更多信息，请查看以下链接。
+  </p>
 
-<ul>
-  <li>
-    <a href="/about/news/postgresql-18-rc-1-released-3130/">
-      PostgreSQL 18 RC 1 发布公告
-    </a>
-  </li>
-  <li>
-    <a href="https://www.postgresql.org/ftp/source/v18rc1/">下载 PostgreSQL 18 RC 1 源代码</a>
-  </li>
-  <li>
-    <a href="/docs/18/">PostgreSQL 18 文档</a>
-  </li>
-  <li>
-    <a href="/docs/18/release-18.html">PostgreSQL 18 发行说明</a>
-  </li>
-  <li>
-    <a href="https://wiki.postgresql.org/wiki/PostgreSQL_18_Open_Items">PostgreSQL 18 待解决事项</a>
+  <ul>
+{% if release %}
+    <li>
+      <a href="{{ release.news.url }}">PostgreSQL {{ betaversion.versionstring_spaced }} 发布公告</a>
+    </li>
+{% endif %}
+    <li>
+      <a href="https://www.postgresql.org/ftp/source/v{{ betaversion.versionstring }}/">下载 PostgreSQL {{ betaversion.versionstring_spaced }} 源代码</a>
+    </li>
+    <li>
+      <a href="/docs/{{ betaversion.numtree }}/">PostgreSQL {{ betaversion.numtree }} 文档</a>
+    </li>
+    <li>
+      <a href="/docs/{{ betaversion.numtree }}/release-{{ betaversion.numtree }}.html">PostgreSQL {{ betaversion.numtree }} 发行说明</a>
+    </li>
+    <li>
+      <a href="https://wiki.postgresql.org/wiki/PostgreSQL_{{ betaversion.numtree }}_Open_Items">PostgreSQL {{ betaversion.numtree }} 待解决事项</a>
   </li>
   <li>
     <a href="https://wiki.postgresql.org/wiki/HowToBetaTest" target="_blank" rel="noopener">PostgreSQL Beta 测试指南</a>
   </li>
 </ul>
-{% endcomment %}
+{% endif %}
 {%endblock%}

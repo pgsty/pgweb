@@ -138,6 +138,15 @@ def joinandor(value, andor):
 
 
 @register.filter()
+def joinzh(value):
+    """Join display values using the punctuation expected in Chinese prose."""
+    items = [str(item) for item in value]
+    if len(items) < 2:
+        return ''.join(items)
+    return '、'.join(items[:-1]) + ' 与 ' + items[-1]
+
+
+@register.filter()
 def list_templates(value):
     for f in Path(os.path.join(settings.PROJECT_ROOT, '../templates/', value)).iterdir():
         if f.is_file() and f.suffix == '.html':
@@ -147,6 +156,11 @@ def list_templates(value):
 @register.filter()
 def sort_lower(value, reverse=False):
     return sorted(value, key=lambda x: x.lower(), reverse=reverse)
+
+
+@register.filter(name="max")
+def max_filter(value):
+    return max(value)
 
 
 @register.filter()

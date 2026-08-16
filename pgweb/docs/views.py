@@ -13,6 +13,8 @@ import re
 from pgweb.util.contexts import render_pgweb
 from pgweb.util.helpers import template_to_string
 from pgweb.util.misc import send_template_mail
+from pgweb.util.decorators import xkey
+from pgweb.util.yamldataloader import YamlDataLoader
 
 from pgweb.core.models import Version, UserSubmission
 from pgweb.util.db import exec_to_dict
@@ -23,6 +25,36 @@ from .forms import DocCommentForm
 
 re_cjk = re.compile(r'[\u4e00-\u9fff]')
 re_whitespace = re.compile(r'\s+')
+re_book_date = re.compile(r'^([A-Za-z]+) (\d{4})(.*)$')
+
+BOOK_LANGUAGES_ZH = {
+    'English': '英语',
+    'French': '法语',
+    'German': '德语',
+    'Russian': '俄语',
+    'Spanish': '西班牙语',
+    'Turkish': '土耳其语',
+}
+BOOK_FORMATS_ZH = {
+    'eBook': '电子书',
+    'Hardback': '精装书',
+    'Paperback': '平装书',
+    'PDF': 'PDF',
+}
+BOOK_MONTHS_ZH = {
+    'January': '1月',
+    'February': '2月',
+    'March': '3月',
+    'April': '4月',
+    'May': '5月',
+    'June': '6月',
+    'July': '7月',
+    'August': '8月',
+    'September': '9月',
+    'October': '10月',
+    'November': '11月',
+    'December': '12月',
+}
 
 
 def _clean_meta_description(text):
@@ -417,6 +449,46 @@ def release_notes(request, version):
     })
     r['xkey'] = 'pgdocs_{}'.format(major_version)
     return r
+
+
+class BooksData(YamlDataLoader):
+    DATAFILE = "books.yaml"
+
+
+booksdata = BooksData()
+
+
+def _localize_book(book):
+    """Keep upstream book metadata canonical while supplying Chinese labels."""
+    localized = dict(book)
+    localized['language_zh'] = BOOK_LANGUAGES_ZH.get(book['language'], book['language'])
+    localized['format_zh'] = '、'.join(
+        BOOK_FORMATS_ZH.get(part.strip(), part.strip())
+        for part in book['format'].split(',')
+    )
+
+    published = book['published']
+    match = re_book_date.match(published)
+    if match and match.group(1) in BOOK_MONTHS_ZH:
+        suffix = match.group(3)
+        if suffix == ' (auf Deutsch/in German)':
+            suffix = '（德语版）'
+        localized['published_zh'] = '{}年{}{}'.format(
+            match.group(2),
+            BOOK_MONTHS_ZH[match.group(1)],
+            suffix,
+        )
+    else:
+        localized['published_zh'] = published
+    return localized
+
+
+@xkey('data_books')
+@content_sources('style', "'unsafe-inline'")
+def books(request):
+    return render_pgweb(request, 'docs', 'docs/books.html', {
+        'books': [_localize_book(book) for book in booksdata.get()['books']],
+    })
 
 
 @login_required

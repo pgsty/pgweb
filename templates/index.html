@@ -46,27 +46,9 @@
       <h2>最新版本</h2>
       <div class="text">
         <p>
-          <strong>
-            2026-05-14 -
-            <a href="/about/news/postgresql-184171016141518-1423-3294/">
-              PostgreSQL 18.4、17.10、16.14、15.18 和 14.23 发布！
-            </a>
-          </strong>
+          <strong>{{ release.date|date:"Y-m-d" }} - <a href="{{ release.news.url }}">{% include "releasetitle.html" %}</a></strong>
         </p>
-        <p>
-          PostgreSQL 全球开发组已<a href="/download/">发布</a>覆盖所有受支持版本的更新，包括
-          <a href="/about/news/postgresql-184171016141518-1423-3294/">18.4、17.10、16.14、15.18 和 14.23</a>。
-          本次发布修复了 11 个安全漏洞，以及过去几个月报告的 60 多个错误。
-        </p>
-        <p>
-          有关本次发布的更多信息，请查阅<a href="/docs/release/">发布说明</a>。您可以从<a href="/download/">下载</a>页面获取 PostgreSQL。
-        </p>
-        <p>
-          PostgreSQL 14 将于 2026 年 11 月 12 日停止接收修复。如果您在生产环境中运行 PostgreSQL 14，建议开始规划升级到更新的受支持 PostgreSQL 版本。更多信息请参阅<a href="/support/versioning/">版本策略</a>。
-        </p>
-        <p>
-          有关 PostgreSQL 18（当前最新的大版本）的更多信息，请参阅<a href="/about/press/">完整新闻稿</a>以及<a href="/about/press/">新闻资料包</a>中的<a href="/about/press/">发布公告译文</a>。
-        </p>
+        {% include "releasetext.html" %}
         <ul>
           {% for v in versions %}
             <li class="{% cycle '' 'pg-bg-gray' %}"><strong>{{ v.numtree }}.{{ v.latestminor }}</strong> &middot; {{ v.reldate|date:"Y-m-d" }} &middot; <a href="/docs/{{ v.numtree }}/{{ v.relnotes }}">说明</a></li>
@@ -149,27 +131,23 @@
       <!-- Featured Post -->
         <header>
           <h3>
-            <a href="/about/news/postgresql-184171016141518-1423-3294/">
-              PostgreSQL 18.4、17.10、16.14、15.18 和 14.23 发布！
-            </a>
+            <a href="{{ release.news.url }}">{% include "releasetitle.html" %}</a>
           </h3>
           <ul class="meta">
-            <li><i class="far fa-clock"></i>&nbsp;2026-05-14</li>
-            <!--<li><i class="far fa-comments"></i> 0</li>-->
+            <li><i class="far fa-clock"></i>&nbsp;{{ release.date|date:"Y-m-d" }}</li>
           </ul>
         </header>
-        <p>
-          PostgreSQL 全球开发组已<a href="/download/">发布</a>覆盖所有受支持版本的更新，包括
-          <a href="/about/news/postgresql-184171016141518-1423-3294/">18.4、17.10、16.14、15.18 和 14.23</a>。
-          本次发布修复了 11 个安全漏洞，以及过去几个月报告的 60 多个错误。您可以在<a href="/docs/release/">发布说明</a>中找到修复的详细信息。
-        </p>
-        <p>
-          PostgreSQL 14 将于 2026 年 11 月 12 日停止接收修复。如果您在生产环境中运行 PostgreSQL 14，建议开始规划升级到更新的受支持 PostgreSQL 版本。更多信息请参阅<a href="/support/versioning/">版本策略</a>。
-        </p>
+        {% include "releasetext.html" %}
         <ul class="bold">
-          <li><a href="/about/news/postgresql-184171016141518-1423-3294/">发布公告</a></li>
-          <li><a href="/docs/release/">发布说明</a></li>
-          <li><a href="/about/press/">PostgreSQL 18 媒体资料包</a></li>
+          <li><a href="{{ release.news.url }}">发布公告</a></li>
+          <li><a href="/docs/release/">发行说明</a></li>
+{% if release.type == "minor" or release.type == "major" %}
+{% with newestversion=release.versions|max %}
+          <li><a href="/about/press/">PostgreSQL {{ newestversion.major }} 媒体资料包</a></li>
+{% endwith %}
+{% elif release.type == "alpha" or release.type == "beta" or release.type == "rc" %}
+          <li><a href="https://wiki.postgresql.org/wiki/PostgreSQL_{{ release.versions.0.major }}_Open_Items">PostgreSQL {{ release.versions.0.major }} 待解决事项</a></li>
+{% endif %}
           <li><a href="/support/versioning/">版本策略</a></li>
           <li><a href="/download/">下载</a></li>
         </ul>
