@@ -75,7 +75,7 @@ sitenav = {
     'support': [
         {'title': '支持', 'link': '/support/'},
         {'title': '版本策略', 'link': '/support/versioning/'},
-        {'title': '安全', 'link': '/support/security/'},
+        {'title': '安全信息', 'link': '/support/security/'},
         {'title': '专业服务', 'link': '/support/professional_support/'},
         {'title': '托管方案', 'link': '/support/professional_hosting/'},
         {'title': '报告 Bug', 'link': '/account/submitbug/'},

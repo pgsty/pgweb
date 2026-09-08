@@ -881,9 +881,59 @@ body.pg-drawer-open {
 /* ------------------------------------------------------------ shout box */
 
 .pg-shout {
+  position: relative;
   background: linear-gradient(90deg, var(--pg-blue-deep), var(--pg-blue));
   color: #fff;
   text-align: center;
+}
+
+html[data-shout="off"] .pg-shout {
+  display: none;
+}
+
+/* Close control: appears while the bar is hovered or focused (always on
+   touch screens), sits at the right edge of the bar. */
+.pg-shout__close {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  margin-top: -13px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 120ms ease, background-color var(--pg-dur) var(--pg-ease), color var(--pg-dur) var(--pg-ease);
+}
+
+.pg-shout:hover .pg-shout__close,
+.pg-shout__close:focus-visible {
+  opacity: 1;
+}
+
+.pg-shout__close:hover,
+.pg-shout__close:focus-visible {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+
+.pg-shout__close .pg-icon {
+  display: block;
+  width: 15px;
+  height: 15px;
+}
+
+@media (hover: none) {
+  .pg-shout__close {
+    opacity: 1;
+  }
 }
 
 .pg-shout__inner {
@@ -891,8 +941,8 @@ body.pg-drawer-open {
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 6px;
+  padding-bottom: 6px;
 }
 
 .pg-shout__news {
@@ -914,8 +964,9 @@ body.pg-drawer-open {
 
 .pg-shout__note {
   margin: 0;
-  color: rgba(255, 255, 255, 0.78);
-  font-size: 12.5px;
+  padding: 0 32px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 13px;
   font-weight: 400;
   line-height: 1.6;
 }
@@ -1315,10 +1366,23 @@ body.pg-drawer-open {
   box-shadow: 0 0 0 3px rgba(126, 214, 160, 0.25);
 }
 
+.pg-hero__chip {
+  max-width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+  text-align: center;
+}
+
 .pg-hero__chip strong {
   color: #fff !important;
-  font-family: var(--pg-font-mono);
   font-weight: 600;
+  line-height: 1.5;
+}
+
+.pg-hero__chip time {
+  color: rgba(230, 240, 248, 0.72);
+  font-family: var(--pg-font-mono);
+  font-size: 12px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1990,6 +2054,30 @@ body.pg-drawer-open {
   .pg-hero__inner {
     padding-top: 48px;
     padding-bottom: 56px;
+  }
+
+  /* The chip carries a whole headline here: flow it as text with the dot
+     inline before the first word and the date on its own line. */
+  .pg-hero__chip {
+    display: block;
+    padding: 8px 14px;
+    border-radius: 14px;
+    font-size: 12.5px;
+  }
+
+  .pg-hero__chip .pg-dot {
+    display: inline-block;
+    margin: 0 6px 2px 0;
+    vertical-align: middle;
+  }
+
+  .pg-hero__chip strong {
+    display: inline;
+  }
+
+  .pg-hero__chip time {
+    display: block;
+    margin-top: 2px;
   }
 
   .pg-hero__title {
@@ -2840,61 +2928,20 @@ button.pg-script-copy-btn.pg-code__btn {
   }
 }
 
-/* Statistics tiles (about page): a quiet grid of figures instead of the
-   upstream's solid blue slabs. The figure sits large in the heading colour
-   with tabular numerals; the label is a small muted line beneath it. */
+/* Statistics slabs (about page): upstream's solid blue grid, kept as is;
+   only the type is tuned (a touch larger and bolder, tabular figures). */
 
-.pg-stats {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  margin: 1rem 0 2rem;
+.pg-page .feature-grid {
+  padding: 2.6em 0.75em;
 }
 
-.pg-stat {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 4px;
-  padding: 20px 22px 18px;
-  border: 1px solid var(--pg-line);
-  border-radius: 12px;
-  background: var(--pg-surface);
-  transition: border-color var(--pg-dur) var(--pg-ease),
-              box-shadow var(--pg-dur) var(--pg-ease);
-}
-
-.pg-stat:hover {
-  border-color: var(--pg-line-strong);
-  box-shadow: var(--pg-shadow-sm);
-}
-
-.pg-stat__value {
-  color: var(--pg-heading) !important;
-  font-family: var(--pg-font-mono);
-  font-size: 1.85rem;
-  font-weight: 600;
-  line-height: 1.1;
-  letter-spacing: -0.01em;
+.pg-page .feature-grid h3 {
+  margin: 0;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   font-variant-numeric: tabular-nums;
-}
-
-.pg-stat__label {
-  color: var(--pg-muted);
-  font-size: 13.5px;
-  line-height: 1.5;
-}
-
-@media (max-width: 991.98px) {
-  .pg-stats {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 479.98px) {
-  .pg-stats {
-    grid-template-columns: minmax(0, 1fr);
-  }
 }
 
 /* Documentation pages keep the upstream fluid layout; nudge only spacing. */

@@ -66,6 +66,14 @@
     if (drawerIsOpen() && window.innerWidth >= 992) setDrawer(false);
   });
 
+  // Notice bar: the close control hides it and remembers the choice.
+  document.querySelectorAll('[data-pg-shout-close]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      document.documentElement.setAttribute('data-shout', 'off');
+      try { localStorage.setItem('pgShout', 'off'); } catch (e) {}
+    });
+  });
+
   // Shadow under the sticky header once the page has scrolled.
   if (header) {
     const onScroll = () => header.classList.toggle('pg-scrolled', window.scrollY > 4);

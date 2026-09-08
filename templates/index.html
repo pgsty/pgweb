@@ -5,14 +5,12 @@
   <meta name="description" content="PostgreSQL 官方网站中文版，世界上最先进的开源数据库" />
 {%endblock%}
 {%block shout%}
-{% if topbarnews or do_esi %}
 <div class="pg-shout">
   <div class="pg-container pg-shout__inner">
-    <p class="pg-shout__news"><i class="fas fa-newspaper" aria-hidden="true"></i><span>{%include "base/esi.html" with includepage="/include/topbar" %}</span></p>
+    <button class="pg-shout__close" type="button" title="关闭提示" aria-label="关闭提示" data-pg-shout-close>{% include "base/icon.html" with name="close" %}</button>
     <p class="pg-shout__note"><a href="https://pg.center/">pg.center</a> 提供对 <a href="https://www.postgresql.org/" target="_blank" rel="noopener">postgresql.org</a> 官网内容的中文翻译，由 <a href="https://pigsty.cc/" target="_blank" rel="noopener">Pigsty</a> 团队维护，与 <a href="/about/governance/">PGDG</a> 无隶属关系。</p>
   </div>
 </div>
-{% endif %}
 {%endblock%}
 {%block layoutblock%}
 <main class="pg-home">
@@ -22,13 +20,13 @@
   <div class="pg-hero__media" aria-hidden="true"></div>
   <div class="pg-hero__shade" aria-hidden="true"></div>
   <div class="pg-container pg-hero__inner">
-    {% with v=versions.0 %}{% if v %}
-    <a class="pg-hero__chip" href="/docs/{{ v.numtree }}/{{ v.relnotes }}" title="PostgreSQL {{ v.numtree }}.{{ v.latestminor }} 发行说明">
+    {% if release %}
+    <a class="pg-hero__chip" href="{{ release.news.url }}" title="查看发布公告">
       <span class="pg-dot" aria-hidden="true"></span>
-      <span>最新版本</span>
-      <strong>PostgreSQL {{ v.numtree }}.{{ v.latestminor }}</strong>
+      <strong>{% include "releasetitle.html" %}</strong>
+      <time datetime="{{ release.date|date:"Y-m-d" }}">{{ release.date|date:"Y-m-d" }}</time>
     </a>
-    {% endif %}{% endwith %}
+    {% endif %}
     <h1 class="pg-hero__title">PostgreSQL：世界上最先进的开源关系型数据库</h1>
     {% with v=versions.0 %}
     <div class="pg-hero__actions">
