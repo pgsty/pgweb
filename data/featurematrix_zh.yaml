@@ -932,7 +932,7 @@ features:
     description: 这减少了 vacuum 的开销，因为可见性图只跟踪需要被 vacuum 的页面。
   Certificate authentication with postgres_fdw:
     name: postgres_fdw 的证书身份验证
-    description: '[postgres_fdw](https://www.postgresql.org/docs/13/postgres-fdw.html) 现在可以使用内置的[证书身份验证](https://www.postgresql.org/docs/current/auth-cert.html)机制。
+    description: '[postgres_fdw](https://www.postgresql.org/docs/13/postgres-fdw.html) 现在可以使用内置的 [证书身份验证](https://www.postgresql.org/docs/current/auth-cert.html) 机制。
 
 
       更多信息请访问 [postgres_fdw 文档](https://www.postgresql.org/docs/13/postgres-fdw.html#id-1.11.7.42.10)'

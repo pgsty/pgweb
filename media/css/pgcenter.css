@@ -75,7 +75,8 @@
   --pg-hover: #1f7ac0;
   --pg-primary: #336791;
   --pg-primary-hover: #264d6d;
-  --pg-code-bg: #eef3f7;
+  --pg-code-bg: #ffffff;
+  --pg-code-inline-bg: rgba(28, 43, 58, 0.06);
 
   /* chrome */
   --pg-header-bg: rgba(243, 246, 249, 0.86);
@@ -180,6 +181,7 @@
   --pg-primary: #3a7ab0;
   --pg-primary-hover: #4a8cc4;
   --pg-code-bg: #0b1119;
+  --pg-code-inline-bg: rgba(230, 237, 244, 0.08);
   --pg-header-bg: rgba(14, 21, 29, 0.88);
   --pg-shadow-sm: 0 4px 18px rgba(2, 8, 18, 0.35);
   --pg-shadow-md: 0 14px 44px rgba(2, 8, 18, 0.5);
@@ -286,14 +288,33 @@ b, strong, th {
   color: var(--pg-ink) !important;
 }
 
+pre,
+code,
+kbd,
+samp {
+  font-family: var(--pg-font-mono);
+}
+
 pre {
   border-color: var(--pg-line);
   border-radius: var(--pg-radius-sm);
   background-color: var(--pg-code-bg);
+  font-size: 13.5px;
+  line-height: 1.65;
 }
 
 code {
-  background-color: var(--pg-code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+  background-color: var(--pg-code-inline-bg);
+  font-size: 0.9em;
+}
+
+pre code {
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: inherit;
 }
 
 .btn {
@@ -2295,30 +2316,28 @@ body.pg-drawer-open {
 
 .pg-page .table.matrix {
   font-size: 13.5px;
-  --fm-yes: #1f7a4d;
-  --fm-yes-bg: rgba(31, 122, 77, 0.12);
-  --fm-yes-cell: rgba(31, 122, 77, 0.045);
-  --fm-no: #a63d3d;
-  --fm-no-bg: rgba(166, 61, 61, 0.11);
-  --fm-no-cell: rgba(166, 61, 61, 0.04);
-  --fm-obs: #8a6516;
-  --fm-obs-bg: rgba(178, 132, 36, 0.14);
-  --fm-obs-cell: rgba(178, 132, 36, 0.045);
+  /* Painted cells: a soft green / rose / amber ground with a deep ink of
+     the same hue, so the colour reads at a glance and the word stays
+     legible. Dark mode uses the same hues at low lightness. */
+  --fm-yes: #1c5a3a;
+  --fm-yes-bg: #d9efe1;
+  --fm-no: #7a2c2c;
+  --fm-no-bg: #f6dcdc;
+  --fm-obs: #6b4b0f;
+  --fm-obs-bg: #f6e8c3;
   --fm-unk: var(--pg-muted);
-  --fm-unk-bg: var(--pg-wash);
-  --fm-unk-cell: transparent;
+  --fm-unk-bg: var(--pg-surface-2);
 }
 
 [data-theme="dark"] .pg-page .table.matrix {
-  --fm-yes: #7ed6a0;
-  --fm-yes-bg: rgba(126, 214, 160, 0.14);
-  --fm-yes-cell: rgba(126, 214, 160, 0.05);
-  --fm-no: #f08a97;
-  --fm-no-bg: rgba(240, 138, 151, 0.14);
-  --fm-no-cell: rgba(240, 138, 151, 0.05);
-  --fm-obs: #e6b566;
-  --fm-obs-bg: rgba(230, 181, 102, 0.16);
-  --fm-obs-cell: rgba(230, 181, 102, 0.05);
+  --fm-yes: #a5e6c0;
+  --fm-yes-bg: #17352a;
+  --fm-no: #f2a6ae;
+  --fm-no-bg: #3b1f24;
+  --fm-obs: #e8c97e;
+  --fm-obs-bg: #3a2f16;
+  --fm-unk: var(--pg-muted);
+  --fm-unk-bg: #1b2735;
 }
 
 .pg-page .table.matrix > thead > tr > th {
@@ -2349,41 +2368,32 @@ body.pg-drawer-open {
   vertical-align: middle;
 }
 
-.pg-page .table.matrix td.fm_yes { background-color: var(--fm-yes-cell); color: var(--fm-yes); }
-.pg-page .table.matrix td.fm_no { background-color: var(--fm-no-cell); color: var(--fm-no); }
-.pg-page .table.matrix td.fm_obs { background-color: var(--fm-obs-cell); color: var(--fm-obs); }
-.pg-page .table.matrix td.fm_unk { background-color: var(--fm-unk-cell); color: var(--fm-unk); }
-
-.pg-page .table.matrix td.fm_yes::before,
-.pg-page .table.matrix td.fm_no::before,
-.pg-page .table.matrix td.fm_obs::before,
-.pg-page .table.matrix td.fm_unk::before {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  min-width: 64px;
-  height: 24px;
-  padding: 0 10px;
-  border-radius: 999px;
-  font-size: 12px;
+.pg-page .table.matrix td.fm_yes,
+.pg-page .table.matrix td.fm_no,
+.pg-page .table.matrix td.fm_obs,
+.pg-page .table.matrix td.fm_unk {
+  font-size: 13px;
   font-weight: 600;
-  line-height: 1;
   letter-spacing: 0.01em;
-  white-space: nowrap;
+  transition: filter var(--pg-dur) var(--pg-ease);
 }
 
-.pg-page .table.matrix td.fm_yes::before { content: "\2713  Yes"; background: var(--fm-yes-bg); }
-.pg-page .table.matrix td.fm_no::before { content: "\2715  No"; background: var(--fm-no-bg); }
-.pg-page .table.matrix td.fm_obs::before { content: "Obsolete"; background: var(--fm-obs-bg); }
-.pg-page .table.matrix td.fm_unk::before { content: "?"; min-width: 32px; background: var(--fm-unk-bg); }
+.pg-page .table.matrix td.fm_yes { background-color: var(--fm-yes-bg); color: var(--fm-yes); }
+.pg-page .table.matrix td.fm_no { background-color: var(--fm-no-bg); color: var(--fm-no); }
+.pg-page .table.matrix td.fm_obs { background-color: var(--fm-obs-bg); color: var(--fm-obs); }
+.pg-page .table.matrix td.fm_unk { background-color: var(--fm-unk-bg); color: var(--fm-unk); }
+
+.pg-page .table.matrix td.fm_yes::before { content: "Yes"; }
+.pg-page .table.matrix td.fm_no::before { content: "No"; }
+.pg-page .table.matrix td.fm_obs::before { content: "Obsolete"; }
+.pg-page .table.matrix td.fm_unk::before { content: "?"; }
 
 .pg-page .table.matrix > tbody > tr:hover > td {
-  filter: brightness(0.97);
+  filter: brightness(0.96);
 }
 
 [data-theme="dark"] .pg-page .table.matrix > tbody > tr:hover > td {
-  filter: brightness(1.15);
+  filter: brightness(1.18);
 }
 
 /* Version filter box above the matrix */
@@ -2456,10 +2466,453 @@ body.pg-drawer-open {
   }
 }
 
+/* Code blocks. code.js wraps every <pre> on content and manual pages in
+   .pg-code: one framed surface with the copy action floating in the
+   top-right corner, shown on hover, keyboard focus, or always on touch
+   screens. Upstream's .pg-script-container (copy / copy-without-sudo)
+   takes the same frame. */
+
+.pg-code {
+  position: relative;
+  margin: 0.9rem 0 1.25rem;
+  border: 1px solid var(--pg-line);
+  border-radius: 12px;
+  background: var(--pg-code-bg);
+  overflow: hidden;
+}
+
+.pg-code > pre,
+.pg-code > pre.code,
+#docContent .pg-code > pre {
+  margin: 0;
+  padding: 14px 56px 14px 18px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 13.5px;
+  line-height: 1.65;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pg-code > pre.code {
+  display: block;
+  min-height: 0;
+  align-items: normal;
+}
+
+.pg-code__actions {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+.pg-code:hover > .pg-code__actions,
+.pg-code:focus-within > .pg-code__actions,
+.pg-code__actions:has([data-state]) {
+  opacity: 1;
+}
+
+@media (hover: none) {
+  .pg-code__actions {
+    opacity: 1;
+  }
+}
+
+.pg-code__btn,
+button.pg-script-copy-btn.pg-code__btn {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--pg-line);
+  border-radius: 7px;
+  background: var(--pg-code-bg);
+  color: var(--pg-muted);
+  box-shadow: 0 1px 2px rgba(25, 49, 69, 0.06);
+  cursor: pointer;
+  transition: background-color var(--pg-dur) var(--pg-ease),
+              color var(--pg-dur) var(--pg-ease),
+              border-color var(--pg-dur) var(--pg-ease);
+}
+
+.pg-code__btn:hover,
+.pg-code__btn:focus-visible {
+  border-color: var(--pg-line-strong);
+  background: var(--pg-surface-2);
+  color: var(--pg-ink);
+}
+
+.pg-code__btn .pg-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.pg-code__btn .pg-icon--check {
+  display: none;
+}
+
+.pg-code__btn[data-state="success"] {
+  color: #1f7a4d;
+  border-color: rgba(31, 122, 77, 0.4);
+}
+
+[data-theme="dark"] .pg-code__btn[data-state="success"] {
+  color: #7ed6a0;
+}
+
+.pg-code__btn[data-state="success"] .pg-icon:not(.pg-icon--check) {
+  display: none;
+}
+
+.pg-code__btn[data-state="success"] .pg-icon--check {
+  display: block;
+}
+
+.pg-code__btn[data-state="error"] {
+  color: #a63d3d;
+}
+
+/* Syntax colours: highlight.js token classes on the theme palette. */
+
+.hljs {
+  color: var(--pg-ink);
+}
+
+.hljs-comment,
+.hljs-quote,
+.hljs-meta .hljs-string {
+  color: var(--pg-muted);
+  font-style: italic;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-type,
+.hljs-operator {
+  color: #264d6d;
+  font-weight: 600;
+}
+
+.hljs-string,
+.hljs-regexp,
+.hljs-addition {
+  color: #1f7a4d;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-symbol,
+.hljs-bullet {
+  color: #8a6516;
+}
+
+.hljs-attr,
+.hljs-attribute,
+.hljs-section,
+.hljs-name,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-title,
+.hljs-deletion {
+  color: #9a2f3f;
+}
+
+.hljs-meta,
+.hljs-doctag,
+.hljs-punctuation {
+  color: var(--pg-ink-2);
+}
+
+.hljs-params {
+  color: var(--pg-blue);
+}
+
+.hljs-link {
+  color: var(--pg-ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--pg-line-strong);
+  text-underline-offset: 3px;
+}
+
+.hljs-emphasis {
+  font-style: italic;
+}
+
+.hljs-strong {
+  font-weight: 700;
+}
+
+[data-theme="dark"] .hljs-keyword,
+[data-theme="dark"] .hljs-selector-tag,
+[data-theme="dark"] .hljs-built_in,
+[data-theme="dark"] .hljs-type,
+[data-theme="dark"] .hljs-operator {
+  color: #7db5e6;
+}
+
+[data-theme="dark"] .hljs-string,
+[data-theme="dark"] .hljs-regexp,
+[data-theme="dark"] .hljs-addition {
+  color: #7ed6a0;
+}
+
+[data-theme="dark"] .hljs-number,
+[data-theme="dark"] .hljs-literal,
+[data-theme="dark"] .hljs-symbol,
+[data-theme="dark"] .hljs-bullet {
+  color: #e6b566;
+}
+
+[data-theme="dark"] .hljs-params {
+  color: #a3cdf3;
+}
+
+[data-theme="dark"] .hljs-attr,
+[data-theme="dark"] .hljs-attribute,
+[data-theme="dark"] .hljs-section,
+[data-theme="dark"] .hljs-name,
+[data-theme="dark"] .hljs-variable,
+[data-theme="dark"] .hljs-template-variable,
+[data-theme="dark"] .hljs-title,
+[data-theme="dark"] .hljs-deletion {
+  color: #f08a97;
+}
+
+/* Testimonial carousel on the about page: one quote at a time with a
+   cross-fade, round previous/next buttons at the sides, small dots below. */
+
+.pg-carousel {
+  position: relative;
+  margin: 0 auto 2.5rem;
+  padding: 0 64px;
+}
+
+.pg-carousel .carousel-inner {
+  position: relative;
+  min-height: 9rem;
+}
+
+.pg-carousel .carousel-item {
+  position: absolute;
+  inset: 0;
+  display: block;
+  float: none;
+  width: 100%;
+  margin: 0;
+  padding: 0.5rem 1rem;
+  text-align: center;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 320ms var(--pg-ease), visibility 0s linear 320ms;
+}
+
+.pg-carousel .carousel-item.active {
+  position: relative;
+  opacity: 1;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.pg-carousel .testimonial {
+  max-width: 48rem;
+  margin: 0 auto 1rem;
+  color: var(--pg-ink);
+  font-size: 17px;
+  line-height: 1.8;
+  text-wrap: pretty;
+}
+
+.pg-carousel .overview {
+  margin: 0;
+  color: var(--pg-muted);
+  font-size: 15px;
+  font-style: italic;
+}
+
+.pg-carousel .overview a {
+  font-weight: 600;
+}
+
+.pg-carousel .carousel-control {
+  position: absolute;
+  top: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-top: -22px;
+  padding: 0;
+  border: 1px solid var(--pg-line-strong);
+  border-radius: 50%;
+  background: var(--pg-surface);
+  color: var(--pg-heading);
+  opacity: 1;
+  cursor: pointer;
+  transition: background-color var(--pg-dur) var(--pg-ease),
+              border-color var(--pg-dur) var(--pg-ease),
+              color var(--pg-dur) var(--pg-ease);
+}
+
+.pg-carousel .carousel-control-prev { left: 0; }
+.pg-carousel .carousel-control-next { right: 0; }
+
+.pg-carousel .carousel-control:hover,
+.pg-carousel .carousel-control:focus-visible {
+  border-color: var(--pg-blue);
+  background: var(--pg-wash);
+  color: var(--pg-hover);
+}
+
+.pg-carousel .carousel-control i {
+  position: static;
+  display: block;
+  margin: 0;
+  color: inherit;
+  font-size: 22px;
+  line-height: 1;
+  text-shadow: none;
+}
+
+.pg-carousel .carousel-indicators {
+  position: static;
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-carousel .carousel-indicators li {
+  width: 8px;
+  height: 8px;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--pg-line-strong);
+  box-shadow: none;
+  text-indent: 0;
+  cursor: pointer;
+  opacity: 1;
+  transition: background-color var(--pg-dur) var(--pg-ease),
+              transform var(--pg-dur) var(--pg-ease);
+}
+
+.pg-carousel .carousel-indicators li:hover {
+  background: var(--pg-blue);
+}
+
+.pg-carousel .carousel-indicators li.active {
+  background: var(--pg-blue);
+  box-shadow: none;
+  transform: scale(1.25);
+}
+
+[data-theme="dark"] .pg-carousel .carousel-indicators li.active,
+[data-theme="dark"] .pg-carousel .carousel-indicators li:hover {
+  background: var(--pg-heading);
+}
+
+@media (max-width: 575.98px) {
+  .pg-carousel {
+    padding: 0 44px;
+  }
+
+  .pg-carousel .carousel-control {
+    width: 36px;
+    height: 36px;
+    margin-top: -18px;
+  }
+
+  .pg-carousel .testimonial {
+    font-size: 15.5px;
+  }
+}
+
+/* Statistics tiles (about page): a quiet grid of figures instead of the
+   upstream's solid blue slabs. The figure sits large in the heading colour
+   with tabular numerals; the label is a small muted line beneath it. */
+
+.pg-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin: 1rem 0 2rem;
+}
+
+.pg-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 20px 22px 18px;
+  border: 1px solid var(--pg-line);
+  border-radius: 12px;
+  background: var(--pg-surface);
+  transition: border-color var(--pg-dur) var(--pg-ease),
+              box-shadow var(--pg-dur) var(--pg-ease);
+}
+
+.pg-stat:hover {
+  border-color: var(--pg-line-strong);
+  box-shadow: var(--pg-shadow-sm);
+}
+
+.pg-stat__value {
+  color: var(--pg-heading) !important;
+  font-family: var(--pg-font-mono);
+  font-size: 1.85rem;
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-stat__label {
+  color: var(--pg-muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+@media (max-width: 991.98px) {
+  .pg-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 479.98px) {
+  .pg-stats {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 /* Documentation pages keep the upstream fluid layout; nudge only spacing. */
 
 #docContent {
   line-height: 1.7;
+}
+
+#docContent pre,
+#docContent code,
+#docContent kbd,
+#docContent tt {
+  font-family: var(--pg-font-mono);
+}
+
+#docContent pre {
+  font-size: 13.5px !important;
+  line-height: 1.6;
 }
 
 /* Build stamp of the development docs, beside the breadcrumb */

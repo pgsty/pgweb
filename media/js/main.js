@@ -75,6 +75,67 @@
 })();
 
 
+/*
+ * Testimonial carousel (the about page). Bootstrap's JS is not loaded,
+ * so this drives the markup: previous/next buttons, indicator dots,
+ * keyboard arrows, and a slow auto-advance that pauses while hovered
+ * or focused.
+ */
+document.querySelectorAll('[data-pg-carousel]').forEach((root) => {
+  const items = Array.from(root.querySelectorAll('.carousel-item'));
+  const dots = Array.from(root.querySelectorAll('[data-pg-slide-to]'));
+  if (items.length < 2) return;
+  const interval = parseInt(root.dataset.interval, 10) || 9000;
+  let index = Math.max(0, items.findIndex((el) => el.classList.contains('active')));
+  let timer = null;
+
+  function show(next) {
+    index = (next + items.length) % items.length;
+    items.forEach((el, i) => el.classList.toggle('active', i === index));
+    dots.forEach((el, i) => {
+      el.classList.toggle('active', i === index);
+      el.setAttribute('aria-current', i === index ? 'true' : 'false');
+    });
+  }
+
+  function play() {
+    stop();
+    timer = setInterval(() => show(index + 1), interval);
+  }
+
+  function stop() {
+    if (timer) clearInterval(timer);
+    timer = null;
+  }
+
+  root.querySelectorAll('[data-pg-slide]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      show(index + (btn.dataset.pgSlide === 'prev' ? -1 : 1));
+      play();
+    });
+  });
+  dots.forEach((dot) => {
+    const go = () => { show(parseInt(dot.dataset.pgSlideTo, 10)); play(); };
+    dot.addEventListener('click', go);
+    dot.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); }
+    });
+  });
+  root.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft') { show(index - 1); play(); }
+    if (e.key === 'ArrowRight') { show(index + 1); play(); }
+  });
+  root.addEventListener('mouseenter', stop);
+  root.addEventListener('mouseleave', play);
+  root.addEventListener('focusin', stop);
+  root.addEventListener('focusout', play);
+  document.addEventListener('visibilitychange', () => (document.hidden ? stop() : play()));
+
+  show(index);
+  play();
+});
+
+
 /* Copy a script from an HTML element to the clipboard,
  * removing comments and blank lines.
  * Arguments:
@@ -84,63 +145,27 @@
  */
 
 function copyScript(trigger, elem, stripSudo = false) {
-    const raw = document.getElementById(elem).innerHTML;
-
-    // Create a scratch div to copy from
-    const scratch = document.createElement("div");
-    document.body.appendChild(scratch);
-
-    // Copy the contents of the script box into the scratch div, removing
-    // comments and blank lines, and optionally stripping sudo
-    const lines = raw.split("\n");
-    let output = '';
-    for (let l = 0; l < lines.length; l++) {
-        if (lines[l][0] != '#' && lines[l].trim() != '') {
-            let line = lines[l];
-            if (stripSudo) {
-                line = line.replace(/^(\s*)sudo /, '$1');
-            }
-            output += line + '<br />';
+    // Plain text of the block (highlighting wraps tokens in spans, so
+    // innerHTML is no longer the script itself).
+    const raw = document.getElementById(elem).textContent;
+    const lines = [];
+    raw.split("\n").forEach((line) => {
+        if (line.trim() === '' || line.trim()[0] === '#') return;
+        lines.push(stripSudo ? line.replace(/^(\s*)sudo /, '$1') : line);
+    });
+    const text = lines.join("\n");
+    const done = (ok) => {
+        if (window.pgFlashButton) {
+            window.pgFlashButton(trigger, ok);
+        } else {
+            trigger.classList.toggle('copied', ok);
+            setTimeout(() => trigger.classList.remove('copied'), 2000);
         }
-    }
-    scratch.innerHTML = output.trim();
-
-    // Perform the copy
-    if(document.body.createTextRange) {
-        // IE 11
-        const range = document.body.createTextRange();
-        range.moveToElementText(scratch);
-        range.select();
-        document.execCommand("Copy");
-        document.getSelection().removeAllRanges()
-    }
-    else if(window.getSelection) {
-        // Sane browsers
-        const selection = window.getSelection();
-        const range = document.createRange();
-        range.selectNodeContents(scratch);
-        selection.removeAllRanges();
-        selection.addRange(range);
-        document.execCommand("Copy");
-        selection.removeAllRanges();
-    }
-
-    // Remove the scratch div
-    scratch.parentNode.removeChild(scratch);
-
-    // Indicate to the user that the script was copied
-    const icon = trigger.querySelector('i');
-    const originalClass = stripSudo ? 'fa-terminal' : 'fa-copy';
-    icon.classList.remove(originalClass);
-    icon.classList.add('fa-check');
-    trigger.classList.add('copied');
-
-    setTimeout(function() {
-        icon.classList.remove('fa-check');
-        icon.classList.add(originalClass);
-        trigger.classList.remove('copied');
-    }, 3000);
+    };
+    const copier = window.pgCopyText || ((t) => navigator.clipboard.writeText(t));
+    copier(text).then(() => done(true), () => done(false));
 }
+
 
 /*
  * showDistros shows / hides the individual distributions of particular OS

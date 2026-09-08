@@ -7,14 +7,15 @@
 请选择您的发行版：
 </p>
 
-<a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/debian/">Debian<br/><img class="logo" src="/media/img/debian.svg" alt="Debian Logo" /></a>
-<a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/redhat">Red Hat/Rocky/AlmaLinux<br/><img class="logo" src="/media/img/redhat.svg" alt="Red Hat Logo" /></a>
-<a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/suse">SUSE<br/><img class="logo" src="/media/img/suse.svg" alt="SUSE Logo" /></a>
-<a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/ubuntu">Ubuntu<br/><img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu Logo" /></a>
-<a role="button" class="btn btn-outline-dark btn-download" href="#generic">其他 Linux<br/><img class="logo" src="/media/img/linux.svg" alt="Linux Logo" /></a>
+<div class="pg-os-grid">
+  <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/debian/"><img class="logo" src="/media/img/debian.svg" alt="Debian Logo" /><span>Debian</span></a>
+  <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/redhat"><img class="logo" src="/media/img/redhat.svg" alt="Red Hat Logo" /><span>Red Hat / Rocky / AlmaLinux</span></a>
+  <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/suse"><img class="logo" src="/media/img/suse.svg" alt="SUSE Logo" /><span>SUSE</span></a>
+  <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/ubuntu"><img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu Logo" /><span>Ubuntu</span></a>
+  <a role="button" class="btn btn-outline-dark btn-download pg-os btn-download-active" href="#generic"><img class="logo" src="/media/img/linux.svg" alt="Linux Logo" /><span>其他 Linux</span></a>
+</div>
 
-<a name="generic"></a>
-<h2>通用 Linux 发行版</h2>
+<h2 id="generic">通用 Linux 发行版</h2>
 <p>
 PostgreSQL 已集成在大多数 Linux 平台的包管理系统中。如果可用，这是推荐的安装方式，因为它能与操作系统正确集成，包括自动补丁更新和其他管理功能。
 </p>
