@@ -351,6 +351,24 @@ _release_notes_only_versions = [
 ]
 release_notes_only_versions = [{'major': major, 'minor': minor} for major, minor in _release_notes_only_versions]
 
+no_release_notes_versions = [
+    {'major': 18, 'minor': 5},
+]
+
+
+def _release_note_neighbors(available_minor_versions, minor_version):
+    """Return the older and newer release notes around a version."""
+    previous_minor = None
+    next_minor = None
+    for i, version in enumerate(available_minor_versions):
+        if version['minor'] == minor_version:
+            if i > 0:
+                next_minor = available_minor_versions[i - 1]['minor']
+            if i + 1 < len(available_minor_versions):
+                previous_minor = available_minor_versions[i + 1]['minor']
+            break
+    return previous_minor, next_minor
+
 
 def release_notes_list(request):
     """Lists the available release notes"""
@@ -358,7 +376,10 @@ def release_notes_list(request):
     releases = exec_to_dict("SELECT tree AS major, minor FROM core_version INNER JOIN generate_series(0, latestminor) g(minor) ON true WHERE testing=0 AND tree > 6.2 ORDER BY tree DESC, minor DESC")
 
     r = render_pgweb(request, 'docs', 'docs/release_notes_list.html', {
-        'releases': releases + release_notes_only_versions,
+        'releases': [
+            version for version in releases + release_notes_only_versions
+            if version not in no_release_notes_versions
+        ],
     })
     r['xkey'] = 'pgdocs_all'
     return r
@@ -386,6 +407,10 @@ def release_notes(request, version):
         minor_version = Decimal(version_pieces[1])
         if int(version_pieces[0]) >= 10 or int(version_pieces[0]) <= 1:
             if major_version > 1:
+                if {'major': major_version, 'minor': minor_version} in no_release_notes_versions:
+                    # PostgreSQL 18.5 was never released. Redirect gaps to the
+                    # following release, as the upstream archive does.
+                    return HttpResponseRedirect('/docs/release/{}.{}/'.format(major_version, minor_version + 1))
                 if minor_version == 0:
                     version_file = 'release-{}.html'.format(major_version)
                 else:
@@ -424,20 +449,18 @@ def release_notes(request, version):
         available_minor_versions = exec_to_dict("SELECT minor FROM generate_series(0, (SELECT latestminor FROM core_version WHERE tree=%(major_version)s)) g(minor) ORDER BY minor DESC", {
             'major_version': major_version,
         })
-        previous_minor = minor_version - 1 if minor_version > 0 else None
-        next_minor = minor_version + 1 if minor_version < available_minor_versions[0]['minor'] else None
+        unavailable_minors = {
+            version['minor'] for version in no_release_notes_versions
+            if version['major'] == major_version
+        }
+        available_minor_versions = [
+            version for version in available_minor_versions
+            if version['minor'] not in unavailable_minors
+        ]
     else:
         available_minor_versions = [v for v in release_notes_only_versions if v['major'] == major_version]
-        # Ugh, there are gaps, so we have to do it the ugly way
-        previous_minor = None
-        next_minor = None
-        for i, v in enumerate(available_minor_versions):
-            if v['minor'] == minor_version:
-                if i > 0:
-                    next_minor = available_minor_versions[i - 1]['minor']
-                if v != available_minor_versions[-1]:
-                    previous_minor = available_minor_versions[i + 1]['minor']
-                break
+
+    previous_minor, next_minor = _release_note_neighbors(available_minor_versions, minor_version)
 
     r = render_pgweb(request, 'docs', 'docs/release_notes.html', {
         'major_version': major_version,

@@ -5,7 +5,7 @@
 {%endblock%}
 {%block contents%}
 
-<h1>Linux 下载（Ubuntu） <img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu Logo" /></h1>
+<h1>Linux 下载（Ubuntu） <img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu 标志" /></h1>
 <p>
 所有 Ubuntu 版本默认都提供 PostgreSQL。但是，Ubuntu 会“快照”一个特定版本的 PostgreSQL，并在该 Ubuntu 版本的整个生命周期内提供支持。
 PostgreSQL 项目维护了一个 <a href="#apt">Apt 仓库</a>，提供所有受支持的 PostgreSQL 版本。
@@ -20,25 +20,26 @@ apt install postgresql
 </pre>
 
 <a name="apt"></a>
-<h2>PostgreSQL Apt Repository</h2>
+<h2>PostgreSQL Apt 仓库</h2>
 <p>
-如果您的 Ubuntu 版本中包含的 PostgreSQL 版本不是您想要的，可以使用 <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt Repository</a>。该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持<a href="/support/versioning/">生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
+如果您的 Ubuntu 版本中包含的 PostgreSQL 版本不是您想要的，可以使用 <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt 仓库</a>。该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持<a href="/support/versioning/">生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
 </p>
 <p>
-PostgreSQL Apt 仓库支持以下 Ubuntu 当前版本：
+PostgreSQL Apt 仓库支持以下 Ubuntu 版本：
 </p>
 <ul>
-  <li>resolute (26.04, LTS)</li>
-  <li>noble (24.04, LTS)</li>
-  <li>jammy (22.04, LTS)</li>
+  <li>stonking（26.10，非长期支持版）</li>
+  <li>resolute（26.04，长期支持版）</li>
+  <li>noble（24.04，长期支持版）</li>
+  <li>jammy（22.04，长期支持版）</li>
 </ul>
 <p>
 支持以下架构：
 </p>
 <ul>
   <li>amd64</li>
-  <li>arm64（仅限 LTS 版本）</li>
-  <li>ppc64el（仅限 LTS 版本）</li>
+  <li>arm64（仅限长期支持版）</li>
+  <li>ppc64el（仅限长期支持版）</li>
 </ul>
 
 <h3>自动仓库配置</h3>
@@ -88,7 +89,7 @@ sudo apt install postgresql-18</pre>
 
 <p>
 有关 Apt 仓库的更多信息，包括常见问题的解答，请参阅
-<a href="https://wiki.postgresql.org/wiki/Apt" target="_blank" rel="noopener">PostgreSQL Apt Repository wiki 页面</a>。
+<a href="https://wiki.postgresql.org/wiki/Apt" target="_blank" rel="noopener">PostgreSQL Apt 仓库维基页面</a>。
 </p>
 
 <h2>软件包</h2>

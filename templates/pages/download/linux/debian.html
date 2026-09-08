@@ -5,7 +5,7 @@
 {%endblock%}
 {%block contents%}
 
-<h1>Linux 下载（Debian） <img class="logo" src="/media/img/debian.svg" alt="Debian Logo" /></h1>
+<h1>Linux 下载（Debian） <img class="logo" src="/media/img/debian.svg" alt="Debian 标志" /></h1>
 <p>
 所有 Debian 版本默认都包含 PostgreSQL。但是，Debian 会“快照”一个特定版本的 PostgreSQL，该版本在 Debian 版本的整个生命周期内受到支持。PostgreSQL 项目维护了一个 <a href="#apt">Apt 仓库</a>，提供所有受支持的 PostgreSQL 版本。
 </p>
@@ -19,19 +19,18 @@ apt install postgresql
 </pre>
 
 <a name="apt"></a>
-<h2>PostgreSQL Apt Repository</h2>
+<h2>PostgreSQL Apt 仓库</h2>
 <p>
-如果您的 Debian 版本中包含的 PostgreSQL 版本不是您想要的，可以使用 <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt Repository</a>。该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的<a href="/support/versioning/">支持生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
+如果您的 Debian 版本中包含的 PostgreSQL 版本不是您想要的，可以使用 <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt 仓库</a>。该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的<a href="/support/versioning/">支持生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
 </p>
 <p>
-PostgreSQL Apt Repository 支持以下 Debian 版本：
+PostgreSQL Apt 仓库支持以下 Debian 版本：
 </p>
 <ul>
-  <li>trixie (13.x)</li>
-  <li>bookworm (12.x)</li>
-  <li>bullseye (11.x)</li>
-  <li>forky (testing)</li>
-  <li>sid (unstable)</li>
+  <li>trixie（13.x）</li>
+  <li>bookworm（12.x）</li>
+  <li>forky（测试版）</li>
+  <li>sid（不稳定版）</li>
 </ul>
 <p>
 支持以下架构：
@@ -90,7 +89,7 @@ sudo apt install postgresql-18</pre>
 
 <p>
 有关 Apt 仓库的更多信息（包括常见问题的解答），请参阅
-<a href="https://wiki.postgresql.org/wiki/Apt" target="_blank" rel="noopener">PostgreSQL Apt Repository Wiki 页面</a>。
+<a href="https://wiki.postgresql.org/wiki/Apt" target="_blank" rel="noopener">PostgreSQL Apt 仓库维基页面</a>。
 </p>
 
 <h2>软件包</h2>
