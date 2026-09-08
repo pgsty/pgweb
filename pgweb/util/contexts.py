@@ -27,6 +27,7 @@ sitenav = {
         ]},
         {'title': '新闻', 'link': '/about/press/'},
         {'title': '许可证', 'link': '/about/licence/'},
+        {'title': '关于 pg.center', 'link': '/about/pgcenter/'},
     ],
     'download': [
         {'title': '下载', 'link': '/download/', 'submenu': [
@@ -78,7 +79,7 @@ sitenav = {
         {'title': '安全信息', 'link': '/support/security/'},
         {'title': '专业服务', 'link': '/support/professional_support/'},
         {'title': '托管方案', 'link': '/support/professional_hosting/'},
-        {'title': '报告 Bug', 'link': '/account/submitbug/'},
+        {'title': '报告 Bug', 'link': 'https://www.postgresql.org/account/submitbug/'},
     ],
     'account': [
         {'title': '您的账户', 'link': '/account/'},
