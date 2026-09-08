@@ -39,7 +39,7 @@ sitenav = {
     'docs': [
         {'title': '文档', 'link': '/docs/'},
         {'title': '手册', 'link': '/docs/', 'submenu': [
-            {'title': '归档手册', 'link': '/docs/manuals/archive/'},
+            {'title': '归档', 'link': '/docs/manuals/archive/'},
         ]},
         {'title': '发布', 'link': '/docs/release/'},
         {'title': '书籍', 'link': '/docs/books/'},

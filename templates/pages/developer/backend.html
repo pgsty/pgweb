@@ -43,7 +43,7 @@ echo "0, 0," | awk -F, '{printf "%d, %d\n", $1 + 145, $2 + 45}'
 <br />
 
 <p>查询通过 TCP/IP 或 Unix Domain 套接字以数据包的形式到达后端。
-它被加载到一个字符串中，然后传递给<a
+它被加载到一个字符串中，然后传递给 <a
 href="https://wiki.postgresql.org/wiki/Backend_flowchart#parser">解析器，</a>
 其中词法扫描器 <a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/parser/scan.l">scan.l</a>
@@ -83,10 +83,10 @@ href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/p
 BY</em> 和 <em>ORDER BY</em> 也存储在各自的 Query 字段中。</p>
 
 <p>下一步是由可能适用于查询的任何<em>视图</em>或<em>规则</em>对 Query 进行修改。
-这由<a href="https://wiki.postgresql.org/wiki/Backend_flowchart#rewrite">重写</a>系统执行。</p>
+这由 <a href="https://wiki.postgresql.org/wiki/Backend_flowchart#rewrite">重写</a> 系统执行。</p>
 
 <p><a
-href="https://wiki.postgresql.org/wiki/Backend_flowchart#optimizer_path">优化器</a>使用
+href="https://wiki.postgresql.org/wiki/Backend_flowchart#optimizer_path">优化器</a> 使用
 Query 结构来确定 RangeTable 中每个表的最佳连接顺序和连接类型，
 利用 Query.jointree（<em>FROM</em> 和 <em>WHERE</em> 子句）来考虑最优的索引使用。</p>  <a
 href="https://wiki.postgresql.org/wiki/Backend_flowchart#optimizer_path">path</a>
@@ -94,8 +94,8 @@ href="https://wiki.postgresql.org/wiki/Backend_flowchart#optimizer_path">path</a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/include/nodes/plannodes.h">Plan，</a>
 其中包含执行查询所需的操作。</p>
 
-<p>然后 Plan 被传递给<a
-href="https://wiki.postgresql.org/wiki/Backend_flowchart#executor">执行器</a>执行，
+<p>然后 Plan 被传递给 <a
+href="https://wiki.postgresql.org/wiki/Backend_flowchart#executor">执行器</a> 执行，
 并将结果返回给客户端。Plan 实际上是一组节点，
 以树形结构排列，有一个顶层节点和各种子节点作为子元素。</p>
 
