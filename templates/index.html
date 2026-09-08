@@ -4,141 +4,187 @@
 {%block meta%}
   <meta name="description" content="PostgreSQL 官方网站中文版，世界上最先进的开源数据库" />
 {%endblock%}
+{%block shout%}
+{% if topbarnews or do_esi %}
+<div class="pg-shout">
+  <div class="pg-container pg-shout__inner">
+    <p class="pg-shout__news"><i class="fas fa-newspaper" aria-hidden="true"></i><span>{%include "base/esi.html" with includepage="/include/topbar" %}</span></p>
+    <p class="pg-shout__note"><a href="https://pg.center/">pg.center</a> 提供对 <a href="https://www.postgresql.org/" target="_blank" rel="noopener">postgresql.org</a> 官网内容的中文翻译，由 <a href="https://pigsty.cc/" target="_blank" rel="noopener">Pigsty</a> 团队维护，与 <a href="/about/governance/">PGDG</a> 无隶属关系。</p>
+  </div>
+</div>
+{% endif %}
+{%endblock%}
 {%block layoutblock%}
-<div class="jumbotron jumbotron-fluid pg-jumbotron">
-  <div class="container">
-    <h1 class="text-white pg-jumbotron-header">PostgreSQL：世界上最先进的开源关系型数据库</h1>
-    <div class="row">
-      <div class="col text-center">
-        <a class="btn btn-light btn-rounded" role="button" href="/download/">下载 <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-        <a class="btn btn-light btn-rounded" role="button" href="/about/">初识 PostgreSQL？</a>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- END Jumbotron -->
-<div class="container margin">
-  <!-- Start First Feature Row -->
+<main class="pg-home">
 
-  <div class="row">
-    <!-- Feature -->
-    <div class="col-lg-6 feature">
-      <img src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo">
-      <h2>初识 PostgreSQL？</h2>
-      <div class="text">
-        <p>
-          PostgreSQL 是一个强大的开源对象关系型数据库系统，历经 35 年以上的持续开发，在可靠性、功能完备性和性能方面享有卓著声誉。
-        </p>
-        <p>
-          <a href="/docs/">官方文档</a>提供了大量关于如何<a href="/download/">安装</a>和<a href="/docs/">使用</a> PostgreSQL 的资料。
-          <a href="/community/">开源社区</a>也提供了丰富的交流渠道，帮助您了解 PostgreSQL 的工作原理、获取支持并寻找职业机会。您还可以进一步了解如何<a href="/community/">参与社区</a>。
-        </p>
-      </div>
-      <a href="/about/" title="了解更多"><button type="button" class="btn btn-center btn-primary btn-inline-block">了解更多</button></a>
-      <a href="/about/featurematrix/" title="特性矩阵"><button type="button" class="btn btn-center btn-primary btn-inline-block">特性矩阵</button></a>
-      <a href="/about/governance/" title="项目治理"><button type="button" class="btn btn-center btn-primary btn-inline-block">项目治理</button></a>
+<!-- Hero -->
+<section class="pg-hero">
+  <div class="pg-hero__media" aria-hidden="true"></div>
+  <div class="pg-hero__shade" aria-hidden="true"></div>
+  <div class="pg-container pg-hero__inner">
+    {% with v=versions.0 %}{% if v %}
+    <a class="pg-hero__chip" href="/docs/{{ v.numtree }}/{{ v.relnotes }}" title="PostgreSQL {{ v.numtree }}.{{ v.latestminor }} 发行说明">
+      <span class="pg-dot" aria-hidden="true"></span>
+      <span>最新版本</span>
+      <strong>PostgreSQL {{ v.numtree }}.{{ v.latestminor }}</strong>
+    </a>
+    {% endif %}{% endwith %}
+    <h1 class="pg-hero__title">PostgreSQL：世界上最先进的开源关系型数据库</h1>
+    {% with v=versions.0 %}
+    <div class="pg-hero__actions">
+      <a class="pg-btn pg-btn--light" role="button" href="/download/">下载 <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+      <a class="pg-btn pg-btn--outline-light" role="button" href="/docs/{{ v.numtree }}/index.html">文档 <i class="fas fa-book" aria-hidden="true"></i></a>
+      <a class="pg-btn pg-btn--outline-light" role="button" href="/about/">初识 PostgreSQL？</a>
     </div>
-    <!-- END Feature -->
+    {% endwith %}
+  </div>
+</section>
+<!-- END Hero -->
 
-    <!-- Feature -->
-    <div class="col-lg-6 feature">
-      <i class="fas fa-download"></i>
-      <h2>最新版本</h2>
-      <div class="text">
-        <p>
-          <strong>{{ release.date|date:"Y-m-d" }} - <a href="{{ release.news.url }}">{% include "releasetitle.html" %}</a></strong>
-        </p>
-        {% include "releasetext.html" %}
-        <ul>
-          {% for v in versions %}
-            <li class="{% cycle '' 'pg-bg-gray' %}"><strong>{{ v.numtree }}.{{ v.latestminor }}</strong> &middot; {{ v.reldate|date:"Y-m-d" }} &middot; <a href="/docs/{{ v.numtree }}/{{ v.relnotes }}">说明</a></li>
-          {% endfor %}
-        </ul>
-      </div>
-      <a href="/download/" title="下载"><button type="button" class="btn btn-center btn-primary">下载</button></a>
-      <a href="/support/versioning/" title="为什么要升级？"><button type="button" class="btn btn-center btn-outline-secondary btn-inline-block">为什么要升级？</button></a>
-      <a href="/support/security/" title="安全"><button type="button" class="btn btn-center btn-outline-secondary btn-inline-block">安全</button></a>
+<!-- Front: four blocks in two rows. Prose on top, live data below. -->
+<section class="pg-front">
+  <div class="pg-container">
+
+    <div class="pg-front__row">
+      <!-- Feature: introduction -->
+      <article class="pg-story pg-story--intro">
+        <img class="pg-story__mark" src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo">
+        <h2>初识 PostgreSQL？</h2>
+        <div class="pg-story__body">
+          <p>
+            PostgreSQL 是一个强大的开源对象关系型数据库系统，历经 35 年以上的持续开发，在可靠性、功能完备性和性能方面享有卓著声誉。
+          </p>
+          <p>
+            <a href="/docs/">官方文档</a> 提供了大量关于如何 <a href="/download/">安装</a> 和 <a href="/docs/">使用</a> PostgreSQL 的资料。<a href="/community/">开源社区</a> 也提供了丰富的交流渠道，帮助您了解 PostgreSQL 的工作原理、获取支持并寻找职业机会。
+          </p>
+          <p>
+            您还可以进一步了解如何 <a href="/community/">参与社区</a>。
+          </p>
+        </div>
+        <div class="pg-story__actions">
+          <a class="pg-btn pg-btn--primary" href="/about/" title="了解更多">了解更多</a>
+          <a class="pg-btn pg-btn--ghost" href="/about/featurematrix/" title="特性矩阵">特性矩阵</a>
+          <a class="pg-btn pg-btn--ghost" href="/about/governance/" title="项目治理">项目治理</a>
+        </div>
+      </article>
+      <!-- END Feature -->
+
+      <!-- Feature: mailing lists -->
+      <article class="pg-story pg-story--lists">
+        <div class="pg-story__icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
+        <h2>邮件列表</h2>
+        <div class="pg-story__body">
+          <p>
+            PostgreSQL <a href="https://lists.postgresql.org" target="_blank" rel="noopener">邮件列表</a> 为您提供了与活跃社区成员交流的渠道，可以参与讨论 PostgreSQL 开发、使用、近期活动和产品发布等主题。
+          </p>
+          <p>
+            要管理您的邮件列表订阅，您需要一个 <a href="/account/">PostgreSQL 社区账户</a>。
+            <a href="/account/">注册</a> 流程非常简单，可让您直接参与 <a href="/community/">全球 PostgreSQL 社区</a>。
+          </p>
+        </div>
+        <div class="pg-story__actions">
+          <a class="pg-btn pg-btn--primary" href="https://lists.postgresql.org" title="订阅">订阅</a>
+          <a class="pg-btn pg-btn--ghost" href="https://www.postgresql.org/list/" title="查看归档">查看归档</a>
+        </div>
+      </article>
+      <!-- END Feature -->
     </div>
-    <!-- END Feature -->
+
+    <div class="pg-front__row pg-front__row--data">
+      <!-- Feature: latest releases -->
+      <article class="pg-story pg-story--data pg-story--versions">
+        <div class="pg-story__icon"><i class="fas fa-download" aria-hidden="true"></i></div>
+        <h2>最新版本</h2>
+        <div class="pg-story__body">
+          <p class="pg-story__lead">
+            <time datetime="{{ release.date|date:"Y-m-d" }}">{{ release.date|date:"Y-m-d" }}</time> <a href="{{ release.news.url }}">{% include "releasetitle.html" %}</a>
+          </p>
+          {% include "releasetext.html" %}
+          <ul class="pg-ledger">
+            {% for v in versions %}
+              <li>
+                <span class="pg-ledger__ver">{{ v.numtree }}.{{ v.latestminor }}</span>
+                <span class="pg-ledger__date">{{ v.reldate|date:"Y-m-d" }}</span>
+                <a class="pg-ledger__link" href="/docs/{{ v.numtree }}/{{ v.relnotes }}">说明 <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="pg-story__actions">
+          <a class="pg-btn pg-btn--primary" href="/download/" title="下载">下载</a>
+          <a class="pg-btn pg-btn--ghost" href="/support/versioning/" title="为什么要升级？">为什么要升级？</a>
+          <a class="pg-btn pg-btn--ghost" href="/support/security/" title="安全">安全</a>
+        </div>
+      </article>
+      <!-- END Feature -->
+
+      <!-- Feature: upcoming events -->
+      <article class="pg-story pg-story--data pg-story--events">
+        <div class="pg-story__icon"><i class="fas fa-calendar-alt" aria-hidden="true"></i></div>
+        <h2>近期活动</h2>
+        <div class="pg-story__body">
+          <p class="pg-story__lead pg-story__lead--note">
+            <span class="pg-story__lead-slot" aria-hidden="true"></span>
+            <span class="pg-story__note-line"><img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event"><span>表示该活动符合 <a href="/about/policies/conferences/">社区活动准则</a>，并对 PostgreSQL 社区具有直接价值。</span></span>
+          </p>
+          <ul class="pg-events">
+            {% for event in events %}
+              <li>
+                <span class="pg-events__date">
+                  <time datetime="{{ event.startdate|date:"Y-m-d" }}">{{ event.startdate|date:"Y-m-d" }}</time>{% if event.enddate != event.startdate %}<span class="pg-events__to" aria-hidden="true">–</span><time datetime="{{ event.enddate|date:"Y-m-d" }}">{{ event.enddate|date:"Y-m-d" }}</time>{% endif %}
+                </span>
+                <span class="pg-events__badge">{% if event.badged %}<img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event" title="PostgreSQL 社区活动">{% endif %}</span>
+                <a class="pg-events__title" href="/about/event/{{ event.title|slugify }}-{{ event.id }}/" title="{{ event.title }}">{{ event.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="pg-story__actions">
+          <a class="pg-btn pg-btn--primary" href="/about/events/" title="查看日程">查看日程</a>
+          <a class="pg-btn pg-btn--ghost" href="/account/events/new/" title="提交您的活动">提交您的活动</a>
+        </div>
+      </article>
+      <!-- END Feature -->
+    </div>
 
   </div>
-  <!-- END First Feature Row -->
-  <!-- Start Second Feature Row -->
-  <div class="row">
-    <!-- Feature -->
-    <div class="col-lg-6 feature">
-      <i class="fas fa-calendar-alt"></i>
-      <h2>近期活动</h2>
-      <div class="text">
-        <ul>
-          {% for event in events %}
-            <li class="{% cycle '' 'pg-bg-gray' %} {% if not event.badged%}non-badged{% endif %}">
-              {% if event.badged %}
-                <img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event">
-              {% endif %}
-              {{ event.displaydate|safe }} &middot; <a href="/about/event/{{ event.title|slugify }}-{{ event.id }}/">{{ event.title }}</a>
-            </li>
-          {% endfor %}
-        </ul>
-        <p>
-          <img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event">
-            表示该活动符合 <a href="/about/policies/conferences/">社区活动准则</a>，并对 PostgreSQL 社区具有直接价值。
-        </p>
-      </div>
-      <a href="/about/events/" title="查看日程"><button type="button" class="btn btn-center btn-primary btn-inline-block">查看日程</button></a>
-      <a href="/account/events/new/" title="提交您的活动"><button type="button" class="btn btn-center btn-primary btn-inline-block">提交您的活动</button></a>
-    </div>
-    <!-- END Feature -->
-    <!-- Feature -->
-    <div class="col-lg-6 feature">
-      <i class="fas fa-envelope"></i>
-      <h2>邮件列表</h2>
-      <div class="text">
-        <p>
-          PostgreSQL <a href="https://lists.postgresql.org" target="_blank" rel="noopener">邮件列表</a>为您提供了与活跃社区成员交流的渠道，可讨论 PostgreSQL 开发、使用、近期活动和产品发布等主题。
-        </p>
-        <p>
-          要管理您的邮件列表订阅，您需要一个 <a href="/account/">PostgreSQL 社区账户</a>。<a href="/account/">注册</a>流程非常简单，可让您直接参与<a href="/community/">全球 PostgreSQL 社区</a>。
-        </p>
-      </div>
-      <a href="https://lists.postgresql.org" title="订阅"><button type="button" class="btn btn-center btn-primary btn-inline-block">订阅</button></a>
-      <a href="https://www.postgresql.org/list/" title="查看归档"><button type="button" class="btn btn-center btn-outline-secondary btn-inline-block">查看归档</button></a>
-    </div>
-    <!-- END Feature -->
-  </div>
-  <!-- END Second Feature Row -->
-</div>
-<!-- CTA -->
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-lg-6 cta cta-3"></div>
-    <div class="col-lg-6 cta-text">
-      <h2>学习与交流机会</h2>
-      <p class="text-left">
-        希望深入了解 PostgreSQL 并参与社区？欢迎参加各类活动、本地用户组和培训课程。</br>在这里，您可以结识经验丰富的 PostgreSQL 用户，并持续提升数据库技能。
-      </p>
-      <a href="/about/events/" title="浏览活动"><button type="button" class="btn btn-light btn-rounded">浏览活动</button></a>
-      <a href="/community/user-groups/" title="浏览用户组"><button type="button" class="btn btn-light btn-rounded">浏览用户组</button></a>
+</section>
+<!-- END Front -->
+
+<!-- CTA: learning -->
+<section class="pg-cta pg-cta--training">
+  <div class="pg-cta__media pg-cta__media--training" role="img" aria-label="PostgreSQL 培训与活动"><span class="pg-cta__wash" aria-hidden="true"></span></div>
+  <div class="pg-cta__text">
+    <h2>学习与交流机会</h2>
+    <p>
+      希望深入了解 PostgreSQL 并参与社区？欢迎参加各类活动、本地用户组和培训课程。在这您可以结识经验丰富的 PG 用户，并持续提高数据库技能。
+    </p>
+    <div class="pg-cta__actions">
+      <a class="pg-btn pg-btn--light" href="/about/events/" title="浏览活动">浏览活动</a>
+      <a class="pg-btn pg-btn--outline-light" href="/community/user-groups/" title="浏览用户组">浏览用户组</a>
     </div>
   </div>
-</div>
+</section>
 <!-- END CTA -->
+
 <!-- News -->
-<div class="container">
-  <div class="row">
-    <div class="col-lg-7">
-      <h2 class="centered-lines">最新动态</h2>
-      <!-- Featured Post -->
+<section class="pg-section pg-section--news">
+  <div class="pg-container">
+    <div class="pg-section__head">
+      <h2>最新动态</h2>
+    </div>
+    <div class="pg-news">
+      <article class="pg-featured">
         <header>
-          <h3>
-            <a href="{{ release.news.url }}">{% include "releasetitle.html" %}</a>
-          </h3>
-          <ul class="meta">
-            <li><i class="far fa-clock"></i>&nbsp;{{ release.date|date:"Y-m-d" }}</li>
+          <h3><a href="{{ release.news.url }}">{% include "releasetitle.html" %}</a></h3>
+          <ul class="pg-meta">
+            <li><i class="far fa-clock" aria-hidden="true"></i><time datetime="{{ release.date|date:"Y-m-d" }}">{{ release.date|date:"Y-m-d" }}</time></li>
           </ul>
         </header>
-        {% include "releasetext.html" %}
-        <ul class="bold">
+        <div class="pg-featured__body">
+          {% include "releasetext.html" %}
+        </div>
+        <ul class="pg-linkrow">
           <li><a href="{{ release.news.url }}">发布公告</a></li>
           <li><a href="/docs/release/">发行说明</a></li>
 {% if release.type == "minor" or release.type == "major" %}
@@ -151,73 +197,66 @@
           <li><a href="/support/versioning/">版本策略</a></li>
           <li><a href="/download/">下载</a></li>
         </ul>
-        <a href="/about/newsarchive/" title="归档"><button type="button" class="btn btn-primary btn-center btn-inline-block">浏览归档</button></a>
-        <a href="/account/news/new/" title="提交新闻"><button type="button" class="btn btn-primary btn-center btn-inline-block">提交新闻</button></a>
-    </div>
-    <div class="col-lg-5">
-      <div class="sidebar">
-
-        <!-- Archives -->
-        <ul class="divided">
+        <div class="pg-featured__actions">
+          <a class="pg-btn pg-btn--primary" href="/about/newsarchive/" title="归档">浏览归档</a>
+          <a class="pg-btn pg-btn--ghost" href="/account/news/new/" title="提交新闻">提交新闻</a>
+        </div>
+      </article>
+      <aside class="pg-sidebar" aria-label="最新新闻">
+        <ul class="pg-newslist">
           {% for n in news %}
             <li>
               <h3><a href="/about/news/{{ n.title|slugify }}-{{ n.id }}/">{{ n.title }}</a></h3>
-              <ul class="meta">
-                <li><i class="far fa-clock"></i>&nbsp;{{ n.displaydate }}，{{ n.org.name }}</li>
-              </ul>
+              <p class="pg-newslist__meta"><time datetime="{{ n.date|date:"Y-m-d" }}">{{ n.displaydate }}</time><span>{{ n.org.name }}</span></p>
             </li>
           {% endfor %}
         </ul>
-        <!-- END Archives -->
-      </div>
+      </aside>
     </div>
   </div>
-</div>
-<!-- Blog -->
- <div class="container margin">
-   <div class="row">
-     <div class="col-md-12">
-       <h2 class="centered-lines"><span>PLANET POSTGRESQL</span></h2><!-- Planet PostgreSQL 博客聚合 -->
-       <div class="feature"><i class="fas fa-globe"></i></div>
+</section>
+<!-- END News -->
+
+<!-- Planet PostgreSQL -->
+<section class="pg-section pg-section--tint pg-section--planet">
+  <div class="pg-container">
+    <div class="pg-section__head">
+      <h2>Planet PostgreSQL</h2>
     </div>
-   </div>
-   <!-- First Row Planet PostgreSQL -->
-   <div class="row">
-     <!-- First Column First Row Planet PostgreSQL -->
+    <div class="pg-planet">
       {%for post in planet %}
-        <div class="col-md-4">
-          <div class="text-center">
-            <h3><a href="{{ post.url }}">{{ post|planet_title }}</a></h3>
-            <ul class="meta">
-              {% if post|planet_author %}
-              <li><i class="far fa-comments"></i>&nbsp;{{ post|planet_author }}</li>
-              {% endif %}
-              <li><i class="far fa-clock"></i>&nbsp;{{ post.date }}</li>
-            </ul>
-          </div>
-        </div>
+        <article class="pg-post">
+          <h3><a href="{{ post.url }}">{{ post|planet_title }}</a></h3>
+          <ul class="pg-meta">
+            {% if post|planet_author %}
+            <li><i class="far fa-comments" aria-hidden="true"></i>{{ post|planet_author }}</li>
+            {% endif %}
+            <li><i class="far fa-clock" aria-hidden="true"></i><span class="pg-meta__date">{{ post.date }}</span></li>
+          </ul>
+        </article>
       {% endfor %}
-   </div>
-   <!-- END First Row Planet PostgreSQL -->
-   <div class="row">
-     <div class="col-sm-12">
-       <a href="https://planet.postgresql.org" title="浏览归档" target="_blank" rel="noopener"><button type="button" class="btn btn-center btn-primary">浏览归档</button></a>
-     </div>
-   </div>
- </div>
- <!-- SUBMIT A BUG -->
- <div class="container-fluid">
-   <div class="row">
-     <div class="col-lg-6 cta-text">
-       <h2>遇到异常行为？</h2>
-       <p>
-         PostgreSQL 社区始终致力于提供能够可靠存储数据的软件。</br>
-         如果您认为发现了 Bug，请点击下方按钮并按照说明提交报告。
-       </p>
-       <a href="https://www.postgresql.org/account/submitbug/" title="提交 Bug"><button type="button" class="btn btn-light btn-rounded">提交 Bug</button></a>
-     </div>
-     <div class="col-lg-6 cta cta-2"></div>
-   </div>
- </div>
- <!-- END SUBMIT A BUG -->
+    </div>
+    <div class="pg-planet__actions">
+      <a class="pg-btn pg-btn--primary" href="https://planet.postgresql.org" title="浏览归档" target="_blank" rel="noopener">浏览归档</a>
+    </div>
+  </div>
+</section>
+<!-- END Planet PostgreSQL -->
+
+<!-- CTA: submit a bug -->
+<section class="pg-cta pg-cta--bugs">
+  <div class="pg-cta__text">
+    <h2>遇到异常行为？</h2>
+    <p>
+      PostgreSQL 社区始终致力于提供能够可靠存储数据的软件。如果您认为发现了 Bug，请点击下方按钮并按照说明提交报告。
+    </p>
+    <div class="pg-cta__actions">
+      <a class="pg-btn pg-btn--light" href="https://www.postgresql.org/account/submitbug/" title="提交 Bug">提交 Bug</a>
+    </div>
+  </div>
+  <div class="pg-cta__media pg-cta__media--bugs" role="img" aria-label="报告 Bug"><span class="pg-cta__wash" aria-hidden="true"></span></div>
+</section>
+<!-- END CTA -->
+
+</main>
 {%endblock%}

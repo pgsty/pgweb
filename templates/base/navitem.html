@@ -1,0 +1,45 @@
+{% comment %}
+One top-level navigation entry, rendered either as a desktop link with a
+hover panel of its section links (mode="desktop") or as a drawer row with
+its children listed underneath (mode="mobile").
+
+Parameters: title, link, key (nav_active section), items (sitenav list, may
+be empty), mode. An item whose link equals the parent link is not repeated;
+its submenu is lifted to the top level of the panel instead.
+{% endcomment %}{% load pgfilters %}{% with active=request.path|nav_active:key %}
+{% if mode == "desktop" %}
+<div class="pg-nav__item{% if items %} pg-nav__item--menu{% endif %}">
+  <a class="pg-nav__link{% if active %} active{% endif %}" href="{{ link }}"{% if active %} aria-current="page"{% endif %}>{{ title }}</a>
+  {% if items %}
+  <div class="pg-nav__panel" role="group" aria-label="{{ title }}">
+    {% for m in items %}
+      {% if m.link == link %}
+        {% for sm in m.submenu %}<a class="pg-nav__panel-link" href="{{ sm.link }}">{{ sm.title }}</a>{% endfor %}
+      {% else %}
+        <a class="pg-nav__panel-link" href="{{ m.link }}">{{ m.title }}</a>
+        {% if m.submenu %}
+        <div class="pg-nav__panel-group">
+          {% for sm in m.submenu %}<a class="pg-nav__panel-link pg-nav__panel-link--sub" href="{{ sm.link }}">{{ sm.title }}</a>{% endfor %}
+        </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% else %}
+<a class="pg-drawer__link{% if active %} active{% endif %}" href="{{ link }}">{{ title }}</a>
+{% if items %}
+<div class="pg-drawer__children">
+  {% for m in items %}
+    {% if m.link == link %}
+      {% for sm in m.submenu %}<a class="pg-drawer__sublink" href="{{ sm.link }}">{{ sm.title }}</a>{% endfor %}
+    {% else %}
+      <a class="pg-drawer__sublink" href="{{ m.link }}">{{ m.title }}</a>
+      {% for sm in m.submenu %}<a class="pg-drawer__sublink pg-drawer__sublink--sub" href="{{ sm.link }}">{{ sm.title }}</a>{% endfor %}
+    {% endif %}
+  {% endfor %}
+</div>
+{% endif %}
+{% endif %}
+{% endwith %}

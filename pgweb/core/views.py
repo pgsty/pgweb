@@ -52,6 +52,11 @@ log = logging.getLogger(__name__)
 
 
 # Front page view
+# Number of upcoming events listed on the home page; the panel sits beside
+# the release panel, so the count is tuned to give both the same height.
+HOME_EVENT_COUNT = 9
+
+
 @cache(minutes=10)
 def home(request):
     news = (
@@ -60,7 +65,7 @@ def home(request):
         .order_by('-date', '-id')[:5]
     )
     today = date.today()
-    # get up to seven events to display on the homepage
+    # get up to HOME_EVENT_COUNT events to display on the homepage
     event_base_queryset = Event.objects.select_related('country').filter(
         approved=True,
         enddate__gte=today,
@@ -70,8 +75,8 @@ def home(request):
         badged=False,
         startdate__lte=today + timedelta(days=90),
     ).order_by('enddate', 'startdate')[:2]
-    # based on that, get 7 - |other_events| community events to display
-    community_event_queryset = event_base_queryset.filter(badged=True).order_by('enddate', 'startdate')[:(7 - other_events.count())]
+    # based on that, get HOME_EVENT_COUNT - |other_events| community events to display
+    community_event_queryset = event_base_queryset.filter(badged=True).order_by('enddate', 'startdate')[:(HOME_EVENT_COUNT - other_events.count())]
     # now, return all the events in one unioned array!
     events = community_event_queryset.union(other_events).order_by('enddate', 'startdate').all()
     versions = list(Version.objects.filter(supported=True))
@@ -176,9 +181,10 @@ def fallback(request, url):
         navsect = url.split('/', 2)[0]
     except Exception as e:
         navsect = ''
-    c = PGWebContextProcessor(request)
-    c.update({'navmenu': get_nav_menu(navsect)})
-    return HttpResponse(t.render(c))
+    # Render with the request so the configured context processors run
+    # (request.path drives the nav highlight and the postgresql.org link).
+    c = {'navmenu': get_nav_menu(navsect)}
+    return HttpResponse(t.render(c, request))
 
 
 def static_file(request, path):
@@ -243,7 +249,8 @@ def sitemap_internal(request):
 # dynamically, since the output will be cached.
 _dynamic_cssmap = {
     'base': ['media/css/main.css',
-             'media/css/normalize.css', ],
+             'media/css/normalize.css',
+             'media/css/pgcenter.css', ],
 }
 
 

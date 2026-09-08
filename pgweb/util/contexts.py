@@ -34,28 +34,18 @@ sitenav = {
             {'title': '源代码', 'link': 'https://www.postgresql.org/ftp/source/'}
         ]},
         {'title': '软件目录', 'link': '/download/product-categories/'},
-        {'title': '扩展目录', 'link': 'https://pigsty.cc/ext'},
-        {'title': '文件浏览器', 'link': 'https://www.postgresql.org/ftp/'},
+        {'title': '浏览文件', 'link': 'https://www.postgresql.org/ftp/'},
     ],
     'docs': [
         {'title': '文档', 'link': '/docs/'},
         {'title': '手册', 'link': '/docs/', 'submenu': [
-            {'title': '手册归档', 'link': '/docs/manuals/archive/'},
+            {'title': '归档手册', 'link': '/docs/manuals/archive/'},
         ]},
-        {'title': '发布说明', 'link': '/docs/release/'},
+        {'title': '发布', 'link': '/docs/release/'},
         {'title': '书籍', 'link': '/docs/books/'},
-        {'title': '教程与其他资源', 'link': '/docs/online-resources/'},
+        {'title': '其他', 'link': '/docs/online-resources/'},
         {'title': 'FAQ', 'link': '/docs/faq/'},
         {'title': 'Wiki', 'link': 'https://wiki.postgresql.org'},
-        {'title': '三方文档', 'link': 'https://pigsty.cc', 'submenu': [
-            {'title': 'pigsty 文档', 'link': 'https://pigsty.cc/docs/'},
-            {'title': 'pig cli 文档', 'link': 'https://pigsty.cc/docs/pig'},
-            {'title': 'pg 扩展文档', 'link': 'https://pigsty.cc/ext/e/'},
-            {'title': 'patroni 文档', 'link': 'https://pigsty.cc/docs/patroni/'},
-            {'title': 'pgbouncer 文档', 'link': 'https://pigsty.cc/docs/pgbouncer/'},
-            {'title': 'pgbackrest 文档', 'link': 'https://pigsty.cc/docs/pgbackrest/'},
-            {'title': 'pg_exporter 文档', 'link': 'https://pigsty.cc/docs/pg_exporter/'},
-        ]},
     ],
     'community': [
         {'title': '社区', 'link': '/community/'},
@@ -121,22 +111,31 @@ def render_pgweb(request, section, template, context):
 
 def _get_gitrev():
     # Return the current git revision, that is used for
-    # cache-busting URLs.
+    # cache-busting URLs. Resolve HEAD's branch (main on pg.center,
+    # master upstream) so a deploy always busts the CSS/JS caches.
+    def _read(path):
+        with open(path) as f:
+            return f.readline().strip()
+
     try:
-        with open('.git/refs/heads/master') as f:
-            return f.readline()[:8]
-    except IOError:
-        # A "git gc" will remove the ref and replace it with a packed-refs.
+        head = _read('.git/HEAD')
+        ref = head[5:] if head.startswith('ref: ') else None
+        if ref is None:
+            # Detached HEAD: the line is the sha itself
+            return head[:8]
         try:
+            return _read('.git/' + ref)[:8]
+        except IOError:
+            # A "git gc" will remove the ref and replace it with a packed-refs.
             with open('.git/packed-refs') as f:
                 for l in f.readlines():
-                    if l.endswith("refs/heads/master\n"):
+                    if l.endswith(" %s\n" % ref):
                         return l[:8]
-                # Not found in packed-refs. Meh, just make one up.
-                return 'ffffffff'
-        except IOError:
-            # If packed-refs also can't be read, just give up
-            return 'eeeeeeee'
+            # Not found in packed-refs. Meh, just make one up.
+            return 'ffffffff'
+    except IOError:
+        # If git metadata can't be read, just give up
+        return 'eeeeeeee'
 
 
 # Template context processor to add information about the root link and
@@ -178,4 +177,5 @@ def PGWebContextProcessor(request):
         'do_esi': settings.DO_ESI,
         'gitrev': gitrev,
         'topbarnews': SimpleLazyObject(_get_topbar_news),
+        'sitenav': sitenav,
     }

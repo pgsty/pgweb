@@ -1,0 +1,40 @@
+{% load pgfilters %}
+<header class="pg-header" id="pgHeader">
+  <div class="pg-container">
+    <nav class="pg-nav" aria-label="主导航">
+      <a class="pg-nav__brand" href="/" aria-label="PostgreSQL 中文站 - 首页">
+        <img class="pg-nav__logo" src="/media/img/about/press/elephant.png" alt="PostgreSQL" width="30" height="30">
+      </a>
+
+      <div class="pg-nav__menu">
+        {% include "base/navitems.html" with mode="desktop" %}
+      </div>
+
+      <div class="pg-nav__util">
+        <form class="pg-nav__search" role="search" method="get" action="/search/">
+          {% include "base/icon.html" with name="search" %}
+          <input id="q" name="q" type="text" maxlength="255" accesskey="s" placeholder="搜索..." aria-label="搜索" autocomplete="off">
+          <kbd aria-hidden="true">/</kbd>
+        </form>
+        <button class="pg-nav__btn pg-nav__search-btn" type="button" title="搜索" aria-label="搜索" data-pg-search-open aria-controls="pgDrawer" aria-expanded="false">{% include "base/icon.html" with name="search" %}</button>
+        <a class="pg-nav__btn pg-nav__alt" href="https://www.postgresql.org{{ request.path }}" title="前往 postgresql.org 对应页面" aria-label="前往 postgresql.org 对应页面" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}</a>
+        <button class="pg-nav__btn" type="button" title="切换深浅主题" aria-label="切换深浅主题" data-pg-theme-toggle>{% include "base/icon.html" with name="moon" %}{% include "base/icon.html" with name="sun" %}</button>
+        <a class="pg-nav__btn pg-nav__account{% if request.path|nav_active:'account' %} active{% endif %}" href="/account/" title="您的账户" aria-label="您的账户">{% include "base/icon.html" with name="user" %}</a>
+        <button class="pg-nav__btn pg-nav__toggle" type="button" title="菜单" aria-label="打开菜单" data-pg-drawer-toggle aria-controls="pgDrawer" aria-expanded="false">{% include "base/icon.html" with name="menu" %}{% include "base/icon.html" with name="close" %}</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<div class="pg-drawer" id="pgDrawer" hidden>
+  <nav class="pg-drawer__inner" aria-label="主导航（菜单）">
+    <form class="pg-drawer__search" role="search" method="get" action="/search/">
+      {% include "base/icon.html" with name="search" %}
+      <input name="q" type="text" maxlength="255" placeholder="搜索..." aria-label="搜索" autocomplete="off" data-pg-drawer-search>
+    </form>
+    {% include "base/navitems.html" with mode="mobile" %}
+    <div class="pg-drawer__sep" role="presentation"></div>
+    <a class="pg-drawer__link{% if request.path|nav_active:'account' %} active{% endif %}" href="/account/">{% include "base/icon.html" with name="user" %}<span>您的账户</span></a>
+    <a class="pg-drawer__link" href="https://www.postgresql.org{{ request.path }}" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}<span>前往 postgresql.org 对应页面</span></a>
+  </nav>
+</div>

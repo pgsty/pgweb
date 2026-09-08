@@ -1,0 +1,8 @@
+Brand web fonts bundled with pg.center (shared with the OINK theme, https://oink.pgsty.com):
+
+- Chakra Petch (Bold) by Cadson Demak — SIL Open Font License 1.1
+  https://github.com/cadsondemak/chakra-petch
+- IBM Plex Mono (Regular, SemiBold) by IBM — SIL Open Font License 1.1
+  https://github.com/IBM/plex
+
+Latin subsets only; the site falls back to system fonts for other scripts.

@@ -1,4 +1,5 @@
 {% extends "base/base.html" %}
+{% load pgfilters %}
 
 {% block title %}文档：{{page.display_version}}：{{page.title}}{% endblock %}
 
@@ -14,11 +15,12 @@
       <div class="row">
         <div id="pgContentWrap" class="col-11">
           <div class="row">
-            <div class="col-md-6 mb-2">
+            <div class="col-md-7 mb-2">
               <div class="row">
                 <div class="col">
                   <div>
-                    <a href="/docs/" title="文档">文档</a> &rarr; <a href="/docs/{{page.display_version}}/{{doc_index_filename}}">PostgreSQL {{page.display_version}}</a>{%if loaddate%} ({{loaddate|date:"Y-m-d H:i:s"}}{%if loadgit%} - git commit <a href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h={{loadgit}}">{{loadgit}}</a>{%endif%}){%endif%}
+                    <a href="/docs/" title="文档">文档</a> &rarr; <a href="/docs/{{page.display_version}}/{{doc_index_filename}}">PostgreSQL {{page.display_version}}</a>{%if loaddate%}
+                    <span class="pg-doc-build">{{loaddate|date:"Y-m-d H:i:s"}}{%if loadgit%} · git commit <a href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h={{loadgit}}" title="{{loadgit}}">{{loadgit|slice:":10"}}</a>{%endif%}</span>{%endif%}
                   </div>
                 </div>
               </div>
@@ -61,7 +63,7 @@
                 </div>
               {% endif %}
             </div>
-            <div class="col-md-6 col-lg-5 offset-lg-1">
+            <div class="col-md-5 col-lg-4 offset-lg-1">
               <form id="docSearchForm" role="search" method="get" action="/search/">
                 <input type="hidden" name="u" value="/docs/{{page.display_version}}/" />
                 <div class="input-group">
@@ -75,12 +77,12 @@
           </div>
 {%if not page.version.supported%}
 	  <div class="text-center alert-warning">
-	    此文档适用于不受支持的 PostgreSQL 版本。<br/>
-	    您可能需要查看<a href="/docs/current/{{page.file}}" title="PostgreSQL {{page.version.display_version}} - {{page.title}}">当前版本</a>的相同页面，或上面列出的其他受支持版本。
+	    当前 PostgreSQL 版本不在支持生命周期内。<br/>
+	    您可以参阅 <a href="/docs/current/{{page.file}}" title="PostgreSQL {{page.version.display_version}} - {{page.title}}">当前大版本</a> 的对应页面，或其他在上面列出的活跃大版本。
 	  </div>
 {%endif%}
           <div id="docContent">
-            {{page.content|safe}}
+            {{page.content|docs_ui_zh}}
           </div>
           {% if page.version.supported %}
             <div id="docComments">

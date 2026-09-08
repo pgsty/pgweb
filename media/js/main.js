@@ -1,22 +1,78 @@
 /*
- * Keyboard-accessible nav toggle
+ * pg.center site chrome
+ * ---------------------------------------------------------------------
+ * Header drawer, search shortcut, scrolled-header shadow and the light/dark
+ * theme switch. `theme` is declared by theme.js, which runs in <head> so the
+ * first paint already carries the stored preference.
  */
-document.getElementById('navbar-toggler-label').addEventListener('keydown', (e) => {
-    if (e.key == ' ') {
-        document.getElementById('navbar-toggler').checked ^= true;
-        e.preventDefault();
-    }
-});
-document.getElementById('navbar-toggler').addEventListener('change', (e) => {
-    document.getElementById('navbar-toggler').setAttribute('aria-expanded', document.getElementById('navbar-toggler').checked);
-});
 
-/*
- * Fix scrolling of anchor links
- */
-var shiftWindow = function() { scrollBy(0, -80) };
-if (location.hash) shiftWindow();
-window.addEventListener("hashchange", shiftWindow);
+(function () {
+  'use strict';
+
+  const header = document.getElementById('pgHeader');
+  const drawer = document.getElementById('pgDrawer');
+  const drawerToggles = document.querySelectorAll('[data-pg-drawer-toggle]');
+  const searchOpeners = document.querySelectorAll('[data-pg-search-open]');
+  const drawerSearch = drawer ? drawer.querySelector('[data-pg-drawer-search]') : null;
+  const headerSearch = document.querySelector('.pg-nav__search input');
+
+  function drawerIsOpen() {
+    return drawer && !drawer.hidden;
+  }
+
+  function setDrawer(open) {
+    if (!drawer) return;
+    drawer.hidden = !open;
+    document.body.classList.toggle('pg-drawer-open', open);
+    drawerToggles.forEach((b) => b.setAttribute('aria-expanded', open ? 'true' : 'false'));
+    searchOpeners.forEach((b) => b.setAttribute('aria-expanded', open ? 'true' : 'false'));
+  }
+
+  drawerToggles.forEach((btn) => {
+    btn.addEventListener('click', () => setDrawer(!drawerIsOpen()));
+  });
+
+  searchOpeners.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      setDrawer(true);
+      if (drawerSearch) drawerSearch.focus();
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && drawerIsOpen()) {
+      setDrawer(false);
+      return;
+    }
+    // "/" focuses the site search unless the reader is already typing.
+    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const t = e.target;
+      const typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
+      if (typing) return;
+      const visible = headerSearch && headerSearch.offsetParent !== null;
+      if (visible) {
+        headerSearch.focus();
+        e.preventDefault();
+      } else if (drawer && drawerSearch) {
+        setDrawer(true);
+        drawerSearch.focus();
+        e.preventDefault();
+      }
+    }
+  });
+
+  // Close the drawer when the viewport grows back into the desktop tiers.
+  window.addEventListener('resize', () => {
+    if (drawerIsOpen() && window.innerWidth >= 992) setDrawer(false);
+  });
+
+  // Shadow under the sticky header once the page has scrolled.
+  if (header) {
+    const onScroll = () => header.classList.toggle('pg-scrolled', window.scrollY > 4);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+})();
 
 
 /* Copy a script from an HTML element to the clipboard,
@@ -119,23 +175,24 @@ document.querySelectorAll('button[data-confirm]').forEach((button) => {
 
 
 /*
- * Theme switching
+ * Theme switching. The buttons carry both a moon and a sun glyph; the
+ * stylesheet shows the one that matches the current theme.
  */
 function theme_apply() {
   'use strict';
   if (theme === 'light') {
-    document.getElementById('btn-theme').innerHTML = '<i class="fas fa-moon"></i>';
     document.documentElement.setAttribute('data-theme', 'light');
     localStorage.setItem('theme', 'light');
   } else {
-    document.getElementById('btn-theme').innerHTML = '<i class="fas fa-lightbulb"></i>';
     document.documentElement.setAttribute('data-theme', 'dark');
     localStorage.setItem('theme', 'dark');
   }
+  document.querySelectorAll('[data-pg-theme-toggle]').forEach((btn) => {
+    btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+  });
 }
 
 theme_apply();
-document.getElementById("form-theme").classList.remove("d-none")
 
 function theme_switch() {
   'use strict';
@@ -158,6 +215,6 @@ theme_OS.addEventListener('change', function (e) {
   theme_apply();
 });
 
-document.querySelector('#btn-theme').addEventListener('click', function () {
-    theme_switch();
+document.querySelectorAll('[data-pg-theme-toggle]').forEach((btn) => {
+  btn.addEventListener('click', theme_switch);
 });

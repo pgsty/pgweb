@@ -17,58 +17,34 @@ PostgreSQL 提供各平台的即用安装包或安装程序，以及源代码归
 
 <p>选择您的操作系统：</p>
 
-<a role="button" id="btn-download-linux" class="btn btn-outline-dark btn-download" href="/download/linux/">
-  Linux<br/>
-  <img class="logo" src="/media/img/linux.svg" alt="Linux Logo" />
-</a>
-<a role="button" class="btn btn-outline-dark btn-download" href="/download/macosx/">
-  macOS<br/>
-  <img class="logo" src="/media/img/apple.png" alt="Apple Logo" />
-</a>
-<a role="button" class="btn btn-outline-dark btn-download" href="/download/windows/">
-  Windows<br/>
-  <img class="logo" src="/media/img/windows.svg" alt="Windows Logo" />
-</a>
-<a role="button" id="btn-download-bsd" class="btn btn-outline-dark btn-download" href="/download/bsd/">
-  BSD<br/>
-  <img class="logo" src="/media/img/bsd.png" alt="BSD Logo" />
-</a>
-<a role="button" class="btn btn-outline-dark btn-download" href="/download/solaris/">
-  Solaris<br/>
-  <img class="logo" src="/media/img/solaris.png" alt="Solaris Logo" />
-</a>
+<div class="pg-os-grid">
+  <a role="button" id="btn-download-linux" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/"><img class="logo" src="/media/img/linux.svg" alt="Linux Logo" /><span>Linux</span></a>
+  <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/macosx/"><img class="logo" src="/media/img/apple.png" alt="Apple Logo" /><span>macOS</span></a>
+  <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/windows/"><img class="logo" src="/media/img/windows.svg" alt="Windows Logo" /><span>Windows</span></a>
+  <a role="button" id="btn-download-bsd" class="btn btn-outline-dark btn-download pg-os" href="/download/bsd/"><img class="logo" src="/media/img/bsd.png" alt="BSD Logo" /><span>BSD</span></a>
+  <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/solaris/"><img class="logo" src="/media/img/solaris.png" alt="Solaris Logo" /><span>Solaris</span></a>
+</div>
 
 <!-- sub-navigation for Linux distributions -->
 <div id="download-subnav-linux" class="download-subnav">
   <p>选择您的 Linux 发行版：</p>
-  <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/debian/">
-    Debian<br/>
-    <img class="logo" src="/media/img/debian.svg" alt="Debian Logo" />
-  </a>
-  <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/redhat">
-    Red Hat/Rocky/AlmaLinux<br/>
-    <img class="logo" src="/media/img/redhat.svg" alt="Red Hat Logo" />
-  </a>
-  <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/suse">
-    SUSE<br/>
-    <img class="logo" src="/media/img/suse.svg" alt="SUSE Logo" />
-  </a>
-  <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/ubuntu">
-    Ubuntu<br/>
-    <img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu Logo" />
-  </a>
-  <a role="button" class="btn btn-outline-dark btn-download" href="/download/linux/#generic">
-    其他 Linux<br/>
-    <img class="logo" src="/media/img/linux.svg" alt="Linux Logo" />
-  </a>
+  <div class="pg-os-grid">
+    <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/debian/"><img class="logo" src="/media/img/debian.svg" alt="Debian Logo" /><span>Debian</span></a>
+    <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/redhat"><img class="logo" src="/media/img/redhat.svg" alt="Red Hat Logo" /><span>Red Hat / Rocky / AlmaLinux</span></a>
+    <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/suse"><img class="logo" src="/media/img/suse.svg" alt="SUSE Logo" /><span>SUSE</span></a>
+    <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/ubuntu"><img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu Logo" /><span>Ubuntu</span></a>
+    <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/linux/#generic"><img class="logo" src="/media/img/linux.svg" alt="Linux Logo" /><span>其他 Linux</span></a>
+  </div>
 </div>
 
 <!-- sub-navigation for BSD distributions -->
 <div id="download-subnav-bsd" class="download-subnav">
   <p>选择您的 BSD 操作系统：</p>
-  <a role="button" class="btn btn-outline-dark btn-download" href="/download/openbsd/">OpenBSD<br/><img class="logo" src="/media/img/openbsd.gif" alt="OpenBSD Logo" /></a>
-  <a role="button" class="btn btn-outline-dark btn-download" href="/download/freebsd/">FreeBSD<br/><img class="logo" src="/media/img/freebsd.svg" alt="FreeBSD Logo" /></a>
-  <a role="button" class="btn btn-outline-dark btn-download" href="/download/netbsd/">NetBSD<br/><img class="logo" src="/media/img/netbsd.svg" alt="NetBSD Logo" /></a>
+  <div class="pg-os-grid">
+    <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/openbsd/"><img class="logo" src="/media/img/openbsd.gif" alt="OpenBSD Logo" /><span>OpenBSD</span></a>
+    <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/freebsd/"><img class="logo" src="/media/img/freebsd.svg" alt="FreeBSD Logo" /><span>FreeBSD</span></a>
+    <a role="button" class="btn btn-outline-dark btn-download pg-os" href="/download/netbsd/"><img class="logo" src="/media/img/netbsd.svg" alt="NetBSD Logo" /><span>NetBSD</span></a>
+  </div>
 </div>
 
 <h3>源代码</h3>

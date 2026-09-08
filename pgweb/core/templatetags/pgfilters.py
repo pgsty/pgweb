@@ -29,6 +29,69 @@ def field_class(value, arg):
     return value.as_widget(attrs={"class": c})
 
 
+@register.filter(name='startswith')
+def startswith(value, prefix):
+    """True when the string value begins with prefix (used for nav state)."""
+    try:
+        return str(value).startswith(str(prefix))
+    except Exception:
+        return False
+
+
+# Top navigation highlight: section key -> (prefixes that match, prefixes
+# that belong to another entry even though they share the path).
+_NAV_SECTIONS = {
+    'home': ((), ()),
+    'about': (('/about/',), ()),
+    'download': (('/download/', '/ftp/'), ()),
+    'docs': (('/docs/',), ()),
+    'community': (('/community/',), ()),
+    'developer': (('/developer/',), ()),
+    'support': (('/support/',), ()),
+    'account': (('/account/',), ()),
+}
+
+
+@register.filter(name='nav_active')
+def nav_active(path, key):
+    """True when the request path belongs to the given top-nav section."""
+    path = str(path or '')
+    if key == 'home':
+        return path == '/'
+    prefixes, exclusions = _NAV_SECTIONS.get(key, ((), ()))
+    if any(path.startswith(x) for x in exclusions):
+        return False
+    return any(path.startswith(x) for x in prefixes)
+
+
+# Boilerplate strings the DocBook build leaves in English inside the stored
+# manual pages: navigation links, the table-of-contents heading and the
+# admonition titles. Translated at render time so the stored HTML stays as
+# loaded. Only whole boilerplate tokens are matched, never running text.
+_DOCS_UI_ZH = [
+    (re.compile(r'(<a\s[^>]*accesskey="p"[^>]*>)Prev(ious)?(</a>)', re.I), r'\1上一页\3'),
+    (re.compile(r'(<a\s[^>]*accesskey="n"[^>]*>)Next(</a>)', re.I), r'\1下一页\2'),
+    (re.compile(r'(<a\s[^>]*accesskey="u"[^>]*>)Up(</a>)', re.I), r'\1上级\2'),
+    (re.compile(r'(<a\s[^>]*accesskey="h"[^>]*>)Home(</a>)', re.I), r'\1首页\2'),
+    (re.compile(r'>Table of Contents<'), '>目录<'),
+    (re.compile(r'(<h3 class="title">)Note(</h3>)'), r'\1注意\2'),
+    (re.compile(r'(<h3 class="title">)Tip(</h3>)'), r'\1提示\2'),
+    (re.compile(r'(<h3 class="title">)Warning(</h3>)'), r'\1警告\2'),
+    (re.compile(r'(<h3 class="title">)Caution(</h3>)'), r'\1小心\2'),
+    (re.compile(r'(<h3 class="title">)Important(</h3>)'), r'\1重要\2'),
+]
+
+
+@register.filter(name='docs_ui_zh', is_safe=True)
+def docs_ui_zh(content):
+    """Translate the manual's navigation/TOC/admonition boilerplate to Chinese."""
+    if not content:
+        return content
+    for pattern, repl in _DOCS_UI_ZH:
+        content = pattern.sub(repl, content)
+    return mark_safe(content)
+
+
 @register.filter(name='hidemail')
 @stringfilter
 def hidemail(value):
