@@ -6,7 +6,7 @@
 <div class="eventdate">日期：<strong>{{obj.displaydate|safe}}</strong></div>
 <div>地点：{{obj.locationstring}}</div>
 {%if obj.language%}<div>语言：{{obj.language}}</div>{%endif%}
-{%if obj.badged%}<img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event">  此活动已按照 <a href="/about/policies/conferences/">社区活动准则</a> 获得认可。{%endif%}
+{%if obj.badged%}<img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event">  此活动已按照<a href="/about/policies/conferences/">社区活动准则</a>获得认可。{%endif%}
 {{obj.details|markdown}}
 {%if obj.has_organisation%}
 <p>发布者：{{obj.org}}{%if obj.org.email%}（{{obj.org.email}}）{%endif%}</p>

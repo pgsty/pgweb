@@ -30,12 +30,14 @@ from django.contrib import admin
 admin.autodiscover()
 
 urlpatterns = [
+    path('ext/', include('pgweb.ext.urls')),
+    path('e/', include('pgweb.ext.urls_e')),
     re_path(r'^$', pgweb.core.views.home),
     re_path(r'^dyncss/(?P<css>base).css$', pgweb.core.views.dynamic_css),
 
     re_path(r'^about/$', pgweb.core.views.about),
     re_path(r'^about/newsarchive/(?P<tag>[^/]*/)?(?P<paginator>[0-9]{8}/)?$', pgweb.news.views.archive),
-    re_path(r'^about/news/(?P<slug>[^/]+)-(?P<itemid>\d+)/$', pgweb.news.views.item),
+    re_path(r'^about/news/(?P<slug>[^/]*)-(?P<itemid>\d+)/$', pgweb.news.views.item),
     re_path(r'^about/news/(?P<itemid>\d+)(?P<slug>-.*)?/$', pgweb.news.views.item),
     re_path(r'^about/news/taglist.json/$', pgweb.news.views.taglist_json),
     re_path(r'^about/events/$', pgweb.events.views.main),
@@ -59,6 +61,10 @@ urlpatterns = [
     re_path(r'^developer/beta/$', pgweb.core.views.beta_testing),
 
     re_path(r'^docs/$', pgweb.docs.views.root),
+    path('docs/third-party/', pgweb.docs.views.third_party),
+    # Retired local manuals: send existing links to the external documentation.
+    re_path(r'^(?:(?:en|zh)/)?docs/(?P<project>patroni|pgbouncer|pgbackrest)(?:/.*)?$',
+            RedirectView.as_view(url='https://pigsty.cc/docs/%(project)s', permanent=True)),
     path(r'docs/books/', pgweb.docs.views.books),
     re_path(r'^docs/manuals/$', pgweb.docs.views.manuals),
     re_path(r'^docs/manuals/archive/$', pgweb.docs.views.manualarchive),

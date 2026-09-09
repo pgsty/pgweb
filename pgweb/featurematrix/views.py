@@ -9,6 +9,8 @@ import yaml
 from pgweb.util.contexts import render_pgweb
 from pgweb.util.decorators import content_sources
 from pgweb.util.decorators import xkey
+from pgweb.util.markup import pgmarkdown
+from pgweb.util.seo import summarize_html
 from pgweb.core.models import Version
 
 log = logging.getLogger(__name__)
@@ -150,8 +152,37 @@ def detail(request, featureslug):
     feature = matrixdata.feature_from_slug(featureslug)
     if not feature:
         raise Http404()
+    title = '特性：{}'.format(feature['display_name'])
+    raw_description = feature.get('display_description', '') or ''
+    description = ''
+    if not raw_description.lstrip().startswith(('http://', 'https://')):
+        description = summarize_html(
+            pgmarkdown(raw_description, allow_relative_links=True),
+            max_length=180,
+        )
+    if not description:
+        versions = feature.get('versions') or {}
+        statuses = {str(status).lower() for status in versions.values()}
+        introduced = next(
+            (version for version, status in versions.items() if str(status).lower() == 'yes'),
+            None,
+        )
+        if introduced and statuses == {'yes'}:
+            description = 'PostgreSQL {} 起支持“{}”特性，详见官方文档。'.format(
+                introduced,
+                feature['display_name'],
+            )
+        else:
+            description = 'PostgreSQL 特性“{}”的版本支持说明，详见官方文档。'.format(feature['display_name'])
     return render_pgweb(request, 'about', 'featurematrix/featuredetail.html', {
         'feature': feature,
+        'og': {
+            'url': '/about/featurematrix/detail/{}/'.format(featureslug),
+            'title': title,
+            'description': description,
+            'type': 'article',
+            'sitename': 'PostgreSQL 特性矩阵',
+        },
     })
 
 

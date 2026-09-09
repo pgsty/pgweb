@@ -1,7 +1,6 @@
-from django.template.defaultfilters import slugify
-
 from datetime import date, timedelta
 from .models import NewsArticle
+from .util import news_url
 
 from pgweb.util.moderation import ModerationState
 
@@ -18,5 +17,5 @@ def get_struct():
         yearsold = (now - n.date).days / 365
         if yearsold > 4:
             yearsold = 4
-        yield ('about/news/{}-{}/'.format(slugify(n.title), n.id),
+        yield (news_url(n.title, n.id).lstrip('/'),
                0.5 - (yearsold / 10.0))

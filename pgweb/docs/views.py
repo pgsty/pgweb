@@ -10,7 +10,7 @@ from html.parser import HTMLParser
 import os
 import re
 
-from pgweb.util.contexts import render_pgweb
+from pgweb.util.contexts import THIRD_PARTY_DOCS, get_nav_menu, render_pgweb
 from pgweb.util.helpers import template_to_string
 from pgweb.util.misc import send_template_mail
 from pgweb.util.decorators import xkey
@@ -22,7 +22,6 @@ from pgweb.util.db import exec_to_dict
 
 from .models import DocPage, DocPageRedirect
 from .forms import DocCommentForm
-from .ecosystem import component_cards
 
 
 re_cjk = re.compile(r'[\u4e00-\u9fff]')
@@ -586,19 +585,36 @@ def root(request):
     versions = Version.objects.filter(Q(supported=True) | Q(testing__gt=0, tree__gt=0)).order_by('-tree')
     r = render_pgweb(request, 'docs', 'docs/index.html', {
         'versions': _loaded_version_wrappers(versions),
-        'ecosystem_components': component_cards(),
         'devel_a4pdf': _find_devel_pdf('A4'),
         'devel_uspdf': _find_devel_pdf('US'),
         'og': {
             'url': '/docs/',
             'type': 'website',
             'title': 'PostgreSQL 中文文档',
-            'description': 'PostgreSQL 中文手册、版本文档与 PDF 下载，以及 Patroni、PgBouncer、pgBackRest、pgBadger 中英文文档。',
+            'description': 'PostgreSQL 中文手册、各版本在线文档、PDF 下载与旧版手册归档。',
             'sitename': 'PostgreSQL 中文站',
         },
     })
     r['xkey'] = 'pgdocs_all pgdocs_pdf'
     return r
+
+
+def third_party(request):
+    navmenu = get_nav_menu('docs')
+    navmenu[-1].update({'submenu': THIRD_PARTY_DOCS, 'active': True})
+    return render(request, 'docs/third_party.html', {
+        'navmenu': navmenu,
+        'components': THIRD_PARTY_DOCS,
+        'source_url': 'https://www.postgresql.org/docs/',
+        'source_label': 'PostgreSQL 官方文档',
+        'og': {
+            'url': '/docs/third-party/',
+            'type': 'website',
+            'title': '三方文档',
+            'description': 'PostgreSQL 生态组件介绍与中文文档入口，涵盖高可用、连接池、备份恢复、监控、空间数据、时序数据与分布式数据库。',
+            'sitename': 'PostgreSQL 中文站',
+        },
+    })
 
 
 class _VersionPdfWrapper(object):

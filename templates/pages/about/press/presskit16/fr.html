@@ -1,5 +1,6 @@
 {% extends "pages/about/press/presskit16/base.html" %}
 
+{% block presskit_heading %}PostgreSQL 16 Dossier de presse{% endblock presskit_heading %}
 {% block presskit_content %}
 <p>Le 14 septembre 2023 - Le PostgreSQL Global Development Group annonce
 aujourd’hui la publication de PostgreSQL 16, dernière version de la base de
@@ -34,7 +35,7 @@ version, le planificateur de requête peut
 <a href="https://www.postgresql.org/docs/16/parallel-query.html">paralléliser</a> les
 <a href="https://www.postgresql.org/docs/16/queries-table-expressions.html#QUERIES-JOIN">jointures</a>
 <code>FULL</code> et <code>RIGHT</code>, générer de meilleurs plans pour les requêtes qui utilisent
-des <a href="(https://www.postgresql.org/docs/16/functions-aggregate.html">fonction
+des <a href="https://www.postgresql.org/docs/16/functions-aggregate.html">fonction
 d’agrégation</a> avec
 des clauses <code>DISTINCT</code> ou <code>ORDER BY</code>, bénéficier de tris incrémentaux pour les
 requêtes <a href="https://www.postgresql.org/docs/16/queries-select-lists.html#QUERIES-DISTINCT"><code>SELECT

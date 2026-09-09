@@ -2840,17 +2840,21 @@ button.pg-script-copy-btn.pg-code__btn {
 }
 
 /* Testimonial carousel on the about page: one quote at a time with a
-   cross-fade, round previous/next buttons at the sides, small dots below. */
+   cross-fade. The block is only as tall as the quote it shows; the round
+   previous/next buttons hang just outside the text column, vertically
+   centred on the quote, and the dots sit a short step below the
+   attribution. */
 
 .pg-carousel {
   position: relative;
-  margin: 0 auto 2.5rem;
-  padding: 0 64px;
+  margin: 0.5rem auto 2rem;
+  padding: 0;
 }
 
 .pg-carousel .carousel-inner {
   position: relative;
-  min-height: 9rem;
+  min-height: 0;
+  overflow: visible;
 }
 
 .pg-carousel .carousel-item {
@@ -2859,8 +2863,9 @@ button.pg-script-copy-btn.pg-code__btn {
   display: block;
   float: none;
   width: 100%;
+  min-height: 0;
   margin: 0;
-  padding: 0.5rem 1rem;
+  padding: 0 1rem;
   text-align: center;
   opacity: 0;
   visibility: hidden;
@@ -2875,8 +2880,8 @@ button.pg-script-copy-btn.pg-code__btn {
 }
 
 .pg-carousel .testimonial {
-  max-width: 48rem;
-  margin: 0 auto 1rem;
+  max-width: 44rem;
+  margin: 0 auto 0.6rem;
   color: var(--pg-ink);
   font-size: 17px;
   line-height: 1.8;
@@ -2886,7 +2891,7 @@ button.pg-script-copy-btn.pg-code__btn {
 .pg-carousel .overview {
   margin: 0;
   color: var(--pg-muted);
-  font-size: 15px;
+  font-size: 14.5px;
   font-style: italic;
 }
 
@@ -2900,9 +2905,9 @@ button.pg-script-copy-btn.pg-code__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  margin-top: -22px;
+  width: 42px;
+  height: 42px;
+  margin-top: -21px;
   padding: 0;
   border: 1px solid var(--pg-line-strong);
   border-radius: 50%;
@@ -2915,8 +2920,8 @@ button.pg-script-copy-btn.pg-code__btn {
               color var(--pg-dur) var(--pg-ease);
 }
 
-.pg-carousel .carousel-control-prev { left: 0; }
-.pg-carousel .carousel-control-next { right: 0; }
+.pg-carousel .carousel-control-prev { left: -72px; }
+.pg-carousel .carousel-control-next { right: -72px; }
 
 .pg-carousel .carousel-control:hover,
 .pg-carousel .carousel-control:focus-visible {
@@ -2930,7 +2935,7 @@ button.pg-script-copy-btn.pg-code__btn {
   display: block;
   margin: 0;
   color: inherit;
-  font-size: 22px;
+  font-size: 20px;
   line-height: 1;
   text-shadow: none;
 }
@@ -2940,7 +2945,7 @@ button.pg-script-copy-btn.pg-code__btn {
   display: flex;
   justify-content: center;
   gap: 8px;
-  margin: 1.5rem 0 0;
+  margin: 1.1rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -2973,6 +2978,17 @@ button.pg-script-copy-btn.pg-code__btn {
 [data-theme="dark"] .pg-carousel .carousel-indicators li.active,
 [data-theme="dark"] .pg-carousel .carousel-indicators li:hover {
   background: var(--pg-heading);
+}
+
+/* Narrower layouts have no margin beside the column: bring the buttons
+   inside and pad the quote away from them. */
+@media (max-width: 991.98px) {
+  .pg-carousel {
+    padding: 0 52px;
+  }
+
+  .pg-carousel .carousel-control-prev { left: 0; }
+  .pg-carousel .carousel-control-next { right: 0; }
 }
 
 @media (max-width: 575.98px) {

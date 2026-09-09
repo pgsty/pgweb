@@ -3,6 +3,7 @@ from pgweb.core.models import Version
 
 
 def get_struct():
+    yield ('docs/third-party/', 0.5, None)
     currentversion = Version.objects.get(current=True)
 
     # Can't use a model here, because we don't (for some reason) have a
@@ -28,18 +29,19 @@ def get_struct():
                 docprio -= 0.1
             lastversion = version
 
+        raw_version = version
         if version >= 10:
             version = int(version)
 
-        yield ('docs/%s/%s' % (version, filename),
-               testing and 0.1 or docprio,  # beta/rc versions always get 0.1 in prio
-               loaded)
-
-        # Also yield the current version urls, with the highest
-        # possible priority
-        if version == currentversion.tree:
+        # Only emit the canonical current URL; numeric current pages remain
+        # reachable aliases. Historical manuals keep their versioned URLs.
+        if raw_version == currentversion.tree:
             yield ('docs/current/%s' % filename,
                    1.0, loaded)
+        else:
+            yield ('docs/%s/%s' % (version, filename),
+                   testing and 0.1 or docprio,
+                   loaded)
 
 
 # For our internal sitemap (used only by our own search engine),

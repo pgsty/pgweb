@@ -1,27 +1,27 @@
 {%extends "base/page.html"%}
 {%load pgmarkdown%}
-{%block title%}新闻归档{%if tag%} - {{tag.name}}{%endif%}{%endblock%}
+{%block title%}{{page_title}}{%endblock%}
 {%block contents%}
-<h1><a href="/about/newsarchive/">新闻归档</a>{%if tag%} - {{tag.name}}{%endif%} <i class="far fa-newspaper"></i></h1>
+<h1><a href="/about/newsarchive/">新闻归档</a>{%if tag%} - {{tag.name}}{%endif%}{%if cutoff_date%}（截至 {{cutoff_date|date:"Y 年 n 月 j 日"}}）{%endif%} <i class="far fa-newspaper"></i></h1>
 
 <p>
 {%for t in newstags%}<span class="newstag"><a class="btn btn-primary" href="/about/newsarchive/{{t.urlname}}/"><i class="fa fa-tag"></i> {{t.name}}</a></span> {%endfor%}
 </p>
 
 {%for obj in news %}
-<h2 class="news"><a href="/about/news/{{obj.title|slugify}}-{{obj.id}}/">{{obj.title}}</a></h2>
+<h2 class="news"><a href="{{obj.permanenturl}}">{{obj.title}}</a></h2>
 <div class="newsdate">发布于 <strong>{{obj.displaydate}}</strong>{% if obj.org.name != '_migrated' %}，{{ obj.org.name }}{% endif %}
 {%for t in obj.tags.all%}<span class="badge badge-pill badge-secondary"><i class="fa fa-tag"></i> {{t}}</span> {%endfor%}
 </div>
 {{obj.content|markdown|striptags|truncatewords:20}}
-<p><a href="/about/news/{{obj.title|slugify}}-{{obj.id}}/">阅读更多...</a></p>
+<p><a href="{{obj.permanenturl}}">阅读更多...</a></p>
 {%endfor%}
 
 {%if paginator%}
-<a class="btn btn-primary" href="/about/newsarchive/{{tag.urlname|default:"-"}}/{{paginator}}/">更早的新闻...</a>
+<a class="btn btn-primary" href="/about/newsarchive/{{tag.urlname|default:"-"}}/{{paginator}}/">更早的新闻（截至 {{paginator_date|date:"Y 年 n 月 j 日"}}）...</a>
 {%endif%}
 
 <p>
-  新闻文章来自 PostgreSQL 项目或其他相关组织投稿。如果您希望分享与 PostgreSQL 相关的新闻，可以在登录后 <a href="/account/news/new/">提交</a> 您自己的文章以供审核。
+  新闻文章来自 PostgreSQL 项目或其他相关组织投稿。如果您希望分享与 PostgreSQL 相关的新闻，可以在登录后<a href="/account/news/new/">提交</a>您自己的文章以供审核。
 </p>
 {%endblock%}

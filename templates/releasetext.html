@@ -1,23 +1,23 @@
 {% load pgfilters %}
 {%if release.type == "minor" %}
         <p>
-          PG 全球开发组已发布覆盖所有受支持版本的 <a href="/download/">更新</a>，包括 <a href="{{ release.news.url }}">{{ release.versions|joinzh }}</a>。本次发布修复了{% if release.cve|length > 0 %} {{ release.cve|length }} 个安全漏洞以及{% endif %}过去几个月内上报的多项错误。
+          PG 全球开发组已发布覆盖所有受支持版本的<a href="/download/">更新</a>，包括 <a href="{{ release.news.url }}">{{ release.versions|joinzh }}</a>。本次发布修复了{% if release.cve|length > 0 %} {{ release.cve|length }} 个安全漏洞以及{% endif %}过去几个月内上报的多项错误。
         </p>
         <p>
-          有关本次发布的更多信息，请查阅 <a href="/docs/release/">发行说明</a>。您可以从 <a href="/download/">下载</a> 页面获取 PostgreSQL。
+          有关本次发布的更多信息，请查阅<a href="/docs/release/">发行说明</a>。您可以从<a href="/download/">下载</a>页面获取 PostgreSQL。
         </p>
 {% elif release.type == "alpha" or release.type == "beta" or release.type == "rc" %}
         <p>
-          PostgreSQL 全球开发组宣布，PostgreSQL {{ release.versions.0 }} 现已 <a href="/download/">开放下载</a>。此版本用于预览 PostgreSQL {{ release.versions.0.major }} 正式发布前的新功能；测试期间部分细节仍可能调整。
+          PostgreSQL 全球开发组宣布，PostgreSQL {{ release.versions.0 }} 现已<a href="/download/">开放下载</a>。此版本用于预览 PostgreSQL {{ release.versions.0.major }} 正式发布前的新功能；测试期间部分细节仍可能调整。
         </p>
         <p>
-          PostgreSQL {{ release.versions.0.major }} 的功能与变更记录可在 <a href="/docs/{{ release.versions.0.major }}/release-{{ release.versions.0.major }}.html">发行说明</a> 中查看。
+          PostgreSQL {{ release.versions.0.major }} 的功能与变更记录可在<a href="/docs/{{ release.versions.0.major }}/release-{{ release.versions.0.major }}.html">发行说明</a>中查看。
         </p>
         <p>
           我们诚邀社区在自己的系统中测试 PostgreSQL {{ release.versions.0.major }} 的新功能，帮助发现并消除缺陷及其他问题。请勿在生产环境中运行此测试版本，但建议使用典型应用负载进行兼容性与回归测试。
         </p>
         <p>
-          您的测试与反馈将帮助社区确保 PostgreSQL {{ release.versions.0.major }} 达到稳定、可靠的发布标准。请进一步了解 <a href="/developer/beta/">测试流程</a> 以及参与方式。
+          您的测试与反馈将帮助社区确保 PostgreSQL {{ release.versions.0.major }} 达到稳定、可靠的发布标准。请进一步了解<a href="/developer/beta/">测试流程</a>以及参与方式。
         </p>
 {% elif release.type == "major" %}
 {% with major=release.versions.0.major %}
@@ -26,10 +26,10 @@
         </p>
 {{ release.announcetext_zh|default:release.announcetext|safe }}
         <p>
-          PostgreSQL {{ major }} 的完整功能列表请参阅 <a href="/docs/{{ major }}/release-{{ major }}.html">发行说明</a>。您可以从 <a href="/download/">下载</a> 页面获取 PostgreSQL {{ major }}。
+          PostgreSQL {{ major }} 的完整功能列表请参阅<a href="/docs/{{ major }}/release-{{ major }}.html">发行说明</a>。您可以从<a href="/download/">下载</a>页面获取 PostgreSQL {{ major }}。
         </p>
         <p>
-          如需完整新闻稿及发布公告译文，请访问 <a href="/about/press/">媒体资料包</a>。
+          如需完整新闻稿及发布公告译文，请访问<a href="/about/press/">媒体资料包</a>。
         </p>
 {% endwith %}
 {% elif release.type == "override" %}
@@ -39,9 +39,7 @@
 {% with oldestversion=versions|last %}
 {% if oldestversion.soon_eol %}
 <p>
-PostgreSQL {{ oldestversion.numtree }} 将于 {{ oldestversion.eoldate|date:"Y年n月j日" }} 停止接收修复。
-如果您在生产环境中运行 PostgreSQL {{ oldestversion.numtree }}，建议开始规划升级到较新的受支持版本。
-更多信息请参阅 <a href="/support/versioning/">版本策略</a>。
+PostgreSQL {{ oldestversion.numtree }} 的社区支持将于 {{ oldestversion.eoldate|date:"Y 年 n 月 j 日" }} 结束。如果您在生产环境中运行 PostgreSQL {{ oldestversion.numtree }}，建议开始规划升级到较新的受支持版本。更多信息请参阅<a href="/support/versioning/">版本策略</a>。
 </p>
 {% endif %}
 {% endwith %}

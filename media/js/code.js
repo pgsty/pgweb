@@ -1,12 +1,13 @@
 /*
  * pg.center code blocks
  * ---------------------------------------------------------------------
- * Wraps every <pre> on content and documentation pages in a framed block
- * with a copy button in the top-right corner (the OINK theme's compact
- * action), and highlights blocks that declare a language (data-lang or
+ * Wraps every <pre> on content and documentation pages in a
+ * framed block with a copy button in the top-right corner (the OINK
+ * theme's compact action), and highlights blocks that declare a language
+ * (data-lang, a language-* class on the <pre> or its <code>, or
  * class="code", which defaults to bash) with a vendored highlight.js core
- * plus the bash, ini and sql grammars. Loaded as an ES module, so nothing
- * runs until the document is parsed.
+ * plus the bash, ini, sql, properties, yaml, diff and json grammars.
+ * Loaded as an ES module, so nothing runs until the document is parsed.
  */
 
 import hljs from './vendor/hljs/core.min.js';
@@ -14,6 +15,9 @@ import bash from './vendor/hljs/bash.min.js';
 import ini from './vendor/hljs/ini.min.js';
 import sql from './vendor/hljs/sql.min.js';
 import properties from './vendor/hljs/properties.min.js';
+import yaml from './vendor/hljs/yaml.min.js';
+import diff from './vendor/hljs/diff.min.js';
+import json from './vendor/hljs/json.min.js';
 
 /* The stock bash grammar colours keywords, strings, variables and comments
    but leaves the command itself, its flags and URLs plain, which is most
@@ -33,6 +37,9 @@ hljs.registerLanguage('bash', shell);
 hljs.registerLanguage('ini', ini);
 hljs.registerLanguage('sql', sql);
 hljs.registerLanguage('properties', properties);
+hljs.registerLanguage('yaml', yaml);
+hljs.registerLanguage('diff', diff);
+hljs.registerLanguage('json', json);
 
 /* Manual pages carry <pre class="programlisting"> without a language; a
    block that opens with a SQL statement is highlighted as SQL. */
@@ -44,7 +51,13 @@ const ICONS = {
   check: '<svg class="pg-icon pg-icon--check" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>',
 };
 
-const LANG_ALIASES = { sh: 'bash', shell: 'bash', zsh: 'bash', conf: 'ini', toml: 'ini', psql: 'sql', postgresql: 'sql', pgsql: 'sql', deb822: 'properties', sources: 'properties', repo: 'ini' };
+const LANG_ALIASES = {
+  sh: 'bash', shell: 'bash', zsh: 'bash', console: 'bash', 'shell-session': 'bash',
+  conf: 'ini', toml: 'ini', repo: 'ini', cfg: 'ini',
+  psql: 'sql', postgresql: 'sql', pgsql: 'sql', plpgsql: 'sql', postgres: 'sql',
+  deb822: 'properties', sources: 'properties',
+  yml: 'yaml', patch: 'diff', jsonc: 'json', json5: 'json',
+};
 
 /* Copy text to the clipboard, with a fallback for browsers without the
    async clipboard API. Shared with main.js (copyScript). */
@@ -87,7 +100,8 @@ window.pgFlashButton = flash;
 function languageOf(pre) {
   let lang = (pre.dataset.lang || '').toLowerCase();
   if (!lang) {
-    const m = (pre.className || '').match(/language-([a-z0-9]+)/i);
+    const code = pre.querySelector(':scope > code');
+    const m = ((pre.className || '') + ' ' + (code ? code.className : '')).match(/\blang(?:uage)?-([a-z0-9+_-]+)/i);
     if (m) lang = m[1].toLowerCase();
   }
   if (!lang && pre.classList.contains('code')) lang = 'bash';

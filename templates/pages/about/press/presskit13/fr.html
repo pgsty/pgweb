@@ -1,12 +1,13 @@
 {% extends "pages/about/press/presskit13/base.html" %}
 
+{% block presskit_heading %}PostgreSQL 13 Dossier de presse{% endblock presskit_heading %}
 {% block presskit_content %}
 <h1>PostgreSQL 13 Released!</h1>
 
 <p>
   <strong>24 septembre 2020 &mdash;</strong> Le PostgreSQL Global Development
   Group annonce aujourd'hui la sortie de
-  <a href="/docs/13/release-13.html">PostgreSQL 13</a>, la dernière
+  <a href="https://www.postgresql.org/docs/13/release-13.html">PostgreSQL 13</a>, la dernière
   version du <a href="https://www.postgresql.org/">SGBD open source de référence</a>.
 </p>
 
@@ -21,8 +22,8 @@
 
 <p>
   À côté de fonctionnalités très demandées comme le
-  <a href="/docs/13/sql-vacuum.html">vacuum parallèle</a> et le
-  <a href="/docs/13/runtime-config-query.html#GUC-ENABLE-INCREMENTAL-SORT">tri incrémental</a>,
+  <a href="https://www.postgresql.org/docs/13/sql-vacuum.html">vacuum parallèle</a> et le
+  <a href="https://www.postgresql.org/docs/13/runtime-config-query.html#GUC-ENABLE-INCREMENTAL-SORT">tri incrémental</a>,
   PostgreSQL 13 améliore l'expérience de gestion des données pour tous les types
   de trafic, en offrant des optimisations pour l'administration au quotidien, plus
   de facilités pour les développeurs d'applications et des améliorations de
@@ -52,7 +53,7 @@
 
 <p>
   Continuant sur les travaux de la version précédente, PostgreSQL 13 gère efficacement
-  <a href="/docs/13/btree-implementation.html#BTREE-DEDUPLICATION">la duplication de données dans un index B-tree</a>,
+  <a href="https://www.postgresql.org/docs/13/btree-implementation.html#BTREE-DEDUPLICATION">la duplication de données dans un index B-tree</a>,
   type standard d'index. Cela réduit l'espace utilisé par les index B-tree tout en
   améliorant la performance des requêtes.
 </p>
@@ -62,9 +63,9 @@
   d'une étape précédente du plan de requêtage peuvent accélérer le tri dans une
   étape ultérieure de ce même plan. De plus, PostgreSQL peut maintenant utiliser
   le système de
-  <a href="/docs/13/planner-stats.html#PLANNER-STATS-EXTENDED">statistiques étendues</a>
+  <a href="https://www.postgresql.org/docs/13/planner-stats.html#PLANNER-STATS-EXTENDED">statistiques étendues</a>
   (accessible au travers de la commande
-  <a href="/docs/13/sql-createstatistics.html"><code>CREATE STATISTICS</code></a>) pour
+  <a href="https://www.postgresql.org/docs/13/sql-createstatistics.html"><code>CREATE STATISTICS</code></a>) pour
   créer de meilleurs plans pour les requêtes contenant des clauses <code>OR</code> et des
   recherches <code>IN</code>/<code>ANY</code> sur des listes.
 </p>
@@ -72,11 +73,11 @@
 <p>
   Avec PostgreSQL 13, la fonctionnalité d'agrégation par hachage peut améliorer
   différents types requêtes utilisant les
-  <a href="/docs/13/functions-aggregate.html">agrégats</a> et les
-  <a href="/docs/13/queries-table-expressions.html#QUERIES-GROUPING-SETS">grouping sets</a>,
+  <a href="https://www.postgresql.org/docs/13/functions-aggregate.html">agrégats</a> et les
+  <a href="https://www.postgresql.org/docs/13/queries-table-expressions.html#QUERIES-GROUPING-SETS">grouping sets</a>,
   en évitant aux agrégats volumineux de devoir tenir entièrement en mémoire. Les
   requêtes sur des
-  <a href="/docs/13/ddl-partitioning.html">tables partitionnées</a> sont
+  <a href="https://www.postgresql.org/docs/13/ddl-partitioning.html">tables partitionnées</a> sont
   plus performantes&nbsp;; il y a désormais davantage de possibilités d'écarter des
   partitions, ou de les joindre directement.
 </p>
@@ -84,7 +85,7 @@
 <h3 id="optimisations-concernant-l-administration">Optimisations concernant l'administration</h3>
 
 <p>
-  <a href="/docs/13/routine-vacuuming.html">VACUUM</a> est une
+  <a href="https://www.postgresql.org/docs/13/routine-vacuuming.html">VACUUM</a> est une
   opération essentielle de l'administration de PostgreSQL. Elle permet de
   récupérer l'espace de stockage après mise à jour ou suppression de lignes. Ce
   processus n'est pas dénué de difficultés, en dépit du travail mené sur les
@@ -93,7 +94,7 @@
 
 <p>
   PostgreSQL 13 poursuit l'amélioration du vacuum en introduisant la
-  <a href="/docs/13/sql-vacuum.html">parallélisation du vacuum pour les index</a>.
+  <a href="https://www.postgresql.org/docs/13/sql-vacuum.html">parallélisation du vacuum pour les index</a>.
   En plus des gains de performances rendus possibles par cette avancée, la charge induite par cette
   fonctionnalité peut être finement ajustée par l'administrateur qui peut définir
   le nombre de processus parallèles à lancer. Pour compléter ces améliorations de
@@ -102,11 +103,11 @@
 </p>
 
 <p>
-  <a href="/docs/13/warm-standby.html#STREAMING-REPLICATION-SLOTS">Les slots de réplication</a>
+  <a href="https://www.postgresql.org/docs/13/warm-standby.html#STREAMING-REPLICATION-SLOTS">Les slots de réplication</a>
   qui sont utilisés pour éviter la suppression des journaux de transactions (WAL)
   avant leur réception par un réplica, peuvent être finement configurés dans
   PostgreSQL 13. Cela permet de définir
-  <a href="/docs/13/runtime-config-replication.html#GUC-MAX-SLOT-WAL-KEEP-SIZE">le nombre maximum de fichiers WAL à conserver</a>
+  <a href="https://www.postgresql.org/docs/13/runtime-config-replication.html#GUC-MAX-SLOT-WAL-KEEP-SIZE">le nombre maximum de fichiers WAL à conserver</a>
   et ainsi aider à la prévention des erreurs de saturation de l'espace disque.
 </p>
 
@@ -115,9 +116,9 @@
   base de données par l'administrateur. Cela inclut notamment les statistiques
   d'utilisation des WAL par <code>EXPLAIN</code>, la progression de la sauvegarde en continu,
   et la progression des commandes <code>ANALYZE</code>. L'intégrité de la sortie de la
-  commande <a href="/docs/13/app-pgbasebackup.html"><code>pg_basebackup</code></a>
+  commande <a href="https://www.postgresql.org/docs/13/app-pgbasebackup.html"><code>pg_basebackup</code></a>
   peut, de plus, être vérifiée avec la nouvelle commande
-  <a href="/docs/13/app-pgverifybackup.html"><code>pg_verifybackup</code></a>.
+  <a href="https://www.postgresql.org/docs/13/app-pgverifybackup.html"><code>pg_verifybackup</code></a>.
 </p>
 
 <h3 id="commodit-s-pour-le-d-veloppement-d-applications">Commodités pour le développement d'applications</h3>
@@ -125,11 +126,11 @@
 <p>
   PostgreSQL 13 simplifie le travail avec les types de données provenant de
   différentes sources de données. Cette version ajoute notamment la fonction
-  <a href="/docs/13/functions-json.html#FUNCTIONS-SQLJSON-OP-TABLE"><code>datetime()</code></a>
+  <a href="https://www.postgresql.org/docs/13/functions-json.html#FUNCTIONS-SQLJSON-OP-TABLE"><code>datetime()</code></a>
   au support de SQL/JSON path. Celle-ci convertit les dates d'un format valide
   (des chaînes ISO 8601, par exemple) en types natifs PostgreSQL. De plus, la
   fonction de génération UUID v4,
-  <a href="/docs/13/functions-uuid.html"><code>gen_random_uuid()</code></a>,
+  <a href="https://www.postgresql.org/docs/13/functions-uuid.html"><code>gen_random_uuid()</code></a>,
   est maintenant disponible sans extension.
 </p>
 
@@ -141,7 +142,7 @@
 
 <p>
   La syntaxe
-  <a href="/docs/13/sql-select.html#SQL-LIMIT"><code>FETCH FIRST</code></a> a été
+  <a href="https://www.postgresql.org/docs/13/sql-select.html#SQL-LIMIT"><code>FETCH FIRST</code></a> a été
   étendue pour y inclure la clause <code>WITH TIES</code>. <code>WITH TIES</code> permet d'inclure
   toutes les lignes liées à la dernière ligne du résultat fourni par <code>ORDER BY</code>.
 </p>
@@ -154,23 +155,23 @@
   versions précédentes, les nouvelles extensions ne pouvaient être installées que
   par un superutilisateur de la base de données. Pour simplifier cette gestion,
   PostgreSQL 13 ajoute le concept
-  «&nbsp;<a href="/docs/13/sql-createextension.html">d'extension de confiance</a>&nbsp;»,
+  «&nbsp;<a href="https://www.postgresql.org/docs/13/sql-createextension.html">d'extension de confiance</a>&nbsp;»,
   qui permet aux utilisateurs d'installer les extensions identifiées comme de
   «&nbsp;confiance&nbsp;» par un superutilisateur. Certaines extensions incluses dans
   PostgreSQL sont définies comme de confiance par défaut&nbsp;:
-  <a href="/docs/13/pgcrypto.html"><code>pgcrypto</code></a>,
-  <a href="/docs/13/tablefunc.html"><code>tablefunc</code></a>,
-  <a href="/docs/13/hstore.html"><code>hstore</code></a>, parmi d'autres.
+  <a href="https://www.postgresql.org/docs/13/pgcrypto.html"><code>pgcrypto</code></a>,
+  <a href="https://www.postgresql.org/docs/13/tablefunc.html"><code>tablefunc</code></a>,
+  <a href="https://www.postgresql.org/docs/13/hstore.html"><code>hstore</code></a>, parmi d'autres.
 </p>
 
 <p>
   Pour les applications qui nécessitent des méthodes d'authentification
   sécurisées, PostgreSQL 13 permet aux clients
-  d'<a href="/docs/13/libpq-connect.html#LIBPQ-CONNECT-CHANNEL-BINDING">exiger l'agrégation de canaux</a>
+  d'<a href="https://www.postgresql.org/docs/13/libpq-connect.html#LIBPQ-CONNECT-CHANNEL-BINDING">exiger l'agrégation de canaux</a>
   lors de l'utilisation de
-  <a href="/docs/13/sasl-authentication.html#SASL-SCRAM-SHA-256">l'authentification SCRAM</a>.
+  <a href="https://www.postgresql.org/docs/13/sasl-authentication.html#SASL-SCRAM-SHA-256">l'authentification SCRAM</a>.
   Le <em>foreign data wrapper</em> de
-  PostgreSQL (<a href="/docs/13/postgres-fdw.html"><code>postgres_fdw</code></a>)
+  PostgreSQL (<a href="https://www.postgresql.org/docs/13/postgres-fdw.html"><code>postgres_fdw</code></a>)
   peut maintenant utiliser une authentification à base de certificats.
 </p>
 
@@ -191,7 +192,7 @@
 
 <ul>
   <li><a href="/download/">Téléchargements</a></li>
-  <li><a href="/docs/13/release-13.html">Notes de version</a></li>
+  <li><a href="https://www.postgresql.org/docs/13/release-13.html">Notes de version</a></li>
   <li><a href="/about/press/">Dossier de presse</a></li>
   <li><a href="/support/security/">Page de sécurité</a></li>
   <li><a href="/support/versioning/">Politique de versions</a></li>

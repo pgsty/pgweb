@@ -23,7 +23,7 @@
           <li><a href="/about/featurematrix/">特性矩阵</a></li>
           <li><a href="/about/governance/">项目治理</a></li>
           <li><a href="/about/sponsors/">赞助者</a></li>
-          <li><a href="/about/press/">新闻</a></li>
+          <li><a href="/about/press/">媒体资料</a></li>
           <li><a href="/about/licence/">许可证</a></li>
         </ul>
       </nav>
@@ -31,7 +31,7 @@
         <h2>文档</h2>
         <ul>
           <li><a href="/docs/">手册</a></li>
-          <li><a href="/docs/release/">发布</a></li>
+          <li><a href="/docs/release/">发行说明</a></li>
           <li><a href="/docs/books/">书籍</a></li>
           <li><a href="/docs/online-resources/">其他</a></li>
           <li><a href="/docs/faq/">FAQ</a></li>
@@ -73,7 +73,7 @@
       </div>
       <div class="pg-footline__right">
         <a class="pg-nav__btn" href="/news.rss" title="RSS 订阅" aria-label="RSS 订阅">{% include "base/icon.html" with name="rss" %}</a>
-        <a class="pg-nav__btn" href="https://www.postgresql.org{{ request.path }}" title="前往 postgresql.org 对应页面" aria-label="前往 postgresql.org 对应页面" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}</a>
+        <a class="pg-nav__btn" href="{{ source_url }}" title="{{ source_label }}" aria-label="{{ source_label }}" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}</a>
         <button class="pg-nav__btn" type="button" title="切换深浅主题" aria-label="切换深浅主题" data-pg-theme-toggle>{% include "base/icon.html" with name="moon" %}{% include "base/icon.html" with name="sun" %}</button>
       </div>
     </div>

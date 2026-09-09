@@ -5,7 +5,7 @@
 
 <p>
   <strong>OCTOBER 3, 2019</strong> - The PostgreSQL Global Development Group
-  today announced the release of <a href="/about/news/postgresql-12-released-1976/">PostgreSQL 12</a>,
+  today announced the release of <a href="https://www.postgresql.org/about/news/postgresql-12-released-1976/">PostgreSQL 12</a>,
   the latest version of the world's <a href="/">most advanced open source database</a>.
 </p>
 
@@ -64,8 +64,8 @@
   Queries on partitioned tables have also seen demonstrable improvements,
   particularly for tables with thousands of partitions that only need to
   retrieve data from a limited subset. PostgreSQL 12 also improves the
-  performance of adding data to partitioned tables with <a href="/docs/12/sql-insert.html"><code>INSERT</code></a>
-  and <a href="/docs/12/sql-copy.html"><code>COPY</code></a>, and includes the
+  performance of adding data to partitioned tables with <a href="https://www.postgresql.org/docs/12/sql-insert.html"><code>INSERT</code></a>
+  and <a href="https://www.postgresql.org/docs/12/sql-copy.html"><code>COPY</code></a>, and includes the
   ability to attach a new partition to a table without blocking queries.
 </p>
 
@@ -73,15 +73,15 @@
   There are additional enhancements to indexing in PostgreSQL 12 that affect
   overall performance, including lower overhead in write-ahead log generation
   for the GiST, GIN, and SP-GiST index types, the ability to create covering
-  indexes (the <a href="/docs/12/indexes-index-only-scans.html"><code>INCLUDE</code></a> clause) on GiST indexes, the ability to perform
+  indexes (the <a href="https://www.postgresql.org/docs/12/indexes-index-only-scans.html"><code>INCLUDE</code></a> clause) on GiST indexes, the ability to perform
   K-nearest neighbor queries with the distance operator (<code>&lt;-&gt;</code>) using
-  SP-GiST indexes, and <a href="/docs/12/sql-createstatistics.html"><code>CREATE STATISTICS</code></a>
+  SP-GiST indexes, and <a href="https://www.postgresql.org/docs/12/sql-createstatistics.html"><code>CREATE STATISTICS</code></a>
   now supporting most-common value (MCV) statistics to help generate better
   query plans when using columns that are nonuniformly distributed.
 </p>
 
 <p>
-  <a href="/docs/12/jit.html">Just-in-time (JIT) compilation</a> using LLVM, introduced in PostgreSQL 11, is now
+  <a href="https://www.postgresql.org/docs/12/jit.html">Just-in-time (JIT) compilation</a> using LLVM, introduced in PostgreSQL 11, is now
   enabled by default. JIT compilation can provide performance benefits to the
   execution of expressions in <code>WHERE</code> clauses, target lists, aggregates, and some
   internal operations, and is available if your PostgreSQL installation is
@@ -99,9 +99,9 @@
 
 <p>
   PostgreSQL 12 introduces the ability to run queries over JSON documents using
-  <a href="/docs/12/functions-json.html#FUNCTIONS-SQLJSON-PATH">JSON path expressions</a>
+  <a href="https://www.postgresql.org/docs/12/functions-json.html#FUNCTIONS-SQLJSON-PATH">JSON path expressions</a>
   defined in the SQL/JSON standard. Such queries may utilize the existing
-  indexing mechanisms for documents stored in the <a href="/docs/12/datatype-json.html"><code>JSONB</code></a>
+  indexing mechanisms for documents stored in the <a href="https://www.postgresql.org/docs/12/datatype-json.html"><code>JSONB</code></a>
   format to efficiently retrieve data.
 </p>
 
@@ -114,7 +114,7 @@
 </p>
 
 <p>
-  PostgreSQL 12 introduces "<a href="/docs/12/ddl-generated-columns.html">generated columns</a>." Defined in the SQL standard,
+  PostgreSQL 12 introduces "<a href="https://www.postgresql.org/docs/12/ddl-generated-columns.html">generated columns</a>." Defined in the SQL standard,
   this type of column computes its value from the contents of other columns in
   the same table. In this version, PostgreSQL supports
   "stored generated columns," where the computed value is stored on the disk.
@@ -124,7 +124,7 @@
 
 <p>
   PostgreSQL 12 extends its support of ICU collations by allowing users to
-  define "<a href="/docs/12/collation.html#COLLATION-NONDETERMINISTIC">nondeterministic collations</a>"
+  define "<a href="https://www.postgresql.org/docs/12/collation.html#COLLATION-NONDETERMINISTIC">nondeterministic collations</a>"
   that can, for example, allow case-insensitive or accent-insensitive comparisons.
 </p>
 
@@ -151,20 +151,20 @@
 <p>
   PostgreSQL 12 introduces the ability to rebuild indexes without blocking
   writes to an index via the
-  <a href="/docs/12/sql-reindex.html#SQL-REINDEX-CONCURRENTLY"><code>REINDEX CONCURRENTLY</code></a>
+  <a href="https://www.postgresql.org/docs/12/sql-reindex.html#SQL-REINDEX-CONCURRENTLY"><code>REINDEX CONCURRENTLY</code></a>
   command, allowing users to avoid downtime scenarios for lengthy index rebuilds.
 </p>
 
 <p>
   Additionally, PostgreSQL 12 can now enable or disable page checksums in an
-  offline cluster using the <a href="/docs/12/app-pgchecksums.html"><code>pg_checksums</code></a> command. Previously page
+  offline cluster using the <a href="https://www.postgresql.org/docs/12/app-pgchecksums.html"><code>pg_checksums</code></a> command. Previously page
   checksums, a feature to help verify the integrity of data stored to disk, could only be
   enabled at the time a PostgreSQL cluster was initialized with <code>initdb</code>.
 </p>
 
 <p>
   For a full list of features included in this release, please read the
-  <a href="/docs/12/release-12.html">release notes</a>, which can be found at:
-  <a href="/docs/12/release-12.html">https://www.postgresql.org/docs/12/release-12.html</a>
+  <a href="https://www.postgresql.org/docs/12/release-12.html">release notes</a>, which can be found at:
+  <a href="https://www.postgresql.org/docs/12/release-12.html">https://www.postgresql.org/docs/12/release-12.html</a>
 </p>
 {% endblock presskit_content %}

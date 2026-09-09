@@ -12,7 +12,7 @@ from urllib.request import urlopen
 from urllib.parse import quote
 
 from pgweb.util.decorators import nocache
-from pgweb.util.contexts import render_pgweb
+from pgweb.util.contexts import get_nav_menu, render_pgweb
 from pgweb.util.helpers import PgXmlHelper, HttpServerError
 from pgweb.util.misc import varnish_purge, version_sort
 from pgweb.util.seo import summarize_html
@@ -248,10 +248,22 @@ def yum_js(request):
 #######
 # Product catalogue
 #######
+def _product_navmenu(categories, current=None):
+    navmenu = get_nav_menu('download')
+    for item in navmenu:
+        if item['link'] == '/download/product-categories/':
+            item.update(active=current is None, submenu=[
+                {'title': category.catname, 'link': '/download/products/{}/'.format(category.pk),
+                 'active': category.pk == current} for category in categories
+            ])
+    return navmenu
+
+
 def categorylist(request):
-    categories = Category.objects.all()
-    return render_pgweb(request, 'download', 'downloads/categorylist.html', {
+    categories = list(Category.objects.all())
+    return render(request, 'downloads/categorylist.html', {
         'categories': categories,
+        'navmenu': _product_navmenu(categories),
         'og': {
             'title': 'PostgreSQL 软件目录与产品分类',
             'description': '按类别查找 PostgreSQL 相关的接口、扩展和软件，了解产品介绍、许可证与发行商。此目录不构成 PostgreSQL 全球开发组的推荐或背书。',
@@ -263,8 +275,9 @@ def categorylist(request):
 def productlist(request, catid, junk=None):
     category = get_object_or_404(Category, pk=catid)
     products = Product.objects.select_related('org', 'licencetype').filter(category=category, approved=True)
-    return render_pgweb(request, 'download', 'downloads/productlist.html', {
+    return render(request, 'downloads/productlist.html', {
         'category': category,
+        'navmenu': _product_navmenu(Category.objects.all(), category.pk),
         'products': products,
         'productcount': len(products),
         'og': {

@@ -22,7 +22,7 @@ class LocalizedBooksTests(SimpleTestCase):
         self.assertEqual(localized['title'], 'Example')
         self.assertEqual(localized['language_zh'], '英语')
         self.assertEqual(localized['format_zh'], '平装书、电子书')
-        self.assertEqual(localized['published_zh'], '2026年4月')
+        self.assertEqual(localized['published_zh'], '2026 年 4 月')
 
     def test_template_uses_each_books_own_url(self):
         books = [
@@ -52,4 +52,4 @@ class LocalizedBooksTests(SimpleTestCase):
 
         self.assertIn('href="https://example.com/first"', rendered)
         self.assertIn('href="https://example.com/second"', rendered)
-        self.assertIn('2003年8月（德语版）', rendered)
+        self.assertIn('2003 年 8 月（德语版）', rendered)

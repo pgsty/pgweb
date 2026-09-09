@@ -114,6 +114,7 @@ INSTALLED_APPS = [
     'pgweb.quotes',
     'pgweb.downloads',
     'pgweb.docs',
+    'pgweb.ext',
     'pgweb.contributors',
     'pgweb.profserv',
     'pgweb.lists',

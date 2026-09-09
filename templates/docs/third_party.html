@@ -1,0 +1,13 @@
+{%extends "base/page.html"%}
+{%block title%}三方文档{%endblock%}
+{%block contents%}
+  <h1>三方文档</h1>
+  <p>PostgreSQL 生态组件的中文文档。点击组件名称，前往对应的文档网站阅读。</p>
+
+  {%for component in components%}
+  <section>
+    <h2><a href="{{component.link}}">{{component.title}} <i class="fas fa-external-link-alt" aria-hidden="true"></i></a></h2>
+    <p>{{component.description}}</p>
+  </section>
+  {%endfor%}
+{%endblock%}

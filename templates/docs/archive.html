@@ -4,8 +4,7 @@
 
 <h1>手册归档 <i class="fas fa-book"></i></h1>
 
-<p>以下是不再受支持的 PostgreSQL 版本的手册链接（包括在线版和可打印版本）。
-如果您仍在使用这些版本，我们强烈建议您进行升级。</p>
+<p>以下是不再受支持的 PostgreSQL 版本的手册链接（包括在线版和可打印版本）。如果您仍在使用这些版本，我们强烈建议您进行升级。</p>
 
 <table class="table table-striped">
   <thead>
@@ -18,7 +17,11 @@
 		{%for v in versions%}
 		<tr>
 	    <td>
-          <a href="/docs/{{v.numtree}}/{{v.indexname}}">{{v.treestring}}</a>
+          {% if v.loaded %}
+            <a href="/docs/{{v.numtree}}/{{v.indexname}}">{{v.treestring}}</a>
+          {% else %}
+            <span title="本站未加载该版本的在线手册">{{v.treestring}}</span>
+          {% endif %}
       </td>
       <td>
 	  {%if v.a4pdf or v.uspdf%}

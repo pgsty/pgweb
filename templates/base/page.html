@@ -11,11 +11,11 @@
          <ul>
            {%for m in navmenu%}
            {%if not forloop.first %}</li>{%endif%}
-           <li{%if forloop.last%} class="last-child"{%endif%}><a href="{{m.link}}">{{m.title}}</a>
+           <li{%if m.id%} id="{{m.id}}"{%endif%}{%if forloop.last%} class="last-child"{%endif%}><a href="{{m.link}}"{%if m.active%} aria-current="page"{%endif%}>{{m.title}}</a>
             {%if m.submenu %}
              <ul>
              {%for sm in m.submenu %}
-              <li{%if forloop.last%} class="last-child"{%endif%}><a href="{{sm.link}}">{{sm.title}}</a></li>
+              <li{%if forloop.last%} class="last-child"{%endif%}><a href="{{sm.link}}"{%if sm.active%} aria-current="page"{%endif%}>{{sm.title}}</a></li>
              {%endfor%}
              </ul>
             {%endif%}

@@ -1,11 +1,12 @@
 {% extends "pages/about/press/presskit13/base.html" %}
 
+{% block presskit_heading %}PostgreSQL 13 ערכת עיתונות{% endblock presskit_heading %}
 {% block presskit_content %}
 <h1>PostgreSQL 13 Released!</h1>
 
 <p dir="rtl">
   קבוצת הפיתוח הגלובלית של PostgreSQL הודיעה היום על שחרורה של
-  <a href="/docs/13/release-13.html">PostgreSQL 13</a>
+  <a href="https://www.postgresql.org/docs/13/release-13.html">PostgreSQL 13</a>
   , הגרסה העדכנית ביותר של
   <a href="https://www.postgresql.org/"> מסד הנתונים המתקדם בעולם עם קוד פתוח </a>
 </p>
@@ -16,9 +17,9 @@
 
 <p dir="rtl">
   לצד תכונות מבוקשות מאוד כמו
-  <a href="/docs/13/sql-vacuum.html"> parallelized vacuuming </a>
+  <a href="https://www.postgresql.org/docs/13/sql-vacuum.html"> parallelized vacuuming </a>
   ו
-  <a href="/docs/13/runtime-config-query.html#GUC-ENABLE-INCREMENTAL-SORT"> incremental sorting </a>
+  <a href="https://www.postgresql.org/docs/13/runtime-config-query.html#GUC-ENABLE-INCREMENTAL-SORT"> incremental sorting </a>
   מערכת מספקת חוויית ניהול נתונים טובה יותר לעומסי עבודה גדולים וקטנים, עם אופטימיזציות לניהול יומיומי, יותר נוחות למפתחי אפליקציות ושיפור האבטחה.
 </p>
 
@@ -37,53 +38,53 @@
 
 <p dir="rtl">
   בהתבסס על עבודה מהמהדורה הקודמת, PostgreSQL 13 יכולה לטפל ביעילות ב
-  <a href="/docs/13/btree-implementation.html#BTREE-DEDUPLICATION"> נתונים כפולים ב B-tree אינדקסים </a>
+  <a href="https://www.postgresql.org/docs/13/btree-implementation.html#BTREE-DEDUPLICATION"> נתונים כפולים ב B-tree אינדקסים </a>
   , האינדקס הסטנדרטי של מסד הנתונים. זה מקטין את גודל האחסון שדרוש לאינדקס B-tree תוך שיפור ביצועי השאילתות הכוללים.
 </p>
 
 <p dir="rtl">
   PostgreSQL 13 מציגה מיון מצטבר, כאשר נתונים ממוינים בשלב מוקדם בשאילתה ויכולים להאיץ את המיון בשלב מאוחר יותר. בנוסף, PostgreSQL יכולה כעת להשתמש
-  <a href="/docs/13/planner-stats.html#PLANNER-STATS-EXTENDED"> בסטטיסטיקה המורחבת </a>
+  <a href="https://www.postgresql.org/docs/13/planner-stats.html#PLANNER-STATS-EXTENDED"> בסטטיסטיקה המורחבת </a>
    (נגישה באמצעות
-  <a href="/docs/13/sql-createstatistics.html"> `CREATE STATISTICS` </a>
+  <a href="https://www.postgresql.org/docs/13/sql-createstatistics.html"> `CREATE STATISTICS` </a>
   ) כדי ליצור תוכניות משופרות לשאילתות עם סעיפי 'OR' וחיפושים 'IN' / 'ANY' על פני רשימות.
 </p>
 
 <p dir="rtl">
   ב- PostgreSQL 13, סוגים נוספים של
-  <a href="/docs/13/functions-aggregate.htm"> aggregate </a>
+  <a href="https://www.postgresql.org/docs/13/functions-aggregate.html"> aggregate </a>
   ו
-  <a href="/docs/13/queries-table-expressions.html#QUERIES-GROUPING-SETS"> grouping set </a>
+  <a href="https://www.postgresql.org/docs/13/queries-table-expressions.html#QUERIES-GROUPING-SETS"> grouping set </a>
   כאשר שאילתות יכולות למנף את הפונקציונליות של hash aggregation יעילה של PostgreSQL, שכן שאילתות עם אגרגטים גדולים אינן צריכות להשתלב לחלוטין בזיכרון. שאילתות עם
-  <a href="/docs/13/ddl-partitioning.htm"> partitioned tables </a>
+  <a href="https://www.postgresql.org/docs/13/ddl-partitioning.html"> partitioned tables </a>
   קיבלו שיפור ביצועים, מכיוון שכעת ישנם מקרים נוספים בהם ניתן לגזום מחיצות ולחבר ישירות את המחיצות.
 </p>
 
 <h3 dir="rtl">אופטימיזציות ניהול</h3>
 
 <p dir="rtl">
-  <a href="/docs/13/routine-vacuuming.html"> Vacuuming </a>
+  <a href="https://www.postgresql.org/docs/13/routine-vacuuming.html"> Vacuuming </a>
   הוא חלק חיוני בניהול של PostgreSQL, המאפשר לבסיס הנתונים להחזיר שטח אחסון לאחר עדכון ומחיקה של שורות. תהליך זה יכול גם להציב אתגרים ניהוליים, אם כי מהדורות קודמות של PostgreSQL עשו עבודה בכדי להקל על פעולה זו.
 </p>
 
 <p dir="rtl">
   PostgreSQL 13 ממשיך לשפר את מערכת vacuuming עם
-  <a href="/docs/13/sql-vacuum.html"> הכנסת vacuuming מקביל לאינדקסי </a>
+  <a href="https://www.postgresql.org/docs/13/sql-vacuum.html"> הכנסת vacuuming מקביל לאינדקסי </a>
   . בנוסף ליתרונות ביצועי vacuuming שהיא מציעה, ניתן לכוון את השימוש בתכונה חדשה זו לעומסי עבודה ספציפיים שכן DBA יכולים לבחור את מספר תהליכים מקבילים להפעלה. בנוסף ליתרונות הביצועים הללו, הוספות נתונים יכולות כעת להפעיל את תהליך autovacuum.
 </p>
 
 <p dir="rtl">
-  <a href="/docs/13/warm-standby.html#STREAMING-REPLICATION-SLOTSl"> Replication slots </a>
+  <a href="https://www.postgresql.org/docs/13/warm-standby.html#STREAMING-REPLICATION-SLOTS"> Replication slots </a>
    המשמשות למניעת הסרת WAL לפני שהתקבלו על ידי רפליקה, ניתנים לכוון ב- PostgreSQL 13 כדי לציין את
-  <a href="/docs/13/runtime-config-replication.html#GUC-MAX-SLOT-WAL-KEEP-SIZE"> המספר המרבי של קבצי WAL שישמרו </a>
+  <a href="https://www.postgresql.org/docs/13/runtime-config-replication.html#GUC-MAX-SLOT-WAL-KEEP-SIZE"> המספר המרבי של קבצי WAL שישמרו </a>
    לסייע למנוע שגיאות הקשורות לזמינות מקום בדיסק.
 </p>
 
 <p dir="rtl">
   PostgreSQL 13 מוסיף גם דרכים נוספות שמנהל מערכת יכול להשתמש על מנת לפקח על פעילות מסדי נתונים, הכולל הפניה לסטטיסטיקה של שימוש ב- WAL מ- 'EXPLAIN', התקדמות streaming base backups והתקדמות פקודות ANALYZE. בנוסף, ניתן לבדוק את תקינות הפלט של הפקודה
-  <a href="/docs/13/app-pgbasebackup.html"> `pg_basebackup` </a>
+  <a href="https://www.postgresql.org/docs/13/app-pgbasebackup.html"> `pg_basebackup` </a>
   באמצעות הפקודה החדשה
-  <a href="/docs/13/app-pgverifybackup.html"> `pg_verifybackup` </a>
+  <a href="https://www.postgresql.org/docs/13/app-pgverifybackup.html"> `pg_verifybackup` </a>
   .
 </p>
 
@@ -91,10 +92,10 @@
 
 <p dir="rtl">
   PostgreSQL 13 מקל עוד יותר על העבודה עם סוגי נתונים של PostgreSQL המגיעים ממקורות נתונים שונים. מהדורה זו מוסיפה את הפונקציה
-  <a href="/docs/13/functions-json.html#FUNCTIONS-SQLJSON-OP-TABLE"> `datetime()` </a>
+  <a href="https://www.postgresql.org/docs/13/functions-json.html#FUNCTIONS-SQLJSON-OP-TABLE"> `datetime()` </a>
   לתמיכת ב SQL/JSON path שלה, אשר ממירה פורמטים תקפים של זמן (למשל
   מחרוזות ISO 8601) לסוגים מקוריים של PostgreSQL. בנוסף, פונקציית
-  <a href="/docs/13/functions-uuid.html"> `gen_random_uuid()` </a>
+  <a href="https://www.postgresql.org/docs/13/functions-uuid.html"> `gen_random_uuid()` </a>
   ליצירה של UUID v4, זמינה כעת ללא צורך בהתקנת תוסף כלשהו.
 </p>
 
@@ -104,31 +105,31 @@
 
 <p dir="rtl">
   התחביר
-  <a href="/docs/13/sql-select.html#SQL-LIMIT"> `FETCH FIRST` </a>
+  <a href="https://www.postgresql.org/docs/13/sql-select.html#SQL-LIMIT"> `FETCH FIRST` </a>
    ב- PostgreSQL 13 מורחב כעת לכלול את הסעיף 'WITH TIES'. כאשר צוין, 'WITH TIES' כולל כל הרשומות , בהתבסס על סעיף 'ORDER BY',  אשר 'מקושרות' עם הרשומה האחרונה בסט התוצאות.
 </p>
 
 <h3 dir="rtl">שיפורי אבטחה</h3>
 <p dir="rtl">
   מערכת ההרחבות של PostgreSQL היא מרכיב מרכזי בחוסן שלה מכיוון שהיא מאפשרת למפתחים להרחיב את הפונקציונליות שלה. במהדורות קודמות, רק משתמש-על של מסד נתונים יכל היה להתקין הרחבות חדשות. כדי להקל על ניצול תכונה זו PostgreSQL 13 מוסיף את הרעיון של
-  <a href="/docs/13/sql-createextension.html"> trusted extension </a>
+  <a href="https://www.postgresql.org/docs/13/sql-createextension.html"> trusted extension </a>
   , המאפשר למשתמשי מסד נתונים להתקין הרחבות שמשתמש-על סימן כ"אמינים". הרחבות מסוימות מובנות מסומנות ככה כברירת מחדל, כולל
-  <a href="/docs/13/pgcrypto.html"> `pgcrypto` </a>
+  <a href="https://www.postgresql.org/docs/13/pgcrypto.html"> `pgcrypto` </a>
    גם
-  <a href="/docs/13/tablefunc.html"> `tablefunc` </a>
+  <a href="https://www.postgresql.org/docs/13/tablefunc.html"> `tablefunc` </a>
   גם
-  <a href="/docs/13/hstore.html"> `hstore` </a>
+  <a href="https://www.postgresql.org/docs/13/hstore.html"> `hstore` </a>
    ואחרים.
 </p>
 
 <p dir="rtl">
   עבור יישומים הדורשים שיטות אימות מאובטחות, PostgreSQL 13 מאפשר ללקוחות לדרוש
-  <a href="/docs/13/libpq-connect.html#LIBPQ-CONNECT-CHANNEL-BINDING"> קשירת ערוצים </a>
+  <a href="https://www.postgresql.org/docs/13/libpq-connect.html#LIBPQ-CONNECT-CHANNEL-BINDING"> קשירת ערוצים </a>
    בעת שימוש
-  <a href="/docs/13/sasl-authentication.html#SASL-SCRAM-SHA-256"> באימות SCRAM </a>
+  <a href="https://www.postgresql.org/docs/13/sasl-authentication.html#SASL-SCRAM-SHA-256"> באימות SCRAM </a>
   .
   גם
-  <a href="/docs/13/postgres-fdw.html"> עטיפת הנתונים הזרים </a>
+  <a href="https://www.postgresql.org/docs/13/postgres-fdw.html"> עטיפת הנתונים הזרים </a>
    של PostgreSQL יכולה כעת להשתמש באימות מבוסס תעודות.
 </p>
 
@@ -147,10 +148,10 @@
     <a href="/download/"> הורדות </a>
   </li>
   <li>
-    <a href="/docs/13/release-13.htm"> הערות מהדורה </a>
+    <a href="https://www.postgresql.org/docs/13/release-13.html"> הערות מהדורה </a>
   </li>
   <li>
-    <a href="/docs/13/release-13.htm"> ערכת עיתונות </a>
+    <a href="https://www.postgresql.org/docs/13/release-13.html"> ערכת עיתונות </a>
   </li>
   <li>
     <a href="/support/security/"> עמוד אבטחה </a>

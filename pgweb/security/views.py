@@ -3,6 +3,8 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 
 from pgweb.util.contexts import render_pgweb
+from pgweb.util.markup import pgmarkdown
+from pgweb.util.seo import summarize_html
 
 from pgweb.core.models import Version
 from .models import SecurityPatch
@@ -14,6 +16,12 @@ def GetPatchesList(filt):
 
 def _list_patches(request, filt, version=None):
     patches = GetPatchesList(filt)
+    if version:
+        page_title = '安全信息：版本 {}'.format(version.numtree)
+        page_description = 'PostgreSQL {} 安全信息：影响该大版本的公开安全漏洞、修复版本和 CVSS 信息。'.format(version.numtree)
+    else:
+        page_title = '安全信息'
+        page_description = 'PostgreSQL 安全信息：已知漏洞、影响版本、修复版本和 CVSS 信息。'
 
     return render_pgweb(request, 'support', 'security/security.html', {
         'patches': patches,
@@ -22,6 +30,14 @@ def _list_patches(request, filt, version=None):
             where=["EXISTS (SELECT 1 FROM security_securitypatchversion pv WHERE pv.version_id=core_version.id)"],
         ),
         'version': version,
+        'page_title': page_title,
+        'og': {
+            'url': request.path,
+            'title': page_title,
+            'description': page_description,
+            'type': 'article',
+            'sitename': 'PostgreSQL 安全信息',
+        },
     })
 
 
@@ -46,9 +62,23 @@ def details(request, cve_prefix, cve):
     except ValidationError:
         raise Http404()
 
+    page_title = 'CVE-{}: {}'.format(security_patch.cve, security_patch.description)
+    page_description = summarize_html(
+        pgmarkdown(security_patch.details or security_patch.description, allow_relative_links=True),
+        max_length=180,
+    ) or security_patch.description
+
     return render_pgweb(request, 'support', 'security/details.html', {
         'security_patch': security_patch,
         'versions': security_patch.securitypatchversion_set.select_related('version').order_by('-version__tree').all(),
+        'page_title': page_title,
+        'og': {
+            'url': '/support/security/CVE-{}/'.format(security_patch.cve),
+            'title': page_title,
+            'description': page_description,
+            'type': 'article',
+            'sitename': 'PostgreSQL 安全信息',
+        },
     })
 
 

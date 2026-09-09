@@ -43,9 +43,8 @@ def startswith(value, prefix):
 _NAV_SECTIONS = {
     'home': ((), ()),
     'about': (('/about/',), ()),
-    'download': (('/download/', '/ftp/'), ()),
+    'download': (('/download/', '/ftp/', '/ext/', '/e/'), ()),
     'docs': (('/docs/',), ()),
-    'ext': (('/ext/', '/e/'), ()),
     'community': (('/community/',), ()),
     'developer': (('/developer/',), ()),
     'support': (('/support/',), ()),

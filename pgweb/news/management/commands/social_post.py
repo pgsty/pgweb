@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
 from django.db import connection
-from django.template.defaultfilters import slugify
 
 from pgweb.news.models import NewsArticle, PinnedNewsArticle
 from pgweb.util.moderation import ModerationState
@@ -44,11 +43,10 @@ class Command(BaseCommand):
                 # Don't post more often than once / 30 seconds, to not trigger flooding.
                 time.sleep(30)
 
-            statusstr = "News: {0}\n\n{1}/about/news/{2}-{3}/\n\n#postgresql".format(
+            statusstr = "News: {0}\n\n{1}{2}\n\n#postgresql".format(
                 article.title[:100],
-                settings.SITE_ROOT,
-                slugify(article.title),
-                article.id,
+                settings.SITE_ROOT.rstrip('/'),
+                article.permanenturl,
             )
 
             for provider in allproviders:

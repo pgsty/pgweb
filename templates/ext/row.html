@@ -1,0 +1,10 @@
+<tr class="{{ extension.color }}">
+  <td class="ext-table__name"><a href="{{ extension.href }}">{{ extension.name }}</a></td>
+  <td class="ext-table__mono">{{ extension.version|default:'—' }}</td>
+  <td class="ext-table__desc">{{ extension.description }}</td>
+  <td class="ext-table__cat"><a href="{{ extension.category_href }}" title="{{ extension.category_label }}"><i aria-hidden="true"></i>{{ extension.category }}</a></td>
+  <td class="ext-table__mono ext-table__license">{% if extension.license != 'Unknown' %}<a href="{{ extension.license_href }}" title="{{ extension.license }}">{{ extension.license }}</a>{% else %}—{% endif %}</td>
+  <td class="ext-table__mono">{% if extension.lang != 'Unknown' %}<a href="{{ extension.language_href }}">{{ extension.lang }}</a>{% else %}—{% endif %}</td>
+  <td class="ext-table__mono">{{ extension.pg_range|default:'—' }}</td>
+  <td class="ext-table__num">{% if extension.stars %}{% if extension.upstream %}<a href="{{ extension.upstream }}" target="_blank" rel="noopener" title="{{ extension.stars }}">{{ extension.stars_short }}</a>{% else %}{{ extension.stars_short }}{% endif %}{% endif %}</td>
+</tr>

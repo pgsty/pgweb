@@ -26,9 +26,13 @@
 	{%for v in versions%}
 	<tr>
 	 <td>
-	  <a href="/docs/{{v.numtree}}/index.html">{{v.treestring}}</a>
+	  {% if v.loaded %}
+	    <a href="/docs/{{v.numtree}}/{{v.indexname}}">{{v.treestring}}</a>
+	  {% else %}
+	    <span title="本站未加载该版本的在线手册">{{v.treestring}}</span>
+	  {% endif %}
     {% if v.current %}
-      / <a href="/docs/current/index.html">当前版本</a>
+      {% if v.loaded %}/ <a href="/docs/current/{{v.indexname}}">当前版本</a>{% endif %}
     {% endif %}
 	 </td>
 	 <td>
@@ -55,7 +59,7 @@
       </table>
 
       <p>
-       需要查看更旧的、不再受支持的版本的文档？请查看 <a href="/docs/manuals/archive/">旧版手册归档</a>。
+       需要查看更旧的、不再受支持的版本的文档？请查看<a href="/docs/manuals/archive/">旧版手册归档</a>。
       </p>
     </div>
     <div class="col-md-3">

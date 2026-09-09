@@ -1,5 +1,6 @@
 from django.template.loader import get_template
 from django.conf import settings
+from django.template.defaultfilters import slugify
 
 from datetime import timedelta
 import os
@@ -11,6 +12,21 @@ from email.utils import formatdate
 from email.utils import make_msgid
 
 from pgweb.mailqueue.util import send_simple_mail
+
+
+def news_slug(title):
+    """Return the stable public slug used by news detail URLs.
+
+    Django's default slugifier drops CJK-only titles.  Keep the historical
+    slug for titles that already have one, and give those articles a stable
+    fixed fallback slug instead of publishing ``/about/news/-ID/`` as a
+    canonical URL. The numeric ID remains the URL's stable suffix.
+    """
+    return slugify(title or '') or 'news'
+
+
+def news_url(title, itemid):
+    return '/about/news/{}-{}/'.format(news_slug(title), itemid)
 
 
 def _get_contenttype_from_extension(f):

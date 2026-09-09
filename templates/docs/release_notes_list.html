@@ -1,7 +1,7 @@
 {% extends "base/page.html" %}
 {% load pgfilters %}
 
-{%block title%}发布说明{%endblock%}
+{%block title%}PostgreSQL 发布说明归档{%endblock%}
 
 {% block contents %}
 {% regroup releases by major as release_groups %}
@@ -9,7 +9,7 @@
 <div id="release-notes" class="row">
     <div class="col-md-9">
       <section>
-        <h1>发布说明 <i class="far fa-file-alt"></i></h1>
+        <h1>PostgreSQL 发布说明归档 <i class="far fa-file-alt"></i></h1>
       </section>
       <p>以下是 PostgreSQL 所有版本的完整发布说明归档。</p>
         {% for release_group in release_groups %}
@@ -19,9 +19,11 @@
 	 <ul>
            {% for release in release_group.list %}
            <li>
-             <a href="/docs/release/{{ major_version | pg_major_version }}.{{ release.minor | release_notes_pg_minor_version:major_version }}/">
-               {{ major_version | pg_major_version }}.{{ release.minor | release_notes_pg_minor_version:major_version }}
-             </a>
+             {% if release.url %}
+             <a href="{{ release.url }}">{{ release.label }}</a>
+             {% else %}
+             <span title="本站未加载该早期版本的本地内容">{{ release.label }}</span>
+             {% endif %}
            </li>
            {% endfor %}
          </ul>

@@ -9,6 +9,54 @@ from pgweb.util.seo import page_metadata
 TOPBAR_CACHE_KEY = 'pgweb:topbar-news'
 _CACHE_MISS = object()
 
+THIRD_PARTY_DOCS = [
+    {
+        'title': 'Patroni',
+        'link': 'https://pigsty.cc/docs/patroni',
+        'description': 'PostgreSQL 高可用管理工具，支持集群管理、主从切换与故障恢复。',
+    },
+    {
+        'title': 'PgBouncer',
+        'link': 'https://pigsty.cc/docs/pgbouncer',
+        'description': '轻量级 PostgreSQL 连接池，通过复用连接降低连接开销。',
+    },
+    {
+        'title': 'pgBackRest',
+        'link': 'https://pigsty.cc/docs/pgbackrest',
+        'description': 'PostgreSQL 备份与恢复工具，提供备份管理、WAL 归档与恢复功能。',
+    },
+    {
+        'title': 'pg_exporter',
+        'link': 'https://pigsty.cc/docs/pg_exporter',
+        'description': '采集 PostgreSQL 监控指标，供 Prometheus 抓取并用于监控与告警。',
+    },
+    {
+        'title': 'Pigsty',
+        'link': 'https://pigsty.cc/docs',
+        'description': '开源 PostgreSQL 发行版，提供部署、监控、高可用、备份恢复与扩展管理。',
+    },
+    {
+        'title': 'pig',
+        'link': 'https://pigsty.cc/docs/pig',
+        'description': 'PostgreSQL 命令行工具，用于安装和管理 PostgreSQL 内核与扩展。',
+    },
+    {
+        'title': 'PostGIS',
+        'link': 'https://postgis.net/docs/manual-dev/zh_Hans/',
+        'description': '为 PostgreSQL 提供几何与地理类型、空间索引和空间分析能力。',
+    },
+    {
+        'title': 'TimescaleDB',
+        'link': 'https://docs.timescaledb.cn/',
+        'description': '面向时序数据的 PostgreSQL 扩展，提供超表、连续聚合与数据压缩等功能。',
+    },
+    {
+        'title': 'Citus',
+        'link': 'https://learn.microsoft.com/zh-cn/postgresql/citus/?view=citus-14',
+        'description': '将 PostgreSQL 扩展为分布式数据库，支持在多个节点间分发数据与查询。',
+    },
+]
+
 # This is the whole site navigation structure. Stick in a smarter file?
 sitenav = {
     'about': [
@@ -37,6 +85,7 @@ sitenav = {
             {'title': '源代码', 'link': 'https://www.postgresql.org/ftp/source/'}
         ]},
         {'title': '软件目录', 'link': '/download/product-categories/'},
+        {'title': '扩展目录', 'link': '/ext/'},
         {'title': '浏览文件', 'link': 'https://www.postgresql.org/ftp/'},
     ],
     'docs': [
@@ -49,23 +98,7 @@ sitenav = {
         {'title': '其他', 'link': '/docs/online-resources/'},
         {'title': 'FAQ', 'link': '/docs/faq/'},
         {'title': 'Wiki', 'link': 'https://wiki.postgresql.org'},
-        # Ecosystem manuals stay last, grouped under one heading. Add new
-        # components here and in pgweb.docs.ecosystem.COMPONENTS / urls.py.
-        {'title': '三方文档', 'link': '/docs/#ecosystem-docs', 'submenu': [
-            {'title': 'Patroni', 'link': '/docs/patroni/'},
-            {'title': 'PgBouncer', 'link': '/docs/pgbouncer/'},
-            {'title': 'pgBackRest', 'link': '/docs/pgbackrest/'},
-            {'title': 'pgBadger', 'link': '/docs/pgbadger/'},
-        ]},
-    ],
-    'ext': [
-        {'title': '扩展目录', 'link': '/ext/'},
-        {'title': '全部索引', 'link': '/ext/list/', 'submenu': [
-            {'title': '功能分类', 'link': '/ext/category/'},
-            {'title': '许可证', 'link': '/ext/license/'},
-            {'title': '编程语言', 'link': '/ext/language/'},
-            {'title': '仓库来源', 'link': '/ext/repo/'},
-        ]},
+        {'title': '三方文档', 'link': '/docs/third-party/', 'id': 'ecosystem-docs'},
     ],
     'community': [
         {'title': '社区', 'link': '/community/'},
@@ -118,10 +151,8 @@ sitenav = {
 
 
 def get_nav_menu(section):
-    if section in sitenav:
-        return sitenav[section]
-    else:
-        return {}
+    # Views replace submenu entries without changing the global navigation.
+    return [item.copy() for item in sitenav.get(section, ())]
 
 
 def render_pgweb(request, section, template, context):
@@ -199,4 +230,6 @@ def PGWebContextProcessor(request):
         'topbarnews': SimpleLazyObject(_get_topbar_news),
         'sitenav': sitenav,
         'seo': page_metadata(request.path),
+        'source_url': 'https://www.postgresql.org' + request.path,
+        'source_label': '前往 postgresql.org 对应页面',
     }

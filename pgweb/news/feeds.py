@@ -1,6 +1,5 @@
 from django.contrib.syndication.views import Feed
 from django.conf import settings
-from django.template.defaultfilters import slugify
 
 from pgweb.util.moderation import ModerationState
 from .models import NewsArticle
@@ -25,7 +24,7 @@ class NewsFeed(Feed):
             return NewsArticle.objects.filter(modstate=ModerationState.APPROVED)[:10]
 
     def item_link(self, obj):
-        return "{}/about/news/{}-{}/".format(settings.SITE_ROOT.rstrip('/'), slugify(obj.title), obj.id)
+        return "{}{}".format(settings.SITE_ROOT.rstrip('/'), obj.permanenturl)
 
     def item_pubdate(self, obj):
         return datetime.combine(obj.date, time.min)

@@ -1,0 +1,21 @@
+{% extends "ext/base.html" %}
+{% block ext_content %}
+<p><a href="/ext/">扩展目录</a> / <a href="{{ breadcrumb_category }}">{{ extension.category_label }}</a></p>
+<h1>{{ extension.name }}</h1>
+<p>{{ extension.description }}</p>
+<p>{% for link in links %}{% if not forloop.first %} · {% endif %}<a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.label }}</a>{% endfor %}</p>
+
+<h2>概览</h2>
+<table class="table table-sm"><tbody>
+  {% for f in overview %}<tr><th scope="row">{{ f.label }}</th><td>{% if f.url %}<a href="{{ f.url }}">{{ f.value }}</a>{% else %}{{ f.value }}{% endif %}</td></tr>{% endfor %}
+</tbody></table>
+{% if relationships %}
+<h2>相关扩展</h2>
+{% for group in relationships %}
+<h3>{{ group.label }}</h3>
+<div class="ext-table"><div class="ext-table__scroll"><table><tbody>
+  {% for extension in group.members %}<tr class="{{ extension.color }}"><td class="ext-table__name"><a href="{{ extension.href }}">{{ extension.name }}</a></td><td class="ext-table__desc">{{ extension.description }}</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% endfor %}
+{% endif %}
+{% endblock %}

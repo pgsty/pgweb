@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import ValidationError
-from django.template.defaultfilters import slugify
 from django.contrib.postgres.fields import DateTimeRangeField
 from django.contrib.postgres.constraints import ExclusionConstraint
 from django.contrib.postgres.fields import RangeOperators
@@ -12,7 +11,7 @@ from pgweb.core.models import Organisation, OrganisationEmail
 from pgweb.core.text import ORGANISATION_HINT_TEXT
 from pgweb.util.moderation import TristateModerateModel, ModerationState, TwoModeratorsMixin
 
-from .util import send_news_email, render_news_template, embed_images_in_html
+from .util import send_news_email, render_news_template, embed_images_in_html, news_url
 
 
 class NewsTag(models.Model):
@@ -67,7 +66,7 @@ class NewsArticle(TwoModeratorsMixin, TristateModerateModel):
 
     @property
     def permanenturl(self):
-        return '/about/news/{}-{}/'.format(slugify(self.title), self.id)
+        return news_url(self.title, self.id)
 
     def verify_submitter(self, user):
         return (len(self.org.managers.filter(pk=user.pk)) == 1)

@@ -3,12 +3,12 @@
 {%block contents%}
 
 <div><span>This page in:
-    <span lang="zh"><a href="/about/press/presskit13//zh/">Chinese</a></span>
+    <span lang="zh"><a href="/about/press/presskit13/zh/">Chinese</a></span>
     / <span lang="en"><a href="/about/press/presskit13/">English</a></span>
     / <span lang="fr"><a href="/about/press/presskit13/fr/">French</a></span>
     / <span lang="de"><a href="/about/press/presskit13/de/">German</a></span>
     / <span lang="he"><a href="/about/press/presskit13/he/">Hebrew</a></span>
-    / <span lang="he"><a href="/about/press/presskit13/id/">Indonesian</a></span>
+    / <span lang="id"><a href="/about/press/presskit13/id/">Indonesian</a></span>
     / <span lang="ja"><a href="/about/press/presskit13/ja/">Japanese</a></span>
     / <span lang="ko"><a href="/about/press/presskit13/ko/">Korean</a></span>
     / <span lang="pl"><a href="/about/press/presskit13/pl/">Polish</a></span>
@@ -19,7 +19,7 @@
 </div>
 
 <h1>
-  PostgreSQL 13 Press Kit {% block presskit_language %}{% endblock presskit_language %}
+  {% block presskit_heading %}PostgreSQL 13 Press Kit{% endblock presskit_heading %}
   <img class="logo" src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo" />
 </h1>
 
@@ -68,7 +68,7 @@ resources:
 </p>
 
 <ul>
-  <li><a href="/docs/13/release-13.html">Release Notes</a></li>
+  <li><a href="https://www.postgresql.org/docs/13/release-13.html">Release Notes</a></li>
   <li><a href="/about/featurematrix/">Feature Matrix</a></li>
 </ul>
 
@@ -96,7 +96,7 @@ resources:
 <p>
   PostgreSQL 13 comes with HTML documentation HTML documentation as well as man
   pages, and you can also browse the documentation online in both
-  <a href="/docs/13/">HTML</a> and <a href="/files/documentation/pdf/13/postgresql-13-US.pdf">PDF</a> formats.
+  <a href="https://www.postgresql.org/docs/13/">HTML</a> and <a href="/files/documentation/pdf/13/postgresql-13-US.pdf">PDF</a> formats.
 </p>
 
 <a name="licence"></a><h2>Licence</h2>

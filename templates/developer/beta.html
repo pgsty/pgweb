@@ -3,33 +3,22 @@
 {%block contents%}
 <h1>Beta 信息 <i class="fa fa-code"></i></h1>
 
-<p>PostgreSQL 的 beta 和候选发布版本是社区在正式发布新版本之前的预发布测试版本。
-    它们已经冻结功能（即不再添加新功能），我们将这些版本发布给公众，以便在最终发布之前进行测试。
-    PostgreSQL 的 beta 和候选发布版本<strong>不适用于生产系统</strong>。</p>
+<p>PostgreSQL 的 beta 和候选发布版本是社区在正式发布新版本之前的预发布测试版本。它们已经冻结功能（即不再添加新功能），我们将这些版本发布给公众，以便在最终发布之前进行测试。PostgreSQL 的 beta 和候选发布版本<strong>不适用于生产系统</strong>。</p>
 
-<p>Beta 和候选发布版本提供给社区，以便在初始发布之前进行测试。
-    它们对于依赖 PostgreSQL 的平台、驱动程序、工具和实用程序的开发人员尤其有用，
-    可以帮助他们为新版本中的变更做好准备。候选发布版本应与 PostgreSQL 新主版本的初始发布相同，
-    但在正式发布之前仍可能进行额外的更改。</p>
+<p>Beta 和候选发布版本提供给社区，以便在初始发布之前进行测试。它们对于依赖 PostgreSQL 的平台、驱动程序、工具和实用程序的开发人员尤其有用，可以帮助他们为新版本中的变更做好准备。候选发布版本应与 PostgreSQL 新主版本的初始发布相同，但在正式发布之前仍可能进行额外的更改。</p>
 
-<p>每个 PostgreSQL 版本的稳定性在很大程度上取决于社区使用您的工作负载和测试工具
-    对即将发布的版本进行测试，以便在初始发布之前发现缺陷和回归问题。
-    用户测试的质量决定了我们何时可以进行最终发布。</p>
+<p>每个 PostgreSQL 版本的稳定性在很大程度上取决于社区使用您的工作负载和测试工具对即将发布的版本进行测试，以便在初始发布之前发现缺陷和回归问题。用户测试的质量决定了我们何时可以进行最终发布。</p>
 
-<p>PostgreSQL 全球开发组强烈建议不要在生产环境或活跃的开发项目中使用 PostgreSQL 的 beta 版本。
-    虽然 PostgreSQL 代码持续经受大量自动化和手动测试，但 beta 版本可能存在严重缺陷。
-    在 beta 开发期间，功能可能随时发生不向后兼容的变更，甚至可能被完全移除。</p>
+<p>PostgreSQL 全球开发组强烈建议不要在生产环境或活跃的开发项目中使用 PostgreSQL 的 beta 版本。虽然 PostgreSQL 代码持续经受大量自动化和手动测试，但 beta 版本可能存在严重缺陷。在 beta 开发期间，功能可能随时发生不向后兼容的变更，甚至可能被完全移除。</p>
 
 {% if not betaversion %}
   <p>
-    <strong>PostgreSQL {{ currentversion.numtree }} 已发布</strong>。
-    PostgreSQL {{ currentversion.numtree|add:1 }} 的首个 Beta 版本尚未开放测试。
+    <strong>PostgreSQL {{ currentversion.numtree }} 已发布</strong>。PostgreSQL {{ currentversion.numtree|add:1 }} 的首个 Beta 版本尚未开放测试。
   </p>
 {% else %}
 
   <p>
-    当前的测试版本是 <strong>PostgreSQL {{ betaversion.versionstring_spaced }}</strong>。
-    有关当前版本及测试方法的更多信息，请查看以下链接。
+    当前的测试版本是 <strong>PostgreSQL {{ betaversion.versionstring_spaced }}</strong>。有关当前版本及测试方法的更多信息，请查看以下链接。
   </p>
 
   <ul>

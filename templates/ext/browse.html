@@ -1,0 +1,56 @@
+{% extends "ext/base.html" %}
+{% block ext_content %}
+<h1>PostgreSQL 扩展目录</h1>
+<p>以下数据来自 <a href="https://pgext.cloud">pgext.cloud</a>，这是一个由 <a href="https://pigsty.cc">Pigsty</a> 维护的 PG 扩展目录，收纳了 {{ total }} 个扩展插件。</p>
+
+<div id="ext-field">
+  {% if universe.cells %}
+  <figure class="ext-field">
+    <div class="ext-field-scroll"><svg viewBox="0 0 {{ universe.width }} {{ universe.height }}" aria-label="扩展方格阵列" role="group">
+      {% for cell in universe.cells %}<a class="ext-cell" href="{{ cell.url }}" aria-label="{{ cell.name }}：{{ cell.description }}" data-name="{{ cell.name }}" data-description="{{ cell.description }}" data-metadata="{{ cell.metadata }}"><title>{{ cell.name }} · {{ cell.description }} · {{ cell.metadata }}</title><rect x="{{ cell.x }}" y="{{ cell.y }}" width="6" height="6" class="{{ cell.color }}{% if cell.packaged %} packaged{% endif %}"></rect></a>{% endfor %}
+    </svg></div>
+  </figure>
+  {% endif %}
+</div>
+<div id="ext-tooltip" class="ext-tooltip" role="tooltip" hidden>
+  <strong data-ext-tooltip-name></strong>
+  <span data-ext-tooltip-description></span>
+  <span class="ext-tooltip__metadata" data-ext-tooltip-metadata></span>
+</div>
+
+<form id="ext-search-form" action="/ext/" method="get" role="search">
+  <label class="sr-only" for="ext-query">搜索扩展</label>
+  <input class="form-control" id="ext-query" type="search" name="q" maxlength="255" value="{{ query }}" placeholder="搜索扩展名称、功能或关键词…" autocomplete="off">
+  <div id="ext-filters" class="ext-filters">
+    {% for dd in dropdowns %}
+    <label for="ext-{{ dd.param }}">{{ dd.label }}
+      <select class="form-control" id="ext-{{ dd.param }}" name="{{ dd.param }}">
+        <option value="">不限</option>
+        {% for option in dd.options %}<option value="{{ option.value }}"{% if option.current %} selected{% endif %}>{{ option.label }}（{{ option.count }}）</option>{% endfor %}
+      </select>
+    </label>
+    {% endfor %}
+  </div>
+  <noscript><button class="btn btn-primary" type="submit">筛选</button></noscript>
+</form>
+
+<section id="ext-results" aria-live="polite">
+  {% if filtered %}<p class="ext-result-count">找到 {{ result_count }} 个扩展。 <a href="/ext/" data-ext-filter>清除筛选</a></p>{% endif %}
+  {% if rows %}
+  <div class="ext-table ext-table--list"><div class="ext-table__scroll"><table>
+    <thead><tr><th>名称</th><th>版本</th><th>简介</th><th>分类</th><th>许可证</th><th>语言</th><th>PG 版本</th><th class="num">星标</th></tr></thead>
+    <tbody>{% for extension in rows %}{% include "ext/row.html" %}{% endfor %}</tbody>
+  </table></div></div>
+  {% if page.paginator.num_pages > 1 %}
+  <nav class="ext-pager" aria-label="扩展列表分页">
+    {% if previous_url %}<a href="{{ previous_url }}" rel="prev">上一页</a>{% endif %}
+    {% for item in pagination %}{% if item.url %}<a href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>{% else %}<span>{{ item.label }}</span>{% endif %}{% endfor %}
+    {% if next_url %}<a href="{{ next_url }}" rel="next">下一页</a>{% endif %}
+  </nav>
+  {% endif %}
+  {% else %}
+  <p>没有找到匹配的扩展，请试试其他关键词或筛选条件。</p>
+  {% endif %}
+</section>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/extensions.js?{{gitrev}}" defer></script>{% endblock %}

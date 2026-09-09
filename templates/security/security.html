@@ -1,8 +1,8 @@
 {%extends "base/page.html"%}
-{%block title%}安全信息{%endblock%}
+{%block title%}{{page_title}}{%endblock%}
 {%block contents%}
 
-<h1>安全信息 <i class="fas fa-lock"></i></h1>
+<h1>{{page_title}} <i class="fas fa-lock"></i></h1>
 
 <p>
   PostgreSQL 全球开发组（PGDG）高度重视安全问题。这使我们的用户能够信赖 PostgreSQL 来保护他们的关键业务数据。
@@ -64,7 +64,7 @@
 </p>
 
 <p>
-  PostgreSQL 安全团队通常不认为通过经过身份验证的有效 SQL 语句对 PostgreSQL 服务器造成的拒绝服务属于安全漏洞。此类拒绝服务问题仍可能是一个 <a href="https://www.postgresql.org/account/submitbug/" target="_blank" rel="noopener">Bug</a>，我们鼓励您在 <a href="https://www.postgresql.org/account/submitbug/" target="_blank" rel="noopener">报告 Bug</a> 页面进行报告。
+  PostgreSQL 安全团队通常不认为通过经过身份验证的有效 SQL 语句对 PostgreSQL 服务器造成的拒绝服务属于安全漏洞。此类拒绝服务问题仍可能是一个 <a href="https://www.postgresql.org/account/submitbug/" target="_blank" rel="noopener">Bug</a>，我们鼓励您在<a href="https://www.postgresql.org/account/submitbug/" target="_blank" rel="noopener">报告 Bug</a> 页面进行报告。
 </p>
 
 <p>
@@ -74,12 +74,12 @@
 <h2>报告 PostgreSQL 安全漏洞</h2>
 
 <p>
-  对于 PostgreSQL 或从 <a href="/download/">PostgreSQL 下载页面</a> 链接的任何安装程序中的安全漏洞，请发送邮件至
+  对于 PostgreSQL 或从 <a href="/download/">PostgreSQL 下载页面</a>链接的任何安装程序中的安全漏洞，请发送邮件至
   <a href="mailto:security@postgresql.org">security@postgresql.org</a>。
 </p>
 
 <p>
-  如需报告非安全相关的 Bug，请访问 <a href="https://www.postgresql.org/account/submitbug/" target="_blank" rel="noopener">报告 Bug</a> 页面。
+  如需报告非安全相关的 Bug，请访问<a href="https://www.postgresql.org/account/submitbug/" target="_blank" rel="noopener">报告 Bug</a> 页面。
 </p>
 
 <p>
@@ -123,7 +123,7 @@
 <h2>PostgreSQL 安全更新发布</h2>
 
 <p>
-  PostgreSQL 项目将安全修复作为 <a href="/support/versioning/">小版本更新</a> 的一部分发布。建议您始终使用最新的小版本，因为它还包含其他非安全相关的修复。
+  PostgreSQL 项目将安全修复作为<a href="/support/versioning/">小版本更新</a>的一部分发布。建议您始终使用最新的小版本，因为它还包含其他非安全相关的修复。
 </p>
 
 <p>
@@ -158,7 +158,7 @@
 </p>
 
 <h3>
-  {%if version%}PostgreSQL {{version.numtree}}{%else%}受支持版本{%endif%}中已知的 PostgreSQL 安全漏洞
+  {%if version%}PostgreSQL {{version.numtree}} {%else%}受支持版本{%endif%}中已知的 PostgreSQL 安全漏洞
 </h3>
 
 {%if version and not version.supported%}
@@ -184,7 +184,7 @@
       <th>参考</th>
       <th>影响版本</th>
       <th>修复版本</th>
-      <th><a href="#comp">组件</a> 与 CVSS v3 基础评分</th>
+      <th><a href="#comp">组件</a>与 CVSS v3 基础评分</th>
       <th>描述</th>
     </tr>
   </thead>
@@ -193,7 +193,7 @@
       <tr>
         <td>
           {%if p.cve%}<span class="nobr"><a href="/support/security/CVE-{{ p.cve }}/">CVE-{{p.cve}}</a></span><br/>{%endif%}
-          {%if p.newspost%}<a href="/about/news/{{p.newspost.title|slugify}}-{{p.newspost.id}}/">公告</a><br/>{%endif%}
+          {%if p.newspost%}<a href="{{p.newspost.permanenturl}}">公告</a><br/>{%endif%}
         </td>
         <td>{{p.affected|join:", "}}</td>
         <td>{{p.fixed|join:", "}}</td>

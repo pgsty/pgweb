@@ -7,19 +7,13 @@
 {% endif %}
 {% endblock extrahead %}
 
-{%block title%}发布说明{%endblock%}
+{%block title%}{{ release_title }}{%endblock%}
 
 {% block contents %}
-{% regroup release_notes by major as release_note_groups %}
-
 <div id="release-notes" class="row">
     <div class="col-md-10">
       <section>
-        <h1>发布说明 <i class="far fa-file-alt"></i></h1>
-        <h2>
-          {% if major_version == 0 %}Postgres95{% else %}PostgreSQL{% endif %}
-          {{ major_version }}.{{ minor_version|release_notes_pg_minor_version:major_version }}
-        </h2>
+        <h1>{{ release_title }} <i class="far fa-file-alt"></i></h1>
       </section>
       <div id="docContent">
         {{ release_note.content|safe }}
