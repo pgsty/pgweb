@@ -1,0 +1,1337 @@
+[
+  {
+    "url": "/about/",
+    "template": "templates/core/about.html",
+    "title": "PostgreSQL 项目简介与核心特性",
+    "og_title": [
+      "PostgreSQL 项目简介与核心特性"
+    ],
+    "h1": [
+      "关于"
+    ],
+    "description": [
+      "了解 PostgreSQL 的对象关系型数据库特性、可靠性、性能、扩展能力与社区资源。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about.html"
+  },
+  {
+    "url": "/about/contact/",
+    "template": "templates/pages/about/contact.html",
+    "title": "PostgreSQL 联系我们",
+    "og_title": [
+      "PostgreSQL 联系我们"
+    ],
+    "h1": [
+      "联系我们"
+    ],
+    "description": [
+      "汇总 PostgreSQL 的 Bug、安全问题、技术支持、媒体与社区联系渠道，并说明如何反馈 pg.center 的译文和网站问题。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__contact.html"
+  },
+  {
+    "url": "/about/donate/",
+    "template": "templates/pages/about/donate.html",
+    "title": "PostgreSQL 捐赠与非营利组织",
+    "og_title": [
+      "PostgreSQL 捐赠与非营利组织"
+    ],
+    "h1": [
+      "捐赠"
+    ],
+    "description": [
+      "了解支持 PostgreSQL 项目的认可非营利组织，以及向这些组织捐赠的方式。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__donate.html"
+  },
+  {
+    "url": "/about/donate_pg_org/",
+    "template": "templates/pages/about/donate_pg_org.html",
+    "title": "PostgreSQL 捐赠",
+    "og_title": [
+      "PostgreSQL 捐赠"
+    ],
+    "h1": [
+      "向 PostgreSQL 捐赠"
+    ],
+    "description": [
+      "PostgreSQL 的捐赠由资金小组管理。捐赠的资金可用于 PostgreSQL 社区所需的各种服务，包括推广材料、项目基础设施、法律费用等"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__donate_pg_org.html"
+  },
+  {
+    "url": "/about/governance/",
+    "template": "templates/pages/about/governance.html",
+    "title": "PostgreSQL 治理",
+    "og_title": [
+      "PostgreSQL 治理"
+    ],
+    "h1": [
+      "项目治理目录"
+    ],
+    "description": [
+      "了解 PostgreSQL 的项目治理结构，查阅核心团队、各委员会与工作小组的职责、成员和章程。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__governance.html"
+  },
+  {
+    "url": "/about/governance/contributors/",
+    "template": "templates/pages/about/governance/contributors.html",
+    "title": "PostgreSQL 贡献者委员会",
+    "og_title": [
+      "PostgreSQL 贡献者委员会"
+    ],
+    "h1": [
+      "贡献者委员会"
+    ],
+    "description": [
+      "了解 PostgreSQL 贡献者委员会的职责、成员与工作方式，以及贡献者认可政策和联系渠道。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__governance__contributors.html"
+  },
+  {
+    "url": "/about/governance/sysadmin/",
+    "template": "templates/pages/about/governance/sysadmin.html",
+    "title": "PostgreSQL 基础设施团队",
+    "og_title": [
+      "PostgreSQL 基础设施团队"
+    ],
+    "h1": [
+      "基础设施团队"
+    ],
+    "description": [
+      "了解 PostgreSQL 基础设施团队负责的服务、工作方式与联系渠道，以及网站开发和基础设施管理的分工。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__governance__sysadmin.html"
+  },
+  {
+    "url": "/about/licence/",
+    "template": "templates/pages/about/licence.html",
+    "title": "PostgreSQL 许可证",
+    "og_title": [
+      "PostgreSQL 许可证"
+    ],
+    "h1": [
+      "许可证"
+    ],
+    "description": [
+      "PostgreSQL 采用 PostgreSQL 许可证发布，这是一种宽松的开源许可证，类似于 BSD 或 MIT 许可证"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__licence.html"
+  },
+  {
+    "url": "/about/policies/",
+    "template": "templates/pages/about/policies.html",
+    "title": "PostgreSQL 项目政策",
+    "og_title": [
+      "PostgreSQL 项目政策"
+    ],
+    "h1": [
+      "政策"
+    ],
+    "description": [
+      "浏览 PostgreSQL 项目的正式政策，包括行为准则、隐私、商标、版本、服务与社区认可政策。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies.html"
+  },
+  {
+    "url": "/about/policies/archives/",
+    "template": "templates/pages/about/policies/archives.html",
+    "title": "PostgreSQL 邮件列表归档政策",
+    "og_title": [
+      "PostgreSQL 邮件列表归档政策"
+    ],
+    "h1": [
+      "归档政策"
+    ],
+    "description": [
+      "了解 PostgreSQL 邮件列表的归档原则、准确记录要求及隐私相关说明。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__archives.html"
+  },
+  {
+    "url": "/about/policies/coc-translations/",
+    "template": "templates/pages/about/policies/coc-translations.html",
+    "title": "PostgreSQL 行为准则翻译与审批流程",
+    "og_title": [
+      "PostgreSQL 行为准则翻译与审批流程"
+    ],
+    "h1": [
+      "行为准则翻译与审批流程"
+    ],
+    "description": [
+      "PostgreSQL 行为准则委员会负责管理将行为准则从英语翻译成其他语言的审批流程，以及在政策修订时更新翻译"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__coc-translations.html"
+  },
+  {
+    "url": "/about/policies/coc/",
+    "template": "templates/pages/about/policies/coc.html",
+    "title": "PostgreSQL 行为准则",
+    "og_title": [
+      "PostgreSQL 行为准则"
+    ],
+    "h1": [
+      "行为准则"
+    ],
+    "description": [
+      "阅读 PostgreSQL 社区行为准则，了解参与项目时应遵循的专业、礼貌与包容原则。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__coc.html"
+  },
+  {
+    "url": "/about/policies/coc/zh/",
+    "template": "templates/pages/about/policies/coc/zh.html",
+    "title": "PostgreSQL 行为准则",
+    "og_title": [
+      "PostgreSQL 行为准则"
+    ],
+    "h1": [
+      "行为准则"
+    ],
+    "description": [
+      "PostgreSQL 项目以我们的代码和工作质量，以及社区的技术和专业成就而自豪。我们希望所有的参与者品行专业，以礼相待，互惠互利，尊重所有用户和开发者"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__coc__zh.html"
+  },
+  {
+    "url": "/about/policies/coc_committee/",
+    "template": "templates/pages/about/policies/coc_committee.html",
+    "title": "PostgreSQL 行为准则委员会",
+    "og_title": [
+      "PostgreSQL 行为准则委员会"
+    ],
+    "h1": [
+      "行为准则委员会"
+    ],
+    "description": [
+      "联系 PostgreSQL 行为准则委员会，查看现任成员与委员会职责。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__coc_committee.html"
+  },
+  {
+    "url": "/about/policies/conferences/",
+    "template": "templates/pages/about/policies/conferences.html",
+    "title": "PostgreSQL 社区会议认可政策",
+    "og_title": [
+      "PostgreSQL 社区会议认可政策"
+    ],
+    "h1": [
+      "社区会议认可"
+    ],
+    "description": [
+      "社区会议认可计划是一项自愿方案，向 PostgreSQL 网站活动列表提交活动的提交者可以根据以下标准进行自我评估，如果符合要求，可以将其活动宣传为 PostgreSQL 社区活动"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__conferences.html"
+  },
+  {
+    "url": "/about/policies/contributors/",
+    "template": "templates/pages/about/policies/contributors.html",
+    "title": "PostgreSQL 认可贡献者政策",
+    "og_title": [
+      "PostgreSQL 认可贡献者政策"
+    ],
+    "h1": [
+      "认可贡献者政策"
+    ],
+    "description": [
+      "PostgreSQL 贡献者简介页面列出了对 PostgreSQL 项目做出了长期投入时间和精力的实质性贡献的人员。一次性或短期的贡献通常不被视为足以列入，除非涉及相当大量的代码和时间"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__contributors.html"
+  },
+  {
+    "url": "/about/policies/funds-group/",
+    "template": "templates/pages/about/policies/funds-group.html",
+    "title": "PostgreSQL 资金小组",
+    "og_title": [
+      "PostgreSQL 资金小组"
+    ],
+    "h1": [
+      "PostgreSQL 资金小组"
+    ],
+    "description": [
+      "PostgreSQL 项目与 Software in the Public Interest, Inc. 之间关系的治理章程"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__funds-group.html"
+  },
+  {
+    "url": "/about/policies/news-and-events/",
+    "template": "templates/pages/about/policies/news-and-events.html",
+    "title": "PostgreSQL 新闻与活动审批政策",
+    "og_title": [
+      "PostgreSQL 新闻与活动审批政策"
+    ],
+    "h1": [
+      "新闻与活动审批政策"
+    ],
+    "description": [
+      "查阅 PostgreSQL 新闻与活动的收录政策，了解提交要求、审核标准、发布频率及活动公告规则。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__news-and-events.html"
+  },
+  {
+    "url": "/about/policies/npos/",
+    "template": "templates/pages/about/policies/npos.html",
+    "title": "认可的 PostgreSQL 非营利组织",
+    "og_title": [
+      "认可的 PostgreSQL 非营利组织"
+    ],
+    "h1": [
+      "认可的 PostgreSQL 非营利组织"
+    ],
+    "description": [
+      "认可的 PostgreSQL 非营利组织（NPO）将作为认可组织列于 PostgreSQL 网站上。要获得 NPO 认可，组织必须自我认证其满足以下标准，这些标准旨在确保其符合 PostgreSQL 社区所期望的开放性标准"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__npos.html"
+  },
+  {
+    "url": "/about/policies/planet-postgresql/",
+    "template": "templates/pages/about/policies/planet-postgresql.html",
+    "title": "Planet PostgreSQL 博客收录政策",
+    "og_title": [
+      "Planet PostgreSQL 博客收录政策"
+    ],
+    "h1": [
+      "Planet PostgreSQL"
+    ],
+    "description": [
+      "Planet PostgreSQL 是由 PostgreSQL 社区运营的博客聚合服务。除了 Planet 主站之外，文章也会被发布（“聚合”）到 www.postgresql.org 网站上"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__planet-postgresql.html"
+  },
+  {
+    "url": "/about/policies/privacy/",
+    "template": "templates/pages/about/policies/privacy.html",
+    "title": "PostgreSQL 隐私政策",
+    "og_title": [
+      "PostgreSQL 隐私政策"
+    ],
+    "h1": [
+      "隐私政策"
+    ],
+    "description": [
+      "PostgreSQL 网站隐私政策说明访问日志、个人信息处理和相关权利。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__privacy.html"
+  },
+  {
+    "url": "/about/policies/project-name/",
+    "template": "templates/pages/about/policies/project-name.html",
+    "title": "PostgreSQL 项目名称政策",
+    "og_title": [
+      "PostgreSQL 项目名称政策"
+    ],
+    "h1": [
+      "项目名称"
+    ],
+    "description": [
+      "了解 PostgreSQL 的正式项目名称、Postgres 简称的由来与使用惯例，以及社区对项目名称的说明。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__project-name.html"
+  },
+  {
+    "url": "/about/policies/services-and-hosting/",
+    "template": "templates/pages/about/policies/services-and-hosting.html",
+    "title": "PostgreSQL 专业服务与托管审批政策",
+    "og_title": [
+      "PostgreSQL 专业服务与托管审批政策"
+    ],
+    "h1": [
+      "专业服务与托管审批政策"
+    ],
+    "description": [
+      "查阅 PostgreSQL 专业服务与托管服务的收录政策，了解企业资料、服务描述、覆盖地区和审核要求。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__services-and-hosting.html"
+  },
+  {
+    "url": "/about/policies/sponsorship/",
+    "template": "templates/pages/about/policies/sponsorship.html",
+    "title": "PostgreSQL 赞助政策",
+    "og_title": [
+      "PostgreSQL 赞助政策"
+    ],
+    "h1": [
+      "PostgreSQL 赞助"
+    ],
+    "description": [
+      "PostgreSQL 赞助政策说明赞助商级别、资格与支持社区工作的方式。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__sponsorship.html"
+  },
+  {
+    "url": "/about/policies/trademarks/",
+    "template": "templates/pages/about/policies/trademarks.html",
+    "title": "PostgreSQL 商标政策",
+    "og_title": [
+      "PostgreSQL 商标政策"
+    ],
+    "h1": [
+      "商标政策"
+    ],
+    "description": [
+      "本政策涉及我们的商标。具体而言，Postgres 和 PostgreSQL 以及大象标志（Slonik）均为 PostgreSQL 加拿大社区协会的注册商标。如果您希望使用这些标志，必须遵守本政策"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__trademarks.html"
+  },
+  {
+    "url": "/about/policies/twitter/",
+    "template": "templates/pages/about/policies/twitter.html",
+    "title": "PostgreSQL @postgresql Twitter 账户政策",
+    "og_title": [
+      "PostgreSQL @postgresql Twitter 账户政策"
+    ],
+    "h1": [
+      "@postgresql Twitter 账户政策"
+    ],
+    "description": [
+      "PostgreSQL @postgresql Twitter 账户人工运营与内容发布政策。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__twitter.html"
+  },
+  {
+    "url": "/about/policies/user-groups/",
+    "template": "templates/pages/about/policies/user-groups.html",
+    "title": "认可的 PostgreSQL 用户组",
+    "og_title": [
+      "认可的 PostgreSQL 用户组"
+    ],
+    "h1": [
+      "认可的 PostgreSQL 用户组"
+    ],
+    "description": [
+      "认可的 PostgreSQL 用户组，又称\"PUG\"，可以作为 PostgreSQL 网站上的认可用户组列出。要成为认可的 PostgreSQL 用户组，用户组必须自我证明其满足以下标准，这些标准旨在确保其达到 PostgreSQL 社区期望的开放性要求"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__policies__user-groups.html"
+  },
+  {
+    "url": "/about/press/",
+    "template": "templates/pages/about/press.html",
+    "title": "PostgreSQL 媒体资料与新闻资料包",
+    "og_title": [
+      "PostgreSQL 媒体资料与新闻资料包"
+    ],
+    "h1": [
+      "媒体资料"
+    ],
+    "description": [
+      "获取 PostgreSQL 新闻资料包、媒体常见问题和公关团队联系方式，查阅各版本发布资料及不同语言版本。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press.html"
+  },
+  {
+    "url": "/about/press/faq/",
+    "template": "templates/pages/about/press/faq.html",
+    "title": "PostgreSQL 媒体常见问题",
+    "og_title": [
+      "PostgreSQL 媒体常见问题"
+    ],
+    "h1": [
+      "媒体常见问题"
+    ],
+    "description": [
+      "面向媒体介绍 PostgreSQL 的版本发布、许可证、项目治理、用户与社区支持，并解答常见的数据库选型问题。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__faq.html"
+  },
+  {
+    "url": "/about/press/presskit10/cn/",
+    "template": "templates/pages/about/press/presskit10/cn.html",
+    "title": "PostgreSQL 10 新闻资料包",
+    "og_title": [
+      "PostgreSQL 10 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 10 新闻资料包"
+    ],
+    "description": [
+      "2017-10-05 - PostgreSQL 全球开发组今天宣布，PostgreSQL 10 正式发布。PostgreSQL 作为世界上最先进的开源关系型数据库，10 是迄今为止的最新版本"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit10__cn.html"
+  },
+  {
+    "url": "/about/press/presskit11/cn/",
+    "template": "templates/pages/about/press/presskit11/cn.html",
+    "title": "PostgreSQL 11 新闻资料包",
+    "og_title": [
+      "PostgreSQL 11 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 11 新闻资料包"
+    ],
+    "description": [
+      "2018-10-18，全球开发组今天宣布，PostgreSQL 11 正式发布。PostgreSQL 作为世界上最先进的开源关系型数据库，11.0 是迄今为止的最新版本"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit11__cn.html"
+  },
+  {
+    "url": "/about/press/presskit12/zh/",
+    "template": "templates/pages/about/press/presskit12/zh.html",
+    "title": "PostgreSQL 12 新闻资料包",
+    "og_title": [
+      "PostgreSQL 12 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 12 新闻资料包"
+    ],
+    "description": [
+      "PostgreSQL 12 新闻资料包：介绍查询性能、索引优化、SQL/JSON 路径等改进，并提供下载和文档资源。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit12__zh.html"
+  },
+  {
+    "url": "/about/press/presskit13/zh/",
+    "template": "templates/pages/about/press/presskit13/zh.html",
+    "title": "PostgreSQL 13 新闻资料包",
+    "og_title": [
+      "PostgreSQL 13 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 13 新闻资料包"
+    ],
+    "description": [
+      "PostgreSQL 13 新闻资料包：介绍索引、查询性能、并行清理与受信任扩展等改进，并提供下载和文档资源。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit13__zh.html"
+  },
+  {
+    "url": "/about/press/presskit14/zh/",
+    "template": "templates/pages/about/press/presskit14/zh.html",
+    "title": "PostgreSQL 14 新闻资料包",
+    "og_title": [
+      "PostgreSQL 14 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 14 新闻资料包"
+    ],
+    "description": [
+      "PostgreSQL 14 新闻资料包：介绍多范围类型、查询性能、逻辑复制与监控等改进，并提供下载和文档资源。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit14__zh.html"
+  },
+  {
+    "url": "/about/press/presskit15/zh/",
+    "template": "templates/pages/about/press/presskit15/zh.html",
+    "title": "PostgreSQL 15 新闻资料包",
+    "og_title": [
+      "PostgreSQL 15 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 15 新闻资料包"
+    ],
+    "description": [
+      "2022 年 10 月 13 日 - PostgreSQL 全球开发组今日宣布发布 PostgreSQL 15，这是世界上最先进的开源数据库的最新版本"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit15__zh.html"
+  },
+  {
+    "url": "/about/press/presskit16/zh/",
+    "template": "templates/pages/about/press/presskit16/zh.html",
+    "title": "PostgreSQL 16 新闻资料包",
+    "og_title": [
+      "PostgreSQL 16 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 16 新闻资料包"
+    ],
+    "description": [
+      "2023 年 9 月 14 日 - PostgreSQL 全球开发组今天宣布 PostgreSQL 16 正式发布，作为世界上最先进的开源数据库，PostgreSQL 16 是目前的最新版本"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit16__zh.html"
+  },
+  {
+    "url": "/about/press/presskit17/zh/",
+    "template": "templates/pages/about/press/presskit17/zh.html",
+    "title": "PostgreSQL 17 新闻资料包",
+    "og_title": [
+      "PostgreSQL 17 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 17 新闻资料包"
+    ],
+    "description": [
+      "2024 年 9 月 26 日 - PostgreSQL 全球开发组今日宣布发布 PostgreSQL 17，这是世界上最先进的开源数据库的最新版本"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit17__zh.html"
+  },
+  {
+    "url": "/about/press/presskit18/zh/",
+    "template": "templates/pages/about/press/presskit18/zh.html",
+    "title": "PostgreSQL 18 新闻资料包",
+    "og_title": [
+      "PostgreSQL 18 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 18 新闻资料包"
+    ],
+    "description": [
+      "2025 年 9 月 25 日 - PostgreSQL 全球开发组今日宣布发布 PostgreSQL 18，这是世界上最先进的开源数据库的最新版本"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit18__zh.html"
+  },
+  {
+    "url": "/about/press/presskit90/zh_cn/",
+    "template": "templates/pages/about/press/presskit90/zh_cn.html",
+    "title": "PostgreSQL 9.0 版发布宣传资料",
+    "og_title": [
+      "PostgreSQL 9.0 版发布宣传资料"
+    ],
+    "h1": [
+      "PostgreSQL 9.0 版发布宣传资料"
+    ],
+    "description": [
+      "2010/09/20: PostgreSQL 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.0 版发布，该版本进一步强化了安全、应用程序支持、监控、性能和特殊数据存储等方面的领先功能。用户尤其关注 9.0 版本中的数据复制和热备功能，这些功能也将加速 PostgreSQL 在云计算和大规模可伸缩应用方面的使用。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit90__zh_cn.html"
+  },
+  {
+    "url": "/about/press/presskit91/zh_cn/",
+    "template": "templates/pages/about/press/presskit91/zh_cn.html",
+    "title": "PostgreSQL 9.1 版发布宣传资料",
+    "og_title": [
+      "PostgreSQL 9.1 版发布宣传资料"
+    ],
+    "h1": [
+      "PostgreSQL 9.1 版发布宣传资料"
+    ],
+    "description": [
+      "2011/09/12: PostgreSQL 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.1 版发布，该版本增加了很多创新性的技术、强大的可扩展性以及类似同步复制、最近邻索引和外部数据包装器等功能。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit91__zh_cn.html"
+  },
+  {
+    "url": "/about/press/presskit92/zh_CN/",
+    "template": "templates/pages/about/press/presskit92/zh_CN.html",
+    "title": "PostgreSQL 9.2 版发布宣传资料",
+    "og_title": [
+      "PostgreSQL 9.2 版发布宣传资料"
+    ],
+    "h1": [
+      "PostgreSQL 9.2 版发布宣传资料"
+    ],
+    "description": [
+      "2012/09/10: PostgreSQL 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.2 版发布，由于 Beta 测试版本在 5 月即已发布，开发人员和软件厂商称赞该版本在性能、可伸缩性和灵活性方面得到大的提升。大量的用户期待切换至新的版本。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit92__zh_CN.html"
+  },
+  {
+    "url": "/about/press/presskit93/zh_CN/",
+    "template": "templates/pages/about/press/presskit93/zh_CN.html",
+    "title": "PostgreSQL 9.3 新闻资料包",
+    "og_title": [
+      "PostgreSQL 9.3 新闻资料包"
+    ],
+    "h1": [
+      "PostgreSQL 9.3 新闻资料包"
+    ],
+    "description": [
+      "2013/9/9: 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.3 版发布，这个版本扩展了可靠性、可用性及与其他数据库易集成性，用户将会发现，他们可以使用 9.3 版本创建一些对以前版本是不可能实现的新功能。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__press__presskit93__zh_CN.html"
+  },
+  {
+    "url": "/community/",
+    "template": "templates/core/community.html",
+    "title": "PostgreSQL 社区｜交流、用户组与社区资源",
+    "og_title": [
+      "PostgreSQL 社区｜交流、用户组与社区资源"
+    ],
+    "h1": [
+      "社区"
+    ],
+    "description": [
+      "了解 PostgreSQL 社区的邮件列表、用户组、IRC、国际站点与其他交流资源。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/community.html"
+  },
+  {
+    "url": "/community/contributors/",
+    "template": "templates/contributors/list.html",
+    "title": "PostgreSQL 贡献者档案",
+    "og_title": [
+      "PostgreSQL 贡献者档案"
+    ],
+    "h1": [
+      "PostgreSQL 贡献者档案"
+    ],
+    "description": [
+      "浏览 PostgreSQL 核心组、主要贡献者和其他贡献者名录，了解贡献者资料与更新方式。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/community__contributors.html"
+  },
+  {
+    "url": "/community/international/",
+    "template": "templates/pages/community/international.html",
+    "title": "PostgreSQL 国际社区站点",
+    "og_title": [
+      "PostgreSQL 国际社区站点"
+    ],
+    "h1": [
+      "国际站点"
+    ],
+    "description": [
+      "浏览各国和地区 PostgreSQL 社区网站及其语言站点。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/community__international.html"
+  },
+  {
+    "url": "/community/irc/",
+    "template": "templates/pages/community/irc.html",
+    "title": "PostgreSQL IRC 社区与频道",
+    "og_title": [
+      "PostgreSQL IRC 社区与频道"
+    ],
+    "h1": [
+      "IRC"
+    ],
+    "description": [
+      "查找 PostgreSQL 在 Libera Chat 上的 IRC 频道、语言频道和管理信息。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/community__irc.html"
+  },
+  {
+    "url": "/community/recognised-npos/",
+    "template": "templates/pages/community/recognised-npos.html",
+    "title": "PostgreSQL 认可的非营利组织",
+    "og_title": [
+      "PostgreSQL 认可的非营利组织"
+    ],
+    "h1": [
+      "认可的非营利组织"
+    ],
+    "description": [
+      "了解支持 PostgreSQL 项目的认可非营利组织及其社区活动。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/community__recognised-npos.html"
+  },
+  {
+    "url": "/community/user-groups/",
+    "template": "templates/pugs/index.html",
+    "title": "PostgreSQL 本地用户组",
+    "og_title": [
+      "PostgreSQL 本地用户组"
+    ],
+    "h1": [
+      "本地用户组"
+    ],
+    "description": [
+      "按国家和地区浏览 PostgreSQL 本地用户组，了解加入或创建用户组的方式。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/community__user-groups.html"
+  },
+  {
+    "url": "/developer/",
+    "template": "templates/pages/developer.html",
+    "title": "PostgreSQL 开发者资源｜参与开发与贡献",
+    "og_title": [
+      "PostgreSQL 开发者资源｜参与开发与贡献"
+    ],
+    "h1": [
+      "开发者"
+    ],
+    "description": [
+      "面向 PostgreSQL 开发者的路线图、源代码、测试、CommitFest 与参与贡献指南。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer.html"
+  },
+  {
+    "url": "/developer/backend/",
+    "template": "templates/pages/developer/backend.html",
+    "title": "PostgreSQL 后端流程图｜查询处理路径",
+    "og_title": [
+      "PostgreSQL 后端流程图｜查询处理路径"
+    ],
+    "h1": [
+      "后端流程图"
+    ],
+    "description": [
+      "通过后端流程图了解 PostgreSQL 查询从连接、解析到执行的处理过程。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer__backend.html"
+  },
+  {
+    "url": "/developer/beta/",
+    "template": "templates/developer/beta.html",
+    "title": "PostgreSQL Beta 与候选版本测试指南",
+    "og_title": [
+      "PostgreSQL Beta 与候选版本测试指南"
+    ],
+    "h1": [
+      "Beta 信息"
+    ],
+    "description": [
+      "了解 PostgreSQL Beta 和候选发布版本的用途、风险、下载、文档与测试方法；不适用于生产环境。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer__beta.html"
+  },
+  {
+    "url": "/developer/coding/",
+    "template": "templates/pages/developer/coding.html",
+    "title": "PostgreSQL 源代码与编码指南",
+    "og_title": [
+      "PostgreSQL 源代码与编码指南"
+    ],
+    "h1": [
+      "编码"
+    ],
+    "description": [
+      "查找 PostgreSQL 源代码、Git 提交、开发文档与编码相关资源。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer__coding.html"
+  },
+  {
+    "url": "/developer/committers/",
+    "template": "templates/pages/developer/committers.html",
+    "title": "PostgreSQL 提交者名单与说明",
+    "og_title": [
+      "PostgreSQL 提交者名单与说明"
+    ],
+    "h1": [
+      "提交者"
+    ],
+    "description": [
+      "查看 PostgreSQL 当前提交者名单、提交权限与提交日志说明。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer__committers.html"
+  },
+  {
+    "url": "/developer/core/",
+    "template": "templates/pages/developer/core.html",
+    "title": "PostgreSQL 核心团队｜成员与职责",
+    "og_title": [
+      "PostgreSQL 核心团队｜成员与职责"
+    ],
+    "h1": [
+      "核心团队"
+    ],
+    "description": [
+      "了解 PostgreSQL 核心团队的职责、成员、活动报告与联系方式。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer__core.html"
+  },
+  {
+    "url": "/developer/related-projects/",
+    "template": "templates/pages/developer/related-projects.html",
+    "title": "PostgreSQL 相关项目｜社区基础设施与工具",
+    "og_title": [
+      "PostgreSQL 相关项目｜社区基础设施与工具"
+    ],
+    "h1": [
+      "相关项目"
+    ],
+    "description": [
+      "浏览为 PostgreSQL 社区提供基础设施、开发工具、软件包和活动支持的相关项目。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer__related-projects.html"
+  },
+  {
+    "url": "/developer/roadmap/",
+    "template": "templates/pages/developer/roadmap.html",
+    "title": "PostgreSQL 开发路线图｜版本发布时间表",
+    "og_title": [
+      "PostgreSQL 开发路线图｜版本发布时间表"
+    ],
+    "h1": [
+      "路线图"
+    ],
+    "description": [
+      "查看 PostgreSQL 小版本发布时间表和下一个主版本的开发计划。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer__roadmap.html"
+  },
+  {
+    "url": "/developer/summerofcode/",
+    "template": "templates/pages/developer/summerofcode.html",
+    "title": "PostgreSQL Google 编程之夏（GSoC）｜2018 项目",
+    "og_title": [
+      "PostgreSQL Google 编程之夏（GSoC）｜2018 项目"
+    ],
+    "h1": [
+      "PostgreSQL 与 Google 编程之夏 2018"
+    ],
+    "description": [
+      "PostgreSQL 参加 Google Summer of Code 2018 的项目、导师、已接受项目和常见问题。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer__summerofcode.html"
+  },
+  {
+    "url": "/developer/testing/",
+    "template": "templates/pages/developer/testing.html",
+    "title": "PostgreSQL 测试资源｜Beta 与开发构建",
+    "og_title": [
+      "PostgreSQL 测试资源｜Beta 与开发构建"
+    ],
+    "h1": [
+      "测试"
+    ],
+    "description": [
+      "查找 PostgreSQL Beta、每日开发构建、测试代码和文档更新相关资源。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/developer__testing.html"
+  },
+  {
+    "url": "/docs/",
+    "template": "templates/docs/index.html",
+    "title": "PostgreSQL 文档与手册｜在线版及 PDF",
+    "og_title": [
+      "PostgreSQL 文档与手册｜在线版及 PDF"
+    ],
+    "h1": [
+      "文档"
+    ],
+    "description": [
+      "查阅 PostgreSQL 中文手册、各版本在线文档、PDF 下载和其他语言翻译。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/docs.html"
+  },
+  {
+    "url": "/docs/books/",
+    "template": "templates/docs/books.html",
+    "title": "PostgreSQL 图书｜社区书目",
+    "og_title": [
+      "PostgreSQL 图书｜社区书目"
+    ],
+    "h1": [
+      "PostgreSQL 图书"
+    ],
+    "description": [
+      "浏览 PostgreSQL 社区维护的图书目录，查看作者、语言、版本和出版信息。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/docs__books.html"
+  },
+  {
+    "url": "/docs/faq/",
+    "template": "templates/pages/docs/faq.html",
+    "title": "PostgreSQL 常见问题 FAQ",
+    "og_title": [
+      "PostgreSQL 常见问题 FAQ"
+    ],
+    "h1": [
+      "常见问题"
+    ],
+    "description": [
+      "汇总 PostgreSQL 新闻、通用、开发和平台相关常见问题入口。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/docs__faq.html"
+  },
+  {
+    "url": "/docs/manuals/archive/",
+    "template": "templates/docs/archive.html",
+    "title": "PostgreSQL 旧版手册归档",
+    "og_title": [
+      "PostgreSQL 旧版手册归档"
+    ],
+    "h1": [
+      "手册归档"
+    ],
+    "description": [
+      "浏览不再受支持的 PostgreSQL 版本手册和 PDF，并了解升级建议。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/docs__manuals__archive.html"
+  },
+  {
+    "url": "/docs/online-resources/",
+    "template": "templates/pages/docs/online-resources.html",
+    "title": "PostgreSQL 教程与学习资源",
+    "og_title": [
+      "PostgreSQL 教程与学习资源"
+    ],
+    "h1": [
+      "教程与其他资源"
+    ],
+    "description": [
+      "浏览 PostgreSQL 教程、在线练习、百科和其他学习资源。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/docs__online-resources.html"
+  },
+  {
+    "url": "/docs/release/",
+    "template": "templates/docs/release_notes_list.html",
+    "title": "PostgreSQL 发布说明归档",
+    "og_title": [
+      "PostgreSQL 发布说明归档"
+    ],
+    "h1": [
+      "PostgreSQL 发布说明归档"
+    ],
+    "description": [
+      "浏览 PostgreSQL 各个版本的完整发布说明和小版本修复记录。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/docs__release.html"
+  },
+  {
+    "url": "/download/",
+    "template": "templates/pages/download.html",
+    "title": "PostgreSQL 下载｜各平台安装包与源代码",
+    "og_title": [
+      "PostgreSQL 下载｜各平台安装包与源代码"
+    ],
+    "h1": [
+      "下载"
+    ],
+    "description": [
+      "获取 PostgreSQL 在 Linux、macOS、Windows、BSD 等平台的安装包、源代码与相关软件。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download.html"
+  },
+  {
+    "url": "/download/bsd/",
+    "template": "templates/pages/download/bsd.html",
+    "title": "PostgreSQL BSD 平台下载｜各发行版安装包",
+    "og_title": [
+      "PostgreSQL BSD 平台下载｜各发行版安装包"
+    ],
+    "h1": [
+      "BSD 发行版"
+    ],
+    "description": [
+      "查看 PostgreSQL 在 BSD 系列系统上的发行版和安装包获取方式。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__bsd.html"
+  },
+  {
+    "url": "/download/freebsd/",
+    "template": "templates/pages/download/freebsd.html",
+    "title": "PostgreSQL FreeBSD 安装包",
+    "og_title": [
+      "PostgreSQL FreeBSD 安装包"
+    ],
+    "h1": [
+      "FreeBSD 安装包"
+    ],
+    "description": [
+      "通过 FreeBSD Ports 与 Packages Collection 获取 PostgreSQL 安装包。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__freebsd.html"
+  },
+  {
+    "url": "/download/linux/",
+    "template": "templates/pages/download/linux.html",
+    "title": "PostgreSQL Linux 下载｜其他发行版安装",
+    "og_title": [
+      "PostgreSQL Linux 下载｜其他发行版安装"
+    ],
+    "h1": [
+      "Linux 下载"
+    ],
+    "description": [
+      "了解在未列出具体发行版的 Linux 系统上通过发行版软件包或源代码安装 PostgreSQL。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__linux.html"
+  },
+  {
+    "url": "/download/linux/debian/",
+    "template": "templates/pages/download/linux/debian.html",
+    "title": "PostgreSQL Debian 下载｜APT 仓库与安装",
+    "og_title": [
+      "PostgreSQL Debian 下载｜APT 仓库与安装"
+    ],
+    "h1": [
+      "Linux 下载（Debian）"
+    ],
+    "description": [
+      "在 Debian 上通过系统软件包或 PostgreSQL APT 仓库安装受支持的 PostgreSQL 版本。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__linux__debian.html"
+  },
+  {
+    "url": "/download/linux/redhat/",
+    "template": "templates/pages/download/linux/redhat.html",
+    "title": "PostgreSQL Linux 下载（Red Hat 系列）",
+    "og_title": [
+      "PostgreSQL Linux 下载（Red Hat 系列）"
+    ],
+    "h1": [
+      "Linux 下载（Red Hat 系列）"
+    ],
+    "description": [
+      "在 RHEL、Rocky Linux、AlmaLinux、Fedora 等 Red Hat 系列发行版上安装 PostgreSQL。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__linux__redhat.html"
+  },
+  {
+    "url": "/download/linux/suse/",
+    "template": "templates/pages/download/linux/suse.html",
+    "title": "PostgreSQL SUSE 下载｜RPM 仓库与安装",
+    "og_title": [
+      "PostgreSQL SUSE 下载｜RPM 仓库与安装"
+    ],
+    "h1": [
+      "Linux 下载（SUSE）"
+    ],
+    "description": [
+      "在 SUSE Linux Enterprise Server 与 openSUSE 上通过 RPM 仓库或系统包安装 PostgreSQL。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__linux__suse.html"
+  },
+  {
+    "url": "/download/linux/ubuntu/",
+    "template": "templates/pages/download/linux/ubuntu.html",
+    "title": "PostgreSQL Ubuntu 下载｜APT 仓库与安装",
+    "og_title": [
+      "PostgreSQL Ubuntu 下载｜APT 仓库与安装"
+    ],
+    "h1": [
+      "Linux 下载（Ubuntu）"
+    ],
+    "description": [
+      "在 Ubuntu 上通过系统软件包或 PostgreSQL APT 仓库安装受支持的 PostgreSQL 版本。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__linux__ubuntu.html"
+  },
+  {
+    "url": "/download/macosx/",
+    "template": "templates/pages/download/macosx.html",
+    "title": "PostgreSQL macOS 安装包｜Postgres.app、Homebrew 等",
+    "og_title": [
+      "PostgreSQL macOS 安装包｜Postgres.app、Homebrew 等"
+    ],
+    "h1": [
+      "mac OS 安装包"
+    ],
+    "description": [
+      "获取适用于 macOS 的 PostgreSQL 安装程序，并了解 Postgres.app、Homebrew、MacPorts 等安装方式。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__macosx.html"
+  },
+  {
+    "url": "/download/netbsd/",
+    "template": "templates/pages/download/netbsd.html",
+    "title": "PostgreSQL NetBSD 安装包",
+    "og_title": [
+      "PostgreSQL NetBSD 安装包"
+    ],
+    "h1": [
+      "NetBSD 安装包"
+    ],
+    "description": [
+      "通过 NetBSD Packages Collection（pkgsrc）获取 PostgreSQL 安装包。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__netbsd.html"
+  },
+  {
+    "url": "/download/openbsd/",
+    "template": "templates/pages/download/openbsd.html",
+    "title": "PostgreSQL OpenBSD 安装包",
+    "og_title": [
+      "PostgreSQL OpenBSD 安装包"
+    ],
+    "h1": [
+      "OpenBSD 安装包"
+    ],
+    "description": [
+      "通过 OpenBSD Ports 与 Packages Collection 获取 PostgreSQL 安装包。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__openbsd.html"
+  },
+  {
+    "url": "/download/product-categories/",
+    "template": "templates/downloads/categorylist.html",
+    "title": "PostgreSQL 软件目录｜驱动、扩展与工具",
+    "og_title": [
+      "PostgreSQL 软件目录｜驱动、扩展与工具"
+    ],
+    "h1": [
+      "软件目录 - 产品分类"
+    ],
+    "description": [
+      "浏览 PostgreSQL 相关驱动、扩展、接口和工具的软件目录。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__product-categories.html"
+  },
+  {
+    "url": "/download/snapshots/",
+    "template": "templates/pages/download/snapshots.html",
+    "title": "PostgreSQL Beta、RC 与开发快照下载",
+    "og_title": [
+      "PostgreSQL Beta、RC 与开发快照下载"
+    ],
+    "h1": [
+      "Beta/RC 版本及开发快照（不稳定）"
+    ],
+    "description": [
+      "下载 PostgreSQL Beta、候选发布版和开发快照，用于测试新版本，不适合生产环境。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__snapshots.html"
+  },
+  {
+    "url": "/download/solaris/",
+    "template": "templates/pages/download/solaris.html",
+    "title": "PostgreSQL Solaris｜源码构建与测试状态",
+    "og_title": [
+      "PostgreSQL Solaris｜源码构建与测试状态"
+    ],
+    "h1": [
+      "Solaris 安装包"
+    ],
+    "description": [
+      "了解在 Solaris 上从源代码构建 PostgreSQL 的方式及社区构建测试状态。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__solaris.html"
+  },
+  {
+    "url": "/download/windows/",
+    "template": "templates/pages/download/windows.html",
+    "title": "PostgreSQL Windows 安装程序",
+    "og_title": [
+      "PostgreSQL Windows 安装程序"
+    ],
+    "h1": [
+      "Windows 安装程序"
+    ],
+    "description": [
+      "获取由 EDB 提供的 PostgreSQL Windows 安装程序及安装说明。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/download__windows.html"
+  },
+  {
+    "url": "/support/",
+    "template": "templates/pages/support.html",
+    "title": "PostgreSQL 支持｜文档、社区与专业服务",
+    "og_title": [
+      "PostgreSQL 支持｜文档、社区与专业服务"
+    ],
+    "h1": [
+      "支持"
+    ],
+    "description": [
+      "获取 PostgreSQL 文档、社区交流、专业服务、托管方案和 Bug 报告入口。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/support.html"
+  },
+  {
+    "url": "/support/professional_hosting/",
+    "template": "templates/profserv/root.html",
+    "title": "PostgreSQL 托管服务",
+    "og_title": [
+      "PostgreSQL 托管服务"
+    ],
+    "h1": [
+      "托管服务"
+    ],
+    "description": [
+      "按地区查找提供 PostgreSQL 托管方案及相关支持服务的公司。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/support__professional_hosting.html"
+  },
+  {
+    "url": "/support/professional_support/",
+    "template": "templates/profserv/root.html",
+    "title": "PostgreSQL 专业支持服务",
+    "og_title": [
+      "PostgreSQL 专业支持服务"
+    ],
+    "h1": [
+      "专业支持服务"
+    ],
+    "description": [
+      "按地区查找为 PostgreSQL 社区提供商业支持和专业服务的公司。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/support__professional_support.html"
+  },
+  {
+    "url": "/support/versioning/",
+    "template": "templates/support/versioning.html",
+    "title": "PostgreSQL 版本策略与升级指南",
+    "og_title": [
+      "PostgreSQL 版本策略与升级指南"
+    ],
+    "h1": [
+      "版本策略"
+    ],
+    "description": [
+      "了解 PostgreSQL 版本编号、支持周期、主版本和小版本升级方式。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/support__versioning.html"
+  },
+  {
+    "url": "/about/pgcenter/",
+    "template": "templates/pages/about/pgcenter.html",
+    "title": "PostgreSQL 关于 pg.center",
+    "og_title": [
+      "PostgreSQL 关于 pg.center"
+    ],
+    "h1": [
+      "关于 pg.center"
+    ],
+    "description": [
+      "了解 pg.center 中文站的内容来源、Pigsty 维护方式、译文许可、署名说明与参与渠道。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__pgcenter.html"
+  },
+  {
+    "url": "/about/featurematrix/",
+    "template": "templates/featurematrix/featurematrix.html",
+    "title": "PostgreSQL 特性矩阵与版本支持对照",
+    "og_title": [
+      "PostgreSQL 特性矩阵与版本支持对照"
+    ],
+    "h1": [
+      "特性矩阵"
+    ],
+    "description": [
+      "按功能类别和 PostgreSQL 版本对照各项特性的支持情况，查看特性引入版本、详细说明与文档链接。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__featurematrix.html"
+  },
+  {
+    "url": "/about/sponsors/",
+    "template": "templates/sponsors/sponsors.html",
+    "title": "PostgreSQL 项目赞助者",
+    "og_title": [
+      "PostgreSQL 项目赞助者"
+    ],
+    "h1": [
+      "赞助者"
+    ],
+    "description": [
+      "了解支持 PostgreSQL 项目的贡献赞助者、财务赞助者与服务器赞助者，以及各类赞助的支持方式。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__sponsors.html"
+  },
+  {
+    "url": "/about/contributing/",
+    "template": "templates/sponsors/contributing.html",
+    "title": "PostgreSQL 贡献赞助者",
+    "og_title": [
+      "PostgreSQL 贡献赞助者"
+    ],
+    "h1": [
+      "贡献赞助者"
+    ],
+    "description": [
+      "查看投入员工时间支持 PostgreSQL 开发、社区和生态项目的企业与组织，以及贡献赞助的认可说明。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__contributing.html"
+  },
+  {
+    "url": "/about/financial/",
+    "template": "templates/sponsors/financial.html",
+    "title": "PostgreSQL 财务赞助者",
+    "og_title": [
+      "PostgreSQL 财务赞助者"
+    ],
+    "h1": [
+      "财务赞助者"
+    ],
+    "description": [
+      "了解向 PostgreSQL 认可的非营利组织捐款的财务赞助者，以及 PostgreSQL 社区协会的赞助等级和记录。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__financial.html"
+  },
+  {
+    "url": "/about/servers/",
+    "template": "templates/sponsors/servers.html",
+    "title": "PostgreSQL 服务器赞助者",
+    "og_title": [
+      "PostgreSQL 服务器赞助者"
+    ],
+    "h1": [
+      "服务器赞助者"
+    ],
+    "description": [
+      "查看为 PostgreSQL 官方网站提供服务器、托管和 CDN 服务的赞助者，以及相关基础设施信息。"
+    ],
+    "file": "/tmp/pgweb-copy-revision-20260909-074553/rendered/about__servers.html"
+  }
+]

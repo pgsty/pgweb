@@ -23,6 +23,11 @@ def root(request, servtype):
         'support': support,
         'regions': regions,
         'what': what,
+        'og': {
+            'title': 'PostgreSQL {}'.format(title),
+            'description': '按地区查找 PostgreSQL {}提供商，了解服务范围和联系方式。'.format(title),
+            'url': '/support/professional_{}/'.format(what),
+        },
     })
 
 
@@ -48,4 +53,9 @@ def region(request, servtype, regionname):
         'whatname': whatname,
         'regionname': regname,
         'services': services,
+        'og': {
+            'title': 'PostgreSQL {}'.format(title),
+            'description': '查找在{}提供 PostgreSQL {}的企业及其服务范围和联系方式。'.format(regname, whatname),
+            'url': '/support/professional_{}/{}/'.format(what, regionname),
+        },
     })

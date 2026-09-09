@@ -12,33 +12,30 @@ from pgweb.util.misc import send_template_mail, generate_random_token
 
 
 class OrganisationForm(forms.ModelForm):
-    new_form_intro = """<em>Note!</em> An organisation record is only needed to post news, events,
-products or professional services. In particular, it is <em>not</em> necessary to register an
-organisation in order to ask questions or otherwise participate on the PostgreSQL mailing lists, file a bug
-report, or otherwise interact with the community."""
+    new_form_intro = """<em>提示：</em>只有发布新闻、活动、产品或专业服务信息时，才需要创建组织资料。在 PostgreSQL 邮件列表提问或参与讨论、提交 Bug 报告，以及其他一般社区交流，都<em>不需要</em>注册组织。"""
 
-    remove_email = forms.ModelMultipleChoiceField(required=False, queryset=None, label="Current email addresses", help_text="Select one or more email addresses to remove")
-    add_email = forms.EmailField(required=False, help_text="Enter an email address to add")
-    remove_manager = forms.ModelMultipleChoiceField(required=False, queryset=None, label="Current manager(s)", help_text="Select one or more managers to remove")
-    add_manager = forms.EmailField(required=False, help_text="Enter an email address of an existing account to add as manager")
+    remove_email = forms.ModelMultipleChoiceField(required=False, queryset=None, label="当前邮箱地址", help_text="选择要移除的一个或多个邮箱地址")
+    add_email = forms.EmailField(required=False, label="添加邮箱地址", help_text="输入要添加的邮箱地址")
+    remove_manager = forms.ModelMultipleChoiceField(required=False, queryset=None, label="当前管理员", help_text="选择要移除的一个或多个管理员")
+    add_manager = forms.EmailField(required=False, label="添加管理员", help_text="输入已注册账户的邮箱地址，将其添加为管理员")
 
     fieldsets = [
         {
             'id': 'general',
-            'legend': 'General',
+            'legend': '基本信息',
             'description': '',
             'fields': ['name', 'address', 'url', 'orgtype', ],
         },
         {
             'id': 'managers',
-            'legend': 'Managers',
-            'description': 'Managers are the accounts that can use and modify this organisation. To add a manager they must have an existing account.',
+            'legend': '管理员',
+            'description': '管理员可以使用和修改此组织的资料。添加管理员前，对方需要先注册账户。',
             'fields': ['remove_manager', 'add_manager'],
         },
         {
             'id': 'emails',
-            'legend': 'E-mail addresses',
-            'description': 'E-mail addresses registered here can be used to post news. If no news will be posted, there is no need to register one or more email addresses.',
+            'legend': '邮箱地址',
+            'description': '在此登记的邮箱地址可用于发布新闻。如不发布新闻，则无需添加邮箱地址。',
             'fields': ['remove_email', 'add_email'],
         },
     ]
@@ -46,6 +43,12 @@ report, or otherwise interact with the community."""
     class Meta:
         model = Organisation
         exclude = ('lastconfirmed', 'approved', 'managers', 'mailtemplate', 'fromnameoverride')
+        labels = {
+            'name': '组织名称',
+            'address': '地址',
+            'url': '网站地址',
+            'orgtype': '组织类型',
+        }
 
     def __init__(self, *args, **kwargs):
         super(OrganisationForm, self).__init__(*args, **kwargs)
@@ -69,7 +72,7 @@ report, or otherwise interact with the community."""
     def clean_add_email(self):
         if self.cleaned_data['add_email']:
             if OrganisationEmail.objects.filter(org=self.instance, address=self.cleaned_data['add_email'].lower()).exists():
-                raise ValidationError("This email is already registered for your organisation.")
+                raise ValidationError("此邮箱地址已登记在您的组织下。")
         return self.cleaned_data['add_email']
 
     def clean_add_manager(self):
@@ -78,7 +81,7 @@ report, or otherwise interact with the community."""
             try:
                 User.objects.get(email=self.cleaned_data['add_manager'].lower())
             except User.DoesNotExist:
-                raise ValidationError("User with email %s not found" % self.cleaned_data['add_manager'])
+                raise ValidationError("未找到使用邮箱 %s 的用户。" % self.cleaned_data['add_manager'])
 
         return self.cleaned_data['add_manager']
 
@@ -90,14 +93,14 @@ report, or otherwise interact with the community."""
                     removecount += 1
 
             if len(self.instance.managers.all()) - removecount <= 0:
-                raise ValidationError("Cannot remove all managers from an organsation!")
+                raise ValidationError("组织必须至少保留一位管理员。")
         return self.cleaned_data['remove_manager']
 
     def clean_remove_email(self):
         if self.cleaned_data['remove_email']:
             for e in self.cleaned_data['remove_email']:
                 if e.newsarticle_set.exists():
-                    raise ValidationError("Cannot remove an email address that has been used to post news articles. Please contact webmaster@postgresql.org to have this removed.")
+                    raise ValidationError("无法移除曾用于发布新闻的邮箱地址。如需移除，请联系 webmaster@postgresql.org。")
         return self.cleaned_data['remove_email']
 
     def save(self, commit=True):

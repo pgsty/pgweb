@@ -5,8 +5,7 @@
 <h1>后端流程图 <i class="fas fa-code-branch"></i></h1>
 
 <center>
-<h3><em>点击某个项目</em>查看更多详情，或查看完整的
-<a href="https://wiki.postgresql.org/wiki/Backend_flowchart">索引。</a></h3>
+<h3><em>点击某个项目</em>查看更多详情，或查看完整的<a href="https://wiki.postgresql.org/wiki/Backend_flowchart">索引。</a></h3>
 
 <p><img src="../../../media/img/developer/backend/flow.gif" usemap="#flowmap" alt="flowchart" />
 
@@ -42,64 +41,49 @@ echo "0, 0," | awk -F, '{printf "%d, %d\n", $1 + 145, $2 + 45}'
 
 <br />
 
-<p>查询通过 TCP/IP 或 Unix Domain 套接字以数据包的形式到达后端。
-它被加载到一个字符串中，然后传递给 <a
-href="https://wiki.postgresql.org/wiki/Backend_flowchart#parser">解析器，</a>
-其中词法扫描器 <a
+<p>查询通过 TCP/IP 或 Unix Domain 套接字以数据包的形式到达后端。它被加载到一个字符串中，然后传递给<a
+href="https://wiki.postgresql.org/wiki/Backend_flowchart#parser">解析器，</a>其中词法扫描器 <a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/parser/scan.l">scan.l</a>
-将查询分解为记号（token）。解析器使用 <a
+将查询分解为词元（token）。解析器使用 <a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/parser/gram.y">gram.y</a>
-和这些记号来识别查询类型，并加载相应的查询特定结构，如 <a
+和这些词元来识别查询类型，并加载相应的查询特定结构，如 <a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/include/nodes/parsenodes.h">CreateStmt</a>
 或 <a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/include/nodes/parsenodes.h">SelectStmt。</a></p>
 
 <p>然后语句被识别为复杂语句（<em>SELECT / INSERT /
 UPDATE / DELETE</em>）或简单语句，例如 <em>CREATE ROLE、ANALYZE</em>
-等。不需要执行器的简单实用命令由 <a href="https://wiki.postgresql.org/wiki/Backend_flowchart#commands">commands</a> 模块中的语句特定函数处理。
-复杂语句需要更多的处理。</p>
+等。不需要执行器的简单实用命令由 <a href="https://wiki.postgresql.org/wiki/Backend_flowchart#commands">commands</a> 模块中的语句特定函数处理。复杂语句需要更多的处理。</p>
 
 <p>解析器接收复杂查询，并创建一个 <a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/include/nodes/parsenodes.h">Query</a>
-结构，其中包含复杂查询使用的所有元素。
-Query.jointree 保存 <em>FROM</em> 和 <em>WHERE</em> 子句，由
+结构，其中包含复杂查询使用的所有元素。Query.jointree 保存 <em>FROM</em> 和 <em>WHERE</em> 子句，由
 <a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/parser/parse_clause.c">transformFromClause()</a> 和
-<a href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/parser/parse_clause.c">transformWhereClause()</a> 填充。
-查询中引用的每个表由一个 <a
-href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/include/nodes/parsenodes.h">RangeTblEntry</a> 表示，
-它们链接在一起形成查询的<em>范围表</em>，由 <a
-href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/parser/parse_clause.c">transformFromClause()</a> 生成。
-Query.rtable 保存查询的范围表。</p>
+<a href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/parser/parse_clause.c">transformWhereClause()</a> 填充。查询中引用的每个表由一个 <a
+href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/include/nodes/parsenodes.h">RangeTblEntry</a> 表示，它们链接在一起形成查询的<em>范围表</em>，由 <a
+href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/parser/parse_clause.c">transformFromClause()</a> 生成。Query.rtable 保存查询的范围表。</p>
 
-<p>某些查询，如 <em>SELECT，</em> 返回数据列。其他查询，如 <em>INSERT</em> 和 <em>UPDATE，</em>
-指定由查询修改的列。这些列引用被转换为 <a
+<p>某些查询，如 <em>SELECT，</em>返回数据列。其他查询，如 <em>INSERT</em> 和 <em>UPDATE，</em>指定由查询修改的列。这些列引用被转换为 <a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/include/nodes/primnodes.h">TargetEntry</a>
-条目，它们链接在一起组成查询的<em>目标列表</em>。
-目标列表存储在 Query.targetList 中，由 <a
+条目，它们链接在一起组成查询的<em>目标列表</em>。目标列表存储在 Query.targetList 中，由 <a
 href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/backend/parser/parse_target.c">transformTargetList()</a> 生成。</p>
 
-<p>其他查询元素，如聚集（<em>SUM()</em>）、<em>GROUP
+<p>其他查询元素，如聚合（<em>SUM()</em>）、<em>GROUP
 BY</em> 和 <em>ORDER BY</em> 也存储在各自的 Query 字段中。</p>
 
-<p>下一步是由可能适用于查询的任何<em>视图</em>或<em>规则</em>对 Query 进行修改。
-这由 <a href="https://wiki.postgresql.org/wiki/Backend_flowchart#rewrite">重写</a> 系统执行。</p>
+<p>下一步是由可能适用于查询的任何<em>视图</em>或<em>规则</em>对 Query 进行修改。这由<a href="https://wiki.postgresql.org/wiki/Backend_flowchart#rewrite">重写</a>系统执行。</p>
 
 <p><a
-href="https://wiki.postgresql.org/wiki/Backend_flowchart#optimizer_path">优化器</a> 使用
-Query 结构来确定 RangeTable 中每个表的最佳连接顺序和连接类型，
-利用 Query.jointree（<em>FROM</em> 和 <em>WHERE</em> 子句）来考虑最优的索引使用。</p>  <a
+href="https://wiki.postgresql.org/wiki/Backend_flowchart#optimizer_path">优化器</a>使用
+Query 结构来确定 RangeTable 中每个表的最佳连接顺序和连接类型，利用 Query.jointree（<em>FROM</em> 和 <em>WHERE</em> 子句）来考虑最优的索引使用。</p>  <a
 href="https://wiki.postgresql.org/wiki/Backend_flowchart#optimizer_path">path</a>
 模块随后生成一个最优的 <a
-href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/include/nodes/plannodes.h">Plan，</a>
-其中包含执行查询所需的操作。</p>
+href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=blob;f=src/include/nodes/plannodes.h">Plan，</a>其中包含执行查询所需的操作。</p>
 
-<p>然后 Plan 被传递给 <a
-href="https://wiki.postgresql.org/wiki/Backend_flowchart#executor">执行器</a> 执行，
-并将结果返回给客户端。Plan 实际上是一组节点，
-以树形结构排列，有一个顶层节点和各种子节点作为子元素。</p>
+<p>然后 Plan 被传递给<a
+href="https://wiki.postgresql.org/wiki/Backend_flowchart#executor">执行器</a>执行，并将结果返回给客户端。Plan 实际上是一组节点，以树形结构排列，有一个顶层节点和各种子节点作为子元素。</p>
 
-<p>还有许多其他模块支持这一基本功能。
-您可以通过点击流程图来访问它们。</p>
+<p>还有许多其他模块支持这一基本功能。您可以通过点击流程图来访问它们。</p>
 
 {%endblock%}

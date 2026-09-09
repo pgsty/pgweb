@@ -1,8 +1,8 @@
 {%extends "base/page.html"%}
-{%block title%}PostgreSQL 9.3 版本发布说明{%endblock%}
+{%block title%}PostgreSQL 9.3 新闻资料包{%endblock%}
 {%block contents%}
 
-<h1>PostgreSQL 9.3 版本发布说明</h1>
+<h1>PostgreSQL 9.3 新闻资料包</h1>
 
 <h2>目录</h2>
 
@@ -11,7 +11,7 @@
  &nbsp; <a href="#features">特性列表</a><br />
  &nbsp; <a href="#download">下载地址</a><br />
  &nbsp; <a href="#docs">文档</a><br />
- &nbsp; <a href="#license">版权声明</a><br />
+ &nbsp; <a href="#license">许可证</a><br />
  &nbsp; <a href="#contact">联系方式</a><br />
  &nbsp; <a href="#quoted_companies">相关商业公司引语与全文</a><br />
  &nbsp; <a href="#companies">企业支持</a><br />
@@ -19,7 +19,7 @@
 
 <a name="original_release"></a><h2>新版本发布说明的原文</h2>
 
-<p>2013/9/9: 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.3 版发布，这个版本扩展了可靠性、可用性及与其他数据库易集成性，用户将会发现，他们可以使用9.3 版本创建一些对以前版本是不可能实现的新功能。
+<p>2013/9/9: 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.3 版发布，这个版本扩展了可靠性、可用性及与其他数据库易集成性，用户将会发现，他们可以使用 9.3 版本创建一些对以前版本是不可能实现的新功能。
 </p>
 
 <p>
@@ -43,7 +43,7 @@
 </p>
 
 <p>
-“PostgreSQL 因为它众所周知的稳定性、强壮性、数据一致性、安全性、ACID 事务性和 SQL 标准规范性一直就是我的最喜欢的选择”，Gandi.net 网站的研发经理 Pascal Bouchareine 说道，“我对9.3 版本中快速的失效转移功能尤其感到兴奋”。
+“PostgreSQL 因为它众所周知的稳定性、强壮性、数据一致性、安全性、ACID 事务性和 SQL 标准规范性一直就是我的最喜欢的选择”，Gandi.net 网站的研发经理 Pascal Bouchareine 说道，“我对 9.3 版本中快速的故障切换功能尤其感到兴奋”。
 </p>
 
 <p>
@@ -52,7 +52,7 @@
 
 <ul>
 <li>数据页的校验：帮助管理员快速检查失效磁盘和可能导致数据出错的有问题硬件</li>
-<li>快速失效转移：可以实现亚秒级的从主库向副本的切换，支持“电信级”高可用性</li>
+<li>快速故障切换：可以实现亚秒级的从主库向副本的切换，支持“电信级”高可用性</li>
 <li>流式重建：在主机失效后可以更加简单、快速地重新配置级联复制</li>
 </ul>
 
@@ -90,8 +90,8 @@ PostgreSQL 是业内领先的开源数据库系统，背后是一个由数千名
 有关上述提及的新特性以及其他特性介绍，可查询以下资源：
 </p>
 <ul>
-<li><a href="/docs/9.3/release-9-3.html">发布声明</a></li>
-<li><a href="/docs/9.3/index.html">9.3 版本的文档</a></li>
+<li><a href="https://www.postgresql.org/docs/9.3/release-9-3.html">发布声明</a></li>
+<li><a href="https://www.postgresql.org/docs/9.3/">9.3 版本的文档</a></li>
 <li><a href="https://wiki.postgresql.org/wiki/What%27s_new_in_PostgreSQL_9.3">9.3 版本的新特性（英文网站）</a></li>
 <li><a href="/about/featurematrix">特性矩阵（仅英语）</a></li>
 <li><a href="https://github.com/umitanuki/mongres">Mongres: MongoDB 在 PostgreSQL 平台的模拟器</a></li>
@@ -101,7 +101,7 @@ PostgreSQL 是业内领先的开源数据库系统，背后是一个由数千名
 
 <a name="download"></a><h2>下载</h2>
 <ul>
-<li><a href="/download">下载页面</a> 有含 Windows、Linux、OSX、BSD 和 Solaris 平台下的安装包及其他工具</li>
+<li><a href="/download">下载页面</a>有含 Windows、Linux、OSX、BSD 和 Solaris 平台下的安装包及其他工具</li>
 <li><a href="https://www.postgresql.org/ftp/source/v9.3.0">源代码</a></li>
 <li><a href="http://pgxn.org">PostgreSQL 扩展模块网站</a></li>
 <li><a href="/download/product-categories">相关商业软件</a></li>
@@ -110,13 +110,12 @@ PostgreSQL 是业内领先的开源数据库系统，背后是一个由数千名
 <a name="docs"></a><h2>文档</h2>
 
 <p>
-HTML 格式文档和 man 格式的文档随 PostgreSQL 一起安装，用户也可以免费地在网站上对 <a href="/docs/9.3/">在线文档</a> 进行浏览、搜索和反馈评论。
+HTML 格式文档和 man 格式的文档随 PostgreSQL 一起安装，用户也可以免费地在网站上对<a href="https://www.postgresql.org/docs/9.3/">在线文档</a>进行浏览、搜索和反馈评论。
 </p>
 
-<a name="license"></a><h2>版权声明</h2>
+<a name="license"></a><h2>许可证</h2>
 <p>
-PostgreSQL 使用 <a href="/about/licence">PostgreSQL 版权声明</a>，它是类似 BSD 的版权。
-由于这个经 <a href="http://www.opensource.org/licenses/postgresql">OSI 认证的版权</a> 不限制 PostgreSQL 在商业环境和有版权的应用程序中使用，因此被公认为是非常有灵活性和对商业应用是友好的。加上有多个公司的支持和源代码归属公共所有，我们的版权使得 PostgreSQL 在那些希望在自己的产品里嵌入数据库的厂商中很流行，因为他们不用担心费用、嵌入软件的版权锁以及版权条款的改变。
+PostgreSQL 使用 <a href="/about/licence">PostgreSQL 许可证</a>，它是类似 BSD 的许可证。由于这个经 <a href="http://www.opensource.org/licenses/postgresql">OSI 认证的许可证</a>不限制 PostgreSQL 在商业环境和专有应用程序中使用，因此被公认为是非常有灵活性和对商业应用是友好的。加上有多个公司的支持和源代码归属公共所有，这一许可证使得 PostgreSQL 在那些希望在自己的产品里嵌入数据库的厂商中很流行，因为他们不用担心费用、供应商锁定以及许可条款的改变。
 </p>
 
 <a name="contact"></a><h2>联系方式</h2>
@@ -149,7 +148,7 @@ PostgreSQL 使用 <a href="/about/licence">PostgreSQL 版权声明</a>，它是�
 
 <blockquote>“PostgreSQL 9.3 版本为开发者提供了一系列可立即使用的功能，例如更好的 JSON 功能、正则表达式索引，以及更容易使用外部数据包装器来整合数据库。没有 9.3 版本的这些功能，我都不知道我的项目如何按时完成。”VenueBook 公司的技术总监 Jonathan S. Katz 说道。</blockquote>
 
-<p><a href="http://venuebook.com/">VenueBook 公司</a> 提供基于云计算的活动管理方案，可以在一个地方帮助管理整个活动流程。我们的软件帮助活动经理准备并审批合同、菜单、在线支付等事务。不同于市面上只能帮你管理活动的其他系统，我们还能简化流程并安排日程。联系方式（仅英语）：<a href="mailto:info@venuebook.com">info@venuebook.com</a>, +1 646-543-8368</p>
+<p><a href="http://venuebook.com/">VenueBook 公司</a>提供基于云计算的活动管理方案，可以在一个地方帮助管理整个活动流程。我们的软件帮助活动经理准备并审批合同、菜单、在线支付等事务。不同于市面上只能帮你管理活动的其他系统，我们还能简化流程并安排日程。联系方式（仅英语）：<a href="mailto:info@venuebook.com">info@venuebook.com</a>, +1 646-543-8368</p>
 
 <b>CloudFlare 公司</b>
 
@@ -157,23 +156,23 @@ PostgreSQL 使用 <a href="/about/licence">PostgreSQL 版权声明</a>，它是�
 <br /><br />
 “将外部数据包装器、物化视图和 LATERAL 连接用于查询，再配合用于监控的自定义后台工作进程，使 PostgreSQL 成为一个真正强大的平台，我们打算持续使用它，并与之共同成长。CloudFlare 很高兴能把这颗明珠纳入我们的工具箱。”CloudFlare 联合创始人兼首席工程师 Lee Holloway 说道。</blockquote>
 
-<p><a href="http://www.cloudflare.com">CloudFlare 公司</a> 可以让用户网站更快，保护它们免受攻击，并确保它们始终在线，还可以通过简单点击添加新的应用。不论目标网站大小和所用平台如何，CloudFlare 都能在不增加硬件、软件，甚至不修改一行代码的前提下提升网站能力。CloudFlare 的社区也因此变得越来越强大，凭借我们的技术，每个月都有成千上万的人体验到一个更快、更安全、更好的互联网。CloudFlare 公司被世界经济论坛称为技术先锋，2011 年和 2012 年被《华尔街日报》评为最具创新性的网络和互联网公司，2012 年被《快公司》评为世界前 50 大最具创新力的公司。CloudFlare 公司位于美国加州三藩市，联系地址（仅英语）：<a href="mailto:press@cloudflare.com">press@cloudflare.com</a>, +1 (650) 485-1399</p>
+<p><a href="http://www.cloudflare.com">CloudFlare 公司</a>可以让用户网站更快，保护它们免受攻击，并确保它们始终在线，还可以通过简单点击添加新的应用。不论目标网站大小和所用平台如何，CloudFlare 都能在不增加硬件、软件，甚至不修改一行代码的前提下提升网站能力。CloudFlare 的社区也因此变得越来越强大，凭借我们的技术，每个月都有成千上万的人体验到一个更快、更安全、更好的互联网。CloudFlare 公司被世界经济论坛称为技术先锋，2011 年和 2012 年被《华尔街日报》评为最具创新性的网络和互联网公司，2012 年被《快公司》评为世界前 50 大最具创新力的公司。CloudFlare 公司位于美国加州三藩市，联系地址（仅英语）：<a href="mailto:press@cloudflare.com">press@cloudflare.com</a>, +1 (650) 485-1399</p>
 
 <b>Gandi.net 公司</b>
 
-<blockquote>"我们需要使用复制技术，对最近这项特性的改进非常感兴趣，我对9.3 版本中的快速失效转移功能尤其兴奋。我们在 Gandi IAAS/PAAS 平台上已经使用 PostgreSQL 很长时间，最近我们也使用它创建我们的在线系统每天来存储、计算、输出数百万条记录，真的是很简单"。
+<blockquote>"我们需要使用复制技术，对最近这项特性的改进非常感兴趣，我对 9.3 版本中的快速故障切换功能尤其兴奋。我们在 Gandi IAAS/PAAS 平台上已经使用 PostgreSQL 很长时间，最近我们也使用它创建我们的在线系统每天来存储、计算、输出数百万条记录，真的是很简单"。
 <br /><br />
 "PostgreSQL 因为它众所周知的稳定性、强壮性、数据一致性、安全性、ACID 事务性和 SQL 标准规范性一直就是我的最喜欢的选择，现在它变得更加现代、充分使用了操作系统提供的功能，我们可见到很大的性能提升和失效时更加容易的管理。它就是适用于关键业务的最好的数据库"，Gandi.net 网站的研发经理 Pascal Bouchareine 说。
 </blockquote>
 
-<p><a href="http://www.gandi.net">GANDI.net 网站</a> 是经 ICANN 批准的一级域名注册商之一，可注册.COM, .NET,.ORG, .BIZ, .INFO 域名和在法国的 .NAME, .BE, .FR, .EU 域名，它提供超过200个域扩展并且仍在增加中。在目前注册领域可能会有一些”灰色“的操作，但 Gandi 认为它是一个遵守道德规范的域名注册商，它尽量在任何地方对用户的权利和隐私进行保护。英语联系：<a href="thomas@gandi.net">Thomas  Stocking</a>, 法语：<a href="mailto:nicolas.lhuillery@gandi.net">Nicolas Lhuillery</a>. Phone: +1 410.429.7402.</p>
+<p><a href="http://www.gandi.net">GANDI.net 网站</a>是经 ICANN 批准的一级域名注册商之一，可注册.COM, .NET,.ORG, .BIZ, .INFO 域名和在法国的 .NAME, .BE, .FR, .EU 域名，它提供超过 200 个域扩展并且仍在增加中。在目前注册领域可能会有一些”灰色“的操作，但 Gandi 认为它是一个遵守道德规范的域名注册商，它尽量在任何地方对用户的权利和隐私进行保护。英语联系：<a href="thomas@gandi.net">Thomas  Stocking</a>, 法语：<a href="mailto:nicolas.lhuillery@gandi.net">Nicolas Lhuillery</a>. Phone: +1 410.429.7402.</p>
 
 <a name="companies"></a><h2>企业支持</h2>
 
-<p>PostgreSQL 获得了一大批公司的支持，他们资助开发人员，提供网上资源以及给予了资金上的支持。一些较大的且长期支持的公司名单列在我们的 <a href="/about/sponsors">开发支持页面</a></p>
+<p>PostgreSQL 获得了一大批公司的支持，他们资助开发人员，提供网上资源以及给予了资金上的支持。一些较大的且长期支持的公司名单列在我们的<a href="/about/sponsors">开发支持页面</a></p>
 
-<p>还有 <a href="/support/professional_support">大量的公司</a> 提供从独立顾问到跨国公司的 PostgreSQL 支持。</p>
+<p>还有<a href="/support/professional_support">大量的公司</a>提供从独立顾问到跨国公司的 PostgreSQL 支持。</p>
 
-<p>我们也很乐意接受各方 <a href="/about/donate">捐助</a>。</p>
+<p>我们也很乐意接受各方<a href="/about/donate">捐助</a>。</p>
 
 {% endblock %}

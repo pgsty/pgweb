@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.http import HttpResponseNotModified
+from django.http import HttpResponsePermanentRedirect
 from django.core.exceptions import PermissionDenied
 from django.template import TemplateDoesNotExist, loader
 from django.contrib.auth.models import User
@@ -47,6 +48,7 @@ from pgweb.survey.models import Survey
 # models and forms needed for core objects
 from .models import Organisation
 from .forms import MergeOrgsForm, ModerationForm, AdminResetPasswordForm
+from .staticpages import AUXILIARY_PAGES, is_public_static_page
 
 log = logging.getLogger(__name__)
 
@@ -84,8 +86,9 @@ def home(request):
 
     release = CurrentRelease.get()
 
+    title = 'PostgreSQL 中文社区｜文档、下载与技术资讯'
     return render(request, 'index.html', {
-        'title': 'PostgreSQL 中文社区：世界上最先进的开源数据库',
+        'title': title,
         'news': news,
         'events': events,
         'versions': versions,
@@ -94,8 +97,8 @@ def home(request):
         'og': {
             'url': '/',
             'type': 'website',
-            'title': 'PostgreSQL 中文社区',
-            'description': 'PostgreSQL 中文社区网站，提供 PostgreSQL 新闻、文档、下载、版本信息、社区活动与技术资源。',
+            'title': title,
+            'description': 'pg.center 是由 Pigsty 团队维护的 PostgreSQL 官方网站中文翻译站，提供中文文档、技术资讯、软件目录与知识库。',
             'sitename': 'PostgreSQL 中文社区',
         },
     })
@@ -156,6 +159,9 @@ re_staticfilenames = re.compile("^[0-9A-Z/_-]+$", re.IGNORECASE)
 
 # Generic fallback view for static pages
 def fallback(request, url):
+    if not is_public_static_page(url) and url not in AUXILIARY_PAGES:
+        raise Http404('Page not found.')
+
     if url.find('..') > -1:
         raise Http404('Page not found.')
 
@@ -166,6 +172,10 @@ def fallback(request, url):
         # Maximum length is really per-directory, but we shouldn't have any pages/fallback
         # urls with anywhere *near* that, so let's just limit it on the whole
         raise Http404('Page not found.')
+
+    normalized = re.sub('/+', '/', url).strip('/')
+    if normalized != url:
+        return HttpResponsePermanentRedirect('/' + normalized + '/')
 
     try:
         t = loader.get_template('pages/%s.html' % url)
@@ -184,7 +194,10 @@ def fallback(request, url):
     # Render with the request so the configured context processors run
     # (request.path drives the nav highlight and the postgresql.org link).
     c = {'navmenu': get_nav_menu(navsect)}
-    return HttpResponse(t.render(c, request))
+    response = HttpResponse(t.render(c, request))
+    if url in AUXILIARY_PAGES:
+        response['X-Robots-Tag'] = 'noindex,follow'
+    return response
 
 
 def static_file(request, path):
@@ -199,7 +212,6 @@ Disallow: /admin/
 Disallow: /account/
 Disallow: /docs/devel/
 Disallow: /list/
-Disallow: /search/
 Disallow: /message-id/raw/
 Disallow: /message-id/flat/
 Disallow: /message-id/resend/
@@ -216,7 +228,11 @@ def _make_sitemap(pagelist):
     x.startDocument()
     x.startElement('urlset', {'xmlns': 'http://www.sitemaps.org/schemas/sitemap/0.9'})
     pages = 0
+    seen = set()
     for p in pagelist:
+        if p[0] in seen:
+            continue
+        seen.add(p[0])
         pages += 1
         x.startElement('url', {})
         x.add_xml_element('loc', '{}{}'.format(site_root, urllib.parse.quote('/' + p[0].lstrip('/'))))

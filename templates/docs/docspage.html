@@ -1,14 +1,7 @@
 {% extends "base/base.html" %}
 {% load pgfilters %}
 
-{% block title %}文档：{{page.display_version}}：{{page.title}}{% endblock %}
-
-{% block extrahead %}
-{%if not page.version.supported%}  <meta name="robots" content="nofollow" />{%endif%}
-{% if canonical_version %}
-  <link rel="canonical" href="{{link_root}}/docs/{{ canonical_version }}/{{ page.file }}" />
-{% endif %}
-{% endblock %}
+{% block title %}{{page.display_version}} 文档 · {{page.title}}{% endblock %}
 
 {% block layoutblock %}
     <div class="container-fluid margin">
@@ -46,7 +39,7 @@
                     开发版本：
                     {% for ver in devel_versions %}
                       {% if not forloop.first %} / {% endif %}
-                      <a href="/docs/{{ver.display_version}}/{{ver.file}}" title="PostgreSQL {{ver.display_version}} - {{page.title}}" {% if ver.version == page.version %}class="docs-version-selected"{% endif %} rel="nofollow">{{ver.display_version}}</a>
+                      <a href="/docs/{{ver.display_version}}/{{ver.file}}" title="PostgreSQL {{ver.display_version}} - {{page.title}}" {% if ver.version == page.version %}class="docs-version-selected"{% endif %}>{{ver.display_version}}</a>
                     {% endfor %}
                   </div>
                 </div>
@@ -78,7 +71,7 @@
 {%if not page.version.supported%}
 	  <div class="text-center alert-warning">
 	    当前 PostgreSQL 版本不在支持生命周期内。<br/>
-	    您可以参阅 <a href="/docs/current/{{page.file}}" title="PostgreSQL {{page.version.display_version}} - {{page.title}}">当前大版本</a> 的对应页面，或其他在上面列出的活跃大版本。
+	    您可以参阅<a href="{{current_page_url}}" title="PostgreSQL 当前版本 - {{page.title}}">{{current_page_label}}</a>的对应页面，或其他在上面列出的活跃大版本。
 	  </div>
 {%endif%}
           <div id="docContent">
@@ -88,7 +81,7 @@
             <div id="docComments">
               <h2>提交更正</h2>
               <p>
-              如果您发现文档中有不正确的内容、与您使用特定功能的经验不符或需要进一步说明，请使用 <a href="/account/comments/new/{{page.version.numtree|default:"devel"}}/{{page.file}}/" rel="nofollow">此表单</a> 来报告文档问题。
+              如果您发现文档中有不正确的内容、与您使用特定功能的经验不符或需要进一步说明，请使用<a href="/account/comments/new/{{page.version.numtree|default:"devel"}}/{{page.file}}/" rel="nofollow">此表单</a>来报告文档问题。
               </p>
             </div>
           {% endif %}

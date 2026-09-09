@@ -418,7 +418,7 @@ def logout(request):
 
 def changepwd(request):
     if hasattr(request.user, 'password') and request.user.password == OAUTH_PASSWORD_STORE:
-        return HttpSimpleResponse(request, "Account error", "This account cannot change password as it's connected to a third party login site.")
+        return HttpSimpleResponse(request, "账户错误", "此账户使用第三方登录，无法在这里修改密码。")
 
     log.info("Initiating password change from {0}".format(get_client_ip(request)))
     return authviews.PasswordChangeView.as_view(template_name='account/password_change.html',
@@ -435,7 +435,7 @@ def resetpwd(request):
                 return HttpResponse("Email must be specified", status=400)
             u = User.objects.get(email__iexact=request.POST['email'])
             if u.password == OAUTH_PASSWORD_STORE:
-                return HttpSimpleResponse(request, "Account error", "This account cannot change password as it's connected to a third party login site.")
+                return HttpSimpleResponse(request, "账户错误", "此账户使用第三方登录，无法在这里修改密码。")
         except User.DoesNotExist:
             log.info("Attempting to reset password of {0}, user not found".format(request.POST['email']))
             return HttpResponseRedirect('/account/reset/done/')
@@ -491,7 +491,7 @@ def reset_complete(request):
 @frame_sources('https://www.google.com/')
 def signup(request):
     if request.user.is_authenticated:
-        return HttpSimpleResponse(request, "Account error", "You must log out before you can sign up for a new account")
+        return HttpSimpleResponse(request, "账户错误", "请先退出当前账户，再注册新账户。")
 
     if request.method == 'POST':
         # Attempt to create user then, eh?
@@ -528,15 +528,12 @@ def signup(request):
 
     return render_pgweb(request, 'account', 'base/form.html', {
         'form': form,
-        'formitemtype': 'Account',
+        'formitemtype': '账户',
         'form_intro': """
-To sign up for a free community account, enter your preferred userid and email address.
-Note that a community account is only needed if you want to submit information - all
-content is available for reading without an account. A confirmation email will be sent
-to the specified address, and once confirmed a password for the new account can be specified.
+填写您希望使用的用户名和邮箱地址，即可注册免费的社区账户。只有提交内容时才需要账户；浏览网站内容无需登录。我们会向您填写的邮箱发送确认邮件，完成确认后即可设置账户密码。
 """,
-        'savebutton': 'Sign up',
-        'operation': 'New',
+        'savebutton': '注册',
+        'operation': '创建',
         'recaptcha': True,
     })
 
@@ -560,11 +557,11 @@ def signup_oauth(request):
     if 'oauth_email' not in cookiedata \
        or 'oauth_firstname' not in cookiedata \
        or 'oauth_lastname' not in cookiedata:
-        return HttpSimpleResponse(request, "OAuth error", 'Invalid redirect received')
+        return HttpSimpleResponse(request, "OAuth 登录错误", '收到的跳转信息无效。')
 
     # Is this email already on a different account as a secondary one?
     if SecondaryEmail.objects.filter(email=cookiedata['oauth_email'].lower()).exists():
-        return HttpSimpleResponse(request, "OAuth error", 'This email address is already attached to a different account')
+        return HttpSimpleResponse(request, "OAuth 登录错误", '此邮箱地址已关联其他账户。')
 
     if request.method == 'POST':
         # Second stage, so create the account. But verify that the
@@ -795,9 +792,9 @@ def communityauth_consent(request, siteid):
 
     return render_pgweb(request, 'account', 'base/form.html', {
         'form': form,
-        'operation': 'Authentication',
-        'form_intro': 'The site you are about to log into is run by {0}. If you choose to proceed with this authentication, your name and email address will be shared with <em>{1}</em>.</p><p>Please confirm that you consent to this sharing.'.format(org.orgname, org.orgname),
-        'savebutton': 'Proceed with login',
+        'operation': '社区认证',
+        'form_intro': '您即将登录的网站由 {0} 运营。继续认证将向 <em>{1}</em> 提供您的姓名和邮箱地址。</p><p>请确认您同意共享这些信息。'.format(org.orgname, org.orgname),
+        'savebutton': '继续登录',
     })
 
 

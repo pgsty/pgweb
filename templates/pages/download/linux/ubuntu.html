@@ -7,8 +7,7 @@
 
 <h1>Linux 下载（Ubuntu） <img class="logo" src="/media/img/ubuntu.svg" alt="Ubuntu 标志" /></h1>
 <p>
-所有 Ubuntu 版本默认都提供 PostgreSQL。但是，Ubuntu 会“快照”一个特定版本的 PostgreSQL，并在该 Ubuntu 版本的整个生命周期内提供支持。
-PostgreSQL 项目维护了一个 <a href="#apt">Apt 仓库</a>，提供所有受支持的 PostgreSQL 版本。
+所有 Ubuntu 版本默认都提供 PostgreSQL。但是，Ubuntu 会选定一个 PostgreSQL 版本，并在该 Ubuntu 版本的整个生命周期内提供支持。PostgreSQL 项目维护了一个 <a href="#apt">Apt 仓库</a>，提供所有受支持的 PostgreSQL 版本。
 </p>
 
 <h2>发行版自带</h2>
@@ -22,7 +21,7 @@ apt install postgresql
 <a name="apt"></a>
 <h2>PostgreSQL Apt 仓库</h2>
 <p>
-如果您的 Ubuntu 版本中包含的 PostgreSQL 版本不是您想要的，可以使用 <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt 仓库</a>。该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持 <a href="/support/versioning/">生命周期</a> 内为所有受支持的 PostgreSQL 版本提供自动更新。
+如果您的 Ubuntu 版本中包含的 PostgreSQL 版本不是您想要的，可以使用 <a href="https://apt.postgresql.org" target="_blank" rel="noopener">PostgreSQL Apt 仓库</a>。该仓库将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持<a href="/support/versioning/">生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
 </p>
 <p>
 PostgreSQL Apt 仓库支持以下 Ubuntu 版本：
@@ -54,7 +53,7 @@ sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh</pre>
 <h3>手工仓库配置</h3>
 
 <p>
-导入 <a href="/media/keys/ACCC4CF8.asc">仓库签名公钥</a>：
+导入<a href="/media/keys/ACCC4CF8.asc">仓库签名公钥</a>：
 </p>
 
 <div class="pg-script-container">
@@ -123,7 +122,7 @@ sudo apt install postgresql-18</pre>
 
 <h2>PostgreSQL Apt 仓库中国镜像</h2>
 <p>
-如果您位于中国大陆，可以考虑使用 <a href="https://mirrors.cloud.tencent.com/postgresql/repos/apt/" target="_blank" rel="noopener">腾讯云 PostgreSQL APT 镜像</a>。</br>
+如果您位于中国大陆，可以考虑使用<a href="https://mirrors.cloud.tencent.com/postgresql/repos/apt/" target="_blank" rel="noopener">腾讯云 PostgreSQL APT 镜像</a>。</br>
 您也可以使用 <a href="https://pigsty.cc/docs/pig" target="_blank" rel="noopener">pig</a> 命令行工具来添加 PGDG APT 仓库，它会自动根据所在区域选择合适的镜像。
 </p>
 <pre class="code" data-lang="bash">curl https://repo.pigsty.cc/pig | bash

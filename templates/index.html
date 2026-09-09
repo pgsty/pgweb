@@ -1,8 +1,29 @@
 {%extends "base/base.html" %}
 {% load pgfilters %}
-{%block title%}中文网：世界上最先进的开源数据库{%endblock%}
+{%block fulltitle%}{{ title }}{%endblock%}
+{# The homepage owns its canonical below, including with the shared canonical block. #}
+{%block canonical%}{%endblock%}
 {%block meta%}
-  <meta name="description" content="PostgreSQL 官方网站中文版，世界上最先进的开源数据库" />
+  <link rel="canonical" href="{{ link_root }}{{ og.url }}" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:image:alt" content="PostgreSQL 大象标志" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="{{ og.title }}" />
+  <meta name="twitter:image" content="{{ link_root }}/media/img/about/press/elephant.png" />
+  <meta name="twitter:image:alt" content="PostgreSQL 大象标志" />
+{%endblock%}
+{%block extrahead%}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "{{ og.sitename|escapejs }}",
+    "alternateName": "pg.center",
+    "url": "{{ link_root|escapejs }}{{ og.url|escapejs }}",
+    "description": "{{ og.description|escapejs }}",
+    "inLanguage": "zh-CN"
+  }
+  </script>
 {%endblock%}
 {%block shout%}
 <div class="pg-shout">
@@ -27,7 +48,7 @@
       <time datetime="{{ release.date|date:"Y-m-d" }}">{{ release.date|date:"Y-m-d" }}</time>
     </a>
     {% endif %}
-    <h1 class="pg-hero__title">PostgreSQL：世界上最先进的开源关系型数据库</h1>
+    <h1 class="pg-hero__title">PostgreSQL 世界上最先进的开源关系型数据库</h1>
     {% with v=versions.0 %}
     <div class="pg-hero__actions">
       <a class="pg-btn pg-btn--light" role="button" href="/download/">下载 <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
@@ -53,10 +74,10 @@
             PostgreSQL 是一个强大的开源对象关系型数据库系统，历经 35 年以上的持续开发，在可靠性、功能完备性和性能方面享有卓著声誉。
           </p>
           <p>
-            <a href="/docs/">官方文档</a> 提供了大量关于如何 <a href="/download/">安装</a> 和 <a href="/docs/">使用</a> PostgreSQL 的资料。<a href="/community/">开源社区</a> 也提供了丰富的交流渠道，帮助您了解 PostgreSQL 的工作原理、获取支持并寻找职业机会。
+            <a href="/docs/">官方文档</a>提供了大量关于如何<a href="/download/">安装</a>和<a href="/docs/">使用</a> PostgreSQL 的资料。<a href="/community/">开源社区</a>也提供了丰富的交流渠道，帮助您了解 PostgreSQL 的工作原理、获取支持并寻找职业机会。
           </p>
           <p>
-            您还可以进一步了解如何 <a href="/community/">参与社区</a>。
+            您还可以进一步了解如何<a href="/community/">参与社区</a>。
           </p>
         </div>
         <div class="pg-story__actions">
@@ -73,11 +94,10 @@
         <h2>邮件列表</h2>
         <div class="pg-story__body">
           <p>
-            PostgreSQL <a href="https://lists.postgresql.org" target="_blank" rel="noopener">邮件列表</a> 为您提供了与活跃社区成员交流的渠道，可以参与讨论 PostgreSQL 开发、使用、近期活动和产品发布等主题。
+            PostgreSQL <a href="https://lists.postgresql.org" target="_blank" rel="noopener">邮件列表</a>为您提供了与活跃社区成员交流的渠道，可以参与讨论 PostgreSQL 开发、使用、近期活动和产品发布等主题。
           </p>
           <p>
-            要管理您的邮件列表订阅，您需要一个 <a href="/account/">PostgreSQL 社区账户</a>。
-            <a href="/account/">注册</a> 流程非常简单，可让您直接参与 <a href="/community/">全球 PostgreSQL 社区</a>。
+            要管理您的邮件列表订阅，您需要一个 <a href="/account/">PostgreSQL 社区账户</a>。<a href="/account/">注册</a>流程非常简单，可让您直接参与<a href="/community/">全球 PostgreSQL 社区</a>。
           </p>
         </div>
         <div class="pg-story__actions">
@@ -123,7 +143,7 @@
         <div class="pg-story__body">
           <p class="pg-story__lead pg-story__lead--note">
             <span class="pg-story__lead-slot" aria-hidden="true"></span>
-            <span class="pg-story__note-line"><img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event"><span>表示该活动符合 <a href="/about/policies/conferences/">社区活动准则</a>，并对 PostgreSQL 社区具有直接价值。</span></span>
+            <span class="pg-story__note-line"><img src="/media/img/PostgreSQL_Badge1.svg" class="community" alt="PostgreSQL Community Event"><span>表示该活动符合<a href="/about/policies/conferences/">社区活动准则</a>，并对 PostgreSQL 社区具有直接价值。</span></span>
           </p>
           <ul class="pg-events">
             {% for event in events %}
@@ -155,7 +175,7 @@
   <div class="pg-cta__text">
     <h2>学习与交流机会</h2>
     <p>
-      希望深入了解 PostgreSQL 并参与社区？欢迎参加各类活动、本地用户组和培训课程。在这您可以结识经验丰富的 PG 用户，并持续提高数据库技能。
+      希望深入了解 PostgreSQL，并参与社区建设？欢迎参加各类活动和培训课程，加入本地用户组，与经验丰富的 PostgreSQL 用户交流，并提升数据库技能。
     </p>
     <div class="pg-cta__actions">
       <a class="pg-btn pg-btn--light" href="/about/events/" title="浏览活动">浏览活动</a>
@@ -186,9 +206,7 @@
           <li><a href="{{ release.news.url }}">发布公告</a></li>
           <li><a href="/docs/release/">发行说明</a></li>
 {% if release.type == "minor" or release.type == "major" %}
-{% with newestversion=release.versions|max %}
-          <li><a href="/about/press/">PostgreSQL {{ newestversion.major }} 媒体资料包</a></li>
-{% endwith %}
+          <li><a href="/about/press/">PostgreSQL 媒体资料包</a></li>
 {% elif release.type == "alpha" or release.type == "beta" or release.type == "rc" %}
           <li><a href="https://wiki.postgresql.org/wiki/PostgreSQL_{{ release.versions.0.major }}_Open_Items">PostgreSQL {{ release.versions.0.major }} 待解决事项</a></li>
 {% endif %}
@@ -204,7 +222,7 @@
         <ul class="pg-newslist">
           {% for n in news %}
             <li>
-              <h3><a href="/about/news/{{ n.title|slugify }}-{{ n.id }}/">{{ n.title }}</a></h3>
+              <h3><a href="{{ n.permanenturl }}">{{ n.title }}</a></h3>
               <p class="pg-newslist__meta"><time datetime="{{ n.date|date:"Y-m-d" }}">{{ n.displaydate }}</time><span>{{ n.org.name }}</span></p>
             </li>
           {% endfor %}
@@ -246,7 +264,7 @@
   <div class="pg-cta__text">
     <h2>遇到异常行为？</h2>
     <p>
-      PostgreSQL 社区始终致力于提供能够可靠存储数据的软件。如果您认为发现了 Bug，请点击下方按钮并按照说明提交报告。
+      PostgreSQL 社区始终致力于提供能够可靠存储数据的软件。如果您认为发现了 Bug，请点击下方按钮，并按照说明提交报告。
     </p>
     <div class="pg-cta__actions">
       <a class="pg-btn pg-btn--light" href="https://www.postgresql.org/account/submitbug/" title="提交 Bug">提交 Bug</a>

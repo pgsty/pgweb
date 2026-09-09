@@ -29,7 +29,7 @@ def generate_pagelinks(pagenum, totalpages, querystring):
 
     if pagenum > 1:
         # Prev link
-        yield '<a href="%s&p=%s">Prev</a>' % (querystring, pagenum - 1)
+        yield '<a href="%s&p=%s">上一页</a>' % (querystring, pagenum - 1)
 
     if pagenum > 10:
         start = pagenum - 10
@@ -43,7 +43,7 @@ def generate_pagelinks(pagenum, totalpages, querystring):
             yield '<a href="%s&p=%s">%s</a>' % (querystring, i, i)
 
     if pagenum != min(start + 20, totalpages):
-        yield '<a href="%s&p=%s">Next</a>' % (querystring, pagenum + 1)
+        yield '<a href="%s&p=%s">下一页</a>' % (querystring, pagenum + 1)
 
 
 @csrf_exempt
@@ -107,17 +107,17 @@ def search(request):
             dateval = 365
 
         sortoptions = (
-            {'val': 'r', 'text': 'Rank', 'selected': request.GET.get('s', '') not in ('d', 'i')},
-            {'val': 'd', 'text': 'Date', 'selected': request.GET.get('s', '') == 'd'},
-            {'val': 'i', 'text': 'Reverse date', 'selected': request.GET.get('s', '') == 'i'},
+            {'val': 'r', 'text': '相关性', 'selected': request.GET.get('s', '') not in ('d', 'i')},
+            {'val': 'd', 'text': '按日期排序', 'selected': request.GET.get('s', '') == 'd'},
+            {'val': 'i', 'text': '按日期反向排序', 'selected': request.GET.get('s', '') == 'i'},
         )
         dateoptions = (
-            {'val': -1, 'text': 'anytime'},
-            {'val': 1, 'text': 'within last day'},
-            {'val': 7, 'text': 'within last week'},
-            {'val': 31, 'text': 'within last month'},
-            {'val': 186, 'text': 'within last 6 months'},
-            {'val': 365, 'text': 'within last year'},
+            {'val': -1, 'text': '不限时间'},
+            {'val': 1, 'text': '最近一天'},
+            {'val': 7, 'text': '最近一周'},
+            {'val': 31, 'text': '最近一个月'},
+            {'val': 186, 'text': '最近六个月'},
+            {'val': 365, 'text': '最近一年'},
         )
     else:
         searchlists = False
@@ -127,7 +127,7 @@ def search(request):
     if request.GET.get('q', '') == '':
         if searchlists:
             return render(request, 'search/listsearch.html', {
-                'search_error': "No search term specified.",
+                'search_error': "请输入搜索词。",
                 'sortoptions': sortoptions,
                 'lists': MailingList.objects.all().order_by("group__sortkey"),
                 'listid': listid,
@@ -137,18 +137,18 @@ def search(request):
             })
         else:
             return render(request, 'search/sitesearch.html', {
-                'search_error': "No search term specified.",
+                'search_error': "请输入搜索词。",
             })
     query = request.GET['q'].strip()
     if '\0' in query or ((not searchlists) and suburl and '\0' in suburl):
         return render(request, 'search/sitesearch.html', {
-            'search_error': "Invalid character in search.",
+            'search_error': "搜索词中包含无效字符。",
         })
 
     # Anti-stefan prevention
     if len(query) > 1000:
         return render(request, 'search/sitesearch.html', {
-            'search_error': "Search term too long.",
+            'search_error': "搜索词过长，请缩短后重试。",
         })
 
     # Is the request being paged?
@@ -199,16 +199,16 @@ def search(request):
                 )
             except requests.exceptions.Timeout:
                 return render(request, 'search/listsearch.html', {
-                    'search_error': 'Timeout when talking to search server. Please try your search again later, or with a more restrictive search terms.',
+                    'search_error': '连接搜索服务器超时。请稍后重试，或缩小搜索范围。',
                 })
             except Exception as e:
                 return render(request, 'search/listsearch.html', {
-                    'search_error': 'General error when talking to search server.',
+                    'search_error': '连接搜索服务器时发生错误。',
                 })
             if r.status_code != 200:
                 memc = None
                 return render(request, 'search/listsearch.html', {
-                    'search_error': 'Error talking to search server: %s' % r.reason,
+                    'search_error': '连接搜索服务器时发生错误：%s' % r.reason,
                 })
             hits = r.json()
             if has_memcached and memc:
@@ -287,7 +287,7 @@ def search(request):
             })
         except psycopg2.ProgrammingError:
             return render(request, 'search/sitesearch.html', {
-                'search_error': 'Error executing search query.'
+                'search_error': '执行搜索时发生错误。'
             })
 
         hits = curs.fetchall()

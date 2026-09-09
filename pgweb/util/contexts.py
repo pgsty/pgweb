@@ -3,6 +3,8 @@ from django.shortcuts import render
 from django.conf import settings
 from django.core.cache import cache
 
+from pgweb.util.seo import page_metadata
+
 
 TOPBAR_CACHE_KEY = 'pgweb:topbar-news'
 _CACHE_MISS = object()
@@ -25,7 +27,7 @@ sitenav = {
         {'title': '近期活动', 'link': '/about/events/', 'submenu': [
             {'title': '往期活动', 'link': '/about/eventarchive/'},
         ]},
-        {'title': '新闻', 'link': '/about/press/'},
+        {'title': '媒体资料', 'link': '/about/press/'},
         {'title': '许可证', 'link': '/about/licence/'},
         {'title': '关于 pg.center', 'link': '/about/pgcenter/'},
     ],
@@ -42,11 +44,28 @@ sitenav = {
         {'title': '手册', 'link': '/docs/', 'submenu': [
             {'title': '归档', 'link': '/docs/manuals/archive/'},
         ]},
-        {'title': '发布', 'link': '/docs/release/'},
+        {'title': '发行说明', 'link': '/docs/release/'},
         {'title': '书籍', 'link': '/docs/books/'},
         {'title': '其他', 'link': '/docs/online-resources/'},
         {'title': 'FAQ', 'link': '/docs/faq/'},
         {'title': 'Wiki', 'link': 'https://wiki.postgresql.org'},
+        # Ecosystem manuals stay last, grouped under one heading. Add new
+        # components here and in pgweb.docs.ecosystem.COMPONENTS / urls.py.
+        {'title': '三方文档', 'link': '/docs/#ecosystem-docs', 'submenu': [
+            {'title': 'Patroni', 'link': '/docs/patroni/'},
+            {'title': 'PgBouncer', 'link': '/docs/pgbouncer/'},
+            {'title': 'pgBackRest', 'link': '/docs/pgbackrest/'},
+            {'title': 'pgBadger', 'link': '/docs/pgbadger/'},
+        ]},
+    ],
+    'ext': [
+        {'title': '扩展目录', 'link': '/ext/'},
+        {'title': '全部索引', 'link': '/ext/list/', 'submenu': [
+            {'title': '功能分类', 'link': '/ext/category/'},
+            {'title': '许可证', 'link': '/ext/license/'},
+            {'title': '编程语言', 'link': '/ext/language/'},
+            {'title': '仓库来源', 'link': '/ext/repo/'},
+        ]},
     ],
     'community': [
         {'title': '社区', 'link': '/community/'},
@@ -65,7 +84,7 @@ sitenav = {
         {'title': '提交者', 'link': '/developer/committers/'},
         {'title': '路线图', 'link': '/developer/roadmap/'},
         {'title': '编码', 'link': '/developer/coding/'},
-        {'title': '提交清单', 'link': 'https://commitfest.postgresql.org'},
+        {'title': 'CommitFest', 'link': 'https://commitfest.postgresql.org'},
         {'title': '测试', 'link': '/developer/testing/', 'submenu': [
             {'title': 'Beta 版信息', 'link': '/developer/beta/'},
         ]},
@@ -179,4 +198,5 @@ def PGWebContextProcessor(request):
         'gitrev': gitrev,
         'topbarnews': SimpleLazyObject(_get_topbar_news),
         'sitenav': sitenav,
+        'seo': page_metadata(request.path),
     }

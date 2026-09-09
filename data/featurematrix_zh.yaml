@@ -1,6 +1,6 @@
 groups:
   Backend: 后端
-  Data Types, Functions, & Operators: 数据类型、函数和运算符
+  Data Types, Functions, & Operators: 数据类型、函数和操作符
   Indexing & Constraints: 索引和约束
   SQL: SQL
   Data Definition Language (DDL): 数据定义语言 (DDL)
@@ -105,7 +105,7 @@ features:
     description: 数组元素可以包含 NULL
   Phrase search:
     name: 短语搜索
-    description: 全文搜索支持短语和词语邻近度搜索。
+    description: 全文检索支持短语和词语邻近度搜索。
   Range types:
     name: 范围类型
     description: https://www.postgresql.org/docs/9.2/static/rangetypes.html
@@ -124,15 +124,15 @@ features:
     name: 块范围 (BRIN) 索引
     description: https://www.postgresql.org/docs/current/static/brin-intro.html
   B-tree bottom-up index deletion:
-    name: B-tree 自底向上的索引删除
+    name: B-树 自底向上的索引删除
   B-tree deduplication:
-    name: B-tree 去重
+    name: B-树 去重
     description: https://www.postgresql.org/docs/13/btree-implementation.html#BTREE-DEDUPLICATION
   Concurrent GiST indexes:
     name: 并发 GiST 索引
     description: 用于并发修改 GiST 索引的高级锁定机制
   Covering Indexes for B-trees (INCLUDE):
-    name: B-tree 的覆盖索引 (INCLUDE)
+    name: B-树 的覆盖索引 (INCLUDE)
     description: '允许将额外的列作为"非键"列包含在索引中，如果满足条件，可以在仅索引扫描中返回这些列的数据。
 
 
@@ -147,10 +147,10 @@ features:
     name: 可延迟唯一约束
     description: 允许将唯一约束检查延迟到事务结束时执行
   Exclusion constraints:
-    name: 排除约束
-    description: 将唯一性概念推广为支持任何可索引的交换运算符，而不仅限于等值运算符
+    name: 排他约束
+    description: 将唯一性概念推广为支持任何可索引的交换操作符，而不仅限于等值操作符
   GIN (Generalized Inverted Index) Indexes:
-    name: GIN (广义反向索引) 索引
+    name: GIN（广义倒排索引）
     description: https://www.postgresql.org/docs/current/static/gin.html
   GIN indexes partial match:
     name: GIN 索引部分匹配
@@ -181,22 +181,22 @@ features:
     description: 为 contrib/pg_trgm 和 contrib/btree_gist 提供最近邻支持
   K-nearest neighbor SP-GiST Support:
     name: K-最近邻 SP-GiST 支持
-    description: 新增对 SP-GiST 索引上 K-最近邻 (K-NN) 搜索的支持，前提是定义了距离运算符 `<->`。
+    description: 新增对 SP-GiST 索引上 K-最近邻 (K-NN) 搜索的支持，前提是定义了距离操作符 `<->`。
   Non-blocking CREATE INDEX:
     name: 非阻塞 CREATE INDEX
     description: 在线创建索引而不锁定表
   Parallel B-tree index scans:
-    name: 并行 B-tree 索引扫描
-    description: B-tree 索引页面可以由多个并行工作进程进行搜索。
+    name: 并行 B-树 索引扫描
+    description: B-树 索引页面可以由多个并行工作进程进行搜索。
   Parallelized CREATE INDEX for BRIN indexes:
     name: BRIN 索引的并行 CREATE INDEX
   Parallelized CREATE INDEX for B-tree indexes:
-    name: B-tree 索引的并行 CREATE INDEX
+    name: B-树 索引的并行 CREATE INDEX
   Parallelized CREATE INDEX for GIN indexes:
     name: GIN 索引的并行 CREATE INDEX
   Skip scan on multicolumn B-tree indexes:
-    name: 多列 B-tree 索引上的跳跃扫描
-    description: 对于在一个或多个前导索引列上缺少 `=` 条件的查询，多列 B-tree 索引现在可以使用跳跃扫描来改善执行时间。
+    name: 多列 B-树 索引上的跳跃扫描
+    description: 对于在一个或多个前导索引列上缺少 `=` 条件的查询，多列 B-树 索引现在可以使用跳跃扫描来改善执行时间。
   Space-Partitioned GiST (SP-GiST) Indexes:
     name: 空间分区 GiST (SP-GiST) 索引
     description: https://www.postgresql.org/docs/current/static/spgist.html
@@ -208,7 +208,7 @@ features:
     description: 默认情况下 `NULL` 彼此不同；在唯一索引或唯一约束上指定 `NULLS NOT DISTINCT` 后，`NULL` 会被视为不再互异。
   WAL support for hash indexes:
     name: 哈希索引的 WAL 支持
-    description: 哈希索引具有预写日志支持，这使其既具备崩溃安全性，又可进行复制。
+    description: 哈希索引具有预写式日志支持，这使其既具备崩溃安全性，又可进行复制。
   ANY_VALUE aggregate:
     name: ANY_VALUE 聚合函数
   FETCH FIRST .. WITH TIES:
@@ -312,7 +312,7 @@ features:
     description: '`ALTER TABLE` 现在可以为现有表指定不同的表访问方法。'
   ALTER TABLE ... SET LOGGED / UNLOGGED:
     name: ALTER TABLE ... SET LOGGED / UNLOGGED
-    description: 允许表在已记录日志和未记录日志状态之间切换。
+    description: 允许表在记录 WAL 和不记录 WAL 两种状态之间切换。
   Changing column types (ALTER TABLE .. ALTER COLUMN TYPE):
     name: 更改列类型 (ALTER TABLE .. ALTER COLUMN TYPE)
     description: 允许在线将列的数据类型更改为另一种类型
@@ -331,7 +331,7 @@ features:
     name: REINDEX CONCURRENTLY
     description: https://www.postgresql.org/docs/current/sql-reindex.html#SQL-REINDEX-CONCURRENTLY
   Stored Generated Columns:
-    name: 存储生成的列
+    name: 存储生成列
     description: https://www.postgresql.org/docs/current/ddl-generated-columns.html
   Temporal constraints:
     name: 时态约束
@@ -363,8 +363,8 @@ features:
     name: 基础备份节流
     description: pg_basebackup 现在支持使用 -r <rate> 或 --max-rate <rate> 对备份进行节流，允许控制基础备份的数据传输速率。
   CREATE STATISTICS - most-common values (MCV) statistics:
-    name: CREATE STATISTICS - 最常用值 (MCV) 统计信息
-    description: CREATE STATISTICS 可以收集最常用值的统计信息，从而改善对包含非均匀分布的列的优化。
+    name: CREATE STATISTICS - 高频值 (MCV) 统计信息
+    description: CREATE STATISTICS 可以收集高频值的统计信息，从而改善对包含非均匀分布的列的优化。
   CREATE STATISTICS - multicolumn:
     name: CREATE STATISTICS - 多列
     description: 'CREATE STATISTICS 提供了收集多列统计信息的能力，优化器可以使用这些信息生成更好的查询计划。
@@ -387,7 +387,7 @@ features:
     name: 已冻结页面映射
     description: 可见性映射中的冻结页面数据，防止在回卷期间重新清理已冻结的页面。
   Full Text Search:
-    name: 全文搜索
+    name: 全文检索
     description: https://www.postgresql.org/docs/current/static/textsearch.html
   Hash aggregation can use disk:
     name: 基于磁盘的哈希聚合
@@ -407,7 +407,7 @@ features:
     name: FULL OUTER JOIN、LEFT OUTER JOIN 和 RIGHT OUTER JOIN 的哈希支持
     description: 允许 FULL OUTER JOIN 以哈希连接方式实现，并允许对 LEFT OUTER JOIN 或 RIGHT OUTER JOIN 的任一侧进行哈希
   Heap Only Tuples (HOT):
-    name: 仅堆元组 (HOT)
+    name: 堆内元组 (HOT)
     description: 针对频繁更新表的优化
   Improved performance for sorts exceeding working memory:
     name: 超出工作内存的排序性能提升
@@ -463,8 +463,8 @@ features:
     name: 并行 JOIN、聚合
     description: 能够使用多个并行进程执行某些类型的 JOIN 以及聚合操作。
   Parallel merge joins:
-    name: 并行合并连接
-    description: 合并连接可以并行执行。
+    name: 并行归并连接
+    description: 归并连接可以并行执行。
   Parallel query:
     name: 并行查询
     description: 能够在并行进程中执行多个查询节点。
@@ -497,7 +497,7 @@ features:
   SELECT ... FOR UPDATE/SHARE NOWAIT:
     name: SELECT ... FOR UPDATE/SHARE NOWAIT
   Set costs specific to TABLESPACEs:
-    name: 为 TABLESPACE 设置特定成本
+    name: 为表空间设置特定代价
     description: 允许在每个表空间级别设置 seq_page_cost 和 random_page_cost
   Shared row level locking:
     name: 共享行级锁定
@@ -521,20 +521,20 @@ features:
     name: 表空间
     description: https://www.postgresql.org/docs/current/static/sql-createtablespace.html
   Unlogged tables:
-    name: 未记录表
-    description: 此类表比普通表提供更好的更新性能，但不具有崩溃安全性：在服务器崩溃时其内容会自动清除。其内容也不会传播到复制从属服务器。
+    name: 不记录 WAL 的表（UNLOGGED）
+    description: 此类表比普通表提供更好的更新性能，但不具有崩溃安全性：在服务器崩溃时其内容会自动清除。其内容也不会传播到从库。
   WAL Buffer auto-tuning:
     name: WAL 缓冲区自动调优
     description: wal_buffers 现在默认根据 shared_buffers 的大小自动调优
   Improved set of JSON functions and operators:
-    name: 改进的 JSON 函数和运算符集
-    description: 新增了从 JSON 数据字符串中提取值的运算符和函数，JSON 数据字符串现在可以转换为记录，并新增了将值、记录和 hstore 数据转换为 JSON 的函数。
+    name: 改进的 JSON 函数和操作符集
+    description: 新增了从 JSON 数据字符串中提取值的操作符和函数，JSON 数据字符串现在可以转换为记录，并新增了将值、记录和 hstore 数据转换为 JSON 的函数。
   JSONB data type:
     name: JSONB 数据类型
     description: https://www.postgresql.org/docs/9.4/static/datatype-json.html
   JSONB-modifying operators and functions:
-    name: JSONB 修改运算符和函数
-    description: 新增了允许删除、修改或向 JSONB 值中插入值的运算符和函数，包括在特定路径位置进行操作。
+    name: JSONB 修改操作符和函数
+    description: 新增了允许删除、修改或向 JSONB 值中插入值的操作符和函数，包括在特定路径位置进行操作。
   JSONB Subscripting:
     name: JSONB 下标访问
   JSON data type:
@@ -560,7 +560,7 @@ features:
   SQL/JSON query functions:
     name: SQL/JSON 查询函数
   Accelerated partition pruning:
-    name: 加速分区裁剪
+    name: 加速分区剪枝
     description: 当仅需要访问有限的分区子集时，针对具有数千个分区的表的查询性能改进。
   Declarative table partitioning:
     name: 声明式表分区
@@ -569,15 +569,15 @@ features:
     name: 默认分区
     description: 默认分区存储不匹配任何其他分区键的数据，即它是一个“兜底”分区。
   Foreign Key references for partitioned tables:
-    name: 分区表的外部键引用
-    description: 外部键可以引用分区表。
+    name: 分区表的外键引用
+    description: 外键可以引用分区表。
   Foreign table inheritance:
     name: 外部表继承
     description: 外部表现在可以从其他外部表或其他常规表继承。反过来也适用。
   Partitioning by a hash key:
     name: 按哈希键分区
   Partition pruning during query execution:
-    name: 查询执行期间的分区裁剪
+    name: 查询执行期间的分区剪枝
     description: 对分区表的查询可以在查询执行期间消除分区，而不仅仅是在查询计划时。这使 PostgreSQL 能够利用查询执行期间可用的信息进一步减少需要使用的分区数量，从而提高查询性能。
   Support for PRIMARY KEY, FOREIGN KEY, indexes, and triggers on partitioned tables:
     name: 分区表的 PRIMARY KEY、FOREIGN KEY、索引和触发器支持
@@ -586,7 +586,7 @@ features:
     description: https://www.postgresql.org/docs/current/static/ddl-partitioning.html
   UPDATE on a partition key:
     name: 分区键上的 UPDATE
-    description: 当分区键上的行被更新时，该行会被移动到相应的分区。
+    description: 当行的分区键被更新时，该行会被移动到相应的分区。
   Materialized Views:
     name: 物化视图
     description: https://www.postgresql.org/docs/current/static/rules-materializedviews.html
@@ -610,9 +610,9 @@ features:
     description: '`ALTER SUBSCRIPTION ... SKIP` 允许订阅端跳过某个事务的重放。'
   Cascading streaming replication:
     name: 级联流复制
-    description: 备用服务器现在可以向其他备用服务器进行流式传输，减少主服务器的复制负载。
+    description: 备库现在可以向其他备库进行流式传输，减少主库的复制负载。
   Configure max WAL retention for replication slots:
-    name: 配置复制槽的最大 WAL 保持时间
+    name: 配置复制槽的最大 WAL 保留量
     description: https://www.postgresql.org/docs/13/runtime-config-replication.html#GUC-MAX-SLOT-WAL-KEEP-SIZE
   Failover support for logical replication slots:
     name: 逻辑复制槽的故障切换支持
@@ -623,7 +623,7 @@ features:
     name: 逻辑复制避免复制环路
   Logical replication column lists:
     name: 逻辑复制的列列表
-    description: 逻辑复制中的 publication 现在可以指定要发布的列列表，以往必须复制整行。
+    description: 逻辑复制中的 发布 现在可以指定要发布的列列表，以往必须复制整行。
   Logical replication for partitioned tables:
     name: 分区表的逻辑复制
     description: 完全支持分区表的逻辑复制。
@@ -641,8 +641,8 @@ features:
   Logical replication parallel apply of transactions:
     name: 逻辑复制对事务的并行应用
   Logical replication publish all tables in schema:
-    name: 逻辑复制发布 schema 中的全部表
-    description: 创建 publication 时，现在可以指定发布某个 schema 下的全部表。
+    name: 逻辑复制发布 模式 中的全部表
+    description: 创建 发布 时，现在可以指定发布某个 模式 下的全部表。
   Logical replication row filtering:
     name: 逻辑复制的行过滤
   Logical replication slots migrate through pg_upgrade migrate:
@@ -658,31 +658,28 @@ features:
     name: 逻辑复制写冲突日志
     description: 逻辑复制期间发生的写冲突现在会同时记录到日志以及 `pg_stat_subscription_stats` 视图中。
   Quorum commit for synchronous replication:
-    name: 同步复制的仲裁提交
-    description: 使用 synchronous_standby_names 配置参数，可以设置同步复制以允许任意数量的备用服务器确认写入已提交，而不考虑其顺序。这也被称为“仲裁提交”。
+    name: 同步复制的基于法定人数的提交
+    description: 使用 synchronous_standby_names 配置参数，可以设置同步复制以允许任意数量的备库确认写入已提交，而不考虑其顺序。这也被称为“基于法定人数的提交”。
   Replication Slots:
     name: 复制槽
     description: https://www.postgresql.org/docs/9.4/static/warm-standby.html#STREAMING-REPLICATION-SLOTS
   Streaming-only cascading replication:
     name: 仅流式复制的级联复制
-    description: 级联复制以前要求 xlog 归档可用，以便新主服务器的备用服务器正确切换到新时间线。此更改移除了这一依赖。
+    description: 级联复制以前要求 xlog 归档可用，以便新主库的备库正确切换到新时间线。此更改移除了这一依赖。
   Streaming Replication:
     name: 流复制
     description: 基于流式 WAL 数据的集成复制支持
   Synchronous replication:
     name: 同步复制
-    description: 允许主服务器在确认提交之前等待备用服务器将事务信息写入磁盘。通过 synchronous_standby_names 设置控制，一次可以有一个备用服务器担任同步备用服务器的角色。可以使用 synchronous_commit 设置按事务启用或禁用同步复制。
+    description: 允许主库在确认提交之前等待备库将事务信息写入磁盘。通过 synchronous_standby_names 设置控制，一次可以有一个备库担任同步备库的角色。可以使用 synchronous_commit 设置按事务启用或禁用同步复制。
   Archive modules:
     name: 归档模块
   Checksum on data pages:
     name: 数据页校验和
-    description: 现在可以在创建集群时对页面启用校验和，以检测和报告页面损坏。
+    description: 现在可以在创建集簇时对页面启用校验和，以检测和报告页面损坏。
   Enable/Disable page checksums in an offline cluster:
-    name: 在离线集群中启用/禁用页面校验和
-    description: '可以通过 pg_checksums 命令在离线 PostgreSQL 集群中启用或禁用页面校验和：
-
-
-      https://www.postgresql.org/docs/12/app-pgchecksums.html'
+    name: 在离线集簇中启用/禁用页面校验和
+    description: "可以通过 pg_checksums 命令在离线 PostgreSQL 集簇中启用或禁用页面校验和：\n\nhttps://www.postgresql.org/docs/12/app-pgchecksums.html"
   Generic WAL facility:
     name: 通用 WAL 机制
     description: 一致、简单的数据库对象 WAL 日志记录 API，支持新的索引访问方法和其他存储对象。
@@ -690,7 +687,7 @@ features:
     name: 热备
     description: 允许在恢复期间进行只读连接
   lz4 and Zstandard (zstd) compression for WAL full page writes:
-    name: WAL 全页写的 lz4 与 Zstandard (zstd) 压缩
+    name: WAL 整页写入的 lz4 与 Zstandard (zstd) 压缩
   min_wal_size / max_wal_size:
     name: min_wal_size / max_wal_size
     description: '替代 `checkpoint_segments` 参数。
@@ -698,8 +695,8 @@ features:
 
       更多信息请参阅 [WAL 配置](https://www.postgresql.org/docs/current/wal-configuration.html) 文档。'
   Multiple synchronous standbys:
-    name: 多个同步备用服务器
-    description: 在提交同步事务时，能够要求多个优先级备用服务器确认同步消息。
+    name: 多个同步备库
+    description: 在提交同步事务时，能够要求多个优先级备库确认同步消息。
   Named restore points:
     name: 命名恢复点
     description: 使用 pg_create_restore_point 创建命名的恢复点以执行恢复操作
@@ -720,7 +717,7 @@ features:
     description: '`pg_basebackup` 现在支持在服务端创建备份时直接执行压缩。'
   pg_basebackup tool:
     name: pg_basebackup 工具
-    description: pg_basebackup 是一个用于对 PostgreSQL 集群进行基础备份的工具
+    description: pg_basebackup 是一个用于对 PostgreSQL 集簇进行基础备份的工具
   pg_dump, pg_dumpall, pg_restore --filter:
     name: pg_dump、pg_dumpall、pg_restore --filter
     description: '`pg_dump`、`pg_dumpall` 和 `pg_restore` 新增 `--filter` 选项，可按规则包含或排除对象。'
@@ -734,10 +731,10 @@ features:
     name: 恢复期间预取 WAL
   remote_apply mode:
     name: remote_apply 模式
-    description: 能够要求同步副本在提交之前与主服务器保持应用变更的同步。支持“一致性集群”。
+    description: 能够要求同步副本在提交之前与主库保持应用变更的同步。支持“一致性集群”。
   Time-delayed Standbys:
-    name: 延迟备用服务器
-    description: 一个名为 recovery_min_apply_delay 的新设置允许备用服务器按指定的时间量落后于主服务器。
+    name: 延迟备库
+    description: 一个名为 recovery_min_apply_delay 的新设置允许备库按指定的时间量落后于主库。
   Verify backup integrity (pg_verifybackup):
     name: 验证备份完整性 (pg_verifybackup)
     description: https://www.postgresql.org/docs/13/app-pgverifybackup.html
@@ -746,12 +743,12 @@ features:
     description: https://www.postgresql.org/docs/current/static/warm-standby.html
   pg_upgrade --swap:
     name: pg_upgrade --swap
-    description: '`--swap` 选项会把旧集群的数据目录直接交换到新集群，并用新版本生成的目录元数据替换之。'
+    description: '`--swap` 选项会把旧集簇的数据目录直接交换到新集簇，并用新版本生成的目录元数据替换之。'
   Planner statistics preserved on major version upgrade:
     name: 主版本升级后保留规划器统计信息
-    description: 主版本升级后会保留规划器统计信息，使集群在升级完成后更快恢复预期性能。
+    description: 主版本升级后会保留规划器统计信息，使集簇在升级完成后更快恢复预期性能。
   COPY from/to STDIN/STDOUT:
-    name: COPY 到/从 STDIN/STDOUT
+    name: COPY 从 STDIN 导入／向 STDOUT 导出
     description: COPY 和 psql 的 \copy 现在分别支持从 STDIN 和到 STDOUT 的管道传输。
   COPY FROM ... WHERE:
     name: COPY FROM ... WHERE
@@ -895,8 +892,8 @@ features:
     name: 保存点
     description: https://www.postgresql.org/docs/current/static/sql-savepoint.html
   Serializable Snapshot Isolation:
-    name: 可串行快照隔离
-    description: 实现了真正的可串行快照隔离。此前，请求可串行隔离级别仅保证在整个事务中使用单个 MVCC 快照，这允许某些已知的异常现象发生。
+    name: 可串行化快照隔离
+    description: 实现了真正的可串行化快照隔离。此前，请求可串行化隔离级别仅保证在整个事务中使用单个 MVCC 快照，这允许某些已知的异常现象发生。
   Two Phase commit:
     name: 两阶段提交
     description: https://www.postgresql.org/docs/current/static/sql-prepare-transaction.html
@@ -904,10 +901,10 @@ features:
     name: 可更新游标
     description: https://www.postgresql.org/docs/current/static/sql-declare.html
   Inserted data can trigger autovacuum:
-    name: 插入的数据可触发自动 vacuum
+    name: 插入的数据可触发自动清理
     description: 这一新行为减少了表需要冻结时的必要工作量，并允许页面被设置为全可见。全可见页面允许仅索引扫描访问更少的堆行。
   Integrated autovacuum daemon:
-    name: 集成自动 vacuum 守护进程
+    name: 集成自动清理 守护进程
     description: https://www.postgresql.org/docs/current/static/routine-vacuuming.html#AUTOVACUUM
   Page freezing optimizations:
     name: 页面冻结优化
@@ -928,8 +925,8 @@ features:
     name: Vacuum “紧急模式”
     description: 当 PostgreSQL 检测到事务 ID 回卷风险时，会更激进地执行 vacuum；该行为由 `vacuum_failsafe_age` 控制。
   Visibility Map for Vacuuming:
-    name: 用于 Vacuuming 的可见性图
-    description: 这减少了 vacuum 的开销，因为可见性图只跟踪需要被 vacuum 的页面。
+    name: 清理使用的可见性映射
+    description: 可见性映射记录页面的全可见状态，使 VACUUM 能够跳过无需扫描的页面，从而减少清理开销。
   Certificate authentication with postgres_fdw:
     name: postgres_fdw 的证书身份验证
     description: '[postgres_fdw](https://www.postgresql.org/docs/13/postgres-fdw.html) 现在可以使用内置的 [证书身份验证](https://www.postgresql.org/docs/current/auth-cert.html) 机制。
@@ -953,7 +950,7 @@ features:
     description: https://www.postgresql.org/docs/9.5/static/sql-importforeignschema.html
   Import foreign table partitions:
     name: 导入外部表分区
-    description: '`IMPORT FOREIGN SCHEMA` 现在可以导入分区表的 schema。'
+    description: '`IMPORT FOREIGN SCHEMA` 现在可以导入分区表的定义。'
   Parallel query execution on remote databases:
     name: 远程数据库上的并行查询执行
     description: '`postgres_fdw` 现在可以利用远程数据库上的查询并行能力。'
@@ -961,7 +958,7 @@ features:
     name: postgres_fdw 并行提交
   postgres_fdw pushdown:
     name: postgres_fdw 下推
-    description: 能够在 postgres_fdw 驱动中将 JOIN、排序、UPDATE 和 DELETE 下推到远程数据库，理论上其他驱动也支持。同时支持一些通用的运算符/函数下推。
+    description: 能够在 postgres_fdw 驱动中将 JOIN、排序、UPDATE 和 DELETE 下推到远程数据库，理论上其他驱动也支持。同时支持一些通用的操作符/函数下推。
   postgres_fdw SCRAM authentication passthrough:
     name: postgres_fdw SCRAM 认证透传
   PostgreSQL Foreign Data Wrapper:
@@ -1073,7 +1070,7 @@ features:
     description: 在 pl/pgsql 中返回任意查询结果的简便方法
   ROWS and COST specification for functions:
     name: 函数的 ROWS 和 COST 规范
-    description: 现在可以为过程函数指定 CPU 成本和预期行数，以向规划器提供更好的提示
+    description: 现在可以为过程函数指定 CPU 代价和预期行数，以向规划器提供更好的提示
   Scrollable and updatable cursor support for pl/pgsql:
     name: pl/pgsql 的可滚动和可更新游标支持
     description: pl/pgsql 函数中对可滚动和可更新游标的支持
@@ -1087,7 +1084,7 @@ features:
     description: 允许通过 RAISE 生成用户定义的异常
   Validator function for pl/perl:
     name: pl/perl 的验证器函数
-    description: pl/pgsql 代码的编译时验证
+    description: PL/Perl 代码的编译时验证
   CREATE EXTENSION .. CASCADE:
     name: CREATE EXTENSION .. CASCADE
     description: 能够为扩展依赖树自动拉取所需的额外扩展。
@@ -1096,7 +1093,7 @@ features:
     description: https://www.postgresql.org/docs/current/static/external-extensions.html
   Trusted Extensions:
     name: 受信任的扩展
-    description: "被超级用户标记为\"受信任\"的扩展随后可以由非特权用户通过 `CREATE EXTENSION` 安装。某些函数默认标记为\"受信任\"。\r\n\r\n更多信息请参阅 [`CREATE EXTENSION`](https://www.postgresql.org/docs/current/sql-createextension.html) 文档。"
+    description: "标记为“受信任”的扩展可由对当前数据库具有 CREATE 权限的非超级用户通过 `CREATE EXTENSION` 安装。某些内置扩展默认标记为“受信任”。\r\n\r\n更多信息请参阅 [`CREATE EXTENSION`](https://www.postgresql.org/docs/current/sql-createextension.html) 文档。"
   Built-in, platform independent immutable collation:
     name: 内置、平台无关且不可变的排序规则
     description: PostgreSQL 新增内置、平台无关且不可变的排序规则提供器，支持 `C` 和 `C.UTF-8` 排序规则。
@@ -1109,8 +1106,8 @@ features:
     name: 数据库级别排序规则
     description: 支持在每个数据库级别设置不同的排序顺序和字符分类
   Default ICU collations for clusters/databases:
-    name: 集群/数据库的默认 ICU 排序规则
-    description: ICU 排序规则现在可以作为整个 PostgreSQL 集群或单个数据库的默认排序规则类型。
+    name: 集簇/数据库的默认 ICU 排序规则
+    description: ICU 排序规则现在可以作为整个 PostgreSQL 集簇或单个数据库的默认排序规则类型。
   EUC_JIS_2004/ SHIFT_JIS_2004 support:
     name: EUC_JIS_2004/ SHIFT_JIS_2004 支持
   ICU collations:
@@ -1130,8 +1127,8 @@ features:
   pg_unicode_fast collation:
     name: pg_unicode_fast 排序规则
   Unicode string literals and identifiers:
-    name: Unicode 字符串文字和标识符
-    description: 允许使用代码点指定 Unicode 字符串文字和标识符
+    name: Unicode 字符串字面量和标识符
+    description: 允许使用代码点指定 Unicode 字符串字面量和标识符
   UTF8 support on Windows:
     name: Windows 上的 UTF8 支持
     description: 完整支持在 Microsoft Windows 上使用 UTF8
@@ -1160,7 +1157,7 @@ features:
     name: pg_walsummary
   pg_xlogdump:
     name: contrib/pg_xlogdump
-    description: 以人类可读的格式显示 PostgreSQL 数据库集群的预写式日志。
+    description: 以人类可读的格式显示 PostgreSQL 数据库集簇的预写式日志。
   psql \bind:
     name: psql \bind
   psql \dconfig:
@@ -1182,7 +1179,7 @@ features:
     name: contrib/auth_delay
     description: auth_delay 使服务器在报告认证失败前短暂暂停，从而增加对数据库密码进行暴力破解攻击的难度。
   auto_explain:
-    name: contrib/autoexplain
+    name: contrib/auto_explain
     description: 自动记录慢查询的执行计划
   btree_gin:
     name: contrib/btree_gin
@@ -1271,7 +1268,7 @@ features:
     description: https://www.postgresql.org/docs/9.2/static/tcn.html
   tsearch2 compatibility wrapper:
     name: tsearch2 兼容性包装器
-    description: 用于从 contrib/tsearch2 迁移到 8.3 集成全文搜索的兼容性包装器
+    description: 用于从 contrib/tsearch2 迁移到 8.3 集成全文检索的兼容性包装器
   unaccent:
     name: contrib/unaccent
     description: https://www.postgresql.org/docs/current/static/unaccent.html
@@ -1297,7 +1294,7 @@ features:
     name: Microsoft Visual C++ 支持
     description: 允许使用 Microsoft Visual Studio 编译后端
   Native Windows Port:
-    name: 原生 Windows 端口
+    name: Windows 原生移植版
     description: 原生移植到 Microsoft Windows 平台
   Spinlock support for the SuperH hardware platform:
     name: SuperH 硬件平台的自旋锁支持

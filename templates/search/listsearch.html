@@ -1,5 +1,6 @@
 {%extends "base/page.html"%}
 {%block title%}搜索结果{%endblock%}
+{%block extrahead%}<meta name="robots" content="noindex,follow" />{%endblock%}
 {%block contents%}
 
 <form method="get" action="/search/">
@@ -50,7 +51,7 @@
   {%if hitcount == 0 %}
     <p>您搜索的 <strong>{{query}}</strong> 没有返回结果。</p>
   {%else%}
-    <h2>结果 {{firsthit}}-{{lasthit}}，共 {%if hitcount == 1000%}超过 1000{%else%}{{hitcount}}{%endif%} 条。</h2>
+    <h2>结果 {{firsthit}}-{{lasthit}}，共{%if hitcount == 1000%}超过 1000{%else%} {{hitcount}}{%endif%} 条。</h2>
     {%if pagelinks %}结果页：{{pagelinks|safe}}<br/><br/>{%endif%}
     {%for hit in hits %}
       {{forloop.counter0|add:firsthit}}. <a href="{{ archives_root }}/message-id/{{hit.messageid}}">{{hit.subject}}</a> [{{hit.rank|floatformat:2}}]<br/>

@@ -5,17 +5,17 @@
 <h1>关于 <img class="logo" src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo" /></h1>
 
 <h2>什么是 PostgreSQL？</h2>
-<p>PostgreSQL 是一个强大的开源对象关系型数据库系统。它使用并扩展了 SQL 语言，并结合了大量功能，能够安全地存储和扩展最复杂的数据工作负载。PostgreSQL 的起源可以追溯到 1986 年，当时它还是加州大学伯克利分校 <a href="/docs/current/history.html">POSTGRES</a> 项目的一部分；其核心代码库至今已持续活跃开发近 40 年。</p>
-<p>PostgreSQL 凭借成熟的架构、可靠性、数据完整性、强大的功能集和优异的可扩展性，以及开源社区持续交付高性能创新方案的长期投入，赢得了良好声誉。PostgreSQL 可在 <a href="/download/">所有主流操作系统</a> 上运行，自 2001 年以来一直符合 <a href="https://en.wikipedia.org/wiki/ACID" target="_blank" rel="noopener">ACID</a> 标准，并拥有强大的附加组件，例如广受欢迎的 <a href="https://postgis.net/" target="_blank" rel="noopener">PostGIS</a> 地理空间数据库扩展。因此，PostgreSQL 成为众多个人和组织的首选开源关系型数据库，并不令人意外。</p>
-<p>使用 PostgreSQL <a href="/docs/current/tutorial.html">入门</a> 从未如此简单。选择一个您想构建的项目，让 PostgreSQL 安全、稳健地存储您的数据。</p>
+<p>PostgreSQL 是一个强大的开源对象关系型数据库系统。它使用并扩展了 SQL 语言，并结合了大量功能，能够安全地存储数据，并灵活扩展以应对最复杂的数据工作负载。PostgreSQL 的起源可以追溯到 1986 年，当时它还是加州大学伯克利分校 <a href="/docs/current/history.html">POSTGRES</a> 项目的一部分；其核心代码库至今已持续活跃开发近 40 年。</p>
+<p>PostgreSQL 凭借成熟的架构、可靠性、数据完整性、强大的功能集和优异的可扩展性，以及开源社区持续交付高性能创新方案的长期投入，赢得了良好声誉。PostgreSQL 可在<a href="/download/">所有主流操作系统</a>上运行，自 2001 年以来一直符合 <a href="https://en.wikipedia.org/wiki/ACID" target="_blank" rel="noopener">ACID</a> 标准，并拥有强大的附加组件，例如广受欢迎的 <a href="https://postgis.net/" target="_blank" rel="noopener">PostGIS</a> 地理空间数据库扩展。因此，PostgreSQL 成为众多个人和组织的首选开源关系型数据库，并不令人意外。</p>
+<p>使用 PostgreSQL <a href="/docs/current/tutorial.html">入门</a>从未如此简单。选择一个您想构建的项目，让 PostgreSQL 安全、稳健地存储您的数据。</p>
 
 <h2>为什么使用 PostgreSQL？</h2>
 <p>
-  PostgreSQL 拥有 <a href="/about/featurematrix/">丰富的功能</a>，既能帮助开发者构建应用程序，也能帮助管理员保护数据完整性并构建容错环境。无论数据集规模如何，它都能够胜任。除了 <a href="/about/license/">免费和开源</a> 之外，PostgreSQL 还具备极高的可扩展性。例如，您可以定义自己的数据类型、编写自定义函数，甚至使用 <a href="/docs/current/xplang.html">不同的编程语言</a> 开发，而无需重新编译数据库。
+  PostgreSQL 拥有<a href="/about/featurematrix/">丰富的功能</a>，既能帮助开发者构建应用程序，也能帮助管理员保护数据完整性并构建容错环境。无论数据集规模如何，它都能够胜任。除了<a href="/about/license/">免费和开源</a>之外，PostgreSQL 还具备极高的可扩展性。例如，您可以定义自己的数据类型、编写自定义函数，甚至使用<a href="/docs/current/xplang.html">不同的编程语言</a>开发，而无需重新编译数据库。
 </p>
 <p>PostgreSQL 力求符合 <a href="/docs/current/features.html">SQL 标准</a>，前提是这种一致性不会与传统功能相矛盾或导致不良的架构决策。SQL 标准要求的许多功能都已得到支持，尽管有时语法或函数略有不同。随着时间的推移，预计将进一步向标准靠拢。截至 2025 年 9 月发布的版本 18，PostgreSQL 至少符合 SQL:2023 核心一致性的 177 项强制功能中的 170 项。截至撰写本文时，没有任何关系数据库完全符合该标准。
 </p>
-<p>以下是 PostgreSQL 中各种功能的不完全列表，每个 <a href="/developer/roadmap/">主要版本</a> 都会添加更多功能：
+<p>以下是 PostgreSQL 中各种功能的不完全列表，每个<a href="/developer/roadmap/">主要版本</a>都会添加更多功能：
 </p>
 <ul>
   <li>
@@ -41,12 +41,12 @@
   <li>
     <strong>并发与性能</strong>
     <ul>
-      <li>索引：B-tree，多列，表达式，部分索引</li>
+      <li>索引：B-树，多列，表达式，部分索引</li>
       <li>高级索引：GiST，SP-GiST，KNN GiST，GIN，BRIN，覆盖索引，布隆过滤器</li>
       <li>复杂的查询规划器/优化器，仅索引扫描，多列统计信息</li>
       <li>事务、嵌套事务（通过保存点）</li>
       <li>多版本并发控制（MVCC）</li>
-      <li>读查询和构建 B-tree 索引的并行化</li>
+      <li>读查询和构建 B-树 索引的并行化</li>
       <li>表分区</li>
       <li>SQL 标准中定义的所有事务隔离级别，包括可串行化</li>
       <li>即时编译（JIT）表达式</li>
@@ -65,7 +65,7 @@
   <li>
     <strong>安全性</strong>
     <ul>
-      <li>认证：GSSAPI，SSPI，LDAP，SCRAM-SHA-256，Certificate，OAuth 2.0 等</li>
+      <li>认证：GSSAPI，SSPI，LDAP，SCRAM-SHA-256，证书，OAuth 2.0 等</li>
       <li>强大的访问控制系统</li>
       <li>列级和行级安全性</li>
       <li>使用证书和附加方法的多因素认证</li>
@@ -87,19 +87,19 @@
     <ul>
       <li>支持国际字符集，例如通过 ICU 排序规则</li>
       <li>不区分大小写和不区分重音的排序规则</li>
-      <li>全文搜索</li>
+      <li>全文检索</li>
     </ul>
   </li>
 </ul>
-<p>您还可以在 PostgreSQL <a href="/docs/">文档</a> 中了解更多功能。此外，PostgreSQL 具有极高的可扩展性：许多能力（例如索引）都定义了 API，以便您利用 PostgreSQL 解决实际问题。</p>
+<p>您还可以在 PostgreSQL <a href="/docs/">文档</a>中了解更多功能。此外，PostgreSQL 具有极高的可扩展性：许多能力（例如索引）都定义了 API，以便您利用 PostgreSQL 解决实际问题。</p>
 <p>PostgreSQL 已在可管理的数据规模和可承载的并发用户数方面证明了其高度可伸缩性。生产环境中已有活跃的 PostgreSQL 集簇管理着数 TB 数据，也有专门的系统管理着 PB 级数据。</p>
 
 <h2>需要帮助？</h2>
 <p>
-  有关 PostgreSQL 的任何问题，首先应查阅其 <a href="/docs/">享誉全球的文档</a>，其中深入讨论了如何使用 PostgreSQL。
+  有关 PostgreSQL 的任何问题，首先应查阅其<a href="/docs/">享誉全球的文档</a>，其中深入讨论了如何使用 PostgreSQL。
 </p>
 <p>
-  我们还提供许多<strong> <a href="https://www.postgresql.org/list/">邮件列表</a></strong>，您可以在其中交流并参与 <a href="/community/">社区</a>。此外，还有众多 <a href="/about/events/">活动</a> 和 <a href="/community/user-groups/">本地用户组</a>，方便您与其他 PostgreSQL 用户交流。
+  我们还提供许多<strong><a href="https://www.postgresql.org/list/">邮件列表</a></strong>，您可以在其中交流并参与<a href="/community/">社区</a>。此外，还有众多<a href="/about/events/">活动</a>和<a href="/community/user-groups/">本地用户组</a>，方便您与其他 PostgreSQL 用户交流。
 </p>
 
 <h2>用户<i class="fa fa-heart"></i>我们</h2>

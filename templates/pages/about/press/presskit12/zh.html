@@ -1,7 +1,8 @@
 {% extends "pages/about/press/presskit12/base.html" %}
 
+{% block presskit_heading %}PostgreSQL 12 新闻资料包{% endblock presskit_heading %}
 {% block presskit_content %}
-<h1>PostgreSQL 12 版本发布!</h1>
+<h2>PostgreSQL 12 版本发布!</h2>
 
 <p>PostgreSQL 全球开发组今天宣布发布 PostgreSQL 12，这是世界上最先进的开源数据库的最新版本。</p>
 
@@ -15,11 +16,11 @@
 
 <p>PostgreSQL 12 为其索引系统和分区功能提供了显著的性能和维护增强。</p>
 
-<p>B-树索引，PostgreSQL 中的标准索引类型，在 PostgreSQL 12 中得到优化，以更好地处理索引经常被修改的工作负载。使用 TPC-C 基准测试，PostgreSQL 12 平均将空间利用率降低了约 40%，并整体提升了查询性能。</p>
+<p>B-树索引，PostgreSQL 中的标准索引类型，在 PostgreSQL 12 中得到优化，以更好地处理索引经常被修改的工作负载。使用 TPC-C 基准测试，PostgreSQL 12 平均减少约 40% 的空间占用，并整体提升了查询性能。</p>
 
 <p>分区表上的查询也有明显改进，特别是针对拥有数千个分区、但只需要从有限子集提取数据的表。PostgreSQL 12 还改进了通过 <code>INSERT</code> 和 <code>COPY</code> 向分区表添加数据的性能，并支持在不阻塞查询的情况下向表附加新分区。</p>
 
-<p>PostgreSQL 12 还带来了其他索引增强，进一步改善整体性能，包括降低 GiST、GIN 和 SP-GiST 索引类型生成预写式日志（WAL）的开销，支持在 GiST 索引上创建覆盖索引（<code>INCLUDE</code> 子句），支持使用距离运算符（<code>&lt;-&gt;</code>）对 SP-GiST 索引执行 K 最近邻查询，以及让 <code>CREATE STATISTICS</code> 现在支持最常见值（MCV）统计，从而帮助在列分布不均匀时生成更好的查询计划。</p>
+<p>PostgreSQL 12 还带来了其他索引增强，进一步改善整体性能，包括降低 GiST、GIN 和 SP-GiST 索引类型生成预写式日志（WAL）的开销，支持在 GiST 索引上创建覆盖索引（<code>INCLUDE</code> 子句），支持使用距离操作符（<code>&lt;-&gt;</code>）对 SP-GiST 索引执行 K 最近邻查询，以及让 <code>CREATE STATISTICS</code> 现在支持高频值（MCV）统计，从而帮助在列分布不均匀时生成更好的查询计划。</p>
 
 <p>使用 LLVM 的即时编译（JIT）在 PostgreSQL 11 中引入，现在在 PostgreSQL 12 中默认启用。JIT 编译可以为 <code>WHERE</code> 子句、目标列表、聚合和某些内部操作中的表达式执行带来性能收益，前提是您的 PostgreSQL 安装在编译或打包时包含 LLVM。</p>
 
@@ -49,7 +50,7 @@
 
 <p>另外，PostgreSQL 12 现在可以使用 <code>pg_checksums</code> 命令在离线集簇中启用或禁用页校验和。此前，页校验和这一用于帮助验证写入磁盘数据完整性的功能，只能在使用 <code>initdb</code> 初始化 PostgreSQL 集簇时启用。</p>
 
-<p>如需查看此版本包含的完整功能列表，请阅读 <a href="/docs/12/release-12.html">发布说明</a>，其地址为：<a href="/docs/12/release-12.html">https://www.postgresql.org/docs/12/release-12.html</a></p>
+<p>如需查看此版本包含的完整功能列表，请阅读<a href="https://www.postgresql.org/docs/12/release-12.html">发布说明</a>，其地址为：<a href="https://www.postgresql.org/docs/12/release-12.html">https://www.postgresql.org/docs/12/release-12.html</a></p>
 {% endblock presskit_content %}
 
 {% block presskit_about %}

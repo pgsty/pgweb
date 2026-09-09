@@ -9,11 +9,13 @@ import pickle as pickle
 import json
 import re
 from urllib.request import urlopen
+from urllib.parse import quote
 
 from pgweb.util.decorators import nocache
 from pgweb.util.contexts import render_pgweb
 from pgweb.util.helpers import PgXmlHelper, HttpServerError
 from pgweb.util.misc import varnish_purge, version_sort
+from pgweb.util.seo import summarize_html
 
 from pgweb.core.models import Version
 from .models import Category, Product, StackBuilderApp
@@ -42,6 +44,10 @@ def ftpbrowser(request, subpath):
         f = open(settings.FTP_PICKLE, "rb")
         allnodes = pickle.load(f)
         f.close()
+    except FileNotFoundError:
+        # pg.center does not mirror the FTP inventory. Keep the same directory
+        # on the upstream file browser rather than displaying a server error.
+        return HttpResponseRedirect('https://www.postgresql.org/ftp/' + quote(subpath, safe='/') + ('/' if subpath else ''))
     except Exception as e:
         return HttpServerError(request, "Failed to load ftp site information: %s" % e)
 
@@ -246,6 +252,11 @@ def categorylist(request):
     categories = Category.objects.all()
     return render_pgweb(request, 'download', 'downloads/categorylist.html', {
         'categories': categories,
+        'og': {
+            'title': 'PostgreSQL 软件目录与产品分类',
+            'description': '按类别查找 PostgreSQL 相关的接口、扩展和软件，了解产品介绍、许可证与发行商。此目录不构成 PostgreSQL 全球开发组的推荐或背书。',
+            'url': '/download/product-categories/',
+        },
     })
 
 
@@ -256,6 +267,11 @@ def productlist(request, catid, junk=None):
         'category': category,
         'products': products,
         'productcount': len(products),
+        'og': {
+            'title': 'PostgreSQL 软件目录：{}'.format(category.catname),
+            'description': summarize_html(category.blurb) or 'PostgreSQL {}软件目录，列出相关产品、许可证、价格和发行商信息。'.format(category.catname),
+            'url': '/download/products/{}/'.format(category.pk),
+        },
     })
 
 

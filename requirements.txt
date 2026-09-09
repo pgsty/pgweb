@@ -1,14 +1,14 @@
 Django>=5.2,<5.3
 psycopg2==2.8.5
 pycryptodomex>=3.4.7,<3.5
-Markdown==3.0.1
+Markdown==3.10.3
 requests-oauthlib==1.0.0
 cvss==2.2
 pytidylib==0.3.2
 pycodestyle==2.4.0
 pynliner==0.8.0
 Babel==2.6.0
-bleach==3.1.4
+bleach==6.4.0
 PyYAML==3.13
 zstandard==0.23.0
 rpmfile==2.1.0

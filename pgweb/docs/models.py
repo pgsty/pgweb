@@ -47,3 +47,62 @@ class DocPageRedirect(models.Model):
 
     class Meta:
         verbose_name_plural = "Doc page redirects"
+
+
+class DocProject(models.Model):
+    id = models.AutoField(primary_key=True)
+    slug = models.CharField(max_length=64, unique=True)
+    name = models.CharField(max_length=100)
+    license = models.TextField(
+        null=True, blank=True, default=None, db_default=None,
+        db_comment='Default documentation license; NULL means unknown. A revision may override it in meta.license.',
+    )
+    upstream_url = models.CharField(max_length=2048, blank=True, default='', db_default='')
+    meta = models.JSONField(default=dict, db_default={})
+
+    class Meta:
+        db_table = 'doc_project'
+
+
+class DocRevision(models.Model):
+    id = models.TextField(primary_key=True)
+    project = models.ForeignKey(
+        DocProject, to_field='slug', db_column='project_id', db_index=False,
+        on_delete=models.DO_NOTHING, related_name='revisions',
+    )
+    version = models.CharField(max_length=64)
+    lang = models.CharField(max_length=32)
+    name = models.CharField(max_length=256, blank=True, default='', db_default='')
+    upstream_url = models.CharField(max_length=2048, blank=True, default='', db_default='')
+    meta = models.JSONField(default=dict, db_default={})
+
+    class Meta:
+        db_table = 'doc_revision'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('project', 'version', 'lang'),
+                name='doc_revision_project_version_lang_key',
+            ),
+        ]
+
+
+class EcosystemDocPage(models.Model):
+    id = models.AutoField(primary_key=True)
+    rev = models.ForeignKey(
+        DocRevision, db_column='rev_id', db_index=False,
+        on_delete=models.DO_NOTHING, related_name='pages',
+    )
+    path = models.CharField(max_length=512, blank=True, default='', db_default='')
+    source_path = models.CharField(max_length=512)
+    upstream_url = models.CharField(max_length=2048, blank=True, default='', db_default='')
+    title = models.CharField(max_length=256)
+    meta = models.JSONField(default=dict, db_default={})
+    description = models.TextField(blank=True, default='', db_default='')
+    content = models.TextField()
+
+    class Meta:
+        db_table = 'doc_page'
+        constraints = [
+            models.UniqueConstraint(fields=('rev', 'path'), name='doc_page_rev_path_key'),
+            models.UniqueConstraint(fields=('rev', 'source_path'), name='doc_page_rev_source_path_key'),
+        ]

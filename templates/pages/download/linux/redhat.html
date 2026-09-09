@@ -19,20 +19,17 @@ Red Hat 系列发行版包括：
 </p>
 <p>以及其他。</p>
 <p>
-这些平台默认提供 PostgreSQL。但是，每个版本的平台通常会“快照”一个特定版本的
-PostgreSQL，并在该平台的整个生命周期内提供支持。
-由于这通常意味着提供的版本并非用户所需，PostgreSQL
-项目为最常见的发行版提供了一个包含所有受支持版本的 <a href="#yum">软件包仓库</a>。
+这些平台默认提供 PostgreSQL。但是，各发行版版本通常会选定一个 PostgreSQL 版本，并在该平台的整个生命周期内提供支持。由于这通常意味着提供的版本并非用户所需，PostgreSQL
+项目为最常见的发行版提供了一个包含所有受支持版本的<a href="#yum">软件包仓库</a>。
 </p>
 
 <a name="yum"></a>
-<h2>PostgreSQL Yum Repository</h2>
+<h2>PostgreSQL YUM 仓库</h2>
 <p>
-<a href="https://yum.postgresql.org" target="_blank" rel="noopener">PostgreSQL Yum Repository</a> 将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持
-<a href="/support/versioning/">生命周期</a> 内为所有受支持的 PostgreSQL 版本提供自动更新。
+<a href="https://yum.postgresql.org" target="_blank" rel="noopener">PostgreSQL YUM 仓库</a> 将与您的常规系统和补丁管理集成，并在 PostgreSQL 的整个支持<a href="/support/versioning/">生命周期</a>内为所有受支持的 PostgreSQL 版本提供自动更新。
 </p>
 <p>
-PostgreSQL Yum Repository 目前支持：
+PostgreSQL YUM 仓库 目前支持：
 </p>
 <p>
   <ul>
@@ -45,12 +42,12 @@ PostgreSQL Yum Repository 目前支持：
 <p><strong><sup>*</sup>注意</strong>：由于 Fedora 的支持周期较短，并非所有受支持的 PostgreSQL 版本都一定能在该平台上使用。我们不建议将 Fedora 用于服务器部署。
 </p>
 <p>
-PostgreSQL Yum Repository 最近开始 <a href="https://yum.postgresql.org/news/postgresql-rpms-multiple-rhel-minor-versions/" target="blank">支持
+PostgreSQL YUM 仓库 最近开始<a href="https://yum.postgresql.org/news/postgresql-rpms-multiple-rhel-minor-versions/" target="blank">支持
 RHEL 及其衍生发行版的最近两个小版本</a>，例如 RHEL 10.0
 和 10.1。
 </p>
 <p>
-要使用 PostgreSQL Yum Repository，请按以下步骤操作：
+要使用 PostgreSQL YUM 仓库，请按以下步骤操作：
 </p>
 <ol>
   <li>选择平台：<select id="platform" class="custom-select"></select></li>
@@ -150,14 +147,12 @@ PostgreSQL，请向您的发行版供应商确认。
 
 <h2>直接下载 RPM</h2>
 <p>
-如果您无法或不想使用基于 yum 的安装方式，yum 仓库中的所有 RPM 包也可以
-<a href="https://yum.postgresql.org/rpmchart/">直接下载</a>
-并手动安装。
+如果您无法或不想使用基于 yum 的安装方式，yum 仓库中的所有 RPM 包也可以<a href="https://yum.postgresql.org/rpmchart/">直接下载</a>并手动安装。
 </p>
 
 <h2>PostgreSQL Yum 仓库中国镜像</h2>
 <br>
-    如果您位于中国大陆，可以考虑使用 <a href="https://mirrors.cloud.tencent.com/postgresql/repos/yum/" target="_blank" rel="noopener">腾讯云 PostgreSQL YUM 镜像</a>。</br>
+    如果您位于中国大陆，可以考虑使用<a href="https://mirrors.cloud.tencent.com/postgresql/repos/yum/" target="_blank" rel="noopener">腾讯云 PostgreSQL YUM 镜像</a>。</br>
 您也可以使用 <a href="https://pigsty.cc/docs/pig" target="_blank" rel="noopener">pig</a> 命令行工具来添加 PGDG Yum 仓库，它会自动根据所在区域选择合适的镜像。
 </p>
 <pre class="code" data-lang="bash">curl https://repo.pigsty.cc/pig | bash

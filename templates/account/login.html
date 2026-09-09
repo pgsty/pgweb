@@ -1,24 +1,21 @@
 {%extends "base/page.html"%}
+{%block title%}账户登录{%endblock%}
 {%block contents%}
 <h1>登录 <i class="fas fa-sign-in-alt"></i></h1>
 <p>
 {%if sitename%}
-您正在尝试登录的网站（{{sitename}}）使用的是 postgresql.org 社区登录系统。
-在此系统中，您需要创建一个社区账户，用于登录大多数 postgresql.org 服务。
-一旦登录该账户，您将自动登录到关联的 postgresql.org 服务。
+您正在尝试登录的网站（{{sitename}}）使用的是 postgresql.org 社区登录系统。在此系统中，您需要创建一个社区账户，用于登录大多数 postgresql.org 服务。一旦登录该账户，您将自动登录到关联的 postgresql.org 服务。
 {%else%}
 请登录您的社区账户以访问此区域。
 {%endif%}
 </p>
 <p>
-如果您还没有账户，
-可以 <a href="/account/signup/">创建</a> 一个专用账户，或使用下方的第三方登录系统。
+如果您还没有账户，可以<a href="/account/signup/">创建</a>一个专用账户，或使用下方的第三方登录系统。
 </p>
 
 <h2>社区账户登录</h2>
 <p>
-如果您拥有带密码的 postgresql.org 社区账户，请使用下方表单登录。
-如果您忘记了密码，可以使用 <a href="/account/reset/">密码重置</a> 表单。
+如果您拥有带密码的 postgresql.org 社区账户，请使用下方表单登录。如果您忘记了密码，可以使用<a href="/account/reset/">密码重置</a>表单。
 </p>
 
 {%if form.non_field_errors%}

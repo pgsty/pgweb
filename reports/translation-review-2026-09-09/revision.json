@@ -1,0 +1,1088 @@
+{
+  "revised_at": "2026-09-09T08:03:53.806403+08:00",
+  "authorization": "用户审阅后要求按照该思路进行修订。",
+  "head": "8492ce994a46b4d3e503df85eae9d40b361188c0",
+  "applied_review_items": 94,
+  "pending_review_items": [
+    "D04"
+  ],
+  "product_files": 57,
+  "test_files": 3,
+  "database_mutations": false,
+  "commit_created": false,
+  "pushed": false,
+  "deployed": false,
+  "baseline_backup": "/tmp/pgweb-copy-revision-20260909-074553",
+  "glossary_path": "/Users/vonng/pgsty/pgdoc/tmp/ref/glossary.tsv",
+  "files": [
+    {
+      "path": "data/featurematrix_zh.yaml",
+      "before_sha256": "d5549b9973bd6b69698617103e03e31c5527b01ca37392aced6c7fec34f96c8f",
+      "after_sha256": "071091951021357a5f492adb04caed6febf4d315ac2626ca027a48dd8ec01d50"
+    },
+    {
+      "path": "data/page_metadata.yaml",
+      "before_sha256": "ce2d0a71396e832bf37238ea49a3227f6d2addd19d1dbbf2cca40d918922628f",
+      "after_sha256": "eaa0a5abdb352b19bc09599cbad3d41c8737ec067cbb48fb78ed09c93f408c22"
+    },
+    {
+      "path": "pgweb/account/forms.py",
+      "before_sha256": "70b745185caeddc949939d0169f64c17d87fc89936be40c892a3d95cf03b7344",
+      "after_sha256": "9ef16b159115e509af925b3cdac1c16fa71091ecb936cceb07a63c9f8ad203b9"
+    },
+    {
+      "path": "pgweb/account/views.py",
+      "before_sha256": "e7638b5c3a39997ef814d136b943607c5e351e32ef0a3eeed489358fa18d5eb2",
+      "after_sha256": "5675f2f3a59b21a1af153dd67dafeee6c89a72d25be33d7f9b6dc54b2c13ea39"
+    },
+    {
+      "path": "pgweb/core/forms.py",
+      "before_sha256": "5d75ebef1eddc4bf030a2cfd5acf50248ff9c08ab3f097ab78d34dc873df1618",
+      "after_sha256": "6d5799e1abde0841f55170c67b19657757749c51cc3d39e0624177a15810adfd"
+    },
+    {
+      "path": "pgweb/core/templatetags/pgfilters.py",
+      "before_sha256": "3ddfc22ff5b28bb5b902c062c6a13a62b662359c871a0c422061767686e2370e",
+      "after_sha256": "72bc099979cc3393e752cd19bb3be845650b7c0387a8fcdbc0d48effb1199c84"
+    },
+    {
+      "path": "pgweb/core/templatetags/pgseo.py",
+      "before_sha256": "caa1f8e2a7bd67dbbcefd2edd11edf3843e02838d3e065771bf6270a01ed8826",
+      "after_sha256": "1417a07545c9ad9307f35752e27b5bacdf1166a7cf0d2879fde9539a57f84050"
+    },
+    {
+      "path": "pgweb/core/test_home_seo.py",
+      "before_sha256": "4e86197c7593824525be4e541db797f93d7519191f30866af2a3a8c4f75e538e",
+      "after_sha256": "c3b03fbe7e54944866ade98b96120f422a19e93b8fd813b230a436ee2589894b"
+    },
+    {
+      "path": "pgweb/core/test_seo.py",
+      "before_sha256": "f6659f6c97ad4302bdf57666551dace5049a26fc5cd3702cbb63bf43e6299c3b",
+      "after_sha256": "cd844338506e86abd14cc3c40fde70bedbd8cbb6f10a151bbc2e6d4a051b5194"
+    },
+    {
+      "path": "pgweb/core/views.py",
+      "before_sha256": "b57f10f93a9cb80467a5b6b6addf423753af87e4cde3c0969a154b03c89cc24e",
+      "after_sha256": "36306d600da2f48c82b4fd056aecbc18d59da324befeab5ca78effa5571cce59"
+    },
+    {
+      "path": "pgweb/docs/ecosystem.py",
+      "before_sha256": "21a605e9e1cb3ab3483b6dd108cc2d95a1590dd073b07cb2bb5601c6eef340dc",
+      "after_sha256": "424691671715364842b5d7cfc119263d0e80f9b463ce91105aec974d9798f635"
+    },
+    {
+      "path": "pgweb/docs/test_docpage_seo.py",
+      "before_sha256": "5adfae7fb3d884de18fd3745e88e193d4f292e0939ab774ee2a15e528bf7d79c",
+      "after_sha256": "f67386a7c51eea80bd4e7d69eea6d801f5d38b87e0d94e248b0160fb9b81093c"
+    },
+    {
+      "path": "pgweb/docs/views.py",
+      "before_sha256": "b4c76ebfbc8bd0817bdc1514d9dbc1198b1c6618845827bb3c0709a2bf3b42c2",
+      "after_sha256": "ceedb46341460328d42a772f924a0e9a4fe9b37dc83030f3d6ffda269066300a"
+    },
+    {
+      "path": "pgweb/downloads/views.py",
+      "before_sha256": "a242d32ebd8fe66622cb047e47c69b04c1ec05351d25b38bfb0389d5a2b9ff64",
+      "after_sha256": "28a5ee834cb859ce1b2c6bceb10067fb28a0f033fc8b2bbf25790745bf551de5"
+    },
+    {
+      "path": "pgweb/events/forms.py",
+      "before_sha256": "08db483b597fea16194f5a6979fcc07fb60cf51c735946f91005aee8a5963201",
+      "after_sha256": "cda07c47d068128f4ba7fefcb6253f286568217b49f01f252fbb7c0fa9acb52d"
+    },
+    {
+      "path": "pgweb/ext/views.py",
+      "before_sha256": "7134daf0d8a40c27ebf8d4f8174467dcecce24c6c1181d93cd0b21fe2ca11bf8",
+      "after_sha256": "8890e9b01b495598f6c56c098010299caa956357b0e21edfe8d9fc1487c4804e"
+    },
+    {
+      "path": "pgweb/news/forms.py",
+      "before_sha256": "daf8e695cbdc7cc1dbe8544f20f8427c2c5ec0e5cbc598f70deb3675438ae66e",
+      "after_sha256": "e62f1c30566f3335d4dd02ca4aa2fcf4fd18a8cee5c01776fd63ecb67991c43d"
+    },
+    {
+      "path": "pgweb/profserv/views.py",
+      "before_sha256": "c9e03247ef6a14337fc3cc990421824dade16d36057eb1b8ea03a6c662278ad7",
+      "after_sha256": "48fa941a9acaf00c5a35c1f27e57adf90ac61bdcd0df49971afb65905b22b249"
+    },
+    {
+      "path": "pgweb/search/views.py",
+      "before_sha256": "8acb7fa45835f0c0bfef950094d47e9d6da491dacda8f9abe3f4151e9d28c470",
+      "after_sha256": "6b0f2dbcf8fb7cc6f16c714eac3029410079f0fc9970724aa428ca285ad67692"
+    },
+    {
+      "path": "pgweb/util/contexts.py",
+      "before_sha256": "10a5c2e2737c5fa08cd854be52c6eb769f8ce54d20018dd5ee6df21b793a7afd",
+      "after_sha256": "36550df3a9dc0dfa7b1602e2f8b3909f161ea70a1442300a774530a4d1f37590"
+    },
+    {
+      "path": "templates/account/communityauth_cooloff.html",
+      "before_sha256": "c5b6afc9045377fe50427f58dee8bea613b033259b86a3125f8d09f061527215",
+      "after_sha256": "e4d997ceb5e56c626ba8c1b0842e975edf3ee3043e20bcfd2146c3b823064b83"
+    },
+    {
+      "path": "templates/account/communityauth_nogroup.html",
+      "before_sha256": "28278dd7b83691b3be074ab704692363217225488e221e806c4f9e08e934f894",
+      "after_sha256": "4cb8a893c5ed3af9acc2e640400df6c991cfc210620a899b852ec78a8948b699"
+    },
+    {
+      "path": "templates/account/communityauth_noinfo.html",
+      "before_sha256": "2041216d4d69556b280be42aaeb88cd44a50d335ba03424d8de1dc1ffc0e05b5",
+      "after_sha256": "5b2d2d6e9d3f164eb2522f64f30ab060eaff76706bee8f36169ac4753f573b90"
+    },
+    {
+      "path": "templates/account/login.html",
+      "before_sha256": "327a4fb894ea56675190deb4758178b3a40a48ad5dfecf2b0fd4f184a0be3009",
+      "after_sha256": "e0835b8d897cf73833e83070e3aca9c31a1b51ae45fb5b69c1946b718990d0ad"
+    },
+    {
+      "path": "templates/account/password_reset_complete.html",
+      "before_sha256": "4fea302fe4499662756e52c0377eece2e9053d08c0d55f9fa4d162c35fc534df",
+      "after_sha256": "d577f8da7a491fd916890258cdc7fc4e377bbe1368c9eaae60ea017b796d8cb4"
+    },
+    {
+      "path": "templates/account/signup_complete.html",
+      "before_sha256": "b5e5a2d3197c832e051d7f3bc3bc61f6ae99a37fd182e51c8d92dea906ed6365",
+      "after_sha256": "9ea0200700761b353ba328f3b6677c4e5035f1a5d961f617e99b37be346ebcdb"
+    },
+    {
+      "path": "templates/account/submit_preview.html",
+      "before_sha256": "235110105ca24d30286e645fdaa386273f21da8cdc14992b0dab4f5af0bd7bf2",
+      "after_sha256": "2910483455806fc6d7c2f1f41a7df6d2fa35681da8bf592b02bc3ee8f0528aaf"
+    },
+    {
+      "path": "templates/account/userprofileform.html",
+      "before_sha256": "da3684f30cdbf6a4d2bd184ad6cb6271e51ef3a32b236ac15351d2661eda824c",
+      "after_sha256": "91c7b82ba273cb3872b34d9de6120df72b1efab54b88c278d92b4959e0997ee7"
+    },
+    {
+      "path": "templates/base/base.html",
+      "before_sha256": "6ef872c95fe02850a7d10796738782b9ee5a7a4036661558e7a12225870433be",
+      "after_sha256": "98b6bebcd98cf217b00c4d0c0cecc42d8952428ede7dab3e05145b0e9e59c36e"
+    },
+    {
+      "path": "templates/base/cocpage.html",
+      "before_sha256": "dcef5c4687ed7f504e7dbcf5c3e92fd8bb275ad5178dc1b064baf1263b2d96e6",
+      "after_sha256": "7e27dd87e57c49b359badfd5fe0b685c8ca6b5ae2cd97bf9b1230f0e9c8f8345"
+    },
+    {
+      "path": "templates/core/about.html",
+      "before_sha256": "5eca1928d30e7b5efc232c35bec2e5b7272eee1ab4351ce97b1da102102bc1d2",
+      "after_sha256": "ededeef52fcc152699acda2218e311371c28d1fc83cc36d3342221d26d486e1d"
+    },
+    {
+      "path": "templates/docs/docspage.html",
+      "before_sha256": "3b71edeca2e6fff72209cbe469fe2ea47cd60cd92e625b1f9b395bc9b5e2cea5",
+      "after_sha256": "833e51e1c92452fe2743ce0648d2826cba328c1d40d02dba274206237ffd328b"
+    },
+    {
+      "path": "templates/index.html",
+      "before_sha256": "9c2e0ec0603a78eb1a652e1512039a34a1857d1f51038501bc40da7a25ab044c",
+      "after_sha256": "a5f03394d5d99bb14eb4aeaa59e04eea291cd378ed371c479e32de835d7003a2"
+    },
+    {
+      "path": "templates/pages/about/pgcenter.html",
+      "before_sha256": "4457fa30197ec1820b849f9304edd85149d47d33351bd41899b46e4076191859",
+      "after_sha256": "41695b5bd75a7202a195786c9617ac0519debd9e8de34f10f968c86fd13e41b4"
+    },
+    {
+      "path": "templates/pages/about/policies/coc/zh.html",
+      "before_sha256": "dd5b0217f6668563993e0c97e8aa94a791c549a7a97bb7904999f0967aa1d916",
+      "after_sha256": "ce59cebba2e21c642074db2ffb714a9be709e1b18466d113fff04a1ef47a9de0"
+    },
+    {
+      "path": "templates/pages/about/policies/funds-group.html",
+      "before_sha256": "f84e94cf98f69fac17054fff2e31dc9c469ba9a8f0ab3e293d1a43583341d08d",
+      "after_sha256": "57430b04451c33c9ca7ae2401c2001cde7e12f6910a01d5c7c96aa7297fe9b22"
+    },
+    {
+      "path": "templates/pages/about/policies/news-and-events.html",
+      "before_sha256": "66ce45525ca94aac58ce34ae6452ad20c8c22129a2f8300419e03513dfcafb25",
+      "after_sha256": "c8617ebe1d331a5abda882ee3d7e8577548a1c3988b26f16f0f74bfd15855ab6"
+    },
+    {
+      "path": "templates/pages/about/policies/services-and-hosting.html",
+      "before_sha256": "9eea9149cedf8ee8564ac8cf2bc3f6708a6e6924b803792c5f4979df5ce08a2b",
+      "after_sha256": "7c75c37195e180113fc42197643844c70d41ea73d7c43b175844dc8a7ebc36e3"
+    },
+    {
+      "path": "templates/pages/about/press.html",
+      "before_sha256": "b803ac106fe1fa166c7d29d4a4934ecbc445ca69e81d901097e4233ad1efc3f5",
+      "after_sha256": "6d011bb55c71b19e16ea4e72e0d16054b525a8ae893e8a78e42bb321248aff79"
+    },
+    {
+      "path": "templates/pages/about/press/faq.html",
+      "before_sha256": "0f7698d97e20fa96b39a56326d08be8b8cd09f5551e7230a56f45bc0bf560886",
+      "after_sha256": "e0e333b8cfaa02cd95dfe1988dc020739ce9499adf8c0b46e8cf293eca09a748"
+    },
+    {
+      "path": "templates/pages/about/press/presskit10/cn.html",
+      "before_sha256": "9e63dba9d8bdda5d9574a6c23afd9f3f68e42b84483314e672857b2d73686f13",
+      "after_sha256": "d37a2addf77dc32e1c4de5a4b5ba8762b54040eed4d852789b75491b6b6982d9"
+    },
+    {
+      "path": "templates/pages/about/press/presskit11/cn.html",
+      "before_sha256": "dd4d18fb52fc1c35d004e391f729ded5315a7edfc38759090e8464f4acdbb58b",
+      "after_sha256": "43568e087e23940fc0f49bd29a65dc4b991593e04123a7d8d342d36dd989ba4d"
+    },
+    {
+      "path": "templates/pages/about/press/presskit12/zh.html",
+      "before_sha256": "0ec68a36d68d68970314eadc88ff74fa83320c2b9363bcb72792aeabd8ee5da4",
+      "after_sha256": "1e89933a0172062ec5d05fce70650d4b719494ee8d1213bcccef026d5db69cdf"
+    },
+    {
+      "path": "templates/pages/about/press/presskit13/zh.html",
+      "before_sha256": "2da540660ef7b6d9a3a065e9d3c860d2f9d0850f82f8861f82eb1a8c951640aa",
+      "after_sha256": "af62373614455290db092e9a3e0edb61dccb2ff8ddece6b8977f68d2e54bca49"
+    },
+    {
+      "path": "templates/pages/about/press/presskit14/zh.html",
+      "before_sha256": "02f05c99417abd58c7652607e6aa530261e1bb16b5d236cf69ba7eb9b7b4db36",
+      "after_sha256": "ef27a8eceab611f5a954f0166f01e844286c06fec6f70efd83bac427901969e0"
+    },
+    {
+      "path": "templates/pages/about/press/presskit15/zh.html",
+      "before_sha256": "5d470d79309f380e0945d075c2a5bfa0fef84d0cb1ac1279f0117fffd2422bc0",
+      "after_sha256": "b7bb772666dc6054775a6d67134525b97eabaac023b72443319b4723c9822366"
+    },
+    {
+      "path": "templates/pages/about/press/presskit16/zh.html",
+      "before_sha256": "7611c41a15c527481b6f61e61dcffed1338ddd5c0ea15f34fe607c7d01761ae0",
+      "after_sha256": "1693d3b6d6c4ab4db69642c9abb038a1e5b81543aac4e3f478fe7c9270355e4d"
+    },
+    {
+      "path": "templates/pages/about/press/presskit17/zh.html",
+      "before_sha256": "faf0a5832f669632f38747f31f7b6dfe70ec4277e6701287f42db8776ac88ca9",
+      "after_sha256": "60ea8b5173c4e642316feffbd2368f1715c3d6e03b524066c3831d4c46c35bd6"
+    },
+    {
+      "path": "templates/pages/about/press/presskit18/zh.html",
+      "before_sha256": "c9a694862607c61035bb6e3c317237519b59c3d149e3b423ab7ae4a9c9c800bf",
+      "after_sha256": "4dbbeb3a5b392d0f817bf21409cf2c6a8d0ab3b0716995ea670da31000f886b9"
+    },
+    {
+      "path": "templates/pages/about/press/presskit90/zh_cn.html",
+      "before_sha256": "c3b05ce94f16e8c09b3beac6673bd1681a75724001733671ee56c68d001a802a",
+      "after_sha256": "d0c547d7b907596cf380ce2c5c5518a374ab408ed7d14fd625f9169a08677d76"
+    },
+    {
+      "path": "templates/pages/about/press/presskit91/zh_cn.html",
+      "before_sha256": "44f5fbba564b0cfb50014837f87e01dcf3e303aeb8d94a884814b28901ec9ea9",
+      "after_sha256": "9fbb2b56391eb50e0ca023cb164b08965c648284b50b6ffdbd4fb72d70daf95e"
+    },
+    {
+      "path": "templates/pages/about/press/presskit92/zh_CN.html",
+      "before_sha256": "5c80de02f49858dc81f986231d10c297fd7900f1afe00f3aa68a11035939bca9",
+      "after_sha256": "a176518cb113c3c8ed76de3ac0e50224d4f8a82be93b7050e8c3e25f964c0019"
+    },
+    {
+      "path": "templates/pages/about/press/presskit93/zh_CN.html",
+      "before_sha256": "6505b902190b10d936b276762594e81860035ffb834a7f194bb6da686369cb42",
+      "after_sha256": "1e7901404d295642bd54b977c4f34f70a991cafdfcbdb7facf45d0f482eadc19"
+    },
+    {
+      "path": "templates/pages/developer/backend.html",
+      "before_sha256": "62bc9a1a49c74b42ee60ee624b2f1eb176365e21b95660470420fbeb6f1cbd04",
+      "after_sha256": "13f04b508b1cfedc3a960934f9d63ba1fba94442e75a112cb430c900c2990806"
+    },
+    {
+      "path": "templates/pages/docs/faq.html",
+      "before_sha256": "9b97506a97e7241e40efda8afa73fae4fefac749544ed26dbc333f42f8a4a83c",
+      "after_sha256": "0922fbe9bd1f55548d9c88fc6cbbc603385cd618b683a58fd12743febb132988"
+    },
+    {
+      "path": "templates/pages/download/linux/debian.html",
+      "before_sha256": "c3906f80d475e495aa0a73437a579a1216c03ce9019b995f79096c1a22aa3beb",
+      "after_sha256": "aecfdd5e03281ec31478b07b45384bd7c373df9f091cc05801697c1284480234"
+    },
+    {
+      "path": "templates/pages/download/linux/redhat.html",
+      "before_sha256": "63deb35bc8abe3a05cce49ddc719e77733a4f7080893195fc5adaa1c3c0e64f5",
+      "after_sha256": "fe015a1506e795b749c9874ecf4d0c1bcd17f8a07cfac96d9ba311dcc6588447"
+    },
+    {
+      "path": "templates/pages/download/linux/suse.html",
+      "before_sha256": "460458fa51796df22d092fded0af5451712945554e4785c8413df9964facfe5d",
+      "after_sha256": "67baba9a870b1ae7c9065ae0f1f12e1a5cfbf80ef06ac7470ed91c9fe28f52a5"
+    },
+    {
+      "path": "templates/pages/download/linux/ubuntu.html",
+      "before_sha256": "dac36dfe618aca4ca82001f1b13ed67b04cef7df5af729c891393584ba6fb666",
+      "after_sha256": "1ac99f70bc03f0f097e7cfc5a40f7bc94d5dc436529e820d79fa5b77394f7110"
+    },
+    {
+      "path": "templates/profserv/list.html",
+      "before_sha256": "2c8e77fafe632d347d2ff3f5d2b6027861afcaa4df8df3b9458bffb7bb17c8fe",
+      "after_sha256": "b349ce57d5137d4cbc3c579022a25c9273940dbed08af569711faf00f4cda2bd"
+    }
+  ],
+  "items": [
+    {
+      "id": "T01",
+      "title": "Full-Text Search：全文检索",
+      "status": "已修订",
+      "reviewed_locations": 4,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T02",
+      "title": "Failover：故障切换",
+      "status": "已修订",
+      "reviewed_locations": 4,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T03",
+      "title": "B-tree：B-树",
+      "status": "已修订",
+      "reviewed_locations": 10,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T04",
+      "title": "Exclusion Constraints：排他约束",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T05",
+      "title": "Operator：操作符",
+      "status": "已修订",
+      "reviewed_locations": 9,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T06",
+      "title": "Most Common Values / MCV：高频值",
+      "status": "已修订",
+      "reviewed_locations": 3,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T07",
+      "title": "HOT：堆内元组",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T08",
+      "title": "Merge Join：归并连接",
+      "status": "已修订",
+      "reviewed_locations": 3,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T09",
+      "title": "Partition pruning：分区剪枝",
+      "status": "已修订",
+      "reviewed_locations": 4,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T10",
+      "title": "Identity column：标识列",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T11",
+      "title": "WAL 与 full-page write：预写式日志、整页写入",
+      "status": "已修订",
+      "reviewed_locations": 3,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T12",
+      "title": "Visibility map：可见性映射",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "与 C11 合并，采用已确认的完整可见性映射描述。"
+    },
+    {
+      "id": "T13",
+      "title": "Autovacuum：自动清理",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T14",
+      "title": "Serializable snapshot isolation：可串行化快照隔离",
+      "status": "已修订",
+      "reviewed_locations": 5,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T15",
+      "title": "逻辑复制说明中的 publication / schema：发布／模式",
+      "status": "已修订",
+      "reviewed_locations": 4,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T16",
+      "title": "复制语境：主库、备库、从库",
+      "status": "已修订",
+      "reviewed_locations": 18,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T17",
+      "title": "数据库集簇与高可用集群分开使用",
+      "status": "已修订",
+      "reviewed_locations": 10,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T18",
+      "title": "规划器 Cost：代价",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T19",
+      "title": "后端概述：词元与聚合",
+      "status": "已修订",
+      "reviewed_locations": 3,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T20",
+      "title": "可伸缩性与可扩展性按语义区分",
+      "status": "已修订",
+      "reviewed_locations": 5,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T21",
+      "title": "Trusted extension：受信任的扩展",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T22",
+      "title": "最近邻索引用词",
+      "status": "已修订",
+      "reviewed_locations": 5,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T23",
+      "title": "生成列的复合名称",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T24",
+      "title": "Index-only scan：仅索引扫描",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T25",
+      "title": "Foreign key：外键",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "T26",
+      "title": "事务 ID 回卷",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C01",
+      "title": "简介页：数据与工作负载的搭配",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C02",
+      "title": "媒体 FAQ：四处明确的直译或歧义",
+      "status": "已修订",
+      "reviewed_locations": 4,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C03",
+      "title": "Linux 下载页：发行版“快照”一个版本",
+      "status": "已修订",
+      "reviewed_locations": 4,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C04",
+      "title": "专业服务地区页：注册地与服务地区",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C05",
+      "title": "复制槽的 WAL 限制是保留量",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C06",
+      "title": "Windows Port：移植版",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C07",
+      "title": "GIN：广义倒排索引",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C08",
+      "title": "分区键更新：修正主宾关系",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C09",
+      "title": "COPY：输入输出方向",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C10",
+      "title": "受信任扩展：纠正函数与扩展混淆",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C11",
+      "title": "可见性映射：纠正描述方向",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C12",
+      "title": "Unicode literal：字符串字面量",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C13",
+      "title": "auto_explain：模块名拼写",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C14",
+      "title": "PostgreSQL 12：空间优化的方向",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C15",
+      "title": "PostgreSQL 11：默认分区条件",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C16",
+      "title": "PostgreSQL 11：INCLUDE 与仅索引扫描",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C17",
+      "title": "PostgreSQL 11：连接与 JIT 表述",
+      "status": "已修订",
+      "reviewed_locations": 3,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C18",
+      "title": "PostgreSQL 14：拆开 postgres_fdw 的两项能力",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C19",
+      "title": "PostgreSQL 15：默认权限变化",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C20",
+      "title": "PostgreSQL 18：值不限定为数值",
+      "status": "已修订",
+      "reviewed_locations": 3,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C21",
+      "title": "PostgreSQL 13：受信任扩展段的病句与引号",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C22",
+      "title": "PostgreSQL 9.1：Heroku 与 salesforce.com 的归属关系",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C23",
+      "title": "PostgreSQL 9.1：三处明确的误译／错字",
+      "status": "已修订",
+      "reviewed_locations": 5,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C24",
+      "title": "PostgreSQL 10：商业伙伴错字",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C25",
+      "title": "PostgreSQL 9.0：RADIUS 认证",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C26",
+      "title": "服务收录政策：word 不应换算为“字”",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C27",
+      "title": "扩展属性 relocatable：说明可以迁移什么",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C28",
+      "title": "关于本站：上游入口说明",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C29",
+      "title": "提交预览：说明撤回后仍可修改",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C30",
+      "title": "账户邮箱提示：解释实际影响",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C31",
+      "title": "UNLOGGED 与导入表定义的表述",
+      "status": "已修订",
+      "reviewed_locations": 3,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C32",
+      "title": "资金小组章程：附议主语与辩论期限",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "C33",
+      "title": "网站团队与网络团队",
+      "status": "已修订",
+      "reviewed_locations": 5,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S01",
+      "title": "标题前缀：PostgreSQL：内容 → PostgreSQL 内容",
+      "status": "已修订",
+      "reviewed_locations": 92,
+      "note": "与 S02、S03、S04 的具体标题合并处理；已经有单独运行时 SEO 覆盖的页面继续使用该覆盖。"
+    },
+    {
+      "id": "S02",
+      "title": "媒体页面与新闻列表分清用途",
+      "status": "已修订",
+      "reviewed_locations": 16,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S03",
+      "title": "政策页标题增加用途区分",
+      "status": "已修订",
+      "reviewed_locations": 3,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S04",
+      "title": "手册标题的完整格式",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S05",
+      "title": "避免扩展首页和生态文档首页重复名称",
+      "status": "已修订",
+      "reviewed_locations": 2,
+      "note": "中文和英文共用的标题逻辑同时去除首页重复名称；章节标题继续保留章节、项目与版本。"
+    },
+    {
+      "id": "S06",
+      "title": "动态页 HTML 标题与分享标题统一",
+      "status": "已修订",
+      "reviewed_locations": 5,
+      "note": "HTML 与 OG 共用最终标题；显式 seo.title 优先，动态标题缺少 PostgreSQL 前缀时补上空格前缀。记录本身不变。"
+    },
+    {
+      "id": "S07",
+      "title": "六个账户页面缺少页面名称",
+      "status": "已修订",
+      "reviewed_locations": 6,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S08",
+      "title": "页面主标题层级",
+      "status": "已修订",
+      "reviewed_locations": 6,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S09",
+      "title": "首页视觉标题是否同步去掉冒号",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.01",
+      "title": "页面摘要：/about/contact/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.02",
+      "title": "页面摘要：/about/press/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.03",
+      "title": "页面摘要：/about/press/faq/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.04",
+      "title": "页面摘要：/about/governance/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.05",
+      "title": "页面摘要：/about/governance/contributors/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.06",
+      "title": "页面摘要：/about/governance/sysadmin/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.07",
+      "title": "页面摘要：/about/policies/project-name/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.08",
+      "title": "页面摘要：/about/policies/news-and-events/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.09",
+      "title": "页面摘要：/about/policies/services-and-hosting/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.10",
+      "title": "页面摘要：/about/policies/archives/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.11",
+      "title": "页面摘要：/about/press/presskit12/zh/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.12",
+      "title": "页面摘要：/about/press/presskit13/zh/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.13",
+      "title": "页面摘要：/about/press/presskit14/zh/",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "S10.14",
+      "title": "首页摘要：补全句子与并列结构",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "U01",
+      "title": "搜索界面的英文提示",
+      "status": "已修订",
+      "reviewed_locations": 19,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "U02",
+      "title": "公共入口的少量补译",
+      "status": "已修订",
+      "reviewed_locations": 8,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "U03",
+      "title": "政策页“查看修订历史”",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "U04",
+      "title": "账户表单字段与帮助文字",
+      "status": "已修订",
+      "reviewed_locations": 25,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "U05",
+      "title": "账户校验消息补译",
+      "status": "已修订",
+      "reviewed_locations": 23,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "U06",
+      "title": "注册及授权页面补译",
+      "status": "已修订",
+      "reviewed_locations": 9,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "U07",
+      "title": "组织资料表单补译",
+      "status": "已修订",
+      "reviewed_locations": 20,
+      "note": "同时补齐同一表单中“添加邮箱地址”“添加管理员”两个隐式字段标签。"
+    },
+    {
+      "id": "U08",
+      "title": "新闻与活动提交表单补译",
+      "status": "已修订",
+      "reviewed_locations": 38,
+      "note": "按已确认的具体替换落实。"
+    },
+    {
+      "id": "D01",
+      "title": "两份中文行为准则的处理方式",
+      "status": "已修订",
+      "reviewed_locations": 5,
+      "note": "旧中文入口继承现行中文模板；保留现行正文，英文入口改为上游英文页。"
+    },
+    {
+      "id": "D02",
+      "title": "Quorum commit 的译法与历史引语",
+      "status": "已修订",
+      "reviewed_locations": 8,
+      "note": "按术语表统一为“基于法定人数的提交”，保留 Quorum Commit，并移除引语中的误导性插注。"
+    },
+    {
+      "id": "D03",
+      "title": "历史许可介绍中混用“版权”与“许可证”",
+      "status": "已修订",
+      "reviewed_locations": 50,
+      "note": "只修订清单列明的许可介绍，保留原文的正式版权声明。"
+    },
+    {
+      "id": "D04",
+      "title": "中文版权起始年份不一致",
+      "status": "待确认事实",
+      "reviewed_locations": 2,
+      "note": "页脚起始年为 2025，本站介绍为 2026；本次审批没有提供实际起始年份，保留原值。"
+    },
+    {
+      "id": "D05",
+      "title": "PL/Perl 验证器条目写成 PL/pgSQL",
+      "status": "已修订",
+      "reviewed_locations": 1,
+      "note": "已核对 PostgreSQL 8.1 官方 PL/Perl 文档的验证器示例，修正中文条目为 PL/Perl。"
+    }
+  ],
+  "qa": {
+    "changed_files": [
+      "data/featurematrix_zh.yaml",
+      "data/page_metadata.yaml",
+      "pgweb/account/forms.py",
+      "pgweb/account/views.py",
+      "pgweb/core/forms.py",
+      "pgweb/core/templatetags/pgfilters.py",
+      "pgweb/core/templatetags/pgseo.py",
+      "pgweb/core/test_home_seo.py",
+      "pgweb/core/test_seo.py",
+      "pgweb/core/views.py",
+      "pgweb/docs/ecosystem.py",
+      "pgweb/docs/test_docpage_seo.py",
+      "pgweb/docs/views.py",
+      "pgweb/downloads/views.py",
+      "pgweb/events/forms.py",
+      "pgweb/ext/views.py",
+      "pgweb/news/forms.py",
+      "pgweb/profserv/views.py",
+      "pgweb/search/views.py",
+      "pgweb/util/contexts.py",
+      "templates/account/communityauth_cooloff.html",
+      "templates/account/communityauth_nogroup.html",
+      "templates/account/communityauth_noinfo.html",
+      "templates/account/login.html",
+      "templates/account/password_reset_complete.html",
+      "templates/account/signup_complete.html",
+      "templates/account/submit_preview.html",
+      "templates/account/userprofileform.html",
+      "templates/base/base.html",
+      "templates/base/cocpage.html",
+      "templates/core/about.html",
+      "templates/docs/docspage.html",
+      "templates/index.html",
+      "templates/pages/about/pgcenter.html",
+      "templates/pages/about/policies/coc/zh.html",
+      "templates/pages/about/policies/funds-group.html",
+      "templates/pages/about/policies/news-and-events.html",
+      "templates/pages/about/policies/services-and-hosting.html",
+      "templates/pages/about/press.html",
+      "templates/pages/about/press/faq.html",
+      "templates/pages/about/press/presskit10/cn.html",
+      "templates/pages/about/press/presskit11/cn.html",
+      "templates/pages/about/press/presskit12/zh.html",
+      "templates/pages/about/press/presskit13/zh.html",
+      "templates/pages/about/press/presskit14/zh.html",
+      "templates/pages/about/press/presskit15/zh.html",
+      "templates/pages/about/press/presskit16/zh.html",
+      "templates/pages/about/press/presskit17/zh.html",
+      "templates/pages/about/press/presskit18/zh.html",
+      "templates/pages/about/press/presskit90/zh_cn.html",
+      "templates/pages/about/press/presskit91/zh_cn.html",
+      "templates/pages/about/press/presskit92/zh_CN.html",
+      "templates/pages/about/press/presskit93/zh_CN.html",
+      "templates/pages/developer/backend.html",
+      "templates/pages/docs/faq.html",
+      "templates/pages/download/linux/debian.html",
+      "templates/pages/download/linux/redhat.html",
+      "templates/pages/download/linux/suse.html",
+      "templates/pages/download/linux/ubuntu.html",
+      "templates/profserv/list.html"
+    ],
+    "source_files": 57,
+    "test_files": 3,
+    "unrelated_file_changes": [],
+    "glossary_unchanged": true,
+    "foreign_metadata_unchanged": 217,
+    "metadata_routes": 306,
+    "chinese_metadata_rendered": 89,
+    "feature_keys_preserved": 420,
+    "feature_group_keys_preserved": 26,
+    "form_fields_checked": 51,
+    "account_titles_checked": 6,
+    "compiled_html_templates": 385,
+    "protected_links_code_and_template_values": true,
+    "database_access": "explicitly disabled",
+    "coc_zh_reuses_current_translation": true,
+    "pending": [
+      "D04"
+    ],
+    "dynamic_view_renders": 9,
+    "existing_and_regression_tests": {
+      "passed": 69,
+      "duration_seconds": 0.561,
+      "database_access": "No database setup; selected SimpleTestCase / unittest cases only"
+    },
+    "system_check": "No issues",
+    "git_diff_check": "passed",
+    "browser_visual_check": {
+      "mode": "loopback HTML fixtures, no application database",
+      "pages": [
+        "/",
+        "/about/policies/coc/"
+      ],
+      "result": "标题显示和布局正常；临时预览已关闭"
+    },
+    "tests_command": ".venv/bin/python manage.py test pgweb.core.test_seo pgweb.core.test_page_metadata pgweb.core.test_home_seo pgweb.docs.test_docpage_seo pgweb.featurematrix.test_seo pgweb.security.test_seo pgweb.news.test_seo pgweb.events.test_seo pgweb.docs.test_books pgweb.docs.test_struct pgweb.docs.test_release_notes pgweb.core.test_staticfiles pgweb.docs.test_ecosystem_views.ManualMarkdownTests pgweb.ext.tests.MarkdownTests --noinput"
+  },
+  "fact_sources": {
+    "D05": "https://www.postgresql.org/docs/8.1/plperl-trusted.html"
+  }
+}

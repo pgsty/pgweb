@@ -11,7 +11,7 @@
  &nbsp; <a href="#additional_features">特性列表</a><br />
  &nbsp; <a href="#download">下载地址</a><br />
  &nbsp; <a href="#docs">文档</a><br />
- &nbsp; <a href="#license">版权声明</a><br />
+ &nbsp; <a href="#license">许可证</a><br />
  &nbsp; <a href="#contact">联系方式</a><br />
  &nbsp; <a href="#quoted_companies">相关商业公司信息</a><br />
  &nbsp; <a href="#companies">企业支持</a><br />
@@ -56,7 +56,7 @@ PostgreSQL 9.0 版本包括一系列其他更新，这些更新增强了数据�
 </h3>
 <ul>
 <li>集成自动升级功能（pg_upgrade）</li>
-<li>RADIUS 授权</li>
+<li>RADIUS 认证</li>
 <li>密码强度检查（passwordcheck）</li>
 <li>更方便的数据库权限管理指令（GRANT ON ALL and DEFAULT PERMISSIONS）</li>
 </ul>
@@ -77,7 +77,7 @@ PostgreSQL 9.0 版本包括一系列其他更新，这些更新增强了数据�
 </h3>
 <ul>
 <li>匿名存储过程代码块功能（DO 语句）</li>
-<li>改进的 Perl 和 Python 存储过程 (包括对 Python 3的支持)</li>
+<li>改进的 Perl 和 Python 存储过程 (包括对 Python 3 的支持)</li>
 <li>可命名参数的函数调用</li>
 </ul>
 
@@ -100,16 +100,16 @@ PostgreSQL 9.0 版本包括一系列其他更新，这些更新增强了数据�
 有关这些特性的更多解释，请浏览下列资源：
 </p>
 <ul>
-<li><a href="/docs/9.0/release-9-0.html">发布声明</a></li>
+<li><a href="https://www.postgresql.org/docs/9.0/release-9-0.html">发布声明</a></li>
 <li><a href="https://wiki.postgresql.org/wiki/What's_new_in_PostgreSQL_9.0">9.0 版本的新特性</a></li>
 <li><a href="/about/featurematrix">特性矩阵</a></li>
 </ul>
 <a name="download"></a><h2>下载</h2>
 <ul>
-<li><a href="/download">下载页面</a> 包括安装程序和一些工具软件</li>
+<li><a href="/download">下载页面</a>包括安装程序和一些工具软件</li>
 <li><a href="https://www.postgresql.org/ftp/source/v9.0.0">源代码</a></li>
 <li><a href="/download/windows">Windows 平台的安装程序</a></li>
-<li><a href="/download/linux">Linux 平台的安装程序</a> 和一些软件包的版本库</li>
+<li><a href="/download/linux">Linux 平台的安装程序</a>和一些软件包的版本库</li>
 <li><a href="/download/solaris">Solaris 平台安装程序</a></li>
 <li><a href="/download/macosx">Mac OSX 平台安装程序</a></li>
 <li><a href="/download/freebsd">FreeBSD 平台安装程序</a></li>
@@ -119,12 +119,11 @@ PostgreSQL 9.0 版本包括一系列其他更新，这些更新增强了数据�
 
 <a name="docs"></a><h2>文档</h2>
 
-<p>HTML 文档和 man 手册页会和 PostgreSQL 同步安装，用户也可以免费地通过在线方式对 <a href="/docs/9.0/">在线文档</a> 进行浏览、搜索、回复意见。</p>
+<p>HTML 文档和 man 手册页会和 PostgreSQL 同步安装，用户也可以免费地通过在线方式对<a href="https://www.postgresql.org/docs/9.0/">在线文档</a>进行浏览、搜索、回复意见。</p>
 
-<a name="license"></a><h2>版权声明</h2>
+<a name="license"></a><h2>许可证</h2>
 <p>
-PostgreSQL 使用 <a href="/about/licence">PostgreSQL 版权</a>，它是类似 BSD 的版权，只要求对有版权的源代码保留其版权和授权的信息即可。
-由于这个经 <a href="http://www.opensource.org/licenses/postgresql">OSI 认证的版权</a> 不限制 PostgreSQL 在商业环境和有版权的应用程序中使用，因此被公认为是非常有灵活性和对商业应用是友好的。加上有多个公司的支持和源代码归属公共所有，我们的版权使得 PostgreSQL 在那些希望在自己的产品里嵌入数据库的厂商中很流行，因为他们不用担心费用、嵌入软件的版权锁以及版权条款的改变。
+PostgreSQL 使用 <a href="/about/licence">PostgreSQL 许可证</a>，它是类似 BSD 的许可证，只要求对获许可的源代码保留其版权和许可信息即可。由于这个经 <a href="http://www.opensource.org/licenses/postgresql">OSI 认证的许可证</a>不限制 PostgreSQL 在商业环境和专有应用程序中使用，因此被公认为是非常有灵活性和对商业应用是友好的。加上有多个公司的支持和源代码归属公共所有，这一许可证使得 PostgreSQL 在那些希望在自己的产品里嵌入数据库的厂商中很流行，因为他们不用担心费用、供应商锁定以及许可条款的改变。
 </p>
 
 <a name="contact"></a><h2>联系方式</h2>
@@ -162,7 +161,7 @@ PostgreSQL 9.0 版本引起了全球商业数据库用户的极大兴趣，下�
 “内置有数据复制功能和对处于热备状态的服务器执行查询的功能是用户多年以来一直提出要增加的功能”，2ndQuadrant 公司的 CTO，Simon Riggs 说道，他也是热备功能的主要代码贡献人员，"有效、少等待的流复制技术可以更好地保护你的数据，同时，热备也大大减少了公司的数据成本，对一些商业化的数据库来说，这项能力一般是附加模块，需要用户额外支付几千美元”。
 </p>
 <p>
-<i>关于2ndQuadrant 公司:</i> <a href="https://2ndquadrant.com">2ndQuadrant 公司</a> 是全球专业的 PostgreSQL 咨询和服务提供商，它的客户已遍及15个国家。该公司的开发人员也向最近六个 PostgreSQL 的大版本升级贡献了主要特性的代码。联系方式：<a href="mailto:info@2ndQuadrant.com">info@2ndQuadrant.com</a> +44 8707667756 (英语、意大利语和法语)
+<i>关于 2ndQuadrant 公司:</i> <a href="https://2ndquadrant.com">2ndQuadrant 公司</a>是全球专业的 PostgreSQL 咨询和服务提供商，它的客户已遍及 15 个国家。该公司的开发人员也向最近六个 PostgreSQL 的大版本升级贡献了主要特性的代码。联系方式：<a href="mailto:info@2ndQuadrant.com">info@2ndQuadrant.com</a> +44 8707667756 (英语、意大利语和法语)
 </p>
 
 <h3>Afilias 公司</h3>
@@ -170,15 +169,15 @@ PostgreSQL 9.0 版本引起了全球商业数据库用户的极大兴趣，下�
 “作为世界上最大的核心 Internet 基础设施供应商之一，Afilias 公司很高兴看到 PostgreSQL 9.0 增加了自动升级功能，这样我们就可以将我们的 1,600 万条域名记录无中断地升级到新版本。另外，我们也期待使用热备和流复制功能，它们将有望达到我们目前通过 Slony 实现的能力。这些高级功能也说明了为何关键业务应用可以依赖强大、灵活且健壮的 PostgreSQL。”Afilias 公司的 CTO Ram Mohan 先生说道。
 </p>
 <p>
-<i>关于 Afilias 公司</i>: <a href="http://www.afilias.info">Afilias 公司</a> 是全球 Internet 基础设施服务供应商。Afilias 公司可靠、安全、可伸缩以及在全球范围内可提供的技术服务，支持了其在互联网域名注册、DNS 管理、RFID 服务和供应链市场的搜索服务等方面的业务，更多关于 Afilias 公司的信息请访问 <a href="http://www.afilias.info">我们的网站</a> 或联系 <a href="mailto:hread@afilias.info">Heather Read</a> (仅英语)
+<i>关于 Afilias 公司</i>: <a href="http://www.afilias.info">Afilias 公司</a>是全球 Internet 基础设施服务供应商。Afilias 公司可靠、安全、可伸缩以及在全球范围内可提供的技术服务，支持了其在互联网域名注册、DNS 管理、RFID 服务和供应链市场的搜索服务等方面的业务，更多关于 Afilias 公司的信息请访问<a href="http://www.afilias.info">我们的网站</a>或联系 <a href="mailto:hread@afilias.info">Heather Read</a> (仅英语)
 </p>
 
 <h3>Openbravo 公司</h3>
 <p>
-“Openbravo 公司一直是 PostgreSQL 的忠实用户，我们在我们的云应用里嵌入了 PostgreSQL，我们在我们的 Ubuntu 程序里也依赖 PostgreSQL。虽然我们的产品支持多数据库，但93%的 Openbravo 公司交付的系统是基于 PostgreSQL。每一个新的 PostgreSQL 版本的发布总是提高了可靠性和性能，我们期待9.0 版本持续保持这个传统。我们对 PostgreSQL 的新特性很兴奋，特别是看到可延迟的唯一键约束功能，这对我们的客户将提高更新和升级的速度。新的内置的基于日志的复制功能也会在冗余和高可用性方面吸引更多用户。特别地是我们所有的开发人员都期待新的 VACUUM FULL 指令。我们已经做了一些基于 PostgreSQL 9.0 版本初步的测试，我们还没有发现任何严重的问题。当然，我们发现了一些小的不兼容性，它们的影响倒不大。Openbravo 公司一旦等 PostgreSQL 9.0 正式版本发布就会支持新的版本，并且只要 PostgreSQL 9.0 支持主要的 Linux 发布版本，我们就将它作为我们以后交付系统的缺省数据库软件”，OpenBravo 公司的 CTO，Paolo Juvara 说道。
+“Openbravo 公司一直是 PostgreSQL 的忠实用户，我们在我们的云应用里嵌入了 PostgreSQL，我们在我们的 Ubuntu 程序里也依赖 PostgreSQL。虽然我们的产品支持多数据库，但 93% 的 Openbravo 公司交付的系统是基于 PostgreSQL。每一个新的 PostgreSQL 版本的发布总是提高了可靠性和性能，我们期待 9.0 版本持续保持这个传统。我们对 PostgreSQL 的新特性很兴奋，特别是看到可延迟的唯一键约束功能，这对我们的客户将提高更新和升级的速度。新的内置的基于日志的复制功能也会在冗余和高可用性方面吸引更多用户。特别地是我们所有的开发人员都期待新的 VACUUM FULL 指令。我们已经做了一些基于 PostgreSQL 9.0 版本初步的测试，我们还没有发现任何严重的问题。当然，我们发现了一些小的不兼容性，它们的影响倒不大。Openbravo 公司一旦等 PostgreSQL 9.0 正式版本发布就会支持新的版本，并且只要 PostgreSQL 9.0 支持主要的 Linux 发布版本，我们就将它作为我们以后交付系统的缺省数据库软件”，OpenBravo 公司的 CTO，Paolo Juvara 说道。
 </p>
 <p>
-<i>关于 Openbravo</i>: <a href="http://www.openbravo.com">Openbravo 公司</a> 是屡获大奖的 Openbravo ERP 软件的开发商，这是一个适用于中小企业的基于 WEB 的开源商业 ERP 软件，-- 它是业内第一个商业软件真正可替换的软件。公司的 ERP 和 Pos 解决方案是市场上最流行的方案，已有150万次的下载，超过50个国家的用户在使用。联系方式：<a href="mailto:media@openbravo.com">Carme Zaragoza</a> +34 932725947 (西班牙语、英语)
+<i>关于 Openbravo</i>: <a href="http://www.openbravo.com">Openbravo 公司</a>是屡获大奖的 Openbravo ERP 软件的开发商，这是一个适用于中小企业的基于 WEB 的开源商业 ERP 软件，-- 它是业内第一个商业软件真正可替换的软件。公司的 ERP 和 Pos 解决方案是市场上最流行的方案，已有 150 万次的下载，超过 50 个国家的用户在使用。联系方式：<a href="mailto:media@openbravo.com">Carme Zaragoza</a> +34 932725947 (西班牙语、英语)
 </p>
 
 <h3>micro systems 公司</h3>
@@ -186,7 +185,7 @@ PostgreSQL 9.0 版本引起了全球商业数据库用户的极大兴趣，下�
 瑞士 Micro 系统公司的创始人 Marc Balmer 先生对重大改进后的 LISTEN/NOTIFY 的事件信息处理机制感兴趣，“新的数据处理方式在异步通知方面将对我们的远程数据显示程序提供更强的支持，如在动物园和博物馆的条码扫描、票务、和销售终端”。
 </p>
 <p>
-<i>关于 micro systems</i>: <a href="http://www.msys.ch">micro systems 公司</a> 是瑞士致力于专业开源产品服务的咨询和服务商，如 BSD Unix 软件和 PostgreSQL 的商业支持。micro systems 公司为客户带来最好的开源软件，并反馈给开源社区。联系方式：<a href="mailto:vera@msys.ch">Vera Hardmeier</a>, +41 61 383 50 10 (德国、英语)
+<i>关于 micro systems</i>: <a href="http://www.msys.ch">micro systems 公司</a>是瑞士致力于专业开源产品服务的咨询和服务商，如 BSD Unix 软件和 PostgreSQL 的商业支持。micro systems 公司为客户带来最好的开源软件，并反馈给开源社区。联系方式：<a href="mailto:vera@msys.ch">Vera Hardmeier</a>, +41 61 383 50 10 (德国、英语)
 </p>
 
 <h3>CAIXA 银行</h3>
@@ -194,16 +193,16 @@ PostgreSQL 9.0 版本引起了全球商业数据库用户的极大兴趣，下�
 “我们是 CAIXA 银行，我们在关键的财务环境下使用 PostgreSQL，因为它已完全具备了支持我们业务操作的水平”，巴西 CAIXA 银行的 IT 副总裁，Clarice Coppetti 说道，“新版本的 PostgreSQL 显示出它满足我们商务需要的能力”。
 </p>
 <p>
-<i>关于 CAIXA 银行</i>: <a href="http://www.caixa.gov.br/">CAIXA</a> 银行是联邦政府公共政策（发挥作用）的主导因素，它与巴西数百万人员的日常生活紧密相关。该机构是100%公共的，它不仅服务于银行客户，而且通过彩票、城市基础设施投资、社会福利以及失业救济等方式面向整个巴西民众，通过这些方式，CAIXA 在2009收入达到1500亿巴西元，约占巴西 GDP 的6%，通过还在房地产、基础卫生领域、服务等行业的多元化发展，CAIXA 对城市发展、社会公平、提高普通民众尤其是低收入人群的生活等方面发挥了一个重要的角色。<a href="http://www.caixa.gov.br/">CAIXA 网站</a> (仅葡萄牙语)
+<i>关于 CAIXA 银行</i>: <a href="http://www.caixa.gov.br/">CAIXA</a> 银行是联邦政府公共政策（发挥作用）的主导因素，它与巴西数百万人员的日常生活紧密相关。该机构是 100% 公共的，它不仅服务于银行客户，而且通过彩票、城市基础设施投资、社会福利以及失业救济等方式面向整个巴西民众，通过这些方式，CAIXA 在 2009 收入达到 1500 亿巴西元，约占巴西 GDP 的 6%，通过还在房地产、基础卫生领域、服务等行业的多元化发展，CAIXA 对城市发展、社会公平、提高普通民众尤其是低收入人群的生活等方面发挥了一个重要的角色。<a href="http://www.caixa.gov.br/">CAIXA 网站</a> (仅葡萄牙语)
 </p>
 
 <a name="companies"></a><h2>企业支持</h2>
 
-<p>PostgreSQL 获得了一大批公司的支持，他们资助开发人员，提供网上资源以及给予了资金上的支持。一些较大的且长期支持的公司名单列在我们的 <a href="/about/sponsors">开发支持页面</a></p>
+<p>PostgreSQL 获得了一大批公司的支持，他们资助开发人员，提供网上资源以及给予了资金上的支持。一些较大的且长期支持的公司名单列在我们的<a href="/about/sponsors">开发支持页面</a></p>
 
-<p>还有 <a href="/support/professional_support">大量的公司</a> 提供从独立顾问到跨国公司的 PostgreSQL 支持。</p>
+<p>还有<a href="/support/professional_support">大量的公司</a>提供从独立顾问到跨国公司的 PostgreSQL 支持。</p>
 
-<p><a href="/about/donate">各种捐助</a> 将被很乐于接受。</p>
+<p><a href="/about/donate">各种捐助</a>将被很乐于接受。</p>
 
 
 

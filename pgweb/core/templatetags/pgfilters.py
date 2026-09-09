@@ -45,6 +45,7 @@ _NAV_SECTIONS = {
     'about': (('/about/',), ()),
     'download': (('/download/', '/ftp/'), ()),
     'docs': (('/docs/',), ()),
+    'ext': (('/ext/', '/e/'), ()),
     'community': (('/community/',), ()),
     'developer': (('/developer/',), ()),
     'support': (('/support/',), ()),
@@ -236,6 +237,9 @@ def languagename(lang):
 
 @register.simple_tag(takes_context=True)
 def git_changes_link(context):
+    language = (context.get('seo') or {}).get('lang', 'zh')
+    if language.startswith('zh'):
+        return mark_safe('<a href="https://git.postgresql.org/gitweb/?p=pgweb.git;a=history;f=templates/{}">查看修订历史</a>。'.format(context.template_name))
     return mark_safe('<a href="https://git.postgresql.org/gitweb/?p=pgweb.git;a=history;f=templates/{}">View</a> change history.'.format(context.template_name))
 
 

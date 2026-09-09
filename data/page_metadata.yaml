@@ -1,0 +1,4332 @@
+pages:
+  /about/:
+    title: PostgreSQL 项目简介与核心特性
+    description: 了解 PostgreSQL 的对象关系型数据库特性、可靠性、性能、扩展能力与社区资源。
+    lang: zh
+  /about/casestudies/mohawk/:
+    title: 'PostgreSQL: Case Studies: Mohawk Software'
+    description: Mohawk Software provides consulting services to many types of companies seeking to deploy
+      complex knowledge management and data mining systems. They provide solutions that match the power
+      and sophistication of larger systems deployed at For…
+    lang: en
+  /about/casestudies/shannonmedical/:
+    title: 'PostgreSQL: Case Studies: Shannon Medical Center'
+    description: Shannon Medical Center performs data analysis for financial, operational, and clinical
+      care systems of hospitals and health care institutions.
+    lang: en
+  /about/casestudies/vanten/:
+    title: 'PostgreSQL: Case Studies: Vanten Inc.'
+    description: Vanten Inc. develops Open Source technology solutions for the Japanese marketplace. They
+      have extensive experience in the development and implementation of solutions for many types of enterprises,
+      with the goal of providing cost-effective s…
+    lang: en
+  /about/contact/:
+    title: PostgreSQL 联系我们
+    description: 汇总 PostgreSQL 的 Bug、安全问题、技术支持、媒体与社区联系渠道，并说明如何反馈 pg.center 的译文和网站问题。
+    lang: zh
+  /about/donate/:
+    title: PostgreSQL 捐赠与非营利组织
+    description: 了解支持 PostgreSQL 项目的认可非营利组织，以及向这些组织捐赠的方式。
+    lang: zh
+  /about/donate_pg_org/:
+    title: PostgreSQL 捐赠
+    description: PostgreSQL 的捐赠由资金小组管理。捐赠的资金可用于 PostgreSQL 社区所需的各种服务，包括推广材料、项目基础设施、法律费用等
+    lang: zh
+  /about/governance/:
+    title: PostgreSQL 治理
+    description: 了解 PostgreSQL 的项目治理结构，查阅核心团队、各委员会与工作小组的职责、成员和章程。
+    lang: zh
+  /about/governance/contributors/:
+    title: PostgreSQL 贡献者委员会
+    description: 了解 PostgreSQL 贡献者委员会的职责、成员与工作方式，以及贡献者认可政策和联系渠道。
+    lang: zh
+  /about/governance/sysadmin/:
+    title: PostgreSQL 基础设施团队
+    description: 了解 PostgreSQL 基础设施团队负责的服务、工作方式与联系渠道，以及网站开发和基础设施管理的分工。
+    lang: zh
+  /about/licence/:
+    title: PostgreSQL 许可证
+    description: PostgreSQL 采用 PostgreSQL 许可证发布，这是一种宽松的开源许可证，类似于 BSD 或 MIT 许可证
+    lang: zh
+  /about/policies/:
+    title: PostgreSQL 项目政策
+    description: 浏览 PostgreSQL 项目的正式政策，包括行为准则、隐私、商标、版本、服务与社区认可政策。
+    lang: zh
+  /about/policies/archives/:
+    title: PostgreSQL 邮件列表归档政策
+    description: 了解 PostgreSQL 邮件列表的归档原则、准确记录要求及隐私相关说明。
+    lang: zh
+  /about/policies/coc-translations/:
+    title: PostgreSQL 行为准则翻译与审批流程
+    description: PostgreSQL 行为准则委员会负责管理将行为准则从英语翻译成其他语言的审批流程，以及在政策修订时更新翻译
+    lang: zh
+  /about/policies/coc/:
+    title: PostgreSQL 行为准则
+    description: 阅读 PostgreSQL 社区行为准则，了解参与项目时应遵循的专业、礼貌与包容原则。
+    lang: zh
+    alternates:
+      de: /about/policies/coc/de/
+      fr: /about/policies/coc/fr/
+      he: /about/policies/coc/he/
+      it: /about/policies/coc/it/
+      ja: /about/policies/coc/ja/
+      ru: /about/policies/coc/ru/
+      zh: /about/policies/coc/
+  /about/policies/coc/de/:
+    title: 'PostgreSQL: Verhaltenskodex (deutsche Übersetzung)'
+    description: Das PostgreSQL-Projekt ist stolz auf die Qualität unseres Codes und unserer Arbeit sowie
+      auf die technischen und professionellen Leistungen unserer Community. Wir erwarten von jedem Mitglied
+      der Community, dass es sich professionell verhält…
+    lang: de
+    alternates:
+      de: /about/policies/coc/de/
+      fr: /about/policies/coc/fr/
+      he: /about/policies/coc/he/
+      it: /about/policies/coc/it/
+      ja: /about/policies/coc/ja/
+      ru: /about/policies/coc/ru/
+      zh: /about/policies/coc/
+  /about/policies/coc/fr/:
+    title: 'PostgreSQL: Code de conduite (traduction française)'
+    description: Le Projet PostgreSQL est fier de la qualité de son code et de son travail, et des réalisations
+      techniques et professionnelles de sa communauté. Nous attendons de tous les participants qu'ils
+      se conduisent de manière professionnelle, en agis…
+    lang: fr
+    alternates:
+      de: /about/policies/coc/de/
+      fr: /about/policies/coc/fr/
+      he: /about/policies/coc/he/
+      it: /about/policies/coc/it/
+      ja: /about/policies/coc/ja/
+      ru: /about/policies/coc/ru/
+      zh: /about/policies/coc/
+  /about/policies/coc/he/:
+    title: 'PostgreSQL: קוד התנהגות (תרגום לעברית)'
+    description: פרויקט PostgreSQL מתגאה באיכות הקוד והעבודה שלנו, ובהישגים הטכניים והמקצועיים של הקהילה
+      שלנו. אנו מצפים מכל המשתתפים להתנהל בצורה מקצועית, לפעול בנימוס בסיסי ולמען האינטרסים המשותפים של
+      כולנו, עם כבוד הדדי לכל המשתתפים והמפתחים שלנו.
+    lang: he
+    alternates:
+      de: /about/policies/coc/de/
+      fr: /about/policies/coc/fr/
+      he: /about/policies/coc/he/
+      it: /about/policies/coc/it/
+      ja: /about/policies/coc/ja/
+      ru: /about/policies/coc/ru/
+      zh: /about/policies/coc/
+  /about/policies/coc/it/:
+    title: 'PostgreSQL: Codice di condotta (traduzione italiana)'
+    description: Il progetto PostgreSQL è orgoglioso della qualità del proprio codice, del proprio lavoro
+      e dei risultati, tecnici e professionali della propria comunità. È doveroso che ognuno che partecipi
+      alla comunità si comporti, nell'interesse comune,…
+    lang: it
+    alternates:
+      de: /about/policies/coc/de/
+      fr: /about/policies/coc/fr/
+      he: /about/policies/coc/he/
+      it: /about/policies/coc/it/
+      ja: /about/policies/coc/ja/
+      ru: /about/policies/coc/ru/
+      zh: /about/policies/coc/
+  /about/policies/coc/ja/:
+    title: PostgreSQL：行動規範（日本語訳）
+    description: 我々PostgreSQLプロジェクトは、コードや取り組み、コミュニティにおける技術的なプロフェッショナルとしての業績に誇りを持っています。我々は皆様がプロとして行動する中で、礼儀と共通の利益を重んじ、全てのユーザーと開発者に敬意を払うことを望んでいます
+    lang: ja
+    alternates:
+      de: /about/policies/coc/de/
+      fr: /about/policies/coc/fr/
+      he: /about/policies/coc/he/
+      it: /about/policies/coc/it/
+      ja: /about/policies/coc/ja/
+      ru: /about/policies/coc/ru/
+      zh: /about/policies/coc/
+  /about/policies/coc/reports/2018/:
+    title: 'PostgreSQL: 2018 Annual Report | Code of Conduct Committee'
+    description: The PostgreSQL Community Code of Conduct Committee’s 2018 annual report covers its formation,
+      reports received, and investigation outcomes.
+    lang: en
+  /about/policies/coc/reports/2019/:
+    title: 'PostgreSQL: 2019 Annual Report | Code of Conduct Committee'
+    description: The PostgreSQL Community Code of Conduct Committee’s 2019 annual report summarizes its
+      members, activities, reports, and investigation outcomes.
+    lang: en
+  /about/policies/coc/reports/2020/:
+    title: 'PostgreSQL: 2020 Annual Report | Code of Conduct Committee'
+    description: The PostgreSQL Community Code of Conduct Committee’s 2020 annual report summarizes its
+      members, activities, reports, and investigation outcomes.
+    lang: en
+  /about/policies/coc/reports/2021/:
+    title: 'PostgreSQL: 2021 Annual Report | Code of Conduct Committee'
+    description: The PostgreSQL Community Code of Conduct Committee’s 2021 annual report summarizes its
+      members, activities, reports, and investigation outcomes.
+    lang: en
+  /about/policies/coc/reports/2022/:
+    title: 'PostgreSQL: 2022 Annual Report | Code of Conduct Committee'
+    description: The PostgreSQL Community Code of Conduct Committee’s 2022 annual report summarizes its
+      members, activities, reports, and investigation outcomes.
+    lang: en
+  /about/policies/coc/ru/:
+    title: 'PostgreSQL: Кодекс поведения (русский перевод)'
+    description: Проект PostgreSQL гордится своей работой, качеством кода, а также техническими и профессиональными
+      достижениями сообщества. Мы ожидаем, что все участники нашего проекта будут вести себя профессионально,
+      вежливо, учитывать общие интересы и у…
+    lang: ru
+    alternates:
+      de: /about/policies/coc/de/
+      fr: /about/policies/coc/fr/
+      he: /about/policies/coc/he/
+      it: /about/policies/coc/it/
+      ja: /about/policies/coc/ja/
+      ru: /about/policies/coc/ru/
+      zh: /about/policies/coc/
+  /about/policies/coc/zh/:
+    title: PostgreSQL 行为准则
+    description: PostgreSQL 项目以我们的代码和工作质量，以及社区的技术和专业成就而自豪。我们希望所有的参与者品行专业，以礼相待，互惠互利，尊重所有用户和开发者
+    lang: zh
+    canonical: /about/policies/coc/
+    alternates:
+      de: /about/policies/coc/de/
+      fr: /about/policies/coc/fr/
+      he: /about/policies/coc/he/
+      it: /about/policies/coc/it/
+      ja: /about/policies/coc/ja/
+      ru: /about/policies/coc/ru/
+      zh: /about/policies/coc/
+  /about/policies/coc_committee/:
+    title: PostgreSQL 行为准则委员会
+    description: 联系 PostgreSQL 行为准则委员会，查看现任成员与委员会职责。
+    lang: zh
+  /about/policies/conferences/:
+    title: PostgreSQL 社区会议认可政策
+    description: 社区会议认可计划是一项自愿方案，向 PostgreSQL 网站活动列表提交活动的提交者可以根据以下标准进行自我评估，如果符合要求，可以将其活动宣传为 PostgreSQL
+      社区活动
+    lang: zh
+  /about/policies/contributors/:
+    title: PostgreSQL 认可贡献者政策
+    description: PostgreSQL 贡献者简介页面列出了对 PostgreSQL 项目做出了长期投入时间和精力的实质性贡献的人员。一次性或短期的贡献通常不被视为足以列入，除非涉及相当大量的代码和时间
+    lang: zh
+  /about/policies/funds-group/:
+    title: PostgreSQL 资金小组
+    description: PostgreSQL 项目与 Software in the Public Interest, Inc. 之间关系的治理章程
+    lang: zh
+  /about/policies/news-and-events/:
+    title: PostgreSQL 新闻与活动审批政策
+    description: 查阅 PostgreSQL 新闻与活动的收录政策，了解提交要求、审核标准、发布频率及活动公告规则。
+    lang: zh
+  /about/policies/npos/:
+    title: 认可的 PostgreSQL 非营利组织
+    description: 认可的 PostgreSQL 非营利组织（NPO）将作为认可组织列于 PostgreSQL 网站上。要获得 NPO 认可，组织必须自我认证其满足以下标准，这些标准旨在确保其符合
+      PostgreSQL 社区所期望的开放性标准
+    lang: zh
+  /about/policies/planet-postgresql/:
+    title: Planet PostgreSQL 博客收录政策
+    description: Planet PostgreSQL 是由 PostgreSQL 社区运营的博客聚合服务。除了 Planet 主站之外，文章也会被发布（“聚合”）到 www.postgresql.org
+      网站上
+    lang: zh
+  /about/policies/privacy/:
+    title: PostgreSQL 隐私政策
+    description: PostgreSQL 网站隐私政策说明访问日志、个人信息处理和相关权利。
+    lang: zh
+  /about/policies/project-name/:
+    title: PostgreSQL 项目名称政策
+    description: 了解 PostgreSQL 的正式项目名称、Postgres 简称的由来与使用惯例，以及社区对项目名称的说明。
+    lang: zh
+  /about/policies/services-and-hosting/:
+    title: PostgreSQL 专业服务与托管审批政策
+    description: 查阅 PostgreSQL 专业服务与托管服务的收录政策，了解企业资料、服务描述、覆盖地区和审核要求。
+    lang: zh
+  /about/policies/sponsorship/:
+    title: PostgreSQL 赞助政策
+    description: PostgreSQL 赞助政策说明赞助商级别、资格与支持社区工作的方式。
+    lang: zh
+  /about/policies/trademarks/:
+    title: PostgreSQL 商标政策
+    description: 本政策涉及我们的商标。具体而言，Postgres 和 PostgreSQL 以及大象标志（Slonik）均为 PostgreSQL 加拿大社区协会的注册商标。如果您希望使用这些标志，必须遵守本政策
+    lang: zh
+  /about/policies/twitter/:
+    title: PostgreSQL @postgresql Twitter 账户政策
+    description: PostgreSQL @postgresql Twitter 账户人工运营与内容发布政策。
+    lang: zh
+  /about/policies/user-groups/:
+    title: 认可的 PostgreSQL 用户组
+    description: 认可的 PostgreSQL 用户组，又称"PUG"，可以作为 PostgreSQL 网站上的认可用户组列出。要成为认可的 PostgreSQL 用户组，用户组必须自我证明其满足以下标准，这些标准旨在确保其达到 PostgreSQL 社区期望的开放性要求
+    lang: zh
+  /about/press/:
+    title: PostgreSQL 媒体资料与新闻资料包
+    description: 获取 PostgreSQL 新闻资料包、媒体常见问题和公关团队联系方式，查阅各版本发布资料及不同语言版本。
+    lang: zh
+  /about/press/faq/:
+    title: PostgreSQL 媒体常见问题
+    description: 面向媒体介绍 PostgreSQL 的版本发布、许可证、项目治理、用户与社区支持，并解答常见的数据库选型问题。
+    lang: zh
+  /about/press/presskit10/:
+    title: PostgreSQL 10 Press Kit
+    description: 5 OCTOBER 2017 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 10, the latest version of the world's most advanced open source database.
+    lang: en
+    canonical: /about/press/presskit10/en/
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/cn/:
+    title: PostgreSQL 10 新闻资料包
+    description: 2017-10-05 - PostgreSQL 全球开发组今天宣布，PostgreSQL 10 正式发布。PostgreSQL 作为世界上最先进的开源关系型数据库，10
+      是迄今为止的最新版本
+    lang: zh
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/de/:
+    title: PostgreSQL 10 Pressemappe
+    description: 5. OKTOBER 2017 - Die PostgreSQL Global Development Group hat heute die Veröffentlichung
+      von PostgreSQL 10, der aktuellsten Version des weltweit führenden Open-Source-SQL-Datenbanksystems,
+      bekannt gegeben.
+    lang: de
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/en/:
+    title: PostgreSQL 10 Press Kit
+    description: 5 OCTOBER 2017 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 10, the latest version of the world's most advanced open source database.
+    lang: en
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/es/:
+    title: Comunicado de prensa para PostgreSQL 10
+    description: 5 de octubre de 2017 — El Grupo Global de Desarrolladores de PostgreSQL (PGDG) anunció
+      hoy el lanzamiento de PostgreSQL 10, la versión más reciente de la base de datos de código abierto
+      más avanzada en el mundo..
+    lang: es
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/fr/:
+    title: Dossier de presse PostgreSQL 10
+    description: 5 OCTOBRE 2017 - Le PostgreSQL Global Development Group a annoncé aujourd'hui la sortie
+      de PostgreSQL 10, toute dernière version du SGBD libre de référence.
+    lang: fr
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/hi/:
+    title: PostgreSQL 10 प्रेस किट
+    description: 5 अक्टूबर 2017 – PostgreSQL ग्लोबल डेवलपमेंट ग्रुप ने आज PostgreSQL 10 की रिलीज की घोषणा
+      की है, जो दुनिया के सबसे उन्नत ओपन सोर्स डाटाबेस का नवीनतम संस्करण है |
+    lang: hi
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/id/:
+    title: PostgreSQL 10 Press Kit
+    description: 5 OCTOBER 2017 - PostgreSQL Global Development Group hari ini mengumumkan peluncuran
+      PostgreSQL 10, versi terbaru dari database open source yang paling terdepan di dunia.
+    lang: id
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/il/:
+    title: PostgreSQL 10 ערכת עיתונות
+    description: 5 באוקטובר 2017 - קבוצת הפיתוח הגלובלית של PostgreSQL הודיעה היום על שחרורה של PostgreSQL
+      10, הגרסה העדכנית ביותר של מסד הנתונים המתקדם בעולם עם קוד פתוח.
+    lang: he
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/it/:
+    title: Press Kit di PostgreSQL 10
+    description: 5 OTTOBRE 2017 - Il PostgreSQL Global Development Group ha annunciato oggi il rilascio
+      di PostgreSQL 10, l'ultima versione del più avanzato database open source al mondo.
+    lang: it
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/kr/:
+    title: PostgreSQL 10 프레스 키트
+    description: PostgreSQL 글로벌 개발 그룹에서는 오늘 2017년 10월 5일에 PostgreSQL 10의 출시를 공식 발표했습니다.
+    lang: ko
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/my/:
+    title: PostgreSQL 10 သတင္းစာ အခ်က္အလက္မ်ား
+    description: 5 အောက်တိုဘာလ ၂၀၁၇ - ေနာက္ဆုံးေပၚ ကမာၻ ့ ေခတ္အမွီဆုံး Open Source ေဒတာေဘ့စ္ ျဖစ္တဲ့ PostgreSQL
+      10 ကို PostgreSQL ကမာၻလုံးဆိုင္ရာ တိုးတက္ေရး အဖြဲ ့အစည္း မွ ယေန ့ ထုတ္ျပန္…
+    lang: my
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/pt/:
+    title: Kit de Imprensa do PostgreSQL 10
+    description: 5 DE OUTUBRO DE 2017 - O Grupo de Desenvolvimento Global do PostgreSQL anunciou hoje
+      o lançamento do PostgreSQL 10, a versão mais recente do banco de dados de código aberto mais avançado
+      do mundo.
+    lang: pt
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/ru/:
+    title: PostgreSQL 10 — материалы для прессы
+    description: 5 ОКТЯБРЯ 2017 - Всемирная группа разработки PostgreSQL объявила сегодня о выпуске PostgreSQL
+      10, новой версии лидирующей реляционной системы управления базами данных с открытым исходным кодом.
+    lang: ru
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/th/:
+    title: PostgreSQL 10 ข่าวประชาสัมพันธ์
+    description: 5 ตุลาคม 2017 - วันนี้ PostgreSQL Global Development Group ได้แถลงข่าว การวางจำหน่าย
+      PostgreSQL 10 ซึ่งเป็นเวอร์ชั่นล่าสุด ของฐานข้อมูลโอเพ่นซอร์สที่ก้าวหน้าที่สุดในโลก
+    lang: th
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit10/vi/:
+    title: PostgreSQL 10 Tài liệu báo chí
+    description: 5 tháng 10 2017 - Tập đoàn Phát triển Toàn cầu PostgreSQL ngày hôm nay đã thông báo ra
+      mắt PostgreSQL 10, phiên bản mới nhất của cơ sở dữ liệu nguồn mở tiên tiến nhất trên thế giới.
+    lang: vi
+    alternates:
+      de: /about/press/presskit10/de/
+      en: /about/press/presskit10/en/
+      es: /about/press/presskit10/es/
+      fr: /about/press/presskit10/fr/
+      he: /about/press/presskit10/il/
+      hi: /about/press/presskit10/hi/
+      id: /about/press/presskit10/id/
+      it: /about/press/presskit10/it/
+      ko: /about/press/presskit10/kr/
+      my: /about/press/presskit10/my/
+      pt: /about/press/presskit10/pt/
+      ru: /about/press/presskit10/ru/
+      th: /about/press/presskit10/th/
+      vi: /about/press/presskit10/vi/
+      zh: /about/press/presskit10/cn/
+  /about/press/presskit11/:
+    title: PostgreSQL 11 Press Kit
+    description: 18 OCTOBER 2018 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 11, the latest version of the world’s most advanced open source database.
+    lang: en
+    canonical: /about/press/presskit11/en/
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/cn/:
+    title: PostgreSQL 11 新闻资料包
+    description: 2018-10-18，全球开发组今天宣布，PostgreSQL 11 正式发布。PostgreSQL 作为世界上最先进的开源关系型数据库，11.0 是迄今为止的最新版本
+    lang: zh
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/de/:
+    title: PostgreSQL 11 Pressemappe
+    description: 18 OCTOBER 2018 - Die PostgreSQL Global Development Group hat heute die Veröffentlichung
+      von PostgreSQL 11, der aktuellsten Version des weltweit führenden Open-Source-SQL-Datenbanksystems,
+      bekannt gegeben.
+    lang: de
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/en/:
+    title: PostgreSQL 11 Press Kit
+    description: 18 OCTOBER 2018 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 11, the latest version of the world’s most advanced open source database.
+    lang: en
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/es/:
+    title: PostgreSQL 11 Dossier de prensa
+    description: 18 de octubre de 2018 - El Grupo Global de Desarrolladores de PostgreSQL (PGDG) anuncia
+      hoy el lanzamiento de PostgreSQL 11, la versión más reciente de la base de datos de código abierto
+      más avanzada en el mundo.
+    lang: es
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/fr/:
+    title: PostgreSQL 11 Dossier de presse
+    description: 18 octobre 2018— Le PostgreSQL Global Development Group a annoncé aujourd’hui la sortie
+      de PostgreSQL 11, la dernière version du SGBD open source le plus avancé au monde.
+    lang: fr
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/he/:
+    title: PostgreSQL 11 ערכת עיתונות
+    description: 18 באוקטובר 2018 - קבוצת הפיתוח הגלובלית של PostgreSQL הודיעה היום על שחרורה של PostgreSQL
+      11, הגרסה העדכנית ביותר של מסד הנתונים המתקדם בעולם עם קוד פתוח.
+    lang: he
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/id/:
+    title: PostgreSQL 11 Press Kit
+    description: 18 OCT 2018 - Grup Pengembangan Global PostgreSQL hari ini mengumumkan rilis PostgreSQL
+      11, versi terbaru dari Open Source paling mumpuni di dunia
+    lang: id
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/it/:
+    title: PostgreSQL 11 Kit stampa
+    description: 18 OTTOBRE 2018 - Il PostgreSQL Global Development Group ha annunciato oggi il rilascio
+      di PostgreSQL 11, l'ultima versione del database open source più avanzato del mondo.
+    lang: it
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/jp/:
+    title: PostgreSQL 11 プレスキット
+    description: 2018年10月18日 PostgreSQLグローバル開発グループは本日、世界で最も先進的なオープンソースデータベースの最新バージョンであるPostgreSQL 11のリリースを発表しました。
+      PostgreSQL 11では、データベースシステムの全体的な性能向上、特に非常に大きなデータベースや高い計算負荷を扱う機能拡張をユーザーに提供します。 さらに、PostgreSQL 11では、テーブルパーティショニングの大幅な改善、トランザクション管理が可能なストアドプロシージャのサ…
+    lang: ja
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/kr/:
+    title: PostgreSQL 11 프레스 키트
+    description: 18 OCTOBER 2018 - 오늘, PostgreSQL 글로벌 개발 그룹은 세상에서 가장 진보적인 오픈 소스 데이터베이스의 가장 최신 버전인 PostgreSQL
+      11이 출시되었음을 알립니다.
+    lang: ko
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/my/:
+    title: PostgreSQL 11 သတင္းစာ အခ်က္အလက္မ်ား
+    description: ၂၀၁၈ခ ွစ 18 ရက - ေန က ေပ ကမ ေခတအမဆ Open Source ေဒတ ေဘစ ျဖစ PostgreSQL 11 က PostgreSQL
+      ကမ လ ဆင တ တကေရး အ ဖ အစညးမ ယန ထတျပန ေျကည လက သည။ PostgreSQL 11 သည ေဒတ ေဘစ စနစ၏အလ စတ တက မာ ျဖစည့ တကတ
+      တ ျမင့မ မာ န ဆကပေနတ အ လနျက မ ေသ ေဒတ ေဘစာ ွင့ အတ ျမင့မ ေသ…
+    lang: my
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/pt/:
+    title: PostgreSQL 11 Kit de Imprensa
+    description: 18 DE OUTUBRO DE 2017 - O Grupo de Desenvolvimento Global do PostgreSQL anunciou hoje
+      o lançamento do PostgreSQL 11, a versão mais recente do banco de dados de código aberto mais avançado
+      do mundo.
+    lang: pt
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/ru/:
+    title: PostgreSQL 11 материалы для прессы
+    description: 18 октября 2018 - Всемирная группа разработки PostgreSQL объявила сегодня о выходе PostgreSQL
+      11, новейшей версии лидирующей реляционной системы управления базами данных (СУБД) с открытым исходным
+      кодом.
+    lang: ru
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/th/:
+    title: PostgreSQL 11 ข่าวประชาสัมพันธ์
+    description: 18 ตุลาคม 2018 - PostgreSQL Global Development ประกาศการเปิดตัว PostgreSQL 11 ซึ่งเป็นฐานข้อมูลโอเพ่นซอร์สที่ทันสมัยที่สุดในโลก
+    lang: th
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit11/vi/:
+    title: PostgreSQL 11 Tài liệu báo chí
+    description: 18 tháng 10 năm 2018 - hôm nay Nhóm Phát triển Toàn cầu PostgreSQL công bố ra mắt PostgreSQL
+      11, phiên bản mới nhất của cơ sở dữ liệu tân tiến nhất trên thế giới.
+    lang: vi
+    alternates:
+      de: /about/press/presskit11/de/
+      en: /about/press/presskit11/en/
+      es: /about/press/presskit11/es/
+      fr: /about/press/presskit11/fr/
+      he: /about/press/presskit11/he/
+      id: /about/press/presskit11/id/
+      it: /about/press/presskit11/it/
+      ja: /about/press/presskit11/jp/
+      ko: /about/press/presskit11/kr/
+      my: /about/press/presskit11/my/
+      pt: /about/press/presskit11/pt/
+      ru: /about/press/presskit11/ru/
+      th: /about/press/presskit11/th/
+      vi: /about/press/presskit11/vi/
+      zh: /about/press/presskit11/cn/
+  /about/press/presskit12/:
+    title: PostgreSQL 12 Press Kit
+    description: OCTOBER 3, 2019 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 12 , the latest version of the world's most advanced open source database .
+    lang: en
+    canonical: /about/press/presskit12/en/
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit12/de/:
+    title: PostgreSQL 12 Pressemappe
+    description: Die PostgreSQL Global Development Group hat heute die Veröffentlichung von PostgreSQL
+      12, der aktuellsten Version des weltweit führenden Open-Source-SQL-Datenbanksystems, bekannt gegeben.
+    lang: de
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit12/en/:
+    title: PostgreSQL 12 Press Kit
+    description: OCTOBER 3, 2019 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 12 , the latest version of the world's most advanced open source database .
+    lang: en
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit12/es/:
+    title: PostgreSQL 12 Dossier de prensa
+    description: El Grupo Global de Desarrolladores de PostgreSQL anuncia hoy el lanzamiento de PostgreSQL
+      12, la versión más reciente de la base de datos de código abierto más avanzada en el mundo.
+    lang: es
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit12/fr/:
+    title: PostgreSQL 12 Dossier de presse
+    description: Le PostgreSQL Global Development Group annonce aujourd'hui la sortie de PostgreSQL 12,
+      la dernière version du SGBD open source le plus avancé du monde.
+    lang: fr
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit12/he/:
+    title: PostgreSQL 12 ערכת עיתונות
+    description: קבוצת הפיתוח הגלובלית של PostgreSQL הודיעה היום על שחרורה של PostgreSQL 12, הגרסה העדכנית
+      ביותר של מסד הנתונים המתקדם בעולם עם קוד פתוח.
+    lang: he
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit12/ja/:
+    title: PostgreSQL 12 プレスキット
+    description: PostgreSQLグローバル開発グループは本日、世界で最も先進的なオープンソースデータベースの最新バージョンであるPostgreSQL 12のリリースを発表しました
+    lang: ja
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit12/pt/:
+    title: PostgreSQL 12 Kit de Imprensa
+    description: O Grupo de Desenvolvimento Global do PostgreSQL anunciou hoje o lançamento do PostgreSQL
+      12, a versão mais recente do banco de dados de código aberto mais avançado do mundo.
+    lang: pt
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit12/ru/:
+    title: PostgreSQL 12 материалы для прессы
+    description: Всемирная группа разработки PostgreSQL объявила сегодня о выходе PostgreSQL 12, новейшей
+      версии лидирующей реляционной системы управления базами данных (СУБД) с открытым исходным кодом.
+    lang: ru
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit12/zh/:
+    title: PostgreSQL 12 新闻资料包
+    description: PostgreSQL 12 新闻资料包：介绍查询性能、索引优化、SQL/JSON 路径等改进，并提供下载和文档资源。
+    lang: zh
+    alternates:
+      de: /about/press/presskit12/de/
+      en: /about/press/presskit12/en/
+      es: /about/press/presskit12/es/
+      fr: /about/press/presskit12/fr/
+      he: /about/press/presskit12/he/
+      ja: /about/press/presskit12/ja/
+      pt: /about/press/presskit12/pt/
+      ru: /about/press/presskit12/ru/
+      zh: /about/press/presskit12/zh/
+  /about/press/presskit13/:
+    title: PostgreSQL 13 Press Kit
+    description: SEPTEMBER 24, 2020 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 13 , the latest version of the world’s most advanced open source database .
+    lang: en
+    canonical: /about/press/presskit13/en/
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/de/:
+    title: PostgreSQL 13 Pressemappe
+    description: Die PostgreSQL Global Development Group hat heute die Veröffentlichung von PostgreSQL
+      13 , der aktuellsten Version des weltweit führenden Open-Source-SQL-Datenbanksystems , bekannt gegeben.
+    lang: de
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/en/:
+    title: PostgreSQL 13 Press Kit
+    description: SEPTEMBER 24, 2020 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 13 , the latest version of the world’s most advanced open source database .
+    lang: en
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/es/:
+    title: PostgreSQL 13 Dossier de prensa
+    description: 24 de septiembre de 2020 — El Grupo Global de Desarrollo de PostgreSQL ha anunciado hoy
+      el lanzamiento de PostgreSQL 13 , la versión más reciente de la base de datos de código abierto
+      más avanzada del mundo .
+    lang: es
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/fr/:
+    title: PostgreSQL 13 Dossier de presse
+    description: 24 septembre 2020 — Le PostgreSQL Global Development Group annonce aujourd'hui la sortie
+      de PostgreSQL 13 , la dernière version du SGBD open source de référence .
+    lang: fr
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/he/:
+    title: PostgreSQL 13 ערכת עיתונות
+    description: קבוצת הפיתוח הגלובלית של PostgreSQL הודיעה היום על שחרורה של PostgreSQL 13 , הגרסה העדכנית
+      ביותר של מסד הנתונים המתקדם בעולם עם קוד פתוח
+    lang: he
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/id/:
+    title: PostgreSQL 13 Press Kit
+    description: Grup PostgreSQL Global Development mengumumkan peluncuran PostgreSQL 13 , versi terbaru
+      dari database open source tercanggih di dunia.
+    lang: id
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/ja/:
+    title: PostgreSQL 13 プレスキット
+    description: 2020年 9月 24日 — PostgreSQL Global Development Groupは本日、世界で 最も高度なオープンソースデータベース の最新バージョンである
+      PostgreSQL13 のリリースを発表しました
+    lang: ja
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/ko/:
+    title: PostgreSQL 13 프레스 키트
+    description: 오늘, PostgreSQL 글로벌 개발 그룹은 세상에서 가장 진보적인 공개 소스 데이터베이스 의 가장 최신 버전인 PostgreSQL 13 이 출시되었음을
+      알립니다.
+    lang: ko
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/pl/:
+    title: PostgreSQL 13 Informacje dla prasy
+    description: 24 września 2020 — Grupa PostgreSQL Global Development ogłosiła dzisiaj wydanie PostgreSQL
+      13 , najnowszej wersji najbardziej zaawansowanej bazy danych open source .
+    lang: pl
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/pt/:
+    title: PostgreSQL 13 Kit de Imprensa
+    description: 24 de Setembro de 2020 — O Grupo de Desenvolvimento Global do PostgreSQL anunciou hoje
+      o lançamento do PostgreSQL 13 , a versão mais recente do banco de dados de código aberto mais avançado
+      do mundo .
+    lang: pt
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/ru/:
+    title: PostgreSQL 13 материалы для прессы
+    description: Всемирная группа разработки PostgreSQL объявила сегодня о выходе PostgreSQL 13 , новейшей
+      версии лидирующей реляционной системы управления базами данных (СУБД) с открытым исходным кодом
+      .
+    lang: ru
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit13/zh/:
+    title: PostgreSQL 13 新闻资料包
+    description: PostgreSQL 13 新闻资料包：介绍索引、查询性能、并行清理与受信任扩展等改进，并提供下载和文档资源。
+    lang: zh
+    alternates:
+      de: /about/press/presskit13/de/
+      en: /about/press/presskit13/en/
+      es: /about/press/presskit13/es/
+      fr: /about/press/presskit13/fr/
+      he: /about/press/presskit13/he/
+      id: /about/press/presskit13/id/
+      ja: /about/press/presskit13/ja/
+      ko: /about/press/presskit13/ko/
+      pl: /about/press/presskit13/pl/
+      pt: /about/press/presskit13/pt/
+      ru: /about/press/presskit13/ru/
+      zh: /about/press/presskit13/zh/
+  /about/press/presskit14/:
+    title: PostgreSQL 14 Press Kit
+    description: SEPTEMBER 30, 2021 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 14 , the latest version of the world’s most advanced open source database .
+    lang: en
+    canonical: /about/press/presskit14/en/
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit14/de/:
+    title: PostgreSQL 14 Pressemappe
+    description: Die PostgreSQL Global Development Group hat heute die Veröffentlichung von PostgreSQL
+      14 , der aktuellsten Version des weltweit führenden Open-Source-SQL-Datenbanksystems , bekannt gegeben.
+    lang: de
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit14/en/:
+    title: PostgreSQL 14 Press Kit
+    description: SEPTEMBER 30, 2021 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 14 , the latest version of the world’s most advanced open source database .
+    lang: en
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit14/es/:
+    title: PostgreSQL 14 Dossier de prensa
+    description: El Grupo Global de Desarrollo de PostgreSQL ha anunciado hoy el lanzamiento de PostgreSQL
+      14 , la última versión de la base de datos de código abierto más avanzada del mundo .
+    lang: es
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit14/fr/:
+    title: PostgreSQL 14 Dossier de presse
+    description: Le PostgreSQL Global Development Group a annoncé aujourd'hui la sortie de PostgreSQL
+      14 , la toute dernière version de la base de données open source de référence .
+    lang: fr
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit14/he/:
+    title: PostgreSQL 14 ערכת עיתונות
+    description: קבוצת הפיתוח הגלובלית של PostgreSQL הודיעה היום על שחרורה של PostgreSQL 14 , הגרסה העדכנית
+      ביותר של מסד הנתונים המתקדם בעולם עם קוד פתוח
+    lang: he
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit14/ja/:
+    title: PostgreSQL 14 プレスキット
+    description: PostgreSQL Global Development Groupは本日、 世界で最も高度なオープンソースデータベース の最新バージョンである PostgreSQL
+      14 のリリースを発表しました
+    lang: ja
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit14/ko/:
+    title: PostgreSQL 14 프레스 키트
+    description: 오늘, PostgreSQL 글로벌 개발 그룹은 세상에서 가장 진보적인 공개 소스 데이터베이스 의 가장 최신 버전인 PostgreSQL 14 가 출시되었음을
+      알립니다.
+    lang: ko
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit14/ru/:
+    title: PostgreSQL 14 материалы для прессы
+    description: Всемирная группа разработки PostgreSQL объявила сегодня о выходе PostgreSQL 14 , новейшей
+      версии лидирующей реляционной системы управления базами данных (СУБД) с открытым исходным кодом
+      .
+    lang: ru
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit14/zh/:
+    title: PostgreSQL 14 新闻资料包
+    description: PostgreSQL 14 新闻资料包：介绍多范围类型、查询性能、逻辑复制与监控等改进，并提供下载和文档资源。
+    lang: zh
+    alternates:
+      de: /about/press/presskit14/de/
+      en: /about/press/presskit14/en/
+      es: /about/press/presskit14/es/
+      fr: /about/press/presskit14/fr/
+      he: /about/press/presskit14/he/
+      ja: /about/press/presskit14/ja/
+      ko: /about/press/presskit14/ko/
+      ru: /about/press/presskit14/ru/
+      zh: /about/press/presskit14/zh/
+  /about/press/presskit15/:
+    title: PostgreSQL 15 Press Kit
+    description: October 13, 2022 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 15 , the latest version of the world’s most advanced open source database .
+    lang: en
+    canonical: /about/press/presskit15/en/
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/de/:
+    title: PostgreSQL 15 Pressemappe
+    description: 13. Oktober 2022 - Die PostgreSQL Global Development Group hat heute die Veröffentlichung
+      von PostgreSQL 15 , der aktuellsten Version des weltweit führenden Open-Source-SQL-Datenbanksystems
+      , bekannt gegeben.
+    lang: de
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/en/:
+    title: PostgreSQL 15 Press Kit
+    description: October 13, 2022 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 15 , the latest version of the world’s most advanced open source database .
+    lang: en
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/es/:
+    title: PostgreSQL 15 Dossier de prensa
+    description: 13 de octubre de 2022 - El Grupo Global de Desarrollo de PostgreSQL ha anunciado hoy
+      el lanzamiento de PostgreSQL 15 , la versión más reciente de la base de datos de código abierto
+      más avanzada del mundo.
+    lang: es
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/fr/:
+    title: PostgreSQL 15 Dossier de presse
+    description: 13 octobre 2022 - Le PostgreSQL Global Development Group annonce aujourd'hui la sortie
+      de PostgreSQL 15 , dernière version de la base de données open source de référence .
+    lang: fr
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/he/:
+    title: PostgreSQL 15 ערכת עיתונות
+    description: אוקטובר 13, 2022 - קבוצת הפיתוח הגלובלית של PostgreSQL הודיעה היום על שחרורה של PostgreSQL
+      15 , הגרסה העדכנית ביותר של מסד הנתונים המתקדם בעולם עם קוד פתוח
+    lang: he
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/it/:
+    title: PostgreSQL 15 Kit stampa
+    description: 13 ottobre 2022 - Il PostgreSQL Global Development Group ha annunciato oggi il rilascio
+      di PostgreSQL 15 , l'ultima versione del database open source più avanzato al mondo .
+    lang: it
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/ja/:
+    title: PostgreSQL 15 プレスキット
+    description: 2022年10月13日 - PostgreSQLグローバル開発グループは、本日、 最も先進的なオープンソースデータベース の最新版である PostgreSQL 15 のリリースを発表しました
+    lang: ja
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/ko/:
+    title: PostgreSQL 15 프레스 키트
+    description: 2022년 10월 13일, PostgreSQL 글로벌 개발 그룹은 세상에서 가장 진보적인 공개 소스 데이터베이스 의 가장 최신 버전인 PostgreSQL
+      15 가 출시되었음을 알립니다.
+    lang: ko
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/pt/:
+    title: PostgreSQL 15 Kit de Imprensa
+    description: 13 de Outubro de 2022 - O Grupo de Desenvolvimento Global do PostgreSQL anunciou hoje
+      o lançamento do PostgreSQL 15 , a versão mais recente do banco de dados de código aberto mais avançado
+      do mundo .
+    lang: pt
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/ru/:
+    title: PostgreSQL 15 материалы для прессы
+    description: 13 октября 2022 - Сегодня Глобальная группа разработки PostgreSQL объявляет о выходе
+      PostgreSQL 15 , последней версии самой развитой базы с открытым исходным кодом .
+    lang: ru
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/sv/:
+    title: PostgreSQL 15 Press Kit
+    description: 13 Oktober 2022 - PostgreSQL Global Development Group presenterade idag PostgreSQL 15
+      , den senaste versionen av världens mest avancerade databas byggd med öppen källkod .
+    lang: sv
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/uk/:
+    title: PostgreSQL 15 матеріали для преси
+    description: 13 жовтня, 2022 - PostgreSQL Global Development Group сьогодні повідомила про випуск
+      PostgreSQL 15 , останньої версії найсучаснішої бази даних з відкритим вихідним кодом у світі .
+    lang: uk
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit15/zh/:
+    title: PostgreSQL 15 新闻资料包
+    description: 2022 年 10 月 13 日 - PostgreSQL 全球开发组今日宣布发布 PostgreSQL 15，这是世界上最先进的开源数据库的最新版本
+    lang: zh
+    alternates:
+      de: /about/press/presskit15/de/
+      en: /about/press/presskit15/en/
+      es: /about/press/presskit15/es/
+      fr: /about/press/presskit15/fr/
+      he: /about/press/presskit15/he/
+      it: /about/press/presskit15/it/
+      ja: /about/press/presskit15/ja/
+      ko: /about/press/presskit15/ko/
+      pt: /about/press/presskit15/pt/
+      ru: /about/press/presskit15/ru/
+      sv: /about/press/presskit15/sv/
+      uk: /about/press/presskit15/uk/
+      zh: /about/press/presskit15/zh/
+  /about/press/presskit16/:
+    title: PostgreSQL 16 Press Kit
+    description: September 14, 2023 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 16, the latest version of the world's most advanced open source database.
+    lang: en
+    canonical: /about/press/presskit16/en/
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/de/:
+    title: PostgreSQL 16 Pressemappe
+    description: 14. September 2023 - Die PostgreSQL Global Development Group gab heute die Veröffentlichung
+      von PostgreSQL 16 bekannt, der neuesten Version der weltweit fortschrittlichsten Open-Source-Datenbank.
+    lang: de
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/en/:
+    title: PostgreSQL 16 Press Kit
+    description: September 14, 2023 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 16, the latest version of the world's most advanced open source database.
+    lang: en
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/es/:
+    title: PostgreSQL 16 Dossier de prensa
+    description: 14 de septiembre de 2023 - El Grupo Global de Desarrollo de PostgreSQL ha anunciado hoy
+      el lanzamiento de PostgreSQL 16, la versión más reciente de la base de datos de código abierto más
+      avanzada del mundo.
+    lang: es
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/fr/:
+    title: PostgreSQL 16 Dossier de presse
+    description: Le 14 septembre 2023 - Le PostgreSQL Global Development Group annonce aujourd’hui la
+      publication de PostgreSQL 16, dernière version de la base de données open source la plus avancée
+      du monde.
+    lang: fr
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/he/:
+    title: PostgreSQL 16 ערכת עיתונות
+    description: ספטמבר 14, 2023 - קבוצת הפיתוח הגלובלית של PostgreSQL הודיעה היום על שחרורה של PostgreSQL
+      16, הגרסה העדכנית ביותר של מסד הנתונים המתקדם בעולם עם קוד פתוח.
+    lang: he
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/it/:
+    title: PostgreSQL 16 Kit stampa
+    description: 14 settembre 2023 - Il PostgreSQL Global Development Group annuncia oggi il rilascio
+      della release 16 di PostgreSQL, l'ultima versione del più avanzato database open source al mondo.
+    lang: it
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/ja/:
+    title: PostgreSQL 16 プレスキット
+    description: 2023 年 9 月 14 日 - PostgreSQLグローバル開発グループは本日、世界で最も先進的なオープンソースデータベースの最新バージョンである PostgreSQL
+      16 のリリースを発表しました
+    lang: ja
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/ko/:
+    title: PostgreSQL 16 프레스 키트
+    description: 2023년 9월 14일, PostgreSQL 글로벌 개발 그룹은 세계에서 가장 진보적인 공개 소스 데이터베이스의 가장 최신 버전인 PostgreSQL 16의
+      출시를 알립니다.
+    lang: ko
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/pt/:
+    title: PostgreSQL 16 Kit de Imprensa
+    description: 14 de Setembro de 2023 - O Grupo de Desenvolvimento Global do PostgreSQL anunciou hoje
+      o lançamento do PostgreSQL 16, a versão mais recente do banco de dados de código aberto mais avançado
+      do mundo.
+    lang: pt
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/ru/:
+    title: PostgreSQL 16 материалы для прессы
+    description: 14 сентября 2023г. - Сегодня Глобальная группа разработки PostgreSQL объявляет о выходе
+      PostgreSQL 16, последней версии самой развитой базы с открытым исходным кодом.
+    lang: ru
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/sv/:
+    title: PostgreSQL 16 Press Kit
+    description: 14 September 2023 - PostgreSQL Global Development Group presenterade idag PostgreSQL
+      16, den senaste versionen av världens mest avancerade databas byggd med öppen källkod.
+    lang: sv
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/uk/:
+    title: PostgreSQL 16 матеріали для преси
+    description: 14 вересня 2023 - PostgreSQL Global Development Group сьогодні повідомила про випуск
+      PostgreSQL 16, останньої версії найсучаснішої бази даних з відкритим вихідним кодом у світі.
+    lang: uk
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit16/zh/:
+    title: PostgreSQL 16 新闻资料包
+    description: 2023 年 9 月 14 日 - PostgreSQL 全球开发组今天宣布 PostgreSQL 16 正式发布，作为世界上最先进的开源数据库，PostgreSQL 16 是目前的最新版本
+    lang: zh
+    alternates:
+      de: /about/press/presskit16/de/
+      en: /about/press/presskit16/en/
+      es: /about/press/presskit16/es/
+      fr: /about/press/presskit16/fr/
+      he: /about/press/presskit16/he/
+      it: /about/press/presskit16/it/
+      ja: /about/press/presskit16/ja/
+      ko: /about/press/presskit16/ko/
+      pt: /about/press/presskit16/pt/
+      ru: /about/press/presskit16/ru/
+      sv: /about/press/presskit16/sv/
+      uk: /about/press/presskit16/uk/
+      zh: /about/press/presskit16/zh/
+  /about/press/presskit17/:
+    title: PostgreSQL 17 Press Kit
+    description: September 26, 2024 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 17 , the latest version of the world's most advanced open source database.
+    lang: en
+    canonical: /about/press/presskit17/en/
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/de/:
+    title: PostgreSQL 17 Pressemappe
+    description: 26. September 2024 - Die PostgreSQL Global Development Group gab heute die Veröffentlichung
+      von PostgreSQL 17 bekannt, der neuesten Version der weltweit fortschrittlichsten Open-Source-Datenbank.
+    lang: de
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/el/:
+    title: PostgreSQL 17 Δελτίο Τύπου
+    description: 26 Σεπτεμβρίου 2024 - Το PostgreSQL Global Development Group ανακοίνωσε σήμερα την κυκλοφορία
+      της PostgreSQL 17 , της πιο πρόσφατης έκδοσης της πιο προηγμένης βάσης δεδομένων ανοιχτού κώδικα
+      στον κόσμο.
+    lang: el
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/en/:
+    title: PostgreSQL 17 Press Kit
+    description: September 26, 2024 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 17 , the latest version of the world's most advanced open source database.
+    lang: en
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/es/:
+    title: PostgreSQL 17 Dossier de prensa
+    description: 26 de septiembre de 2024 - El Grupo Global de Desarrollo de PostgreSQL ha anunciado hoy
+      el lanzamiento de PostgreSQL 17 , la versión más reciente de la base de datos de código abierto
+      más avanzada del mundo.
+    lang: es
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/fr/:
+    title: PostgreSQL 17 Dossier de presse
+    description: 26 septembre 2024 - Le PostgreSQL Global Development Group annonce aujourd'hui la publication
+      de PostgreSQL 17 , dernière version de la base de données open source de référence.
+    lang: fr
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/he/:
+    title: PostgreSQL 17 ערכת עיתונות
+    description: ספטמבר 26, 2024 - קבוצת הפיתוח הגלובלית של PostgreSQL הודיעה היום על שחרורה של PostgreSQL
+      17, הגרסה העדכנית ביותר של מסד הנתונים המתקדם בעולם עם קוד פתוח.
+    lang: he
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/id/:
+    title: PostgreSQL 17 Press Kit
+    description: 26 September 2024 - PostgreSQL Global Development Group hari ini mengumumkan perilisan
+      PostgreSQL 17 , versi terbaru dari database Open Source paling canggih di dunia.
+    lang: id
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/it/:
+    title: PostgreSQL 17 Kit stampa
+    description: 26 settembre 2024 - Il PostgreSQL Global Development Group ha annunciato oggi il rilascio
+      di PostgreSQL 17 , l'ultima versione del database open source più avanzato al mondo.
+    lang: it
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/ja/:
+    title: PostgreSQL 17 プレスキット
+    description: 2024 年 9 月 26 日 - PostgreSQL Global Development Group は本日、世界で最も高度かつ進化したオープンソースデータベースの最新バージョンである
+      PostgreSQL 17 を発表しました
+    lang: ja
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/ko/:
+    title: PostgreSQL 17 프레스 키트
+    description: 2024년 9월 26일 , 오늘 PostgreSQL 글로벌 개발 그룹 은 세계에서 가장 진보된 오픈 소스 데이터베이스의 최신 버전인 PostgreSQL
+      17 의 출시를 발표했습니다.
+    lang: ko
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/pl/:
+    title: PostgreSQL 17 Informacje dla prasy
+    description: 26 września 2024 - PostgreSQL Global Development Group ogłosiła dziś wydanie PostgreSQL
+      17 , najnowszej wersji najbardziej zaawansowanej na świecie bazy danych open source.
+    lang: pl
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/pt/:
+    title: PostgreSQL 17 Kit de Imprensa
+    description: 26 de Setembro de 2023 - O Grupo de Desenvolvimento Global do PostgreSQL anunciou hoje
+      o lançamento do PostgreSQL 17 , a versão mais recente do banco de dados de código aberto mais avançado
+      do mundo.
+    lang: pt
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/ru/:
+    title: PostgreSQL 17 материалы для прессы
+    description: 26 сентября 2024г. - Сегодня Глобальная группа разработки PostgreSQL объявляет о выходе
+      PostgreSQL 17, последней версии самой развитой базы с открытым исходным кодом.
+    lang: ru
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/sv/:
+    title: PostgreSQL 17 Press Kit
+    description: 26 September 2024 - PostgreSQL Global Development Group presenterade idag PostgreSQL
+      17 , den senaste versionen av världens mest avancerade databas byggd med öppen källkod.
+    lang: sv
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/uk/:
+    title: PostgreSQL 17 матеріали для преси
+    description: 26 вересня 2024 року - PostgreSQL Global Development Group сьогодні оголосила про випуск
+      PostgreSQL 17 , останньої версії найсучаснішої у світі бази даних з відкритим вихідним кодом.
+    lang: uk
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit17/zh/:
+    title: PostgreSQL 17 新闻资料包
+    description: 2024 年 9 月 26 日 - PostgreSQL 全球开发组今日宣布发布 PostgreSQL 17，这是世界上最先进的开源数据库的最新版本
+    lang: zh
+    alternates:
+      de: /about/press/presskit17/de/
+      el: /about/press/presskit17/el/
+      en: /about/press/presskit17/en/
+      es: /about/press/presskit17/es/
+      fr: /about/press/presskit17/fr/
+      he: /about/press/presskit17/he/
+      id: /about/press/presskit17/id/
+      it: /about/press/presskit17/it/
+      ja: /about/press/presskit17/ja/
+      ko: /about/press/presskit17/ko/
+      pl: /about/press/presskit17/pl/
+      pt: /about/press/presskit17/pt/
+      ru: /about/press/presskit17/ru/
+      sv: /about/press/presskit17/sv/
+      uk: /about/press/presskit17/uk/
+      zh: /about/press/presskit17/zh/
+  /about/press/presskit18/:
+    title: PostgreSQL 18 Press Kit
+    description: September 25, 2025 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 18 , the latest version of the world's most advanced open source database.
+    lang: en
+    canonical: /about/press/presskit18/en/
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/de/:
+    title: PostgreSQL 18 Pressemappe
+    description: 25. September 2025 – Die PostgreSQL Global Development Group hat heute die Veröffentlichung
+      von PostgreSQL 18 bekannt gegeben, der neuesten Version der weltweit fortschrittlichsten Open-Source-Datenbank.
+    lang: de
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/el/:
+    title: PostgreSQL 18 Δελτίο Τύπου
+    description: 25 Σεπτεμβρίου 2025 - Το PostgreSQL Global Development Group ανακοίνωσε σήμερα την κυκλοφορία
+      της PostgreSQL 18 , της πιο πρόσφατης έκδοσης της πιο προηγμένης βάσης δεδομένων ανοιχτού κώδικα
+      στον κόσμο.
+    lang: el
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/en/:
+    title: PostgreSQL 18 Press Kit
+    description: September 25, 2025 - The PostgreSQL Global Development Group today announced the release
+      of PostgreSQL 18 , the latest version of the world's most advanced open source database.
+    lang: en
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/es/:
+    title: PostgreSQL 18 Dossier de prensa
+    description: 25 de septiembre de 2025 - El Grupo Global de Desarrollo de PostgreSQL ha anunciado hoy
+      el lanzamiento de PostgreSQL 18 , la versión más reciente de la base de datos de código abierto
+      más avanzada del mundo.
+    lang: es
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/fr/:
+    title: PostgreSQL 18 Dossier de presse
+    description: 25 septembre 2025. Le PostgreSQL Global Development Group annonce aujourd'hui la publication
+      de PostgreSQL 18 , dernière version de la base de données open source de référence.
+    lang: fr
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/he/:
+    title: PostgreSQL 18 ערכת עיתונות
+    description: 25 בספטמבר 2025 – קבוצת הפיתוח הגלובלית של PostgreSQL מודיעה היום על שחרור PostgreSQL
+      18 , הגרסה העדכנית ביותר של מסד הנתונים בקוד פתוח המתקדם בעולם.
+    lang: he
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/id/:
+    title: PostgreSQL 18 Press Kit
+    description: 25 September 2025 - PostgreSQL Global Development Group hari ini mengumumkan perilisan
+      PostgreSQL 18 , versi terbaru dari database open source paling canggih di dunia.
+    lang: id
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/it/:
+    title: PostgreSQL 18 Kit stampa
+    description: 25 settembre 2025 - Il PostgreSQL Global Development Group ha annunciato oggi il rilascio
+      di PostgreSQL 18 , l'ultima versione del database open source più avanzato al mondo.
+    lang: it
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/ja/:
+    title: PostgreSQL 18 プレスキット
+    description: 2025 年 9 月 25 日 — PostgreSQL Global Development Group は本日、世界で最も先進的なオープンソースデータベースの最新バージョンである
+      PostgreSQL 18 のリリースを発表しました
+    lang: ja
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/ko/:
+    title: PostgreSQL 18 프레스 키트
+    description: 2025년 9월 25일 - PostgreSQL 글로벌 개발 그룹 은 세계에서 가장 진보된 오픈 소스 데이터베이스의 최신 버전인 PostgreSQL 18
+      의 출시를 오늘 발표했습니다.
+    lang: ko
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/pt/:
+    title: PostgreSQL 18 Kit de Imprensa
+    description: 25 de Setembro de 2025 - O Grupo de Desenvolvimento Global do PostgreSQL anunciou hoje
+      o lançamento do PostgreSQL 18 , a versão mais recente do banco de dados de código aberto mais avançado
+      do mundo.
+    lang: pt
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/ru/:
+    title: PostgreSQL 18 материалы для прессы
+    description: 25 сентября 2025 г. — Сегодня Глобальная группа разработки PostgreSQL объявляет о выпуске
+      PostgreSQL 18 — последней версии самой продвинутой в мире СУБД с открытым исходным кодом.
+    lang: ru
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/th/:
+    title: PostgreSQL 18 ข่าวประชาสัมพันธ์
+    description: 25 กันยายน 2025 - PostgreSQL Global Development Group วันนี้ประกาศการเปิดตัว PostgreSQL
+      18 เวอร์ชันล่าสุดของฐานข้อมูลโอเพนซอร์สที่ทันสมัยที่สุดในโลก
+    lang: th
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/uk/:
+    title: PostgreSQL 18 матеріали для преси
+    description: 25 вересня 2025 р. — PostgreSQL Global Development Group сьогодні оголосила про випуск
+      PostgreSQL 18 , останньої версії найсучаснішої у світі бази даних з відкритим кодом. PostgreSQL
+      18 покращує продуктивність для робочих навантажень будь-я…
+    lang: uk
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit18/zh/:
+    title: PostgreSQL 18 新闻资料包
+    description: 2025 年 9 月 25 日 - PostgreSQL 全球开发组今日宣布发布 PostgreSQL 18，这是世界上最先进的开源数据库的最新版本
+    lang: zh
+    alternates:
+      de: /about/press/presskit18/de/
+      el: /about/press/presskit18/el/
+      en: /about/press/presskit18/en/
+      es: /about/press/presskit18/es/
+      fr: /about/press/presskit18/fr/
+      he: /about/press/presskit18/he/
+      id: /about/press/presskit18/id/
+      it: /about/press/presskit18/it/
+      ja: /about/press/presskit18/ja/
+      ko: /about/press/presskit18/ko/
+      pt: /about/press/presskit18/pt/
+      ru: /about/press/presskit18/ru/
+      th: /about/press/presskit18/th/
+      uk: /about/press/presskit18/uk/
+      zh: /about/press/presskit18/zh/
+  /about/press/presskit90/:
+    title: PostgreSQL 9.0 Press Kit
+    description: '20 SEPTEMBER 2010: The PostgreSQL Global Development Group announces the release of
+      PostgreSQL 9.0, the latest version of the world''s leading open source relational database.'
+    lang: en
+    canonical: /about/press/presskit90/en/
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/br/:
+    title: Kit de imprensa do PostgreSQL 9.0
+    description: '20 DE SETEMBRO 2010: O Grupo de Desenvolvimento Global do PostgreSQL anuncia o lançamento
+      do PostgreSQL 9.0, a versão mais recente do banco de dados relacional de código aberto…'
+    lang: pt
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/de/:
+    title: PostgreSQL 9.0 Pressemappe
+    description: '20. September 2010: Die PostgreSQL Global Development Group gibt die Veröffentlichung
+      von PostgreSQL 9.0 bekannt, die neueste Version der weltweit führenden relationalen Open…'
+    lang: de
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/el/:
+    title: Δελτίο Τύπου για την PostgreSQL 9.0
+    description: '20 Σεπτεμβρίου 2010: Η Ομάδα Ανάπτυξης PostgreSQL (PostgreSQL Global Development Group)
+      ανακοινώνει την έκδοση 9.0, την πιο πρόσφατη έκδοση της πρωτοπόρου ανοιχτού κώδικα…'
+    lang: el
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/en/:
+    title: PostgreSQL 9.0 Press Kit
+    description: '20 SEPTEMBER 2010: The PostgreSQL Global Development Group announces the release of
+      PostgreSQL 9.0, the latest version of the world''s leading open source relational database.'
+    lang: en
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/es/:
+    title: Dossier de Prensa de PostgreSQL 9.0
+    description: 'SEPTIEMBRE 20, 2010: El Grupo Global de Desarrollo de PostgreSQL anuncia la liberación
+      de PostgreSQL 9.0, la más reciente versión del Sistema de Gestión de Bases de Datos de…'
+    lang: es
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/fr/:
+    title: PostgreSQL 9.0 Press Kit
+    description: '20 SEPTEMBRE 2010 : Le « PostgreSQL Global Development Group » annonce la publication
+      de PostgreSQL 9.0, la dernière version en date du système de gestion de bases de données…'
+    lang: fr
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/it/:
+    title: PostgreSQL 9.0 Press Kit
+    description: '20 Settembre 2010: Il Gruppo di Sviluppo Globale di PostgreSQL è lieto di annunciare
+      il rilascio di PostgreSQL 9.0, la più recente versione del più avanzato database relazionale…'
+    lang: it
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/ja/:
+    title: PostgreSQL 9.0プレスキット
+    description: '2010年9月20日: PostgreSQLグローバル開発グループは、最も先端的なオープンソースリレーショナルデータベースの最新バージョンであるPostgreSQL 9.0のリリースをアナウンスします。このメジャーリリースでは、セキュリティ、アプリケーションサポート、監視、性能、特別なデータの格納という点において先端的な機能を有します。'
+    lang: ja
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/nl/:
+    title: PostgreSQL 9.0 Press Kit (NL)
+    description: '20 SEPTEMBER 2010: PostgreSQL Global Development Group presenteert: release 9.0 van
+      PostgreSQL, ''s werelds beste open source relationele database.'
+    lang: nl
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/pt/:
+    title: Kit de Imprensa do PostgreSQL 9.0
+    description: '20 de SETEMBRO de 2010: O Grupo de Desenvolvimento Global do PostgreSQL anuncia a chegada
+      do PostgreSQL 9.0, a última versão da base de dados relacional open source mais avançada…'
+    lang: pt
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/ro/:
+    title: PostgreSQL 9.0 Press Kit
+    description: '20 SEPTEMBRIE 2010: PostgreSQL Global Development Group anunţă lansarea oficială a PostgreSQL
+      9.0, recunoscutul sistem open-source de gestiune a bazelor de date relaţionale.'
+    lang: ro
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/ru/:
+    title: 'PostgreSQL 9.0: Материалы для прессы'
+    description: '20 СЕНТЯБРЯ 2010: Всемирная группа разработчиков PostgreSQL объявила о выпуске PostgreSQL
+      9.0, новой версии лидирующей реляционной системы управления базами данных (СУБД) с…'
+    lang: ru
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/tr/:
+    title: PostgreSQL 9.0 Basın Bilteni
+    description: '20 Eylül 2010: PostgreSQL Global Development Group, dünyanın lider açık kaynak kodlu
+      ilişkisel veritabanı sunucusu olan PostgreSQL''in 9.0 sürümünü duyurdu.'
+    lang: tr
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit90/zh_cn/:
+    title: PostgreSQL 9.0 版发布宣传资料
+    description: '2010/09/20: PostgreSQL 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.0 版发布，该版本进一步强化了安全、应用程序支持、监控、性能和特殊数据存储等方面的领先功能。用户尤其关注
+      9.0 版本中的数据复制和热备功能，这些功能也将加速 PostgreSQL 在云计算和大规模可伸缩应用方面的使用。'
+    lang: zh
+    alternates:
+      de: /about/press/presskit90/de/
+      el: /about/press/presskit90/el/
+      en: /about/press/presskit90/en/
+      es: /about/press/presskit90/es/
+      fr: /about/press/presskit90/fr/
+      it: /about/press/presskit90/it/
+      ja: /about/press/presskit90/ja/
+      nl: /about/press/presskit90/nl/
+      pt: /about/press/presskit90/br/
+      ro: /about/press/presskit90/ro/
+      ru: /about/press/presskit90/ru/
+      tr: /about/press/presskit90/tr/
+      zh: /about/press/presskit90/zh_cn/
+  /about/press/presskit91/:
+    title: PostgreSQL 9.1 Press Kit
+    description: '12 SEPTEMBER 2011: The PostgreSQL Global Development Group announces the release of
+      PostgreSQL 9.1.'
+    lang: en
+    canonical: /about/press/presskit91/en/
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/br/:
+    title: Kit de Imprensa do PostgreSQL 9.1
+    description: '12 SETEMBRO 2011: O Grupo de Desenvolvimento Global do PostgreSQL anuncia o lançamento
+      do PostgreSQL 9.1.'
+    lang: pt
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/de/:
+    title: PostgreSQL 9.1 Pressemappe
+    description: '12 SEPTEMBER 2011: Die PostgreSQL Global Development Group gibt die Veröffentlichung
+      von PostgreSQL 9.1 bekannt.'
+    lang: de
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/el/:
+    title: Δελτίο Τύπου για την PostgreSQL 9.1
+    description: '12 Σεπτεμβρίου 2011: Η Ομάδα Ανάπτυξης PostgreSQL (PostgreSQL Global Development Group)
+      ανακοινώνει την έκδοση 9.1.'
+    lang: el
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/en/:
+    title: PostgreSQL 9.1 Press Kit
+    description: '12 SEPTEMBER 2011: The PostgreSQL Global Development Group announces the release of
+      PostgreSQL 9.1.'
+    lang: en
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/es/:
+    title: PostgreSQL 9.1 Press Kit
+    description: '12 DE SEPTIEMBRE DEL 2011: El Equipo Global de Desarrollo de PostgreSQL da a conocer
+      el lanzamiento de PostgreSQL 9.1.'
+    lang: es
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/fr/:
+    title: Dossier de presse PostgreSQL 9.1
+    description: '12 SEPTEMBRE 2011 : Le PostgreSQL Global Development Group annonce la publication de
+      PostgreSQL 9.1.'
+    lang: fr
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/it/:
+    title: Press Kit di PostgreSQL 9.1
+    description: '12 SETTEMBRE 2011: Il PostgreSQL Global Development Group annuncia il rilascio di PostgreSQL
+      9.1.'
+    lang: it
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/ja/:
+    title: PostgreSQL 9.1プレスキット
+    description: '2011年9月12日: PostgreSQLグローバル開発グループはPostgreSQl 9.1のリ リースをアナウンスします。先端的なオープンソースデータベースの最新バージョ
+      ンでは、革新的な技術、類を見ない拡張性、同期レプリケーションやK-最近傍イン デックス、外部データラッパなど新しい機能を提供します。'
+    lang: ja
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/ro/:
+    title: PostgreSQL 9.1 Press Kit
+    description: '12 SEPTEMBRIE 2011: PostgreSQL Global Development Group anunţă lansarea PostgreSQL 9.1.
+      Această ultimă versiune oferă tehnologii inovative, extensibilitate fără egal, precum şi…'
+    lang: ro
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/ru/:
+    title: 'PostgreSQL 9.1: Материалы для прессы'
+    description: '12 СЕНТЯБРЯ 2011: Всемирная группа разработчиков PostgreSQL объявляет о выпуске PostgreSQL
+      9.1.'
+    lang: ru
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit91/zh_cn/:
+    title: PostgreSQL 9.1 版发布宣传资料
+    description: '2011/09/12: PostgreSQL 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.1 版发布，该版本增加了很多创新性的技术、强大的可扩展性以及类似同步复制、最近邻索引和外部数据包装器等功能。'
+    lang: zh
+    alternates:
+      de: /about/press/presskit91/de/
+      el: /about/press/presskit91/el/
+      en: /about/press/presskit91/en/
+      es: /about/press/presskit91/es/
+      fr: /about/press/presskit91/fr/
+      it: /about/press/presskit91/it/
+      ja: /about/press/presskit91/ja/
+      pt: /about/press/presskit91/br/
+      ro: /about/press/presskit91/ro/
+      ru: /about/press/presskit91/ru/
+      zh: /about/press/presskit91/zh_cn/
+  /about/press/presskit92/:
+    title: PostgreSQL 9.2 Press Kit
+    description: '10 SEPTEMBER 2012: The PostgreSQL Global Development Group announces PostgreSQL 9.2,
+      the latest release of the leader in open source databases.'
+    lang: en
+    canonical: /about/press/presskit92/en/
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/ca/:
+    title: Kit de Premsa de PostgreSQL 9.2
+    description: '10 setembre 2012: El Grup Global de Desenvolupament de PostgreSQL anuncia PostgreSQL
+      9.2, l''última versió del motor líder en bases de dades de codi obert.'
+    lang: ca
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/de/:
+    title: PostgreSQL 9.2 Pressemappe
+    description: '10 SEPTEMBER 2012: Die PostgreSQL Global Development Group kündigt die Veröffentlichung
+      von PostgreSQL 9.2 an, die neuste Version des führenden Open-Source Datenbank-Systems.'
+    lang: de
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/el/:
+    title: Δελτίο Τύπου για την PostgreSQL 9.2
+    description: '10 Σεπτεμβρίου 2012: Η Ομάδα Ανάπτυξης PostgreSQL (PostgreSQL Global Development Group)
+      ανακοινώνει την έκδοση 9.2, την πιο πρόσφατη έκδοση της ηγετικής βάσης δεδομένων ανοικτού…'
+    lang: el
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/en/:
+    title: PostgreSQL 9.2 Press Kit
+    description: '10 SEPTEMBER 2012: The PostgreSQL Global Development Group announces PostgreSQL 9.2,
+      the latest release of the leader in open source databases.'
+    lang: en
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/es/:
+    title: Dossier de Prensa de PostgreSQL 9.2
+    description: '10 de septiembre de 2012: El Grupo Global de Desarrollo de PostgreSQL anuncia PostgreSQL
+      9.2, la última versión del líder en bases de datos de código abierto.'
+    lang: es
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/fr/:
+    title: Dossier de presse PostgreSQL 9.2
+    description: '10 SEPTEMBRE 2012 : Le PostgreSQL Global Development Group annonce la sortie de PostgreSQL
+      9.2, dernière version en date du système de gestion de bases de données libre de…'
+    lang: fr
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/it/:
+    title: Press Kit di PostgreSQL 9.2
+    description: '10 SETTEMBRE 2012: Il PostgreSQL Global Development Group annuncia l''uscita di PostgreSQL
+      9.2, l''ultima versione del leader dei database open source.'
+    lang: it
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/jp/:
+    title: PostgreSQL 9.2プレスキット
+    description: 2012年9月10日：PostgreSQL Global Development Groupは、オープンソースデータベースのリーダーであるPostgreSQLの最新バージョンPostgreSQL
+      9.2のリリースをアナウンスします。
+    lang: ja
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/nl/:
+    title: PostgreSQL 9.2 Press Kit
+    description: '10 SEPTEMBER 2012: PostgreSQL Global Development Group brengt PostgreSQL 9.2, de nieuwste
+      release van de koploper in open source databases.'
+    lang: nl
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/pl/:
+    title: PostgreSQL 9.2 - Informacje dla prasy
+    description: '10 września 2012: The PostgreSQL Global Development Group ogłosiła wydanie wersji 9.2
+      bazy PostgreSQL, lidera wśród baz danych open source.'
+    lang: pl
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/pt/:
+    title: Kit de Imprensa do PostgreSQL 9.2
+    description: '10 DE SETEMBRO DE 2012: O Grupo de Desenvolvimento Global do PostgreSQL anuncia o PostgreSQL
+      9.2, a última versão do líder dos bancos de dados de código aberto.'
+    lang: pt
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/ru/:
+    title: PostgreSQL 9.2 материалы для прессы
+    description: '10 СЕНТЯБРЯ 2012: Всемирная группа разработки PostgreSQL объявила о выходе PostgreSQL
+      9.2, новейшей версии лидирующей реляционной системы управления базами данных (СУБД) с…'
+    lang: ru
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/ua/:
+    title: PostgreSQL 9.2 матеріали для преси
+    description: '10 ВЕРЕСНЯ 2012: Всесвітня група розробки PostgreSQL оголосила про вихід PostgreSQL
+      9.2, найновішої версії провідної реляційної системи управління базами даних (СУБД) з…'
+    lang: uk
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit92/zh_CN/:
+    title: PostgreSQL 9.2 版发布宣传资料
+    description: '2012/09/10: PostgreSQL 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.2 版发布，由于 Beta 测试版本在 5 月即已发布，开发人员和软件厂商称赞该版本在性能、可伸缩性和灵活性方面得到大的提升。大量的用户期待切换至新的版本。'
+    lang: zh
+    alternates:
+      ca: /about/press/presskit92/ca/
+      de: /about/press/presskit92/de/
+      el: /about/press/presskit92/el/
+      en: /about/press/presskit92/en/
+      es: /about/press/presskit92/es/
+      fr: /about/press/presskit92/fr/
+      it: /about/press/presskit92/it/
+      ja: /about/press/presskit92/jp/
+      nl: /about/press/presskit92/nl/
+      pl: /about/press/presskit92/pl/
+      pt: /about/press/presskit92/pt/
+      ru: /about/press/presskit92/ru/
+      uk: /about/press/presskit92/ua/
+      zh: /about/press/presskit92/zh_CN/
+  /about/press/presskit93/:
+    title: PostgreSQL 9.3 Press Kit
+    description: '9 SEPTEMBER 2013: The PostgreSQL Global Development Group announces the release of PostgreSQL
+      9.3, the latest version of the world''s leading open source relational database…'
+    lang: en
+    canonical: /about/press/presskit93/en/
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/de/:
+    title: PostgreSQL 9.3 Pressemappe
+    description: '9 SEPTEMBER 2013: Die PostgreSQL Global Development Group freut sich, die Freigabe von
+      PostgreSQL 9.3 heute bekanntgeben zu dürfen - die neueste Version des führenden…'
+    lang: de
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/en/:
+    title: PostgreSQL 9.3 Press Kit
+    description: '9 SEPTEMBER 2013: The PostgreSQL Global Development Group announces the release of PostgreSQL
+      9.3, the latest version of the world''s leading open source relational database…'
+    lang: en
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/es/:
+    title: Dossier de Prensa de PostgreSQL 9.3
+    description: '9 de septiembre de 2013: El Grupo Global de Desarrollo de PostgreSQL anuncia el lanzamiento
+      de PostgreSQL 9.3, la última versión del líder mundial en sistemas de base de datos…'
+    lang: es
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/fr/:
+    title: Dossier de presse PostgreSQL 9.3
+    description: '9 SEPTEMBRE 2013 : Le PostgreSQL Global Development Group annonce la publication de
+      PostgreSQL 9.3, la dernière version du système de gestion de bases de données relationnelles…'
+    lang: fr
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/it/:
+    title: Press Kit di PostgreSQL 9.3
+    description: '9 SETTEMBRE 2013: Il PostgreSQL Global Development Group annuncia il rilascio di PostgreSQL
+      9.3, l''ultima versione del principale sistema open source di database relazionali.'
+    lang: it
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/jp/:
+    title: PostgreSQL 9.3 プレスキット
+    description: 2013年9月9日:PostgreSQL Global Development Groupは、オープンソースリレーションデータベースシステムのリーダーであるPostgreSQLの最新バージョンPostgreSQL
+      9.3のリリースをアナウンスします。 このリリースではPostgreSQLの信頼性、可用性、他のデータベースとの統合機能を拡張しました。
+    lang: ja
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/pl/:
+    title: PostgreSQL 9.3 - Informacje dla prasy
+    description: '9 września 2013: The PostgreSQL Global Development Group ogłosiła wydanie wersji 9.3
+      bazy PostgreSQL, lidera wśród baz danych open source.'
+    lang: pl
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/pt/:
+    title: Kit de Imprensa do PostgreSQL 9.3
+    description: '9 DE SETEMBRO DE 2013: O Grupo de Desenvolvimento Global do PostgreSQL anuncia o lançamento
+      do PostgreSQL 9.3, a última versão do líder mundial em sistema de banco de dados…'
+    lang: pt
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/ru/:
+    title: PostgreSQL 9.3, материалы для прессы
+    description: '9 сентября 2013 года: Всемирная группа разработки PostgreSQL объявила о выходе PostgreSQL
+      9.3, новейшей версии лидирующей реляционной системы управления базами данных (СУБД) с…'
+    lang: ru
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/ua/:
+    title: PostgreSQL 9.3 матеріали для преси
+    description: '9 ВЕРЕСНЯ 2013: Всесвітня група розробки PostgreSQL оголосила про вихід PostgreSQL 9.3,
+      найновішої версії провідної реляційної системи керування базами даних (СКБД) з відкритими…'
+    lang: uk
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+    canonical: /about/press/presskit93/uk/
+  /about/press/presskit93/uk/:
+    title: PostgreSQL 9.3 матеріали для преси
+    description: '9 ВЕРЕСНЯ 2013: Всесвітня група розробки PostgreSQL оголосила про вихід PostgreSQL 9.3,
+      найновішої версії провідної реляційної системи керування базами даних (СКБД) з відкритими…'
+    lang: uk
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit93/zh_CN/:
+    title: PostgreSQL 9.3 新闻资料包
+    description: '2013/9/9: 全球开发组宣布业界领先的开源关系数据库 PostgreSQL 9.3 版发布，这个版本扩展了可靠性、可用性及与其他数据库易集成性，用户将会发现，他们可以使用 9.3
+      版本创建一些对以前版本是不可能实现的新功能。'
+    lang: zh
+    alternates:
+      de: /about/press/presskit93/de/
+      en: /about/press/presskit93/en/
+      es: /about/press/presskit93/es/
+      fr: /about/press/presskit93/fr/
+      it: /about/press/presskit93/it/
+      ja: /about/press/presskit93/jp/
+      pl: /about/press/presskit93/pl/
+      pt: /about/press/presskit93/pt/
+      ru: /about/press/presskit93/ru/
+      uk: /about/press/presskit93/uk/
+      zh: /about/press/presskit93/zh_CN/
+  /about/press/presskit94/:
+    title: PostgreSQL 9.4 Press Kit
+    description: '18 DECEMBER 2014: The PostgreSQL Global Development Group announces the release of PostgreSQL
+      9.4, the latest version of the world''s leading open source database system.'
+    lang: en
+    canonical: /about/press/presskit94/en/
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/de/:
+    title: PostgreSQL 9.4 Pressemappe
+    description: '18 DEZEMBER 2014: Die PostgreSQL Global Development Group ist hocherfreut, die Veröffentlichung
+      von PostgreSQL 9.4, der jüngsten Version des weltweit führenden Open Source…'
+    lang: de
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/en/:
+    title: PostgreSQL 9.4 Press Kit
+    description: '18 DECEMBER 2014: The PostgreSQL Global Development Group announces the release of PostgreSQL
+      9.4, the latest version of the world''s leading open source database system.'
+    lang: en
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/es/:
+    title: Comunicado de Prensa para PostgreSQL 9.4
+    description: '18 DE DICIEMBRE, 2014: El PostgreSQL Global Development Group anuncia el lanzamiento
+      de PostgreSQL 9.4, la última versión del sistema de bases de datos de código abierto líder en…'
+    lang: es
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/fr/:
+    title: Dossier de presse PostgreSQL 9.4
+    description: '18 DÉCEMBRE 2014 : Le PostgreSQL Global Development Group annonce la sortie de PostgreSQL
+      9.4.'
+    lang: fr
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/id/:
+    title: PostgreSQL 9.4 Press Kit
+    description: '18 DESEMBER 2014: PostgreSQL Global Development Group mengumumkan rilis PostgreSQL 9.4,
+      versi terbaru dari sistem database yang terbaik di dunia.'
+    lang: id
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/it/:
+    title: Press Kit di PostgreSQL 9.4
+    description: '18 DICEMBRE 2014: Il PostgreSQL Global Development Group annuncia il rilascio di PostgreSQL
+      9.4, l''ultima versione del principale sistema open source di database relazionali.'
+    lang: it
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/jp/:
+    title: PostgreSQL 9.4 プレスキット
+    description: '2014年12月18日: PostgreSQL Global Development GroupはPostgreSQL9.4(世界をリードするオープンソースデータベース・システムの最新版)リリースを発表します。'
+    lang: ja
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/pl/:
+    title: PostgreSQL 9.4 - Informacje dla prasy
+    description: '18 Grudzień 2014: PostgreSQL Global Development Group ogłosiła wydanie wersji 9.4 bazy
+      PostgreSQL, lidera wśród baz danych open source.'
+    lang: pl
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/pt/:
+    title: Kit de Imprensa do PostgreSQL 9.4
+    description: '18 DE DEZEMBRO DE 2014: O Grupo de Desenvolvimento Global do PostgreSQL anuncia o lançamento
+      do PostgreSQL 9.4, a última versão do líder mundial em sistema de banco de dados de…'
+    lang: pt
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit94/ru/:
+    title: PostgreSQL 9.4 материалы для прессы
+    description: '18 ДЕКАБРЯ 2014: Всемирная группа разработки PostgreSQL объявила о выходе PostgreSQL
+      9.4, новейшей версии лидирующей реляционной системы управления базами данных (СУБД) с…'
+    lang: ru
+    alternates:
+      de: /about/press/presskit94/de/
+      en: /about/press/presskit94/en/
+      es: /about/press/presskit94/es/
+      fr: /about/press/presskit94/fr/
+      id: /about/press/presskit94/id/
+      it: /about/press/presskit94/it/
+      ja: /about/press/presskit94/jp/
+      pl: /about/press/presskit94/pl/
+      pt: /about/press/presskit94/pt/
+      ru: /about/press/presskit94/ru/
+  /about/press/presskit95/:
+    title: PostgreSQL 9.5 Press Kit
+    description: '7 JANUARY 2016: The PostgreSQL Global Development Group announces the release of PostgreSQL
+      9.5.'
+    lang: en
+    canonical: /about/press/presskit95/en/
+    alternates:
+      en: /about/press/presskit95/en/
+      fr: /about/press/presskit95/fr/
+      it: /about/press/presskit95/it/
+      ru: /about/press/presskit95/ru/
+  /about/press/presskit95/en/:
+    title: PostgreSQL 9.5 Press Kit
+    description: '7 JANUARY 2016: The PostgreSQL Global Development Group announces the release of PostgreSQL
+      9.5.'
+    lang: en
+    alternates:
+      en: /about/press/presskit95/en/
+      fr: /about/press/presskit95/fr/
+      it: /about/press/presskit95/it/
+      ru: /about/press/presskit95/ru/
+  /about/press/presskit95/fr/:
+    title: Dossier de presse PostgreSQL 9.5
+    description: Cette version ajoute les capacités d'UPSERT, les droits de niveau ligne (Row Level Security),
+      et de nombreuses fonctionnalités orientées Big Data, qui ouvrent plus grand encore…
+    lang: fr
+    alternates:
+      en: /about/press/presskit95/en/
+      fr: /about/press/presskit95/fr/
+      it: /about/press/presskit95/it/
+      ru: /about/press/presskit95/ru/
+  /about/press/presskit95/it/:
+    title: Press Kit di PostgreSQL 9.5
+    description: '7 GENNAIO 2016: Il PostgreSQL Global Development Group annuncia il rilascio di PostgreSQL
+      9.5.'
+    lang: it
+    alternates:
+      en: /about/press/presskit95/en/
+      fr: /about/press/presskit95/fr/
+      it: /about/press/presskit95/it/
+      ru: /about/press/presskit95/ru/
+  /about/press/presskit95/ru/:
+    title: PostgreSQL 9.5 — материалы для прессы
+    description: '7 ЯНВАРЯ 2016: Всемирная группа разработки PostgreSQL объявляет о выходе PostgreSQL
+      9.5. В этом релизе представлены такие возможности как UPSERT, безопасность на уровне строк…'
+    lang: ru
+    alternates:
+      en: /about/press/presskit95/en/
+      fr: /about/press/presskit95/fr/
+      it: /about/press/presskit95/it/
+      ru: /about/press/presskit95/ru/
+  /about/press/presskit96/:
+    title: PostgreSQL 9.6 Press Kit
+    description: '29 SEPTEMBER 2016: PostgreSQL 9.6, the latest version of the world''s leading open source
+      relational database, was released today by the PostgreSQL Global Development Group.'
+    lang: en
+    canonical: /about/press/presskit96/en/
+    alternates:
+      de: /about/press/presskit96/de/
+      en: /about/press/presskit96/en/
+      es: /about/press/presskit96/es/
+      fr: /about/press/presskit96/fr/
+      id: /about/press/presskit96/id/
+      it: /about/press/presskit96/it/
+      pt: /about/press/presskit96/pt/
+      ru: /about/press/presskit96/ru/
+  /about/press/presskit96/de/:
+    title: PostgreSQL 9.6 Pressemappe
+    description: '29 SEPTEMBER 2016: PostgreSQL 9.6, die neueste Version der weltweit führenden Open-Source-SQL-Datenbank,
+      wurde heute von der PostgreSQL Global Development Group freigegeben.'
+    lang: de
+    alternates:
+      de: /about/press/presskit96/de/
+      en: /about/press/presskit96/en/
+      es: /about/press/presskit96/es/
+      fr: /about/press/presskit96/fr/
+      id: /about/press/presskit96/id/
+      it: /about/press/presskit96/it/
+      pt: /about/press/presskit96/pt/
+      ru: /about/press/presskit96/ru/
+  /about/press/presskit96/en/:
+    title: PostgreSQL 9.6 Press Kit
+    description: '29 SEPTEMBER 2016: PostgreSQL 9.6, the latest version of the world''s leading open source
+      relational database, was released today by the PostgreSQL Global Development Group.'
+    lang: en
+    alternates:
+      de: /about/press/presskit96/de/
+      en: /about/press/presskit96/en/
+      es: /about/press/presskit96/es/
+      fr: /about/press/presskit96/fr/
+      id: /about/press/presskit96/id/
+      it: /about/press/presskit96/it/
+      pt: /about/press/presskit96/pt/
+      ru: /about/press/presskit96/ru/
+  /about/press/presskit96/es/:
+    title: Comunicado de Prensa para PostgreSQL 9.6
+    description: '29 de septiembre de 2016: PostgreSQL 9.6, la versión más reciente de la base de datos
+      de código abierto líder en el mundo, fue liberada hoy por el Grupo Global de Desarrolladores…'
+    lang: es
+    alternates:
+      de: /about/press/presskit96/de/
+      en: /about/press/presskit96/en/
+      es: /about/press/presskit96/es/
+      fr: /about/press/presskit96/fr/
+      id: /about/press/presskit96/id/
+      it: /about/press/presskit96/it/
+      pt: /about/press/presskit96/pt/
+      ru: /about/press/presskit96/ru/
+  /about/press/presskit96/fr/:
+    title: Dossier de presse PostgreSQL 9.6
+    description: '29 septembre 2016 : le PostgreSQL Global Development Group a publié aujourd''hui PostgreSQL
+      9.6, dernière version du système libre de gestion de bases de données SQL de référence.'
+    lang: fr
+    alternates:
+      de: /about/press/presskit96/de/
+      en: /about/press/presskit96/en/
+      es: /about/press/presskit96/es/
+      fr: /about/press/presskit96/fr/
+      id: /about/press/presskit96/id/
+      it: /about/press/presskit96/it/
+      pt: /about/press/presskit96/pt/
+      ru: /about/press/presskit96/ru/
+  /about/press/presskit96/id/:
+    title: PostgreSQL 9.6 Press Kit
+    description: '29 SEPTEMBER 2016: PostgreSQL 9.6, versi terbaru sistem database relasional Open Source
+      tercanggih dunia, dirilis hari ini oleh PostgreSQL Global Development Group.'
+    lang: id
+    alternates:
+      de: /about/press/presskit96/de/
+      en: /about/press/presskit96/en/
+      es: /about/press/presskit96/es/
+      fr: /about/press/presskit96/fr/
+      id: /about/press/presskit96/id/
+      it: /about/press/presskit96/it/
+      pt: /about/press/presskit96/pt/
+      ru: /about/press/presskit96/ru/
+  /about/press/presskit96/it/:
+    title: Press Kit di PostgreSQL 9.6
+    description: '29 SETTEMBRE 2016: PostgreSQL 9.6, l''ultima versione del più avanzato database SQL
+      open source, è stato rilasciato oggi dal PostgreSQL Global Development Group.'
+    lang: it
+    alternates:
+      de: /about/press/presskit96/de/
+      en: /about/press/presskit96/en/
+      es: /about/press/presskit96/es/
+      fr: /about/press/presskit96/fr/
+      id: /about/press/presskit96/id/
+      it: /about/press/presskit96/it/
+      pt: /about/press/presskit96/pt/
+      ru: /about/press/presskit96/ru/
+  /about/press/presskit96/pt/:
+    title: Kit de Imprensa do PostgreSQL 9.6
+    description: '29 DE SETEMBRO DE 2016: PostgreSQL 9.6, a última versão do líder mundial em banco de
+      dados SQL de código aberto, foi lançada hoje pelo Grupo de Desenvolvimento Global do…'
+    lang: pt
+    alternates:
+      de: /about/press/presskit96/de/
+      en: /about/press/presskit96/en/
+      es: /about/press/presskit96/es/
+      fr: /about/press/presskit96/fr/
+      id: /about/press/presskit96/id/
+      it: /about/press/presskit96/it/
+      pt: /about/press/presskit96/pt/
+      ru: /about/press/presskit96/ru/
+  /about/press/presskit96/ru/:
+    title: PostgreSQL 9.6 — материалы для прессы
+    description: '29 сентября 2016: PostgreSQL 9.6, новая версия лидирующей реляционной системы управления
+      базами данных (СУБД) выпущена сегодня Всемирной группой разработки PostgreSQL.'
+    lang: ru
+    alternates:
+      de: /about/press/presskit96/de/
+      en: /about/press/presskit96/en/
+      es: /about/press/presskit96/es/
+      fr: /about/press/presskit96/fr/
+      id: /about/press/presskit96/id/
+      it: /about/press/presskit96/it/
+      pt: /about/press/presskit96/pt/
+      ru: /about/press/presskit96/ru/
+  /community/:
+    title: PostgreSQL 社区｜交流、用户组与社区资源
+    description: 了解 PostgreSQL 社区的邮件列表、用户组、IRC、国际站点与其他交流资源。
+    lang: zh
+  /community/contributors/:
+    title: PostgreSQL 贡献者档案
+    description: 浏览 PostgreSQL 核心组、主要贡献者和其他贡献者名录，了解贡献者资料与更新方式。
+    lang: zh
+  /community/international/:
+    title: PostgreSQL 国际社区站点
+    description: 浏览各国和地区 PostgreSQL 社区网站及其语言站点。
+    lang: zh
+  /community/irc/:
+    title: PostgreSQL IRC 社区与频道
+    description: 查找 PostgreSQL 在 Libera Chat 上的 IRC 频道、语言频道和管理信息。
+    lang: zh
+  /community/recognised-npos/:
+    title: PostgreSQL 认可的非营利组织
+    description: 了解支持 PostgreSQL 项目的认可非营利组织及其社区活动。
+    lang: zh
+  /community/user-groups/:
+    title: PostgreSQL 本地用户组
+    description: 按国家和地区浏览 PostgreSQL 本地用户组，了解加入或创建用户组的方式。
+    lang: zh
+  /developer/:
+    title: PostgreSQL 开发者资源｜参与开发与贡献
+    description: 面向 PostgreSQL 开发者的路线图、源代码、测试、CommitFest 与参与贡献指南。
+    lang: zh
+  /developer/backend/:
+    title: PostgreSQL 后端流程图｜查询处理路径
+    description: 通过后端流程图了解 PostgreSQL 查询从连接、解析到执行的处理过程。
+    lang: zh
+  /developer/beta/:
+    title: PostgreSQL Beta 与候选版本测试指南
+    description: 了解 PostgreSQL Beta 和候选发布版本的用途、风险、下载、文档与测试方法；不适用于生产环境。
+    lang: zh
+  /developer/coding/:
+    title: PostgreSQL 源代码与编码指南
+    description: 查找 PostgreSQL 源代码、Git 提交、开发文档与编码相关资源。
+    lang: zh
+  /developer/committers/:
+    title: PostgreSQL 提交者名单与说明
+    description: 查看 PostgreSQL 当前提交者名单、提交权限与提交日志说明。
+    lang: zh
+  /developer/core/:
+    title: PostgreSQL 核心团队｜成员与职责
+    description: 了解 PostgreSQL 核心团队的职责、成员、活动报告与联系方式。
+    lang: zh
+  /developer/corereports/january2022_december2022/:
+    title: 'PostgreSQL Core Team Report: January 2022 - December 2022'
+    description: High-level report of PostgreSQL Core Team activities from January 2022 to December 2022.
+    lang: en
+  /developer/corereports/june2018_may2019/:
+    title: 'PostgreSQL Core Team Report: June 2018 - May 2019'
+    description: High-level report of PostgreSQL Core Team activities from June 2018 to May 2019.
+    lang: en
+  /developer/corereports/june2019_december2021/:
+    title: 'PostgreSQL Core Team Report: June 2019 - December 2021'
+    description: High-level report of PostgreSQL Core Team activities from June 2019 to December 2021.
+    lang: en
+  /developer/related-projects/:
+    title: PostgreSQL 相关项目｜社区基础设施与工具
+    description: 浏览为 PostgreSQL 社区提供基础设施、开发工具、软件包和活动支持的相关项目。
+    lang: zh
+  /developer/roadmap/:
+    title: PostgreSQL 开发路线图｜版本发布时间表
+    description: 查看 PostgreSQL 小版本发布时间表和下一个主版本的开发计划。
+    lang: zh
+  /developer/summerofcode/:
+    title: PostgreSQL Google 编程之夏（GSoC）｜2018 项目
+    description: PostgreSQL 参加 Google Summer of Code 2018 的项目、导师、已接受项目和常见问题。
+    lang: zh
+  /developer/summerofcode2011/:
+    title: 'PostgreSQL: Google Summer of Code 2011'
+    description: The PostgreSQL 2011 Google Summer of Code projects, mentors, proposal guidance, and accepted
+      projects.
+    lang: en
+  /developer/summerofcode2012/:
+    title: 'PostgreSQL: Google Summer of Code 2012'
+    description: The PostgreSQL 2012 Google Summer of Code projects, mentors, proposal guidance, and accepted
+      projects.
+    lang: en
+  /developer/summerofcode2013/:
+    title: 'PostgreSQL: Google Summer of Code 2013'
+    description: The PostgreSQL 2013 Google Summer of Code projects, mentors, proposal guidance, and accepted
+      projects.
+    lang: en
+  /developer/summerofcode2014/:
+    title: 'PostgreSQL: Google Summer of Code 2014'
+    description: The PostgreSQL 2014 Google Summer of Code projects, mentors, proposal guidance, and accepted
+      projects.
+    lang: en
+  /developer/summerofcode2016/:
+    title: 'PostgreSQL: Google Summer of Code 2016'
+    description: The PostgreSQL 2016 Google Summer of Code projects, mentors, proposal guidance, and accepted
+      projects.
+    lang: en
+  /developer/summerofcodeadvice/:
+    title: 'PostgreSQL: Google Summer of Code Advice'
+    description: Advice for students preparing PostgreSQL Google Summer of Code proposals, including planning,
+      documentation and references.
+    lang: en
+  /developer/testing/:
+    title: PostgreSQL 测试资源｜Beta 与开发构建
+    description: 查找 PostgreSQL Beta、每日开发构建、测试代码和文档更新相关资源。
+    lang: zh
+  /docs/:
+    title: PostgreSQL 文档与手册｜在线版及 PDF
+    description: 查阅 PostgreSQL 中文手册、各版本在线文档、PDF 下载和其他语言翻译。
+    lang: zh
+  /docs/books/:
+    title: PostgreSQL 图书｜社区书目
+    description: 浏览 PostgreSQL 社区维护的图书目录，查看作者、语言、版本和出版信息。
+    lang: zh
+  /docs/faq/:
+    title: PostgreSQL 常见问题 FAQ
+    description: 汇总 PostgreSQL 新闻、通用、开发和平台相关常见问题入口。
+    lang: zh
+  /docs/manuals/archive/:
+    title: PostgreSQL 旧版手册归档
+    description: 浏览不再受支持的 PostgreSQL 版本手册和 PDF，并了解升级建议。
+    lang: zh
+  /docs/online-resources/:
+    title: PostgreSQL 教程与学习资源
+    description: 浏览 PostgreSQL 教程、在线练习、百科和其他学习资源。
+    lang: zh
+  /docs/release/:
+    title: PostgreSQL 发布说明归档
+    description: 浏览 PostgreSQL 各个版本的完整发布说明和小版本修复记录。
+    lang: zh
+  /download/:
+    title: PostgreSQL 下载｜各平台安装包与源代码
+    description: 获取 PostgreSQL 在 Linux、macOS、Windows、BSD 等平台的安装包、源代码与相关软件。
+    lang: zh
+  /download/bsd/:
+    title: PostgreSQL BSD 平台下载｜各发行版安装包
+    description: 查看 PostgreSQL 在 BSD 系列系统上的发行版和安装包获取方式。
+    lang: zh
+  /download/freebsd/:
+    title: PostgreSQL FreeBSD 安装包
+    description: 通过 FreeBSD Ports 与 Packages Collection 获取 PostgreSQL 安装包。
+    lang: zh
+  /download/linux/:
+    title: PostgreSQL Linux 下载｜其他发行版安装
+    description: 了解在未列出具体发行版的 Linux 系统上通过发行版软件包或源代码安装 PostgreSQL。
+    lang: zh
+  /download/linux/debian/:
+    title: PostgreSQL Debian 下载｜APT 仓库与安装
+    description: 在 Debian 上通过系统软件包或 PostgreSQL APT 仓库安装受支持的 PostgreSQL 版本。
+    lang: zh
+  /download/linux/redhat/:
+    title: PostgreSQL Linux 下载（Red Hat 系列）
+    description: 在 RHEL、Rocky Linux、AlmaLinux、Fedora 等 Red Hat 系列发行版上安装 PostgreSQL。
+    lang: zh
+  /download/linux/suse/:
+    title: PostgreSQL SUSE 下载｜RPM 仓库与安装
+    description: 在 SUSE Linux Enterprise Server 与 openSUSE 上通过 RPM 仓库或系统包安装 PostgreSQL。
+    lang: zh
+  /download/linux/ubuntu/:
+    title: PostgreSQL Ubuntu 下载｜APT 仓库与安装
+    description: 在 Ubuntu 上通过系统软件包或 PostgreSQL APT 仓库安装受支持的 PostgreSQL 版本。
+    lang: zh
+  /download/macosx/:
+    title: PostgreSQL macOS 安装包｜Postgres.app、Homebrew 等
+    description: 获取适用于 macOS 的 PostgreSQL 安装程序，并了解 Postgres.app、Homebrew、MacPorts 等安装方式。
+    lang: zh
+  /download/netbsd/:
+    title: PostgreSQL NetBSD 安装包
+    description: 通过 NetBSD Packages Collection（pkgsrc）获取 PostgreSQL 安装包。
+    lang: zh
+  /download/openbsd/:
+    title: PostgreSQL OpenBSD 安装包
+    description: 通过 OpenBSD Ports 与 Packages Collection 获取 PostgreSQL 安装包。
+    lang: zh
+  /download/product-categories/:
+    title: PostgreSQL 软件目录｜驱动、扩展与工具
+    description: 浏览 PostgreSQL 相关驱动、扩展、接口和工具的软件目录。
+    lang: zh
+  /download/snapshots/:
+    title: PostgreSQL Beta、RC 与开发快照下载
+    description: 下载 PostgreSQL Beta、候选发布版和开发快照，用于测试新版本，不适合生产环境。
+    lang: zh
+  /download/solaris/:
+    title: PostgreSQL Solaris｜源码构建与测试状态
+    description: 了解在 Solaris 上从源代码构建 PostgreSQL 的方式及社区构建测试状态。
+    lang: zh
+  /download/windows/:
+    title: PostgreSQL Windows 安装程序
+    description: 获取由 EDB 提供的 PostgreSQL Windows 安装程序及安装说明。
+    lang: zh
+  /support/:
+    title: PostgreSQL 支持｜文档、社区与专业服务
+    description: 获取 PostgreSQL 文档、社区交流、专业服务、托管方案和 Bug 报告入口。
+    lang: zh
+  /support/professional_hosting/:
+    title: PostgreSQL 托管服务
+    description: 按地区查找提供 PostgreSQL 托管方案及相关支持服务的公司。
+    lang: zh
+  /support/professional_support/:
+    title: PostgreSQL 专业支持服务
+    description: 按地区查找为 PostgreSQL 社区提供商业支持和专业服务的公司。
+    lang: zh
+  /support/security/faq/2013-04-04/:
+    title: 'PostgreSQL: 2013-04-04 Security Release FAQ'
+    description: FAQ for the PostgreSQL security update released on 2013-04-04, including affected versions
+      and CVE-2013-1899.
+    lang: en
+  /support/versioning/:
+    title: PostgreSQL 版本策略与升级指南
+    description: 了解 PostgreSQL 版本编号、支持周期、主版本和小版本升级方式。
+    lang: zh
+  /about/pgcenter/:
+    title: PostgreSQL 关于 pg.center
+    description: 了解 pg.center 中文站的内容来源、Pigsty 维护方式、译文许可、署名说明与参与渠道。
+    lang: zh
+  /about/featurematrix/:
+    title: PostgreSQL 特性矩阵与版本支持对照
+    description: 按功能类别和 PostgreSQL 版本对照各项特性的支持情况，查看特性引入版本、详细说明与文档链接。
+    lang: zh
+  /about/sponsors/:
+    title: PostgreSQL 项目赞助者
+    description: 了解支持 PostgreSQL 项目的贡献赞助者、财务赞助者与服务器赞助者，以及各类赞助的支持方式。
+    lang: zh
+  /about/contributing/:
+    title: PostgreSQL 贡献赞助者
+    description: 查看投入员工时间支持 PostgreSQL 开发、社区和生态项目的企业与组织，以及贡献赞助的认可说明。
+    lang: zh
+  /about/financial/:
+    title: PostgreSQL 财务赞助者
+    description: 了解向 PostgreSQL 认可的非营利组织捐款的财务赞助者，以及 PostgreSQL 社区协会的赞助等级和记录。
+    lang: zh
+  /about/servers/:
+    title: PostgreSQL 服务器赞助者
+    description: 查看为 PostgreSQL 官方网站提供服务器、托管和 CDN 服务的赞助者，以及相关基础设施信息。
+    lang: zh
