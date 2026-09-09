@@ -11,12 +11,12 @@
       </div>
 
       <div class="pg-nav__util">
-        <form class="pg-nav__search" role="search" method="get" action="/search/">
-          {% include "base/icon.html" with name="search" %}
-          <input id="q" name="q" type="text" maxlength="255" accesskey="s" placeholder="搜索..." aria-label="搜索" autocomplete="off">
+        <form class="pg-nav__search" role="search" method="get" action="/search/" data-pg-palette-form>
+          <a class="pg-nav__search-go" href="/search/" title="打开检索页" aria-label="打开检索页">{% include "base/icon.html" with name="search" %}</a>
+          <input id="q" name="q" type="text" maxlength="255" accesskey="s" placeholder="搜索文档..." aria-label="搜索文档" autocomplete="off">
           <kbd aria-hidden="true">/</kbd>
         </form>
-        <button class="pg-nav__btn pg-nav__search-btn" type="button" title="搜索" aria-label="搜索" data-pg-search-open aria-controls="pgDrawer" aria-expanded="false">{% include "base/icon.html" with name="search" %}</button>
+        <a class="pg-nav__btn pg-nav__search-btn" href="/search/" title="搜索文档" aria-label="搜索文档">{% include "base/icon.html" with name="search" %}</a>
         <a class="pg-nav__btn pg-nav__alt" href="{{ source_url }}" title="{{ source_label }}" aria-label="{{ source_label }}" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}</a>
         <button class="pg-nav__btn" type="button" title="切换深浅主题" aria-label="切换深浅主题" data-pg-theme-toggle>{% include "base/icon.html" with name="moon" %}{% include "base/icon.html" with name="sun" %}</button>
         <a class="pg-nav__btn pg-nav__account{% if request.path|nav_active:'account' %} active{% endif %}" href="/account/" title="您的账户" aria-label="您的账户">{% include "base/icon.html" with name="user" %}</a>

@@ -1,0 +1,24 @@
+{% comment %}
+Site-wide search palette: opened by "/" or ⌘K, by the header search box and
+by the manual's search box on wide screens. Narrow screens go straight to
+/search/. The form works without JavaScript as a plain search form.
+{% endcomment %}<dialog class="pg-palette" id="pgPalette" aria-label="搜索文档" data-site-search="{% if site_search %}1{% else %}0{% endif %}">
+  <form class="pg-palette__bar" action="/search/" method="get" role="search">
+    <svg class="pg-icon"><use href="#pgi-search"/></svg>
+    <span class="ds-scope"><button class="ds-chip" id="pgPaletteScope" type="button" title="检索范围" aria-expanded="false">PG</button></span>
+    <input class="pg-palette__input" id="pgPaletteInput" name="q" type="text" placeholder="搜索参数、函数、命令、错误码、扩展…" maxlength="255" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="搜索文档" role="combobox" aria-expanded="true" aria-haspopup="listbox" aria-controls="pgPaletteList" aria-autocomplete="list">
+    <input type="hidden" name="scope" id="pgPaletteScopeInput" value="pg">
+    <button class="pg-palette__close" type="button" data-pg-palette-close aria-label="关闭"><kbd>esc</kbd></button>
+  </form>
+  <div class="pg-palette__body">
+    <div class="pg-palette__list" id="pgPaletteList" role="listbox" aria-label="搜索结果"></div>
+    <div class="pg-palette__preview" id="pgPalettePreview" aria-live="polite"></div>
+  </div>
+  <div class="pg-palette__foot">
+    <span><kbd>↑</kbd><kbd>↓</kbd> 选择</span>
+    <span><kbd>↵</kbd> 打开</span>
+    <span><kbd>⌫</kbd> 改范围</span>
+    <span class="pg-palette__status" id="pgPaletteStatus"></span>
+    <a class="pg-palette__all" id="pgPaletteAll" href="/search/">完整检索页<svg class="pg-icon"><use href="#pgi-arrow-right"/></svg></a>
+  </div>
+</dialog>

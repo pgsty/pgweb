@@ -44,7 +44,8 @@
     {% if release %}
     <a class="pg-hero__chip" href="{{ release.news.url }}" title="查看发布公告">
       <span class="pg-dot" aria-hidden="true"></span>
-      <strong>{% include "releasetitle.html" %}</strong>
+      <strong class="pg-hero__chip-full">{% include "releasetitle.html" %}</strong>
+      <strong class="pg-hero__chip-short" aria-hidden="true">PG {{ release.versions|joinzh }} 发布！</strong>
       <time datetime="{{ release.date|date:"Y-m-d" }}">{{ release.date|date:"Y-m-d" }}</time>
     </a>
     {% endif %}

@@ -1,43 +1,40 @@
 {%extends "base/page.html"%}
-{%block title%}搜索结果{%endblock%}
+{%block title%}站内搜索{%endblock%}
 {%block extrahead%}<meta name="robots" content="noindex,follow" />{%endblock%}
 {%block contents%}
 
-<h1>站内搜索 <i class="fas fa-link"></i></h1>
-<form method="get" action="/search/">
+<h1>站内搜索 <i class="fas fa-search"></i></h1>
+<p class="ss-lead">在新闻、活动、下载与其他站内页面中全文检索。查参数、函数、命令与扩展请用<a href="/search/{% if query %}?q={{query|urlencode}}{% endif %}">文档检索</a>。</p>
+<form method="get" action="/search/" class="ss-form">
+  <input type="hidden" name="site" value="1">
   {%if suburl%}
    <input type="hidden" name="u" value="{{suburl}}">
   {%endif%}
-  <div class="row">
-    <div class="col-lg-6">
-      <div class="input-group">
-        <input type="text" name="q" value="{{query}}" class="form-control" placeholder="搜索...">
-        <span class="input-group-btn">
-          <button class="btn btn-default" type="submit">
-            <i class="fas fa-search"></i>
-          </button>
-        </span>
-      </div><!-- /input-group -->
-    </div><!-- /.col-lg-6 -->
-  </div><!-- /.row -->
+  <div class="input-group">
+    <input type="text" name="q" value="{{query}}" class="form-control" placeholder="搜索站内内容..." aria-label="搜索站内内容">
+    <span class="input-group-btn">
+      <button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
+    </span>
+  </div>
 </form>
 
 {%if search_error %}
-<div>{{search_error}}</div>
+<p class="ss-error">{{search_error}}</p>
 {%else%}
-<!-- docbot goes here -->
 {%if hitcount == 0 %}
- <p>您搜索的 <strong>{{query}}</strong> 没有返回结果。</p>
+ <p class="ss-empty">没有找到与 <strong>{{query}}</strong> 匹配的页面。</p>
 {%else%}
- <h2>结果 {{firsthit}}-{{lasthit}}，共{%if hitcount == 1000%}超过 1000{%else%} {{hitcount}}{%endif%} 条。</h2>
- {%if pagelinks %}结果页：{{pagelinks|safe}}<br/><br/>{%endif%}
+ <p class="ss-count">第 {{firsthit}}–{{lasthit}} 条，共{%if hitcount == 1000%}超过 1000{%else%} {{hitcount}}{%endif%} 条。</p>
+ <ol class="ss-hits" start="{{firsthit}}">
  {%for hit in hits %}
-  {{forloop.counter0|add:firsthit}}. <a href="{{hit.url}}">{{hit.title}}</a> [{{hit.rank|floatformat:2}}]<br/>
-  <div>...{{hit.abstract|safe}}...</div>
-  <a href="{{hit.url}}">{{hit.url}}</a><br/>
-  <br/>
+  <li class="ss-hit">
+   <a class="ss-hit__title" href="{{hit.url}}">{{hit.title}}</a>
+   <p class="ss-hit__abstract">…{{hit.abstract|safe}}…</p>
+   <a class="ss-hit__url" href="{{hit.url}}">{{hit.url}}</a>
+  </li>
  {%endfor%}
- {%if pagelinks %}结果页：{{pagelinks|safe}}<br/><br/>{%endif%}
+ </ol>
+ {%if pagelinks %}<p class="ss-pages">结果页：{{pagelinks|safe}}</p>{%endif%}
 {%endif%}
 {%endif%}
 {%endblock%}

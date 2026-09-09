@@ -1,15 +1,29 @@
-"""Explicit, transactional indexing of local PG manuals, keyed by source hashes."""
+"""Explicit, transactional indexing, keyed by source hashes.
+
+Two sources feed the same table: the locally served PostgreSQL manuals
+(one row per definition or text fragment, rebuilt per major version when
+the page content changes) and the PGEXT extension catalogue (one row per
+extension, replaced wholesale, which is cheap at a few thousand rows).
+"""
+import math
 import re
 from collections import Counter
 
 from django.db import connection, transaction
 from django.contrib.postgres.search import SearchVector
 from django.db.models import Value
+from django.utils.html import escape
 
 from pgweb.docs.models import DocPage
-from .extract import extract_page, source_hash
+from pgweb.docs.versions import manual_major, manual_tree
+from pgweb.ext.catalog import catalog as extension_catalog, category_label, detail_url, pg_range, value_label
+from .extract import digest, extract_page, source_hash
 from .lexicon import index_text
 from .models import IndexedPage, SearchEntry
+from .taxonomy import normalize_name
+from . import service
+
+LOCK_NAMESPACE = 734021
 
 
 def eligible_page(page):
@@ -17,7 +31,7 @@ def eligible_page(page):
         return False
     # Older release notes are copied into newer manuals but their reader routes redirect.
     release = re.match(r'release-(\d+)(?:-|\.)', page.file)
-    return not release or int(release.group(1)) == int(page.version_id)
+    return not release or int(release.group(1)) == manual_major(page.version_id)
 
 
 def entry_object(document_id, version, entry):
@@ -25,13 +39,15 @@ def entry_object(document_id, version, entry):
     body = index_text(entry['body'])
     vector = (SearchVector(Value(title), config='simple', weight='A') +
               SearchVector(Value(body), config='simple', weight='D'))
-    return SearchEntry(document_id=document_id, version=version, vector=vector, **entry)
+    return SearchEntry(source='pg', document_id=document_id, version=version, vector=vector, **entry)
 
 
 def rebuild_version(version, force=False, dry_run=False, progress=None):
+    version = manual_major(version)
     report = Counter()
-    pages = list(DocPage.objects.filter(version=version).order_by('file'))
-    hashes = dict(IndexedPage.objects.filter(page__version=version).values_list('page_id', 'source_hash'))
+    tree = manual_tree(version)
+    pages = list(DocPage.objects.filter(version=tree).order_by('file'))
+    hashes = dict(IndexedPage.objects.filter(page__version=tree).values_list('page_id', 'source_hash'))
     changed, eligible = [], []
     for page in pages:
         if not eligible_page(page):
@@ -41,7 +57,7 @@ def rebuild_version(version, force=False, dry_run=False, progress=None):
         if not force and hashes.get(page.pk) == fingerprint:
             report['unchanged'] += 1
             continue
-        entries = extract_page(page.file, page.title, page.content, str(int(version)))
+        entries = extract_page(page.file, page.title, page.content, 'devel' if tree == 0 else str(int(version)))
         changed.append((page, fingerprint, entries))
         report['pages'] += 1
         report['entries'] += len(entries)
@@ -53,7 +69,7 @@ def rebuild_version(version, force=False, dry_run=False, progress=None):
     with transaction.atomic():
         # Serialize publication per version; lock changed source rows while publishing.
         with connection.cursor() as cursor:
-            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [734021, int(version)])
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, int(version)])
         for page, fingerprint, entries in changed:
             # Reject a changed source rather than publishing results for the wrong text.
             current = DocPage.objects.select_for_update().get(pk=page.pk)
@@ -67,5 +83,68 @@ def rebuild_version(version, force=False, dry_run=False, progress=None):
                                             update_fields=['entity_key', 'kind', 'subtype', 'name', 'name_key', 'aliases',
                                                            'anchor', 'heading', 'signature', 'body', 'preview', 'vector', 'version'])
             document.entries.exclude(key__in=[entry['key'] for entry in entries]).delete()
-        IndexedPage.objects.filter(page__version=version).exclude(page_id__in=eligible).delete()
+        IndexedPage.objects.filter(page__version=tree).exclude(page_id__in=eligible).delete()
+    service.forget_catalog()
     return dict(report)
+
+
+def extension_entry(row):
+    """One catalogue row as a search entry: name, descriptions, tags and a small fact card."""
+    name = row['name']
+    name_key = normalize_name(name)
+    aliases = {name_key}
+    if row.get('pkg') and row['pkg'] != name:
+        aliases.add(normalize_name(row['pkg']))
+    if '_' in name_key:
+        aliases.add(name_key.replace('_', ''))
+    category = category_label(row.get('category') or '') if row.get('category') else ''
+    zh = ' '.join((row.get('zh_desc') or '').split())
+    en = ' '.join((row.get('en_desc') or '').split())
+    tags = [t for t in (row.get('tags') or []) if t]
+    facts = [('版本', row.get('version')), ('分类', category), ('语言', row.get('lang')),
+             ('许可证', row.get('license')), ('PostgreSQL', pg_range(row.get('pg_ver'))),
+             ('来源', value_label('repo', row.get('repository') or 'Unknown'))]
+    parts = []
+    if zh or en:
+        parts.append('<p class="ds-ext-desc">' + escape(zh or en) + '</p>')
+    if zh and en:
+        parts.append('<p class="ds-ext-desc-en">' + escape(en) + '</p>')
+    parts.append('<dl class="ds-ext-facts">' + ''.join(
+        '<div><dt>{}</dt><dd>{}</dd></div>'.format(escape(label), escape(str(value))) for label, value in facts if value) + '</dl>')
+    if row.get('need_ddl') and re.fullmatch(r'[A-Za-z0-9_]+', name):
+        parts.append('<pre data-lang="sql">CREATE EXTENSION ' + name + ';</pre>')
+    if tags:
+        parts.append('<p class="ds-ext-tags">' + ' '.join('<code>' + escape(t) + '</code>' for t in tags) + '</p>')
+    signature = ' · '.join(v for v in ('v' + row['version'] if row.get('version') else '', row.get('lang') or '',
+                                       (row.get('license') or '') if row.get('license') != 'Unknown' else '') if v)
+    return {
+        'key': digest('ext\0' + name), 'entity_key': 'extension:' + name_key, 'kind': 'extension',
+        'subtype': 'contrib' if row.get('contrib') else 'catalog', 'name': name, 'name_key': name_key,
+        'aliases': sorted(aliases), 'anchor': '', 'heading': (category + ' · ' if category else '') + '扩展目录',
+        'signature': signature, 'body': '\n'.join(v for v in (zh, en, ' '.join(tags), row.get('pkg') or '', category) if v),
+        'preview': ''.join(parts), 'url': detail_url(name), '_desc': zh + ' ' + en,
+    }
+
+
+def rebuild_extensions(dry_run=False):
+    rows = [row for row in extension_catalog() if row.get('name')]
+    entries = [extension_entry(row) for row in rows]
+    if dry_run:
+        return {'extensions': len(entries)}
+    top = max((math.log1p(row.get('stars') or 0) for row in rows), default=0) or 1
+    objects = []
+    for row, entry in zip(rows, entries):
+        desc = entry.pop('_desc')
+        entry['weight'] = round(math.log1p(row.get('stars') or 0) / top, 4)
+        title = index_text(' '.join([entry['name'], *entry['aliases']]))
+        vector = (SearchVector(Value(title), config='simple', weight='A') +
+                  SearchVector(Value(index_text(desc)), config='simple', weight='B') +
+                  SearchVector(Value(index_text(entry['body'])), config='simple', weight='D'))
+        objects.append(SearchEntry(source='ext', document=None, version=None, vector=vector, **entry))
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
+        SearchEntry.objects.filter(source='ext').delete()
+        SearchEntry.objects.bulk_create(objects, batch_size=200)
+    service.forget_catalog()
+    return {'extensions': len(objects)}

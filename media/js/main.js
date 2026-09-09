@@ -1,9 +1,10 @@
 /*
  * pg.center site chrome
  * ---------------------------------------------------------------------
- * Header drawer, search shortcut, scrolled-header shadow and the light/dark
- * theme switch. `theme` is declared by theme.js, which runs in <head> so the
- * first paint already carries the stored preference.
+ * Header drawer, scrolled-header shadow and the light/dark theme switch.
+ * Search shortcuts ("/" and ⌘K) live in palette.js. `theme` is declared
+ * by theme.js, which runs in <head> so the first paint already carries the
+ * stored preference.
  */
 
 (function () {
@@ -12,9 +13,6 @@
   const header = document.getElementById('pgHeader');
   const drawer = document.getElementById('pgDrawer');
   const drawerToggles = document.querySelectorAll('[data-pg-drawer-toggle]');
-  const searchOpeners = document.querySelectorAll('[data-pg-search-open]');
-  const drawerSearch = drawer ? drawer.querySelector('[data-pg-drawer-search]') : null;
-  const headerSearch = document.querySelector('.pg-nav__search input');
 
   function drawerIsOpen() {
     return drawer && !drawer.hidden;
@@ -25,47 +23,14 @@
     drawer.hidden = !open;
     document.body.classList.toggle('pg-drawer-open', open);
     drawerToggles.forEach((b) => b.setAttribute('aria-expanded', open ? 'true' : 'false'));
-    searchOpeners.forEach((b) => b.setAttribute('aria-expanded', open ? 'true' : 'false'));
   }
 
   drawerToggles.forEach((btn) => {
     btn.addEventListener('click', () => setDrawer(!drawerIsOpen()));
   });
 
-  searchOpeners.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      setDrawer(true);
-      if (drawerSearch) drawerSearch.focus();
-    });
-  });
-
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && drawerIsOpen()) {
-      setDrawer(false);
-      return;
-    }
-    if (document.getElementById('doc-search')) return;
-    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
-      e.preventDefault();
-      const version = location.pathname.match(/^\/docs\/(\d+)\//);
-      location.assign('/search/' + (version ? '?scope=pg' + version[1] : ''));
-      return;
-    }
-    // "/" focuses the site search unless the reader is already typing.
-    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
-      const t = e.target;
-      const typing = t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.tagName === 'SELECT' || t.isContentEditable);
-      if (typing) return;
-      const visible = headerSearch && headerSearch.offsetParent !== null;
-      if (visible) {
-        headerSearch.focus();
-        e.preventDefault();
-      } else if (drawer && drawerSearch) {
-        setDrawer(true);
-        drawerSearch.focus();
-        e.preventDefault();
-      }
-    }
+    if (e.key === 'Escape' && drawerIsOpen()) setDrawer(false);
   });
 
   // Close the drawer when the viewport grows back into the desktop tiers.

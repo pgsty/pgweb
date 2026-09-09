@@ -43,12 +43,15 @@
   {%block extrahead%}{%endblock%}
   </head>
   <body>
+    {% include "search/icons.html" %}
     {% include "base/header.html" %}
+    {% include "search/palette.html" %}
     {% block shout %}{% endblock %}
     {%block layoutblock%}{%endblock%}
     {% include "base/footer.html" %}
     <script src="/media/js/main.js?{{gitrev}}"></script>
     <script type="module" src="/media/js/code.js?{{gitrev}}"></script>
+    <script type="module" src="/media/js/palette.js?{{gitrev}}"></script>
 {%block extrascript%}{%endblock%}
   </body>
 </html>

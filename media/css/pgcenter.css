@@ -591,7 +591,7 @@ input.form-control:focus, textarea.form-control:focus, .custom-select:focus {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  width: 190px;
+  width: 150px;
   height: 34px;
   margin: 0 4px 0 0;
   padding: 0 8px 0 10px;
@@ -617,6 +617,24 @@ input.form-control:focus, textarea.form-control:focus, .custom-select:focus {
   width: 15px;
   height: 15px;
   color: var(--pg-muted);
+}
+
+.pg-nav__search-go {
+  display: inline-flex;
+  align-items: center;
+  margin: 0 -2px;
+  padding: 4px 2px;
+  border-radius: 5px;
+  color: var(--pg-muted);
+}
+
+.pg-nav__search-go:hover {
+  color: var(--pg-heading);
+  text-decoration: none;
+}
+
+.pg-nav__search-go:hover .pg-icon {
+  color: var(--pg-heading);
 }
 
 .pg-nav__search input {
@@ -825,11 +843,17 @@ body.pg-drawer-open {
   overflow: hidden;
 }
 
-/* Header tiers. Each step removes one thing so the row keeps fitting. */
+/* Header tiers. Each step removes one thing so the row keeps fitting.
+   The search box goes first: below 1024px the centred menu and the box
+   would meet, so only the magnifier stays (it links to /search/). */
 
-@media (max-width: 1099.98px) {
+@media (max-width: 1023.98px) {
   .pg-nav__search {
-    width: 150px;
+    display: none;
+  }
+
+  .pg-nav__search-btn {
+    display: inline-flex;
   }
 }
 
@@ -844,13 +868,6 @@ body.pg-drawer-open {
     right: 8px;
   }
 
-  .pg-nav__search {
-    display: none;
-  }
-
-  .pg-nav__search-btn {
-    display: inline-flex;
-  }
 }
 
 @media (max-width: 767.98px) {
@@ -1226,6 +1243,7 @@ html[data-shout="off"] .pg-shout {
   }
 
   .pg-footline__copy {
+    justify-self: center;
     white-space: normal;
   }
 
@@ -1447,6 +1465,11 @@ html[data-shout="off"] .pg-shout {
   font-family: var(--pg-font-mono);
   font-size: 12px;
   font-variant-numeric: tabular-nums;
+}
+
+/* Phones get the abbreviated headline ("PG 18.6 … 发布！") instead. */
+.pg-hero__chip-short {
+  display: none;
 }
 
 .pg-hero__title {
@@ -2049,6 +2072,28 @@ html[data-shout="off"] .pg-shout {
   color: var(--pg-ink);
 }
 
+/* The hairline separates rows only: none above the first row, whatever
+   the column count (3 / 2 / 1). */
+.pg-post:nth-child(-n+3) {
+  padding-top: 4px;
+  border-top: 0;
+}
+
+@media (max-width: 991.98px) {
+  .pg-post:nth-child(3) {
+    padding-top: 16px;
+    border-top: 1px solid var(--pg-line);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .pg-post:nth-child(2),
+  .pg-post:nth-child(3) {
+    padding-top: 16px;
+    border-top: 1px solid var(--pg-line);
+  }
+}
+
 .pg-post h3 a:hover {
   color: var(--pg-hover);
 }
@@ -2119,28 +2164,34 @@ html[data-shout="off"] .pg-shout {
     padding-bottom: 56px;
   }
 
-  /* The chip carries a whole headline here: flow it as text with the dot
-     inline before the first word and the date on its own line. */
+  /* One line on a phone: "PostgreSQL" becomes "PG", the date is dropped,
+     and the pill never wraps (it ellipsises on the very narrowest screens). */
   .pg-hero__chip {
-    display: block;
-    padding: 8px 14px;
-    border-radius: 14px;
-    font-size: 12.5px;
+    max-width: 100%;
+    flex-wrap: nowrap;
+    gap: 7px;
+    padding: 6px 10px 6px 9px;
+    /* Scales with the screen so the six-version headline fits a 360px phone. */
+    font-size: clamp(10.5px, 3vw, 12px);
   }
 
   .pg-hero__chip .pg-dot {
-    display: inline-block;
-    margin: 0 6px 2px 0;
-    vertical-align: middle;
+    flex: none;
+    width: 6px;
+    height: 6px;
   }
 
-  .pg-hero__chip strong {
-    display: inline;
-  }
-
+  .pg-hero__chip-full,
   .pg-hero__chip time {
+    display: none;
+  }
+
+  .pg-hero__chip-short {
     display: block;
-    margin-top: 2px;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .pg-hero__title {
@@ -2291,13 +2342,63 @@ html[data-shout="off"] .pg-shout {
   border-radius: var(--pg-radius-sm);
 }
 
+/* Site buttons inside the content column keep their own colours (the
+   column paints every link wine-red). */
+#pgContentWrap .pg-btn--ghost {
+  margin-left: 4px;
+  vertical-align: middle;
+  color: var(--pg-heading);
+}
+
+#pgContentWrap .pg-btn--ghost:hover,
+#pgContentWrap .pg-btn--ghost:focus-visible {
+  color: var(--pg-heading);
+}
+
+#pgContentWrap .pg-btn--primary,
+#pgContentWrap .pg-btn--primary:hover {
+  color: #fff;
+}
+
+/* News archive tag filters: quiet pills instead of a wall of solid buttons */
+#pgContentWrap .newstag .btn {
+  margin: 0 4px 8px 0;
+  padding: 4px 12px;
+  border: 1px solid var(--pg-line-strong);
+  border-radius: 999px;
+  background: var(--pg-surface);
+  color: var(--pg-heading) !important;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.5;
+  box-shadow: none;
+}
+
+#pgContentWrap .newstag .btn:hover,
+#pgContentWrap .newstag .btn:focus-visible {
+  border-color: var(--pg-blue);
+  background: var(--pg-wash);
+}
+
+#pgContentWrap .newstag .btn .fa-tag {
+  margin-right: 2px;
+  color: var(--pg-muted);
+  font-size: 11px;
+}
+
 @media (max-width: 991.98px) {
+  /* Below the sidebar layout the quick links follow the content instead of
+     pushing it a whole screen down. */
+  .pg-page > .row > .col-lg-2 {
+    order: 2;
+  }
+
   #pgSideWrap {
     position: static;
   }
 
   #pgSideNav {
-    margin-bottom: 1.25rem;
+    margin: 1.5rem 0 0;
   }
 
   .pg-page {
@@ -3041,6 +3142,24 @@ button.pg-script-copy-btn.pg-code__btn {
   line-height: 1.6;
 }
 
+/* Manual navigation rows on phones: the five cells no longer share fixed
+   10% widths, so the link labels stay on one line and the chapter title
+   takes what is left. */
+@media (max-width: 575.98px) {
+  #docContent .navheader td,
+  #docContent .navfooter td {
+    width: auto !important;
+    padding: 0 4px;
+    white-space: nowrap;
+  }
+
+  #docContent .navheader th[width],
+  #docContent .navfooter th[width] {
+    width: auto !important;
+    font-size: 12.5px;
+  }
+}
+
 /* Build stamp of the development docs, beside the breadcrumb */
 .pg-doc-build {
   display: inline-block;
@@ -3054,6 +3173,941 @@ button.pg-script-copy-btn.pg-code__btn {
 
 .pg-doc-build a {
   font-weight: 500;
+}
+
+/* --------------------------------------------------------------- search */
+
+/* Shared between the search page (/search/) and the palette that opens on
+   every page: result rows, kind badges, and the definition preview. The
+   preview is typeset like a manual page (.pg-prose), with the version
+   line in the reader's own style. */
+
+/* Kept in the layout at zero size: <use> references into a display:none
+   SVG are unreliable in some WebKit versions. */
+.pg-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+.ds-icon {
+  width: 16px;
+  height: 16px;
+  flex: none;
+}
+
+.ds-kind {
+  --kind-color: var(--pg-ink-2);
+  --kind-bg: var(--pg-wash);
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--kind-bg);
+  color: var(--kind-color);
+}
+
+.ds-kind .ds-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.ds-kind-guc { --kind-color: #8a5a10; --kind-bg: rgba(191, 146, 34, 0.14); }
+.ds-kind-sql { --kind-color: #2b5f8c; --kind-bg: rgba(51, 103, 145, 0.13); }
+.ds-kind-function { --kind-color: #1c6b52; --kind-bg: rgba(68, 160, 132, 0.14); }
+.ds-kind-type { --kind-color: #9a4f1e; --kind-bg: rgba(194, 131, 63, 0.14); }
+.ds-kind-relation { --kind-color: #5a4fa8; --kind-bg: rgba(124, 113, 188, 0.14); }
+.ds-kind-error { --kind-color: #9a2f3f; --kind-bg: rgba(195, 86, 104, 0.12); }
+.ds-kind-tool { --kind-color: #2f5d7a; --kind-bg: rgba(63, 126, 187, 0.13); }
+.ds-kind-psql { --kind-color: #4a5d75; --kind-bg: rgba(91, 111, 140, 0.14); }
+.ds-kind-extension { --kind-color: #1f6f80; --kind-bg: rgba(55, 147, 167, 0.14); }
+.ds-kind-guide, .ds-kind-all { --kind-color: var(--pg-ink-2); --kind-bg: var(--pg-wash); }
+
+[data-theme="dark"] .ds-kind-guc { --kind-color: #e8c97e; }
+[data-theme="dark"] .ds-kind-sql { --kind-color: #8fc0ec; }
+[data-theme="dark"] .ds-kind-function { --kind-color: #8fd7b8; }
+[data-theme="dark"] .ds-kind-type { --kind-color: #f0b78a; }
+[data-theme="dark"] .ds-kind-relation { --kind-color: #c1b8f3; }
+[data-theme="dark"] .ds-kind-error { --kind-color: #f2a6ae; }
+[data-theme="dark"] .ds-kind-tool { --kind-color: #9fc7e6; }
+[data-theme="dark"] .ds-kind-psql { --kind-color: #b7c6d8; }
+[data-theme="dark"] .ds-kind-extension { --kind-color: #8fd3e2; }
+
+.ds-result {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  color: var(--pg-ink);
+  text-decoration: none;
+  outline-offset: -3px;
+  transition: background-color var(--pg-dur) var(--pg-ease);
+}
+
+.ds-result:hover {
+  background: var(--pg-wash);
+  color: var(--pg-ink);
+  text-decoration: none;
+}
+
+.ds-result.is-selected {
+  background: var(--pg-wash-strong);
+  box-shadow: inset 3px 0 var(--pg-blue);
+}
+
+[data-theme="dark"] .ds-result.is-selected {
+  box-shadow: inset 3px 0 var(--pg-sky);
+}
+
+.ds-result .ds-kind {
+  margin-top: 1px;
+}
+
+.ds-result-body {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ds-result-title {
+  display: block;
+  color: var(--pg-heading);
+  font-family: var(--pg-font-mono), var(--pg-font);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+
+.ds-result-meta {
+  display: block;
+  margin-top: 2px;
+  color: var(--pg-muted);
+  font-size: 11.5px;
+}
+
+.ds-result-meta i {
+  margin-left: 8px;
+  padding-left: 8px;
+  border-left: 1px solid var(--pg-line-strong);
+  font-style: normal;
+}
+
+.ds-result-snippet {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-top: 5px;
+  overflow: hidden;
+  color: var(--pg-ink-2);
+  font-size: 12.5px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.ds-result-path {
+  display: block;
+  margin-top: 4px;
+  overflow: hidden;
+  color: var(--pg-muted);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-result mark,
+.ds-doc mark {
+  padding: 0;
+  border-radius: 2px;
+  background: rgba(226, 187, 72, 0.28);
+  color: inherit;
+}
+
+[data-theme="dark"] .ds-result mark {
+  background: rgba(226, 187, 72, 0.22);
+}
+
+.ds-empty {
+  padding: 48px 24px;
+  color: var(--pg-muted);
+  text-align: center;
+}
+
+.ds-empty h2 {
+  margin: 0 0 8px;
+  color: var(--pg-ink-2);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ds-empty p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* Definition preview */
+.ds-preview-head {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 14px 24px 12px;
+  border-bottom: 1px solid var(--pg-line);
+  background: var(--pg-surface);
+}
+
+.ds-preview-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 26px;
+  margin-bottom: 8px;
+}
+
+.ds-preview-kind {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--pg-ink-2);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.ds-preview-back {
+  display: none;
+  align-items: center;
+  gap: 2px;
+  padding: 0 6px 0 0;
+  border: 0;
+  background: transparent;
+  color: var(--pg-link);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.ds-preview-open {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-left: auto;
+  padding: 4px 10px;
+  border: 1px solid var(--pg-line);
+  border-radius: 7px;
+  color: var(--pg-heading);
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background-color var(--pg-dur) var(--pg-ease),
+              border-color var(--pg-dur) var(--pg-ease);
+}
+
+.ds-preview-open:hover {
+  border-color: var(--pg-line-strong);
+  background: var(--pg-wash);
+  text-decoration: none;
+}
+
+.ds-preview-open .ds-icon {
+  width: 13px;
+  height: 13px;
+}
+
+.ds-preview-title {
+  margin: 0;
+  color: var(--pg-heading);
+  font-family: var(--pg-font-mono), var(--pg-font);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.01em;
+  overflow-wrap: anywhere;
+}
+
+.ds-preview-signature {
+  margin: 4px 0 0;
+  color: var(--pg-ink-2);
+  font-family: var(--pg-font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.ds-preview-path {
+  margin: 4px 0 0;
+  color: var(--pg-muted);
+  font-size: 12px;
+}
+
+/* "版本 19 / 18 / 17": the manual header's version links */
+.ds-preview-versions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 6px;
+  margin-top: 8px;
+  font-size: 13px;
+}
+
+.ds-preview-versions__label {
+  margin-right: 2px;
+  color: var(--pg-muted);
+  font-size: 12px;
+}
+
+.ds-preview-versions__sep {
+  color: var(--pg-line-strong);
+}
+
+.ds-preview-versions a {
+  color: var(--pg-link-content);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.ds-preview-versions a:hover {
+  text-decoration: underline;
+}
+
+.ds-preview-versions a.is-current {
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* The definition itself, typeset as a manual page */
+.ds-doc {
+  padding: 18px 24px 28px;
+  font-size: 14.5px;
+  line-height: 1.8;
+}
+
+.ds-doc > :first-child {
+  margin-top: 0;
+}
+
+.ds-doc h1,
+.ds-doc h2,
+.ds-doc h3,
+.ds-doc h4 {
+  display: block;
+  margin: 1.2em 0 0.6em;
+  padding-bottom: 0;
+  font-size: 1.1rem;
+}
+
+.ds-doc h2::after {
+  content: none;
+}
+
+.ds-doc dl {
+  margin: 0 0 1em;
+}
+
+.ds-doc dt {
+  margin: 0.8em 0 0.3em;
+  color: var(--pg-heading);
+  font-weight: 600;
+}
+
+.ds-doc dt code {
+  font-size: 0.95em;
+}
+
+.ds-doc dd {
+  margin: 0 0 0.6em 1.2em;
+}
+
+.ds-doc .func_signature {
+  margin: 0 0 0.8em;
+  padding: 10px 12px;
+  border: 1px solid var(--pg-line);
+  border-radius: 8px;
+  background: var(--pg-wash);
+  font-family: var(--pg-font-mono);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.ds-doc .func_signature code {
+  padding: 0;
+  background: transparent;
+}
+
+.ds-doc .pg-table-scroll {
+  margin: 1em 0;
+}
+
+.ds-doc table {
+  font-size: 13.5px;
+}
+
+.ds-doc pre,
+.ds-doc .pg-code > pre {
+  font-size: 12.5px;
+}
+
+.ds-doc .refnamediv h2,
+.ds-doc .refsynopsisdiv h2 {
+  font-size: 1rem;
+  color: var(--pg-muted);
+}
+
+/* Extension catalogue card content */
+.ds-ext-desc {
+  font-size: 15px;
+}
+
+.ds-ext-desc-en {
+  color: var(--pg-ink-2);
+}
+
+.ds-ext-facts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px 20px;
+  margin: 1em 0;
+}
+
+.ds-ext-facts dt {
+  margin: 0;
+  color: var(--pg-muted);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ds-ext-facts dd {
+  margin: 0;
+  font-family: var(--pg-font-mono);
+  font-size: 13px;
+}
+
+.ds-ext-tags code {
+  margin: 0 4px 4px 0;
+}
+
+.ds-related {
+  margin: 0 24px 28px;
+  padding-top: 14px;
+  border-top: 1px solid var(--pg-line);
+}
+
+.ds-related h3 {
+  margin: 0 0 10px;
+  color: var(--pg-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.ds-related__definition {
+  display: block;
+  padding: 6px 10px;
+  margin-bottom: 4px;
+  border: 1px solid var(--pg-line);
+  border-radius: 7px;
+  color: var(--pg-ink-2);
+  font-family: var(--pg-font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+
+.ds-related__definition:hover {
+  border-color: var(--pg-line-strong);
+  background: var(--pg-wash);
+  text-decoration: none;
+}
+
+.ds-catalog-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--pg-line);
+  border-radius: 10px;
+  color: var(--pg-ink);
+  text-decoration: none;
+  transition: background-color var(--pg-dur) var(--pg-ease),
+              border-color var(--pg-dur) var(--pg-ease);
+}
+
+.ds-catalog-card:hover {
+  border-color: var(--pg-line-strong);
+  background: var(--pg-wash);
+  text-decoration: none;
+}
+
+.ds-catalog-card__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ds-catalog-card strong {
+  display: block;
+  color: var(--pg-heading);
+  font-family: var(--pg-font-mono);
+  font-size: 13.5px;
+}
+
+.ds-catalog-card span span {
+  display: block;
+  color: var(--pg-muted);
+  font-size: 12px;
+}
+
+.ds-catalog-card > .ds-icon {
+  color: var(--pg-muted);
+}
+
+/* ---- palette ---- */
+
+.pg-nav__search input {
+  cursor: text;
+}
+
+.pg-palette {
+  width: min(880px, calc(100vw - 32px));
+  max-height: min(640px, calc(100vh - 80px));
+  margin: 8vh auto 0;
+  padding: 0;
+  border: 1px solid var(--pg-line-strong);
+  border-radius: 14px;
+  background: var(--pg-surface);
+  color: var(--pg-ink);
+  box-shadow: var(--pg-shadow-md);
+  overflow: hidden;
+}
+
+.pg-palette[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.pg-palette::backdrop {
+  background: rgba(14, 21, 29, 0.42);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+}
+
+html.pg-palette-open {
+  overflow: hidden;
+}
+
+.pg-palette *,
+.pg-palette *::before,
+.pg-palette *::after {
+  box-sizing: border-box;
+}
+
+.pg-palette__bar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 0 12px 0 16px;
+  border-bottom: 1px solid var(--pg-line);
+}
+
+.pg-palette__bar > .pg-icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: var(--pg-muted);
+}
+
+/* Scope token: a chip in front of the input, with a menu of scopes. Backspace
+   at the start of the input turns it back into editable text ("pg18:"). */
+.ds-scope {
+  position: relative;
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+}
+
+.ds-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  height: 26px;
+  padding: 0 5px 0 9px;
+  border: 1px solid var(--pg-line);
+  border-radius: 7px;
+  background: var(--pg-wash-strong);
+  color: var(--pg-heading);
+  font-family: var(--pg-font-mono);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: border-color var(--pg-dur) var(--pg-ease),
+              background-color var(--pg-dur) var(--pg-ease);
+}
+
+.ds-chip:hover,
+.ds-chip[aria-expanded="true"] {
+  border-color: var(--pg-line-strong);
+}
+
+.ds-chip[hidden] {
+  display: none;
+}
+
+.ds-chip__caret {
+  width: 12px;
+  height: 12px;
+  color: var(--pg-muted);
+}
+
+.ds-scope-menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 6;
+  min-width: 156px;
+  padding: 5px;
+  border: 1px solid var(--pg-line);
+  border-radius: 10px;
+  background: var(--pg-surface);
+  box-shadow: var(--pg-shadow-md);
+}
+
+.ds-scope-menu[hidden] {
+  display: none;
+}
+
+.ds-scope-menu__item {
+  display: block;
+  width: 100%;
+  padding: 6px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--pg-ink-2);
+  font-family: var(--pg-font-mono);
+  font-size: 12.5px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.ds-scope-menu__item:hover {
+  background: var(--pg-wash);
+  color: var(--pg-heading);
+}
+
+.ds-scope-menu__item.is-active {
+  background: var(--pg-wash-strong);
+  color: var(--pg-heading);
+  font-weight: 600;
+}
+
+/* Fallback actions at the end of a list */
+.ds-result--action .ds-result-title {
+  color: var(--pg-ink-2);
+  font-family: var(--pg-font);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.ds-result--action q {
+  color: var(--pg-heading);
+  font-family: var(--pg-font-mono);
+  quotes: '“' '”';
+}
+
+.ds-result__go {
+  align-self: center;
+  color: var(--pg-muted);
+  opacity: 0;
+}
+
+.ds-result--action:hover .ds-result__go,
+.ds-result--action.is-selected .ds-result__go {
+  opacity: 1;
+}
+
+.ds-kind-action {
+  --kind-color: var(--pg-muted);
+  --kind-bg: transparent;
+  border: 1px dashed var(--pg-line-strong);
+}
+
+/* Category cards for an empty query */
+.ds-cats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 2px 4px 6px;
+}
+
+.ds-cat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  padding: 9px 11px;
+  border: 1px solid var(--pg-line);
+  border-radius: 10px;
+  color: var(--pg-ink);
+  text-decoration: none;
+  transition: background-color var(--pg-dur) var(--pg-ease),
+              border-color var(--pg-dur) var(--pg-ease);
+}
+
+.ds-cat:hover,
+.ds-cat.is-selected {
+  border-color: var(--pg-line-strong);
+  background: var(--pg-wash);
+  text-decoration: none;
+}
+
+.ds-cat__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ds-cat__body strong {
+  display: block;
+  color: var(--pg-heading);
+  font-size: 13.5px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.ds-cat__body span {
+  display: block;
+  overflow: hidden;
+  color: var(--pg-muted);
+  font-size: 11.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ds-cat small {
+  flex: none;
+  color: var(--pg-muted);
+  font-family: var(--pg-font-mono);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-palette__input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 54px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  color: var(--pg-ink);
+  font-family: var(--pg-font-mono), var(--pg-font);
+  font-size: 16px;
+}
+
+.pg-palette__input::placeholder {
+  color: var(--pg-muted);
+  font-family: var(--pg-font);
+  font-size: 15px;
+}
+
+.pg-palette__close {
+  flex: none;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ds-app kbd,
+.pg-palette kbd {
+  display: inline-block;
+  min-width: 18px;
+  margin: 0 1px;
+  padding: 0 5px;
+  border: 1px solid var(--pg-line);
+  border-radius: 5px;
+  background: var(--pg-canvas);
+  color: var(--pg-muted);
+  font-family: var(--pg-font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 18px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.pg-palette__body {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: minmax(0, 1fr);
+  min-height: 0;
+}
+
+.pg-palette__list {
+  min-height: 120px;
+  padding: 6px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.pg-palette__list .ds-result {
+  padding: 8px 10px;
+}
+
+.pg-palette__list .ds-result-title {
+  font-size: 13.5px;
+}
+
+.pg-palette__heading {
+  padding: 8px 10px 4px;
+  color: var(--pg-muted);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.pg-palette__preview {
+  display: none;
+  min-width: 0;
+  border-left: 1px solid var(--pg-line);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.pg-palette__preview .ds-preview-head {
+  padding: 12px 18px 10px;
+}
+
+.pg-palette__preview .ds-preview-title {
+  font-size: 18px;
+}
+
+.pg-palette__preview .ds-doc {
+  padding: 14px 18px 22px;
+  font-size: 13.5px;
+}
+
+.pg-palette__preview .ds-related {
+  margin: 0 18px 22px;
+}
+
+.pg-palette__foot {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 14px;
+  border-top: 1px solid var(--pg-line);
+  color: var(--pg-muted);
+  font-size: 11.5px;
+}
+
+.pg-palette__foot kbd {
+  margin-right: 3px;
+}
+
+.pg-palette__status {
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.pg-palette--browse .pg-palette__body {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.pg-palette--browse .pg-palette__preview {
+  display: none;
+}
+
+.pg-palette--browse .pg-palette__list {
+  padding: 8px 10px 10px;
+}
+
+.pg-palette__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 14px;
+  color: var(--pg-link);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.pg-palette__all .pg-icon {
+  width: 14px;
+  height: 14px;
+}
+
+@media (min-width: 1100px) {
+  .pg-palette {
+    width: min(1040px, calc(100vw - 48px));
+    max-height: min(680px, calc(100vh - 80px));
+  }
+
+  .pg-palette__body {
+    grid-template-columns: 380px minmax(0, 1fr);
+  }
+
+  .pg-palette__preview {
+    display: block;
+  }
+}
+
+/* Site-wide search results (search/sitesearch.html) */
+.ss-lead {
+  color: var(--pg-ink-2);
+}
+
+.ss-form {
+  max-width: 560px;
+  margin-bottom: 1.5rem;
+}
+
+.ss-count,
+.ss-empty,
+.ss-error {
+  color: var(--pg-muted);
+  font-size: 13.5px;
+}
+
+.ss-hits {
+  margin: 0 0 1.5rem;
+  padding-left: 1.6em;
+}
+
+.ss-hit {
+  margin: 0 0 1.1rem;
+}
+
+.ss-hit__title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.ss-hit__abstract {
+  margin: 0.2rem 0;
+  color: var(--pg-ink-2);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.ss-hit__url {
+  color: var(--pg-muted) !important;
+  font-size: 12.5px;
+  overflow-wrap: anywhere;
+}
+
+.ss-pages a {
+  margin-right: 6px;
 }
 
 /* ---------------------------------------------------------- motion/print */

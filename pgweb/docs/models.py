@@ -1,5 +1,6 @@
 from django.db import models
 from pgweb.core.models import Version
+from .versions import manual_major
 
 
 class DocPage(models.Model):
@@ -15,6 +16,10 @@ class DocPage(models.Model):
             return 'devel'
         else:
             return str(self.version.numtree)
+
+    @property
+    def search_version(self):
+        return manual_major(self.version_id)
 
     class Meta:
         db_table = 'docs'

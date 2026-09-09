@@ -63,6 +63,8 @@ def main():
         else:
             report = import_snapshot(snapshot, dry_run=args.dry_run, prune=args.prune)
         print(json.dumps(report, ensure_ascii=False, indent=2))
+        if not args.dry_run:
+            print('Refresh the search index: .venv/bin/python manage.py index_docs --extensions', file=sys.stderr)
         return 0
     except (OSError, ValueError, DatabaseError, psycopg2.Error) as exc:
         print('Catalog sync failed: {}'.format(exc), file=sys.stderr)

@@ -185,17 +185,21 @@ function watch(pre) {
   mo.observe(pre, { childList: true, characterData: true, subtree: true });
 }
 
-function init() {
-  document.querySelectorAll('.pg-script-container').forEach(enhanceScriptContainer);
-  document.querySelectorAll('.pg-page pre, #docContent pre').forEach((pre) => {
+/* Enhance every code block under `root`. Also exposed as window.pgEnhanceCode
+   for content that arrives after load (search previews). */
+export function enhance(root = document) {
+  root.querySelectorAll('.pg-script-container').forEach(enhanceScriptContainer);
+  root.querySelectorAll('pre').forEach((pre) => {
     if (pre.closest('.pg-script-container')) return;
-    // Skip tiny inline-ish blocks the manual uses for single tokens.
+    if (!pre.closest('.pg-page, #docContent, .pg-prose')) return;
     enhancePre(pre);
   });
 }
 
+window.pgEnhanceCode = enhance;
+
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', () => enhance(document));
 } else {
-  init();
+  enhance(document);
 }

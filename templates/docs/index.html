@@ -9,7 +9,7 @@
       </section>
       <p>
        <a class="btn btn-primary btn-double-width" href="/docs/current/">查看手册</a>
-       <a class="btn btn-secondary" href="/search/">检索文档</a>
+       <a class="pg-btn pg-btn--ghost pg-btn--sm" href="/search/">检索文档</a>
       </p>
 
       <h2>手册 <i class="fas fa-book"></i></h2>
@@ -46,12 +46,12 @@
 	</tr>
 	{%endfor%}
 	<tr>
-	 <td><a href="/docs/devel/index.html">开发快照</a></td>
+	 <td><a href="/docs/devel/index.html">{{devel_major}} devel / 开发快照</a></td>
 	 <td>
 	  {%if devel_a4pdf or devel_uspdf%}
-	  {%if devel_a4pdf%}<a href="/files/documentation/pdf/19/postgresql-19-A4.pdf">A4 PDF</a> <span class="txtMediumGrey">({{devel_a4pdf|filesizeformat}})</span>{%endif%}
+	  {%if devel_a4pdf%}<a href="/files/documentation/pdf/{{devel_major}}/postgresql-{{devel_major}}-A4.pdf">A4 PDF</a> <span class="txtMediumGrey">({{devel_a4pdf|filesizeformat}})</span>{%endif%}
 	  {%if devel_a4pdf and devel_uspdf%}&bull;{%endif%}
-	  {%if devel_uspdf%}<a href="/files/documentation/pdf/19/postgresql-19-US.pdf">US PDF</a> <span class="txtMediumGrey">({{devel_uspdf|filesizeformat}})</span>{%endif%}
+	  {%if devel_uspdf%}<a href="/files/documentation/pdf/{{devel_major}}/postgresql-{{devel_major}}-US.pdf">US PDF</a> <span class="txtMediumGrey">({{devel_uspdf|filesizeformat}})</span>{%endif%}
 	  {%else%}PDF 版本不可用
 	  {%endif%}
 	 </td>

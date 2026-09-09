@@ -90,7 +90,6 @@ urlpatterns = [
     re_path(r'^community/user-groups/$', pgweb.pugs.views.index),
 
     re_path(r'^search/$', pgweb.search.views.search),
-    path('search/docs/', pgweb.search.docviews.search_page),
     path('search/api/', pgweb.search.docviews.search_api),
     path('search/preview/<int:entry_id>/', pgweb.search.docviews.preview_api),
 

@@ -57,10 +57,10 @@
               {% endif %}
             </div>
             <div class="col-md-5 col-lg-4 offset-lg-1">
-              <form id="docSearchForm" role="search" method="get" action="/search/">
+              <form id="docSearchForm" role="search" method="get" action="/search/" data-pg-palette-form data-pg-palette-scope="pg{{page.search_version}}">
                 <input type="hidden" name="u" value="/docs/{{page.display_version}}/" />
                 <div class="input-group">
-                  <input type="text" id="doc-query-inline" name="q" class="form-control" placeholder="检索 PG{{page.display_version}} 文档…" aria-label="检索当前版本文档" maxlength="255"/>
+                  <input type="text" id="doc-query-inline" name="q" class="form-control" placeholder="检索 PG{{page.search_version}} 文档…" aria-label="检索当前版本文档" maxlength="255"/>
                   <span class="input-group-btn">
                     <button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
                   </span>

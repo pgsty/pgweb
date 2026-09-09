@@ -4,76 +4,70 @@
 <link rel="stylesheet" href="/media/css/docsearch.css?{{gitrev}}">
 {% endblock %}
 {% block layoutblock %}
-<main class="ds-app" id="doc-search" data-search-api="/search/api/" data-preview-api="/search/preview/">
-  <div class="ds-heading">
-    <div><a href="/docs/">文档</a><span class="ds-divider">/</span><h1>PostgreSQL 文档检索</h1></div>
-    <span class="ds-heading-note">从一个名字，找到完整解释。</span>
-  </div>
-  <form class="ds-searchbar" action="/search/" method="get" role="search" id="ds-form">
-    <label class="ds-version-select" for="ds-scope">
-      <img src="/media/img/about/press/elephant.png" alt="" width="27" height="27">
-      <select name="scope" id="ds-scope" aria-label="文档版本">
-        <option value="pg" {% if search.scope == 'pg' %}selected{% endif %}>PG{{search.current|default:'—'}} · 当前</option>
-        {% for version in search.versions %}<option value="{{version.key}}" {% if search.scope == version.key %}selected{% endif %}>PG{{version.version}}{% if version.testing %} · 测试版{% endif %}</option>{% endfor %}
+<main class="ds-app" id="doc-search" data-search-api="/search/api/" data-preview-api="/search/preview/" data-site-search="{% if site_search %}1{% else %}0{% endif %}">
+  <h1 class="ds-title">PostgreSQL 文档检索</h1>
+  <form class="ds-bar" id="ds-form" action="/search/" method="get" role="search">
+    <div class="ds-scope">
+      <button class="ds-chip" id="ds-scope-chip" type="button" title="检索范围" aria-expanded="false" hidden>PG</button>
+      <select name="scope" id="ds-scope" class="ds-scope-select" aria-label="检索范围">
+        <option value="pg" {% if search.scope == 'pg' %}selected{% endif %}>PG {{search.current|default:'—'}} · 当前</option>
+        {% for version in search.versions %}{% if not version.current %}<option value="{{version.key}}" {% if search.scope == version.key %}selected{% endif %}>PG {{version.version}}{% if version.testing %} · 测试版{% endif %}</option>{% endif %}{% endfor %}
+        <option value="ex" {% if search.scope == 'ex' %}selected{% endif %}>扩展目录</option>
       </select>
-    </label>
-    <div class="ds-input-wrap">
-      {% include "base/icon.html" with name="search" %}
-      <input id="ds-query" name="q" value="{{search.raw}}" placeholder="搜索名称或正文，试试 pg17: work_mem" maxlength="255" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="搜索文档" aria-controls="ds-results" aria-describedby="ds-status">
-      <button class="ds-clear" id="ds-clear" type="button" aria-label="清空搜索" title="清空搜索">{% include "base/icon.html" with name="close" %}</button>
+    </div>
+    <div class="ds-input">
+      <svg class="ds-icon"><use href="#pgi-search"/></svg>
+      <input id="ds-query" name="q" type="text" value="{{search.raw}}" placeholder="搜索参数、函数、命令、错误码、扩展…" maxlength="255" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="搜索文档" role="combobox" aria-expanded="true" aria-haspopup="listbox" aria-controls="ds-results" aria-autocomplete="list" aria-describedby="ds-status">
+      <button class="ds-clear" id="ds-clear" type="button" aria-label="清空" title="清空"><svg class="ds-icon"><use href="#pgi-x"/></svg></button>
     </div>
     <input type="hidden" name="kind" id="ds-kind" value="{{search.kind}}">
-    <button class="ds-submit" type="submit">搜索 <span aria-hidden="true">↵</span></button>
+    <button class="ds-submit" type="submit">搜索</button>
   </form>
-  <div class="ds-contextbar">
-    <div><span class="ds-scope-chip" id="ds-scope-chip">{% if search.error %}未执行检索{% else %}pg{{search.version|default:''}}:{% endif %}</span><span id="ds-status" role="status" aria-live="polite">{% if search.error %}{{search.error}}{% elif search.term %}找到 {{search.total}} 个结果{% else %}按类别浏览，或直接搜索完整手册{% endif %}</span></div>
-    <span class="ds-shortcuts"><kbd>↑</kbd><kbd>↓</kbd> 选择 <kbd>↵</kbd> 打开 <kbd>⌘ K</kbd> 搜索</span>
-  </div>
+  <p class="ds-status" id="ds-status" role="status" aria-live="polite">{% if search.error %}{{search.error}}{% elif search.term %}{% if search.scope == 'ex' %}扩展目录{% else %}PG {{search.version}}{% endif %} · 找到 {{search.total}} 个结果{% else %}{% if search.scope == 'ex' %}扩展目录{% else %}PG {{search.version|default:'—'}}{% endif %} · 按类别浏览，或输入名称与关键词{% endif %}</p>
   <div class="ds-workspace">
-    <aside class="ds-sidebar" aria-label="实体分类">
-      <div class="ds-sidebar-title">浏览手册 <span>POSTGRESQL</span></div>
-      <nav id="ds-facets" aria-label="筛选文档类别">
-        <a class="ds-facet{% if not search.kind %} is-active{% endif %}" data-kind="" href="?q={{search.raw|urlencode}}&amp;scope={{search.scope}}"><span class="ds-kind-icon ds-kind-all">⌕</span><span>全部内容</span><small>{{search.all_total}}</small></a>
-        {% for facet in search.facets %}
-        <a class="ds-facet{% if search.kind == facet.key %} is-active{% endif %}" data-kind="{{facet.key}}" href="?q={{search.raw|urlencode}}&amp;scope={{search.scope}}&amp;kind={{facet.key}}" title="{{facet.hint}}"><span class="ds-kind-icon ds-kind-{{facet.key}}">{{facet.icon}}</span><span>{{facet.label}}</span><small>{{facet.count}}</small></a>
-        {% endfor %}
-      </nav>
-      <div class="ds-sidebar-foot"><span class="ds-live-dot"></span>PostgreSQL 官方手册<br><span>名称、定义与章节全文</span></div>
-    </aside>
+    <nav class="ds-facets" id="ds-facets" aria-label="筛选类别">
+      <a class="ds-facet{% if not search.kind %} is-active{% endif %}" data-kind="" href="?q={{search.raw|urlencode}}&amp;scope={{search.scope}}"><span class="ds-kind ds-kind-all"><svg class="ds-icon"><use href="#pgi-layers"/></svg></span><span>全部</span><small>{{search.all_total}}</small></a>
+      {% for facet in search.facets %}
+      <a class="ds-facet{% if search.kind == facet.key %} is-active{% endif %}" data-kind="{{facet.key}}" href="?q={{search.raw|urlencode}}&amp;scope={{search.scope}}&amp;kind={{facet.key}}" title="{{facet.hint}}"><span class="ds-kind ds-kind-{{facet.key}}"><svg class="ds-icon"><use href="#pgi-{% if facet.key == 'guc' %}sliders{% elif facet.key == 'sql' %}terminal-square{% elif facet.key == 'function' %}sigma{% elif facet.key == 'type' %}braces{% elif facet.key == 'relation' %}table{% elif facet.key == 'error' %}alert{% elif facet.key == 'tool' %}terminal{% elif facet.key == 'psql' %}backslash{% elif facet.key == 'extension' %}blocks{% else %}book{% endif %}"/></svg></span><span>{{facet.label}}</span><small>{{facet.count}}</small></a>
+      {% endfor %}
+    </nav>
     <section class="ds-results-panel" aria-label="搜索结果">
-      <div class="ds-panel-heading"><span id="ds-results-title">{% if search.term or search.error %}检索结果{% elif search.kind %}分类索引{% else %}常用入口{% endif %}</span><small id="ds-result-count">{{search.total}} 个条目</small></div>
+      <div class="ds-panel-head"><span id="ds-results-title">{% if search.term or search.error %}检索结果{% elif search.kind %}分类索引{% else %}常用条目{% endif %}</span><small id="ds-result-count">{{search.total}}</small></div>
       <div class="ds-notice" id="ds-notice" {% if not search.notice %}hidden{% endif %}>{{search.notice}}</div>
-      <div class="ds-results" id="ds-results" tabindex="0" aria-label="文档结果列表">
+      <div class="ds-results" id="ds-results" tabindex="0" role="listbox" aria-label="结果列表">
         {% for hit in search.results %}
-        <a class="ds-result" href="{{hit.url}}" data-entry="{{hit.id}}">
-          <span class="ds-kind-icon ds-kind-{{hit.kind}}">{{hit.icon}}</span>
-          <div class="ds-result-body"><div class="ds-result-title">{{hit.name_html|safe}}</div><div class="ds-result-meta">{{hit.label}}<span>PG{{hit.version}}</span></div><p>{{hit.snippet|safe}}</p><div class="ds-result-path">{{hit.heading}}</div></div>
-          <span class="ds-result-arrow" aria-hidden="true">›</span>
+        <a class="ds-result" href="{{hit.url}}" data-entry="{{hit.id}}" role="option" id="ds-entry-{{hit.id}}">
+          <span class="ds-kind ds-kind-{{hit.group}}"><svg class="ds-icon"><use href="#pgi-{% if hit.group == 'guc' %}sliders{% elif hit.group == 'sql' %}terminal-square{% elif hit.group == 'function' %}sigma{% elif hit.group == 'type' %}braces{% elif hit.group == 'relation' %}table{% elif hit.group == 'error' %}alert{% elif hit.group == 'tool' %}terminal{% elif hit.group == 'psql' %}backslash{% elif hit.group == 'extension' %}blocks{% else %}book{% endif %}"/></svg></span>
+          <span class="ds-result-body"><span class="ds-result-title">{{hit.name_html|safe}}</span><span class="ds-result-meta">{{hit.label}}<i>{{hit.source_label}}</i></span><span class="ds-result-snippet">{{hit.snippet|safe}}</span><span class="ds-result-path">{{hit.heading}}</span></span>
         </a>
         {% empty %}
-        <div class="ds-empty"><span>⌕</span><h2>{% if search.error %}暂时无法检索{% else %}没有找到匹配内容{% endif %}</h2><p>{{search.error|default:'试试更短的名称、中文关键词，或切换文档版本。'}}</p></div>
+        <div class="ds-empty"><h2>{% if search.error %}暂时无法检索{% else %}没有找到匹配内容{% endif %}</h2><p>{{search.error|default:'没有匹配的名称或定义，试试下面的方式。'}}</p></div>
+        {% if search.term and not search.error %}
+        <a class="ds-result ds-result--action" href="?q={{search.term|urlencode}}&amp;scope={{search.scope}}&amp;kind=guide"><span class="ds-kind ds-kind-action"><svg class="ds-icon"><use href="#pgi-book"/></svg></span><span class="ds-result-body"><span class="ds-result-title">在手册全文中检索 <q>{{search.term}}</q></span></span></a>
+        {% if site_search %}<a class="ds-result ds-result--action" href="/search/?q={{search.term|urlencode}}&amp;site=1"><span class="ds-kind ds-kind-action"><svg class="ds-icon"><use href="#pgi-layers"/></svg></span><span class="ds-result-body"><span class="ds-result-title">在站内新闻与页面中搜索 <q>{{search.term}}</q></span></span></a>{% endif %}
+        <a class="ds-result ds-result--action" href="https://www.postgresql.org/search/?q={{search.term|urlencode}}" target="_blank" rel="noopener"><span class="ds-kind ds-kind-action"><svg class="ds-icon"><use href="#pgi-arrow-up-right"/></svg></span><span class="ds-result-body"><span class="ds-result-title">在 postgresql.org 搜索 <q>{{search.term}}</q></span></span></a>
+        {% endif %}
         {% endfor %}
       </div>
-      <a class="ds-more" id="ds-more" {% if search.next_offset == None %}hidden{% endif %} href="?q={{search.raw|urlencode}}&amp;scope={{search.scope}}&amp;kind={{search.kind}}&amp;offset={{search.next_offset}}">更多结果 ↓</a>
-      <div class="ds-results-foot"><span id="ds-timing">{{search.elapsed_ms}} ms</span><span>选中预览 · 双击打开</span></div>
+      <a class="ds-more" id="ds-more" {% if search.next_offset == None %}hidden{% endif %} href="?q={{search.raw|urlencode}}&amp;scope={{search.scope}}&amp;kind={{search.kind}}&amp;offset={{search.next_offset}}">更多结果</a>
     </section>
-    <section class="ds-preview" id="ds-preview" aria-label="文档定义预览" tabindex="0">
-      <div class="ds-welcome">
-        <div class="ds-welcome-mark"><img src="/media/img/about/press/elephant.png" alt="PostgreSQL" width="60" height="60"></div>
-        <span class="ds-eyebrow">POSTGRESQL · 文档检索</span>
-        <h2>找到定义，<br>也读懂上下文。</h2>
-        <p>参数、函数、SQL 命令、错误代码，<br>以及手册里每一个值得展开的细节。</p>
+    <section class="ds-preview" id="ds-preview" aria-label="定义预览" tabindex="0">
+      <div class="ds-intro">
+        <svg class="ds-icon ds-intro__mark"><use href="#pgi-search"/></svg>
+        <p>输入名称或关键词，从 PostgreSQL 手册与扩展目录中直接找到定义。</p>
         <div class="ds-examples">
-          <button type="button" data-query="pg: work_mem"><code>work_mem</code><span>参数定义</span><b>↗</b></button>
-          <button type="button" data-query="pg: 23505"><code>23505</code><span>错误条件</span><b>↗</b></button>
-          <button type="button" data-query="pg: ->>"><code>→ &nbsp; -&gt;&gt;</code><span>运算符</span><b>↗</b></button>
-          <button type="button" data-query="pg17: 逻辑复制"><code>pg17: 逻辑复制</code><span>版本与全文</span><b>↗</b></button>
+          <button type="button" data-query="work_mem">work_mem</button>
+          <button type="button" data-query="jsonb_set">jsonb_set</button>
+          <button type="button" data-query="23505">23505</button>
+          <button type="button" data-query="->>">-&gt;&gt;</button>
+          <button type="button" data-query="pg17: 逻辑复制">pg17: 逻辑复制</button>
+          <button type="button" data-query="ex: 向量">ex: 向量</button>
         </div>
-        <p class="ds-welcome-tip">用 <code>pg:</code> 搜当前版本，用 <code>pg17:</code> 指定版本。<br>点击左侧类别，也可以像字典一样浏览。</p>
+        <p class="ds-keys"><kbd>pg17:</kbd> 限定版本 <kbd>ex:</kbd> 只搜扩展 <kbd>↑</kbd><kbd>↓</kbd> 选择 <kbd>↵</kbd> 打开</p>
       </div>
     </section>
   </div>
 </main>
 {{ search|json_script:"ds-initial" }}
 {% endblock %}
-{% block extrascript %}<script src="/media/js/docsearch.js?{{gitrev}}" defer></script>{% endblock %}
+{% block extrascript %}<script type="module" src="/media/js/docsearch.js?{{gitrev}}"></script>{% endblock %}

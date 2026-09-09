@@ -7,16 +7,18 @@ from django.test import SimpleTestCase, TestCase
 from pgweb.core.models import Version
 from pgweb.docs.models import DocPage
 from .extract import extract_page, reading_html
-from .indexer import rebuild_version
+from .indexer import rebuild_extensions, rebuild_version
 from .lexicon import query_text, index_text
 from .models import IndexedPage, SearchEntry
 from .service import highlight, parse_query, search, preview
+from pgweb.ext.sync import import_snapshot
+from pgweb.ext.tests import snapshot as extension_snapshot
 
 
 PARAMETER = '''<div class="sect1" id="RESOURCE"><div class="titlepage"><h2>资源消耗</h2></div>
 <p>前面的普通正文也必须可以检索。</p><dl>
 <dt id="GUC-WORK-MEM"><code class="varname">work_mem</code> (<code class="type">integer</code>)</dt>
-<dd><p>设置排序或哈希操作的工作内存限制，默认 4MB。</p><p>每个操作都可以使用此内存。</p></dd>
+<dd><p>设置排序或哈希操作的工作内存限制，默认 4MB（25% 的 "内存"）。</p><p>每个操作都可以使用此内存。</p></dd>
 <dt id="GUC-SHARED-BUFFERS"><code class="varname">shared_buffers</code></dt>
 <dd><p>设置共享内存缓冲区的大小。</p></dd></dl>
 <div class="sect2" id="NESTED"><h3>事务隔离</h3><p>可串行化隔离保证事务行为。</p></div>
@@ -135,9 +137,14 @@ class ScopeTests(SimpleTestCase):
         self.assertEqual((state['version'], state['kind'], state['term']), (17, 'guc', 'work_mem'))
 
     def test_missing_or_external_scopes_never_fall_back_to_current(self):
-        for term in ['pg99: work_mem', 'pg15: work_mem', 'pt: ttl', 'ex: vector']:
+        for term in ['pg99: work_mem', 'pg15: work_mem', 'pt: ttl']:
             with self.assertRaises(ValueError):
                 self.parse(term)
+        state = self.parse('ex: vector')
+        self.assertEqual((state['scope'], state['sources'], state['term']), ('ex', ('ext',), 'vector'))
+        self.assertEqual(self.parse('kind:operator ->>')['kind'], 'function')
+        self.assertEqual(self.parse('kind:psql \\d')['kind'], 'psql')
+        self.assertEqual(self.parse('kind:cli pg_dump')['kind'], 'tool')
 
     def test_sql_cast_uri_and_host_port_survive_parsing(self):
         for term in ['::', 'pg::text', 'postgresql://localhost/db', 'localhost:5432']:
@@ -230,9 +237,19 @@ class SearchDatabaseTests(TestCase):
         self.assertFalse(SearchEntry.objects.filter(version=18, name='23506').exists())
 
     def test_literal_punctuation_does_not_match_everything(self):
-        self.assertEqual(search('%')['total'], 0)
-        self.assertEqual(search('""')['total'], 0)
-        self.assertEqual(search("x' OR 1=1 --")['total'], 0)
+        # The fixture body contains a percent sign and quotes; a lone symbol
+        # must not turn into a scan of every chapter that contains it.
+        for term in ['%', '"', '""', '\\', "x' OR 1=1 --"]:
+            with self.subTest(term=term):
+                self.assertEqual(search(term)['total'], 0)
+        self.assertEqual(search('"工作内存"')['total'], 1)
+        self.assertEqual(search('->>')['results'][0]['name'], '->>')
+
+    def test_incomplete_kind_filter_is_not_a_search_term(self):
+        result = search('kind:')
+        self.assertEqual((result['kind'], result['term']), ('', ''))
+        self.assertTrue(result['results'])
+        self.assertEqual(search('kind: work_mem')['results'][0]['name'], 'work_mem')
 
     def test_http_api_legacy_scope_and_reading_anchor(self):
         result = self.client.get('/search/api/', {'q': '23505', 'u': '/docs/17/'}).json()
@@ -249,3 +266,48 @@ class SearchDatabaseTests(TestCase):
         self.assertEqual(page['Cache-Control'], 'no-cache')
         self.assertIn("style-src 'self'", page['Content-Security-Policy'])
         self.assertEqual(self.client.post('/search/api/').status_code, 405)
+        # The site-wide crawler search stays reachable behind site=1.
+        site = self.client.get('/search/', {'q': 'work_mem', 'site': '1'})
+        self.assertTemplateUsed(site, 'search/sitesearch.html')
+        self.assertContains(site, '站内搜索')
+
+
+class ExtensionSearchTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        Version.objects.bulk_create([Version(tree=18, current=True, reldate=date(2025, 9, 1),
+                                             firstreldate=date(2025, 9, 1), eoldate=date(2030, 1, 1))])
+        DocPage.objects.create(file='runtime-config-resource.html', version_id=18, title='资源消耗', content=PARAMETER)
+        DocPage.objects.create(file='pgtrgm.html', version_id=18, title='F.30. pg_trgm — 三元组匹配',
+                               content='<div class="sect1"><h2>F.30. pg_trgm — 三元组匹配</h2><p>手册中的模块说明。</p></div>')
+        rebuild_version(18)
+        rows = extension_snapshot()
+        rows['tables']['universe'][1].update(name='pg_trgm', pkg='pg_trgm', lead_ext='pg_trgm', contrib=True,
+                                             zh_desc='三元组相似度', en_desc='Trigram similarity')
+        import_snapshot(rows)
+        rebuild_extensions()
+
+    def test_catalogue_entries_are_found_by_name_and_description(self):
+        result = search('vector')
+        first = result['results'][0]
+        self.assertEqual((first['source'], first['group'], first['url']), ('ext', 'extension', '/e/vector/'))
+        self.assertEqual(search('向量检索')['results'][0]['name'], 'vector')
+        self.assertEqual([f['count'] for f in result['facets'] if f['key'] == 'extension'], [1])
+        detail = preview(SearchEntry.objects.get(pk=first['id']))
+        self.assertIn('向量检索', detail['html'])
+        self.assertIn('CREATE EXTENSION vector;', detail['html'])
+        self.assertEqual(detail['versions'], [])
+
+    def test_extension_scope_and_manual_definition_win_over_catalogue_card(self):
+        self.assertTrue(all(r['source'] == 'ext' for r in search('ex: ')['results']))
+        self.assertEqual(search('ex: work_mem')['total'], 0)
+        result = search('pg_trgm')
+        hits = [r for r in result['results'] if r['group'] == 'extension']
+        self.assertEqual(len(hits), 1)
+        self.assertEqual((hits[0]['source'], hits[0]['version']), ('pg', 18))
+        detail = preview(SearchEntry.objects.select_related('document__page').get(pk=hits[0]['id']))
+        self.assertEqual(detail['catalog']['url'], '/e/pg_trgm/')
+        self.assertEqual([v['version'] for v in detail['versions']], [18])
+        rebuilt = rebuild_extensions()
+        self.assertEqual(rebuilt, {'extensions': 2})
+        self.assertEqual(SearchEntry.objects.filter(source='ext').count(), 2)

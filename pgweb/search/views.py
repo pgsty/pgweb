@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponseRedirect, Http404
 from django.views.decorators.csrf import csrf_exempt
 from django.conf import settings
+from django.utils.html import escape
 
 from pgweb.util.decorators import cache, queryparams
 
@@ -47,9 +48,11 @@ def generate_pagelinks(pagenum, totalpages, querystring):
 
 
 @csrf_exempt
-@queryparams('d', 'l', 'ln', 'm', 'p', 'q', 's', 'u', 'scope', 'kind', 'offset')
+@queryparams('d', 'l', 'ln', 'm', 'p', 'q', 's', 'u', 'scope', 'kind', 'offset', 'limit', 'site')
 def search(request):
-    if request.GET.get('m') != '1':
+    # Documentation search unless the mailing-list (m=1) or the site-wide
+    # crawler search (site=1) is asked for explicitly.
+    if request.GET.get('m') != '1' and request.GET.get('site') != '1':
         from .docviews import search_page
         return search_page(request)
     return legacy_search(request)
@@ -325,6 +328,6 @@ def legacy_search(request):
             'hits': [{
                 'title': h[3],
                 'url': "%s%s" % (h[1], h[2]),
-                'abstract': h[4].replace("[[[[[[", "<strong>").replace("]]]]]]", "</strong>"),
+                'abstract': escape(h[4]).replace("[[[[[[", "<strong>").replace("]]]]]]", "</strong>"),
                 'rank': h[5]} for h in hits[:-1]],
         })

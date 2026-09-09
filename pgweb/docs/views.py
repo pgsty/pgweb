@@ -22,6 +22,7 @@ from pgweb.util.db import exec_to_dict
 
 from .models import DocPage, DocPageRedirect
 from .forms import DocCommentForm
+from .versions import DEVEL_MAJOR_VERSION
 
 
 re_cjk = re.compile(r'[\u4e00-\u9fff]')
@@ -391,6 +392,8 @@ def _versioned_404(msg, version):
 def docpage(request, version, filename):
     loaddate = None
     loadgit = None
+    if version == str(DEVEL_MAJOR_VERSION):
+        return HttpResponsePermanentRedirect('/docs/devel/{}.html'.format(filename))
     if version == 'current':
         ver = Version.objects.filter(current=True)[0].tree
     elif version == 'devel':
@@ -544,6 +547,8 @@ def docpage(request, version, filename):
 @allow_frames
 @content_sources('style', "'unsafe-inline'")
 def docsvg(request, version, filename):
+    if version == str(DEVEL_MAJOR_VERSION):
+        return HttpResponsePermanentRedirect('/docs/devel/{}.svg'.format(filename))
     if version == 'current':
         ver = Version.objects.filter(current=True)[0].tree
     elif version == 'devel':
@@ -589,6 +594,7 @@ def root(request):
         'versions': _loaded_version_wrappers(versions),
         'devel_a4pdf': _find_devel_pdf('A4'),
         'devel_uspdf': _find_devel_pdf('US'),
+        'devel_major': DEVEL_MAJOR_VERSION,
         'og': {
             'url': '/docs/',
             'type': 'website',
@@ -644,7 +650,8 @@ class _VersionPdfWrapper(object):
 
 def _find_devel_pdf(pagetype):
     try:
-        return os.stat('%s/documentation/pdf/19/postgresql-19-%s.pdf' % (settings.STATIC_CHECKOUT, pagetype)).st_size
+        return os.stat('%s/documentation/pdf/%s/postgresql-%s-%s.pdf' % (
+            settings.STATIC_CHECKOUT, DEVEL_MAJOR_VERSION, DEVEL_MAJOR_VERSION, pagetype)).st_size
     except Exception:
         return 0
 

@@ -160,10 +160,31 @@ def render_pgweb(request, section, template, context):
     return render(request, template, context)
 
 
+def _media_stamp():
+    # Development only: HEAD does not move while files are being edited, so
+    # the newest mtime under media/css and media/js is appended to the
+    # cache-busting revision. Costs one directory walk per request.
+    import os
+    latest = 0
+    for folder in ('media/css', 'media/js'):
+        for root, _dirs, files in os.walk(folder):
+            for name in files:
+                try:
+                    latest = max(latest, int(os.stat(os.path.join(root, name)).st_mtime))
+                except OSError:
+                    pass
+    return str(latest)
+
+
 def _get_gitrev():
     # Return the current git revision, that is used for
     # cache-busting URLs. Resolve HEAD's branch (main on pg.center,
     # master upstream) so a deploy always busts the CSS/JS caches.
+    rev = _git_head()
+    return rev + '-' + _media_stamp() if settings.DEBUG else rev
+
+
+def _git_head():
     def _read(path):
         with open(path) as f:
             return f.readline().strip()
@@ -229,6 +250,7 @@ def PGWebContextProcessor(request):
         'gitrev': gitrev,
         'topbarnews': SimpleLazyObject(_get_topbar_news),
         'sitenav': sitenav,
+        'site_search': bool(getattr(settings, 'SEARCH_DSN', '')),
         'seo': page_metadata(request.path),
         'source_url': 'https://www.postgresql.org' + request.path,
         'source_label': '前往 postgresql.org 对应页面',
