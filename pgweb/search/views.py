@@ -7,10 +7,13 @@ from django.utils.html import escape
 from pgweb.util.decorators import cache, queryparams
 
 import urllib.parse
+import re
 import requests
 import psycopg2
 
 from pgweb.lists.models import MailingList
+from pgweb.core.models import Version
+from pgweb.docs.versions import DEVEL_MAJOR_VERSION
 
 # Conditionally import memcached library. Everything will work without
 # it, so we allow development installs to run without it...
@@ -131,7 +134,16 @@ def legacy_search(request):
         )
     else:
         searchlists = False
-        suburl = request.GET.get('u', None)
+        suburl = request.GET.get('u') or None
+        # The crawler indexes canonical manual URLs, including /current/
+        # and /devel/, while old bookmarks may use their major numbers.
+        manual = re.fullmatch(r'/docs/(\d+)/?', suburl or '')
+        if manual:
+            major = int(manual.group(1))
+            if major == DEVEL_MAJOR_VERSION:
+                suburl = '/docs/devel/'
+            elif Version.objects.filter(tree=major, current=True).exists():
+                suburl = '/docs/current/'
 
     # Check that we actually have something to search for
     if request.GET.get('q', '') == '':
@@ -310,7 +322,7 @@ def legacy_search(request):
                 quoted_suburl = ''
         except Exception as e:
             quoted_suburl = ''
-        querystr = "?q=%s&u=%s" % (
+        querystr = "?site=1&q=%s&u=%s" % (
             urllib.parse.quote_plus(query.encode('utf-8')),
             quoted_suburl,
         )

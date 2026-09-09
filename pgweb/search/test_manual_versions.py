@@ -1,5 +1,6 @@
 from datetime import date
 from io import StringIO
+from unittest.mock import patch
 
 from django.core.management import call_command
 from django.test import TestCase
@@ -52,3 +53,17 @@ class ManualVersionTests(TestCase):
         alias = self.client.get(f'/docs/{DEVEL_MAJOR_VERSION}/runtime-config-resource.html')
         self.assertEqual(alias.status_code, 301)
         self.assertEqual(alias['Location'], '/docs/devel/runtime-config-resource.html')
+
+    @patch('pgweb.search.views.psycopg2.connect')
+    def test_site_search_keeps_pagination_and_uses_canonical_manual_scopes(self, connect):
+        cursor = connect.return_value.cursor.return_value
+        cursor.fetchall.return_value = [
+            (1, 'https://pg.center', '/docs/current/runtime-config-resource.html', '资源消耗', '工作内存', 1),
+            (1000, None, None, None, None, 41),
+        ]
+        for major, path, internal in [(18, '/docs/current/', False), (DEVEL_MAJOR_VERSION, '/docs/devel/', True)]:
+            response = self.client.get('/search/', {'site': '1', 'q': 'work_mem', 'u': f'/docs/{major}/'})
+            self.assertEqual(cursor.execute.call_args[0][1]['suburl'], path)
+            self.assertEqual(cursor.execute.call_args[0][1]['internal'], internal)
+            self.assertContains(response, '?site=1&q=work_mem&u=')
+            self.assertContains(response, '&p=2')
