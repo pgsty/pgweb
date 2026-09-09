@@ -16,6 +16,7 @@ import pgweb.news.views
 import pgweb.profserv.views
 import pgweb.pugs.views
 import pgweb.search.views
+import pgweb.search.docviews
 import pgweb.security.views
 import pgweb.sponsors.views
 import pgweb.survey.views
@@ -89,6 +90,9 @@ urlpatterns = [
     re_path(r'^community/user-groups/$', pgweb.pugs.views.index),
 
     re_path(r'^search/$', pgweb.search.views.search),
+    path('search/docs/', pgweb.search.docviews.search_page),
+    path('search/api/', pgweb.search.docviews.search_api),
+    path('search/preview/<int:entry_id>/', pgweb.search.docviews.preview_api),
 
     re_path(r'^support/security/$', pgweb.security.views.index),
     re_path(r'^support/security/(\d\.\d|\d{2})/$', pgweb.security.views.version),

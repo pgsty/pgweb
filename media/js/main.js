@@ -44,6 +44,13 @@
       setDrawer(false);
       return;
     }
+    if (document.getElementById('doc-search')) return;
+    if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      const version = location.pathname.match(/^\/docs\/(\d+)\//);
+      location.assign('/search/' + (version ? '?scope=pg' + version[1] : ''));
+      return;
+    }
     // "/" focuses the site search unless the reader is already typing.
     if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       const t = e.target;

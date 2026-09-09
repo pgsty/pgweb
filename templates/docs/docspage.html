@@ -60,7 +60,7 @@
               <form id="docSearchForm" role="search" method="get" action="/search/">
                 <input type="hidden" name="u" value="/docs/{{page.display_version}}/" />
                 <div class="input-group">
-                  <input type="text" id="q" name="q" class="form-control" placeholder="搜索文档..."/>
+                  <input type="text" id="doc-query-inline" name="q" class="form-control" placeholder="检索 PG{{page.display_version}} 文档…" aria-label="检索当前版本文档" maxlength="255"/>
                   <span class="input-group-btn">
                     <button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
                   </span>

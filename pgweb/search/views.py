@@ -47,9 +47,16 @@ def generate_pagelinks(pagenum, totalpages, querystring):
 
 
 @csrf_exempt
-@queryparams('d', 'l', 'ln', 'm', 'p', 'q', 's', 'u')
-@cache(minutes=30)
+@queryparams('d', 'l', 'ln', 'm', 'p', 'q', 's', 'u', 'scope', 'kind', 'offset')
 def search(request):
+    if request.GET.get('m') != '1':
+        from .docviews import search_page
+        return search_page(request)
+    return legacy_search(request)
+
+
+@cache(minutes=30)
+def legacy_search(request):
     # Perform a general web search
     # Since this lives in a different database, we open a direct
     # connection with psycopg, thus bypassing everything that has to do

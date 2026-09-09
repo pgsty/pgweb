@@ -271,3 +271,5 @@ connection.close()
 
 if not quiet:
     print("Done loading docs version %s (%i pages)." % (ver, pagecount))
+    if numchanges and ver != 'devel' and float(ver) >= 14:
+        print("Refresh the manual search index: .venv/bin/python manage.py index_docs --versions %s" % int(float(ver)))

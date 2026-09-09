@@ -509,6 +509,8 @@ def docpage(request, version, filename):
         current_page_label = '当前版本手册首页'
 
     page_title = _doc_page_title(page)
+    from pgweb.search.extract import reading_html
+    page.content = reading_html(page.content)
     r = render(request, 'docs/docspage.html', {
         'page': page,
         'supported_versions': [v for v in versions if v.version.supported],
