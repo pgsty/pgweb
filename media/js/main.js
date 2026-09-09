@@ -38,11 +38,10 @@
     if (drawerIsOpen() && window.innerWidth >= 992) setDrawer(false);
   });
 
-  // Notice bar: the close control hides it and remembers the choice.
+  // Notice bar: the close control hides it for this page view only.
   document.querySelectorAll('[data-pg-shout-close]').forEach((btn) => {
     btn.addEventListener('click', () => {
       document.documentElement.setAttribute('data-shout', 'off');
-      try { localStorage.setItem('pgShout', 'off'); } catch (e) {}
     });
   });
 
