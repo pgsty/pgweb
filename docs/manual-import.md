@@ -22,7 +22,7 @@
 
 导入按 `(version, file)` 原位更新，移除本版构建不再包含的文件，保留未变化页面的 ID。将本地导入后的文档数据固定导出，同步到生产时按同一键在事务内更新并核对每版记录数及内容摘要；同时同步 `docsloaded` 与开发源码提交。不覆盖新闻、用户、扩展目录等业务数据。别名、重定向表如有差异，应先核对具体记录。
 
-生产 PDF 位于 `/data/app/pgweb/static/documentation/pdf/`，对应 `/files/documentation/pdf/`。逐文件比较源产物、本地副本和生产副本 SHA256，并检查公网下载响应。
+生产 PDF 位于 `/data/app/pgsql.cc/static/documentation/pdf/`；旧入口保留期间还需同步 `/data/app/pgweb/static/documentation/pdf/`，对应 `/files/documentation/pdf/`。逐文件比较源产物、本地副本和生产副本 SHA256，并检查公网下载响应。
 
 ## 发布与检索
 

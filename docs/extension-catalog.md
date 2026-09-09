@@ -66,7 +66,7 @@ PGWeb 在自己的数据库中仅保存 `pgext.universe` 的副本；运行页�
 ## 将同一份数据发布到本地与生产
 
 先在生产部署扩展应用和同步脚本，并应用迁移。生产连接通过 `ssh pg`，使用远端的 Django 配置，
-默认代码目录 `/data/app/pgweb`。可用 `--ssh-host`、`--remote-root` 更换环境。
+默认代码目录 `/data/app/pgsql.cc`。可用 `--ssh-host`、`--remote-root` 更换环境。
 
 ```bash
 # 固定源库快照，只导出，不修改目标库；文件是压缩 JSON

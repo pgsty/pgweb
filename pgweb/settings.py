@@ -153,15 +153,15 @@ RECAPTCHA_SECRET_KEY = ""
 # In particular, adjust the email addresses
 ###
 SESSION_COOKIE_SECURE = True                                # Allow our session only over https
-SESSION_COOKIE_DOMAIN = "pgsql.cc"                          # Scope session cookies to this site
+SESSION_COOKIE_DOMAIN = None                                # Host-only cookies for the public domain
 SESSION_COOKIE_HTTPONLY = True                              # Access over http only, no js
 CSRF_COOKIE_SECURE = SESSION_COOKIE_SECURE
 CSRF_COOKIE_DOMAIN = SESSION_COOKIE_DOMAIN
 CSRF_COOKIE_HTTPONLY = SESSION_COOKIE_HTTPONLY
 
 SITE_ROOT = "https://pgsql.cc"                               # Root of working URLs
-ALLOWED_HOSTS = ['pgsql.cc', 'www.pgsql.cc', 'localhost', '127.0.0.1']
-CSRF_TRUSTED_ORIGINS = ['https://pgsql.cc', 'https://www.pgsql.cc']
+ALLOWED_HOSTS = ['pgsql.cc', 'localhost', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = ['https://pgsql.cc']
 FTP_PICKLE = "/usr/local/pgweb/ftpsite.pickle"              # Location of file with current contents from ftp site
 YUM_JSON = "/usr/local/pgweb/external/yum.json"
 STATIC_CHECKOUT = os.path.join(BASE_DIR, "static")          # Location of static files served under /files/

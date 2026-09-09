@@ -20,7 +20,7 @@ def main():
     parser.add_argument('--target', choices=['local', 'production'], default='local')
     parser.add_argument('--database', help='Override target database name, e.g. for an isolated test database')
     parser.add_argument('--ssh-host', default='pg')
-    parser.add_argument('--remote-root', default='/data/app/pgweb')
+    parser.add_argument('--remote-root', default='/data/app/pgsql.cc')
     parser.add_argument('--dry-run', action='store_true', help='Compare only; no permanent table or sequence writes')
     parser.add_argument('--prune', action='store_true', help='Remove target rows absent from this complete source snapshot')
     args = parser.parse_args()
