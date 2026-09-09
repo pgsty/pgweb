@@ -110,6 +110,7 @@ urlpatterns = [
     re_path(r'^about/contributing/$', pgweb.sponsors.views.contributing),
     re_path(r'^about/financial/$', pgweb.sponsors.views.financial),
     re_path(r'^about/servers/$', pgweb.sponsors.views.servers),
+    re_path(r'^about/pgcenter/$', RedirectView.as_view(url='/about/pgsql/', permanent=True, query_string=True)),
 
     re_path(r'^robots.txt$', pgweb.core.views.robots),
     re_path(r'^favicon\.ico$', RedirectView.as_view(url='/media/favicon.ico', permanent=True)),

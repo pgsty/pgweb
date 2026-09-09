@@ -20,8 +20,8 @@ def load_security_json(*, overwrite_text=None, prune_missing=None, dry_run=False
 SELECT (regexp_match(cveid, '^CVE-(\\d{4}-\\d{4,5})$'))[1] AS cve, title, description, vector, fixed, component
 FROM JSON_TABLE(%(j)s::json, '$[*]' COLUMNS (
   cveid text PATH '$.cveMetadata.cveId' ERROR ON EMPTY ERROR ON ERROR,
-  title text PATH '$._pgcenter.title' ERROR ON EMPTY ERROR ON ERROR,
-  description text PATH '$._pgcenter.description' ERROR ON EMPTY ERROR ON ERROR,
+  title text PATH '$._localized.title' ERROR ON EMPTY ERROR ON ERROR,
+  description text PATH '$._localized.description' ERROR ON EMPTY ERROR ON ERROR,
   vector text PATH '$.containers.cna.metrics[*] ? (exists(@.cvssV3_1)).cvssV3_1.vectorString' ERROR ON EMPTY ERROR ON ERROR,
   fixed text[] PATH '$.containers.cna.affected.versions[*].lessThan.number()' WITH ARRAY WRAPPER ERROR ON EMPTY ERROR ON ERROR,
   component text PATH '$.containers.cna.x_postgresql.component' DEFAULT 'core server' ON EMPTY ERROR ON ERROR
@@ -125,7 +125,7 @@ def _load_all_cve_json():
                     for description in cna['descriptions']
                     if description['lang'] == 'en'
                 )
-                j['_pgcenter'] = {
+                j['_localized'] = {
                     'title': localized.get('title', cna['title']),
                     'description': localized.get('description', english_description),
                 }

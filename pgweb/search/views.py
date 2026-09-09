@@ -339,7 +339,7 @@ def legacy_search(request):
                                    querystr)),
             'hits': [{
                 'title': h[3],
-                'url': "%s%s" % (h[1], h[2]),
+                'url': "%s%s" % (settings.SITE_ROOT.rstrip('/') if h[0] == 1 else h[1], h[2]),
                 'abstract': escape(h[4]).replace("[[[[[[", "<strong>").replace("]]]]]]", "</strong>"),
                 'rank': h[5]} for h in hits[:-1]],
         })

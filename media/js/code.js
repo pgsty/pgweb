@@ -1,5 +1,5 @@
 /*
- * pg.center code blocks
+ * pgsql.cc code blocks
  * ---------------------------------------------------------------------
  * Wraps every <pre> on content and documentation pages in a
  * framed block with a copy button in the top-right corner (the OINK

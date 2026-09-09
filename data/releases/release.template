@@ -1,9 +1,9 @@
-# 发布 YAML 可用字段模板。新闻 id 必须使用 pg.center 本地数据库中的译文主键。
+# 发布 YAML 可用字段模板。新闻 id 必须使用 pgsql.cc 本地数据库中的译文主键。
 date: 2026-06-04       # 发布日期，格式为 yyyy-mm-dd
 versions:              # 小版本可列出一个或多个，其余发布类型必须只有一个版本
   - 19.0               # 正式版写完整 <major>.<minor>；测试版写 <major>alpha<num>/beta<num>/rc<num>
 news:
-  id: 3313             # pg.center 的本地中文发布公告主键
+  id: 3313             # pgsql.cc 的本地中文发布公告主键
 announcetext_zh: |     # 仅 major 或 override 使用；这里填写首页显示的中文 HTML
   <p>
   在这里填写<b>中文发布摘要</b>。

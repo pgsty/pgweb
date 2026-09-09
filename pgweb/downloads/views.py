@@ -45,7 +45,7 @@ def ftpbrowser(request, subpath):
         allnodes = pickle.load(f)
         f.close()
     except FileNotFoundError:
-        # pg.center does not mirror the FTP inventory. Keep the same directory
+        # pgsql.cc does not mirror the FTP inventory. Keep the same directory
         # on the upstream file browser rather than displaying a server error.
         return HttpResponseRedirect('https://www.postgresql.org/ftp/' + quote(subpath, safe='/') + ('/' if subpath else ''))
     except Exception as e:

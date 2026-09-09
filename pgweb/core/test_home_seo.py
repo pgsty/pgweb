@@ -23,7 +23,7 @@ class HomeMarkup(HTMLParser):
                 if name == tag and all(attrs.get(k) == v for k, v in matching.items())]
 
 
-@override_settings(SITE_ROOT='https://pg.center', ALLOWED_HOSTS=['testserver', 'preview.example'])
+@override_settings(SITE_ROOT='https://pgsql.cc', ALLOWED_HOSTS=['testserver', 'preview.example'])
 class HomeSEOTests(SimpleTestCase):
     def setUp(self):
         # Exercise the real view and inherited templates without a database.
@@ -59,7 +59,7 @@ class HomeSEOTests(SimpleTestCase):
         self.assertEqual(head.values('meta', 'content', name='twitter:title'), [title])
         descriptions = head.values('meta', 'content', name='description')
         self.assertEqual(descriptions, [
-            'pg.center 是由 Pigsty 团队维护的 PostgreSQL 官方网站中文翻译站，提供中文文档、技术资讯、软件目录与知识库。',
+            'pgsql.cc 是由 Pigsty 团队维护的 PostgreSQL 官方网站中文翻译站，提供中文文档、技术资讯、软件目录与知识库。',
         ])
         self.assertNotIn('官方网站中文版', html)
         self.assertEqual(head.values('meta', 'content', property='og:description'), descriptions)
@@ -68,27 +68,27 @@ class HomeSEOTests(SimpleTestCase):
         self.assertEqual(head.values('meta', 'content', property='og:locale'), ['zh_CN'])
         self.assertEqual(head.values('meta', 'content', name='twitter:card'), ['summary'])
         self.assertEqual(head.values('meta', 'content', property='og:image'),
-                         ['https://pg.center/media/img/about/press/elephant.png'])
+                         ['https://pgsql.cc/media/img/about/press/elephant.png'])
         self.assertEqual(head.values('meta', 'content', name='twitter:image'),
                          head.values('meta', 'content', property='og:image'))
         self.assertNotIn('noindex', html.split('</head>', 1)[0])
 
     def test_canonical_and_site_identity_ignore_request_host_and_query(self):
-        for site_root in ('https://pg.center', 'https://pg.center/'):
+        for site_root in ('https://pgsql.cc', 'https://pgsql.cc/'):
             with self.subTest(site_root=site_root), override_settings(SITE_ROOT=site_root):
                 response = self.client.get('/?utm_source=share', HTTP_HOST='preview.example')
                 self.assertEqual(response.status_code, 200)
                 html = response.content.decode()
                 head = HomeMarkup(html.split('</head>', 1)[0])
-                self.assertEqual(head.values('link', 'href', rel='canonical'), ['https://pg.center/'])
-                self.assertEqual(head.values('meta', 'content', property='og:url'), ['https://pg.center/'])
+                self.assertEqual(head.values('link', 'href', rel='canonical'), ['https://pgsql.cc/'])
+                self.assertEqual(head.values('meta', 'content', property='og:url'), ['https://pgsql.cc/'])
                 self.assertEqual(head.values('script', 'type', type='application/ld+json'), ['application/ld+json'])
                 data = json.loads(html.split('<script type="application/ld+json">')[1].split('</script>')[0])
                 self.assertEqual(data['@context'], 'https://schema.org')
                 self.assertEqual(data['@type'], 'WebSite')
                 self.assertEqual(data['name'], 'PostgreSQL 中文社区')
-                self.assertEqual(data['alternateName'], 'pg.center')
-                self.assertEqual(data['url'], 'https://pg.center/')
+                self.assertEqual(data['alternateName'], 'pgsql.cc')
+                self.assertEqual(data['url'], 'https://pgsql.cc/')
                 self.assertEqual(data['inLanguage'], 'zh-CN')
                 self.assertEqual(data['description'], head.values('meta', 'content', name='description')[0])
                 self.assertEqual([data['name']], head.values('meta', 'content', property='og:site_name'))
@@ -101,12 +101,24 @@ class HomeSEOTests(SimpleTestCase):
         self.assertContains(response, 'class="pg-hero__chip"')
         self.assertContains(response, 'href="/about/news/release-3365/"')
         self.assertContains(response, '无隶属关系')
+        self.assertContains(response, 'href="/about/pgsql/"')
+        self.assertNotContains(response, 'pg.center')
+
+    def test_about_page_uses_new_brand_and_old_url_redirects(self):
+        response = self.client.get('/about/pgsql/')
+        self.assertContains(response, '关于 pgsql.cc')
+        self.assertNotContains(response, 'pg.center')
+        head = HomeMarkup(response.content.decode().split('</head>', 1)[0])
+        self.assertEqual(head.values('link', 'href', rel='canonical'), ['https://pgsql.cc/about/pgsql/'])
+        old = self.client.get('/about/pgcenter/')
+        self.assertEqual(old.status_code, 301)
+        self.assertEqual(old['Location'], '/about/pgsql/')
 
     def test_jsonld_strings_are_escaped(self):
         value = '引号 "、反斜杠 \\、换行\n和 </script><script>alert(1)</script>'
         html = render_to_string('index.html', {
             'title': value,
-            'link_root': 'https://pg.center',
+            'link_root': 'https://pgsql.cc',
             'og': {'title': value, 'sitename': value, 'description': value, 'url': '/'},
         })
         source = html.split('<script type="application/ld+json">')[1].split('</script>')[0]

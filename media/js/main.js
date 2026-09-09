@@ -1,5 +1,5 @@
 /*
- * pg.center site chrome
+ * pgsql.cc site chrome
  * ---------------------------------------------------------------------
  * Header drawer, scrolled-header shadow and the light/dark theme switch.
  * Search shortcuts ("/" and ⌘K) live in palette.js. `theme` is declared

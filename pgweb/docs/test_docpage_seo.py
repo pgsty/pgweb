@@ -62,7 +62,7 @@ class DocPageSeoTests(SimpleTestCase):
 
     def test_document_modified_time_is_not_published_time(self):
         source = render_to_string('base/base.html', {
-            'link_root': 'https://pg.center',
+            'link_root': 'https://pgsql.cc',
             'seo': {'title': 'PostgreSQL 18 文档 · ECPG PREPARE'},
             'og': {
                 'url': '/docs/18/ecpg-sql-prepare.html',

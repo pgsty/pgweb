@@ -22,7 +22,7 @@ pages:
     lang: en
   /about/contact/:
     title: PostgreSQL 联系我们
-    description: 汇总 PostgreSQL 的 Bug、安全问题、技术支持、媒体与社区联系渠道，并说明如何反馈 pg.center 的译文和网站问题。
+    description: 汇总 PostgreSQL 的 Bug、安全问题、技术支持、媒体与社区联系渠道，并说明如何反馈 pgsql.cc 的译文和网站问题。
     lang: zh
   /about/donate/:
     title: PostgreSQL 捐赠与非营利组织
@@ -4306,9 +4306,9 @@ pages:
     title: PostgreSQL 版本策略与升级指南
     description: 了解 PostgreSQL 版本编号、支持周期、主版本和小版本升级方式。
     lang: zh
-  /about/pgcenter/:
-    title: PostgreSQL 关于 pg.center
-    description: 了解 pg.center 中文站的内容来源、Pigsty 维护方式、译文许可、署名说明与参与渠道。
+  /about/pgsql/:
+    title: PostgreSQL 关于 pgsql.cc
+    description: 了解 pgsql.cc 中文站的内容来源、Pigsty 维护方式、译文许可、署名说明与参与渠道。
     lang: zh
   /about/featurematrix/:
     title: PostgreSQL 特性矩阵与版本支持对照

@@ -1,7 +1,7 @@
-# pg.center 发布数据流程
+# pgsql.cc 发布数据流程
 
 首页、Beta 页面和发布摘要由 `data/releases/` 中日期最新的 `.yaml` 文件驱动。
-文件名必须使用 `YYYY-MM-DD.yaml`，其中的新闻 `id` 必须指向 pg.center 本地数据库中的
+文件名必须使用 `YYYY-MM-DD.yaml`，其中的新闻 `id` 必须指向 pgsql.cc 本地数据库中的
 中文发布公告，而不是上游 postgresql.org 数据库的主键。
 
 ## 安全默认值

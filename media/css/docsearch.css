@@ -1,7 +1,7 @@
 /* PostgreSQL document search page: one search bar, then a workspace card
    with category filters, the ranked list and the definition preview. Result
    rows, kind badges and the preview are shared with the site palette, so
-   those rules live in pgcenter.css (.ds-result, .ds-kind, .ds-preview-*,
+   those rules live in pgsql.css (.ds-result, .ds-kind, .ds-preview-*,
    .ds-doc); this file only lays out the page. */
 
 .ds-app {

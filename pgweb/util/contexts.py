@@ -77,7 +77,7 @@ sitenav = {
         ]},
         {'title': '媒体资料', 'link': '/about/press/'},
         {'title': '许可证', 'link': '/about/licence/'},
-        {'title': '关于 pg.center', 'link': '/about/pgcenter/'},
+        {'title': '关于 pgsql.cc', 'link': '/about/pgsql/'},
     ],
     'download': [
         {'title': '下载', 'link': '/download/', 'submenu': [
@@ -178,7 +178,7 @@ def _media_stamp():
 
 def _get_gitrev():
     # Return the current git revision, that is used for
-    # cache-busting URLs. Resolve HEAD's branch (main on pg.center,
+    # cache-busting URLs. Resolve HEAD's branch (main on pgsql.cc,
     # master upstream) so a deploy always busts the CSS/JS caches.
     rev = _git_head()
     return rev + '-' + _media_stamp() if settings.DEBUG else rev
@@ -240,7 +240,7 @@ def _get_topbar_news():
 
 
 # Topbar news is lazy so requests that do not render the global header avoid
-# the query. pg.center does not use ESI, so keep a short application cache as
+# the query. pgsql.cc does not use ESI, so keep a short application cache as
 # well instead of querying PinnedNewsArticle for every page.
 def PGWebContextProcessor(request):
     gitrev = SimpleLazyObject(_get_gitrev)

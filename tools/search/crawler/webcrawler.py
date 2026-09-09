@@ -20,9 +20,19 @@ def doit():
     # Start by indexing the main website
     log("Starting indexing of main website")
     local_baseurl = cp.get("search", "local_baseurl") if cp.has_option("search", "local_baseurl") else None
-    hostname = cp.get("search", "web")  # pg.center
+    hostname = cp.get("search", "web")  # pgsql.cc
     https = cp.get("search", "https").lower() == 'true' if cp.has_option("search", "https") else True
     SitemapSiteCrawler(hostname, conn, 1, cp.get("search", "frontendip"), https, local_baseurl).crawl()
+    # Keep result URLs and the site label aligned with the configured domain
+    # after a successful crawl. Existing document rows retain their site id.
+    curs.execute("""UPDATE sites SET
+        description=replace(description, hostname, %(hostname)s),
+        hostname=%(hostname)s, baseurl=%(baseurl)s, https=%(https)s
+        WHERE id=1""", {
+        'hostname': hostname,
+        'baseurl': ('https://' if https else 'http://') + hostname,
+        'https': https,
+    })
     conn.commit()
 
     # Skip id=1, which is the main site..

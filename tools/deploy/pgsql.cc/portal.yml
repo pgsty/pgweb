@@ -1,0 +1,21 @@
+# Merge these entries into the existing infra_portal map in Pigsty's inventory.
+# The pgweb key replaces the current application vhost; other sites stay intact.
+pgweb:
+  domain: pgsql.cc
+  endpoint: 127.0.0.1:8000
+  conf: pgweb.conf
+  certbot: pgsql.cc
+  log: pgweb.log
+
+pgweb_www:
+  domain: www.pgsql.cc
+  conf: redirect.conf
+  certbot: www.pgsql.cc
+  redirect: pgsql.cc
+
+# Retain the existing domain solely for permanent redirects and TLS renewal.
+pgweb_legacy:
+  domain: pg.center
+  conf: redirect.conf
+  certbot: pg.center
+  redirect: pgsql.cc

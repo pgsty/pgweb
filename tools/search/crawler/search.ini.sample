@@ -1,4 +1,7 @@
 [search]
 db=dbname=pgweb
-web=www.postgresql.org
-frontendip=1.2.3.4
+web=pgsql.cc
+https=true
+frontendip=
+# Fetch locally while keeping the public domain in the search index.
+local_baseurl=http://127.0.0.1:8000

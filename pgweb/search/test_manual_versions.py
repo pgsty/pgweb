@@ -58,7 +58,7 @@ class ManualVersionTests(TestCase):
     def test_site_search_keeps_pagination_and_uses_canonical_manual_scopes(self, connect):
         cursor = connect.return_value.cursor.return_value
         cursor.fetchall.return_value = [
-            (1, 'https://pg.center', '/docs/current/runtime-config-resource.html', '资源消耗', '工作内存', 1),
+            (1, 'https://pgsql.cc', '/docs/current/runtime-config-resource.html', '资源消耗', '工作内存', 1),
             (1000, None, None, None, None, 41),
         ]
         for major, path, internal in [(18, '/docs/current/', False), (DEVEL_MAJOR_VERSION, '/docs/devel/', True)]:

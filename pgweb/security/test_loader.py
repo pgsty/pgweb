@@ -17,12 +17,12 @@ class SecurityLoaderTests(SimpleTestCase):
 
         self.assertEqual(len(cves), 51)
         self.assertEqual(
-            cves['CVE-2026-6472']['_pgcenter']['title'],
+            cves['CVE-2026-6472']['_localized']['title'],
             'PostgreSQL CREATE TYPE 未检查多重范围类型所在 schema 的 CREATE 权限',
         )
         self.assertIn(
             'PostgreSQL 18.4、17.10、16.14、15.18 和 14.23',
-            cves['CVE-2026-6472']['_pgcenter']['description'],
+            cves['CVE-2026-6472']['_localized']['description'],
         )
 
     def test_current_release_cves_all_have_chinese_overlays(self):

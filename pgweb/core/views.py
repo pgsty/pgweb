@@ -98,7 +98,7 @@ def home(request):
             'url': '/',
             'type': 'website',
             'title': title,
-            'description': 'pg.center 是由 Pigsty 团队维护的 PostgreSQL 官方网站中文翻译站，提供中文文档、技术资讯、软件目录与知识库。',
+            'description': 'pgsql.cc 是由 Pigsty 团队维护的 PostgreSQL 官方网站中文翻译站，提供中文文档、技术资讯、软件目录与知识库。',
             'sitename': 'PostgreSQL 中文社区',
         },
     })
@@ -266,7 +266,7 @@ def sitemap_internal(request):
 _dynamic_cssmap = {
     'base': ['media/css/main.css',
              'media/css/normalize.css',
-             'media/css/pgcenter.css', ],
+             'media/css/pgsql.css', ],
 }
 
 

@@ -1,4 +1,4 @@
-PostgreSQL 中文社区网站（pg.center）
+PostgreSQL 中文社区网站（pgsql.cc）
 ======================
 
 The code in this repository is what backs the website at www.postgresql.org.

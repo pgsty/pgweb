@@ -87,12 +87,12 @@ class PublicMetadataTests(SimpleTestCase):
                      'canonical': '/example/', 'lang': 'fr', 'alternates': {'fr': '/example/'}}},
             {'og': {'title': '新闻标题', 'description': description, 'url': '/example/'}},
         ):
-            context['link_root'] = 'https://pg.center'
+            context['link_root'] = 'https://pgsql.cc'
             source = render_to_string('base/base.html', context)
             head = HeadParser(source)
             self.assertEqual(head.values('meta', 'content', name='description'), [description])
             self.assertEqual(head.values('meta', 'content', property='og:description'), [description])
-            self.assertEqual(head.values('link', 'href', rel='canonical'), ['https://pg.center/example/'])
+            self.assertEqual(head.values('link', 'href', rel='canonical'), ['https://pgsql.cc/example/'])
             self.assertNotIn('< b', source)
         self.assertIn('lang="fr"', render_to_string('base/base.html', {'seo': {'lang': 'fr'}}))
 
@@ -112,6 +112,8 @@ class PublicMetadataTests(SimpleTestCase):
                 fallback(RequestFactory().get('/' + path + '/'), path)
         paths = {path for path, *_ in get_struct()}
         self.assertIn('about/', paths)
+        self.assertIn('about/pgsql/', paths)
+        self.assertNotIn('about/pgcenter/', paths)
         self.assertIn('download/', paths)
         self.assertNotIn('include/topbar/', paths)
         self.assertNotIn('account/markdown_submission/', paths)
