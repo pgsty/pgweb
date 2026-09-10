@@ -565,6 +565,15 @@
   align-items: baseline;
 }
 
+.pg-digest__head::after {
+  content: none; /* no rule: the RSS button closes the row instead */
+}
+
+.pg-digest__rss {
+  margin-left: auto;
+  align-self: center;
+}
+
 .pg-digest__date {
   color: var(--pg-link);
   font-family: var(--pg-font-mono);

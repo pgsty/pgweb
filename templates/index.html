@@ -288,6 +288,7 @@
       <h2 id="digest-title">博览</h2>
       <a class="pg-digest__date" href="{{ info_home.url }}"><time datetime="{{ info_home.date|date:"Y-m-d" }}">{{ info_home.date|date:"Y-m-d" }}</time></a>
       <span class="pg-digest__count">{{ info_home.count }} 条</span>
+      <a class="info-rss pg-digest__rss" href="/info/rss/" title="订阅博览 RSS，每天一期">{% include "base/icon.html" with name="rss" %}<span>RSS 订阅</span></a>
     </div>
     <ol class="pg-digest">
       {% for entry in info_home.entries %}
@@ -299,8 +300,9 @@
       {% endfor %}
     </ol>
     <div class="pg-digest__actions">
-      <a class="pg-btn pg-btn--primary" href="{{ info_home.url }}" title="查看当天博览">查看当天详情</a>
-      <a class="pg-btn pg-btn--ghost" href="/info/" title="更多博览">更多博览</a>
+      <a class="pg-btn pg-btn--primary" href="{{ info_home.url }}" title="当日博览">当日详情</a>
+      <a class="pg-btn pg-btn--ghost" href="/info/" title="博览最新收录">更多资讯</a>
+      <a class="pg-btn pg-btn--ghost" href="/info/archive/" title="博览归档">历史归档</a>
     </div>
   </div>
 </section>
