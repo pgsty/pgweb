@@ -191,30 +191,6 @@
 </section>
 <!-- END CTA -->
 
-<!-- 博览 -->
-{% if info_home.entries %}
-<section class="pg-section pg-section--info">
-  <div class="pg-container">
-    <div class="pg-section__head">
-      <h2>博览</h2>
-    </div>
-    <ul class="pg-infohome">
-      {% for entry in info_home.entries %}
-        <li>
-          <h3><a href="{{ entry.url }}" target="_blank" rel="noopener">{{ entry.title }}</a></h3>
-          {% if entry.summary %}<p class="pg-infohome__lead">{{ entry.summary }}</p>{% endif %}
-          {% if entry.source %}<p class="pg-infohome__meta">{{ entry.source }}</p>{% endif %}
-        </li>
-      {% endfor %}
-    </ul>
-    <div class="pg-infohome__actions">
-      <a class="pg-btn pg-btn--primary" href="/info/" title="更多博览">更多博览</a>
-    </div>
-  </div>
-</section>
-{% endif %}
-<!-- END 博览 -->
-
 <!-- News -->
 <section class="pg-section pg-section--news">
   <div class="pg-container">
@@ -303,6 +279,33 @@
   <div class="pg-cta__media pg-cta__media--bugs" role="img" aria-label="报告 Bug"><span class="pg-cta__wash" aria-hidden="true"></span></div>
 </section>
 <!-- END CTA -->
+
+<!-- 博览: the latest day as a compact digest -->
+{% if info_home.entries %}
+<section class="pg-section pg-section--digest" aria-labelledby="digest-title">
+  <div class="pg-container">
+    <div class="pg-section__head pg-digest__head">
+      <h2 id="digest-title">博览</h2>
+      <a class="pg-digest__date" href="{{ info_home.url }}"><time datetime="{{ info_home.date|date:"Y-m-d" }}">{{ info_home.date|date:"Y-m-d" }}</time></a>
+      <span class="pg-digest__count">{{ info_home.count }} 条</span>
+    </div>
+    <ol class="pg-digest">
+      {% for entry in info_home.entries %}
+        <li class="pg-digest__item pg-digest__item--t{{ entry.tier }}">
+          <a class="pg-digest__title" href="{{ entry.url }}"{% if entry.external %} target="_blank" rel="noopener"{% endif %}>{{ entry.title }}</a>
+          {% if entry.source %}<span class="pg-digest__source">{{ entry.source }}</span>{% endif %}
+          {% if entry.anchor_url %}<a class="pg-digest__more" href="{{ entry.anchor_url }}" title="在博览中查看详情">详情</a>{% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+    <div class="pg-digest__actions">
+      <a class="pg-btn pg-btn--primary" href="{{ info_home.url }}" title="查看当天博览">查看当天详情</a>
+      <a class="pg-btn pg-btn--ghost" href="/info/" title="更多博览">更多博览</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+<!-- END 博览 -->
 
 </main>
 {%endblock%}

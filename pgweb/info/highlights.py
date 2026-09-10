@@ -1,34 +1,42 @@
-"""The 博览 block on the home page: the latest day's 大新闻, cached briefly."""
+"""The 博览 block on the home page: the latest day's items as a compact list, cached briefly."""
 
 from django.core.cache import cache
 from django.db.models import Max
-from django.utils.text import Truncator
 
 HOME_CACHE_KEY = 'pgweb:info-home'
 HOME_CACHE_SECONDS = 300
-HOME_LIMIT = 4
-HOME_SUMMARY = 80
 
 
-def home_highlights(limit=HOME_LIMIT):
-    """{'date': …, 'entries': [...]}; empty and harmless when nothing is loaded."""
+def home_highlights():
+    """{'date', 'url', 'count', 'entries': [...]}; empty and harmless when nothing is loaded.
+
+    Every published item of the latest day in reading order (tier, position),
+    without tiers, pictures or paragraphs: the home page shows the day as a
+    compact digest and links each title to its article and to the day page.
+    """
     cached = cache.get(HOME_CACHE_KEY)
     if cached is not None:
         return cached
-    result = {'date': None, 'entries': []}
+    result = {'date': None, 'url': '/info/', 'count': 0, 'entries': []}
     try:
         from .models import InfoItem
-        rows = InfoItem.objects.filter(status='published', tier=1)
+        rows = InfoItem.objects.filter(status='published')
         latest = rows.aggregate(date=Max('date'))['date']
         if latest is not None:
-            result['date'] = latest
-            result['entries'] = [{
-                'title': item.title,
-                'summary': Truncator(item.summary).chars(HOME_SUMMARY),
-                'source': item.source,
-                'url': item.url or item.anchor_url,
-                'date': item.date,
-            } for item in rows.filter(date=latest).order_by('position', 'id')[:limit]]
+            items = list(rows.filter(date=latest).order_by('tier', 'position', 'id'))
+            result.update({
+                'date': latest,
+                'url': '/info/{}/'.format(latest.isoformat()),
+                'count': len(items),
+                'entries': [{
+                    'title': item.title,
+                    'url': item.url or item.anchor_url,
+                    'external': bool(item.url),
+                    'source': item.source or item.author,
+                    'anchor_url': item.anchor_url if item.summary else '',
+                    'tier': item.tier,
+                } for item in items],
+            })
     except Exception:
         # The home page never fails because the column is missing or unmigrated.
         return result

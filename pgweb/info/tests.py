@@ -444,27 +444,36 @@ class HomeBlockTests(TestCase):
         cache.clear()
 
     def test_the_helper_is_empty_and_safe_before_anything_is_loaded(self):
-        self.assertEqual(home_highlights(), {'date': None, 'entries': []})
+        self.assertEqual(home_highlights(), {'date': None, 'url': '/info/', 'count': 0, 'entries': []})
 
-    def test_the_helper_returns_the_latest_day_of_lead_items(self):
+    def test_the_helper_returns_every_item_of_the_latest_day_in_reading_order(self):
         run('info_import', batch(day='2026-09-08'))
         cache.clear()
         run('info_import', batch(day='2026-09-10', items=[
             item(1, 1, title='头条一', url='https://example.org/a'),
             item(1, 2, title='头条二', url='https://example.org/b'),
             item(2, 3),
+            item(3, 4, url=''),
         ]))
         result = home_highlights()
         self.assertEqual(result['date'], date(2026, 9, 10))
-        self.assertEqual([entry['title'] for entry in result['entries']], ['头条一', '头条二'])
+        self.assertEqual(result['url'], '/info/2026-09-10/')
+        self.assertEqual(result['count'], 4)
+        self.assertEqual([entry['title'] for entry in result['entries']],
+                         ['头条一', '头条二', 'Autobase 2.11 收进平台界面', 'ClickHouse 26.8 提供 PostgreSQL 线协议端点'])
         self.assertEqual(result['entries'][0]['url'], 'https://example.org/a')
         self.assertEqual(result['entries'][0]['source'], 'PostgreSQL 新闻')
-        self.assertLessEqual(len(result['entries'][0]['summary']), 80)
-        # The cached result is reused, so a later limit does not re-query.
-        self.assertEqual(len(home_highlights(limit=1)['entries']), 2)
+        self.assertTrue(result['entries'][0]['anchor_url'].startswith('/info/2026-09-10/#'))
+        self.assertEqual(result['entries'][3]['anchor_url'], '')
+        self.assertFalse(result['entries'][3]['external'])
 
-    def test_the_helper_returns_at_most_four_items(self):
-        rows = [item(1, position, title='头条 {}'.format(position),
-                     url='https://example.org/lead/{}'.format(position)) for position in range(1, 7)]
-        run('info_import', batch(items=rows))
-        self.assertEqual(len(home_highlights()['entries']), 4)
+    def test_the_home_page_shows_the_digest_with_links_to_the_day(self):
+        from unittest.mock import patch as mock_patch
+        run('info_import', batch())
+        cache.clear()
+        with mock_patch('pgweb.docs.versions.manual_groups', return_value={'supported': [], 'historical': [], 'testing': [], 'devel': None}):
+            response = self.client.get('/')
+        self.assertContains(response, 'pg-digest')
+        self.assertContains(response, 'href="/info/2026-09-10/"')
+        self.assertContains(response, 'PostgreSQL Anonymizer 3.2 修复三个高危漏洞')
+        self.assertNotContains(response, 'pg-infohome')
