@@ -42,6 +42,7 @@ def startswith(value, prefix):
 # that belong to another entry even though they share the path).
 _NAV_SECTIONS = {
     'home': ((), ()),
+    'info': (('/info/',), ()),
     'about': (('/about/',), ()),
     'download': (('/download/', '/ftp/', '/ext/', '/e/'), ()),
     'docs': (('/docs/',), ()),

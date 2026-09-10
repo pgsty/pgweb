@@ -106,8 +106,13 @@ class BaseSiteCrawler(object):
                 log("Exception crawling '%s': %s" % (url, e))
             self.queue.task_done()
 
+    # Sections of the main site that carry their own search and must stay out
+    # of the site index. GenericSiteCrawler crawls other hosts and keeps its
+    # own rule; the main site is crawled by SitemapSiteCrawler, which uses this.
+    EXCLUDED_PREFIXES = ('/info/',)
+
     def exclude_url(self, url):
-        return False
+        return any(url.startswith(prefix) for prefix in self.EXCLUDED_PREFIXES)
 
     def crawl_page(self, url, relprio, internal):
         if url in self.pages_crawled or url + "/" in self.pages_crawled:

@@ -1,0 +1,27 @@
+{% extends "info/base.html" %}
+{% block info_content %}
+<h1>PostgreSQL 博览</h1>
+<p class="info-tagline">{{ tagline }}</p>
+
+{% if days %}
+{% for day in days %}
+<section class="info-day" aria-labelledby="day-{{ day.date|date:"Ymd" }}">
+  <h2 class="info-day__head" id="day-{{ day.date|date:"Ymd" }}">
+    <a href="{{ day.url }}"><time datetime="{{ day.date|date:"Y-m-d" }}">{{ day.date|date:"Y-m-d" }}</time></a>
+    <span class="info-day__count">{{ day.count }} 条</span>
+  </h2>
+  {% include "info/items.html" with lead=day.lead brief=day.brief mini=day.mini %}
+</section>
+{% endfor %}
+
+{% if page.paginator.num_pages > 1 %}
+<nav class="info-pager" aria-label="博览分页">
+  {% if previous_url %}<a href="{{ previous_url }}" rel="prev">上一页</a>{% endif %}
+  {% for item in pagination %}{% if item.url %}<a href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>{% else %}<span>{{ item.label }}</span>{% endif %}{% endfor %}
+  {% if next_url %}<a href="{{ next_url }}" rel="next">下一页</a>{% endif %}
+</nav>
+{% endif %}
+{% else %}
+<p class="info-empty">博览还没有收录任何条目。</p>
+{% endif %}
+{% endblock %}

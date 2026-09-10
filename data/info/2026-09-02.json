@@ -1,0 +1,355 @@
+{
+  "date": "2026-09-02",
+  "origin": "pgsty-daily 2026-09-02.md; pgnexus #257",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 逻辑解码提权漏洞出现公开技术拆解",
+      "summary": "PGDG 的公告说明，缺少授权检查使持有 REPLICATION 权限但不是超级用户的角色，能借逻辑解码插件名让服务端 dlopen 运行账户可见的任意文件，从而以数据库服务账户执行代码。受影响的是 18.6、17.11、16.15、15.19、14.24 之前的版本，修复早在 8 月 13 日随这批小版本发布，9 月 1 日新增的是第三方把攻击路径写清楚的技术拆解，复现门槛因此降低。运维应先找出低于修复线的实例并升级，再逐一列出 rolreplication 角色、清掉不必要的权限、轮换可疑凭证，并把只读备份、物理复制和逻辑复制的账号与网络规则分开审计。",
+      "url": "https://www.postgresql.org/support/security/CVE-2026-6471/",
+      "author": "PostgreSQL 全球开发组",
+      "source": "PostgreSQL 安全公告",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "逻辑解码",
+        "提权"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Claude Fable 5.1 与 Mythos 5.1 同底座但安全面不同",
+      "summary": "Anthropic 同日发布 Fable 5.1 与 Mythos 5.1，并说明二者是同一个底层模型。Fable 面向 Pro、Max、Team、Enterprise 与 API，标价为每百万输入/输出 token 10 与 50 美元，缓存读取降到 0.25 美元；被网络安全 safeguard 标记的请求会路由到 Opus 4.8，生物类请求路由到 Opus 5，调用方需自行配置 Fallback API。Mythos 只向经核验的机构开放，默认有 30 天安全监测数据留存。直接影响是模型 ID 不再等于实际完成请求的模型，应记录真实参与的模型并为静默降级设告警。",
+      "url": "https://www.anthropic.com/claude/fable",
+      "author": "Anthropic",
+      "source": "Anthropic",
+      "source_date": "2026-09-01",
+      "image": "https://cdn.sanity.io/images/4zrzovbb/website/3a6d1dcf0efc89e613672a4eeffec994a47a29a7-2400x1260.jpg",
+      "domain": "ai",
+      "tags": [
+        "模型发布",
+        "API",
+        "安全路由"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "OpenAI 把 Astra 定为首个网络安全能力达到 Critical 的模型",
+      "summary": "OpenAI 称尚未发布的 Astra 在配上工具和访问权限时，能发现未知漏洞、开发利用手段，并对不少加固过的系统实施端到端攻击，因此首次按 Preparedness Framework 判为 Critical 网络安全能力。公司表示曾推迟部分开发与发布，用于加强网络隔离、轨迹监测和对齐训练，最强的网络安全工作流会先限于小范围测试者。公告还提到监测可能误伤合法的长时 agent 任务：ChatGPT 和 Codex 用户可能被要求复核后继续，API 侧则会直接停止任务。以上都是厂商自评，系统卡要等到发布时才提供。",
+      "url": "https://openai.com/index/path-to-astra/",
+      "author": "OpenAI",
+      "source": "OpenAI",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "模型安全",
+        "Agent"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "BigQuery Graph 正式可用，把 GQL 图查询搬进数据仓库",
+      "summary": "Google 宣布 BigQuery Graph 正式可用：ISO GQL 与 SQL 并列，图遍历在 BigQuery 内原生执行，官方口径是图分析不再需要单独做 ETL。公告还描述了跨 Google Cloud 与 AWS 等数据源的虚拟知识图谱，以及面向 agent 的聊天与记忆能力，其中一部分仍在预览或分阶段推出。同日发布的 TabFM 是预训练表格基础模型，声称一条 SQL 就能做零样本回归与分类。图能力过去常逼着团队把关系数据复制到独立图库，因此值得用依赖关系、权限、订单链这类真实场景做对照测试，核对 GQL 表达能力、扫描与槽位成本、跨云读写和权限继承。",
+      "url": "https://cloud.google.com/blog/products/data-analytics/bigquery-graph-connecting-data-and-ai-at-scale/",
+      "author": "Google Cloud",
+      "source": "Google Cloud 博客",
+      "source_date": "2026-09-01",
+      "image": "https://storage.googleapis.com/gweb-cloudblog-publish/images/09_-_Data_Analytics_tFH57V6.max-2600x2600.jpg",
+      "domain": "db",
+      "tags": [
+        "BigQuery",
+        "图分析",
+        "GQL"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Firefox 155 修复多个高危内存安全与沙箱逃逸缺陷",
+      "summary": "Mozilla 的 MFSA 2026-82 列出 Firefox 155 修掉的一批高影响缺陷，包括 Android 上的权限提升、JavaScript 垃圾回收的释放后使用、DOM Navigation 与 Security 组件的沙箱逃逸、音视频组件的释放后使用，以及 WebGPU 权限提升。公告没有说这些缺陷已在野利用。浏览器同时装着开发者的登录态、云控制台和内部系统，属于端点更新里不该被低估的一环，受管桌面、开发机和 Android 终端应按常规紧急窗口推进；确因兼容性要延后的，应隔离高权限浏览行为、缩短会话，并写明例外的到期日。",
+      "url": "https://www.mozilla.org/en-US/security/advisories/mfsa2026-82/",
+      "author": "Mozilla",
+      "source": "Mozilla 安全公告",
+      "source_date": "2026-09-01",
+      "image": "https://www.mozilla.org/media/img/m24/og.3a69dffad83e.png",
+      "domain": "infra",
+      "tags": [
+        "浏览器",
+        "安全更新"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare D1 免费版超出每日行读写配额后直接报错",
+      "summary": "Cloudflare 从 9 月 1 日起对 Workers Free 计划的 D1 硬性执行每日行读与行写限额：达到上限后 Worker Binding 和 REST API 都返回错误，一直持续到世界协调时午夜重置，已存储的数据不受影响。这把超额从计量提醒变成了可用性边界，重试并不能绕过当日上限。官方建议先观察查询活动、补索引、排查全表扫描，实在不行再升级付费计划。免费 D1 上跑着用户流量的应用应加用量告警和错误分类，检查读写放大、分页与批量任务的行为，并把午夜重置写进 runbook，避免按本地时区误判恢复时间。",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-01-d1-free-tier-limit-enforcement/",
+      "author": "Cloudflare",
+      "source": "Cloudflare Changelog",
+      "source_date": "2026-09-01",
+      "image": "https://developers.cloudflare.com/og-changelog.png",
+      "domain": "cloud",
+      "tags": [
+        "D1",
+        "配额",
+        "可用性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "containerd 1.7 的延长支持在本月结束",
+      "summary": "上游把生命周期终点写为 2026 年 9 月，延长支持只覆盖 GKE 的 Kubernetes 1.30–1.32 场景。",
+      "url": "https://github.com/containerd/containerd/blob/main/RELEASES.md",
+      "author": "containerd",
+      "source": "containerd 仓库",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器运行时",
+        "生命周期"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Docker Scout 的通知与 ECR/ACR 集成到达退役日",
+      "summary": "官方迁移方向是 CI 里的 docker scout cves/policy 或长期运行的 watch，需确认告警链路没有静默消失。",
+      "url": "https://docs.docker.com/scout/release-notes/platform/",
+      "author": "Docker",
+      "source": "Docker 文档",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "CVE"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "CrowdSec 1.8.0 引入仍标为 alpha 的 WAF bot 检测",
+      "summary": "同版本还加了 Kubernetes API 日志数据源并修复两个 HTTP 采集 DoS；缺兼容 bouncer 可能静默拒绝全部客户端。",
+      "url": "https://github.com/crowdsecurity/crowdsec/releases/tag/v1.8.0",
+      "author": "CrowdSec",
+      "source": "GitHub Release",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "WAF",
+        "bot 检测"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 绕过游标以支持并行计划的补丁修正正确性问题",
+      "summary": "新增排空远端结果的封装和丢行标志，有人已在不支持游标的 MotherDuck 兼容端点上跑通。",
+      "url": "https://www.postgresql.org/message-id/CA+FpmFfFFf2RBeB-DHg6uFM9qa2i2HnBj=FJ=czfqMVe9DZr+w@mail.gmail.com",
+      "author": "Rafia Sabih",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "并行查询"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "前端工具准备弃用不安全的 PQcancel 接口",
+      "summary": "补丁系列改用 pselect() 实现取消，作者请求先合入第一个清理补丁以停止反复变基。",
+      "url": "https://www.postgresql.org/message-id/DL519QREJ4P1.2Z9UAEYVCTNQ2@jeltef.nl",
+      "author": "Jelte Fennema-Nio",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "gist_trgm_ops 的等值操作符让规划器选错索引，慢约 355 倍",
+      "summary": "同一列同时建有 btree 与 GiST 索引时，代价估算会失真，短期方案是新增不注册等值操作符的操作类。",
+      "url": "https://www.postgresql.org/message-id/CA+vB=AHon6EB=90pbPDik_u8+++Ty8TA6Z4-RXo_X5QCr71kcQ@mail.gmail.com",
+      "author": "Vaibhav Dalvi",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_trgm",
+        "代价估算"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "ASF 年报：302 个项目、1709 次发布，可信发布进入第二轮 alpha",
+      "summary": "基金会同时宣布 1000 万美元 Responsible AI 计划，签名、SBOM 与 attestation 仍需按项目单独验收。",
+      "url": "https://news.apache.org/foundation/entry/the-apache-software-foundation-advances-open-source-infrastructure-and-celebrates-community-growth-in-fy26",
+      "author": "Apache 软件基金会",
+      "source": "ASF 新闻",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理",
+        "SBOM"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "表膨胀排查指南提醒纯追加写入的表同样会膨胀",
+      "summary": "批量插入失败会留下死元组，PostgreSQL 13 起按插入量触发的 autovacuum 一旦跟不上，顺序扫描就在读死空间。",
+      "url": "https://www.tigerdata.com/blog/reading-table-bloat-before-it-reads-you",
+      "author": "NanoHertz Communications",
+      "source": "Tiger Data",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "膨胀",
+        "autovacuum"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "对快速路径锁调用 LockHasWaiters() 会导致崩溃",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/apdli2Lgvi40GxEb@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "锁"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "WAIT FOR 的查询指纹化补丁已进入 19",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/apexHWuZgggO8Aai@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_stat_statements"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "事务块里执行 REPACK (ANALYZE) 崩溃，将改为直接拒绝",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEezdMUixhJ-N0YO0OFUmh0uPaXRDkds5FS-5dmdwz4Bg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "TABLES IN SCHEMA 发布的 EXCEPT 规则用组合矩阵验证",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABdArM6BDcR_dJBY9FSZvtjzW_fuGbxHGeG5RiLQTdbUWJgQtw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "新视图 pg_stat_vfdcache 暴露虚拟文件描述符缓存统计",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADu+CpSyR3fnHGwTRAbULyBtxPZbkR2Y41Dd36ombAUwG4TT3g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "统计信息导入函数移除 fcinfo 参数的重构引发签名之争",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/apdjiyA-Nn6TDtbm@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "FDW"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Tom Lane 质疑 GRAPH_TABLE 用独立节点表示图属性引用",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_bBNJji=irgdtf_ox1aJD9UzPxb2KU3subBFtN_ynzR7Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "EnableLogicalDecoding() 的拼写与注释修复进入待提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/F590A6A7-D8B1-4088-B07D-DA8EDB0F3925@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码"
+      ],
+      "position": 22
+    }
+  ]
+}

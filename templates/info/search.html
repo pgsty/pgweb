@@ -1,0 +1,35 @@
+{% extends "info/base.html" %}
+{% block info_content %}
+<h1>搜索博览</h1>
+<p class="info-tagline">{{ tagline }}</p>
+
+<form class="info-search" action="/info/search/" method="get" role="search">
+  <label class="sr-only" for="info-search-q">搜索博览</label>
+  <input class="form-control" id="info-search-q" type="search" name="q" maxlength="255" value="{{ q }}" placeholder="搜索博览" autocomplete="off" autofocus>
+  <button class="btn btn-primary" type="submit">搜索</button>
+</form>
+
+{% if searched %}
+<p class="info-search__count">{% if total %}找到 {{ total }} 条结果。{% else %}没有找到与“{{ q }}”相关的条目，换个关键词试试。{% endif %}</p>
+{% if results %}
+<ol class="info-results">
+  {% for row in results %}
+  <li class="info-result info-result--t{{ row.tier }}">
+    <h3 class="info-result__title">{% if row.url %}<a href="{{ row.url }}" target="_blank" rel="noopener">{{ row.title_html|safe }}{% include "base/icon.html" with name="external" %}</a>{% else %}<span>{{ row.title_html|safe }}</span>{% endif %}</h3>
+    {% if row.snippet %}<p class="info-result__snippet">{{ row.snippet|safe }}</p>{% endif %}
+    <p class="info-meta"><a class="info-result__date" href="{{ row.anchor_url }}"><time datetime="{{ row.date|date:"Y-m-d" }}">{{ row.date|date:"Y-m-d" }}</time></a>{% if row.author %}<span>{{ row.author }}</span>{% endif %}{% if row.source %}<span>{{ row.source }}</span>{% endif %}</p>
+  </li>
+  {% endfor %}
+</ol>
+{% if page.paginator.num_pages > 1 %}
+<nav class="info-pager" aria-label="检索结果分页">
+  {% if previous_url %}<a href="{{ previous_url }}" rel="prev">上一页</a>{% endif %}
+  {% for item in pagination %}{% if item.url %}<a href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>{% else %}<span>{{ item.label }}</span>{% endif %}{% endfor %}
+  {% if next_url %}<a href="{{ next_url }}" rel="next">下一页</a>{% endif %}
+</nav>
+{% endif %}
+{% endif %}
+{% else %}
+<p class="info-search__hint">输入关键词检索博览收录的标题、摘要、作者与发布方。检索范围只包含博览，不含手册与扩展目录。</p>
+{% endif %}
+{% endblock %}

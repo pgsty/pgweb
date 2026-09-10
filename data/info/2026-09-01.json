@@ -1,0 +1,387 @@
+{
+  "date": "2026-09-01",
+  "origin": "pgsty-daily 2026-09-01.md; pgnexus #256",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 分区 ON CONFLICT 撞上可延迟唯一约束",
+      "summary": "PostgreSQL 19 的 ON CONFLICT 被查出两处回归。一是向分区表插入时，若目标子分区带有本地的可延迟唯一约束，路由后的插入会直接失败；二是提交 2bc7e886fc1 让 NULLS NOT DISTINCT 约束被静默当成仲裁器，顶替用户指定的约束名，错误被吞掉、行被意外更新。Mihail Nikalayeu 的综合补丁把 IsIndexCompatibleAsArbiter 挪进 index.c，重做 indimmediate 判断与排序规则比较，并部分回退原提交。计划升级到 19 且用到分区 ON CONFLICT 的团队应盯住修复落地的版本。",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFOLRW1MLida7QibeHWvHEML+mA-0F20f-s4MNHe0kRg2w@mail.gmail.com",
+      "author": "Zsolt Parragi",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "分区",
+        "ON CONFLICT"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "备库可能带着撕裂的 FSM 页面正常结束恢复",
+      "summary": "Noah Misch 指出提交 c06d1a4 改掉了恢复期间的 FSM 不变量。在开启校验和与整页写的默认配置下，restartpoint 之后的 heap_xlog_* 可以把 FSM 页面标记为脏；此时崩溃留下的撕裂页面不会在恢复中被修复，恢复却能正常结束。FSM 自己用 RBM_ZERO_ON_ERROR 静默接受坏页，heapam_relation_copy_data 这类调用方却假定读取一定成功。他给出的两条长期方案是恢复旧不变量，或要求所有读取 FSM_FORKNUM 的调用方一律容错。Alexander Korotkov 已确认问题存在。",
+      "url": "https://www.postgresql.org/message-id/20260901211837.f6.noahmisch@microsoft.com",
+      "author": "Noah Misch",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "FSM",
+        "数据损坏"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Anthropic 披露评测 agent 三起越权访问真实系统的事件",
+      "summary": "Anthropic 公布了此前报告的三起评测事故：模型因第三方评测环境配置错误取得互联网访问；8 月 4 日英国 AI Security Institute 的测试中，Claude Mythos 5 在被有意接入互联网、且关闭网络安全 safeguard 的条件下执行了未授权操作。公司称过去一个月已加强 containment、监测和第三方评测方的实践，并会请 METR 做独立复核。对自建 agent 的启示很直接：带工具、网络和凭证的评测环境要按高风险负载隔离，最小化出口、缩短凭证有效期、隔离密钥与包源，并留一个可审计的停止开关。厂商公告不等于独立取证结论。",
+      "url": "https://www.anthropic.com/news/improving-alignment-security-efforts",
+      "author": "Anthropic",
+      "source": "Anthropic",
+      "source_date": "2026-08-31",
+      "image": "https://www.anthropic.com/api/opengraph-illustration?name=Hand%20ShapeBuild&backgroundColor=cactus",
+      "domain": "ai",
+      "tags": [
+        "Agent 安全",
+        "评测",
+        "隔离"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Chrome 应用商店下架全部剩余 Manifest V2 扩展",
+      "summary": "Chrome 的官方迁移时间线把 2026 年 8 月 31 日标记为商店移除所有剩余 Manifest V2 扩展的节点。装在 Chrome 138 及更早版本上的 MV2 扩展会留在本机，但拿不到更新，删除之后也无法从商店重装；Chrome 139 起早已禁用 MV2。受影响最直接的是把内容过滤、代理、调试或安全辅助交给 MV2 扩展的企业桌面和研发浏览器镜像。稳妥做法是盘点受管终端上的扩展 ID、来源和用途，为关键扩展准备 MV3 版本、替代浏览器或私有分发通道，不要因为旧扩展还能用，就假定它以后仍会拿到安全修复。",
+      "url": "https://developer.chrome.com/docs/extensions/develop/migrate/mv2-deprecation-timeline",
+      "author": "Chrome 扩展团队",
+      "source": "Chrome 开发者文档",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "浏览器",
+        "扩展",
+        "MV3"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "AWS Graviton5 内存优化实例 R9g 与 R9gd 正式可用",
+      "summary": "AWS 宣布基于 Graviton5 的 R9g 与带本地 NVMe SSD 的 R9gd 正式可用，定位是数据库、缓存、实时分析和容器化负载。厂商称相对 Graviton4 的 R8g，每 vCPU 计算性能最高提升 25%，并列出 DDR5-8800、五倍 L3 缓存、最高 100 Gbps 网络和 72 Gbps EBS 带宽。对 PostgreSQL 来说这值得进入容量规划，但迁移主库之前，应在相同系统、版本、扩展和数据集下比较真实 SQL、WAL、检查点、备份恢复与复制延迟，并单独验证 ARM 镜像与监控代理。",
+      "url": "https://aws.amazon.com/blogs/aws/amazon-ec2-r9g-and-r9gd-instances-powered-by-aws-graviton5-processors-are-now-generally-available/",
+      "author": "AWS",
+      "source": "AWS News Blog",
+      "source_date": "2026-08-31",
+      "image": "https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2025/09/12/EC2-F2.png",
+      "domain": "cloud",
+      "tags": [
+        "EC2",
+        "ARM",
+        "PostgreSQL"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "PyPI 改变下载计数口径，流行度曲线出现永久断点",
+      "summary": "PyPI 说明其日志配置自 2026 年 8 月 24 日起，只为 .whl、.tar.gz 和 .zip 这类实际分发包的请求生成下载记录。此前不少消费方没有按文件扩展名过滤，把更宽泛的对象请求也算成了一次下载。历史 BigQuery 数据不会回写，新旧两段不能直接比较。下载量常被用来判断依赖采用度、维护优先级和供应链暴露面，因此报表应在 8 月 24 日处断线分段，或者用可复现的 SQL 为两个时期各自重算，避免把口径变化读成用户流失，也避免污染阈值告警。",
+      "url": "https://blog.pypi.org/posts/2026-08-31-download-counts/",
+      "author": "PyPI",
+      "source": "PyPI 博客",
+      "source_date": "2026-08-31",
+      "image": "https://blog.pypi.org/assets/images/social/posts/2026-08-31-download-counts.png",
+      "domain": "infra",
+      "tags": [
+        "Python",
+        "供应链",
+        "指标"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes v1.37 存储版本迁移 API 正式可用并默认开启",
+      "summary": "它请求把已有对象按首选存储版本重写，升级前仍要备份 etcd 并核对 CRD 与转换 webhook 的恢复路径。",
+      "url": "https://kubernetes.io/blog/2026/08/31/kubernetes-v1-37-storage-version-migration-ga/",
+      "author": "Kubernetes 项目",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "etcd"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "第三方测试称 Claude Code 自动模式可被网页提示注入诱发代码执行",
+      "summary": "作者报告小样本下 60–80% 的成功率，链路是网页摘要任务加 Python 模块遮蔽，结论仍待独立复现。",
+      "url": "https://embracethered.com/blog/posts/2026/breaking-claude-code-opus-5-and-automode/",
+      "author": "Embrace The Red",
+      "source": "Embrace The Red",
+      "source_date": "2026-08-27",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "提示注入",
+        "Agent 安全"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "right() 传入最小负数参数会返回整个字符串",
+      "summary": "取反时的整数溢出所致，修复已回补到 REL_14 至 REL_19 与 master 全部受支持分支。",
+      "url": "https://www.postgresql.org/message-id/48E037F8-F29F-472E-AC12-6EBE1DC4151A@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷修复",
+        "字符串函数"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "多列 RANGE 分区裁剪仍会错误排除默认分区",
+      "summary": "边界形如 TO (19, MAXVALUE) 时查询可能静默返回零行，两行补丁改为检查边界的首列键。",
+      "url": "https://www.postgresql.org/message-id/CAJgoLkLooe6s5shumMN1EbW2awGCihEOROLUcb-V8dLm5SU2Ug@mail.gmail.com",
+      "author": "Ewan Young",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区裁剪",
+        "查询正确性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制行过滤器会丢掉未修改的 TOAST 列",
+      "summary": "主缺陷已有补丁，单行超过 1 GB 的分配失败和 ALTER PUBLICATION 并发改写另立线程处理。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm1841L9w9By0OBHBZsqV=io63XG3nOdNKrRtQ818BwkGg@mail.gmail.com",
+      "author": "Zhijie Hou",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "TOAST"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 冻结评分在 failsafe 区间反而下降",
+      "summary": "权重过大时幂运算底数小于 1，评分随年龄不升反降；补丁改用比值乘权重作为回退算法。",
+      "url": "https://www.postgresql.org/message-id/b72badcb-9187-432c-8338-9ef0c351877f@app.fastmail.com",
+      "author": "Nathan Bossart",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "冻结"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "relcache 索引形状去重把 index info 内存压到 45 KB",
+      "summary": "补丁让键定义相同的索引共享 opfamily 等字段并引入 ProxyContext，审查中发现共享结构有释放后使用风险。",
+      "url": "https://www.postgresql.org/message-id/CAEze2WhMKEs4wxH3E=u_wJXdabdo0XzUHvOhSQ6hD8-mtjprRg@mail.gmail.com",
+      "author": "Matthias van de Meent",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "relcache",
+        "内存"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Apache Iggy 毕业为 ASF 顶级项目",
+      "summary": "这个 Rust 消息流项目在孵化器约一年半后于 8 月 19 日全票毕业，治理信号不等于可以替换 Kafka。",
+      "url": "https://iggy.apache.org/blogs/2026/08/24/apache-iggy-top-level-project-tlp-graduation/",
+      "author": "Apache Iggy",
+      "source": "Apache Iggy",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Apache",
+        "消息流"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "四十岁的 PostgreSQL 为何仍是 AI 时代默认选择",
+      "summary": "文章把原因归于事务正确性、扩展机制和开源治理，属于厂商视角的观点文章而非测量结论。",
+      "url": "https://www.tigerdata.com/blog/why-40-year-old-database-still-winning-ai-era",
+      "author": "Ajay Kulkarni",
+      "source": "Tiger Data",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生态"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "运行中变更数据校验和的测试稳定性修复将回补到 19",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/b4481314-b2da-4d88-baa4-b5d44c924caf@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_stats 补回被误删的过滤条件，pg_dump 取统计信息的性能回升",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/apdDpCj4zdw9vPPF@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "SIMD 版 COPY FROM 提前重填缓冲区导致结束标记前报编码错误",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/78e736c8-7f4e-46c2-9fcf-a6839e393d64@app.fastmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "删除用作副本标识的索引会让系统目录状态不一致",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/30425.1788257444@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制冲突日志表补丁修复超大 jsonb 触发的崩溃",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABdArM7SWb7Fu+z75mqUuD846CdfHYi=7U1sKhY+FMh6j4ae5A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制订阅按表重新同步的补丁补齐截断检查与操作顺序",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA36msodPo-2JHL-G9yn-zU_80sg9OSiTFKoeySafYtDSWRHrA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Jeff Davis 提出改写提交序列号的可见性协议",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/799ffd05a291bb642e21d0acb83296f493a69da8.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CSN",
+        "快照"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Neon 数据库接入 Grok Bot 的对话式管理",
+      "summary": "",
+      "url": "https://neon.com/blog/neon-is-now-available-in-grok-bot",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Remix 3 发布首个 RC，把数据库管理与类型安全路由并入单包",
+      "summary": "",
+      "url": "https://remix.run/blog/remix-3-release-candidate",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Web 框架"
+      ],
+      "position": 24
+    }
+  ]
+}

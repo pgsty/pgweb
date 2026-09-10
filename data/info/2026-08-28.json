@@ -1,0 +1,371 @@
+{
+  "date": "2026-08-28",
+  "origin": "pgsty-daily 2026-08-28.md; pgnexus #252",
+  "items": [
+    {
+      "tier": 1,
+      "title": "在线数据校验和功能面临从 v19 部分回退",
+      "summary": "Daniel Gustafsson 提交了一个针对在线数据校验和功能的部分回退补丁，目标分支是 REL_19_STABLE，同时保留其中若干有独立价值的小修复。他的建议是只在 v19 回退、master 保留该功能以便继续开发，若遗留问题长期无人解决再考虑一并撤下。同一线程里 Alexander Lakhin 报告 buildfarm 机器 culicidae 上出现新的间歇失败，校验和状态返回 inprogress-off 或 inprogress-on 而不是预期的 off，人工加延迟可以稳定复现。等待这项特性随 v19 落地的团队，应按它可能不进版本来安排计划。",
+      "url": "https://www.postgresql.org/message-id/9A5B206A-DA3B-48AD-AAC0-A7EF22E332BB@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据校验和",
+        "PG19",
+        "回退"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "多一个索引列的代价超过多一百万行数据",
+      "summary": "Damaso Sanoja 用 PostgreSQL 17.10 加 TimescaleDB 2.29.1、一亿行数据做基准：给宽表时序模式新增一个索引列会让索引体积增加 864.9 MB，而新增一百万行只增加 30.1 MB，相差 28.7 倍，同时写入吞吐下降约六分之一。原因是多维索引的乘性效应，每多一个索引维度，需要跟踪的序列数就成倍增长。文章给出的解法是模式规范化：把描述性字段拆进元数据表，事实表只保留代理键 tag_id 作索引列，可将索引体积压掉约三分之二、总存储减半。",
+      "url": "https://www.tigerdata.com/blog/time-series-cardinality",
+      "author": "Damaso Sanoja",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-08-28",
+      "image": "https://assets.tigerdata.com/blog/2026/08/time-series-cardinality.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "索引",
+        "时序"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "ReViSQL-K2.6 用语义验证奖励微调 Text-to-SQL",
+      "summary": "Thinking Machines 发布 Text-to-SQL 强化学习工作 ReViSQL-K2.6，并开放代码、数据与训练配方。作者审计了 2.5k 条 BIRD Train 样本，称其中 61.1% 至少含一种标注问题，于是用清洗后的 BIRD-Platinum、VeriEQL 语义等价校验和过程奖励微调 Kimi-K2.6，报告在 Arcwise-Plat-SQL 上以 16 次采样达到 92.97%。这些基准、成本与人类代理分数口径都是作者自述，本期未见独立复现。要落到生产，验收应换成脱敏的真实 schema、PostgreSQL 方言、行级权限、只读角色和执行代价上限。",
+      "url": "https://thinkingmachines.ai/news/putting-task-expertise-into-rl/",
+      "author": "Thinking Machines",
+      "source": "Thinking Machines",
+      "source_date": "2026-08-27",
+      "image": "https://thinkingmachines.ai/news/putting-task-expertise-into-rl/images/cover-social.png",
+      "domain": "db",
+      "tags": [
+        "Text-to-SQL",
+        "强化学习",
+        "评测"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 调整 DNS 缓存布局释放约 100 TB 内存",
+      "summary": "Cloudflare 披露 1.1.1.1 解析器 Big Pineapple 的五项 Rust 层优化：把数据换成不可变的 Box<[T]> 与 Box<str>、减少列表与指针、压缩字段、复用 scratch buffer。单条缓存净占用从 953 字节降到 420 字节，生产 p99 内存由 9.3 GB 降到 5.3 GB，全网工作集少了约 100 TB；插入吞吐从每秒 62.5 万条升到 89.3 万条，查找延迟从 828 纳秒降到 670 纳秒。rollout 实际发生在 5 到 7 月，本文是事后复盘。这些比例绑定特定数据形态，套用前需自行 profiling。",
+      "url": "https://blog.cloudflare.com/dns-cache-memory-optimization-1111/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-08-27",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01M1185AQ3B90700DKB48C2HHM.png",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "缓存",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "受监管环境下的 PostgreSQL 安全实践指南",
+      "summary": "重点不在是否部署了控制措施，而在 HIPAA、PCI DSS 或 FedRAMP 审计时能否拿出访问与权限复核记录。",
+      "url": "https://www.postgresql.fastware.com/blog/postgresql-security-best-practices-for-regulated-environments",
+      "author": "Fujitsu",
+      "source": "Fujitsu",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "合规"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "restoredrill 把备份恢复演练输出成可审计证据",
+      "summary": "它在一次性容器里恢复 pg_dump 备份并产出证据报告，v0.1.0 不覆盖 pgBackRest、PITR 和 WAL 重放。",
+      "url": "https://github.com/ahmadpiran/restoredrill",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-08-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份恢复",
+        "演练"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 评分函数为 TOAST 表算错权重",
+      "summary": "主表设了 autovacuum 相关 reloptions 而 TOAST 表没有时该函数传入 NULL，未回退到主表配置，补丁已提交。",
+      "url": "https://www.postgresql.org/message-id/apGJqfd2xyAcUGKZ@nathan",
+      "author": "Masahiko Sawada",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "TOAST"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "WAIT FOR LSN 的超时值存在溢出与取整缺陷",
+      "summary": "多次睡眠迭代累计的超时会越过 INT_MAX，且 (0, 0.5] 区间的取值被静默取整为零，变成无限等待。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoC-rMqs0Wxovh0X1+tkd-SDMTh9kMGovb615OAJ8W02xA@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAIT FOR",
+        "缺陷"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "离线改校验和可能让备库状态与主库不一致",
+      "summary": "pg_checksums 改数据文件时不写 WAL，与在线转换交错后备库会持有过期水位，补丁仍在补齐竞态场景。",
+      "url": "https://www.postgresql.org/message-id/apEdrmkoNT6R9XyJ@bdtpg",
+      "author": "Bertrand Drouvot",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据校验和",
+        "复制"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志表的 JSON 膨胀估算被推翻",
+      "summary": "原按存储大小估算的 6 倍上限失效，全 NULL 的整数数组转成 JSON 可膨胀 120 倍并触发内存分配错误。",
+      "url": "https://www.postgresql.org/message-id/CABdArM5ZjGiV2cSmi-+U=bfr3z5c-Jc1RQ6dULL4qF9Kyc=ofg@mail.gmail.com",
+      "author": "Nisha Moond",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突日志"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "单子节点 Append 会丢掉 disabled_nodes 设置",
+      "summary": "enable_indexscan=off 在分区裁剪后可能被忽略，Richard Guo 已把修复回合到 v18，该缺陷是 v18 引入的回归。",
+      "url": "https://www.postgresql.org/message-id/CAMbWs4_3xr5j8RzpB62g=5Emfvje9MQF8gWseszAgSucgj9EnQ@mail.gmail.com",
+      "author": "Richard Guo",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划",
+        "分区裁剪"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "共享内存请求错误处理补丁提交后出现测试回归",
+      "summary": "Andres Freund 发现开启 huge pages 时内存分配向上取整，预留超过 128 kB，测试预期的失败条件命中不了。",
+      "url": "https://www.postgresql.org/message-id/9fc300f0-07d6-4512-8719-65a659d99bb1@iki.fi",
+      "author": "Andres Freund",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "共享内存",
+        "测试"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "内部错误码 XX000 该不该重新分类引发争论",
+      "summary": "Tom Lane 与 Andres Freund 反对大范围重分类，认为那会掩盖 relation_open 收到 OID 0 这类真实缺陷。",
+      "url": "https://www.postgresql.org/message-id/73eb724a-c1a3-456c-be12-0375d4556b67@gmail.com",
+      "author": "Alexander Lakhin",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "错误码"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Anthropic 的模型硬件标准进入研究预览",
+      "summary": "它以设备驱动、manifest 和自然语言安全标签让 agent 操作实验室与制造设备，标准本身尚未公开。",
+      "url": "https://www.anthropic.com/news/model-hardware-standard-research-preview",
+      "author": "Anthropic",
+      "source": "Anthropic",
+      "source_date": "2026-08-27",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Agent",
+        "硬件"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "NVIDIA 称 Vera 定制 CPU 开始规模出货",
+      "summary": "厂商给出 88 个 Olympus 核心与 1.2 TB/s 内存带宽，首台服务器和 Vera Rubin GPU 已交付 AWS。",
+      "url": "https://blogs.nvidia.com/blog/vera-cpu-delivery/",
+      "author": "NVIDIA",
+      "source": "NVIDIA",
+      "source_date": "2026-08-27",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "CPU",
+        "AI 基础设施"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "FDW 函数下推补丁引入未初始化变量告警",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACiT8iamoL-=792e6JK2uCVvwDhfCg7DXHhvqN0P33jhGg2-8A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制行过滤修复会触发不必要的 detoast",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOzEurTYcP-R2o6wzjm4WLBGuJisb_heAO9e4iEtiNsj=wFagg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "TOAST"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "分区索引重建会丢失副本标识与扩展依赖",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1AB8B80D-5987-45DA-8A47-1EE9EB273157@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "索引"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "让 pg_backup_stop() 返回 pg_control 的补丁修订",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAGRkXqSZUyXRq+Y9dOwfY52q1_KeR3_t2=o0x3djPTaS-jtY3A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Gemini 3.5 Transcribe 进入公开预览",
+      "summary": "",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-3-5-transcribe/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "语音"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Gemini Omni 1.1 Flash 开放可控视频生成",
+      "summary": "",
+      "url": "https://blog.google/innovation-and-ai/technology/developers-tools/build-with-gemini-omni-1-1-flash/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-27",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "视频生成"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Experiential 以 Apache-2.0 发布多模型网关",
+      "summary": "",
+      "url": "https://github.com/experientiallabs/experiential",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "网关"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "FFmpeg 缺陷报告称由 AI 编写的 fuzzer 发现除零问题",
+      "summary": "",
+      "url": "https://news.ycombinator.com/item?id=49468642",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "FFmpeg"
+      ],
+      "position": 23
+    }
+  ]
+}

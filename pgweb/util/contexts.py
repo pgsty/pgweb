@@ -59,6 +59,12 @@ THIRD_PARTY_DOCS = [
 
 # This is the whole site navigation structure. Stick in a smarter file?
 sitenav = {
+    'info': [
+        {'title': '最新收录', 'link': '/info/'},
+        {'title': '每日更新', 'link': '/info/daily/'},
+        {'title': '归档', 'link': '/info/archive/'},
+        {'title': '搜索博览', 'link': '/info/search/'},
+    ],
     'about': [
         {'title': '关于', 'link': '/about/'},
         {'title': '项目治理', 'link': '/about/governance/'},

@@ -1,0 +1,273 @@
+{
+  "date": "2026-08-30",
+  "origin": "pgsty-daily 2026-08-30.md; pgnexus #254",
+  "items": [
+    {
+      "tier": 1,
+      "title": "OpenAI 计划 11 月 12 日停止向 Cursor 供给模型",
+      "summary": "OpenAI 称已通知 SpaceX，计划终止向 Cursor 提供 OpenAI 模型的合同，拟定的停止日期是 2026 年 11 月 12 日，理由是 Cursor 控制权变更后无法确信 SpaceX 会遵守条款，同时表示会在合同允许的最大通知期内维持访问。日期和理由都出自 OpenAI，Cursor 与 SpaceX 的实施细节仍待各自说明。依赖 Cursor 内 OpenAI 模型选择器、agent 工具调用、组织 SSO 或审计日志的团队，现在就该为关键仓库准备多模型回归集和备用的 IDE 与 API 路径，迁移验收不能只测能否回答问题。",
+      "url": "https://openai.com/index/our-decision-on-cursor-following-its-acquisition-by-spacex/",
+      "author": "OpenAI",
+      "source": "OpenAI",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "模型供给",
+        "供应商风险"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "腾讯发布并开源 Hy4 preview，上下文超过 100 万",
+      "summary": "腾讯称已发布并开源 Hy4 preview，规模为 770B 总参数、49B 激活参数，上下文超过 100 万。公告给出编码、办公和科研方向的内部评测，并称模型参与了算子融合与通信优化，使端到端吞吐比基线提升 31.8%。这些数字都是厂商自测，公告正文没有替代一份可审计的权重许可、评测脚本或可复现部署基线。采购或上线前应先拿到精确的权重 revision、许可证文本与硬件矩阵，再用真实 SQL、中文文档和长上下文任务做离线评测，并把远程工具、数据库写权限与出站网络设成单独的审批点。",
+      "url": "https://www.tencent.com/tencent-releases-and-open-sources-tencent-hy4-preview/",
+      "author": "腾讯",
+      "source": "腾讯",
+      "source_date": "2026-08-28",
+      "image": "https://www.tencent.com/wp-content/uploads/2026/08/hy4-preview-cover.jpg",
+      "domain": "ai",
+      "tags": [
+        "开放权重",
+        "长上下文"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "vLLM 0.28.0 引入分层 KV 缓存并移除两个参数",
+      "summary": "vLLM 0.28.0 是 584 次提交、270 位贡献者的大型更新，不是常规补丁。它带来磁盘 KV offload、可在树外加载的二级层管理器和 tiering 指标，以及 Model Runner V2 的 E/P/D 解耦与权重 offload，同时把 max_num_batched_tokens 默认值提高到 16384。兼容性上 bitsandbytes 移为外置插件，Transformers 升到 5.15.0，两个已弃用的运行时参数被删除。升级前应对首字延迟、吞吐、磁盘 I/O 和失败恢复做 A/B 对比。",
+      "url": "https://github.com/vllm-project/vllm/releases/tag/v0.28.0",
+      "author": "vLLM",
+      "source": "GitHub",
+      "source_date": "2026-08-26",
+      "image": "https://opengraph.githubassets.com/4ebc6bdc52e9be13e062849c7d527d88f083515ccff086b45b804e1e708e9324/vllm-project/vllm/releases/tag/v0.28.0",
+      "domain": "infra",
+      "tags": [
+        "推理服务",
+        "KV 缓存"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "GrapheneOS 称 Pixel 11 缺少可用的 ARM MTE 支持",
+      "summary": "GrapheneOS 在公开帖中表示，由于 ARM 硬件内存标记在软件、固件以及很可能硬件层面缺少支持，项目无法完成 Pixel 11 系列的移植。目前没有看到 Google 对这一原因的独立技术说明，因此它属于项目方声明，而不是对芯片或设备设计的最终认定。内存标记对捕捉内存安全类漏洞有实际价值，若说法成立，受影响的就不只是某一版系统的功能缺口，而是设备支持范围、威胁模型和更新年限。安全终端与高价值密钥设备的采购清单，应把 MTE 可用性和第三方系统支持路线一并写进去。",
+      "url": "https://bsky.app/profile/grapheneos.org/post/3mua32q4ds22e",
+      "author": "GrapheneOS",
+      "source": "GrapheneOS",
+      "source_date": "2026-08-29",
+      "image": "https://cdn.bsky.app/img/avatar_thumbnail/plain/did:plc:kym5w7pcv4v7xbz7lvbj24na/bafkreickcnmrwdtb3mwqzz7v7s2xgmczwzrdwp3ucvadpeuorzbsgvunjm",
+      "domain": "infra",
+      "tags": [
+        "移动安全",
+        "MTE"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "WAIT FOR 命令将在 v19 只归一化 LSN 参数",
+      "summary": "不归一化会让 pg_stat_statements 堆满按 LSN 区分的条目；MODE 与 NO_THROW 是否也归一化，留待更多使用数据。",
+      "url": "https://www.postgresql.org/message-id/CAN12+Y++gqFTmmnYWXEuEqH7xGLY_NeoE3ixOZxfqGWjEijeaA@mail.gmail.com",
+      "author": "Sami Imseih",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAIT FOR",
+        "pg_stat_statements"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "GIN 索引的 pageinspect 支持补丁退回作者",
+      "summary": "gin_entrypage_items() 调用 index_getattr() 前缺少 TupleDescFinalize()，会触发新提交引入的断言失败。",
+      "url": "https://www.postgresql.org/message-id/E918F3EB-7706-4657-AC13-95CF05131298@yandex-team.ru",
+      "author": "Andrey Borodin",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GIN",
+        "pageinspect"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "把各类变量转为原子类型的补丁改回待审查",
+      "summary": "有符号原子 API 的通用形式仍有分歧，Nathan Bossart 说明这部分改为后续任务，并将提交 v2 补丁集。",
+      "url": "https://www.postgresql.org/message-id/F99C838D-FBA2-41AD-B457-C5205534F6EC@yandex-team.ru",
+      "author": "Andrey Borodin",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并发",
+        "原子操作"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别补丁系列提交第三与第四部分",
+      "summary": "覆盖提交 2014 至 2026，不改变已覆盖的行为，集中在文档修正、量词错误诊断和 EXPLAIN 输出的清理。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zCAw9fQzZ08=_PXsZ3Cpj3zan1k=F7pq8EC6oA_Z-1tAw@mail.gmail.com",
+      "author": "Henson Choi",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行模式识别",
+        "SQL 标准"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Debian 生成式 AI 总决议投票结束进入定案",
+      "summary": "官方页面已把议题归入 Decided，但当时尚未展示计票，胜出选项仍需等正式结果页复核。",
+      "url": "https://www.debian.org/vote/2026/vote_002",
+      "author": "Debian 项目",
+      "source": "Debian",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "一篇复盘记录了自认为安全的 MySQL 升级如何出事",
+      "summary": "它是事故复盘文章而不是官方安全公告，可以当作升级演练案例来读。",
+      "url": "https://blog.elis.cc/articles/a-safe-mysql-upgrade-that-wasnt-so-safe/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "升级"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Zod 维护者称 v4.5 的 schema 编译提速三到九倍",
+      "summary": "发布渠道是维护者的社媒帖，尚未见到完整基准与迁移文档，应先用真实 schema 压测。",
+      "url": "https://twitter.com/colinhacks/status/2093725420462182512",
+      "author": "Zod",
+      "source": "Zod",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "校验",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "Proton 发布 8 月 27 日故障的事故报告",
+      "summary": "",
+      "url": "https://proton.me/blog/august-27-outage-incident-report",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "事故"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 状态页记录凤凰城与洛杉矶网络性能事件",
+      "summary": "",
+      "url": "https://www.cloudflarestatus.com/incidents/f8ms50xkfn4t",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "事故"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Git3 把 S3 存储桶当作 Git remote",
+      "summary": "",
+      "url": "https://github.com/robertpitt/git3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Git",
+        "对象存储"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "OpenContext 为 MCP 提供项目本地持久记忆",
+      "summary": "",
+      "url": "https://www.opencntx.dev/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MCP"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "DataZen 自称本地优先的跨数据库工作流客户端",
+      "summary": "",
+      "url": "https://flyxl.github.io/datazen/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "客户端"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Sony Music 与 Warner 起诉 Anthropic 侵犯知识产权",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/08/29/sony-music-warner-sue-anthropic-alleging-a-brazen-campaign-of-intellectual-property-theft",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "版权",
+        "诉讼"
+      ],
+      "position": 17
+    }
+  ]
+}

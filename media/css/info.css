@@ -1,0 +1,623 @@
+/* 博览 (/info/): a reading column of dated items in three densities.
+   Only --pg-* tokens, hairlines and spacing; the tiers differ by size and
+   density, never by colour. Also carries the home page's 博览 block. */
+
+.info-column {
+  min-width: 0;
+  max-width: 62rem;
+  color: var(--pg-ink);
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.info-column h1 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 12px;
+}
+
+.info-column h1 time {
+  color: var(--pg-muted);
+  font-family: var(--pg-font-mono);
+  font-size: 1.4rem;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.info-tagline {
+  margin: -0.75rem 0 1.75rem;
+  color: var(--pg-muted);
+  font-size: 14px;
+}
+
+.info-empty {
+  margin: 2rem 0;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--pg-line);
+  border-bottom: 1px solid var(--pg-line);
+  color: var(--pg-muted);
+}
+
+/* ------------------------------------------------------------ one day */
+
+.info-day {
+  margin: 0 0 2.5rem;
+}
+
+.info-day__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 1rem;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--pg-line-strong);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.info-day__head:after {
+  content: none;
+}
+
+
+.info-day__count {
+  color: var(--pg-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+/* ------------------------------------------------------ tier 1: 大新闻 */
+
+.info-leads {
+  margin: 0 0 1.5rem;
+}
+
+.info-lead {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 16px 0 18px;
+  border-bottom: 1px solid var(--pg-line);
+}
+
+.info-lead:first-child {
+  padding-top: 4px;
+}
+
+.info-lead__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.info-lead__title {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+
+.info-lead__summary {
+  margin: 0 0 6px;
+  color: var(--pg-ink-2);
+  font-size: 14.5px;
+  line-height: 1.85;
+}
+
+.info-lead__thumb {
+  flex: 0 0 auto;
+  width: 160px;
+  overflow: hidden;
+  border: 1px solid var(--pg-line);
+  border-radius: var(--pg-radius-sm);
+}
+
+.info-lead__thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 5 / 3;
+  object-fit: cover;
+}
+
+/* ------------------------------------------------------ tier 2: 小新闻 */
+
+.info-briefs {
+  margin: 0 0 1.5rem;
+  padding: 0;
+  list-style: none;
+}
+
+.info-brief__title {
+  margin-right: 8px;
+  font-weight: 600;
+}
+
+.info-brief {
+  padding: 9px 0;
+  border-bottom: 1px solid var(--pg-line);
+  font-size: 14.5px;
+  line-height: 1.7;
+}
+
+
+
+.info-brief__note {
+  color: var(--pg-muted);
+}
+
+/* -------------------------------------------------------- tier 3: 迷你 */
+
+.info-minis {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.info-mini {
+  position: relative;
+  padding: 5px 0 5px 14px;
+  color: var(--pg-ink-2);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.info-mini:before {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--pg-line-strong);
+  content: "";
+}
+
+
+/* --------------------------------------------------------- shared meta */
+
+.info-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 8px;
+  margin: 0;
+  color: var(--pg-muted);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+
+.info-meta > * + *:before {
+  margin-right: 8px;
+  content: "·";
+}
+
+.info-meta time {
+  font-family: var(--pg-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.info-column .pg-icon--external {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 5px;
+  color: var(--pg-muted);
+  vertical-align: -1px;
+}
+
+/* --------------------------------------------------------- day nav */
+
+.info-daynav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 2.5rem 0 0;
+  padding-top: 1rem;
+  border-top: 1px solid var(--pg-line);
+  font-size: 14px;
+}
+
+
+.info-daynav__prev,
+.info-daynav__next {
+  font-family: var(--pg-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+.info-daynav span {
+  min-width: 1px;
+}
+
+/* --------------------------------------------------------- pagination */
+
+.info-pager {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 2rem 0 0;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--pg-line);
+  font-size: 14px;
+}
+
+.info-pager a,
+.info-pager span {
+  padding: 4px 11px;
+  border: 1px solid var(--pg-line);
+  border-radius: 6px;
+  color: var(--pg-ink-2);
+}
+
+
+.info-pager a[aria-current] {
+  border-color: var(--pg-line-strong);
+  background: var(--pg-wash);
+  color: var(--pg-heading);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------------------ archive */
+
+.info-month {
+  margin: 0 0 1.75rem;
+}
+
+.info-month__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 0.75rem;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--pg-line-strong);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.info-month__head:after {
+  content: none;
+}
+
+.info-month__count {
+  color: var(--pg-muted);
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+.info-month__days {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 6px 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.info-month__days a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 9px;
+  border: 1px solid var(--pg-line);
+  border-radius: 6px;
+  color: var(--pg-ink-2);
+  font-family: var(--pg-font-mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+
+.info-month__n {
+  color: var(--pg-muted);
+  font-size: 12px;
+}
+
+/* ------------------------------------------------------------- search */
+
+.info-search {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 1.5rem;
+}
+
+.info-search input {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.info-search__count,
+.info-search__hint {
+  margin: 0 0 1.25rem;
+  color: var(--pg-muted);
+  font-size: 14px;
+}
+
+.info-results {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.info-result {
+  padding: 14px 0 15px;
+  border-bottom: 1px solid var(--pg-line);
+}
+
+.info-result:first-child {
+  padding-top: 2px;
+}
+
+.info-result__title {
+  margin: 0 0 5px;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+
+.info-result--t3 .info-result__title {
+  font-size: 14.5px;
+  font-weight: 500;
+}
+
+.info-result__snippet {
+  margin: 0 0 5px;
+  color: var(--pg-ink-2);
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.info-column mark {
+  padding: 0 1px;
+  background: var(--pg-wash-strong);
+  color: inherit;
+  font-weight: 600;
+}
+
+
+/* ----------------------------------------------------------- side card */
+
+.pg-sidecard {
+  padding: 1rem 0.85rem 1.1rem;
+  border: 1px solid var(--pg-line);
+  border-radius: var(--pg-radius);
+  background: var(--pg-surface);
+  font-size: 14px;
+}
+
+.pg-sidecard h2 {
+  display: block;
+  margin: 0 0.5rem 0.5rem;
+  color: var(--pg-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.pg-sidecard h2:after {
+  content: none;
+}
+
+.pg-sidecard__search {
+  margin: 0 0 1rem;
+}
+
+.pg-sidecard__search input {
+  width: 100%;
+  height: 34px;
+  font-size: 13px;
+}
+
+.pg-sidecard__days {
+  max-height: 22rem;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  list-style: none;
+}
+
+.pg-sidecard__days a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  color: var(--pg-ink-2);
+  transition: background-color var(--pg-dur) var(--pg-ease),
+              color var(--pg-dur) var(--pg-ease);
+}
+
+.pg-sidecard__days a:hover {
+  background: var(--pg-wash);
+  color: var(--pg-heading);
+}
+
+.pg-sidecard__days a[aria-current] {
+  background: var(--pg-wash);
+  color: var(--pg-link);
+  font-weight: 600;
+}
+
+.pg-sidecard__date {
+  font-family: var(--pg-font-mono);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.pg-sidecard__count {
+  color: var(--pg-muted);
+  font-size: 12px;
+}
+
+.pg-sidecard__more {
+  margin: 0.9rem 0 0;
+  padding: 0.7rem 0.5rem 0;
+  border-top: 1px solid var(--pg-line);
+}
+
+.pg-sidecard__more a {
+  color: var(--pg-link);
+  font-weight: 600;
+}
+
+/* ------------------------------------------------- home page 博览 block */
+
+.pg-infohome {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0 36px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pg-infohome > li {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 16px 0 18px;
+  border-top: 1px solid var(--pg-line);
+}
+
+.pg-infohome h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.55;
+}
+
+.pg-infohome h3 a {
+  color: var(--pg-ink);
+}
+
+.pg-infohome h3 a:hover {
+  color: var(--pg-hover);
+}
+
+.pg-infohome__lead {
+  margin: 0;
+  color: var(--pg-ink-2);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+.pg-infohome__meta {
+  margin: 0;
+  color: var(--pg-muted);
+  font-size: 12.5px;
+}
+
+.pg-infohome__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+/* --------------------------------------------------------- responsive */
+
+@media (max-width: 991.98px) {
+  .pg-sidecard {
+    margin: 1.5rem 0 0;
+  }
+
+  .pg-sidecard__days {
+    max-height: none;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .info-column {
+    font-size: 14.5px;
+  }
+
+  /* One narrow column reads better than a text column beside a thumbnail. */
+  .info-lead {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .info-lead__thumb {
+    width: 140px;
+  }
+
+  .info-minis {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .info-daynav {
+    font-size: 13px;
+  }
+}
+
+/* ----------------------------- inside the site's content area
+
+   #pgContentWrap in pgsql.css styles every heading and link in the inner
+   page. These rules use the same prefix so the column can size its own day
+   headings and keep navigation chrome quieter than a content link. */
+
+#pgContentWrap .info-day__head,
+#pgContentWrap .info-month__head {
+  margin: 0 0 1rem;
+  font-size: 1.3rem;
+}
+
+#pgContentWrap .info-month__head {
+  margin-bottom: 0.75rem;
+  font-size: 1.15rem;
+}
+
+#pgContentWrap .info-day__head:after,
+#pgContentWrap .info-month__head:after {
+  content: none;
+}
+
+#pgContentWrap .info-day__head a {
+  color: var(--pg-heading);
+  font-family: var(--pg-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+#pgContentWrap .info-day__head a:hover,
+#pgContentWrap .info-month__days a:hover,
+#pgContentWrap .info-pager a:hover,
+#pgContentWrap .info-result__date:hover {
+  color: var(--pg-hover);
+}
+
+#pgContentWrap .info-month__days a,
+#pgContentWrap .info-pager a,
+#pgContentWrap .info-result__date {
+  color: var(--pg-ink-2);
+}
+
+#pgContentWrap .info-month__days a:hover,
+#pgContentWrap .info-pager a:hover {
+  border-color: var(--pg-line-strong);
+}
+
+#pgContentWrap .info-pager a[aria-current] {
+  color: var(--pg-heading);
+}
+
+#pgContentWrap .info-daynav a {
+  color: var(--pg-link);
+}
+
+/* main.css indents every list in the content area on small screens; the
+   column's lists carry their own bullets and alignment. */
+
+#pgContentWrap .info-briefs,
+#pgContentWrap .info-minis,
+#pgContentWrap .info-results,
+#pgContentWrap .info-month__days {
+  padding-left: 0;
+}

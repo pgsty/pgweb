@@ -86,6 +86,7 @@ def home(request):
 
     release = CurrentRelease.get()
     from pgweb.docs.versions import manual_groups
+    from pgweb.info.highlights import home_highlights
 
     title = 'PostgreSQL 中文社区｜文档、下载与技术资讯'
     return render(request, 'index.html', {
@@ -94,6 +95,7 @@ def home(request):
         'events': events,
         'versions': versions,
         'manuals': manual_groups(),
+        'info_home': home_highlights(),
         'planet': planet,
         'release': release,
         'og': {

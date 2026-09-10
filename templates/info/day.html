@@ -1,0 +1,19 @@
+{% extends "info/base.html" %}
+{% block info_content %}
+<h1>PostgreSQL 博览 <time datetime="{{ day|date:"Y-m-d" }}">{{ day|date:"Y-m-d" }}</time></h1>
+<p class="info-tagline">{% if count %}当天收录 {{ count }} 条。{% else %}{{ tagline }}{% endif %}</p>
+
+{% if count %}
+<section class="info-day info-day--single">
+  {% include "info/items.html" %}
+</section>
+{% else %}
+<p class="info-empty">这一天没有收录条目。可以看看 <a href="/info/">最新收录</a> 或 <a href="/info/archive/">归档</a>。</p>
+{% endif %}
+
+<nav class="info-daynav" aria-label="按日期浏览">
+  {% if previous_day %}<a class="info-daynav__prev" href="/info/{{ previous_day|date:"Y-m-d" }}/" rel="prev">← {{ previous_day|date:"Y-m-d" }}</a>{% else %}<span class="info-daynav__prev"></span>{% endif %}
+  <a class="info-daynav__all" href="/info/">最新收录</a>
+  {% if next_day %}<a class="info-daynav__next" href="/info/{{ next_day|date:"Y-m-d" }}/" rel="next">{{ next_day|date:"Y-m-d" }} →</a>{% else %}<span class="info-daynav__next"></span>{% endif %}
+</nav>
+{% endblock %}

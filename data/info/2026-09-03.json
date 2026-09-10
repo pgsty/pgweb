@@ -1,0 +1,370 @@
+{
+  "date": "2026-09-03",
+  "origin": "pgsty-daily 2026-09-03.md; pgnexus #258",
+  "items": [
+    {
+      "tier": 1,
+      "title": "发布管理组提议把 SQL/PGQ 属性图功能撤出 PostgreSQL 19",
+      "summary": "刚进入 PostgreSQL 的 SQL/PGQ 属性图功能被查出成片的严重问题：rewriteGraphTable() 访问表时不持锁、AlterPropGraph() 的锁级别不足、依赖处理让 ALTER TABLE 报错、持有图权限的角色执行 DROP OWNED BY 失败、SQLSTATE 错误码不对、pg_dump 静默丢数据，以及非唯一键导致查询结果错误。鉴于问题密度，Melanie Plageman 代表发布管理组提议把 PGQ 从 REL_19_STABLE 回退，Peter Eisentraut 同意，Robert Haas 主张连 master 一并回退。",
+      "url": "https://www.postgresql.org/message-id/CAN12+YJ-fuZOiXEsLDPyno1kOF8gqXay1UQnwxMOsqLkvnakgA@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "SQL/PGQ",
+        "发布管理"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "中断的并发分离分区会留下不一致的目录状态",
+      "summary": "Mihail Nikalayeu 在压测里发现，DETACH PARTITION ... CONCURRENTLY 被中断之后，分区在 pg_class 里的 relispartition 标记仍然保留，而 get_partition_ancestors() 已经不再返回结果，两边状态对不上，只有执行 FINALIZE 才能清除。Álvaro Herrera 初审后认为补丁可以推送并回补到旧版本，Nisha Moond 确认 get_rel_sync_entry() 是同一个根因。用到并发分离分区的系统在命令被中断后应主动检查目录状态，不要假定失败的命令没有留下痕迹。",
+      "url": "https://www.postgresql.org/message-id/CABdArM7GwU_k_0A6RkAy4YXZNPdk53ygVHLD=g6Xbsx_BagZZQ@mail.gmail.com",
+      "author": "Mihail Nikalayeu",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "逻辑复制"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Google 发布 Gemini 3.8 Flash 与受限的 Cyber 版本",
+      "summary": "Google 让 gemini-3.8-flash 正式可用，定位是长程软件工程、自治 agent 和多步推理，官方口径为每百万输入/输出 token 0.75 与 3.75 美元，并称 12 月 31 日之后计划翻倍。同时推出的 3.8 Flash Cyber 只通过 Fairwind 计划提供给受信任的政府、关键基础设施和软件维护方，主打漏洞发现与自动修复。同一套基础能力被切成公开版与受限版，说明模型名、账号资格与 safeguard 配置共同决定实际能力，换模型不能只比 token 单价。",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/gemini-models/3-8-flash-and-3-8-flash-cyber/",
+      "author": "Google",
+      "source": "Google 博客",
+      "source_date": "2026-09-02",
+      "image": "https://storage.googleapis.com/gweb-uniblog-publish-prod/images/gemini-3-8_flash__blog__header__16-9__light.width-1300.png",
+      "domain": "ai",
+      "tags": [
+        "模型发布",
+        "漏洞研究"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Copilot 代码审查可以提交计入合并规则的批准",
+      "summary": "GitHub 把 Copilot 的批准能力作为公开预览提供给多个 Copilot 计划。默认关闭，普通审查里的 approval assessment 只显示判断、不计入合并要求；管理员在企业、组织或仓库层开启之后，Copilot 才能提交满足 required approvals 的批准，而且新提交会像人类批准一样让它失效。这把建议角色变成了合并权限模型的一部分，一次组织级默认配置就可能影响大量仓库。稳妥做法是保持默认关闭，先定义哪些目录可以接受机器批准、是否仍要求代码所有者和独立人工批准，再从低风险仓库开始，限制可批准的文件路径并记录每一次机器批准。",
+      "url": "https://github.blog/changelog/2026-09-01-copilot-code-review-can-now-approve-pull-requests/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-09-01",
+      "image": "https://github.blog/wp-content/uploads/2026/09/640486943-995df08a-2d27-4fa0-a465-3e4e2ec3f6cb.png",
+      "domain": "ai",
+      "tags": [
+        "代码审查",
+        "分支保护"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "暗网服务兜售逾 1.53 亿张美加驾照扫描件，FBI 已立案",
+      "summary": "KrebsOnSecurity 报道名为 Nexus 的暗网服务宣称手握超过 1.53 亿张美国和加拿大驾照扫描件，记者用样本、时间戳和使用场景把线索指向身份验证链路，报道称 FBI 新奥尔良分部已经立案调查；IDScan.net 当时只确认在调查潜在事件，没有给出性质与范围结论，报道之后该暗网站点下线。归因尚未证实，但风险很具体：证件正反面、照片和红外紫外扫描件无法像密码那样轮换。做证件 OCR 或活体核验的团队应盘点采集、传输、留存位置与子处理方，默认不保存原图，限制客服访问，并核实删除与备份的生命周期。",
+      "url": "https://krebsonsecurity.com/2026/09/fbi-probes-service-selling-153m-drivers-licenses/",
+      "author": "Brian Krebs",
+      "source": "KrebsOnSecurity",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据泄露",
+        "身份验证"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "NGINX 核心、Gateway Fabric 与 Ingress 同日更新",
+      "summary": "NGINX 1.31.5 加入 Control API、predicate locations 和请求体的提前检查，属于架构特性发布而不是普通补丁。Gateway Fabric 2.7 对齐 Gateway API 1.6，把 TCPRoute 与 UDPRoute 升到 v1，并用 HTTPExternalAuthFilter 调用授权代理；Ingress Controller 5.6 把 HSTS 提升为一等策略。三者的共同方向是把外部认证、TLS 终止和 HSTS 从任意 snippet 变成可验证的资源，但升级前仍要导出现有 snippet 并用镜像流量做代理链回归。",
+      "url": "https://blog.nginx.org/blog/nginx-1-31-5-control-api-predicate-locations-early-body-inspection-and-more",
+      "author": "NGINX",
+      "source": "NGINX 博客",
+      "source_date": "2026-09-02",
+      "image": "https://blog.nginx.org/wp-content/uploads/2026/09/nginx-1.31.5.png",
+      "domain": "infra",
+      "tags": [
+        "NGINX",
+        "Kubernetes",
+        "Gateway API"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "GHES 到 GHEC 数据驻留的持续同步迁移正式可用",
+      "summary": "由 gh elm 扩展管理，把长时间冻结缩短为切换时排空在途修改，起点版本从 GHES 3.17.18 起。",
+      "url": "https://github.blog/changelog/2026-09-01-enterprise-live-migrations-from-ghes-to-ghe-com-generally-available/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub Enterprise",
+        "迁移"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 让 Cursor 云端 agent 跑进客户自己的沙箱",
+      "summary": "终端、文件系统和浏览器操作在客户账户内执行，但模型读取的文件片段与 PR 用产物仍会上传。",
+      "url": "https://www.cloudflare.com/en-in/press/press-releases/2026/cloudflare-expands-support-for-ai-coding-agents-with-cursor-cloud-agents-on-cloudflare-sandboxes/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 新闻稿",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Agent",
+        "沙箱"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Copilot 应用与命令行开始遵从企业内容排除策略",
+      "summary": "被排除的文件不作为 agent 上下文，但只覆盖产品遵从该策略的通道，替代不了密钥扫描和最小权限。",
+      "url": "https://github.blog/changelog/2026-09-02-content-exclusions-generally-available-in-copilot-app-and-cli/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据边界",
+        "Copilot"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Go 1.27 的 goroutine 泄漏剖析可在生产定位永久阻塞",
+      "summary": "经 net/http/pprof 暴露在 /debug/pprof/goroutineleak，只覆盖 channel 与 sync 原语上的部分阻塞。",
+      "url": "https://go.dev/blog/goroutine-leak-profiles",
+      "author": "Go 团队",
+      "source": "Go 博客",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Go",
+        "可观测性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "SUM(int4) 在 int8 累加器溢出时静默返回错误结果",
+      "summary": "对约 43 亿个 INT_MAX 求和会得到负数，串行计划静默溢出，并行聚合却可能报错，行为并不一致。",
+      "url": "https://www.postgresql.org/message-id/api0zO-MqjNPZnXn@paquier.xyz",
+      "author": "Andrei Lepikhov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "聚合",
+        "查询正确性"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "可序列化隔离下 ON CONFLICT DO SELECT 不给返回行加谓词锁",
+      "summary": "缺失的谓词锁可能破坏可序列化保证，已被列为 19 的待办事项，目前还没有补丁。",
+      "url": "https://www.postgresql.org/message-id/apl2wQLh5hiWXRo2@nathan",
+      "author": "Nathan Bossart",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SSI",
+        "隔离级别"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "视图的 DO INSTEAD 规则会静默忽略 FOR PORTION OF",
+      "summary": "时态子句丢失后整行被改写或删除，补丁参照 INSTEAD OF 触发器的做法对这一组合直接报错。",
+      "url": "https://www.postgresql.org/message-id/CAON2xHO5FJ1jC87cQhGg+KMG5QR7ZaifJwN24rPjMqCGYn-hzA@mail.gmail.com",
+      "author": "Ewan Young",
+      "source": "pgsql-hackers",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规则系统",
+        "时态表"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Fujitsu 梳理 Oracle 迁移工具的适用边界",
+      "summary": "文章指出各类工具通常只解决迁移中的一环，需按负载特点、schema 复杂度和可接受停机时间组合。",
+      "url": "https://www.postgresql.fastware.com/blog/oracle-data-migration-tools-what-enterprises-should-consider",
+      "author": "Fujitsu",
+      "source": "Fujitsu Enterprise Postgres",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "Oracle"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_checksums 应像 pg_basebackup 一样忽略陌生文件",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+=E0zz+_MgQXAoOyn5C0vW53740izzRiTv6excqtCJfRg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "SQL 可调用的槽函数出错时释放复制槽的补丁进入 v15 审查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBuKvEwGEPyUYiRE2Qz4LsbnydEnhqK9mtg21FL6v9GpA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "FindConflictTuple() 每次重试都泄漏一个仍占着缓冲区的元组槽",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABdArM7xjMova7EU1XT_RQbuTN8A28=eoTmQ_2uicSvOgLBq2Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "资源泄漏"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "remove_useless_joins 与占位变量交互的修复仍不完整",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1468659.1788447305@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_progress_vacuum 报告当前索引的方案出现分歧",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACVYtmj=P4u1cBO+MwHFYQw_wzVxhtcV1WWrELbSOvuuzg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "监控"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "update_deleted 的四项后续修复中两项已合入",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1Lj61OTUNariwOqJnmhweamWABgraJSd1dbh=EzdiOm=A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突检测"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "用 SIMD 加速 COPY TO 解析的补丁被作者撤回",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/777bc2f5-957e-4c8b-9f63-1d54e1f1bc3d@data-bene.io",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "性能"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "八进制 GUC 的显示改进补丁新增专用标志",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1474133.1788452930@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "恢复冲突统计测试的竞态修复已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEBuHZnPgWKFf6FJYFX=h+f6aS6VGtToeBLgJL--AfgJw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "回归测试"
+      ],
+      "position": 23
+    }
+  ]
+}

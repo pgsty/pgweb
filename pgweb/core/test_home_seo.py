@@ -53,6 +53,10 @@ class HomeSEOTests(SimpleTestCase):
         })
         manuals.start()
         self.addCleanup(manuals.stop)
+        highlights = patch('pgweb.info.highlights.home_highlights',
+                           return_value={'date': None, 'entries': []})
+        highlights.start()
+        self.addCleanup(highlights.stop)
 
     def test_homepage_has_one_consistent_description_and_title(self):
         response = self.client.get('/')

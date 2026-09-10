@@ -103,6 +103,9 @@ class SitemapSiteCrawler(BaseSiteCrawler):
             # Remove hostname part
             if '/' in url:
                 url = url[url.index('/'):]
+            if self.exclude_url(url):
+                # 博览 has its own search; it never enters the site index.
+                continue
             if lastmod:
                 if url in self.scantimes:
                     if lastmod < self.scantimes[url]:

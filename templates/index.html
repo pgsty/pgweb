@@ -13,6 +13,7 @@
   <meta name="twitter:image:alt" content="PostgreSQL 大象标志" />
 {%endblock%}
 {%block extrahead%}
+  <link rel="stylesheet" href="/media/css/info.css?{{gitrev}}">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -189,6 +190,30 @@
   </div>
 </section>
 <!-- END CTA -->
+
+<!-- 博览 -->
+{% if info_home.entries %}
+<section class="pg-section pg-section--info">
+  <div class="pg-container">
+    <div class="pg-section__head">
+      <h2>博览</h2>
+    </div>
+    <ul class="pg-infohome">
+      {% for entry in info_home.entries %}
+        <li>
+          <h3><a href="{{ entry.url }}" target="_blank" rel="noopener">{{ entry.title }}</a></h3>
+          {% if entry.summary %}<p class="pg-infohome__lead">{{ entry.summary }}</p>{% endif %}
+          {% if entry.source %}<p class="pg-infohome__meta">{{ entry.source }}</p>{% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="pg-infohome__actions">
+      <a class="pg-btn pg-btn--primary" href="/info/" title="更多博览">更多博览</a>
+    </div>
+  </div>
+</section>
+{% endif %}
+<!-- END 博览 -->
 
 <!-- News -->
 <section class="pg-section pg-section--news">

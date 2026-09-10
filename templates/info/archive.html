@@ -1,0 +1,20 @@
+{% extends "info/base.html" %}
+{% block info_content %}
+<h1>博览归档</h1>
+<p class="info-tagline">{% if total %}共 {{ day_total }} 天、{{ total }} 条收录。{% else %}{{ tagline }}{% endif %}</p>
+
+{% if months %}
+{% for month in months %}
+<section class="info-month" aria-labelledby="month-{{ month.key }}">
+  <h2 class="info-month__head" id="month-{{ month.key }}">{{ month.label }}<span class="info-month__count">{{ month.count }} 条</span></h2>
+  <ul class="info-month__days">
+    {% for d in month.days %}
+    <li><a href="{{ d.url }}"><time datetime="{{ d.date|date:"Y-m-d" }}">{{ d.date|date:"Y-m-d" }}</time><span class="info-month__n">{{ d.count }}</span></a></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endfor %}
+{% else %}
+<p class="info-empty">博览还没有收录任何条目。</p>
+{% endif %}
+{% endblock %}

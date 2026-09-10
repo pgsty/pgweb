@@ -1,0 +1,43 @@
+{% extends "base/base.html" %}
+{% comment %}
+The 博览 shell: the standard inner-page two-column layout, with the column's
+own side card instead of the site's quick links.
+{% endcomment %}
+{% block title %}{{ title }}{% endblock %}
+{% block extrahead %}
+<link rel="stylesheet" href="/media/css/info.css?{{gitrev}}">
+<link rel="alternate" type="application/rss+xml" title="PostgreSQL 博览" href="/info/rss/">
+{% if noindex %}<meta name="robots" content="noindex,follow">{% endif %}
+{% endblock %}
+{% block layoutblock %}
+<div class="container-fluid margin pg-page">
+  <div class="row">
+    <div class="col-lg-2">
+      <div id="pgSideWrap">
+        <div class="pg-sidecard">
+          <form class="pg-sidecard__search" action="/info/search/" method="get" role="search">
+            <label class="sr-only" for="info-q">搜索博览</label>
+            <input class="form-control" id="info-q" type="search" name="q" maxlength="255" value="{{ sidecard_query }}" placeholder="搜索博览" autocomplete="off">
+          </form>
+          {% if sidecard_days %}
+          <h2>每日更新</h2>
+          <ul class="pg-sidecard__days">
+            {% for d in sidecard_days %}
+            <li><a href="{{ d.url }}"{% if d.date == sidecard_current %} aria-current="page"{% endif %}><span class="pg-sidecard__date">{{ d.date|date:"Y-m-d" }}</span><span class="pg-sidecard__count">{{ d.count }}</span></a></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <p class="pg-sidecard__more"><a href="/info/archive/">归档</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-10">
+      <div id="pgContentWrap">
+        <div class="info-column" lang="zh">
+          {% block info_content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

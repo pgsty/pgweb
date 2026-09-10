@@ -1,0 +1,33 @@
+{% comment %}
+One day's items, three tiers in reading order. Expects lead / brief / mini.
+Every element carries the item key as its id so /info/<date>/#<key> works.
+{% endcomment %}{% if lead %}
+<div class="info-leads">
+  {% for item in lead %}
+  <article class="info-lead" id="{{ item.key }}">
+    <div class="info-lead__body">
+      <h3 class="info-lead__title"><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}{% include "base/icon.html" with name="external" %}</a></h3>
+      {% if item.summary %}<p class="info-lead__summary">{{ item.summary }}</p>{% endif %}
+      <p class="info-meta">{% if item.author %}<span>{{ item.author }}</span>{% endif %}{% if item.source %}<span>{{ item.source }}</span>{% endif %}{% if item.source_date %}<time datetime="{{ item.source_date|date:"Y-m-d" }}">{{ item.source_date|date:"Y-m-d" }}</time>{% endif %}</p>
+    </div>
+    {% if item.image %}<a class="info-lead__thumb" href="{{ item.url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="{{ item.image }}" alt="" loading="lazy" decoding="async"></a>{% endif %}
+  </article>
+  {% endfor %}
+</div>
+{% endif %}
+{% if brief %}
+<ul class="info-briefs">
+  {% for item in brief %}
+  <li class="info-brief" id="{{ item.key }}">
+    <a class="info-brief__title" href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}{% include "base/icon.html" with name="external" %}</a>{% if item.summary %}<span class="info-brief__note">{{ item.summary }}</span>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% if mini %}
+<ul class="info-minis">
+  {% for item in mini %}
+  <li class="info-mini" id="{{ item.key }}">{% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}</a>{% else %}<span>{{ item.title }}</span>{% endif %}</li>
+  {% endfor %}
+</ul>
+{% endif %}

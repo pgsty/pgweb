@@ -1,0 +1,402 @@
+{
+  "date": "2026-08-31",
+  "origin": "pgsty-daily 2026-08-31.md; pgnexus #255",
+  "items": [
+    {
+      "tier": 1,
+      "title": "WAL_LOG 建库策略会让旧主库回放时反复崩溃",
+      "summary": "PostgreSQL 19 的 WAL_LOG CREATE DATABASE 策略被查出严重缺陷。提交 add323da40a 在 heap_xlog_prune_freeze() 里加了一条断言，要求可见性映射缓冲区为脏。主备切换后，提升为主的备库可见性映射是全零，VACUUM FREEZE 会重新置位并生成不含整页镜像的 PRUNE 记录；重新加入的旧主库回放这些记录时发现位已置好，visibilitymap_set() 成了空操作、缓冲区保持干净，于是断言失败、节点反复崩溃重启。Melanie Plageman 的短期方案是在 PageSetLSN() 前先判断缓冲区是否为脏。",
+      "url": "https://www.postgresql.org/message-id/apUTKUUvYfG3SlBF@paquier.xyz",
+      "author": "Melanie Plageman",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "恢复",
+        "复制"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "能源公司迁到 Tiger Cloud 后查询延迟降到 1/25",
+      "summary": "Tristan Vermeesch 记录了 Companion.energy 把实时能源传感器数据从 Azure PostgreSQL 迁到 Tiger Cloud 的过程，原环境用的是功能受限的 Apache 2 版 TimescaleDB。迁移后 skip-scan 让最常用查询延迟从 4950 毫秒降到 202 毫秒，Hypercore 列存把 1.7 TB 压到 39 GB，压缩比 43.5 倍；针对 2.83 亿行构建的连续聚合替代了对 8.07 亿行原始表的全量扫描。整个过程用 LiveSync 复制，历时八周，最终割接 16 小时完成。这些是厂商案例口径，同类迁移仍需自行验证。",
+      "url": "https://www.tigerdata.com/blog/companion-energy-case-study-tiger-data",
+      "author": "Tristan Vermeesch",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-08-31",
+      "image": "https://assets.tigerdata.com/blog/2026/08/companion.energy.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "迁移",
+        "时序"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Debian 生成式 AI 总决议由“负责任使用”方案胜出",
+      "summary": "Debian 公布 LLM 使用总决议的正式计票：Choice 5 “Responsible Use of Generative AI” 是 Schwartz Set 中唯一成员和最终胜者，以 281 比 126 胜过默认选项，以 203 比 148 胜过“有条件允许 AI 辅助贡献”，以 210 比 130 胜过谨慎方案；投票于 8 月 28 日 23:59:59 UTC 结束。它既不是全面允许也不是全面禁止，而是把质量、可维护性、许可证和非公开数据的责任继续留在贡献者身上。结果公布后一名开发者公开宣布退出项目，说明政策定案并不等于分歧消失。",
+      "url": "https://www.debian.org/vote/2026/vote_002",
+      "author": "Debian 项目",
+      "source": "Debian",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理",
+        "AI 贡献"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Qubes QSB-118：错误回报路径可在 dom0 执行命令",
+      "summary": "Qubes 公布 QSB-118：从 dom0 向一个已失陷的 qube 执行 qvm-copy-to-vm 时，远端可控的文件名会被填进对话框命令。原有的净化只替换非 ASCII 字符和双引号，保留了 shell 元字符，随后 system() 执行构造出的命令，于是攻击从受陷 qube 穿透到最不该被攻陷的控制域。所有 Qubes OS 版本受影响，4.3 的修复包是 qubes-core-dom0-linux 4.3.22，公告时仍需先从 security-testing 迁到 stable。更一般的教训是跨隔离域协议里的错误字符串、文件名和路径都应视为不可信输入。",
+      "url": "https://www.qubes-os.org/news/2026/08/29/qsb-118/",
+      "author": "Qubes OS",
+      "source": "Qubes OS",
+      "source_date": "2026-08-29",
+      "image": "https://www.qubes-os.org/attachment/icons/qubes-logo-icon-name-slogan-fb.png",
+      "domain": "infra",
+      "tags": [
+        "Qubes",
+        "命令注入",
+        "隔离"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Linux 7.3-rc1 发布，合并窗口关闭",
+      "summary": "Linus Torvalds 在 8 月 30 日宣布 Linux 7.3-rc1，称本次按提交数很大，但实际 diff 约三分之一来自 AMD DCN6 的寄存器头文件与配套新一代 GPU 代码。其余合并覆盖 VFS、BPF、io_uring 与 block、cgroup、KVM、CXL、XFS、Btrfs、NFS/SMB、Landlock 和 Rust 等子系统，公告本身没有宣称可直接投产。维护自定义内核、GPU 计算、存储或 eBPF 程序的团队可以据此开始预检兼容矩阵，把启动、恢复、网络、文件系统和负载性能分开记录验收，不要用 rc1 的提交数推断稳定性。",
+      "url": "https://lwn.net/Articles/1091420/",
+      "author": "Linus Torvalds",
+      "source": "LWN",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "内核"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "git.kernel.org 约两成容量被 AI 爬虫长期占用",
+      "summary": "Konstantin Ryabitsev 公布 git.kernel.org 的运营数据：站点每天收到约 600 万次随机 commit 浏览请求，Anubis 当场挡住约 66%，仍有约 33% 能完成工作量证明抵达主站，维护者估计真正合法的访问只有约 2%。五个地理分布节点的 90 个核心里，长期有 14 到 16 个用于把 Git commit 渲染成供爬虫解析的 HTML。大量请求不是克隆仓库，而是跨 fork 反复请求可组合的 HTML 和 diff 地址。团队打算关闭或限制匿名的高开销功能，但仍会提供可下载的数据。",
+      "url": "https://people.kernel.org/monsieuricon/creepy-crawlies",
+      "author": "Konstantin Ryabitsev",
+      "source": "people.kernel.org",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "爬虫",
+        "容量规划",
+        "开源基础设施"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Omarchy 4.0.1 取消默认把用户加入 docker 组",
+      "summary": "Omarchy 在 4.0.1 安全版本中不再默认把用户加入 docker 组，改为按需加入。Docker daemon 以 root 运行，组成员可经 socket 启动特权容器并挂载宿主文件系统，因此旧默认等于让整个桌面会话隐式持有一条通往 root 的路径；继承补充组之后，浏览器、插件、npm 脚本、IDE 和 agent 进程都能走这条路。这一版还收录了 agent 自动审查、主题代码执行、FIDO2 临时文件和插件 Git transport helper 等多项加固。开发机应核对 docker 组成员、socket 属主以及 CI runner 和 agent 的服务账号。",
+      "url": "https://github.com/omacom/omarchy/releases/tag/v4.0.1",
+      "author": "Omarchy",
+      "source": "GitHub",
+      "source_date": "2026-08-25",
+      "image": "https://opengraph.githubassets.com/fe8aeff0ab76df7de7af072e63a22d65a4524f479545b85312ecc7ed08912cc7/omacom/omarchy/releases/tag/v4.0.1",
+      "domain": "infra",
+      "tags": [
+        "Docker",
+        "权限",
+        "开发机安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Neon 把自动扩缩容做成 Lakebase Postgres 的默认",
+      "summary": "它省掉上线前预估实例规格的环节，按需调整资源，适合流量波动大或难以预测的负载。",
+      "url": "https://neon.com/blog/autoscaling-lakebase-postgres",
+      "author": "Carlota Soto",
+      "source": "Neon 博客",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "弹性伸缩"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "按 XID 年龄失效复制槽的补丁需避开内部槽",
+      "summary": "pg_conflict_detection 槽可能被误判失效导致订阅无法恢复，社区倾向改由 launcher 主导检查。",
+      "url": "https://www.postgresql.org/message-id/CABdArM4uYTsD2MeD=04EdA4ecty=TKL0Jai5jx0MLBUoXTb1VA@mail.gmail.com",
+      "author": "Bertrand Drouvot",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "VACUUM"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GRAPH_TABLE 的 WHERE 子句未强制转换为布尔值",
+      "summary": "非布尔表达式会被静默当成过滤条件，退化成类似 IS NOT NULL 的判断，该问题已列入 v19 待办。",
+      "url": "https://www.postgresql.org/message-id/CAON2xHNZUS8ZwzVEJFeRirsC_-7EJvdbwABSzdGaJ_DF9DvHoQ@mail.gmail.com",
+      "author": "Ewan Young",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GRAPH_TABLE",
+        "查询正确性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "导入统计信息时接受 NaN 会毁掉查询规划",
+      "summary": "NaN 可绕过 CLAMP_PROBABILITY 把行数估算抬到 1e100，并产生代价为 NaN 的索引扫描路径。",
+      "url": "https://www.postgresql.org/message-id/apUz8GXrL2b2o1jU@paquier.xyz",
+      "author": "Ewan Young",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "查询规划"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "pg_log_query_plan() 的定位仍未取得一致",
+      "summary": "Andrei Lepikhov 希望加请求追踪以关联调用与日志，torikoshia 主张把它当采样工具即可。",
+      "url": "https://www.postgresql.org/message-id/4b22a159-a624-4d3b-b304-1dbd974caf79@gmail.com",
+      "author": "torikoshia",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行计划",
+        "可观测性"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "数据库迁移工具的企业采购指南",
+      "summary": "以 PostgreSQL 为目标平台，比较过程性代码的转换能力、schema 兼容性和能否满足业务规定的切换窗口。",
+      "url": "https://www.postgresql.fastware.com/blog/database-migration-tools-an-enterprise-buyers-guide",
+      "author": "Fujitsu",
+      "source": "Fujitsu",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "选型"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Qubes QSB-117 无法排除微码问题的跨 qube 风险",
+      "summary": "它覆盖 Intel 8 月 11 日的微码公告，影响 10、11 代 Core 与 Core Ultra 1 至 3，更新后需重启 dom0。",
+      "url": "https://www.qubes-os.org/news/2026/08/28/qsb-117/",
+      "author": "Qubes OS",
+      "source": "Qubes OS",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "微码",
+        "固件"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Flatpak 获得两年定向资金补齐沙箱权限模型",
+      "summary": "德国 Sovereign Tech Agency 投入 508,640 欧元，路线含 PipeWire 拆分授权、网络与 VPN portal。",
+      "url": "https://modal.cx/blog/announcing-flatpak-sta/",
+      "author": "Modal Collective",
+      "source": "Modal Collective",
+      "source_date": "2026-08-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Flatpak",
+        "沙箱"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "加州 AB-1856 两院通过但尚未签署生效",
+      "summary": "当前文本把允许复制、再分发和修改的许可证发行者排除在“操作系统提供者”定义之外。",
+      "url": "https://leginfo.legislature.ca.gov/faces/billStatusClient.xhtml?bill_id=202520260AB1856",
+      "author": "California Legislature",
+      "source": "California Legislature",
+      "source_date": "2026-08-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "政策",
+        "开源分发"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pgstat 允许在运行中的事务内刷新部分统计信息",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN12+YJZ7p0XUnfOra1Lt_mS5C0mEGmyVAkr_e=kTVE2upgT4g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pg_current_vxact_id() 在备库上同样可用",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/emfa1b6f5d-f0d0-4f45-9c35-3a11b9fa7260@cybertec.at",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "SQL 层 pg_datum_image_equal 函数补丁完成变基",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEze2WhW41mVDMKRcpLaj_NMLVp4jtQLZjtG3M8RXNNbhZmCcw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "函数"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "用辅助函数替换开放编码的取反溢出检查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/apUsjiBcAc0wBIdo@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "溢出检查"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_statements 重置后归一化查询文本会丢失",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/29410A4B-9E7B-4557-A289-B8AB6299707F@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_stat_statements"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "一名 Debian 开发者在总决议结果公布后宣布退出",
+      "summary": "",
+      "url": "https://lists.debian.org/debian-devel/2026/08/msg00318.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源社区"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "ReactOS 0.4.16 发布并加入图形安装器",
+      "summary": "",
+      "url": "https://reactos.org/project-news/reactos-0416-released/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "操作系统"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Haiku R1/beta6 时隔约两年发布",
+      "summary": "",
+      "url": "https://www.haiku-os.org/news/2026-08-26_haiku_r1_beta6/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "操作系统"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Microsoft 测试修复持续数小时的 Outlook 故障",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/08/31/microsoft-tests-fix-for-latest-hours-long-outlook-outage",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "事故"
+      ],
+      "position": 25
+    }
+  ]
+}

@@ -32,6 +32,7 @@ admin.autodiscover()
 
 urlpatterns = [
     path('ext/', include('pgweb.ext.urls')),
+    path('info/', include('pgweb.info.urls')),
     path('e/', include('pgweb.ext.urls_e')),
     re_path(r'^$', pgweb.core.views.home),
     re_path(r'^dyncss/(?P<css>base).css$', pgweb.core.views.dynamic_css),

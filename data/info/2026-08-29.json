@@ -1,0 +1,245 @@
+{
+  "date": "2026-08-29",
+  "origin": "pgsty-daily 2026-08-29.md; pgnexus #253",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Kubernetes 1.37 发布，16 项能力转入 Stable",
+      "summary": "Kubernetes 1.37 “Garhwal” 列出 67 项 enhancement，16 项转 Stable、23 项转 Beta、27 项进 Alpha。缓存重建期间现在会对请求做有界处理并以 429 拒绝，降低大集群控制面雪崩的风险，metrics.k8s.io 同时升到 Stable。Beta 包含原生 gang scheduling 和 native histogram。项目还把 kube-dns 列入弃用路径，并提示 cgroup v1 的临时兼容开关终将移除。升级验证的重点是控制器是否按 Retry-After 退避、指标采集协议以及节点的 cgroup v2 就绪度。",
+      "url": "https://kubernetes.io/blog/2026/08/26/kubernetes-v1-37-release/",
+      "author": "Kubernetes 项目",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "升级",
+        "etcd"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Z.ai 以开放权重发布 GLM-5.3",
+      "summary": "Z.ai 把 GLM-5.3 放上 Hugging Face，模型卡列出 Transformers、vLLM、SGLang、Docker Model Runner 与若干量化推理路径，提供 reasoning_effort 参数和最高 300k 上下文的评测说明。厂商称它与 5.2 共用基座、提升来自后训练，并特别提到网络攻防能力增长明显、利用类基准大幅提高。这些都是发布方自评，本期未见独立复现。需要注意许可证是专有的 glm-5.3 而非 OSI 开源；能力更强也意味着自托管时要重看工具白名单、出站策略、速率限制与审计留存。",
+      "url": "https://huggingface.co/zai-org/GLM-5.3",
+      "author": "Z.ai",
+      "source": "Hugging Face",
+      "source_date": "2026-08-28",
+      "image": "https://cdn-thumbnails.huggingface.co/social-thumbnails/models/zai-org/GLM-5.3.png",
+      "domain": "ai",
+      "tags": [
+        "开放权重",
+        "模型安全"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "htmx 4.0.0 发布，属性继承改为显式声明",
+      "summary": "htmx 4 是一次需要回归测试的大版本。属性继承不再隐式，改用 :inherited 显式标记，这会直接改变嵌套 hx-* 属性、认证与 CSRF 头、target 和 confirm 的传递方式；事件统一成 htmx:phase:action 形式，部分 xhr、校验与错误事件被移除或合并；history 默认不再把页面快照留在 localStorage，回退时会重新取页。新版还加入 morph swaps、hx-partial 和流式 HTML 扩展，并提供 upgrade-check 命令。项目承诺 htmx 2 继续支持，npm 的 latest 暂时仍指向 2.x。",
+      "url": "https://four.htmx.org/announcements/2026-08-28-htmx-4.0.0-is-released",
+      "author": "htmx",
+      "source": "htmx",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "前端",
+        "破坏性变更"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Luanti 称 Android 应用因 DMCA 通知被下架",
+      "summary": "Luanti 表示 Tracer.AI 代表 Microsoft 发出的 DMCA 通知，使其 Android 应用暂时无法在 Google Play 提供。项目称该通知笼统指向 Minecraft 的注册号，没有列举具体被指控的资产，而 Luanti 的发行包不带任何游戏内容和默认游戏素材，ContentDB 上的第三方内容另有志愿者审核与下架流程，后续计划用感知哈希辅助人工核验。这些是项目方陈述，不等于通知方、平台或法院的事实认定。对维护开源发行渠道的团队，可行的准备是保留构建溯源与素材许可记录，并留一条商店之外的分发路径。",
+      "url": "https://blog.luanti.org/2026/08/27/luanti-dmca-tracer-ai/",
+      "author": "Luanti",
+      "source": "Luanti 博客",
+      "source_date": "2026-08-27",
+      "image": "https://blog.luanti.org/static/blog/2026_dmca/cover.webp",
+      "domain": "infra",
+      "tags": [
+        "开源分发",
+        "DMCA"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Oracle 澄清 MySQL 各组件并非同一条支持轨",
+      "summary": "Oracle 说明 MySQL Server 与 NDB Cluster 采用 LTS 和 Innovation 双轨，而 MySQL Shell、Router、Connectors 以及 Kubernetes Operator 走单一发布模式，即最新受支持版本直接替换前一版本。公告解释的是版本与支持语义，没有宣布新的 Server 版本或安全修复。对企业发布管理来说，同一个版本号不代表同一条生命周期：资产清单应让各组件分别记录 EOL、升级窗口、兼容矩阵与回滚证据，别把留在 LTS Server 理解成控制面组件也能无限期停留。",
+      "url": "https://blogs.oracle.com/mysql/mysql-release-models-lts-innovation-and-single-release",
+      "author": "Oracle MySQL",
+      "source": "Oracle MySQL 博客",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "生命周期"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 并发模式对物化视图报错信息不正确",
+      "summary": "它会误报 has no identity index，v2 补丁改用 errdetail_relkind_not_supported() 并补上了物化视图测试。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACXPvy4_LkQ0nHKgbZjAGK9fkDqRYUvXA3hgwxPm_X7Eng@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "物化视图"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_subscription 拆表方案推迟到 v20",
+      "summary": "共享目录里存了数据库级 OID，导致 REASSIGN OWNED 和依赖追踪异常；拆分改动过大，本地实现已完成但另开线程推进。",
+      "url": "https://www.postgresql.org/message-id/20260828231141.c5.noahmisch@microsoft.com",
+      "author": "Noah Misch",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "系统目录"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "子事务出错时复制槽的释放方式仍有分歧",
+      "summary": "争议在于创建过程中出错的槽该不该直接删除，Masahiko Sawada 建议本轮只处理子事务回滚时的释放。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACVjdXfSqTWUam8Db_tja_F=Qj3J9O-bajCp0HabUts6sw@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "子事务"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "提案随机化 B-Tree 页分裂位置以消除振荡",
+      "summary": "随机化限定在 SPLIT_DEFAULT 叶页的等惩罚候选之间，能否降低尾延迟而不影响页面占用率仍待真实基准验证。",
+      "url": "https://www.postgresql.org/message-id/0025135A-F56E-44FF-95C8-945A6BB5FDB4@yandex-team.ru",
+      "author": "Andrey Borodin",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "B-Tree",
+        "尾延迟"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "连接消除会删掉仍被 CASE 引用的连接",
+      "summary": "Tender Wang 用 SQLSmith 发现子查询上拉后常量折叠掩盖了列引用，Tom Lane 承认现有修复方案并不理想。",
+      "url": "https://www.postgresql.org/message-id/CAHewXN=kWGAXV537mKtSyBYobGdHhYJVDJJMXXZEmmPWE_zaPw@mail.gmail.com",
+      "author": "Tom Lane",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划",
+        "崩溃"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "数据校验和测试的时序不稳定定位到等待缺失",
+      "summary": "Alexander Lakhin 确认改用 wait => 1 后 50 次迭代稳定通过，失败的是第 3 个用例而非此前推测的第 15 个。",
+      "url": "https://www.postgresql.org/message-id/a14e16d3-a9bb-4bd1-9501-a66b906048b4@gmail.com",
+      "author": "Alexander Lakhin",
+      "source": "pgsql-hackers",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据校验和",
+        "测试"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Sesame 发布本地优先密码管理器公开测试版",
+      "summary": "vault、TOTP 与备份都留在本机，可选服务端基于 PostgreSQL；独立审计尚未完成，官方建议只用测试数据。",
+      "url": "https://usesesame.app/",
+      "author": "Sesame",
+      "source": "Sesame",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "密码管理",
+        "客户端加密"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "OpenAI Python SDK 迁移到 HTTPX2 改变 TLS 信任源",
+      "summary": "默认信任库从 certifi 转向操作系统，依赖 RESPX、自定义 transport 或企业 TLS 代理的项目需要重新测试。",
+      "url": "https://github.com/openai/openai-python/blob/main/httpx2.md",
+      "author": "OpenAI",
+      "source": "GitHub",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "SDK",
+        "TLS"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "论文称多 agent 环境在 12 个构造问题中产出 5 个新结果",
+      "summary": "",
+      "url": "https://arxiv.org/abs/2608.23691",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "研究"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "vphone-cli 用 Apple 私有虚拟化框架启动虚拟 iPhone",
+      "summary": "",
+      "url": "https://github.com/Lakr233/vphone-cli",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "虚拟化"
+      ],
+      "position": 15
+    }
+  ]
+}
