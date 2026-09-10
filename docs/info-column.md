@@ -50,7 +50,7 @@
 | `/info/daily/` | 302 到最近有内容的一天 |
 | `/info/archive/` | 归档：按月列出有内容的日期与条数 |
 | `/info/search/?q=` | 博览检索，每页 20 条 |
-| `/info/rss/` | 最近 50 条一、二档条目 |
+| `/info/rss/` | 每天一期：最近 30 天，每天一个条目，正文是当天三档全文（`content:encoded`），链接与 guid 指向当天页面；页面标题右侧有「RSS 订阅」按钮 |
 
 布局沿用站内内页：`container-fluid margin pg-page` 两栏，左侧 `.pg-sidecard`（搜索框 + 「新闻博览」入口 + 最近 30 天日期与条数 + 归档入口），右侧 `#pgContentWrap`。条目样式在 `media/css/info.css`，只用 `--pg-*` 令牌与现有排版规则（`.pg-prose` 的字号行高、酒红内容链接、外链图标）。三档的区别靠密度和字号，不用彩色卡片。
 

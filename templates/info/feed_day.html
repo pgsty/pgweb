@@ -1,0 +1,15 @@
+{% comment %}One day of 博览 as the body of a feed entry. Absolute links only; no site chrome.{% endcomment %}{% autoescape on %}{% if lead %}<h2>大新闻</h2>
+{% for item in lead %}<h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
+{% if item.thumb %}<p><a href="{{ item.url }}"><img src="{{ root }}/info/img/{{ item.key }}.webp" width="500" height="300" alt=""></a></p>
+{% elif item.image %}<p><a href="{{ item.url }}"><img src="{{ item.image }}" alt=""></a></p>
+{% endif %}<p>{{ item.summary }}</p>
+<p><small>{% if item.source_date %}{{ item.source_date|date:"Y-m-d" }} · {% endif %}{% if item.author %}{{ item.author }}{% if item.source %} · {% endif %}{% endif %}{{ item.source }}</small></p>
+{% endfor %}{% endif %}{% if brief %}<h2>小新闻</h2>
+<ul>
+{% for item in brief %}<li><a href="{{ item.url }}">{{ item.title }}</a>{% if item.summary %} — {{ item.summary }}{% endif %}</li>
+{% endfor %}</ul>
+{% endif %}{% if mini %}<h2>迷你</h2>
+<ul>
+{% for item in mini %}<li>{% if item.url %}<a href="{{ item.url }}">{{ item.title }}</a>{% else %}{{ item.title }}{% endif %}</li>
+{% endfor %}</ul>
+{% endif %}<p><a href="{{ root }}/info/{{ day|date:"Y-m-d" }}/">在 pgsql.cc 查看本期</a></p>{% endautoescape %}

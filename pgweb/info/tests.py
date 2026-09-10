@@ -225,7 +225,7 @@ class PageTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, 'info/stream.html')
         html = response.content.decode()
-        self.assertContains(response, '<h1>PostgreSQL 博览</h1>', html=True)
+        self.assertContains(response, 'PostgreSQL 博览')
         self.assertContains(response, '每日精选 PostgreSQL、数据库与云计算资讯')
         # Read positions inside the reading column, not the side card above it.
         body = html.split('<div class="info-column"', 1)[1]
@@ -417,23 +417,35 @@ class FeedTests(TestCase):
     def tearDown(self):
         cache.clear()
 
-    def test_the_feed_carries_the_top_two_tiers_with_the_key_as_guid(self):
+    def test_the_feed_has_one_entry_per_day_with_the_day_page_as_permalink(self):
+        run('info_import', batch(day='2026-09-08'))
         response = self.client.get('/info/rss/')
         self.assertEqual(response.status_code, 200)
         body = response.content.decode()
-        self.assertIn('PostgreSQL 博览', body)
+        self.assertEqual(body.count('<item>'), 2)
+        self.assertIn('<title>PostgreSQL 博览 2026-09-10</title>', body)
+        self.assertIn('<guid isPermaLink="true">https://pgsql.cc/info/2026-09-10/</guid>', body)
+        self.assertLess(body.index('2026-09-10</title>'), body.index('2026-09-08</title>'))
+        # The day is the entry body, all three tiers, article links absolute.
+        self.assertIn('content:encoded', body)
         self.assertIn('https://example.org/tier1', body)
         self.assertIn('https://example.org/tier2', body)
-        self.assertNotIn('https://example.org/tier3', body)
-        for key in InfoItem.objects.filter(tier__lte=2).values_list('key', flat=True):
-            self.assertIn('<guid isPermaLink="false">{}</guid>'.format(key), body)
+        self.assertIn('https://example.org/tier3', body)
+        self.assertIn('大新闻', body)
+        self.assertIn('迷你', body)
+        self.assertIn('https://pgsql.cc/info/2026-09-10/', body)
 
-    def test_the_feed_is_capped_at_fifty_items(self):
-        for day in ('2026-09-01', '2026-09-02'):
-            rows = [item(2, position, title='条目 {}'.format(position),
-                         url='https://example.org/many/{}/{}'.format(day, position)) for position in range(1, 31)]
-            run('info_import', batch(day=day, items=rows))
-        self.assertEqual(self.client.get('/info/rss/').content.decode().count('<item>'), 50)
+    def test_the_feed_is_capped_at_thirty_days(self):
+        for n in range(1, 32):
+            run('info_import', batch(day='2026-08-{:02d}'.format(n), items=[
+                item(1, 1, url='https://example.org/{}'.format(n))]))
+        self.assertEqual(self.client.get('/info/rss/').content.decode().count('<item>'), 30)
+
+    def test_the_pages_offer_the_feed(self):
+        for url in ('/info/', '/info/2026-09-10/'):
+            response = self.client.get(url)
+            self.assertContains(response, 'class="info-rss"')
+            self.assertContains(response, 'rel="alternate" type="application/rss+xml"')
 
 
 class HomeBlockTests(TestCase):

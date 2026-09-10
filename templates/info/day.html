@@ -1,6 +1,6 @@
 {% extends "info/base.html" %}
 {% block info_content %}
-<h1>PostgreSQL 博览 <time datetime="{{ day|date:"Y-m-d" }}">{{ day|date:"Y-m-d" }}</time></h1>
+<h1>PostgreSQL 博览 <time datetime="{{ day|date:"Y-m-d" }}">{{ day|date:"Y-m-d" }}</time> <a class="info-rss" href="/info/rss/" title="订阅博览 RSS">{% include "base/icon.html" with name="rss" %}<span>RSS 订阅</span></a></h1>
 <p class="info-tagline">{% if count %}当天收录 {{ count }} 条。{% else %}{{ tagline }}{% endif %}</p>
 
 {% if count %}

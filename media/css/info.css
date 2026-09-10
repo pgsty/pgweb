@@ -31,6 +31,37 @@
   font-size: 14px;
 }
 
+/* RSS button at the right end of the title row: one entry per day. */
+.info-rss {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  padding: 5px 11px;
+  border: 1px solid var(--pg-line-strong);
+  border-radius: 999px;
+  color: var(--pg-ink-2);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  vertical-align: middle;
+  transition: border-color var(--pg-dur) var(--pg-ease), color var(--pg-dur) var(--pg-ease);
+}
+
+#pgContentWrap .info-rss {
+  color: var(--pg-ink-2);
+}
+
+#pgContentWrap .info-rss:hover {
+  border-color: var(--pg-link);
+  color: var(--pg-link);
+}
+
+.info-rss .pg-icon {
+  width: 14px;
+  height: 14px;
+}
+
 .info-empty {
   margin: 2rem 0;
   padding: 1.5rem 0;
