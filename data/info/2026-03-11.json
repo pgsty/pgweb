@@ -1,0 +1,320 @@
+{
+  "date": "2026-03-11",
+  "origin": "chronicle 2026-03-11: pgnexus #79, news 1；借 2026-03-09/03-10 hackers 4 条",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PGCA 上调两档最高赞助等级并改版官网",
+      "summary": "PostgreSQL 社区协会（PGCA）是核心团队在 2011 年授权成立的非营利组织，负责持有并保护 PostgreSQL 的商标与品牌资产。协会参考其他开源基金会的赞助模式，考虑到维护品牌资产的成本上升，自 2026 年 2 月 1 日起上调 Benefactor 与 Patron 两个最高等级的赞助额度，其余等级维持不变。同期上线改版后的官网，把非营利使命、商标使用规范和捐赠入口集中呈现，域名仍是 postgres.ca。",
+      "url": "https://www.postgresql.org/about/news/updates-to-pgca-non-profit-sponsorship-levels-website-3254/",
+      "author": "PostgreSQL Community Association",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "商标",
+        "赞助"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "把 not 挪进子句让软删除查询快 32 倍",
+      "summary": "软删除表的常见写法是 EXISTS 配活跃行的部分索引。Nikolay Samokhvalov 对比两个等价查询：一个用 EXISTS 匹配占 98% 的活跃帖子，另一个把 not 挪进子句，用 NOT EXISTS 匹配占 2% 的已删除帖子。后者快 32 倍。原因是索引里「没找到」可以完全跳过堆访问，而「找到了」在频繁更新的表上还要回表校验可见性：前者做了 52.7 万次堆读取，后者 1 万次。凡少数派布尔标记的模式都适用这个思路。",
+      "url": "https://postgres.ai/blog/20260311-not-exists-vs-exists-partial-index",
+      "author": "Nikolay Samokhvalov",
+      "source": "postgres.ai",
+      "source_date": "2026-03-11",
+      "image": "https://postgres.ai/img/og-image.png",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "索引",
+        "查询优化"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "每多一个索引，写入就多缴一次固定税",
+      "summary": "Matty Stratton 从写放大的角度解释索引为何反噬写入：一张带 5 个索引的表每插入一行要落 6 次写，1 次堆写加 5 次索引写，在 5 万行每秒的摄入速率下就是每秒 30 万次写，带来大量 I/O 与 WAL 膨胀。时间戳这类单调递增列还有「热右边缘」问题，B-tree 最右侧叶页持续分裂。由此形成回路：索引拖慢写入，缓冲区压力上升，查询变慢，于是再加索引。每秒 500 行时无碍的索引数量，到 5 万行每秒就成了问题。",
+      "url": "https://www.tigerdata.com/blog/why-adding-more-indexes-eventually-makes-things-worse",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-11",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/Option-1-1200X627.png",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "写入",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pganalyze 认为「AI DBA」是个错误的框架",
+      "summary": "Lukas Fittl 反对把 AI 包装成 DBA 的替代品。他认为这种说法混淆了「执行工作」与「对结果负责」两件事，生产出问题时模型无法担责，团队反而留下一段责任真空。他主张换个方向用 AI：不去替换数据库专家，而是由平台团队提供安全、经过筛选的 AI 工具，帮应用工程师和数据平台团队更有效地使用数据库。LLM 擅长的是检索资料、交叉引用代码、弥合团队之间的知识差距，生产决策的归属和问责仍要落在人身上。",
+      "url": "https://pganalyze.com/blog/the-ai-dba-dilemma",
+      "author": "Lukas Fittl",
+      "source": "pganalyze 博客",
+      "source_date": "2026-03-11",
+      "image": "https://pganalyze.com/blog/the-ai-dba-dilemma/pganalyze_OG_the-ai-dba-dilemma.png",
+      "domain": "pg",
+      "tags": [
+        "AI",
+        "运维"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "缓冲区锁定优化推送，只读负载提升 7–8%",
+      "summary": "Andres Freund 的补丁减少争用缓存行上的原子操作，索引嵌套循环连接最多快 25%。",
+      "url": "https://www.postgresql.org/message-id/mheeefrtikvgjnjsenocvo3afj7vlpr5rljkzevssxs77n2zdt@sugqtjhryydo",
+      "author": "Andres Freund",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "性能"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "发布支持 EXCEPT TABLE 排除表已推送",
+      "summary": "语法为 FOR ALL TABLES EXCEPT TABLE (a, b, c)，括号写法与现有包含列表是否一致仍有争论。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uB20MhJJEaPJdm31t4fykJ+fChA_76jU2P9HX5knbJvAA@mail.gmail.com",
+      "author": "Shveta Malik",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别补丁与 Trino 交叉验证结果一致",
+      "summary": "两边正确性相同，匹配失败时 PostgreSQL 保持 O(n)，Trino 呈 O(n²)，10 万行时差距悬殊。",
+      "url": "https://www.postgresql.org/message-id/CAE+cgNgVWChqF-f-s4zT18V+oK1y9UOvORq9JX7jFKj4=r_taw@mail.gmail.com",
+      "author": "SungJun Jang",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "initdb 默认排序规则提供者之争仍未收敛",
+      "summary": "Jeff Davis 主张默认 UTF-8，C 排序建索引快 3 倍、排序快 2–5 倍，但 19 版赶不上。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoYPfiz6_QjkiKykwziFDZFzPVf_x77rChYBu=OGVOmbYw@mail.gmail.com",
+      "author": "Jeff Davis",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "排序规则",
+        "初始化"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 新调度器按评分给表排优先级",
+      "summary": "Nathan Bossart 用新 GUC 调节各项权重，越过 failsafe 年龄的表评分高到千万亿量级。",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0seLxDmH9UftUA3vS8DrW+7T9HV5XK8yAuQxA8BaRkg2g@mail.gmail.com",
+      "author": "Nathan Bossart",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "消除 xl_heap_visible 的减 WAL 补丁到 v37",
+      "summary": "Melanie Plageman 移除 get_conflict_xid()，冲突 XID 只按设置 VM 位、冻结、修剪三种情况计算。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Z8Ry_ynNBPAzs_Ry3MQi9NaBgt1ccLgwRsDbxWpocaBg@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "内核"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "读取流改造让 pgstatindex 快 4–5 倍",
+      "summary": "hash、gin、bloom_vacuum 收益微小；Andres Freund 要求换用缓冲区驱逐函数重测。",
+      "url": "https://www.postgresql.org/message-id/6vfwrw7xci7pccrfcne5ekvjw5l2uvjsjzpmgi356h7y2rkojx@6ogr34zctcue",
+      "author": "Xuneng Zhou",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "IO",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "TID 访问器函数 tid_blockno 与 tid_offset 在评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWVt5-R_2j2Wy+i5d-tw67SQ9uGVmd_R+dP-PgsBgGRfkA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "补丁"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "新 GUC 允许 walsender 不等远端刷新即退出",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdupdorG3m_TGSWO5ykXXkMAB1UXA7cB9ktr_sW6yt2vbg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "libpq 提议试完一台主机所有地址再换下一台",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/0F9E3150-AF67-4523-984B-2D854DC9141B@yandex-team.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_database_ddl() 补丁更新到第 15 版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANxoLDfLDa6Oh9y=QtVoCd=03b9ydeFF6fUe8vR1wPYU7refBg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "补丁"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "x86 原子操作头文件拼写错误引出弃用 32 位之议",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/11631eaf-30ae-4d56-9a67-bbfe06156990@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "WAL 记录未初始化填充拟统一改用 memset",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALzhyqzKTRVsQGj+qDDRVs3Oo0EvffuQvVO0v4rbpWU=SoXKug@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "安全"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "libpq 服务端 SNI 补丁增加 pg_hosts.conf 校验",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/AE0BE080-02E8-4EF2-980B-15302FA1599E@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "TLS"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "用 rdtsc 降低 EXPLAIN ANALYZE 计时开销仍在评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAP53Pkw7FzFoE9cyGN1eDKzh2hNNf=DP8HNyepaM1vwnM9_XLg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Replit 半年内估值从 30 亿涨到 90 亿美元",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/03/11/replit-snags-9b-valuation-6-months-after-hitting-3b/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "融资"
+      ],
+      "position": 20
+    }
+  ]
+}

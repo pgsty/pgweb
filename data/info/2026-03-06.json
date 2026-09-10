@@ -1,0 +1,160 @@
+{
+  "date": "2026-03-06",
+  "origin": "chronicle 2026-03-06：news 2、pgnexus #73",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgAdmin 4 v9.13 引入核心 LLM 集成基础设施",
+      "summary": "pgAdmin 团队发布 v9.13，共 15 项修复与新功能。最显眼的是引入核心 LLM 集成基础设施，在此之上提供安全、模式与性能方面的 AI 报告、查询工具里的 AI 聊天，以及 EXPLAIN 的 AI 解读。此外 ERD 工具会显示由现有表生成的关系图中的外键关系，索引创建对话框支持 ONLY，建表时可自定义 OF TYPE 列，也能从 JSON 文件加载预定义用户。修复覆盖结果集下载忽略引用设置、工具设置重启后丢失等问题。",
+      "url": "https://www.pgadmin.org/docs/pgadmin4/latest/release_notes_9_13.html",
+      "author": "pgAdmin 开发团队",
+      "source": "pgAdmin",
+      "source_date": "2026-03-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "发布",
+        "AI"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "表分区在大规模场景下的隐性成本",
+      "summary": "表分区常被当作 PostgreSQL 扩展性的默认答案。这篇文章把代价摊开讲：分区裁剪确实让窄时间范围的查询和按分区 DROP 的数据保留变快，但写入性能并不改善，长跨度查询的规划时间随分区数量线性增长，季度报表和历史分析首当其冲。运维面同样变大，自动建分区一旦静默失败就会出事，监控和操作手册都要按分区改写。作者的结论是分区适合保留期可预测的中等写入负载，对高频摄入只是把问题往后推，MVCC 的开销并没有消失。",
+      "url": "https://www.tigerdata.com/blog/hidden-costs-table-partitioning-scale",
+      "author": "Matty Stratton",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-03-06",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/Blog-Thumbnail-1280x720.png",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "性能",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "取消 psql 查询的过程比看上去复杂",
+      "summary": "在 psql 里按 Ctrl-C 中止一条跑太久的查询，是很多人每天都会做的动作。Neon 的 George MacKerron 写文章说明这个操作为什么让他不安：中止的场景各不相同，有时是发现该先建索引，有时是结果已经不需要，而取消请求要经过一条与查询本身无关的路径，是否生效、何时生效并不总是确定。文章梳理了这一过程中的技术细节和可能出问题的地方，也解释了这个常见动作值得多一分谨慎的理由。",
+      "url": "https://neon.com/blog/ctrl-c-in-psql-gives-me-the-heebie-jeebies",
+      "author": "George MacKerron",
+      "source": "Neon 博客",
+      "source_date": "2026-03-06",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/ctrl-c-in-psql-gives-me-the-heebie-jeebies/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "psql",
+        "运维"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "EDB 用 Postgres Distributed 应对单主写入瓶颈",
+      "summary": "EDB 发文讨论 PostgreSQL 服务上亿用户时遇到的写入瓶颈，把单主架构的上限称作 write wall，认为绕过它的常见做法会积累人工干预和运维债务。文章给出的方案是 EDB Postgres Distributed，用原生的双活架构替代分库分表和多种数据库拼装的组合，官方口径称它能自愈并支撑大规模负载。内容属于厂商视角，PGD 是商业产品，双活带来的冲突解决语义和应用改造成本文中没有展开，评估时需要自行验证。",
+      "url": "https://www.enterprisedb.com/blog/postgres-distributed-native-path-forward-openais-database-layer",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-03-06",
+      "image": "https://enterprisedb.com/sites/default/files/2026-03/11461081314_technical-blog_postgres-distributed_infographic.png",
+      "domain": "pg",
+      "tags": [
+        "分布式",
+        "厂商",
+        "扩展性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "清除可见性映射不注册 VM 缓冲区影响增量备份",
+      "summary": "heap_update 等函数改了 VM 缓冲区却不写进 WAL 记录，增量备份会拿到过时的 VM，vacuum 随后报不一致。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_bn+e7F4yPFBgFbnP+syJRKyNK092bjD2LKvZW7O4Svag@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "备份",
+        "内核"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "自动序列复制改用常驻的序列同步工作进程",
+      "summary": "序列不再一次性同步，改为在发布端与订阅端之间持续对齐，并用漂移检测避免无谓的同步。",
+      "url": "https://www.postgresql.org/message-id/TY4PR01MB16907262C550857585D2C92B4947DA@TY4PR01MB16907.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "序列"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Swiss PGDay 2026 开始征集演讲",
+      "summary": "会议 6 月 25 至 26 日在 Rapperswil 举行，演讲征集 4 月 7 日截止，海报 6 月 8 日前提交。",
+      "url": "https://2026.pgday.ch/call-for-papers/",
+      "author": "",
+      "source": "Swiss PostgreSQL Users Group",
+      "source_date": "2026-03-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "CREATE SUBSCRIPTION ... SERVER 补丁到第 18 版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1K79RCQ-WrN3gvdC=HzRcpeOhho+kWWKWatKzm4v_aypg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "recovery_target_xid 的取值检查已改进并推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/c2e97e35-1227-4351-8faa-fa95208f6cf9@pgbackrest.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "AWS 推出面向医疗机构的 Amazon Connect Health",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/03/05/aws-amazon-connect-health-ai-agent-platform-health-care-providers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 10
+    }
+  ]
+}

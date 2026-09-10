@@ -1,0 +1,373 @@
+{
+  "date": "2026-06-22",
+  "origin": "chronicle 2026-06-22: pgnexus #185, planet 5",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostGIS Tiger Geocoder 2025.1 独立发布",
+      "summary": "Tiger Geocoder 从 PostGIS 主库拆出来独立发布，版本号按发布时的美国人口普查 TIGER 数据年份命名。2025.1 载入 TIGER 2025 数据，最低要求 PostgreSQL 16，代码搬到 OSGeo Gitea 上的独立仓库；数据库搜索路径不再自动包含 tiger schema，需要自己配置。安全上给 schema 与表名加了引号，地址规范化支持按国家解析，高速公路编码认得 SH 与紧凑写法。",
+      "url": "https://postgis.net/2026/06/PostGIS-Tiger-Geocoder-2025.1/",
+      "author": "Regina Obe",
+      "source": "PostGIS",
+      "source_date": "2026-06-22",
+      "image": "https://postgis.net/postgis-logo-horizontal.png",
+      "domain": "pg",
+      "tags": [
+        "PostGIS",
+        "地理编码",
+        "发布"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "effective_io_concurrency 的含义已经变过两次",
+      "summary": "effective_io_concurrency 控制预取深度，含义随版本改过两次。PostgreSQL 13 之前它要过一个调和级数公式，设成 10 实际只预取三页左右；13 到 17 就是并发 I/O 请求数；18 起它驱动 PostgreSQL 自己的异步 I/O，走 worker 进程或 io_uring，默认值也从 1 改成 16。Christophe Pettus 提醒不要跨大版本照搬旧值，SSD 上可以往几百试但必须实测。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-effectiveioconcurrency/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-22",
+      "image": "https://thebuild.com/media/media/6f158e7ebc1c4880a93bc650bc8fb9d5.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "IO",
+        "预取"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_stats 里的四个列决定了规划器怎么估行数",
+      "summary": "规划器读的是 pg_statistic，pg_stats 是同一份数据的可读视图，由 ANALYZE 扫表汇总生成，大批量导入后建议手工跑一次。Richard Yen 讲了四个关键列：n_distinct（唯一列为 -1）、null_frac、correlation（物理与逻辑顺序的吻合度）和最常见值列表。直方图默认 100 个等深桶，可用 ALTER TABLE 调大统计目标，多列相关的偏差交给 CREATE STATISTICS。",
+      "url": "https://richyen.com/postgres/2026/06/22/pg_stats_how_postgres_internal_stats_work.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "优化器",
+        "ANALYZE"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "waxsql 给查询规划器生成类型正确的假查询",
+      "summary": "waxsql 生成类型正确、语法合法但计算上毫无意义的 SQL，用来给查询规划器做模糊测试、验证解析器、造可复现的负载。它对每个表达式向内部目录询问什么能产生某个类型，因此产出的查询能通过解析分析和类型检查，而不只是语法正确。复杂度由一个 0 到 10 的旋钮控制，schema 与查询各有独立随机流，同一个种子在不同机器上产出相同结果。项目是纯 Python、无运行时依赖，自带语法、解析和 explain 三级校验。",
+      "url": "https://thebuild.com/blog/waxsql-wax-fruit-for-your-query-planner/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-22",
+      "image": "https://thebuild.com/media/media/71216503087e46b9b2f1152244b76ba0.png",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "优化器",
+        "工具"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL wiki 新增一页“C 方言”写作约定",
+      "summary": "Christophe Pettus 在 PostgreSQL wiki 上新开了一页 The PostgreSQL C Dialect，把写 C 扩展要知道的约定和惯用写法集中记下来，起因是他写第一个扩展时踩的坑。Tom Lane 表示赞赏，Bruce Momjian 在 Developer's FAQ 上加了链接。Roberto Mello 注意到文中破折号密集，问是否由 LLM 协助撰写、有没有用别的模型核对，截至讨论时无人回复。",
+      "url": "https://www.postgresql.org/message-id/933DA583-B0F4-4FFB-BB0B-64901D4D94AD@thebuild.com",
+      "author": "Christophe Pettus",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展开发",
+        "文档",
+        "社区"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "索引预取补丁更新到 v28，SP-GiST 范围扫描快 20 倍",
+      "summary": "启动读取流的时机改到第四次切换堆块，消除了 LIMIT 与 nestloop 半连接场景下的回退。",
+      "url": "https://www.postgresql.org/message-id/CAH2-WzkZTkDuyVFszLwPJesF9pS5E8m0UA+344bx-B-zfA5kaw@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "预取",
+        "索引",
+        "性能"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "LockBufferForCleanup 的竞态让 VACUUM 永久等待",
+      "summary": "Alexander Lakhin 在 buildfarm 上发现，引入原子解 pin 的提交 5310fac6e0f 埋下了这次挂起。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7W6PsSCOby4JDo9UZunsbHu91FHB0u1K0WUvzWjQ1WRJg@mail.gmail.com",
+      "author": "Xuneng Zhou",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "竞态",
+        "缺陷"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_combinebackup 的一处循环会陷入无限空转",
+      "summary": "copy_file_range 返回 0 是合法情况，Peter Eisentraut 建议把它直接当错误处理。",
+      "url": "https://www.postgresql.org/message-id/3208cf7a-c7f3-41eb-92f6-33cbeff4df40@eisentraut.org",
+      "author": "Peter Eisentraut",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "缺陷"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "EXPLAIN ANALYZE 报告等待事件的方案被要求重做",
+      "summary": "Haas 与 Freund 反对在等待事件热路径上加判断，主张改成定时器中断的自采样。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoZpp=yEuFDQAm8A3CwL2hOHO4Tv7500V-OF2ddRxSrsBA@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "等待事件"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "SLOT_NAME=NONE 未能跳过与发布端的连接",
+      "summary": "Jeff Davis 发现存在 tablesync slot 时提前返回失效，修复可能要回移到旧版本。",
+      "url": "https://www.postgresql.org/message-id/d87ac2f15c496f78bc6288494d18e39728566c76.camel@j-davis.com",
+      "author": "Jeff Davis",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "缺陷"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "PG20 最低依赖之争聚焦测试框架的 Python 版本",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+=fpGbqjgb1x0G6cp0230N0K0Um-20qY0jmRuBHbKPLkA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建",
+        "依赖"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "为连接与外键增加优化器统计信息的补丁收到大批意见",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/a6b82427-9806-496a-9e6a-4ac7edaac6f2@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_table_ddl() 补丁新增只输出外键的选项",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANxoLDejn2JFXF7kVMtcznW6XyessrJ7WToSaQau2GxBdAGSUg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "贪婪连接搜索算法被质疑不适合中等规模的连接",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/95e94b0e-cf88-4c9d-80d7-cbf608b672b2@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "运行中查询计划的日志方案进入代码风格审查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmobUqXfn9Y40Oc0PKn7yeG62v8gwAekr=HUQjcW3OPAk5Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "日志"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "副本标识为 full 时的索引选择改用启发式方法",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/TYRPR01MB12156CDC14DB15747719D38F9F5EF2@TYRPR01MB12156.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制拟报告实际发往下游的字节数与事务数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAE9k0P=XBOJkU8M_3USzECyFdb9jWACwLizrf6iJP3cRa7R+LA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "逻辑复制"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "基于外键消除内连接的补丁遇到外连接边界限制",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHewXNku=us+nRLYFdx_Xc8C=AUCMyPMYG32=Bggw0cytWCT3g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "GROUP BY 已保证唯一时移除 DISTINCT 要防集合返回函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAFJHCweR5tbr9GsqofWbmZXZOJbsYj8OL=ihjR3MTg933B8Shw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 该不该归为客户端工具",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1adc75e6-8b8f-4e53-ba32-a8cd0ca38b6c@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "文档"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "INSERT ... SET 语法补丁通过完整回归测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAF0whucy3wpEYqtVEX=eKi9rd5uR-=hQMkaCmjYwxQ-rOmheVw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "语法",
+        "兼容"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 社区贡献汇总覆盖今年第 23 与 24 周",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/87/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "SpaceX 与 Reflection AI 签下每月 1.5 亿美元算力协议",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/06/22/spacex-inks-compute-deal-with-reflection-ai-an-open-source-ai-lab/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据中心",
+        "算力"
+      ],
+      "position": 23
+    }
+  ]
+}

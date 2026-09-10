@@ -1,0 +1,205 @@
+{
+  "date": "2026-06-02",
+  "origin": "chronicle 2026-06-02: pgnexus #165, news 1, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Autobase 2.8.0 发布，分出商业企业版",
+      "summary": "Autobase 是把高可用 PostgreSQL 集群自动化搭起来的开源平台，常被当成云托管数据库的自建替代。2.8.0 起项目分成两条线：社区版继续以 MIT 许可开源，面向个人开发者和业余项目；新的企业版是商业版本，针对公司内部的集中管理、运维管控、治理、扩展性与技术支持，官方口径是做成可部署在自有基础设施上的完整 DBaaS。选型时要留意能力今后如何在两条线之间划分。",
+      "url": "https://github.com/autobase-tech/autobase/releases/tag/2.8.0",
+      "author": "vitabaks",
+      "source": "Autobase",
+      "source_date": "2026-06-02",
+      "image": "https://opengraph.githubassets.com/83febe07642b7661388a9c530d7ca4a5c81a203f9bd5eb93b2373a802ce2a8dc/autobase-tech/autobase/releases/tag/2.8.0",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "开源许可"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Christophe Pettus 评测 Azure Postgres 托管服务",
+      "summary": "托管 Postgres 评测系列这次看 Azure Database for PostgreSQL Flexible Server。作者认可的是大版本跟进快，当前支持到 PostgreSQL 17，常用扩展按白名单提供，实例级 PgBouncer 事务池不必另起一层，同步流复制把提交刷到两个故障域再回应客户端，语义可审计。代价是备库进入提交路径，备库一慢主库延迟跟着涨，跨可用区每次提交多 1 到 3 毫秒。",
+      "url": "https://thebuild.com/blog/managed-postgres-examined-azure-database-for-postgresql-flexible-server/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-02",
+      "image": "https://thebuild.com/media/media/fb00c5a3b3174e7ea14030349430f477.png",
+      "domain": "pg",
+      "tags": [
+        "Azure",
+        "托管服务",
+        "高可用"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Laurenz Albe 讨论函数何时才算 leakproof",
+      "summary": "leakproof 指函数没有副作用，除返回值外不泄露参数信息；行级安全和 security_barrier 视图靠它判断用户条件能否被推到安全条件之前执行。Laurenz Albe 指出 PostgreSQL 只标了约 345 个 leakproof 函数，基本都是基础类型的比较运算符，保守的代价是 RLS 下查询性能受损。他认为行级安全本就不该指望挡住能随意写 SQL 的用户，过严的定义牺牲了可用性。",
+      "url": "https://www.cybertec-postgresql.com/en/when-is-a-function-leakproof/",
+      "author": "Laurenz Albe",
+      "source": "Cybertec",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "行级安全",
+        "优化器"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "boringsql 拆解 pg_stat_statements 的边界",
+      "summary": "Radim Marek 提醒 pg_stat_statements 不是查询仓库，而是共享内存里一张定长哈希表。由此有几处坑：queryid 按对象 OID 计算，跨大版本或重建表之后就会变，不能当持久主键；ORM 的别名、列表和 LIMIT 差异会把一条逻辑查询打散成上百行；条目数受 pg_stat_statements.max 限制，被淘汰的历史直接消失；mean_exec_time 是开机以来的平均，看不出 p99 毛刺。",
+      "url": "https://boringsql.com/posts/pg-stat-statements/",
+      "author": "Radim Marek",
+      "source": "boringsql",
+      "source_date": "2026-06-02",
+      "image": "https://boringsql.com/og-images/pg-stat-statements-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "扩展"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "TigerData 谈数据库账单之外的日程债务",
+      "summary": "云账单之外还有一笔隐性成本：工程师花在数据库维护上的重复时间。文章称之为日程债务，在高负载 PostgreSQL 场景里表现为分区管理、autovacuum 调优、复制监控和容量规划，作者估计可以占掉资深工程师两到三成的时间，而且数据从百万行长到十亿行之后，运维手册变厚、新人上手变慢、产品迭代跟着变慢。建议先做一次 90 天日程审计，统计与数据库相关的故障、会议和维护，再用自动分区、保留策略和存储优化把生命周期管理从人手里拿走。",
+      "url": "https://www.tigerdata.com/blog/the-engineering-calendar-is-the-database-bill-nobody-tracks",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-06-02",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/05/The-Engineering-Time-Sink-Nobody-Talks-About.png",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "成本",
+        "分区"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "发布集 EXCEPT 补丁被发现两个边界缺陷",
+      "summary": "pg_get_publication_tables() 会返回被排除的表，CURRENT_SCHEMA 下的跨模式排除也缺校验。",
+      "url": "https://www.postgresql.org/message-id/CABdArM56e15Qa+Z9xX7kkinZR2rxkc2=r-QAisFvKg+Bf2sa_g@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "补丁"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表补丁 v44 争论选项写法",
+      "summary": "Peter Smith 主张 conflict_log_destination 用逗号分隔字符串，Amit Kapila 认为枚举加 all 更省事。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-sqEMAbZ2pTt=zMa=918NV7HVeXF4bCOF+swtzKnTy5yQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突处理"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_createsubscriber 将允许重名发布",
+      "summary": "PG19 只放开发布名重复，订阅名会被复用作槽名，留到下个版本再处理。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KZTJ+tSiMVDCdDQHzncuq_pUcHb7t=XbsUe_Jh4iYodg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "工具"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别把变量上限定在 240 个",
+      "summary": "Tatsuo Ishii 与 Jian He 支持在 0xF0 边界预留 16 个控制码，为将来扩展留出空间。",
+      "url": "https://www.postgresql.org/message-id/20260602.115039.1897923276330429432.ishii@postgresql.org",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "补丁"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "把所有 GUC 排成一列：三个 CPU 代价参数",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-cpuindextuplecost-cpuoperatorcost-and-cputuplecost/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "Stormatics 复盘表怎么也停不下来增长的一夜",
+      "summary": "",
+      "url": "https://stormatics.tech/blogs/the-night-our-tables-wouldnt-stop-growing",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "injection_points 的等待唤醒改用原子操作",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ah5Y-1t_Xfw-CU_T@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "6/7 月 Hacking Workshop 讲 pg_stat_io",
+      "summary": "",
+      "url": "https://rhaas.blogspot.com/2026/06/hacking-workshop-for-junejuly-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    }
+  ]
+}

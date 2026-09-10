@@ -1,0 +1,476 @@
+{
+  "date": "2026-07-10",
+  "origin": "chronicle 2026-07-10: pgnexus #203, planet 1, daily 14",
+  "items": [
+    {
+      "tier": 1,
+      "title": "逻辑复制序列可能带着过期值进入 READY",
+      "summary": "Noah Misch 在一次 AI 辅助审查中发现逻辑复制序列的缺陷：sequencesync worker 从发布端取到序列值之后，发布端的序列继续推进并执行了 REFRESH SEQUENCES，worker 随后把旧值写进订阅端，已订阅的序列就带着过期数据进入 READY 状态。提议的修复是对正在同步的序列跳过重新初始化并告警，提示用户等本轮同步结束后重跑。Vignesh 已提交 v1 补丁。",
+      "url": "https://www.postgresql.org/message-id/20260710045217.f0.noahmisch@microsoft.com",
+      "author": "Noah Misch",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "序列",
+        "竞态"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "清除可见性位的 WAL 记录需要注册 VM 缓冲区",
+      "summary": "Melanie Plageman 更新了补丁，回应 Robert Haas 的审查意见。修复要求在清除 VM 位时，堆的 WAL 记录必须注册 VM 缓冲区，否则崩溃恢复后两边可能不一致。性能测试显示默认配置没有回退，但关掉 synchronous_commit 之后，因为持 VM 缓冲区锁的时间变长，TPS 下降 10 到 15%。Andrey Borodin 确认 v18 的回合补丁通过了 WAL 兼容性检查。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZQVzDGfEmfbe_V1voy5yDwjs8BQEC_wsWEfCzzya2P1g@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可见性图",
+        "WAL",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "流水线恢复把 WAL 解码拆出去，基准提升约三成",
+      "summary": "Imran Zaheer 提交了 Pipelined Recovery 补丁集的 v5。方案把 WAL 解码从 startup 进程里剥离，交给独立的 pipeline worker，两者用共享内存队列通信，序列化阶段改用 shm_mq_sendv() 避免额外拷贝。CPU 采样显示 startup 进程用于应用 WAL 记录的时间从约 47% 升到 89%，全内存工作负载下基准提升约 30%。审阅者 Xuneng Zhou 尚未做完整审查。",
+      "url": "https://www.postgresql.org/message-id/CA+UBfa=Xzk=SyKHuuBPCXcUbZSzTXiNoLuqOWxnd6Zwbh9=_Gw@mail.gmail.com",
+      "author": "Imran Zaheer",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "WAL",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "剪枝时设置可见性位没有同步更新 FSM",
+      "summary": "堆页剪枝过程中按需设置 Visibility Map 时，Free Space Map 没有跟着更新，VACUUM 可能因此跳过该页面，让空间信息一直过时。Melanie Plageman 提出在页面新近变为全可见时更新 FSM。Andres Freund 建议对没有删除任何元组的已满页面跳过这次更新，但认为在当前发布周期里用简单方案更稳妥，同时质疑原注释里说这类更新无关的说法缺乏依据。Melanie 已提交不含启发式优化的修复版本。",
+      "url": "https://www.postgresql.org/message-id/gmuwqrfyjdzmm7fu2uugvgmt32fz5itclkv7vftmbottkaj3i6@25u2clp2wwod",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "FSM",
+        "可见性图"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "跨库执行 REASSIGN OWNED 会误解订阅的依赖",
+      "summary": "最近的提交给 pg_subscription 加了 subserver 和 subconflictlogrelid 两个字段，各自跨共享与非共享目录建立依赖。Noah Misch 指出，若在 subdbid 所指数据库之外执行 REASSIGN OWNED，这两个字段会被按当前数据库解释，导致报错或波及无关对象。修复思路是只处理 subdbid 与当前库匹配的行。Jeff Davis 认同并计划跟进。",
+      "url": "https://www.postgresql.org/message-id/20260710192533.4f.noahmisch@microsoft.com",
+      "author": "Noah Misch",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "订阅",
+        "目录",
+        "依赖"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "EDB 给出 EFM 加 PgPool 的高可用部署指南",
+      "summary": "EDB 发布了一套基于 EDB Postgres Advanced Server 的双层高可用参考架构。EDB Failover Manager 负责监控主备状态，在主库故障时自动完成切换；PgPool-II 部署在数据库节点前端，提供连接池与读写分离负载均衡，并用 watchdog 机制在三个实例之间做高可用，对外只暴露一个虚拟 IP。验证过的版本组合是 EPAS v16.4.1、EFM v4.9 和 PgPool v4.4.5。",
+      "url": "https://www.enterprisedb.com/blog/high-availability-edb-postgres-advanced-server-using-efm-and-pgpool-complete-setup-guide",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "PgPool",
+        "EFM"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 让每个活跃仓库都有可查询的 owner",
+      "summary": "GitHub 说明了它如何在 45 天内为活跃仓库建立经过校验的归属，并归档约 8000 个闲置仓库。owner 以 ownership-type 和 ownership-name 两个自定义属性记录，校验、警告和归档由 GitHub App 加 Kubernetes CronJob 驱动。理由是 secret scanning、依赖告警和供应链修复都需要知道谁能决定和修复；没有 owner，自动化最多发现问题，进不了闭环。",
+      "url": "https://github.blog/security/application-security/how-github-gave-every-repository-a-durable-owner/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-07-09",
+      "image": "https://github.blog/wp-content/uploads/2026/01/generic-github-invertocat-mona-logo.png",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "治理"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 用 ML-DSA 推进后量子认证迁移",
+      "summary": "Cloudflare 称其多数流量已经用上 ML-KEM，接下来以 ML-DSA 推进认证一侧的防护，目标是在 2029 年实现全面后量子安全。文章也承认 ML-DSA 存在签名尺寸和实现上的限制，现有基于 RSA 与 ECC 的技巧不能完全照搬。后量子迁移的难点不在某一天换掉一个算法，而是证书、身份、签名、协议尺寸、设备兼容性和回滚链条构成的多年工程。",
+      "url": "https://blog.cloudflare.com/ml-dsa-will-have-to-do/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-07-09",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KYN1RPDXF8ZMCRX3ZR83HG10.png",
+      "domain": "infra",
+      "tags": [
+        "后量子",
+        "TLS"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "共享缓冲区查找表拟改用专用哈希表",
+      "summary": "新实现的自旋锁持有时间比 dynahash 多 50 到 150 纳秒，扩容方案留待后续补丁。",
+      "url": "https://www.postgresql.org/message-id/CAAStW3LLnPYypEh3fQu+z-t1cAw7fUJh=0aQDZcMh=XOuJQF_Q@mail.gmail.com",
+      "author": "Dhruv Aron",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "性能"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "UnlockBufHdrExt 的位序错误已修复并提交",
+      "summary": "位运算改成先减后加以避免重叠，此前 TerminateBufferIO 的 BM_IO_ERROR 标志会丢失。",
+      "url": "https://www.postgresql.org/message-id/hm4wqcu3zvl76go6zvyvr77tzgbiehs5v4lvaa53uwlj5wqar7@nfohqqm3r3i3",
+      "author": "Andres Freund",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "缺陷修复"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "INSERT ... BY NAME 有了草案补丁",
+      "summary": "按列名而非位置匹配源查询结果，即将发布的 SQL 标准允许同时给出显式列表。",
+      "url": "https://www.postgresql.org/message-id/e96b935f-0745-45da-9aa1-bed09d4be62d@uni-muenster.de",
+      "author": "Ayush Tiwari",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "语法"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "JSON_TABLE 的 NESTED PATH 出现 3.7 倍性能回退",
+      "summary": "自动生成列名与用户列名冲突还会误报重复，回退原因目前尚未查清。",
+      "url": "https://www.postgresql.org/message-id/CAA-aLv5PGAFmAEpbhKQz8wppoOOTHfo-=LJb2sAB3974-9QtOw@mail.gmail.com",
+      "author": "Thom Brown",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON_TABLE",
+        "性能"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "获取待 repack 的表时避免多余加锁",
+      "summary": "Álvaro Herrera 去掉多余的系统缓存拷贝，并修复关系并发消失或被替换的处理。",
+      "url": "https://www.postgresql.org/message-id/alD9l-XlCuu3eUEe@alvherre.pgsql",
+      "author": "Álvaro Herrera",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "repack",
+        "锁"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "TABLES IN SCHEMA 的 EXCEPT 支持改到 v20",
+      "summary": "schema 限定与 EXCEPT 列表的校验从语法层推迟到执行阶段集中处理。",
+      "url": "https://www.postgresql.org/message-id/CABdArM72ufPkmOttET=q+kDaFrUMSUGYgZOh_OrBvuH-EPM1Bg@mail.gmail.com",
+      "author": "Nisha Moond",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "发布"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Spice 2.0 发布，主打少 ETL 的实时联邦查询",
+      "summary": "基于 Rust 与 Apache DataFusion，性能和 GA 范围仍需用真实数据自行验证。",
+      "url": "https://spice.ai/blog/spice-2-0-is-now-available",
+      "author": "Spice AI",
+      "source": "Spice AI 博客",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "联邦查询",
+        "分析"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "KVM 的 Januscape 漏洞影响 guest 到 host 隔离",
+      "summary": "CVE-2026-53359 值得 KVM 宿主机核查补丁状态与嵌套虚拟化的暴露面。",
+      "url": "https://arstechnica.com/security/2026/07/high-severity-guest-vm-escape-is-1-of-2-linux-vulnerabilities-to-surface-this-week/",
+      "author": "Ars Technica",
+      "source": "Ars Technica",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "KVM",
+        "漏洞"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "hba 配置格式讨论转向 JSON5",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFMTWKpmgPa41yJRznyym9ThGnVnVGn-1TME2zpVVT9YjA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制冲突日志表理清并行 worker 的报错顺序",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1Lyor4dZ9YL3WEUdXayCnjTDD7R_hrKnEVEeyoP-+9ZSw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 保留复制源 OID 的补丁到 v11",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uBmSF2wGUT9ZNBMZ3znRuCCf+2Mm-xvkuKBaciuSsnDow@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "按 max_log_size 截断日志的补丁已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHW_-tUC26y_nMkDO2yZMqjoBFKbbfz-uYUSv6HjGAw+w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "错误消息里显示虚拟列表达式的补丁到 v6",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DJV79NVENPC8.DVXIKOV4VBNV@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "pg_always_inline 新旧宏将在旧分支并存",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3184af6f-75a2-4b43-8223-897b71970fef@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "CAST 的 FORMAT 首版将只覆盖日期时间模板",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABXr29G5MYGf00bimwGxUKKE0RDD5Wvsfcxd6XiZaFrU7EoQug@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 补齐函数定义遗漏的 static",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPmGK16XqvvkWhsGgUASUQAtrxEtOfUud4id6do3zZ+XX44WZA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "psql 描述命令不再重复列出 schema 内的表",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+fyZ0bguUtHQW9VcD5ideOzpmS+fykM+emGwrhPYnajA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Dave Stokes 谈那些看不懂用途的 PostgreSQL 查询",
+      "summary": "",
+      "url": "https://stokerpostgresql.blogspot.com/2026/07/ever-run-into-postgresql-query-that-you.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "demo_cli 给本地 PostgreSQL 操作先建恢复点",
+      "summary": "",
+      "url": "https://github.com/WePwn/demo_cli",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "sqlitefeed 提供交互式的 SQLite 查询检查",
+      "summary": "",
+      "url": "https://github.com/yeet-src/sqlitefeed",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "LWN 预览 Git 2.55 的变化",
+      "summary": "",
+      "url": "https://lwn.net/Articles/1079596/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Allstate 指控 Broadcom 因其弃用 VMware 发起审计",
+      "summary": "",
+      "url": "https://arstechnica.com/information-technology/2026/07/allstate-accuses-broadcom-of-auditing-it-because-it-quit-vmware-ca/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud VMware Engine 要求更新 guest 内核",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/vmware-engine/docs/security-bulletins",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Hyper 用 Elixir 编排分布式 Firecracker microVM",
+      "summary": "",
+      "url": "https://github.com/harmont-dev/hyper",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 32
+    }
+  ]
+}

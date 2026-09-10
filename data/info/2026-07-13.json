@@ -1,0 +1,462 @@
+{
+  "date": "2026-07-13",
+  "origin": "chronicle 2026-07-13: pgnexus #206, planet 4, daily 11",
+  "items": [
+    {
+      "tier": 1,
+      "title": "全局临时表补丁集发到 v9",
+      "summary": "Dean Rasheed 发布全局临时表补丁集的 v9，回应 Japin Li 和 Zsolt Parragi 的审查意见。这一版对 pg_class 里非临时关系改用 reloncommit = 'n' 而不是 NULL，避免空值处理的复杂；修好 pg_dump 丢掉 ON COMMIT 子句和已中止事务错误固定 datfrozenxid 两个问题，并给子事务清理函数补上提前返回。此外还新增了 pg_dump 测试用例。",
+      "url": "https://www.postgresql.org/message-id/CAEZATCVeGPE-NdWMtOX99GiiR+o2ocyT0kEZB2CPprG-a5ivrg@mail.gmail.com",
+      "author": "Dean Rasheed",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "补丁"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "运行时过滤器下推的 PoC 补丁到 v5",
+      "summary": "Matheus Alcantara 提交了把 Bloom filter 等运行时过滤器下推进规划器的 v5 PoC。候选过滤器不再限制为最优的三个，改按选择率阈值挑选；路径组合用广度优先逐步扩展，上限由新 GUC 控制，每种组合直接传给对应的真实路径构造函数而不是克隆已有路径。Tomas Vondra 调研 DuckDB、Spark 和 Trino 后发现它们都放在规划后处理阶段。自底向上规划估不准选择率仍是未解的核心问题。",
+      "url": "https://www.postgresql.org/message-id/DJXOUTCDRPW8.2XXAGP2XKHPRU@gmail.com",
+      "author": "Matheus Alcantara",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "Bloom filter"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "行模式识别的偏移量合并补丁被指出十一处缺陷",
+      "summary": "Henson Choi 评审了行模式识别导航偏移量合并补丁的 v51。0001 修好 FIRST(expr, n>0) 丢失前向范围的回归，但他认为只做合并不够，会把原本 fail-closed 的错误变成静默的错误结果。评审列出 11 个缺陷，归为五个根因：偏移量在执行器初始化时冻结，感知不到 PARAM_EXEC 变化；volatile 检查跑在常量折叠之前；越界导航的语义不合标准。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zCsQ67fehbVNdJZkNTK4DhCH5s6JN0bAcaYnzmP4LY5tA@mail.gmail.com",
+      "author": "Henson Choi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行模式识别",
+        "评审"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "备库上的 walsummarizer 每十秒报错且不再推进",
+      "summary": "PostgreSQL 17.7 的备库上出现 walsummarizer 反复记录 invalid record length ... got 0 且停滞不前的缺陷。Thom Brown 提交了分析和两个补丁：0001 把 read_upto 截断到时间线切换点，0002 把全零 WAL 当作 WAL 末尾而不是硬错误。Robert Haas 认为按 SummarizeWAL 的约定调用方本应已截断，0001 是多余的。全零文件的来源仍未查明。",
+      "url": "https://www.postgresql.org/message-id/CALP_NYR-Q4F-VSS0GGK=cRVE30stQBHD_6xu2upWUP1hob488w@mail.gmail.com",
+      "author": "Thom Brown",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "增量备份",
+        "WAL",
+        "缺陷"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "vacuum 统计补丁到 v40，是否进内核受质疑",
+      "summary": "Alena Rybakina 提交了 rebase 后的 vacuum 统计补丁系列 v40，每个提交对应一类统计。Bharath Rupireddy 审查后提出实质质疑：补丁新增的大部分统计项，包括堆和元组指标、WAL 用量、缓冲区用量、计时信息和可见性映射变更，在现有 vacuum 的输出里已经有了。他问能不能沿用 v28 里基于 hook 的外部模块方案，而不是在内核里新增视图，并建议先给出具体的自动调优用例。",
+      "url": "https://www.postgresql.org/message-id/b66b05f4-a7c6-4254-9c40-34528f0a841d@yandex.ru",
+      "author": "Alena Rybakina",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "统计信息"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Coverity 报出大小写转换的整数溢出隐患",
+      "summary": "Coverity 在 unicode_case.c 的 convert_case() 里报出潜在整数溢出：大小写转换让输出显著膨胀时 result_len 可能回绕。Tom Lane 指出即使输入长度在 size_t 范围内，输出长度也可能溢出，32 位平台尤其明显。Jeff Davis 引 Unicode 17.0 说明映射最多带来 3 倍码点扩展，叠加 UTF-8 单码点 4 字节，上限是 12 倍；但文本上限 1GB。",
+      "url": "https://www.postgresql.org/message-id/3213927.1783950167@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Unicode",
+        "溢出"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "用蓝绿部署在 Aurora PostgreSQL 上重建大索引",
+      "summary": "在 Aurora PostgreSQL 上重建大索引时，REINDEX 会把排序中间数据溢写到磁盘，临时空间不够就会失败。文章的做法是把重建放进蓝绿部署的 green 环境，配合 Aurora Optimized Reads，用带 NVMe 的实例让排序数据落到本地盘而不是走网络访问 EBS。实测一个膨胀到 8918 MB 的索引约四分钟重建到 4557 MB，期间写了约 19.5 GB 临时数据。",
+      "url": "https://aws.amazon.com/blogs/database/rebuild-large-indexes-on-aurora-postgresql-with-blue-green-deployments/",
+      "author": "Santosh Mishra",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-07-13",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/07/02/DB5546.png",
+      "domain": "pg",
+      "tags": [
+        "Aurora",
+        "索引",
+        "运维"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "在线改校验和的补丁拆成文档与加锁两部分",
+      "summary": "Rui Zhao 发现 launcher_exit() 有四处无锁读，v6 改用 launch_fast_checkpoint。",
+      "url": "https://www.postgresql.org/message-id/CAHWVJhFHko2c6DaBpTXNgM+r-x9dnwDgZz8thG8CnBR=v-Tz3g@mail.gmail.com",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "并发"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "REFRESH SEQUENCES 遇到同步 worker 将直接报错",
+      "summary": "v2 顺带修了只读事务下 sequencesync worker 失败等几个问题。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+SpTvDhfwUbt9bhP0ZqLFTScQ=VceZCF25Jyn7fkAiXA@mail.gmail.com",
+      "author": "vignesh C",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "序列"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "并发删除序列会让发布端权限检查触发断言",
+      "summary": "vignesh C 把 NULL 权限值当作序列已不存在，走既有的缺失错误路径。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm2fHGLeiQKj0r6OG7N9QeayxSmpLrWYJRyt4dL_m3VRWw@mail.gmail.com",
+      "author": "vignesh C",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "序列",
+        "断言"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "四个 OpenSSL 清理补丁不改变现有行为",
+      "summary": "换掉废弃的 SSLv23_method 与 X509_NAME_get_text_by_NID，并修正协议检测宏。",
+      "url": "https://www.postgresql.org/message-id/68B9881D-DAA8-467D-A251-C96E98E57BA0@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "OpenSSL",
+        "清理"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "pg_log_query_plan 的日志请求会被静默丢弃",
+      "summary": "游标配合 FETCH 1 可复现，标志在 ExecProcNode 再次执行之前就被重置。",
+      "url": "https://www.postgresql.org/message-id/b7985819-a760-4e59-b1f4-d793b8cddcc5@gmail.com",
+      "author": "Andrei Lepikhov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行计划",
+        "日志"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "DROP SUBSCRIPTION 的文档将说明残留槽要手动清理",
+      "summary": "Amit Kapila 计划改文档而不是改代码，修复提交到 HEAD 并回移至 PG14。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+c3M8Qmq+=CLvHx6c0MctnZ2j_AjHhCCHANkQ06ZK6YQ@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "订阅",
+        "文档"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Neon 发布 Neon API 的 TypeScript 客户端 SDK",
+      "summary": "在 REST 接口之上做类型安全封装，替调用方处理资源就绪的轮询。",
+      "url": "https://neon.com/blog/neon-sdk",
+      "author": "Andre Landgraf",
+      "source": "Neon 博客",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "SDK"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "pgnudge 把 PostgreSQL 变更当作可丢失的重载提示",
+      "summary": "不留永久触发器或槽，按表名合并通知，不提供历史与恰好一次语义。",
+      "url": "https://github.com/janbjorge/pgnudge",
+      "author": "janbjorge",
+      "source": "GitHub",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "缓存"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "MCP 发布候选版改用无状态的传输层",
+      "summary": "以协议层无状态取代 session id，要求新的请求头，官方称含破坏性变更。",
+      "url": "https://blog.modelcontextprotocol.io/posts/2026-07-28-release-candidate/",
+      "author": "Model Context Protocol",
+      "source": "MCP 博客",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "MCP",
+        "协议"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Math.tanh 的末位差异可能暴露浏览器宿主系统",
+      "summary": "Chrome 148 起该函数走宿主 std::tanh，不同 libm 的位级结果并不相同。",
+      "url": "https://scrapfly.dev/posts/browser-math-os-fingerprint/",
+      "author": "Scrapfly",
+      "source": "Scrapfly 博客",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "浏览器",
+        "指纹"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "REASSIGN OWNED 过滤当前库订阅的补丁已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-u1ZQge4yCAhhbZ7EdwVrG3MeQH_jbaj2WXgoSYzF0bXQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "TABLES IN SCHEMA 的 EXCEPT 补丁收到 v20 审查意见",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uAvshwkEgepntqRgvMwnnFXZMfPWtdscDqHVdZW33g-4A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "hba 新格式讨论转向向后兼容与迁移工具",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/21FABBDE-07F9-409B-A0AE-6C5052BB96D7@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "psql 描述命令去重的补丁已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KGLPgu4uTpe-LnB6MDHzqCMzmR_GqMJxTykJTBX6bxmg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "补丁文件加 nocfbot- 前缀即可让 cfbot 忽略",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+k_cfkv=2eOs4b5t2R9q_wnVPiMyhLr1MbWW6taT_K_cg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 逐项讲 GUC：enable_tidscan",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_tidscan/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Pavlo Golub 记下 Swiss PgDay 2026 的未记录部分",
+      "summary": "",
+      "url": "https://pashagolub.github.io/blog/2026/pgday2025-unlogged/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "PostgresEDI 七月聚会谈公共演讲与 AI 合规",
+      "summary": "",
+      "url": "https://vyruss.org/blog/postgresedi-july-2026-meetup-public-speaking-ai-compliance.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "postgres-contrib 汇总第 26 与第 27 周的社区贡献",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/89/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "mcp-spec-check 黑盒探测公开 MCP 端点的合规度",
+      "summary": "",
+      "url": "https://github.com/Roee-Tsur/mcp-spec-check",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "nfs-crust 让 Rust 应用直连 NFSv4.1 读写不可变数据",
+      "summary": "",
+      "url": "https://github.com/s2-streamstore/nfs-crust",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Skillscript 把 agent 技能写成受限的操作 DAG",
+      "summary": "",
+      "url": "https://github.com/sshwarts/skillscript",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Mindwalk 把编码 agent 的会话足迹画成可审计时间轴",
+      "summary": "",
+      "url": "https://github.com/cosmtrek/mindwalk",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "有人在 API 边界实测编码 agent 的请求开销",
+      "summary": "",
+      "url": "https://systima.ai/blog/claude-code-vs-opencode-token-overhead",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 31
+    }
+  ]
+}

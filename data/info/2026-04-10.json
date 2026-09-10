@@ -1,0 +1,194 @@
+{
+  "date": "2026-04-10",
+  "origin": "chronicle 2026-04-10: news 4, pgnexus #109, planet 1；三档借用 2026-04-08 / 04-09 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_datasentinel 1.0 发布，补全后端级监控",
+      "summary": "DATASENTINEL 发布了 pg_datasentinel 首个正式版本，一个专注可观测性的开源扩展。它在 pg_stat_activity 之上补出每个后端的内存占用和实时临时文件字节数，PostgreSQL 18 及以上还给出当前执行计划 ID，并在 cgroup 环境里报告 CPU 配额与内存上限。它还跟踪 XID 消耗速率、估算距回卷上限的剩余时间，把 vacuum、检查点等事件解析成可查询的视图。要求 15 或更高版本。",
+      "url": "https://www.postgresql.org/about/news/pg_datasentinel-10-released-3271/",
+      "author": "Christophe REVEILLERE",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-04-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "监控",
+        "可观测性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Autobase 2.7.0 把 SQL 编辑器嵌进控制台",
+      "summary": "Autobase 是自建高可用 PostgreSQL 集群的开源 DBaaS 替代方案。2.7.0 与 Zexa Technologies 合作，把 DBDesk Studio 作为嵌入式 SQL 编辑器接进控制台，可以直接连接集群、执行查询和管理数据；同时内置由 pg_auto_reindexer 驱动的自动索引维护，在膨胀拖慢查询之前重建。此外新增 24 个云区域，控制台镜像补上 ARM 支持。",
+      "url": "https://github.com/autobase-tech/autobase/releases/tag/2.7.0",
+      "author": "Vitaliy Kukharik",
+      "source": "Autobase",
+      "source_date": "2026-04-10",
+      "image": "https://opengraph.githubassets.com/8babc388e1f96b58dea4714945c5fd54c46b0956a95294b507c5ad31229104c0/autobase-tech/autobase/releases/tag/2.7.0",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "运维",
+        "索引"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "强制检查点引发的写入风暴与 max_wal_size",
+      "summary": "pgEdge 的 Shaun Thomas 解释了强制检查点为何拖垮写入密集实例。定时检查点按 checkpoint_completion_target 把刷盘摊开，而 WAL 触到 max_wal_size 时的强制检查点不理会这个设置，只能立刻刷盘。测试中 1GB 配置的 TPS 从 1100 跌到 620，4GB 则保持平稳。建议写入密集场景调到 10–20GB，批量作业 50GB 以上，并打开 log_checkpoints。",
+      "url": "https://www.pgedge.com/blog/checkpoints-write-storms-and-you",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检查点",
+        "WAL",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "DBConvert Streams 2.0 支持 PostgreSQL CDC",
+      "summary": "Slotix 发布 DBConvert Streams 2.0，把数据迁移、数据探索和实时复制收进同一个工具。它基于 PostgreSQL 逻辑复制的 WAL 做日志式变更数据捕获，不依赖 Kafka 或额外流水线组件就能持续同步；支持与 MySQL 之间的迁移并自动转换 schema，内置 SQL 界面，还能跨 CSV、JSON、Parquet 文件做联邦查询。可本地运行，也可用 Docker 部署。",
+      "url": "https://streams.dbconvert.com/blog/dbconvert-streams-2-0/",
+      "author": "Slotix s.r.o.",
+      "source": "DBConvert 博客",
+      "source_date": "2026-04-10",
+      "image": "https://streams.dbconvert.com/blog/content/images/2026/03/data-explorer-dark.png",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "迁移",
+        "逻辑复制"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "TimescaleDB 如何抬高工业物联网的性能上限",
+      "summary": "Tiger Data 的 Doug Pagnutti 用工业物联网场景说明 TimescaleDB 在哪三处突破了原生 PostgreSQL 的限制。它把表自动切成按时间划分的块，索引小到能放进内存，写入速率随之抬高；查询靠块排除只扫相关时间范围，再用连续聚合预算好汇总，把耗时从 250–1500 毫秒压到 0.4 毫秒；旧块转成列式后压缩率可达 80% 至 95%。厂商称年存储成本可能从 15 万美元降到 1.5 万美元。",
+      "url": "https://www.tigerdata.com/blog/how-timescaledb-expands-postgresql-iiot-performance-envelope",
+      "author": "Doug Pagnutti",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-04-10",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/How-TimescaleDB-reshapes-the-performance-Envelope.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "压缩",
+        "物联网"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "并发 REPACK 会长时间卡住逻辑解码的 restart_lsn",
+      "summary": "Zhijie Hou 发现长事务阻止 restart_lsn 推进，WAL 被保留数小时甚至数天，补丁让工作进程定期推进。",
+      "url": "https://www.postgresql.org/message-id/a38fc771-c860-4605-8c44-d16e8aff2534@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "逻辑复制"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 17 起视图查询会报 relid 0 错误",
+      "summary": "视图里的 UNION ALL 混用 int[] 与 bigint[] 时触发 XX000，17、18 和 master 分支均受影响。",
+      "url": "https://www.postgresql.org/message-id/adjW8rfPDkplC7lF@pryzbyj2023",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "优化器"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_get_*_ddl 合并改动里的内存管理错误",
+      "summary": "Jeff Davis 指出代码对 DatumGetArrayTypeP 的结果调用 pfree，pg_get_role_ddl() 会报无效指针。",
+      "url": "https://www.postgresql.org/message-id/4efc426cde8eed9734af3a4552c3be29188f3661.camel@j-davis.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "DDL"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "rdtsc 计时补丁改进虚拟机下的频率校准告警",
+      "summary": "第 27 版让 pg_test_timing 在校准频率与上报频率相差超过一成时告警，并提示改用 system 时钟源。",
+      "url": "https://www.postgresql.org/message-id/CAP53PkwR8gEteMDTK0=hGx5YmLMUhW3aFXAergr_VWgmBFFBig@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "计时"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "编码风格是否应移出 SGML 文档并弃用 Size",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/C33D942E-8D36-4CAD-8A65-58473CBF8F3C@anarazel.de",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "用支持钩子优化 JSONB 数值字段提取",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABXr29G35c6Qo-Ab4EpH24gHS+ejjJGfhmW3nQ1eEK+Rgt_9Wg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "REPACK 与防回卷 VACUUM 的锁优先级之争",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/138051.1775847402@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    }
+  ]
+}

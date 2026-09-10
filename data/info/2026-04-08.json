@@ -1,0 +1,185 @@
+{
+  "date": "2026-04-08",
+  "origin": "chronicle 2026-04-08: pgnexus #107, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "边缘 AI 把 PostgreSQL 当作事实来源",
+      "summary": "Vibhor Kumar 主张边缘 AI 的记录系统不能是概率性的：每个站点跑一个本地 PostgreSQL 作账本与策略边界，热数据留在本地，云端只做汇总、跨站分析与治理，两者之间靠 outbox 队列异步同步。落地要点包括用 INSERT ... ON CONFLICT 配稳定事件 ID 做幂等、把冲突规则写明而不是简单地后写覆盖、向量检索按租户与站点加上权限约束。他提醒 pgvector 0.8.2 的安全修复要尽快打上。",
+      "url": "https://vibhorkumar.wordpress.com/2026/04/08/ai-at-the-edge-truth-in-postgres/",
+      "author": "Vibhor Kumar",
+      "source": "Vibhor Kumar 博客",
+      "source_date": "2026-04-08",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/04/image-2.png",
+      "domain": "pg",
+      "tags": [
+        "边缘",
+        "AI",
+        "架构"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "迁到 TimescaleDB 的最佳时机是一千万行",
+      "summary": "Matty Stratton 给了一个时间点：一千万行左右迁移只是一个周末的活，拖到五亿行以上就变成几名工程师做几周的项目。他把中间这段时间的查询调优、扩机器和处理故障叫作优化税，是维持原生 PostgreSQL 性能的隐性开销。TimescaleDB 的原生压缩和自动分区把这部分负担去掉。文中没有给出具体基准，判断仍应结合自己的写入速率与查询形态。",
+      "url": "https://www.tigerdata.com/blog/when-to-migrate-postgres-to-timescaledb",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-08",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/Best-time-to-migrate-Blog.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "迁移"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "AWS 把统一 JSON 搜索拆给六个服务",
+      "summary": "Ezat Karimi 的思路是不指望单一数据库扛下所有 JSON 场景。以视频平台为例，实时用户状态放 DynamoDB，影片目录放 DocumentDB，计费用 Aurora PostgreSQL 保证 ACID，数据湖落 S3，分析用 Redshift 的 SUPER 类型，内容发现交给 OpenSearch。各服务之间靠 OpenSearch Ingestion 做快照加持续变更捕获，在可接受的窗口内保持最终一致。",
+      "url": "https://aws.amazon.com/blogs/database/how-to-build-unified-json-search-solutions-in-aws/",
+      "author": "Ezat Karimi",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-04-08",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/04/01/ezatk_OS_architecture-1201x630.png",
+      "domain": "cloud",
+      "tags": [
+        "JSON",
+        "架构"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 评分视图提交后报出重复释放",
+      "summary": "同一查询里多次调用评分函数会触发 double pfree，讨论转向为统计接口做更大改动。",
+      "url": "https://www.postgresql.org/message-id/5684f479-858e-4c5d-b8f5-bcf05de1f909@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "缺陷"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "槽同步进程改用 SIGTERM 已回补到 17 与 18",
+      "summary": "回补带出 ABI 问题，新信号将挪到 ProcSignalReason 枚举末尾以免打乱既有取值。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwGprr+1ycMFpkni4fOM=CGt7iO1yGnJROHqU59sewV0-Q@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "回补"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 用标志位规避锁升级死锁遭反对",
+      "summary": "Andres Freund 认为许多取锁路径绕开检查，应让死锁检测器真正理解锁升级。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KWDbBk4FgbbWdivQLrPPzR4zgvfnHK4WjWC78rbuRVbg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "锁"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "FreeBSD 上 walsender 的关闭超时会失效",
+      "summary": "pq_flush() 卡住导致回不到超时检查，建议改用 pq_flush_if_writable()。",
+      "url": "https://www.postgresql.org/message-id/43F849DC-885F-4D60-94F6-78B5D645E24D@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "日志截断参数定名 log_statement_max_length",
+      "summary": "审查建议只在真正记日志的路径上调用截断，回归测试也从 pg_ctl 套件挪走。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwGEd=PpVWDd05bYM8F6mnxcSNmWL2Ei8JCf5azZSJnYJA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "日志"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "JSONB 提取优化拆成五个补丁推进",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABXr29HN04CqHBGZ_k6_jQmCL5FO59tDE4PUL9U56Rpu=d4=0A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "构建农场机器报出错误的 TSC 频率",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAP53PkyZ6sbaJvMHXFD4Xpv72ZtqUe8iz_02EquFDYjdKQ2=yw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 的重试补丁获 RMT 批准",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/adZq3Rlxq3v916aG@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "WAIT FOR LSN 的初始化补丁继续拆分",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABPTF7WC0DdMkQz1NWymS3rRSn_p09yFjM36z0CtmW3+WY0mcA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    }
+  ]
+}

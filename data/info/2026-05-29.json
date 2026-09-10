@@ -1,0 +1,231 @@
+{
+  "date": "2026-05-29",
+  "origin": "chronicle 2026-05-29: pgnexus #161, planet 4；补 2026-05-26 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的 REPACK 命令怎么用",
+      "summary": "Shaun Thomas 介绍 PostgreSQL 19 新增的 REPACK：重写膨胀的表并把空闲空间还给操作系统，这是 VACUUM 做不到的。写法是 REPACK (VERBOSE, ANALYZE) 表名，CONCURRENTLY 用复制槽捕获重写期间的改动以避开长时间排他锁，USING INDEX 按索引物理排序，接手 CLUSTER 的活。注意它不能用于无日志表和分区表，也不能放进事务块，并发形态还不是 MVCC 安全的。",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-the-new-repack-command",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "PostgreSQL 19",
+        "膨胀"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_tde 是什么，以及你到底需不需要它",
+      "summary": "Christophe Pettus 讲 Percona 的开源透明加密扩展 pg_tde，当前 2.1.2，官方口径的开销在 10% 以内。它对显式标记的堆表及其索引、TOAST 表、序列和 WAL 做块级加密，内部密钥加密数据、主密钥再加密内部密钥，主密钥放在 Vault 或 KMIP 服务里。没覆盖的部分要留意：系统目录仍是明文，临时溢出文件不加密，而且不支持 pg_upgrade。他的建议是只有合规硬性要求或需要按表加密时才上。",
+      "url": "https://thebuild.com/blog/open-source-tde-for-postgresql-what-pgtde-is-and-whether-you-need-it/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "加密",
+        "pg_tde",
+        "合规"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "clang-20 在 RISC-V 上误编译波及时区与 pg_trgm",
+      "summary": "Greg Burd 报告 clang-20 的自动向量化在 RISC-V 构建上生成了错误的散布写入，受影响的不止 DES 加密代码。他排查出三处：pgcrypto 的 crypt-des.c、时区编译器 zic.c 和 pg_trgm 的 trgm_op.c。zic.c 尤其麻烦，时区数据编译出错很难被发现。问题只在 -O2 和 -O3 下、编译器生成 RVV 散布存储时出现。Tom Lane 指出时区数据的测试覆盖有限。",
+      "url": "https://www.postgresql.org/message-id/0c5901cb-6e58-47f6-aad0-f880e091ab37@app.fastmail.com",
+      "author": "Greg Burd",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "编译器",
+        "RISC-V",
+        "正确性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "key joins 提案想把外键关系写进 JOIN 子句",
+      "summary": "Joel Jacobson 在推进一项名为 key joins 的 SQL 语言特性，并打算提交 SQL 委员会。写法形如 LEFT JOIN 表 FOR KEY (列) -> 别名 (列)，直接在连接里声明外键关系。补丁从 v4 改到 v6，修掉了构建失败与测试问题。Matthias van de Meent 建议支持引用命名的外键约束；Laurenz Albe 想用 FROM 和 TO 取代箭头，Joel 说用户反馈显示箭头更清楚。",
+      "url": "https://www.postgresql.org/message-id/751d58ec-e8d9-41c8-a8e4-d2133b89a970@app.fastmail.com",
+      "author": "Joel Jacobson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "连接",
+        "提案"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PQfn() 的弃用有了可用的过渡补丁",
+      "summary": "Nathan Bossart 拿出一版工作补丁来解决 PQfn() 的弃用：在 libpq 里引入回调机制处理预备语句被释放的通知，走协议扩展而不是次版本号，对旧服务端或旧客户端回退到 PQexecParams()。Jacob Champion 建议在切到回退方案之前先把 PQfn() 保留几个版本，并对基于通知的架构表示怀疑，更倾向中间件层面的上下文隔离。相关讨论已另开线程继续。",
+      "url": "https://www.postgresql.org/message-id/ahmtVYcf4EYwz02U@nathan",
+      "author": "Nathan Bossart",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "协议",
+        "废弃"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 的第一部分已提交",
+      "summary": "catalog_xmin 不推进的疑虑被认为与 CLUSTER 同源、可单独处理，v4 的代码改动获批。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1LtgqdC21EoES0WkiBvB5=k5pMxm5zZahS9f2mSszdLrA@mail.gmail.com",
+      "author": "Álvaro Herrera",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "提交"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "校验和状态变更的修复已赶在 beta1 前推送",
+      "summary": "缺失的 procsignalbarrier 已补上并带测试，多余的 DELAY_CHKPT_START 标志将在 19 里移除。",
+      "url": "https://www.postgresql.org/message-id/F2ACC7C5-13F5-4B3E-8964-1C3170E05064@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "PostgreSQL 19"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表的创建顺序与 TOAST 需求待定",
+      "summary": "先建表能省一次更新，但会撞上禁止依赖不存在对象的新规则，改到订阅之后建更合规。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-t04zWHek+LuB5uF1hY9+6B-x_nuL8AhwHkFCYv64iOaA@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突日志"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "复制槽释放补丁的 TRY-CATCH 位置有争议",
+      "summary": "审阅者主张把捕获放进创建槽的内部函数，才能覆盖所有调用方，并留意锁的处理。",
+      "url": "https://www.postgresql.org/message-id/TY4PR01MB17718C386870F9DAD4B0BF9BC94162@TY4PR01MB17718.jpnprd01.prod.outlook.com",
+      "author": "Shveta Malik",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "错误处理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "commit_timestamp_buffers 该给多大",
+      "summary": "Christophe Pettus 的 GUC 系列新篇，只有开了 track_commit_timestamp 才需要关心。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-committimestampbuffers/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "提交时间戳"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "通用计划补丁修好指向已释放计划的 QueryDesc",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqGq2S+NL3Q8sYh2u9XLXmNYTy-Z6HqmTW4VHUahB=yqjw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区裁剪"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "EnterpriseDB 汇总团队在 PGConf.dev 2026 的参与",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/pgconfdev-2026-our-teams-sessions-working-groups-and-key-takeaways",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "Ashutosh Bapat 写下对 PGConf.dev 2026 的反思",
+      "summary": "",
+      "url": "https://ashutoshpg.blogspot.com/2026/05/my-reflections-on-pgconfdev-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "cary huang 解释 PGConf.dev 为何仍是他最喜欢的会",
+      "summary": "",
+      "url": "https://www.highgo.ca/2026/05/26/pgconf-dev-2026-why-it-remains-my-favorite-postgresql-conference/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 14
+    }
+  ]
+}

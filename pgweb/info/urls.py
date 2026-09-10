@@ -12,5 +12,6 @@ urlpatterns = [
     path('archive/', views.archive, name='archive'),
     path('search/', views.search, name='search'),
     path('rss/', InfoFeed(), name='rss'),
+    path('img/<str:key>.webp', views.thumb, name='thumb'),
     path('<str:datestr>/', views.day, name='day'),
 ]

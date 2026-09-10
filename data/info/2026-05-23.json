@@ -1,0 +1,198 @@
+{
+  "date": "2026-05-23",
+  "origin": "chronicle 2026-05-23: pgnexus #155, planet 2；补 2026-05-22 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "在 Ubuntu 26.04 上把 PostgreSQL 17 升级到 18",
+      "summary": "Paolo Melchiorre 记录了在 Ubuntu 26.04 上把 PostgreSQL 17.10 升到 18.4 的过程，用的是发行版自带工具，不依赖 PGDG 仓库。核心是一条 pg_upgradecluster 17 main -v 18：新集群接管 5432，旧集群退到 5433 并停止，确认无误再 pg_dropcluster 并卸载 17 的软件包。文中没有涉及扩展兼容与备份，这些仍需自行安排。",
+      "url": "https://www.paulox.net/2026/05/24/upgrading-postgresql-from-version-17-to-18-on-ubuntu-26-04-resolute-raccoon/",
+      "author": "Paolo Melchiorre",
+      "source": "paulox.net",
+      "source_date": "2026-05-23",
+      "image": "https://www.paulox.net/images/PXL_20260501_105449063.webp",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "Ubuntu",
+        "pg_upgradecluster"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "并发 REPACK 的库级快照将从 PostgreSQL 19 回退",
+      "summary": "为支持并发 REPACK，补丁引入了数据库级快照。Amit Kapila 提出架构层面的担忧：逻辑解码从设计上处理的是集群范围的事务，而这个补丁在构建初始快照时绕开了该假设。他认可库级快照对并发 repack 的价值，但认为需要更多时间评估它与既有机制的相互作用。Álvaro Herrera 考虑到 beta 1 前的时间压力，同意先在 PostgreSQL 19 里回退这部分功能，放到 20 再做。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1K7Q=CNNr0_t5aXVD8t9UW2xSFdjOgG4cSB6-G2c8DK=Q@mail.gmail.com",
+      "author": "Amit Kapila、Álvaro Herrera",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "逻辑解码",
+        "PostgreSQL 19"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "补丁让日志报出阻塞 autovacuum 的最旧 xmin 来源",
+      "summary": "autovacuum 清不掉死元组时，DBA 往往要另行排查是谁按住了 xmin 水位。Shinya Kato 的补丁让日志直接给出最旧 xmin 的来源。同一个 xid 只可能属于一个后端，因此 active、idle、prepared 之间怎么排序都不影响结果；设计上只报告优先级最高的那个阻塞者，避免日志冗长、便于定位根因。完整的阻塞者列表计划以后通过动态统计视图暴露，审阅者反馈积极。",
+      "url": "https://www.postgresql.org/message-id/SY7PR01MB10921CD524617DCF4FE8E2565B60C2@SY7PR01MB10921.ausprd01.prod.outlook.com",
+      "author": "Shinya Kato",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "xmin",
+        "补丁"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "WAIT FOR LSN 改变语义，复制槽测试出现竞态",
+      "summary": "Alexander Lakhin 报告 019_replslot_limit.pl 因新的 WAIT FOR LSN 实现而失败：wait_for_catchup() 现在在备库回放到目标 LSN 时就返回，不再等主库处理完反馈并更新槽状态，测试检查时 restart_lsn 还没推进。Xuneng Zhou 判断新语义更正确，该改测试。Alexander Korotkov 建议直接调用 wait_for_slot_catchup()。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7XDVHC-FDtZNWep6eCJEiaGOBskmYbVivZGZ2p-V23-QA@mail.gmail.com",
+      "author": "Xuneng Zhou",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "测试",
+        "WAL"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "checkpoint_flush_after 等检查点参数建议保持默认",
+      "summary": "Christophe Pettus 的 GUC 系列继续讲检查点。checkpoint_flush_after 提示内核在检查点期间把脏页逐步刷盘，Linux 上默认 256kB，其他平台为 0，作者说这是最不需要动的参数。checkpoint_warning 默认 30 秒，WAL 量触发的检查点过于频繁时在日志里告警，真出现告警应该调大 max_wal_size。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-checkpointflushafter-and-checkpointwarning/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-23",
+      "image": "https://thebuild.com/media/media/b68deb343c0e46529962bb3609d05f50.png",
+      "domain": "pg",
+      "tags": [
+        "检查点",
+        "参数",
+        "调优"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "ECPG 在连接为 NULL 时的崩溃已修复并提交",
+      "summary": "问题出在 ECPGprepared_statement() 与 ECPGdeallocate_all()，补丁在 14 以后的各分支上验证通过。",
+      "url": "https://www.postgresql.org/message-id/CAHg+QDe=UwWiKo6Yqc5=sUdhG=jm7jWd42yM8iGmadbnU0YNEw@mail.gmail.com",
+      "author": "Andrew Dunstan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ECPG",
+        "崩溃修复"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Runtime 把 coding agent 的运行环境做成团队基础设施",
+      "summary": "共享 runner、权限、审计与预算，取代每个开发者在本机各跑一套 agent 的做法。",
+      "url": "https://www.runtm.com/",
+      "author": "Runtime",
+      "source": "runtm.com",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Agent",
+        "沙箱"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "Freenet 以点对点平台形式重新面向去中心化应用",
+      "summary": "",
+      "url": "https://freenet.org/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "P2P"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "KVBoost 主打 chunk 级 KV cache 复用",
+      "summary": "",
+      "url": "https://pythongiant.github.io/KVBoost/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "推理优化"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "Superset 定位为 agent 时代的 IDE",
+      "summary": "",
+      "url": "https://github.com/superset-sh/superset",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "Proof Loop 让 coding agent 自证任务已完成",
+      "summary": "",
+      "url": "https://github.com/LeoStehlik/proof-loop",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "Darc 为 coding agent 提供类 grep 的记忆检索",
+      "summary": "",
+      "url": "https://github.com/0xjunha/darc",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 12
+    }
+  ]
+}

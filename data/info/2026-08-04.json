@@ -1,0 +1,393 @@
+{
+  "date": "2026-08-04",
+  "origin": "chronicle 2026-08-04: pgnexus #228, news 3, daily 21, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgAdmin 4 v9.17 修复七个安全漏洞",
+      "summary": "这一版的重点是安全。pgAdmin 4 v9.17 带来 28 项修复与改进，其中包含七个漏洞：工具的权限绕过、经主口令钩子与导入导出工具触发的系统命令注入、索引统计与发布视图里的 SQL 注入、AI 助手只读事务防护的词法差异绕过、无需认证即可访问的路由，以及共享服务器克隆导致的凭据泄露。功能侧新增在访问日志中记录已认证用户和查看数据的取行上限。",
+      "url": "https://www.pgadmin.org/docs/pgadmin4/9.17/release_notes_9_17.html",
+      "author": "pgAdmin Development Team",
+      "source": "pgAdmin 项目",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgAdmin",
+        "安全",
+        "CVE"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pgBackRest 2.59.0 支持 PG19 并默认禁止以 root 运行",
+      "summary": "备份工具的这一版在能力和默认值上都有动作。pgBackRest 2.59.0 加入对 PostgreSQL 19 的支持，新增 archive-expire-before 选项清理 WAL 归档，支持 S3 Outposts 与 Azure 批量删除，修复 SFTP 空闲断开后的重连，info 命令会显示各仓库的备份进度。安全方面默认不再允许以 root 运行，仅 restore 例外，需要时用 allow-root 打开。",
+      "url": "https://pgsql.cc/about/news/pgbackrest-2590-3347/",
+      "author": "pgBackRest Community",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgBackRest",
+        "备份",
+        "PostgreSQL 19"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "E-Maj 5.0.0 允许非超级用户安装和使用",
+      "summary": "E-Maj 是给数据库子集做细粒度写入日志、支持按时间点回溯的 PostgreSQL 扩展。5.0.0 这个大版本最实质的变化是允许非超级用户角色在库中安装和使用它，可用功能随该角色的权限而定，这让它更容易进入权限收紧的环境。此外还改进了幂等管理脚本的写法与参数管理，并加入对 PostgreSQL 19 的兼容。扩展本身兼容 14 到 19，配套的 Emaj_web 5.0.0 兼容 3.0 到 5.0 的扩展版本。",
+      "url": "https://pgsql.cc/about/news/e-maj-500-3346/",
+      "author": "Philippe Beaudoin",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "时间回溯",
+        "E-Maj"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PlanetScale 公开分片 PostgreSQL 的并行备份实现",
+      "summary": "分片之后，备份的瓶颈不再是 pg_basebackup 这条命令，而是对象存储读写、WAL 截点、恢复编排和计算隔离组成的系统问题。PlanetScale 介绍了自家做法：底层仍是常规的文件级基础备份加归档 WAL 回放，为备份临时拉起节点，稳态路径复用上一轮健康快照，让备份节点从对象存储拉取并重放数据，每 12 小时一次快照。厂商称可在数小时内处理 PB 级数据库、吞吐超过 50 GB/s，这些数字不宜直接照搬。",
+      "url": "https://planetscale.com/blog/massively-parallel-postgres-backups",
+      "author": "PlanetScale",
+      "source": "PlanetScale 工程博客",
+      "source_date": "2026-07-31",
+      "image": "https://planetscale.com/assets/massively-parallel-postgres-backups-social-apuT3KE7.png",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "分片",
+        "对象存储"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 讲了服务超长上下文模型的三层取舍",
+      "summary": "只压权重而不管缓存容量和页归属，可能把吞吐优化变成正确性事故。Cloudflare 公开了三处改动：在 Kimi K2.6 上把 KV cache 降到 FP8，可容纳上下文从约 68.6 万 token 提到 137 万；把 GLM 5.2 权重从 FP8 压到 INT4，检查点从 705 GB 降到 421 GB；给物理缓存页加再分配标记，解码读取前核对请求期待的页和标记，不匹配就中止，防止共享缓存串话。",
+      "url": "https://blog.cloudflare.com/smaller-faster-safer-models/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-08-03",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KZ1Q04GM9SA4QGPGPKWJQSJ6.png",
+      "domain": "ai",
+      "tags": [
+        "推理",
+        "KV cache",
+        "量化"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "CloudNativePG 把参数变更拆成重载与滚动重启两条路",
+      "summary": "需要重启的参数改动会先逐个重启副本，再切换主库，最后处理原主库，力求不丢数据。",
+      "url": "https://www.cybertec-postgresql.com/en/mastering-postgresql-configuration-management-with-cloudnativepg-cnpg/",
+      "author": "Wellingtone Luvonga",
+      "source": "Cybertec 博客",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CloudNativePG",
+        "配置管理"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "XLogReader 处理跨页超大记录时可能损坏内存",
+      "summary": "Matthias van de Meent 的修复已合入主干，并补了覆盖超过记录长度上限的测试。",
+      "url": "https://www.postgresql.org/message-id/anJg3rHwUKDkwqSO@paquier.xyz",
+      "author": "Matthias van de Meent",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "内存损坏"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "非确定性排序规则下等值选择率只算了首个匹配项",
+      "summary": "提议在属性与表达式的确定性不同时才全量扫描 MCV 列表，以保住常见路径的速度。",
+      "url": "https://www.postgresql.org/message-id/CALRDUFrSnFkHD+d2HVf86C08Cv9ipejTmQuEfHJowC+OaoeRJg@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "排序规则"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "同时开启数据校验和与丢弃缓存调试项会崩溃",
+      "summary": "Mihail Nikalayeu 报告并给出补丁，Daniel Gustafsson 计划合入主干并回补到 19。",
+      "url": "https://www.postgresql.org/message-id/CADzfLwXGvb4Y-mqy8T+O0f_tkXR1sTDBGzP5Z=V_qcGnZ46rWg@mail.gmail.com",
+      "author": "Mihail Nikalayeu",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "崩溃"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GUC 逐项谈：闲置复制槽超时",
+      "summary": "用于回收长期不推进的复制槽，避免它一直扣住 WAL，是 18 起可用的一道保险。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-idle_replication_slot_timeout/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "复制槽"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Andy Pavlo 加入 ClickHouse 筹建 Labs",
+      "summary": "公告强调这不是独立研究部门，而是与工程、客户和行业伙伴协作的组织。",
+      "url": "https://clickhouse.com/blog/andy-pavlo-joins-clickhouse",
+      "author": "ClickHouse",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "数据库研究"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 预览把每个 agent 装进一台「电脑」的运行时",
+      "summary": "由平台在 isolate、容器沙箱和浏览器之间选择执行后端，实际隔离边界仍需逐项审计。",
+      "url": "https://blog.cloudflare.com/cloudflare-computer/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Agent",
+        "隔离"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 给自助账户开放计费用量接口",
+      "summary": "单一接口返回 Workers、R2、D1 等按产品和计费周期拆分的用量与成本，数据日更。",
+      "url": "https://blog.cloudflare.com/billable-usage-api/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "FinOps",
+        "API"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "拟新增 pg_wal_preallocate() 预先创建 WAL 段",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACVuNwoF6CkvbcmT4ZqyHyOu1+nCbVSD6j4aJaxoDR1+Zg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "GSoC 项目提出合并 B 树相邻叶页以治理膨胀",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANBEAPHj3iZ97i4W9EL5TicWXRyNQ1FzK_pgxaT=TJbms0AHxg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "B-tree",
+        "索引膨胀"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "拟在订阅端增加处理逻辑解码消息的钩子",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBqVO_fwLkvxwzibohpMG-7n+7MqgkD9qRMGTVN6e8x7g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "钩子"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 拟支持查看远端服务器的执行计划",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACUL2JJetV36pVFyDGXE9cU5KzBwnHfnBcRj4ZbiFj3t8Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "执行计划"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "WAL 发送进程关闭超时取 -1 与 0 的差别将写清",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHBE3Uz7G81mTfe8TFaM-rczNDAhXWMPYjUNo=DjoTU+A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "文档",
+        "复制"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "是否为原子变量引入有符号版本尚未达成一致",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/207c0bfb-6e06-4358-bb2f-c961915efc36@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并发",
+        "原子操作"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "清可见性映射时不检查返回值的告警已消除",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ammwSQityMfSPcyj7h5UMM1BAugzEce=icbGKgf5yMzA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可见性映射",
+        "静态分析"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "EDB 比较库内扩展与可视化编排两种 AI 运维路线",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/canvas-or-function-aidb-vs-langflow-agentic-ai-ops-edb-postgres",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EDB",
+        "AI"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "FedRAMP 20x 的 Class A 申请通道已开放",
+      "summary": "",
+      "url": "https://www.fedramp.gov/2026/timeline/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "合规",
+        "FedRAMP"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Nightcrawler 把自主渗透测试流程搬到手机端",
+      "summary": "",
+      "url": "https://github.com/garagehq/nightcrawler/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全自动化",
+        "红队"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "用 PPPoE 半桥绕开无硬件加速网关的拨号瓶颈",
+      "summary": "",
+      "url": "https://arcbox.dev/blog/unifi-pppoe-half-bridge-acceleration",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络"
+      ],
+      "position": 24
+    }
+  ]
+}

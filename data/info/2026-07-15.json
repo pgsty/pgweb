@@ -1,0 +1,509 @@
+{
+  "date": "2026-07-15",
+  "origin": "chronicle 2026-07-15: pgnexus #208, planet 3, daily 16",
+  "items": [
+    {
+      "tier": 1,
+      "title": "ClickHouse 托管 PostgreSQL 强制启用 huge pages",
+      "summary": "ClickHouse 称其托管 PostgreSQL 在启动前预留约 25% 内存的 huge pages，校验池大小并要求 huge_pages = on，不足就让实例开通失败。文章以 100 GB 缓冲池、100 个连接为例，估算 4 KB 页的页表可能吃掉约 20 GB，而 2 MB 的大页能显著收窄这笔开销。shared_buffers 是每个 backend 都要映射的大共享内存段，规模上去后页表与 TLB 成本会变成浪费。",
+      "url": "https://clickhouse.com/blog/huge-pages-clickhouse-managed-postgres",
+      "author": "ClickHouse",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存",
+        "huge pages",
+        "托管"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "堆层批处理 v2 让带过滤的查询快 13% 到 14%",
+      "summary": "Denis Smirnov 发布了堆层批处理实验的 v2 双补丁，定位是 Amit 的 v8 系列的替代思路。第一个补丁复用 heapgettup_pagemode() 已收集的可见偏移量，避免在同一堆页内重复调用。第二个补丁按同一页面的批次对最多 64 个元组求顺序扫描的前缀条件，用 64 位掩码记录通过的行，直接调用现有标量算子，不引入 SIMD 或新的批处理接口。",
+      "url": "https://www.postgresql.org/message-id/A800AC8E-6D9F-4F04-9ACB-D73A2CF87D58@gmail.com",
+      "author": "Denis Smirnov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "批处理",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "关系扩展后 FSM 区间端点算错的缺陷已修复",
+      "summary": "Jingtang Zhang 报告关系扩展后调用 FreeSpaceMapVacuumRange() 时传入的排他终点不对，修复只改一行，把 last_block 换成 last_block + 1，第二个补丁补了一个跨 FSM 叶页边界的回归测试。Melanie Plageman 确认这是真实缺陷，但触发条件有限，只有新页正好是新 FSM 页的第一页时才碰得上。问题自 PostgreSQL 16 引入，需要回移，她当天完成了提交。",
+      "url": "https://www.postgresql.org/message-id/albeIeDL1jglr4qc@paquier.xyz",
+      "author": "Jingtang Zhang",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FSM",
+        "缺陷修复"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "postgres_fdw 绕开游标支持并行计划的补丁修了崩溃",
+      "summary": "这个补丁让 postgres_fdw 绕开游标、改用流式抓取，从而允许并行计划。Yilin Zhang 报告了一个崩溃：排空过程中取消后端时 active_scan 没有清掉，留下悬垂指针，下次执行就崩溃。Rafia Sabih 无法复现该用例，同时在 pgfdw_abort_cleanup 里补上未完成排空时重置 active_scan，重构了写入 tuplestore 的函数，并在执行 DML 之前补齐排空调用。",
+      "url": "https://www.postgresql.org/message-id/CA+FpmFfw6GQhmY_o+AUqc+ArRfx=iNcpVpWF=dTjGKKThzZc=Q@mail.gmail.com",
+      "author": "Rafia Sabih",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "并行"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Neon 把对象存储、函数和 AI 网关推入公测",
+      "summary": "Neon 把三项后端服务推到公开测试：与数据库分支机制集成的对象存储、与数据库同置的长时运行计算函数，以及通过统一 API 接入七家模型提供方的 AI Gateway，由 Databricks 提供支撑，费用合并成一张账单。这些组件可以在单个 neon.ts 文件里声明，用 neon deploy 部署，面向自动化或 agent 驱动的全栈交付，与 Neon 的 PostgreSQL 数据库协同运行。",
+      "url": "https://neon.com/blog/neon-backend-is-beta",
+      "author": "Bryan Clark",
+      "source": "Neon 博客",
+      "source_date": "2026-07-15",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/neon-backend-is-beta/neon-backend-beta.jpg",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "对象存储"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "RDS 结束 SQL Server 2016 支持，剩余实例升到 2019",
+      "summary": "AWS 文档列明 Microsoft 对 SQL Server 2016 的关键补丁支持在 2026 年 7 月 14 日结束，RDS for SQL Server 随之停止支持这个主版本，未升级的实例会被安排升到 SQL Server 2019 可用的最新小版本。AWS 建议用户自己挑时间先行升级，以免碰上自动变更。真正的风险不在数据库内核，而是没有在生产副本上验证过的应用兼容性和回退路径。",
+      "url": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/SQLServer.Concepts.General.VersionSupport.html",
+      "author": "AWS",
+      "source": "AWS 文档",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "RDS",
+        "生命周期"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "研究者称 Windows 上的 Cursor 会执行仓库里的 git.exe",
+      "summary": "Mindgard 称 Cursor 在 Windows 打开项目后会从工作区等位置寻找 Git，如果仓库根目录放了恶意的 git.exe，工具会在没有点击、提示和批准的情况下执行它。报告称已在 Cursor 3.2.16 上验证，并叙述多次披露未获修复；这些是研究方的陈述，还不是 Cursor 的公开确认。在供应商给出说明之前，不可信仓库只应放进沙箱或一次性虚拟机里打开。",
+      "url": "https://mindgard.ai/blog/cursor-0day-when-full-disclosure-becomes-the-only-protection-left",
+      "author": "Mindgard",
+      "source": "Mindgard",
+      "source_date": "2026-07-14",
+      "image": "https://cdn.prod.website-files.com/673f0725df990f6c96bf18ea/6a562c4ba76323b509a1de8d_cursor-zero-hero.webp",
+      "domain": "infra",
+      "tags": [
+        "IDE",
+        "代码执行"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Dependabot 版本更新默认等新包发布满三天",
+      "summary": "GitHub 宣布 Dependabot 默认等 registry 上的新版本存在至少三天，再创建版本更新的 PR，不需要额外配置。这个默认只作用于版本更新，安全更新仍然立即创建，维护者可以用 cooldown 配置改窗口或退出，GHES 3.23 会带上同一默认。恶意发布和账户接管的信号常在发布后不久才出现，延迟能压低发布即合并的风险，但替代不了锁文件、来源准入和人工审核。",
+      "url": "https://github.blog/changelog/2026-07-14-dependabot-version-updates-introduce-default-package-cooldown/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-14",
+      "image": "https://github.blog/wp-content/uploads/2026/07/DependabotPackageCooldown_Improvement_Unfurl_TextOnly.jpg",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "依赖"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "清除可见性位的 VM 修复已推到各稳定分支",
+      "summary": "剩余的验证性补丁等 buildfarm 确认，0002 待 WAL 日志支持补齐后再提交。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoZLGkm=17C28M-5tifZoGMC04ZVPNpdJvj+jacBRz-fNg@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可见性图",
+        "WAL"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "walsummarizer 的测试改用 archive_mode=always",
+      "summary": "流复制收到的段不会被归档，原测试因此带上时序依赖，在 Windows 上失败。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1JFpJaV9f9kOpBCi4d4h53RFeMcoZb0cjvKkSLsxXhdLw@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "测试"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "EXCEPT 发布补丁到 v21，另发现分区 detach 竞态",
+      "summary": "并发 detach 时 get_partition_ancestors() 可能返回 NIL，触发断言失败。",
+      "url": "https://www.postgresql.org/message-id/CAHut+PuJE947Y3WPo+caEpEojQdRXryS2KjBLBr12rb9RQ95Zw@mail.gmail.com",
+      "author": "Nisha Moond",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "发布"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "序列并发删除引发的断言失败已经有补丁",
+      "summary": "buildfarm 出现过同一原因的失败，NULL 权限值改按序列缺失来处理。",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB12149D8AFCC23CE88858F8D9FF5F82@OS9PR01MB12149.jpnprd01.prod.outlook.com",
+      "author": "vignesh C",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "序列",
+        "断言"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "FOR PORTION OF 剩余行的 RLS 检查补到 v4",
+      "summary": "补上 CREATE POLICY 文档表格的独立行，以及 SELECT 策略的回归测试。",
+      "url": "https://www.postgresql.org/message-id/CAEZATCWEsMTVTA4mOPidvPE4wEv=oVzurR+vSAPmeT4RS7FqCg@mail.gmail.com",
+      "author": "Paul A Jungwirth",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行级安全",
+        "时态表"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "refint contrib 模块将在 PostgreSQL 20 移除",
+      "summary": "弃用说明会回移到 v14 至 v19 各分支，引导用户改用原生外键。",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWW1ToYgBoi-ZLc2KBE3Hp+uvBHWOxuk947+OTcowxLpyA@mail.gmail.com",
+      "author": "Ayush Tiwari",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "contrib",
+        "弃用"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "SQL:2011 应用时间的更新与删除仍是 v19 待办",
+      "summary": "v3 补丁仍可干净应用，但至今没有收到任何审查反馈。",
+      "url": "https://www.postgresql.org/message-id/alepFIMKzmfl1Iye@nathan",
+      "author": "Nathan Bossart",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态表",
+        "PG19"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "apt.postgresql.org 已用 Meson 构建 PG20 快照包",
+      "summary": "缺少 LLVM bitcode 支持是软件包构建改用 Meson 的主要阻碍。",
+      "url": "https://www.postgresql.org/message-id/ald4zLd-nes2CjuZ@msg.df7cb.de",
+      "author": "Christoph Berg",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Meson",
+        "打包"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Percona 整理日常用得上的 psql 元命令",
+      "summary": "覆盖会话管理、对象检查、输出格式、计时以及用 .psqlrc 持久化配置。",
+      "url": "https://www.percona.com/blog/postgresql-meta-commands-that-save-time-every-day/",
+      "author": "Sonia Valeja",
+      "source": "Percona 博客",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql",
+        "运维"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "JetBrains 开源图数据库 YouTrackDB",
+      "summary": "支持快照隔离与 Gremlin，但示例构件仍是 0.5.0-SNAPSHOT，接口未稳定。",
+      "url": "https://github.com/JetBrains/youtrackdb",
+      "author": "JetBrains",
+      "source": "GitHub",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图数据库"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "Windows 七月更新强制第三方 TDI 传输注册",
+      "summary": "使用未注册传输的 socket 应用可能停止工作，RDP 新增 SHA-2 指纹支持。",
+      "url": "https://support.microsoft.com/en-us/servicing/os/windows-10/2026/07/july-14-2026-kb5099539-os-builds-19045-7548-and-19044-7548",
+      "author": "Microsoft",
+      "source": "Microsoft 支持",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Windows",
+        "兼容性"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 2,
+      "title": "Codex 多 agent 消息加密后本地审计轨迹不可读",
+      "summary": "记录里只剩 encrypted_content，content 为空，该 issue 仍处于开放状态。",
+      "url": "https://github.com/openai/codex/issues/28058",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "审计",
+        "agent"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "REASSIGN OWNED 过滤订阅的补丁通过审查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-tR9SdcEDbvHvGT0ArRLCVVLUgh9jYErHLhFU50V3Jbtw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "只读事务下序列同步失败拟用 GUC 覆盖解决",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB121497C2991050424BEB8563CF5F82@OS9PR01MB12149.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "utf8_to_unicode 加上扩展因子校验与静态断言",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/55491ca4edb3a78ecd62b8d313eca7dd57de5e79.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "CAST 的 FORMAT 子句是否值得做仍无共识",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxGm7Byb+=k3EKTtMR2jdGWnR2p81T8xZHpNUBnK0WNwLQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "INSERT 对 FOR PORTION OF 剩余行的 RLS 已有补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aleorWwGP_uiS6fh@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "监控资源属主意外变化的断言拟按计划移除",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/alewd1f2G0kKeM1i@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "syslogger 新增变量是否要加 PGDLLIMPORT 待定",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/4ccb96f8-0bac-4362-ac22-2f81d1b0062c@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "升级后分阶段分析会重复处理分区表的子表",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aleqYZGaU4RcHemR@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "服务器日志写入将获得四个新的等待事件",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAM527d8nm_Y1Jp1FDm-Sp3MvpRzbObLeyRMtk5WW9Bn8nqm=pA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 逐项讲 GUC：event_source",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-event_source/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Jimmy Angelakos 讲 NOTIFY 怎样拖垮数据库",
+      "summary": "",
+      "url": "https://vyruss.org/blog/listen-carefully-how-notify-can-trip-up-your-database.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Karen Jex 问到底要懂多少数据库知识",
+      "summary": "",
+      "url": "https://karenjex.blogspot.com/2026/07/how-much-do-you-really-need-to-know.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": ".NET 七月服务更新修复多个 CVE",
+      "summary": "",
+      "url": "https://devblogs.microsoft.com/dotnet/dotnet-and-dotnet-framework-july-2026-servicing-updates/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "Phoronix 称 FreeBSD 16 移除基础系统最后的 GPL 代码",
+      "summary": "",
+      "url": "https://www.phoronix.com/news/FreeBSD-16-Goes-GPL-Free",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 34
+    }
+  ]
+}

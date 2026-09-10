@@ -1,0 +1,421 @@
+{
+  "date": "2026-05-20",
+  "origin": "chronicle 2026-05-20: daily, pgnexus #152, news 2, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Barman 3.18.0 试水云存储上的块级增量备份",
+      "summary": "EDB 发布 Barman 3.18.0，重点是把云备份并进统一体验。实验性的块级增量云备份只上传发生变化的数据块，底层用 pg_basebackup 流式备份，经本地暂存区直接写入 S3、Azure Blob 或 GCS，不在 Barman 主机上保留完整副本。云操作也在逐步并入主 CLI，取代独立的 barman-cloud 脚本，另有云 WAL 归档的内存压缩与 LZ4 压缩。需要注意增量备份的恢复尚未提供。",
+      "url": "https://github.com/EnterpriseDB/barman/releases/tag/release%2F3.18.0",
+      "author": "EnterpriseDB",
+      "source": "Barman",
+      "source_date": "2026-05-20",
+      "image": "https://opengraph.githubassets.com/53f7d00c2d5a6015097d861497756a363ef38c50af22ea1d91868d940f578cd1/EnterpriseDB/barman/releases/tag/release/3.18.0",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "云存储"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "plpgsql_wrap 1.0 用 AES 加密存储过程源码",
+      "summary": "HexaCluster 发布 plpgsql_wrap v1.0，作用类似 Oracle 的 WRAP：用这门语言创建的存储过程先经校验，再以 AES-256-GCM 加密写进 pg_proc.prosrc，没有密钥就看不到明文，pg_dump 导出的同样是密文且可直接还原，另有 unwrap_procedure() 凭密钥取回源码。首个公开版本兼容 PostgreSQL 12 及以上，面向把存储过程交付给第三方时保护业务逻辑的场景。",
+      "url": "https://github.com/hexacluster/plpgsql_wrap/",
+      "author": "Gilles Darold",
+      "source": "HexaCluster",
+      "source_date": "2026-05-20",
+      "image": "https://opengraph.githubassets.com/86879913b49f84d89c30f1813e4f4a064f36788b63ee2273468adf4ccfbe5a18/HexaCluster/plpgsql_wrap",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "PL/pgSQL",
+        "加密"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "DuckDB 1.5.3 不是一次普通的补丁发布",
+      "summary": "DuckDB 官方特意说明 1.5.3 不是普通补丁版本：Quack 成为核心扩展，DuckLake、Iceberg、AWS 与 HTTPS 等扩展能力同时发生变化。版本号是 patch，行为面却覆盖数据湖表格式、远程协议和云对象存储路径，升级风险高于一般修补版。使用 DuckDB 扩展、DuckLake、Iceberg 或远程访问的团队应先读变更说明再升级，生产上的 notebook 与 ETL 环境不宜只看版本号就自动放行。",
+      "url": "https://duckdb.org/2026/05/20/announcing-duckdb-153",
+      "author": "DuckDB",
+      "source": "DuckDB 博客",
+      "source_date": "2026-05-20",
+      "image": "https://duckdb.org/images/blog/thumbs/duckdb-release-1-5-3.png",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "湖仓"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Turso 用形式化建模在 SQLite 里找出十多个缺陷",
+      "summary": "Turso 用形式化建模工具 Quint 给 SQLite 的 C API 建模，生成操作序列与真实实现做差分验证，找出十多个 bug。这不是靠模型猜错误，而是规约与模型检验驱动的系统性测试：把事务状态机和边界 API 写成规约，再让工具去构造违反预期的路径。SQLite 被极其广泛地嵌入在各类软件中，这条路径说明数据库可靠性工具链正从论文走向工程实践，维护嵌入式数据库或复杂状态机的团队可以照着做。",
+      "url": "https://turso.tech/blog/how-we-used-quint-to-find-over-10-bugs-in-sqlite",
+      "author": "Turso",
+      "source": "Turso 博客",
+      "source_date": "2026-05-19",
+      "image": "https://turso.tech/images/blog/how-we-used-quint-to-find-over-10-bugs-in-sqlite/cover.png",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "形式化方法",
+        "测试"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Railway 因云账号被误封而全平台中断",
+      "summary": "Railway 发布事故报告：Google Cloud 错误暂停了它的账号，托管在 GCP 上的基础设施随之全平台中断。事故说明多区域部署并不等于账号级的风险隔离，当云厂商的合规、支付或滥用检测对账号执行全局动作时，下游服务可能同时失去计算、网络、镜像和控制面权限，这是绕过传统多区架构的硬中断。关键平台应把云账号被封列进灾难场景，预先准备升级路径、备用组织、出云备份和状态页沟通模板。",
+      "url": "https://blog.railway.com/p/incident-report-may-19-2026-gcp-account-outage",
+      "author": "Railway",
+      "source": "Railway 博客",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "事故",
+        "云风险"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "pg_deltax 以 Apache 许可对标 TimescaleDB",
+      "summary": "xata 开源的时序扩展，许可比 TimescaleDB 宽松，功能完整度与生产稳定性仍待验证。",
+      "url": "https://github.com/xataio/deltax",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "扩展"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Tinybird 清理孤儿对象砍掉 45% 存储账单",
+      "summary": "清理过程中一度接近误删数据，文章给出识别孤儿对象与设置保护的步骤。",
+      "url": "https://www.tinybird.co/blog/how-we-deal-with-cloud-orphan-objects",
+      "author": "",
+      "source": "Tinybird",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "成本",
+        "ClickHouse"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 正在调查内部仓库被未授权访问",
+      "summary": "官方目前只确认在调查，涉及范围、攻击路径和是否触及客户数据都要等正式报告。",
+      "url": "https://twitter.com/github/status/2056884788179726685",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "事故"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Grafana 确认代码仓库被访问并下载",
+      "summary": "公司称未发现客户数据或系统受影响，已轮换令牌、审查日志并加固提交与访问设置。",
+      "url": "https://grafana.com/blog/grafana-labs-security-update-latest-on-tanstack-npm-supply-chain-ransomware-incident/",
+      "author": "",
+      "source": "Grafana Labs",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "供应链"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "CISA 管理员把 GovCloud 密钥泄漏到 GitHub",
+      "summary": "高权限的政府云凭证出现在个人仓库里，再次说明代码托管平台同时是凭证的高危边界。",
+      "url": "https://krebsonsecurity.com/2026/05/cisa-admin-leaked-aws-govcloud-keys-on-github/",
+      "author": "",
+      "source": "KrebsOnSecurity",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "凭证",
+        "安全"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Gentoo 公告 Copy Fail 等三个内核漏洞",
+      "summary": "Copy Fail、Dirty Frag 与 Fragnesia 牵动容器与宿主的隔离边界，节点镜像应排期升级。",
+      "url": "https://www.gentoo.org/news/2026/05/19/copy-fail-fragnesia-vulnerabilities.html",
+      "author": "",
+      "source": "Gentoo",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "内核",
+        "容器安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 推出 Claude Managed Agents",
+      "summary": "把 agent 需要的有状态执行与工具连接放到平台层，与此前的 Browser Run 一脉相承。",
+      "url": "https://blog.cloudflare.com/claude-managed-agents/",
+      "author": "",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AI Agent",
+        "边缘"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 扩大 Dependabot 与代码扫描的 OIDC 支持",
+      "summary": "把包发布与依赖更新从长期密钥迁到短期凭证，可以缩小令牌泄漏的爆炸半径。",
+      "url": "https://github.blog/changelog/2026-05-19-expanded-oidc-support-for-dependabot-and-code-scanning/",
+      "author": "",
+      "source": "GitHub Changelog",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "OIDC"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Gemini CLI 将在 6 月 18 日停用",
+      "summary": "Google 让开发者迁到 Antigravity CLI，迁移窗口不足一个月，脚本与 CI 需要提前替换。",
+      "url": "https://developers.googleblog.com/an-important-update-transitioning-gemini-cli-to-antigravity-cli/",
+      "author": "",
+      "source": "Google Developers",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "CLI",
+        "迁移"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 呼吁让表访问方法重新活跃起来",
+      "summary": "",
+      "url": "https://thebuild.com/blog/table-access-methods-wake-up/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储",
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "数据分析师与 width_bucket() 的一场较量",
+      "summary": "",
+      "url": "https://kmoppel.github.io/2026-05-21-data-analyst-vs-width-bucket/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "分析"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GUC 梳理：bytea_output 的兼容影响",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-byteaoutput/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "GUC 梳理：check_function_bodies",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-checkfunctionbodies/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制冲突日志表补丁推进到第三十七版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uCX53c40xopqmHtWSWBmh78BqhLVGXa88fU42eOi6w+LQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "补丁"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Amazon MWAA 支持 Apache Airflow 3.2",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/04/amazon-mwaa-now-supports-apache-airflow-3-2/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "AWS",
+        "调度"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "OpenBSD 7.9 发布",
+      "summary": "",
+      "url": "https://www.openbsd.org/79.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "操作系统"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Docker 的容器工作流 agent Gordon 正式可用",
+      "summary": "",
+      "url": "https://www.docker.com/blog/meet-gordon-dockers-ai-agent-for-your-entire-container-workflow/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "AI Agent"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 推出 Prempti，给编码 agent 加策略与可见性",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/05/20/introducing-prempti-policy-and-visibility-for-ai-coding-agents/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "治理",
+        "AI Agent"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Amazon ECS 支持暂停与继续部署",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-ecs-pause-continue-deployments/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "发布"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "有人指出语言包注册表默认就不稳定",
+      "summary": "",
+      "url": "https://nesbitt.io/2026/05/15/language-registries-are-unstable-by-default.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "包管理",
+        "治理"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Infracost 为 agent 重做 CLI，省下 79% token",
+      "summary": "",
+      "url": "https://www.infracost.io/resources/blog/we-cut-claude-s-token-usage-79-by-redesigning-our-cli-for-agents",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "CLI",
+        "成本"
+      ],
+      "position": 26
+    }
+  ]
+}

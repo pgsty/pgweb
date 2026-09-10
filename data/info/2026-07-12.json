@@ -1,0 +1,327 @@
+{
+  "date": "2026-07-12",
+  "origin": "chronicle 2026-07-12: pgnexus #205, news 1, planet 2, daily 10",
+  "items": [
+    {
+      "tier": 1,
+      "title": "powa-archivist 5.2.0 发布，支持 PostgreSQL 19",
+      "summary": "PoWA 团队发布了 powa-archivist 5.2.0，主要变化是支持 PostgreSQL 19，新增统计视图 pg_stat_recovery 和 pg_stat_lock，由 Julien Rouhaud 与 Georgy Shelkovy 贡献。powa-archivist 是 PostgreSQL Workload Analyzer 的采集底座，兼容所有仍受支持的大版本，能从多个实例采集并聚合指标，给出索引建议。",
+      "url": "https://github.com/powa-team/powa-archivist",
+      "author": "PoWA 团队",
+      "source": "PoWA",
+      "source_date": "2026-07-12",
+      "image": "https://opengraph.githubassets.com/1c2a1464016952f81d81400ee7dc733670cc29425d21bae78e2e057a446431f2/powa-team/powa-archivist",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "扩展",
+        "PoWA"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "JSON_TABLE 的 PLAN 子句缺陷与性能回退都已修好",
+      "summary": "Thom Brown 测试了修复 JSON_TABLE PLAN 子句的一组补丁：0001 修好 pg_dump 里 ERROR ON EMPTY 的处理，0002 保住 PLAN 子句的括号，0003 防止列被静默丢弃。0003 起初会让自动生成的路径名与用户指定的名字冲突，Korotkov 随后发了修订版。此前 NESTED PATH 查询约 3.7 倍的性能回退，根因是嵌套路径被反复求值，由 0005 修复。Thom 确认全部解决。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdt440fLNi3V8Lrp6bBQHPG98+MbDUqjX2FbY4QVea69rA@mail.gmail.com",
+      "author": "Thom Brown",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON_TABLE",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "执行器批处理的堆层实验带来 4% 到 13% 提升",
+      "summary": "Denis Smirnov 提交了一个 WIP 补丁，作为执行器批处理讨论中的堆层实验。补丁改 heap_getnextslot()：页面模式扫描处理完页面上第一个元组之后，复用已经收集的可见元组偏移量，同时保留现有的 table AM 接口和逐元组的执行器接口。Apple M5 Pro 上的基准显示各类 count(*) 查询执行时间减少 4% 到 13%。与 Amit 的 v8 补丁集相比，pass-all 场景略逊。",
+      "url": "https://www.postgresql.org/message-id/749D4E65-6E1F-4569-AA0D-5C354E138E57@gmail.com",
+      "author": "Denis Smirnov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "批处理",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "按 XID 年龄失效复制槽的补丁到 v12",
+      "summary": "Masahiko Sawada 和 Bharath Rupireddy 就核心设计达成一致：vacuum 遇到被活跃 walsender 持有的槽直接跳过，不阻塞等待，也不发信号，否则多个 autovacuum worker 反复碰到同一个槽会产生大量检查点请求。checkpointer 与副本上的 restartpoint 仍是兜底路径。v12 还把 vacuum、检查点和物理逻辑两类槽的测试合进了一个补丁。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACV9YBChGHOimyyLd+_F94wbOSrNFh-6Qu0fyB6t0eGZ2Q@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "autovacuum"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "新视图 pg_stat_vfdcache 暴露虚拟文件描述符缓存",
+      "summary": "有补丁提议新增 pg_stat_vfdcache 视图，暴露虚拟文件描述符缓存的统计，用来辅助调整 max_files_per_process。主要分歧在于暴露缓存总条目数还是只暴露活跃条目数，最终共识是两者都给。内存占用统计既不宜遍历全部 VFD，也不适合用固定常量估算文件名长度，Ayoub Kazar 改成运行时累计：打开文件时加上 sizeof(Vfd) 与文件名实际长度，释放时相应减去。",
+      "url": "https://www.postgresql.org/message-id/CADu+CpTwQXRdoKVSnoVRLp5m0UbA_cAU6s+_Og5=hCwKp0JR2Q@mail.gmail.com",
+      "author": "Ayoub Kazar",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "文件描述符"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "新视图将列出 xmin horizon 的各个持有者",
+      "summary": "Scott Ray 正在开发一个视图，展示 xmin horizon 的各类贡献者，包括后端进程、prepared 事务、复制槽和 hot standby feedback 的 walsender，并显示移除每个持有者后 horizon 会怎样变化。这项工作源自 autovacuum 无法清理元组时如何报告最旧 xmin 的讨论。Scott 最终另开线程和 CF 条目，避免干扰 cfbot。",
+      "url": "https://www.postgresql.org/message-id/hi43TYkkiVFTHU-Ep1YShHpZABqvdH5inI4E2pMjz52CrjurHxaJ9fiFPGzy466_wKSO58zPxHINiE49JEXDVAutiSKZzve819pr05l1ByI=@scottray.io",
+      "author": "Scott Ray",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "xmin"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "在线改校验和读 fast_checkpoint 是否要持锁",
+      "summary": "Daniel Gustafsson 建议在调用 SetDataChecksumsOff() 之前短暂持锁再读该字段。",
+      "url": "https://www.postgresql.org/message-id/415B3BF9-45FD-448E-BFA3-7B6E4A9059C5@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "并发"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "AWS DMS 模式转换支持 SQL Server 离线源",
+      "summary": "公告没有给出完整特性矩阵，转换结果仍应按草案处理并保留人工例外清单。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/07/aws-dms-schema-conversion-offline-source/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "迁移",
+        "DMS"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "EMR on EKS 的 Spark 故障分析接入 MCP",
+      "summary": "只读分析 History Server 与执行器日志，可由兼容 MCP 的客户端直接调用。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-emr-eks-spark-troubleshooting/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Spark",
+        "MCP"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 让客户为公有云源站提供地域提示",
+      "summary": "源站 IP 地理定位模糊会让分层缓存选错上层节点，抬高回源时延。",
+      "url": "https://blog.cloudflare.com/smart-tiered-cache-for-public-clouds/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CDN",
+        "缓存"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 复盘：工具变多反而让 Copilot 评审变差",
+      "summary": "改用少量 Unix 风格的探索工具，把路径收敛到 pull request 的证据上。",
+      "url": "https://github.blog/ai-and-ml/github-copilot/better-tools-made-copilot-code-review-worse-heres-how-we-actually-improved-it/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码评审",
+        "agent"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "虚拟生成列索引补丁修正预期输出文件",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/tencent_4F6D54B4AC135DDFA4963ED4CA8D5DF0AF08@qq.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 逐项讲 GUC：enable_sort",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_sort/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Sqlsure 在执行前检查 AI 生成 SQL 的连接与口径",
+      "summary": "",
+      "url": "https://github.com/sqlsure/sqlsure",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "HyperPod 用 AMI 配置替代 Slurm 节点的启动脚本",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2025/06/ami-configuration-continuous-slurm/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 文章讨论 AI 负载该放在哪种基础设施上",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/07/10/where-should-ai-workloads-run-a-sovereign-and-sensible-approach/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "有人用 eBPF 与 XDP 重写 pf 风格的包过滤数据面",
+      "summary": "",
+      "url": "https://blog.nfsensei.org/the-packet-filter-reborn.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Cpp2Rust 尝试把 C++ 自动翻译成安全 Rust",
+      "summary": "",
+      "url": "https://github.com/Cpp2Rust/cpp2rust",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Runloom 在自由线程 Python 上做 Go 风格协程",
+      "summary": "",
+      "url": "https://github.com/robertsdotpm/runloom",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Ant 作为轻量 JavaScript 运行时进入 Show HN",
+      "summary": "",
+      "url": "https://antjs.org/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Iroh 的 Mesh LLM 把多机 GPU 聚成一个接口",
+      "summary": "",
+      "url": "https://www.iroh.computer/blog/mesh-llm",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Reame 把 KV cache 放到磁盘做 CPU 优先推理",
+      "summary": "",
+      "url": "https://github.com/swellweb/reame",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 22
+    }
+  ]
+}

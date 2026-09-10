@@ -1,0 +1,370 @@
+{
+  "date": "2026-06-14",
+  "origin": "chronicle 2026-06-14: pgnexus #177, planet 2；补入 2026-06-12、2026-06-13 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "索引预取补丁发布第 27 版",
+      "summary": "Peter Geoghegan 发布了索引预取补丁的第 27 版，收拾了 PostgreSQL 19 最后一轮 commitfest 之后搁置的遗留问题。主要变化是简化 heapam_index_getnext_scanbatch_pos，把批次环形缓冲区的管理交给新的高层辅助函数，消除 Andres Freund 指出的表访问方法之间的重复代码。新增的测试设施有回收批次时的 Valgrind 内存标记，待办的是 CI 失败与成本模型。",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wzn+C=mAMv9aW3Skfh80JPpHKT3yM=DYwkrrhYyG2f+_vg@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取",
+        "PG19"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Key joins 争论卡在语法与实现位置",
+      "summary": "Arne Roland 的 key joins 补丁引入了 LEFT JOIN FOR KEY 这样的语法，靠外键关系给连接提供正确性保证。Tomas Vondra 的反馈集中在三点：这个特性是否非要有真实存在的外键约束、唯一约束够不够；验证该放在解析分析阶段还是规划器阶段；以及视图、SQL 函数和策略带来的 DDL 处理复杂性。Arne 认为解析期验证是正确性证明所必需的，计划把 DDL 处理拆成独立补丁。",
+      "url": "https://www.postgresql.org/message-id/a0e6e185-f6d9-4ae6-bf23-21bec0524564@malkut.net",
+      "author": "Arne Roland",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "SQL 标准",
+        "外键"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Zed 的 DeltaDB 想留住提交之前的编辑历史",
+      "summary": "AI 编码把大量意图、试错、局部编辑、agent 计划和对话都塞进了提交之前的阶段，而 Git 的提交只记录结果、不记录生成过程，评审、回滚、协作和审计因此都缺了一块。Zed 公布的 DeltaDB 是它对编辑历史和协作数据结构的方向性表达，技术细节还需要继续跟踪。要做 agent 编辑器或代码评审工具的团队，值得把提交前的操作日志、agent 轨迹、补丁来源和用户意图当成一等数据，而不是只依赖最终那份差异。",
+      "url": "https://zed.dev/blog/introducing-deltadb",
+      "author": "Zed",
+      "source": "Zed 博客",
+      "source_date": "2026-06-11",
+      "image": "https://images.zed.dev/blog/deltadb-early-access/thumbnail.webp",
+      "domain": "infra",
+      "tags": [
+        "版本控制",
+        "协作",
+        "AI 编码"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "OpenAI GPT-5.4 与 5.5 进入 Bedrock",
+      "summary": "AWS 宣布 OpenAI 的 GPT-5.4 和 GPT-5.5 在 Bedrock 的美国东部弗吉尼亚区域可用。公告列出的能力包括 272K 令牌上下文、文本与图像输入、Responses API、服务端和客户端的工具调用以及响应流式输出。大型企业选用模型时，采购流程、审计、区域与网络边界和数据治理往往比裸接口更关键。选型时应比较直连与各云渠道在区域、日志、配额和价格上的差别。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/openai-gpt-us-east-virginia-amazon/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Bedrock",
+        "企业采购"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "ALTER DOMAIN 锁修复将顺带清理无用参数",
+      "summary": "Fujii Masao 倾向于移除 validateDomainCheckConstraint() 的 lockmode 参数，并从发布说明里删掉对应条目。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwFAVGOvJxA1HdRN-DoVK-Fn1W4S+O1O+GpNO-W2mdjiYA@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL",
+        "锁"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "有团伙声称用 PeopleSoft 0-day 攻击百家机构",
+      "summary": "目前是媒体报道，尚待 Oracle 与受害方的一手确认，与本周早些时候的 Oracle 漏洞警告指向同一波攻击。",
+      "url": "https://www.theregister.com/cyber-crime/2026/06/11/shinyhunters-claims-oracle-peoplesoft-0-day-hit-100-orgs/5254443",
+      "author": "The Register",
+      "source": "The Register",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "Oracle"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "OpenSearch 把可观测性包装成 MCP 应用",
+      "summary": "AI 运维助手要能读日志、指标、链路和索引才有用，接入前需设定只读范围、索引级权限和查询限流。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/opensearch-agentic-observability-mcp-app/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性",
+        "MCP"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "MWAA 无服务器版接入 EventBridge 通知",
+      "summary": "覆盖工作流的启动、运行、成功、失败以及任务级状态变化，接入事件总线时要注意幂等与重复投递。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-mwaa-serverless-eventbridge/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Airflow",
+        "事件驱动"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Google Cloud 推进机密 AI 的可信执行环境",
+      "summary": "面向敏感数据和受监管负载，落地时要看机密虚拟机与 GPU、证明链、密钥释放策略和日志边界。",
+      "url": "https://cloud.google.com/blog/products/identity-security/powering-the-next-era-of-confidential-ai",
+      "author": "Google Cloud",
+      "source": "Google Cloud 博客",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "机密计算",
+        "AI"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁的第 48 版收到详细评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxF3WB=juHAU5DwbyeNCtiUe5VOOfNTuqOYPTGEkaKf94A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "窗口函数"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "逐个梳理 GUC：default_tablespace",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-defaulttablespace/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "NOT IN 里的 NULL 陷阱",
+      "summary": "",
+      "url": "https://boringsql.com/posts/not-in-null/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "NULL"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "seg 扩展修复上界确定性标记的丢失",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/5ccbdbde-6467-4a10-bf4d-0be73a05ce8d@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "pg_attribute_always_inline 有望改成短名字",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/adee40b0-ee0d-40a8-abe7-61784db3ec6c@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "代码风格"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Loomabase 做离线优先的 SQLite 与 Postgres 同步",
+      "summary": "",
+      "url": "https://github.com/JustVugg/loomabase",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "同步",
+        "离线优先"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "一篇论文重新解构 Datalog",
+      "summary": "",
+      "url": "https://www.rntz.net/post/my-thesis.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "查询语言"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "VPC 流日志新增元数据字段",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-flow-logs-metadata/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络",
+        "排障"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "EC2 I7i 实例进入巴黎区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-ec2-i7i-instances-europe-paris-region/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "实例选型"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Amazon Quick 集成 Snowflake Cortex AI",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-quick-snowflake-cortex-ai/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "BI",
+        "数据仓库"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Qubes OS 4.3.1 发布",
+      "summary": "",
+      "url": "https://www.qubes-os.org/news/2026/06/11/qubes-os-4-3-1-has-been-released/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "虚拟化",
+        "安全"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "VRChat 逾 240 万用户数据因云端配置被访问",
+      "summary": "",
+      "url": "https://www.theregister.com/security/2026/06/11/24m-vrchat-users-data-accessed-following-cloud-breach/5254246",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据泄露"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "有研究者声称找到 BitLocker 绕过手法",
+      "summary": "",
+      "url": "https://www.theregister.com/security/2026/06/11/nightmare-eclipse-drops-claimed-bitlocker-bypass-for-microsoft-windows/5254371",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "加密",
+        "Windows"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "ShieldMCP 扫描 MCP 配置里的安全问题",
+      "summary": "",
+      "url": "https://shieldmcp.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MCP",
+        "安全"
+      ],
+      "position": 23
+    }
+  ]
+}

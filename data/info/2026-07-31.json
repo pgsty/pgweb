@@ -1,0 +1,363 @@
+{
+  "date": "2026-07-31",
+  "origin": "chronicle 2026-07-31: pgnexus #224, news 1, daily 22, planet 8",
+  "items": [
+    {
+      "tier": 1,
+      "title": "plRuby 让 Ruby 成为 PostgreSQL 的过程语言",
+      "summary": "PostgreSQL 的过程语言家族又多了一位成员。Command Prompt 发布 plRuby，把 MRI Ruby 3.x 解释器嵌进后端，用 CREATE EXTENSION 安装，支持普通函数、集合返回函数、触发器、事件触发器和带事务控制的存储过程，覆盖 PostgreSQL 11 到 18。数据库访问经 SPI，支持游标流式读取和预备语句。它是非受信语言，没有沙箱，只有超级用户能安装。",
+      "url": "https://pgsql.cc/about/news/plruby-3345/",
+      "author": "Command Prompt, Inc",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "过程语言",
+        "Ruby"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "extension_control_path 把扩展从服务器镜像里拆出来",
+      "summary": "PG18 之前，扩展的控制文件写死在 $sharedir/extension 下，没法和服务器镜像分开打包。pgEdge 的 Muhammad Aqeel 说明 extension_control_path 补上了缺口，与 dynamic_library_path 配对。他把扩展分成四类：pgvector 这类按需加载可热挂载，pgaudit 需重启但能独立版本化，pg_cron 收益有限，深度集成的一类拆不开真正的耦合。",
+      "url": "https://www.pgedge.com/blog/postgresql-18-s-extension_control_path-decoupling-extensions-from-server-images",
+      "author": "Muhammad Aqeel",
+      "source": "pgEdge 博客",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 18",
+        "扩展",
+        "容器"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "COUNT(DISTINCT) 太慢时的三条近似路线",
+      "summary": "精确去重计数在大表上代价高，但不是所有场景都需要精确。Elizabeth Garrett Christensen 对比三条路：TABLESAMPLE 取样 10% 只要 217 毫秒，但去重计数高估约 730%；postgresql-hll 的 HyperLogLog 用时 320 毫秒、误差 0.6%，草图可合并，预聚合后查七日去重用户只要 4 毫秒；DataSketches 的 CPC 误差 1.1%。财务与合规仍应走精确值。",
+      "url": "https://www.snowflake.com/en/blog/engineering/postgres-count-distinct-approximation/",
+      "author": "Elizabeth Garrett Christensen",
+      "source": "Snowflake 工程博客",
+      "source_date": "2026-07-31",
+      "image": "https://www.snowflake.com/content/dam/snowflake-site/engineering-blog/featured-images/sf-eng-blog-ML-4-1.png",
+      "domain": "pg",
+      "tags": [
+        "近似统计",
+        "HyperLogLog",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 把几件本要靠外部工具的事收回 SQL",
+      "summary": "大版本的亮点常被大特性占满，Shaun Thomas 挑的是几处补齐日常缺口的小改动。random() 新增接受上下界的重载，时间类型可直接返回 DATE、TIMESTAMP 或 TIMESTAMPTZ，不必再套一层转换。pg_get_role_ddl() 能取出角色的属性、按角色设置和成员关系，不再需要调 pg_dumpall；pg_get_tablespace_ddl() 与 pg_get_database_ddl() 同理。",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-the-cult-of-functionality",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "DDL",
+        "函数"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "GitHub Models 已于 7 月 30 日全面退役",
+      "summary": "这不是功能调整，而是整个访问面下线。GitHub 确认自 7 月 30 日起，所有客户都无法再使用 GitHub Models 的 playground、模型目录、推理 API 和自带密钥，需要模型访问的用户被指向 Microsoft Foundry，GitHub 内的 AI 流程转向 Copilot。仍以它为推理后端的工具、评测或 CI 会直接失败，迁移不能只改 base URL。",
+      "url": "https://github.blog/changelog/2026-07-30-github-models-is-now-retired/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-30",
+      "image": "https://github.blog/wp-content/uploads/2026/07/GitHubModelsRetired_Retired_Unfurl_TextOnly.jpg",
+      "domain": "infra",
+      "tags": [
+        "GitHub",
+        "平台下线",
+        "迁移"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "depesz 拆解 PostgreSQL 19 的 SQL 属性图查询",
+      "summary": "按提交内容讲 CREATE PROPERTY GRAPH 与 GRAPH_TABLE 的写法，属于等待系列。",
+      "url": "https://www.depesz.com/2026/07/31/waiting-for-postgresql-19-sql-property-graph-queries-sql-pgq/",
+      "author": "Hubert Lubaczewski",
+      "source": "depesz.com",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "SQL/PGQ"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG19 的 wal_compression=on 拟默认走 LZ4",
+      "summary": "基准显示 lz4 是唯一比不压缩还快的算法，pglz 几乎让运行时间翻倍，与 TOAST 默认对齐。",
+      "url": "https://www.postgresql.org/message-id/amyWkBMR4hKVUZFv@msg.df7cb.de",
+      "author": "Christoph Berg",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩",
+        "PostgreSQL 19"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "修 glibc qsort 漏洞时引入的 PG17 vacuum 顺序错误已修",
+      "summary": "由 Хамидуллин Рустам 报告并提供补丁，Nathan Bossart 确认后已提交。",
+      "url": "https://www.postgresql.org/message-id/amzA4luAZVEd1_f8@nathan",
+      "author": "Nathan Bossart",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "缺陷修复"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "walsummarizer 切换时间线时可能卡住的问题已修复",
+      "summary": "Robert Haas 提交并回补了修复，测试用例针对 v17 与 v18 作了调整。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoZtLS2OBRRp=yebS-17OOfE-QYbRzc8VZFs94Y2nYYRnw@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL 摘要",
+        "缺陷修复"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "PG19 beta1 的 IO 统计断言失败已在主干修复",
+      "summary": "Melanie Plageman 选了最简方案：耗时非零时不再要求操作计数非零。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_b8f-gRpukUaDDTNq_gw4bm3bUB2ouE=HmY5D14w_1W8Q@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "统计"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 的堆叠 Pull Request 进入公开预览",
+      "summary": "每层独立跑检查与评审，合并顶层可一次带入下方未合并层，命令行扩展为 gh-stack。",
+      "url": "https://github.blog/changelog/2026-07-30-stacked-pull-requests-are-now-in-public-preview/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub",
+        "代码审查"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Actions 新增同仓引用语法，按当前提交解析",
+      "summary": "免去 checkout 或硬编码 ref，内部组合也能满足完整 SHA 固定，自托管 runner 需 2.336.0。",
+      "url": "https://github.blog/changelog/2026-07-30-reference-same-repository-actions-with-self-repository-syntax/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub Actions",
+        "供应链"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Copilot 代码审查的技能与 MCP 连接已正式可用",
+      "summary": "审查中的 MCP 调用限定只读，沿用云端 agent 配置，GitHub 与 Playwright 默认开启。",
+      "url": "https://github.blog/changelog/2026-07-29-copilot-code-review-agent-skills-and-mcp-now-generally-available/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Copilot",
+        "MCP"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AWS 多项服务自 7 月 30 日起停止接纳新客户",
+      "summary": "包括早期 Bedrock Agents、Kendra、Q Business、Cognito Sync 和 Simple AD，存量可继续用。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-service-availability/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "生命周期"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：hot_standby 该怎么设",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-hot_standby/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "备库"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "psql 与 pg_dump 系列的最低支持版本提升到 v10",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/amy4zVTKV4--UBfM@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "版本支持"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "TOAST 改用 8 字节 OID 会让索引体积约增四成",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/amwKSyRcjid3wPai@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "OID"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL Performance Farm 发布 7 月进展",
+      "summary": "",
+      "url": "https://markwkm.blogspot.com/2026/07/performance-farm-july-2026-update.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "测试"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "一份 WAWTech Summer 2026 的现场记录",
+      "summary": "",
+      "url": "https://pashagolub.github.io/blog/2026/WAWTech-unlogged/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "会议"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "CodeQL 2.26.1 扩展 Go 与 Java 建模并降低 Rust 误报",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-29-codeql-2-26-1-improves-analysis-accuracy-and-framework-coverage/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "静态分析"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 的远程控制可限制为仅受管设备",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-30-limit-remote-control-to-managed-devices/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Copilot",
+        "设备管理"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "VS Code 七月版把 worktree 支持扩到多种 agent 会话",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-30-github-copilot-in-visual-studio-code-july-2026-releases/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "VS Code",
+        "Agent"
+      ],
+      "position": 22
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "date": "2026-03-04",
+  "origin": "chronicle 2026-03-04：pgnexus #71",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 支持 ON CONFLICT DO SELECT",
+      "summary": "PostgreSQL 19 给 ON CONFLICT 加了 DO SELECT 变体。此前冲突时只能什么都不做或改为更新，想拿到已存在那行的主键或生成列值，还得再发一条 SELECT。新语法让带 RETURNING 的 INSERT 在冲突时直接返回现有行，并支持行锁定和 WHERE 条件。Laurenz Albe 指出，表上有生成列或触发器时收益最明显，它补齐了 DO NOTHING 与 DO UPDATE 之间的空档。",
+      "url": "https://www.cybertec-postgresql.com/en/insert-on-conflict-do-select-a-new-feature-in-postgresql-v19/",
+      "author": "Laurenz Albe",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-03-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "SQL",
+        "upsert"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "TimescaleDB 每分钟处理 300 万笔美股交易",
+      "summary": "金融科技公司 MarketReader 用 TimescaleDB 承接美股实时行情，每分钟处理 300 万笔交易。数据取自 NASDAQ，覆盖 26000 只证券，通过 API 与 WebSocket 每十分钟推送 700 次更新。架构上由 hypertable 自动分区，continuous aggregate 做统计聚合，pgvector 承担向量检索；系统实时识别异常波动，再把上下文交给大模型生成解释。",
+      "url": "https://www.tigerdata.com/blog/how-marketreader-processes-3m-trades-min-deliver-us-market-trading-insights-timescaledb",
+      "author": "Nicole Bahr",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-03-04",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/marketreader-blog-thumbnail-1280x720.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "扩展",
+        "案例"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "TikTok 因 Oracle 故障在美国再次中断",
+      "summary": "ByteDance 完成 TikTok 美国业务出售后仅数天，Oracle 的基础设施再次出现故障，美国部分用户无法正常访问 TikTok。这是所有权转移以来第二次与 Oracle 相关的服务中断，报道没有给出故障范围和恢复时长，Oracle 方面也未公开原因。对正在做云上迁移的团队，这类事件的参考价值在于交接期的脆弱：新的基础设施安排往往还没跑过完整的故障演练，依赖关系、值班流程和回退路径都还在磨合。",
+      "url": "https://techcrunch.com/2026/03/03/tiktok-down-for-some-in-u-s-thanks-to-second-oracle-outage-since-sale/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-03-03",
+      "image": "https://techcrunch.com/wp-content/uploads/2025/03/GettyImages-2198288850.jpg?resize=1200%2C800",
+      "domain": "cloud",
+      "tags": [
+        "云服务",
+        "故障",
+        "Oracle"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "COPY 的 ON_ERROR SET_NULL 选项已提交",
+      "summary": "转换失败的列写入 NULL，Peter Eisentraut 在提交前补上了带 CHECK 约束的域类型是否允许 NULL 的校验。",
+      "url": "https://www.postgresql.org/message-id/5e126dbb-9535-4de4-ad3b-187e475aa6b5@eisentraut.org",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "COPY"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "共享归档模式提案要补上 WAL 归档缺口",
+      "summary": "Andrey Borodin 称主库故障时约 1% 到 2% 的集群出现 PITR 时间线缺口，提案让备库保留 WAL 直到归档完成。",
+      "url": "https://www.postgresql.org/message-id/F02ECB2F-0FA9-432F-8E53-4D1EE9C0E7CA@yandex-team.ru",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "备份",
+        "高可用"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "rdtsc 降低 EXPLAIN ANALYZE 计时开销的补丁到第 10 版",
+      "summary": "Lukas Fittl 把 CPU 特性检测挪进 pg_cpu_x86.c 并加上不变位检查，HyperV 下读 MSR 的做法仍有争议。",
+      "url": "https://www.postgresql.org/message-id/CAP53Pkw6BuGCig3iDfDkh1MZz_3UqzGb-YAVSKn2r9dQCKYDfw@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "EXPLAIN"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "读取流不再同步等待已在进行中的 IO",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZM1epxTdt2=4-g4ff6UC09zne+0xg_gNv3d7LEcxEvNA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "multixact 最老事务 ID 的初始化缺陷补上回归测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/120550bf-ca50-4a07-91b1-a88f1434ee8b@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制 walsender 退出等待改用超时机制",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/6ed7f4ed-aac1-4ce9-a692-7062a4bb07f6@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "Claude Code 推出语音模式",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/03/03/claude-code-rolls-out-a-voice-mode-capability/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-03",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 10
+    }
+  ]
+}

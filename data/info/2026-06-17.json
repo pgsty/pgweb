@@ -1,0 +1,549 @@
+{
+  "date": "2026-06-17",
+  "origin": "chronicle 2026-06-17: daily, pgnexus #180, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 文档新增属性图一章",
+      "summary": "PostgreSQL 19 的文档里出现了属性图一章，SQL/PGQ 开始进入核心用户视野。PG19 仍在开发中，文档页自己也标着尚未受支持，但这一章足以让内核、扩展和上层 ORM 提前评估适配。PostgreSQL 一向靠扩展和 SQL 能力吸收周边数据库类型，SQL/PGQ 若在核心里站稳，图查询必须另起一套图数据库的默认选型就会被改写。有依赖路径、权限图或知识图谱需求的团队可以先跟踪语法、限制和执行计划表现。",
+      "url": "https://www.postgresql.org/docs/19/ddl-property-graphs.html",
+      "author": "PostgreSQL 全球开发组",
+      "source": "PostgreSQL 文档",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ",
+        "图查询",
+        "PG19"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "TimescaleDB 2.28.0 增强压缩列存查询与连续聚合",
+      "summary": "TimescaleDB 2.28.0 在压缩列存的查询和连续聚合刷新上都有实质增强，正对应时序负载最常见的每组最新值、压缩历史上的条件聚合和持续 rollup。这一版还有一处不向后兼容的改动：移除自适应分块。发布说明还预告 2.29.0 起不再支持 PostgreSQL 15，并调整内部 catalog 中的 chunk_constraint。留在 PG15 的用户要安排升级，依赖内部 catalog 的监控脚本得改用稳定视图。",
+      "url": "https://github.com/timescale/timescaledb/releases/tag/2.28.0",
+      "author": "Timescale",
+      "source": "GitHub Release",
+      "source_date": "2026-06-16",
+      "image": "https://opengraph.githubassets.com/c9e6833ffb8d830faf156d0910f4dc27d29d004a808f40f5d3936b7184478dfe/timescale/timescaledb/releases/tag/2.28.0",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "扩展",
+        "发布"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PG19 固定开启 standard_conforming_strings",
+      "summary": "PostgreSQL 19 的提交 45762084 把 standard_conforming_strings 固定为始终开启，但 pg_dump、pg_restore 的参考页和迁移说明都没提这对恢复旧版转储意味着什么。Baji Shaik 提交补丁补上说明，Tom Lane 认为写得过于乐观：即便数据是 COPY 格式，旧转储也不安全，视图、默认值、约束和函数里的字符串字面量都可能被解析成另一个意思。他给出了措辞更严的替代版本。",
+      "url": "https://www.postgresql.org/message-id/ajK85yBHh_RK7x4T@nathan",
+      "author": "Tom Lane",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_dump",
+        "升级",
+        "兼容性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Amazon S3 Annotations 让对象自带可查询上下文",
+      "summary": "AWS 让对象存储自己带上可查询的上下文。S3 Annotations 把结构化标注直接挂在对象旁边，并支持查询与自动化，不再只是标签的扩展。传统对象存储的元数据能力很薄，AI 检索、数据湖和文档库往往要另外维护一套 catalog、向量库或数据库来记住这些信息。归档、日志、文档库和训练数据集都可能受益，但迁移前值得先弄清查询模型、权限、成本、生命周期，以及它与 Glue、Lake Formation 的关系。",
+      "url": "https://aws.amazon.com/blogs/aws/amazon-s3-annotations-attach-rich-queryable-context-directly-to-your-objects/",
+      "author": "AWS",
+      "source": "AWS News Blog",
+      "source_date": "2026-06-16",
+      "image": "https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2026/06/16/s3-annotations-header-image.png",
+      "domain": "cloud",
+      "tags": [
+        "对象存储",
+        "元数据",
+        "数据湖"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "S3 Vectors 大索引查询降价八成，上限提到一万条",
+      "summary": "AWS 同时调整了 S3 Vectors 的两项关键参数：大索引的查询费用下调八成，单次相似度检索最多返回一万条结果。向量检索的成本和 top-k 上限会直接决定 RAG、相似检索和多阶段重排的做法，AWS 在对象存储产品线里改这两个数字，意图是把一部分向量负载从专用数据库拉到更便宜的存储上。做大规模文档或日志 embedding 的团队值得重新比较 S3 Vectors、pgvector 与自建 ANN，延迟和一致性仍需实测。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/s3-vectors-reduces-query-charges-80-percent-large-indexes/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "向量检索",
+        "成本"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare DMARC Management 正式可用",
+      "summary": "Cloudflare 的 DMARC Management 正式可用，并把入口开放给免费客户。域名邮件认证是钓鱼、供应链欺诈和品牌冒用的基础控制面，但 SPF、DKIM、DMARC 三件套配置复杂、报告难读，上线之后又容易随时间漂移。把这套治理挪到域名和 DNS 的同一个平台上，主要价值是压低长期维护成本，也可能推动更多中小站点真的把策略收紧。维护文档站、包仓库或邮件域名的团队值得借机复核现有记录。",
+      "url": "https://blog.cloudflare.com/dmarc-management-ga/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-06-16",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW9WM4PCGPGDJ9Z51V3DFD6D.png",
+      "domain": "infra",
+      "tags": [
+        "DMARC",
+        "邮件安全"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "社区就 pytest 成为主要测试框架达成共识",
+      "summary": "共识是先把 Python 基础设施回移到所有活跃稳定分支，再分阶段迁移，Python 将成为非 psql 测试的硬依赖。",
+      "url": "https://www.postgresql.org/message-id/4504402d-c229-4c86-a7b8-df0d11a8a111@dunslane.net",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "pytest"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "虚拟生成列的 NOT NULL 修复在 JIT 下算错结果",
+      "summary": "补丁提交后 buildfarm 立刻报错，查询列返回 0 而非 42，Tom Lane 确认只在启用 JIT 时复现。",
+      "url": "https://www.postgresql.org/message-id/CAApHDvrJBXEhet4=Es_wHBKdv5PCV5OGCaJOSmJexeaFqfmUHA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "JIT"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 的死锁修复可能推迟到 PG20",
+      "summary": "Álvaro Herrera 认为原补丁逻辑不直观、风险偏高，作者改出一版侵入性更小的本地标志方案。",
+      "url": "https://www.postgresql.org/message-id/ajLfxNPl1zg5H--m@alvherre.pgsql",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "并发"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "写失败的 -1 被计入 I/O 统计",
+      "summary": "pg_pread 出错返回的 -1 隐式转成 UINT64_MAX 累加进统计，修复把计数挪到错误处理之后。",
+      "url": "https://www.postgresql.org/message-id/ajHprjZERUqMP2Kj@paquier.xyz",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计",
+        "缺陷"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Databricks 推出湖仓事务分析平台 LTAP",
+      "summary": "公告营销色彩较重，事务语义、服务路径与一致性边界仍要回到 Delta 和 Unity Catalog 文档逐项核对。",
+      "url": "https://www.databricks.com/company/newsroom/press-releases/databricks-launches-ltap-first-lake-transactionalanalytical",
+      "author": "Databricks",
+      "source": "Databricks",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "湖仓",
+        "HTAP"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Code Quality 将于 7 月 20 日正式可用",
+      "summary": "代码质量与覆盖率门禁被产品化进 PR 和 CI 主流程，同时提供组织级统一启用开关。",
+      "url": "https://github.blog/changelog/2026-06-16-github-code-quality-generally-available-july-20-2026/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码质量",
+        "CI"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "报道称数万台 Fortinet 防火墙遭批量入侵",
+      "summary": "攻击者用已知口令直接登入全球企业的防火墙与 VPN 设备，凭据轮换和管理面收口是当务之急。",
+      "url": "https://techcrunch.com/2026/06/17/cybercriminals-allegedly-hacked-tens-of-thousands-of-fortinet-firewalls-used-by-major-companies-all-over-the-world/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "凭据"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "卡巴斯基在 Steam 创意工坊发现数十个恶意壁纸",
+      "summary": "能执行脚本、访问文件的可安装内容都应当按代码对待，工作机与娱乐环境最好隔离。",
+      "url": "https://securelist.com/dozens-of-malicious-wallpapers-found-on-steam-workshop/120186/",
+      "author": "Kaspersky",
+      "source": "Securelist",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "恶意软件"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "CloudWatch 原生支持 OTel 指标与 PromQL",
+      "summary": "指标可直接以 OpenTelemetry 格式写入并用 PromQL 查询，延续了这一批集中化更新的方向。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-cloudwatch-otel-metrics/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "pg_ducklake v1.0 发布",
+      "summary": "",
+      "url": "https://pgducklake.select/blog/releasing-v1/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "湖仓"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐条梳理：default_transaction_deferrable",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-defaulttransactiondeferrable/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "autovacuum 评分视图的 mxid_score 会溢出",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ajLI39rH9-I-PmMR@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "让 ANALYZE 跳过未变化关系的提案陷入停滞",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/d18342e7-dfaf-4158-acfc-a60d6ab016f5@tantorlabs.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ANALYZE"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "DROP PROPERTY GRAPH 报错的修复与术语之争",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ajItSKjvadWQKKaY@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "libcurl 引发的 OAuth 测试问题已修复并回移到 v18",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ajK_1G-v2UJmsML9@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "OAuth"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "gcc-15 每夜构建让三台 buildfarm 成员暂时下线",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEP4nAzaBGyVVX9YbaCJVymDsvT-NivFVe9hfPsyT9u3DM2FfQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "buildfarm"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Mittr 用一个 Postgres 实例做 webhook 投递",
+      "summary": "",
+      "url": "https://mittr.io/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "队列"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "用 WASM 扫描器排查 Postgres 死锁而不外泄 SQL",
+      "summary": "",
+      "url": "https://stackengine.dev/postgres-deadlock-detected-sharelock-transaction",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "死锁"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Sentinel 用 Postgres 阻止任务重复执行",
+      "summary": "",
+      "url": "https://github.com/Sreejay-reddy/Sentinel",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "幂等"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "RDS for SQL Server 支持 X2m 实例",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/rds-sqlserver-supports-x2m/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "RDS"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "AWS Sign-in 支持资源策略与资源控制策略",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-sign-in/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "IAM"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "AWS Blocks 后端编排框架进入预览",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-blocks-preview/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "框架"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Models 不再向新客户开放",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-16-github-models-is-no-longer-available-to-new-customers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "生命周期"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Cilium 三个分支同时发布维护版本",
+      "summary": "",
+      "url": "https://github.com/cilium/cilium/releases/tag/v1.19.5",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "NLnet 资助 67 个开放技术项目",
+      "summary": "",
+      "url": "https://nlnet.nl/news/2026/20260616-67-new-projects.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源资助"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "GrapheneOS 已移植到 Android 17",
+      "summary": "",
+      "url": "https://discuss.grapheneos.org/d/36469-grapheneos-has-been-ported-to-android-17-and-official-releases-are-coming-soon",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "隐私"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Linux 7.1 移除 Intel 486 支持",
+      "summary": "",
+      "url": "https://www.theregister.com/os-platforms/2026/06/16/linux-kernel-71-sends-intel-486-support-to-silicon-heaven/5256260",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "内核"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "在 EC2 里跑 Firecracker，一秒内拉起浏览器",
+      "summary": "",
+      "url": "https://browser-use.com/posts/firecracker-browser-infra",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "虚拟化"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "企业级 AI 智能体层的架构与实现",
+      "summary": "",
+      "url": "https://vibhorkumar.wordpress.com/2026/06/17/the-ai-agent-layer-architecture-implementation-and-the-future-of-intelligent-enterprise-systems/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Agent"
+      ],
+      "position": 35
+    }
+  ]
+}

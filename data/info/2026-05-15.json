@@ -1,0 +1,152 @@
+{
+  "date": "2026-05-15",
+  "origin": "chronicle 2026-05-15: pgnexus #147, news 1, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "CloudNativePG 修复指标导出器的超级用户提权漏洞",
+      "summary": "CloudNativePG 发布 1.29.1 与 1.28.3，修复指标导出器中 CVSS 9.4 的 CVE-2026-44477。导出器原先以超级用户身份连接再用 SET ROLE 降权，低权限角色可借此提权并在主节点容器里执行任意命令。新版本改用权限受限的 cnpg_metrics_exporter 角色，同时修正三个高可用故障转移缺陷，其中一个涉及数据安全。项目方要求所有用户立即升级。",
+      "url": "https://cloudnative-pg.io/releases/cloudnative-pg-1-29.1-released/",
+      "author": "CloudNativePG 项目组",
+      "source": "CloudNativePG",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "Kubernetes",
+        "高可用"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "上千个值的 IN 子句把时间耗在查询规划上",
+      "summary": "数千个值的 IN 子句在 PostgreSQL 里是隐蔽瓶颈：规划器逐个解析常量、展开成庞大表达式树，CPU 花在规划而不是执行。TigerData 实测把写法换成 ANY(ARRAY[...])，上千个 ID 作为单个数组参数传入，规划时间从 40 多毫秒降到 2 毫秒以内，并让规划器选择 Bitmap Index Scan。ORM 是超大 IN 子句最常见的来源，用 EXPLAIN ANALYZE 看规划是否超过总耗时一半即可判断。",
+      "url": "https://www.tigerdata.com/blog/why-giant-in-clauses-slow-down-your-app",
+      "author": "TigerData",
+      "source": "TigerData 博客",
+      "source_date": "2026-05-15",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/05/Why-Giant-IN-Clauses-Slow-Down-Your-App.png",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "查询规划",
+        "SQL"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgcrypto 的两个远程执行漏洞潜伏了二十年",
+      "summary": "pgcrypto 自 2005 年随 PostgreSQL 分发，两个漏洞在其中潜伏了约二十年。去年 12 月 ZeroDay.Cloud 的 AI 辅助模糊测试挖出这两个远程执行漏洞：一个是 PGP 会话密钥解析里缺少边界检查的堆溢出，另一个是编码校验缺陷，都能在数据库进程内执行任意代码。修复随 2 月的小版本发布，18.0、17.7 及更早的实例仍可被利用；这些函数默认授予 PUBLIC，作者建议回收公共执行权限。",
+      "url": "https://thebuild.com/blog/two-decades-two-rces-what-pgcrypto-has-been-doing-since-2005/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-15",
+      "image": "https://thebuild.com/media/media/a674ee7d8306410d9f801694caca76d6_0.png",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "pgcrypto",
+        "扩展"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ORDER BY 的两条解析路径会改变排序结果",
+      "summary": "PostgreSQL 解析 ORDER BY 有两条路径：裸列名按 SQL-92 先查 SELECT 列表再回到表，包成表达式后按 SQL-99 只查 FROM 作用域。别名与输入列同名而取值不同时，ORDER BY a 与 ORDER BY -a 返回同样的行却是不同的顺序，加一个正号或 COLLATE 就足以切换路径；GROUP BY 的查找顺序又相反。要在表达式里用别名，只能套一层子查询把它移进 FROM。",
+      "url": "https://boringsql.com/posts/order-by-jungle/",
+      "author": "Radim Marek",
+      "source": "boringsql",
+      "source_date": "2026-05-15",
+      "image": "https://boringsql.com/og-images/order-by-jungle-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "排序",
+        "语义"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志表补丁被指出禁用订阅时漏记",
+      "summary": "Nisha Moond 报告 disable_on_error 生效时冲突不写入冲突日志表，另有错误码用错、变量未初始化等问题。",
+      "url": "https://www.postgresql.org/message-id/CABdArM7F08dw2B9k5Vi_hY1QZXAQqHdA5ttupoKuKSLDd5b1eQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "补丁"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "refint 的计划缓存缺陷引出移除该模块的提议",
+      "summary": "v4 补丁去掉外键检查函数的计划缓存改为每次准备；Álvaro Herrera 建议在 v20 直接移除已被内置外键取代的 refint。",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWWEvcVsnJWXgijh5Sb8+odYs7ZS4pNPN2Va1Un5w5jATg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "补丁"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 跳过表统计要堵住孤儿条目泄漏",
+      "summary": "表在加锁失败与统计更新之间被删除会永久残留统计条目，v8 补丁用第二次 syscache 查找检测并清除。",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0v-xJ5fdTvNOdfokbY10pjjP=x_sfQ6Td30bbooomysaw@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "统计"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "连接与外键的优化器统计补丁更新到第七版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAK98qZ3_4nPQ4DYXG_2QAD-A-BfmWs2psJ9N_HQ9rSDZb0HF3A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "手动槽位同步补丁给每轮重试加短期内存上下文",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABPTF7VVPxgfYyr8Kyi=+JACjckQ6NpniV9eRtHboj2hMn0REw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 9
+    }
+  ]
+}

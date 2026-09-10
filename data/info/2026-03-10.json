@@ -1,0 +1,201 @@
+{
+  "date": "2026-03-10",
+  "origin": "chronicle 2026-03-10：pgnexus #78",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Plexigrid 把四套数据库合并成 TimescaleDB 一套",
+      "summary": "电网优化公司 Plexigrid 把原本由 InfluxDB、TigerGraph、MySQL 和 PostgreSQL 拼成的架构合并为一套 TimescaleDB，用于配电网的近实时监控。厂商给出的迁移结果是摄入速度提升 44%，存储占用下降 95%，查询性能提升 350 倍。更实际的收益是部署简化：同一套架构覆盖云端和本地环境，运维不必再为四种存储各准备一套流程。数据出自客户案例，负载特征是否相符需自行判断。",
+      "url": "https://www.tigerdata.com/blog/from-4-databases-to-1-how-plexigrid-replaced-influxdb-got-350x-faster-queries-tiger-data",
+      "author": "Nicole Bahr",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-03-10",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/plexigrid-tiger-data-case-study.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "迁移",
+        "案例"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "json_schema_validate 扩展在库内校验 JSON 结构",
+      "summary": "jsonb 给了 PostgreSQL 存放半结构化数据的灵活性，却没有内置的结构校验；用 CHECK 约束加 SQL 自己写校验逻辑，稍复杂就难以维护。EDB 介绍了一个名为 json_schema_validate 的扩展，直接在数据库内按 JSON Schema 规范校验 json 与 jsonb 数据。它的价值在于把校验规则写成一份标准的 Schema，而不是散落各处的约束表达式，既拦住坏数据，又保留 jsonb 本身的灵活。",
+      "url": "https://www.enterprisedb.com/blog/validating-shape-your-json-data",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "JSON",
+        "约束"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "EDB 工程师参与 ISO SQL 标准委员会会议",
+      "summary": "EDB 的 Matheus Alcantara 与 Euler Taveira 作为受邀嘉宾参加了在圣保罗举行的 ISO/IEC SQL 标准委员会会议，Peter Eisentraut 远程参与。两人把标准化流程类比成 PostgreSQL 的 Commitfest，提案提交、讨论、打磨的节奏相似。这类参与的意义在于 PostgreSQL 社区不只是跟随标准，也能对语言演进的方向出声，标准与实现之间的差异往往就在这样的会议上被讨论掉。",
+      "url": "https://www.enterprisedb.com/blog/shaping-sql-sao-paulo",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-03-10",
+      "image": "https://enterprisedb.com/sites/default/files/2026-03/img_1984.jpg",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "社区"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "索引预取补丁到第 12 版并去掉读取流让出",
+      "summary": "表和索引 AM 直接控制批次布局，位图索引扫描 5% 的回归已修复，缓冲区 pin 归谁释放仍有分歧。",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wz=g=JTSyDB4UtB5su2ZcvsS7VbP+ZMvvaG6ABoCb+s8Lw@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "xl_running_xacts 未初始化填充引出内存安全争论",
+      "summary": "填充里可能带上服务器内存内容，提出者认为风险类似 Heartbleed，也挡住了 MemorySanitizer 的采用。",
+      "url": "https://www.postgresql.org/message-id/b607e42e-34ff-414a-b727-dd5ec70babe3@timescale.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "WAL"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "参数数量不符的 internal 函数会让服务器崩溃",
+      "summary": "定义这类函数需要超级用户权限，讨论认为除了核对 C 函数签名，没有现实可行的运行时防护。",
+      "url": "https://www.postgresql.org/message-id/tencent_438D11DB5E3C427F547DAACC@qq.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "扩展开发"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "SIMD 加速 COPY TO 在多列场景出现 17% 回归",
+      "summary": "Nathan Bossart 指出回归来自需要转义的列上反复调用 strlen()，可能要在转义时跳过 SIMD 路径。",
+      "url": "https://www.postgresql.org/message-id/abBuKalOno33MQFw@nathan",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "COPY"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "取极值时的扫描页数上限该收紧到什么程度有分歧",
+      "summary": "Peter Geoghegan 想扫两三个索引叶页面就放弃，Andres Freund 担心回滚批量插入后的估算变差。",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wz=oN+4+YFkJ=PijR5srTjBefVZfgV6zz0PU40pu1ntxMQ@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "统计信息"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "OAuth 日志改动会破坏 SASL 的收尾报文",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+kEYA0Tp2son-+Ti1wvSAPov87AVFf4qXATTOHRX1F2gg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "未记录日志关系的假 LSN 处理补丁准备提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_bwpjonq5ag2EBm2xDRRyfU8PpCFioG1o=8Ed9VKkRBfQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "中断与信号重构补丁在辅助进程中触发断言失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/6dhkabcmuqvitikyxc56avfrqcyyenbis2l3wuwmrbj27uvm67@z6kpdljfhoot",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "CYBERTEC 回顾伦敦 Tech Show 2026 参展",
+      "summary": "",
+      "url": "https://www.cybertec-postgresql.com/en/looking-back-at-techshow-london-2026/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "AI 网络公司 Eridu 完成 2 亿美元 A 轮融资",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/03/10/ai-network-startup-eridu-emerges-from-stealth-with-hefty-200m-series-a/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 13
+    }
+  ]
+}

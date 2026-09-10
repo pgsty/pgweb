@@ -1,0 +1,194 @@
+{
+  "date": "2026-03-15",
+  "origin": "chronicle 2026-03-15: pgnexus #83；并入 2026-03-14 候选（pgnexus #82, planet 1）",
+  "items": [
+    {
+      "tier": 1,
+      "title": "在运行的集群上开关数据校验和的补丁重启评审",
+      "summary": "让运行中的集群在线开启或关闭数据校验和，是悬了多年的需求。Daniel Gustafsson 把补丁集重新基于主线：代码挪进重命名后的 datachecksumsworker，信号处理改写，补上 PITR 与整页写的测试，状态切换处引入检查点。Tomas Vondra 评审指出三处问题：注入点可能改不到数据库列表，遍历数据库时记录进度有误，失败的库应立即中止而不是继续。他还提醒，新增 XLOG 记录类型如今需要第二个资源管理器。",
+      "url": "https://www.postgresql.org/message-id/daa95f1b-4dbd-4e03-a436-3ddd48b0fe56@vondra.me",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "内核"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Ashutosh Bapat 谈技术工作的「职业因果」",
+      "summary": "PostgreSQL 开发者 Ashutosh Bapat 写了一篇随笔，说职业工作也有因果：不负责任的实现会反噬自己和他人，扎实的贡献则会在意想不到的地方回到生活里。他举了三件事：职业早期某金融机构系统的一个缺陷，让包括他本人在内的多个银行账户无法使用；如今在车站扫码买票取代了当年排的长队，背后跑的正是 PostgreSQL；他参与实现的 SQL/PGQ 图查询，被人用来改进咖啡供应链。职业焦虑常常遮住了工作更大的那层意义。",
+      "url": "https://ashutoshpg.blogspot.com/2026/03/professional-karma.html",
+      "author": "Ashutosh Bapat",
+      "source": "Planet PostgreSQL",
+      "source_date": "2026-03-14",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi3gfVoagA29_N1QXwEGbKfULOQo25mDpr0ek4npRV6FoxqmcHHtwqjWkgDiY2Fmk_5HO6bsokp4ULHI3Udgdo_lSYBDsByXr_Y-W6qxuv8y_mY_e9FW-4PlYY27q4hZheC7T0Ft7MoeAKqmmLVi5NzQfmWcA7G4Me1gJTMaeVtR8Zno8qUu2Ef4sqxB3U/w1200-h630-p-k-no-nu/1773395145724.jpeg",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "随笔"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "CREATE SUBSCRIPTION ... SERVER 进入收尾评审",
+      "summary": "用外部服务器定义代替连接串，评审集中在目录字段对齐、pg_dump 覆盖和两种模式切换的测试。",
+      "url": "https://www.postgresql.org/message-id/3ebceab06a3fc076ce3041af1d8c2164eeecff52.camel@j-davis.com",
+      "author": "Jeff Davis",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "PostgreSQL 19"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "COPY TO 的 SIMD 补丁修掉此前 17% 的回归",
+      "summary": "第 3 版只对超过一个向量长度且无需转码的值走 SIMD，干净数据快 34–39%，宽表回到 ±4%。",
+      "url": "https://www.postgresql.org/message-id/CA+K2Rum7+Jm2rm65K5msxaiAM8QTkhSNAYarPBP9O7nBXYo12Q@mail.gmail.com",
+      "author": "KAZAR Ayoub",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 拟先导入远端统计再退回采样",
+      "summary": "为赶上 19 版特性冻结，libpq 故障仍按错误处理；reltuples 为 0 或 -1 时跳过列统计。",
+      "url": "https://www.postgresql.org/message-id/CAPmGK17+FS99X7t8_T2pL-seSOP_dYoQi7jOhshf8LKFzJgrwg@mail.gmail.com",
+      "author": "Corey Huinker",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "统计"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "扩展拥有专属模式的安全补丁更新到 v9",
+      "summary": "Jelte Fennema-Nio 补回遗漏文件并修好 CI 失败，目标是让扩展对象获得更强的隔离。",
+      "url": "https://www.postgresql.org/message-id/DH3MUONF7YR4.1US0IY1XYL6A2@jeltef.nl",
+      "author": "Jelte Fennema-Nio",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "安全"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pytest 进入受支持测试框架的补丁修好 CI",
+      "summary": "协议 grease 改动引发的失败已绕开，macOS 上 UNIX 套接字临时路径过长的问题一并修掉。",
+      "url": "https://www.postgresql.org/message-id/DH2K7UQ0S6Z8.13OLYFR32GEGB@jeltef.nl",
+      "author": "Jelte Fennema-Nio",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "复制监控拟新增下游实际收到的字节与事务数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/abcv2M3BVzLYfdeq@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "监控"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "消除 xl_heap_visible 的补丁集推进到 v38",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZbOp52rnkjf63h5mf94raEKBH7AAbz6QTx-xdH9yLfmQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "vacuum 统计第 31 版被要求把新列追加到末尾",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/10BE6E39-94D2-4909-ACB8-24E1FA6580EE@yandex-team.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "vacuum",
+        "监控"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "发布排除语法改用分组写法已实现待定夺",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm2kvFahDDvdgCNo=Nv-COz_N5Xw8YmzQBN2bd3g=N81fQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "walsender 关停超时补丁补上小超时值的测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aed6b990-e7d8-40d1-96a4-64ccbfbda876@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制"
+      ],
+      "position": 12
+    }
+  ]
+}

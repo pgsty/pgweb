@@ -1,0 +1,421 @@
+{
+  "date": "2026-07-30",
+  "origin": "chronicle 2026-07-30: pgnexus #223, daily 31, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "备库断开流复制后仍会从归档追进度，别把它读成健康",
+      "summary": "高可用演练里最容易误判的一句话是「复制没有落后」。Coroot 切断 CloudNativePG 备库到主库的连接后，日志里连接失败与 restored log file 交替出现：归档段先落到对象存储，备库继续回放，于是部分延迟指标回落，而 shipping 指标持续上升。根因是 PostgreSQL 自身的归档恢复回退，不是 operator 额外复制数据。告警应把流复制连接、接收延迟、回放延迟和归档恢复速率分开看。",
+      "url": "https://coroot.com/blog/fencing-a-cnpg-replica/",
+      "author": "Coroot",
+      "source": "Coroot 工程博客",
+      "source_date": "2026-07-29",
+      "image": "https://coroot.com/assets/images/blog/fencing-a-cnpg-replica/screenshot-1785258967881.png",
+      "domain": "pg",
+      "tags": [
+        "CloudNativePG",
+        "复制",
+        "WAL 归档"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "vip-manager v5 改为在 DCS 失联时摘除 VIP",
+      "summary": "vip-manager 给 Patroni 集群管理浮动 IP，这一版改了失败时的默认取向。Pavlo Golub 说明 v5 在分布式配置存储不可达时不再保留 VIP，而是主动摘除以避免脑裂，代价是 DCS 或 Patroni 的短暂故障会直接中断服务；etcd watch 被取消后也会重新同步领导权状态，不再留下过期 VIP。配置层面删除了已弃用参数，旧配置不改可能起不来。作者强调这不是外观性版本，升级前要改监控预期并复核切换流程。",
+      "url": "https://pashagolub.github.io/blog/2026/vip-manager-v5-released/",
+      "author": "Pavlo Golub",
+      "source": "pashagolub.github.io",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "Patroni",
+        "VIP"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgvector 做带过滤的向量检索有四种可选写法",
+      "summary": "向量检索一旦带上标量过滤，HNSW 常常先取一批再被 WHERE 过滤掉，召回不足。Christopher Winslett 整理了四种写法：开 hnsw.iterative_scan 让图继续扫到够数；对稳定且基数低的条件建带 WHERE 的部分 HNSW 索引；先超量取候选再过滤重排，池子按 k 除以选择率再乘二估；以及按查询向量哈希缓存结果。低选择率下迭代扫描代价明显，写完要用 EXPLAIN ANALYZE 核对。",
+      "url": "https://www.crunchydata.com/blog/hybrid-vector-search",
+      "author": "Christopher Winslett",
+      "source": "Crunchy Data 博客",
+      "source_date": "2026-07-30",
+      "image": "https://imagedelivery.net/lPM0ntuwQfh8VQgJRu0mFg/8cbf23cb-d4bc-432d-e9c3-01a08c1c7400/public",
+      "domain": "pg",
+      "tags": [
+        "pgvector",
+        "向量检索",
+        "HNSW"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Redis Open Source 8.10 GA，改动跨编码、复制与备份",
+      "summary": "Redis 把 8.10 标为 GA，改动横跨数据编码、复制身份和持久化流程，影响面大于普通补丁版本。新增紧凑哈希、HIMPORT、节点间 TLS 证书认证、集合基数命令、基于 MP-AOF 的 BACKUP 和 Streams 回复大小限制，同时带来 active defrag 与 AOF 加载的修复。升级前建议搭 8.8 与 8.10 的对照环境，复测内存、P99、还原、集群切换和证书轮换，备份以还原可读为验收。",
+      "url": "https://github.com/redis/redis/releases/tag/8.10.0",
+      "author": "Redis",
+      "source": "Redis GitHub Release",
+      "source_date": "2026-07-29",
+      "image": "https://opengraph.githubassets.com/e9f60999454b2575de4ba4afea3a89457de0a766285d5e7c76558645ac3d799c/redis/redis/releases/tag/8.10.0",
+      "domain": "db",
+      "tags": [
+        "Redis",
+        "备份",
+        "TLS"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "TeamCity 全版本受未认证 RCE 影响，需按 CI 事件处置",
+      "summary": "CI 服务器通常持有代码、仓库与云凭据、签名材料和构件发布权限，未认证远程执行的后果不止一台机器失陷。JetBrains 称所有 TeamCity On-Premises 版本受 CVE-2026-63077 影响，攻击者经 HTTP 访问即可利用 agent 轮询协议绕过认证并执行系统命令。修复版本是 2025.11.7 与 2026.1.3，更早版本可先用安全补丁插件缓解。处置顺序是隔离公网入口、升级，再轮换凭据并审计构件。",
+      "url": "https://blog.jetbrains.com/teamcity/2026/07/cve-2026-63077/",
+      "author": "JetBrains",
+      "source": "JetBrains 博客",
+      "source_date": "2026-07-27",
+      "image": "https://blog.jetbrains.com/wp-content/uploads/2026/07/TC-social-BlogSocialShare-1280x720-1-1.png",
+      "domain": "infra",
+      "tags": [
+        "TeamCity",
+        "CVE",
+        "CI"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Prometheus Operator 0.93.0 改了压缩默认行为",
+      "summary": "Prometheus 加 Thanos 的组合里，压缩与块上传直接决定存储放大、查询完整性和恢复成本。0.93.0 在 Prometheus 3.9.0、Thanos 0.41.0 及以上的集群不再默认关闭本地压缩，改用延迟压缩路径、shipper 元文件名和忽略块大小不一致三个参数协同。同版本还收紧 CRD 数值校验、给分片数设默认值。要保持旧行为需显式设置 spec.disableCompaction 为 true。",
+      "url": "https://github.com/prometheus-operator/prometheus-operator/releases/tag/v0.93.0",
+      "author": "Prometheus Operator",
+      "source": "GitHub Release",
+      "source_date": "2026-07-28",
+      "image": "https://opengraph.githubassets.com/a4c0b427d99ebce08e17b585d8b8dc7e03c1b1d9194aff99bbe6eaf625e21ead/prometheus-operator/prometheus-operator/releases/tag/v0.93.0",
+      "domain": "cloud",
+      "tags": [
+        "Prometheus",
+        "Thanos",
+        "Kubernetes"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "CommSync 用 Lakebase Search 把检索收回库内",
+      "summary": "厂商称在三个模块改用 lakebase_text 与 lakebase_vector 后，查询延迟下降三个数量级。",
+      "url": "https://neon.com/blog/commsync-runs-text-vector-and-hybrid-search-on-postgres-with-lakebase-search",
+      "author": "Carlota Soto",
+      "source": "Neon 博客",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "向量",
+        "Neon"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "启用数据校验和时对无效数据库的处理已修补",
+      "summary": "推送后又发现 DROP DATABASE 中途崩溃会留下跳过项，使状态误报为已开启。",
+      "url": "https://www.postgresql.org/message-id/28CF6FD9-E1C4-4C04-8270-E3305AC46171@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "缺陷修复"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "并发激活逻辑解码引发的状态变化报错已修复",
+      "summary": "Masahiko Sawada 合入修复后 buildfarm 又报错，根因是 TAP 测试的会话设置。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBZGuDVa-ctuko+Oma+X9qYppQbzWo8gNmJ1AiRyAjq7g@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "缺陷修复"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "有人在 PG19 beta1 上遇到多个后端卡在 LockBuffer",
+      "summary": "发生在 autovacuum 处理 pg_attribute 的 B 树页删除路径，约七周才复现一次。",
+      "url": "https://www.postgresql.org/message-id/amq7kT_VZSeW7cAv@pryzbyj2023",
+      "author": "Justin Pryzby",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "B-tree"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "子事务中获取的复制槽出错后不释放，会卡住 vacuum",
+      "summary": "影响 PG14 及以上所有版本，v7 补丁改为在子事务中止路径上统一释放。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACVWi5n+DVrzBm2FviMMrSNKgdcx+htyUDF9_6J36KQVkA@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "WAL"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "archive_mode=shared 让备库协调归档的补丁到 v8",
+      "summary": "备库改为显式向主库请求归档状态，主库给不出就拒绝连接，级联时启用回退归档。",
+      "url": "https://www.postgresql.org/message-id/CALdSSPiVbHM9+XettYcOHDJ6KTLzjNEhdURwXwfzyMV-dtL1Gg@mail.gmail.com",
+      "author": "Kirill Reshke",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL 归档",
+        "备库"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Direct TOAST 概念验证提出彻底去掉 TOAST 索引",
+      "summary": "Hannu Krosing 直接存 chunk TID，但补丁由模型生成且未处理向后兼容，遭到批评。",
+      "url": "https://www.postgresql.org/message-id/amrV65HC0vJKn8Ah@paquier.xyz",
+      "author": "Hannu Krosing",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "存储"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Milvus 3.0.0 已打正式 tag，发布说明仍未到位",
+      "summary": "GitHub release 只写「release note is coming」，迁移步骤与兼容矩阵都还没有。",
+      "url": "https://github.com/milvus-io/milvus/releases/tag/v3.0.0",
+      "author": "Milvus",
+      "source": "GitHub Release",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Milvus",
+        "向量数据库"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：hba_file 该怎么理解",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-hba_file/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "数据类型的二进制格式拟写成独立文档章节",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/amvWEvqYLT8F6Rhh@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "文档",
+        "libpq"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 拟下推外部表与集合返回函数的连接",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdvhMtkY-MJ5M3_JjN5wPA7_ZoYw_vmdm97ZEvQ33rCT0g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_statements 可扩展性工作的进展更新",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0u0gpdiND+CCXhAbrC5p7hcXU+5NdoM4oiS_XGu6DoPzg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_stat_statements"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "长事务中途刷新统计信息的补丁更新到 v2",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0u84eMFeFWMaEo0D84ed3jF_RY0=RWD8tDwQWsNsU1qvA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "post_recovery_sync_level 拟在恢复后拦住客户端连接",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/7FBC2251-A9A5-4B1C-944B-C575DE984C18@yandex-team.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 的 NO_ 系列提示标签修掉三个缺陷",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/29e0b01e-d028-48bc-ae4d-e86f9d700cc5@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Kedge 主打可 fork 的虚拟机快照与全局 SQLite",
+      "summary": "",
+      "url": "https://kedge.dev/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "microVM",
+        "SQLite"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Nscale 收购 Anyscale，补齐 AI 计算栈的软件层",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/07/30/nscale-buys-anyscale-as-it-seeks-to-own-more-of-the-ai-compute-stack/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "并购",
+        "AI 算力"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "有人主张 GitHub 的形状不适配 agent 产码的节奏",
+      "summary": "",
+      "url": "https://depot.dev/blog/github-is-the-wrong-shape-for-this-new-world",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发协作"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "TurboFieldfare 用 SSD 按 token 流式读取 MoE 专家",
+      "summary": "",
+      "url": "https://github.com/drumih/turbo-fieldfare",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "本地推理"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Nightshift 给无人值守 agent 加交接文件与验证门禁",
+      "summary": "",
+      "url": "https://github.com/toolshedlabs-hash/nightshift",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Agent",
+        "自动化"
+      ],
+      "position": 26
+    }
+  ]
+}

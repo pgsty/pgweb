@@ -1,0 +1,452 @@
+{
+  "date": "2026-05-30",
+  "origin": "chronicle 2026-05-30: daily 63, pgnexus #162, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "星型连接想走一条更快的规划路径",
+      "summary": "Tomas Vondra 和 Bruce Momjian 在讨论针对星型连接的规划优化：识别出事实表连接多张维度表的形态后限制连接搜索空间，只允许标准顺序的前缀组合，比如 [F]、[F,D1]、[F,D1,D2]，而不允许 [F,D2]。测试显示维度较多的查询规划时间从数千毫秒降到个位数毫秒。Bruce 希望把前缀的定义讲清楚，并追问维度连接之间是否允许插入非维度表，讨论也在考虑要不要要求所有维度连续连接。",
+      "url": "https://www.postgresql.org/message-id/ahsp-_c8MPWPT4t_@momjian.us",
+      "author": "Tomas Vondra、Bruce Momjian",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "星型连接",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "compute_query_id 该开还是留 auto",
+      "summary": "compute_query_id 让内核算出一个各方共用的查询标识，pg_stat_statements、活动视图和日志都能对上。取值有 auto、on、off 和 regress，默认 auto 只在模块提出需求时才计算。Christophe Pettus 提醒的坑是：只在日志前缀里加了 %Q 却没有模块要求计算，日志里的标识就是空的。他建议依赖日志或活动视图的设成 on，装了 pg_stat_statements 的留在 auto。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-computequeryid/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-30",
+      "image": "https://thebuild.com/media/media/0cdde73a965f4ae6befa8e4d4c475d1b.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "查询标识",
+        "监控"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "有人主张用 SQLite 就够做持久化工作流",
+      "summary": "一篇讨论持久化工作流的文章在 Hacker News 上拿到六百多分：作者认为多数任务编排被过度设计，SQLite 作为嵌入式事务存储，在单机、边缘和小团队场景里性价比很高，用 WAL 加事务状态机就能撑起持久化的工作流引擎，不必先上一套重型队列和编排服务。可以纳入轻量编排的候选方案，但跨节点调度、长事务的可观测性和灾备仍要单独设计。",
+      "url": "https://obeli.sk/blog/sqlite-is-all-you-need-for-durable-workflows/",
+      "author": "obeli.sk",
+      "source": "obeli.sk",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "工作流",
+        "架构"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Prometheus 3.12.0 同批带来安全修复与新功能",
+      "summary": "Prometheus 3.12.0 不是普通补丁版。安全方面修掉了 remote-write 的 Snappy 解压拒绝服务，以及 STACKIT 服务发现的凭据暴露；功能方面新增实验性的 PromQL 函数、TSDB 性能优化、DigitalOcean 托管数据库与 Outscale 服务发现，Web 界面也能删除时间序列并清理 tombstone。跑 3.x 的团队值得排升级，重点检查 remote-write 入口与服务发现配置。",
+      "url": "https://github.com/prometheus/prometheus/releases/tag/v3.12.0",
+      "author": "Prometheus",
+      "source": "GitHub Releases",
+      "source_date": "2026-05-28",
+      "image": "https://opengraph.githubassets.com/7f4f2842d44a9bd126f07d8a56dd8f3a7bc83981be42ba643fc8c485bab8d1f0/prometheus/prometheus/releases/tag/v3.12.0",
+      "domain": "infra",
+      "tags": [
+        "Prometheus",
+        "安全",
+        "发布"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "研究者威胁再次公开 Windows 漏洞利用代码",
+      "summary": "The Register 报道称，一名研究者与微软之间关于 0-day 的争执升级，威胁再放出一批 Windows 漏洞利用代码。这类披露协调失败的直接后果是，企业会被暴露在利用代码突然公开、补丁尚未就绪的窗口里。具体影响仍应以厂商公告和 CVE 编号为准；以 Windows 为主的环境值得提前盯住后续公告、终端检测规则、补丁节奏和临时缓解措施，把监控和应急路径先准备好。",
+      "url": "https://www.theregister.com/security/2026/05/28/microsoft-0-day-feud-escalates-as-researcher-threatens-another-windows-exploit-dump/5248085",
+      "author": "The Register",
+      "source": "The Register",
+      "source_date": "2026-05-28",
+      "image": "https://image.theregister.com/254471.jpg?imageId=254471&x=0&y=0&cropw=100&croph=100&panox=0&panoy=0&panow=100&panoh=100&width=1200&height=683",
+      "domain": "infra",
+      "tags": [
+        "漏洞披露",
+        "Windows",
+        "安全"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表改为先建表再插订阅元组",
+      "summary": "新顺序省掉一次更新，超过 8KB 的 JSON 列所需的 TOAST 表也已在最新补丁集里处理。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-u5pcgAhXyJgj+p7-xmShtp0i8xA000tzjCLFQp_zMXUA@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突日志"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Redshift Serverless 的 4-RPU 起步容量扩到七个区域",
+      "summary": "最低容量下调直接影响开发环境和低频分析任务的成本可行性。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-redshift-serverless-4-rpu-seven-regions/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Redshift",
+        "成本"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Oracle Database@AWS 扩展到 20 个区域",
+      "summary": "传统商业数据库继续被搬进公有云区域网络，跨云延迟与出站费值得重新核算。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/oracle-database-aws-available-twenty-regions/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Oracle",
+        "多云"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "CNCF 谈 Kubernetes 的集成税",
+      "summary": "以 Prometheus 和 Cilium 为例，讲清组件本身之外的集成、调优与运维成本。",
+      "url": "https://www.cncf.io/blog/2026/05/28/the-kubernetes-integration-tax-prometheus-cilium-and-production-reality/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "可观测性"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "AWS Shield Advanced 新增攻击流量日志",
+      "summary": "攻击期间的流量可落盘分析，便于事后调优规则、对接 SIEM 和补齐审计材料。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-shield-ddos/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "DDoS"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Rust 1.96.0 稳定新的 Range 类型",
+      "summary": "core::range::Range* 进入稳定，底层库作者需要关注与未来 edition 迁移的关系。",
+      "url": "https://blog.rust-lang.org/2026/05/28/Rust-1.96.0/",
+      "author": "Rust",
+      "source": "Rust 博客",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust",
+        "发布"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "一篇文章讨论怎么把 diff 渲染得更可读",
+      "summary": "AI 让代码产出暴增之后，瓶颈转到 diff 的可读性、风险标注和上下文恢复。",
+      "url": "https://pierre.computer/writing/on-rendering-diffs",
+      "author": "pierre.computer",
+      "source": "pierre.computer",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码评审",
+        "工具"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "vLLM 0.22.0 发布，459 次提交",
+      "summary": "含第二代 Model Runner、实验性 Rust 前端、FP8 批次无关推理与多层 KV cache 卸载。",
+      "url": "https://github.com/vllm-project/vllm/releases/tag/v0.22.0",
+      "author": "vLLM",
+      "source": "GitHub Releases",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "vLLM",
+        "推理",
+        "发布"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "一篇质疑 MCP 的文章在 Hacker News 走热",
+      "summary": "观点文，落点是生产 agent 工具层还需要鉴权、审计、稳定 schema、错误恢复和长生命周期状态。",
+      "url": "https://www.quandri.io/engineering-blog/mcp-is-dead",
+      "author": "Quandri",
+      "source": "Quandri 工程博客",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MCP",
+        "Agent"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "S3 Tables 新增可用区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-s3-tables-aws-regions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "湖仓"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "AWS Interconnect 多云互联提供免费 500 Mbps 档",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-interconnect-multicloud-offers-free-500-mbps-tier/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "网络"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "RDS for Oracle 跟进 2026 年 4 月补丁包",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-rds-oracle-supports-april-2026-release-update-supplemental-patch-bundle/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "Oracle"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Amazon SES 增加收件箱投递率与黑名单监控",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-ses-global-deliverability/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "邮件"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 讲用 GitOps 与供应链安全搭内部开发者平台",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/05/29/building-a-cloud-native-internal-developer-platform-with-kubernetes-gitops-and-supply-chain-security/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "平台工程"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Zig 重做构建系统引发讨论",
+      "summary": "",
+      "url": "https://ziglang.org/devlog/2026/#2026-05-26",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Zig",
+        "构建"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Openrsync 提供 OpenBSD 风格的 rsync 实现",
+      "summary": "",
+      "url": "https://github.com/kristapsdz/openrsync",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "同步工具"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Perry 把 TypeScript 直接编译成可执行文件",
+      "summary": "",
+      "url": "https://www.perryts.com/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TypeScript"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Bijou64 提出一种变长整数编码",
+      "summary": "",
+      "url": "https://www.inkandswitch.com/tangents/bijou64/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编码"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Totpgate 用 TOTP 做单包授权",
+      "summary": "",
+      "url": "https://github.com/PepperDev/totpgate",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "认证"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Tiny-vLLM 用 C++ 与 CUDA 写了个精简推理引擎",
+      "summary": "",
+      "url": "https://github.com/jmaczan/tiny-vllm",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "推理引擎"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Tokentoll 把大模型接口的成本回归检查放进 CI",
+      "summary": "",
+      "url": "https://github.com/Jwrede/tokentoll",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "成本"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "一个面向不可信 agent 脚本的轻量编译器",
+      "summary": "",
+      "url": "https://autolang.vercel.app/docs/philosophy-vision",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Agent",
+        "安全"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "VT Code 用 Rust 写终端里的编码 agent",
+      "summary": "",
+      "url": "https://github.com/vinhnx/VTCode",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Coding Agent"
+      ],
+      "position": 28
+    }
+  ]
+}

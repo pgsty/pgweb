@@ -121,8 +121,17 @@
 .info-lead__thumb img {
   display: block;
   width: 100%;
+  height: auto; /* the width/height attributes only reserve space */
   aspect-ratio: 5 / 3;
   object-fit: cover;
+}
+
+/* A lead whose picture has not been made yet keeps the picture slot so the
+   column reads as one layout; the slot is a quiet wash, nothing more. */
+.info-lead__thumb--pending {
+  display: block;
+  aspect-ratio: 5 / 3;
+  background: var(--pg-wash);
 }
 
 /* ------------------------------------------------------ tier 2: 小新闻 */
@@ -404,6 +413,27 @@
   font-weight: 700;
 }
 
+.pg-sidecard__lead {
+  margin: 0 0 0.9rem;
+}
+
+.pg-sidecard__lead a {
+  display: block;
+  padding: 5px 9px;
+  border-radius: 6px;
+  color: var(--pg-heading);
+  font-weight: 700;
+}
+
+.pg-sidecard__lead a:hover {
+  background: var(--pg-wash);
+}
+
+.pg-sidecard__lead a[aria-current] {
+  background: var(--pg-wash);
+  color: var(--pg-link);
+}
+
 .pg-sidecard h2:after {
   content: none;
 }
@@ -575,6 +605,10 @@
   .info-lead__thumb {
     width: 100%;
     max-width: 280px;
+  }
+
+  .info-lead__thumb--pending {
+    display: none;
   }
 
   .info-minis {

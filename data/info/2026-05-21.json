@@ -1,0 +1,451 @@
+{
+  "date": "2026-05-21",
+  "origin": "chronicle 2026-05-21: daily, pgnexus #153, news 5, planet 5",
+  "items": [
+    {
+      "tier": 1,
+      "title": "AWS 开源 ExtendDB，首个后端选了 PostgreSQL",
+      "summary": "AWS 发布 ExtendDB 0.1，一个 Apache 2.0 许可的 DynamoDB API 兼容适配器，第一个参考存储后端是 PostgreSQL。它面向不能使用托管 DynamoDB 的场景，目标是应用代码不改写就能在本地、CI、自建机房或断连的边缘环境里跑 DynamoDB 形态的负载，对 PostgreSQL 生态来说是又一个把 Postgres 当作兼容后端的案例。有这类需求的团队可以关注它的兼容范围、事务语义与运维边界。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-extenddb-dynamodb/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开源",
+        "兼容层",
+        "DynamoDB"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "CVE-2026-6473 值得今天就打补丁",
+      "summary": "Christophe Pettus 再次提醒 PostgreSQL 核心的 CVE-2026-6473：官方评分 CVSS 8.8，是整数回绕导致的越界写入，18、17、16、15、14 各分支未修复的版本都受影响，修复已随 18.4、17.10、16.14、15.18 与 14.23 发布。这类问题不像扩展漏洞可以靠回收权限缓解，只能升级。仍在旧小版本上的实例应把升级排进本周维护窗口，托管实例也要确认厂商是否已推送。",
+      "url": "https://thebuild.com/blog/patch-today-cve-2026-6473/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-21",
+      "image": "https://thebuild.com/media/media/b12c626aafc84c77b08801279b57ef99_0.png",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "CVE",
+        "升级"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_statviz 1.0 给统计图表加上可选的 AI 解读",
+      "summary": "pg_statviz 把 PostgreSQL 内部统计做成时序分析与可视化，1.0 的主要变化是可选的 AI 分析：加上 --ai 之后，每张图的数据与图片会送给有视觉能力的模型，给出 HEALTHY、WARNING 或 CRITICAL 判断、简短解读和改进建议，可选 Claude、Gemini 或本地 Ollama。流程先跑确定性的规则引擎再调用模型，最终结论不会低于规则引擎的级别。不启用 AI 时工具没有额外依赖。",
+      "url": "https://github.com/vyruss/pg_statviz/releases/tag/v1.0",
+      "author": "pg_statviz 项目",
+      "source": "GitHub",
+      "source_date": "2026-05-21",
+      "image": "https://opengraph.githubassets.com/4182858f784be61f4dae458589dc99b38953e134ef8fa35a64008229773b92c9/vyruss/pg_statviz/releases/tag/v1.0",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "可视化",
+        "AI"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 称被投毒的 VS Code 扩展导致内部仓库外泄",
+      "summary": "GitHub 发布事件说明：5 月 18 日一名员工的设备因第三方被投毒的 VS Code 扩展失陷，目前评估是 GitHub 内部仓库遭到窃取，攻击者声称约 3800 个仓库，与调查方向一致。官方称没有证据显示客户的企业、组织和仓库受影响，已按优先级轮换关键密钥，并继续分析日志、验证轮换结果。供应链攻击从装包、CI 与发布令牌进一步推进到 IDE 扩展，而扩展通常能读工作区、环境变量与本机凭证，权限边界很宽。",
+      "url": "https://github.blog/security/investigating-unauthorized-access-to-githubs-internal-repositories/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-05-20",
+      "image": "https://github.blog/wp-content/uploads/2026/01/generic-security-logo-blocks-github.png",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "供应链",
+        "IDE"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "OpenTelemetry 从 CNCF 毕业",
+      "summary": "CNCF 宣布 OpenTelemetry 毕业，确认它作为云原生可观测性事实标准的地位。这条消息的分量不在某个功能，而在于一层基础设施标准进入成熟期：追踪、指标、日志与性能剖析的采集语义收敛之后，观测数据可以在不同后端之间迁移，供应商锁定随之下降。数据库、Kubernetes、服务网格、模型推理与无服务器平台都在围绕它做埋点与采集管线。新系统应优先采用它的 SDK、Collector 与语义约定。",
+      "url": "https://www.cncf.io/announcements/2026/05/21/cloud-native-computing-foundation-announces-opentelemetrys-graduation-solidifying-status-as-the-de-facto-observability-standard/",
+      "author": "CNCF",
+      "source": "CNCF",
+      "source_date": "2026-05-21",
+      "image": "https://www.cncf.io/wp-content/uploads/2026/05/Screenshot-2026-05-13-at-2.16.49-PM.jpg",
+      "domain": "cloud",
+      "tags": [
+        "可观测性",
+        "CNCF",
+        "标准"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 迁移之后怎么完成切换",
+      "summary": "文章讲大规模逻辑复制切换的顺序，重点是 Patroni 与复制槽在切换窗口里的风险。",
+      "url": "https://stormatics.tech/blogs/how-to-cut-over-after-a-postgresql-migration",
+      "author": "",
+      "source": "Stormatics",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "逻辑复制"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pgEdge Cloud 推出 RAG Server",
+      "summary": "由 Vectorizer、Docloader 与 pg_semantic_cache 组成管线，把检索留在 Postgres 内。",
+      "url": "https://www.pgedge.com/blog/from-managed-postgresql-to-production-rag-build-your-own-ellie-in-pgedge-cloud",
+      "author": "",
+      "source": "pgEdge",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RAG",
+        "向量"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "check_pgactivity 2.10 增加两个监控服务",
+      "summary": "新增未使用索引与关系大小检查，无效索引现在也涵盖 TOAST 索引，错误信息带上库名。",
+      "url": "https://github.com/OPMDG/check_pgactivity/releases/tag/REL2_10",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "Nagios"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Nx Console 的 VS Code 扩展曾被投毒",
+      "summary": "StepSecurity 记录 v18.95.0 一度出现在扩展市场，这条链路与 GitHub 员工设备失陷相呼应。",
+      "url": "https://www.stepsecurity.io/blog/nx-console-vs-code-extension-compromised",
+      "author": "",
+      "source": "StepSecurity",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "IDE"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare Ask AI 被指创建全账号只读令牌",
+      "summary": "研究者称该功能默认生成的 API token 覆盖整个账号，agent 类功能的默认权限值得复核。",
+      "url": "https://www.frr.dev/posts/cloudflare-ask-ai-api-token/",
+      "author": "",
+      "source": "frr.dev",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "权限",
+        "AI"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "有人发现 Google API key 删除后仍能继续调用",
+      "summary": "密钥失效的真实生效时间决定事故止血速度，轮换流程应当验证旧密钥是否真的作废。",
+      "url": "https://www.aikido.dev/blog/google-api-keys-deletion",
+      "author": "",
+      "source": "Aikido",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "凭证",
+        "安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "未修复的 Chromium 漏洞被公开利用代码",
+      "summary": "Chrome、Edge、Brave 等下游浏览器都在窗口期内，企业应加快浏览器更新策略。",
+      "url": "https://arstechnica.com/security/2026/05/google-publishes-exploit-code-threatening-millions-of-chromium-users/",
+      "author": "",
+      "source": "Ars Technica",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "浏览器",
+        "安全"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "网易游戏把 Kubernetes 上的模型冷启动压到 30 秒",
+      "summary": "瓶颈从调度转向模型数据加载，方案是用 Fluid 抽象数据集并做预取与缓存弹性。",
+      "url": "https://www.cncf.io/blog/2026/05/21/how-netease-games-achieved-30-second-llm-cold-starts-on-kubernetes/",
+      "author": "",
+      "source": "CNCF 博客",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "推理",
+        "缓存"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "1Password 给 Codex 做了按任务发凭证的 MCP 服务",
+      "summary": "凭证在运行时注入目标进程、作用域受限，agent 拿到的是访问能力而不是密钥本身。",
+      "url": "https://1password.com/blog/1password-trusted-access-layer-for-openai-codex",
+      "author": "",
+      "source": "1Password",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "密钥管理",
+        "MCP"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PGConf.EU 2026 开放演讲征集",
+      "summary": "",
+      "url": "https://2026.pgconf.eu/call-for-papers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Swiss PGDay 2026 公布议程并新增 BoF",
+      "summary": "",
+      "url": "https://2026.pgday.ch/schedule/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "ORDER BY coalesce(x, 0) 里其实没有 x",
+      "summary": "",
+      "url": "https://mydbanotebook.org/posts/order-by-coalescex-0-there-is-no-x/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Tom Lane 评审连接统计补丁并建议先做双表",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/24247.1779395113@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "补丁"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 社区发布第 19 周贡献汇总",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/83/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "QuestDB 9.4.0 发布",
+      "summary": "",
+      "url": "https://questdb.com/blog/questdb-9-4-0-release/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "时序"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "etcd 3.7.0 进入 beta",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/05/20/etcd-370-beta/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "etcd",
+        "Kubernetes"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Node.js 发布 26.2.0 与 24.16.0 LTS",
+      "summary": "",
+      "url": "https://nodejs.org/en/blog/release/v26.2.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Node.js"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "AWS Security Hub 把未使用权限纳入风险发现",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-security-hub-unused-access/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "权限"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Firefox 换新设计并带上 AI 开关与内置 VPN",
+      "summary": "",
+      "url": "https://blog.mozilla.org/en/firefox/new-firefox-design/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "浏览器"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "SpiderMonkey 告别 asm.js",
+      "summary": "",
+      "url": "https://spidermonkey.dev/blog/2026/05/20/saying-goodbye-to-asmjs.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Web",
+        "引擎"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 在 VS Code 里按任务自动选择模型",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-05-20-auto-model-selection-now-routes-based-on-your-task-in-vs-code/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Copilot"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Copilot Chat 支持语义化的 issue 检索",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-05-20-semantic-issue-search-in-copilot-chat/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Copilot"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "一份 1281 次运行的编码 agent 失败模式统计",
+      "summary": "",
+      "url": "https://tessl.io/blog/coding-agent-failure-patterns-large-codebases",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI Agent",
+        "评测"
+      ],
+      "position": 28
+    }
+  ]
+}

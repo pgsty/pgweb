@@ -1,0 +1,276 @@
+{
+  "date": "2026-04-07",
+  "origin": "chronicle 2026-04-07: pgnexus #106, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_column_size() 报的是存储大小不是内容长度",
+      "summary": "pg_column_size() 报的是一个值实际占的存储字节数，不是内容长度。Lætitia AVROT 演示了两处容易踩空的地方：一万个字符压缩后可能只占 125 字节，仍留在主元组里；而一旦被挪到 TOAST 表，主元组里永远只剩 18 字节的指针，与原始数据大小无关。她建议把 pg_column_size() 的物理均值与 length() 的逻辑均值一起算，差距大就说明 TOAST 压缩在起作用。",
+      "url": "https://mydbanotebook.org/posts/pg_column_size-what-you-see-is-not-what-you-get/",
+      "author": "Lætitia AVROT",
+      "source": "MyDBaNotebook",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "存储"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 与 Oracle 的 schema 差在哪里",
+      "summary": "Laurenz Albe 对比了两边的 schema。Oracle 里用户与 schema 一一绑定，PostgreSQL 把两者当作独立概念，对象所有权也可以单独管理。命名空间的划法也不同：Oracle 按 SQL 标准分类，PostgreSQL 把所有类关系对象归在一组，迁移时容易撞名。PostgreSQL 另有 schema 级的 USAGE 与 CREATE 权限，非限定名靠 search_path 解析。",
+      "url": "https://www.cybertec-postgresql.com/en/schema-postgresql-oracle-difference/",
+      "author": "Laurenz Albe",
+      "source": "CYBERTEC",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Oracle",
+        "迁移",
+        "权限"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制的行列过滤把敏感字段挡在源端",
+      "summary": "PostgreSQL 15 起，发布可以带列过滤和行过滤，不必再上中间件。Rishika Kasani 介绍的用法是：列过滤把个人健康信息、支付字段挡在源端，行过滤做多租户隔离或按地域分发。过滤在源库发送前生效，受限数据不出源系统，对 HIPAA、PCI DSS 这类合规要求有帮助。同一套 SQL 语法在 Amazon RDS、Aurora 和自建实例上通用。",
+      "url": "https://aws.amazon.com/blogs/database/postgresql-logical-replication-how-to-replicate-only-the-data-that-you-need/",
+      "author": "Rishika Kasani",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-04-07",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/04/03/DB5370.png",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "合规"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "只读副本缓解的是读，写瓶颈一点没动",
+      "summary": "把分析查询挪到只读副本，主库 CPU 和写延迟立刻缓解，但写入瓶颈一点没动。Matty Stratton 指出写路径的机制不变：每行的 MVCC 开销、每次插入和每条索引项产生的 WAL，以及和 autovacuum 抢资源。加副本反而增加了延迟监控、连接路由和多实例管理的负担，写高峰时副本一落后，读请求又回到主库。真要解决得动存储模型，例如用列式批量处理把每秒 WAL 操作从几十万降到几百。",
+      "url": "https://www.tigerdata.com/blog/read-replicas-dont-solve-write-bottlenecks",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-07",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/Read-Replicas-Don-t-Solve-Write-Bottlenecks-V2.png",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "写入",
+        "架构"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "用 pgEdge MCP Server 管分布式集群",
+      "summary": "Ahsan Hadi 演示用 pgEdge MCP Server 管一套分布式 PostgreSQL 集群：每个节点一份 YAML 配置，在 Claude Desktop 里注册成多个 MCP 条目，指向同一个二进制。三个例子分别是查 spock.subscription 看复制健康、比对两节点的列类型与索引定义找模式漂移、用 pg_stat_statements 找最慢的五条查询。服务器默认只读，写操作要显式打开。",
+      "url": "https://www.pgedge.com/blog/using-the-pgedge-mcp-server-with-a-distributed-postgresql-cluster",
+      "author": "Ahsan Hadi",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MCP",
+        "分布式",
+        "运维"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "EXPLAIN 新增 IO 选项展示预取统计",
+      "summary": "补丁系列已全部提交，覆盖顺序扫描、位图堆扫描与 TID 范围扫描，默认关闭以免输出过长。",
+      "url": "https://www.postgresql.org/message-id/CAP53PkxCmAF9qioQpGM8+H4sb_0ThUrvKR3wLEQ+8QNdVN_tQQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "预取"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "rdtsc 计时补丁在六年之后落地",
+      "summary": "前三个提交已推送，用于降低 EXPLAIN ANALYZE 的计时开销，ARM 支持留到以后再做。",
+      "url": "https://www.postgresql.org/message-id/CAP53PkxXprjgJ6em41+m7qM4=Egmxy=NE8A2VT6WdaXbY6gffQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "并行 autovacuum 已提交，表级覆盖仍未定",
+      "summary": "全局参数为零时表级 reloption 能否覆盖存在分歧，将另开线程继续讨论。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoDEfe5-tYSqa=MGLP5TX5QH2irVZVyULCeTQj0J92Hp1A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "并行"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_buffercache_pages 改用 tuplestore 后提速",
+      "summary": "不再依赖扫描期间 NBuffers 保持不变，实测快 10% 到 30%，耗时也更稳定。",
+      "url": "https://www.postgresql.org/message-id/7ab3914f-da59-4c1f-b809-225637b586e8@iki.fi",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_buffercache"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "节点级仪表化前两个补丁瞄准 PostgreSQL 19",
+      "summary": "totaltime 分配移到 ExecutorStart，插件可申请仪表化级别，实测提速 4% 到 12%。",
+      "url": "https://www.postgresql.org/message-id/CAP53Pkyqsht+exJQYRsjhSWYKu+vFGHhPub7m6PmFD6Or0=p1g@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "空闲主库上的 WAIT FOR LSN 会一直阻塞",
+      "summary": "walreceiver 没给共享内存里的写入与刷新位置设初值，补丁 0001 已获认可。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdvM9Tp1_g1JY9H+cx1H0Q4jH-BZFZGQwgviLNs1HSg+CA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "缺陷"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "终止信号里附带 PID 与 UID 的补丁被打回",
+      "summary": "Andres Freund 指出信号包装层次混乱且不便翻译，功能可能赶不上 PostgreSQL 19。",
+      "url": "https://www.postgresql.org/message-id/CAKZiRmyA0s-HF9=N5BZ4yJO_mE6_=uh0rNTwtXFve1vwQMH62A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "日志"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 改用重试替代串行测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmobXFPn9HF4KmRB9Sg=uT2+2ss+jQexpQO4pY_mueCqADg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "可调整大小共享内存合并为两个补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAExHW5uLau-i0T-ybPa=g5FLQo6OR1U9MR3GNijm6TDv12aLPw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "锁统计的注入点竞态问题已修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/adSdpIjMWRR7YmbK@ip-10-97-1-34.eu-west-3.compute.internal",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "CREATE/REINDEX CONCURRENTLY 将清理残留索引",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADzfLwXpAHZujwO517mXwAtOD=LQsZfAK_JSgbQqGDeZVWgNCg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 的日志方案仍在拉锯",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/78ae6b84-ad9d-4820-8b09-a37d18d05a1c@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "2026 年第 13 周 PostgreSQL 贡献汇总",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/77/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    }
+  ]
+}

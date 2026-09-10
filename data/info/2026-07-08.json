@@ -1,0 +1,510 @@
+{
+  "date": "2026-07-08",
+  "origin": "chronicle 2026-07-08: pgnexus #201, news 5, planet 3, daily",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL ODBC 新版修掉栈溢出与双重释放",
+      "summary": "PostgreSQL ODBC 驱动发布 REL-18_00_0002，修的多是安全问题：getPrecisionPart() 里的栈缓冲区溢出、SQLDisconnect 清理阶段的 double-free 堆损坏，以及多处越界读取，日志里也开始屏蔽敏感连接参数。功能上升级到 OpenSSL 3.5.5，修正了 SQLPrimaryKeys 误把 INCLUDE 列纳入结果，并拒绝非法游标名。用 ODBC 连 PostgreSQL 的应用值得尽快跟进。",
+      "url": "https://www.postgresql.org/about/news/postgresql-odbc-version-rel-18_00_0002-released-3341/",
+      "author": "PostgreSQL ODBC",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "ODBC",
+        "发布"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "备库 OID 重用会让 17.6 反复致命崩溃",
+      "summary": "有用户报告 PostgreSQL 17.6 反复 FATAL 崩溃，信息是 trying to drop stats entry already dropped。Bertrand Drouvot 用自定义扩展手动指定下一个 OID，复现了 OID 重用的场景。根因在备库：某后端持有该 pgstat 条目的本地引用，第一次 DROP 回放时它被标记为已删除却无法释放，第二次 DROP 又撞上同一个 OID，于是触发 FATAL。修复提交 850b9218c8e 已回合稳定分支。",
+      "url": "https://www.postgresql.org/message-id/ak2S5046X1aaagr4@paquier.xyz",
+      "author": "Bertrand Drouvot",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计",
+        "崩溃",
+        "备库"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "视图上组合两个特性会让 PG19 解引用空指针",
+      "summary": "在视图上同时用 FOR PORTION OF 更新和 INSTEAD OF 触发器，会让 PostgreSQL 19 解引用空指针。修法是禁掉这个组合，争的是该在哪一步拦：解析、重写还是执行。Paul Jungwirth 起初认为解析阶段够用，因为 relcache 失效会强制重新解析；Tom Lane 纠正说视图是以重写规则的形式存在磁盘上的，后续重写并不会触发重新解析。Paul 随后用测试验证了解析阶段拦截会让服务器崩溃，重写和执行阶段都能正确挡住。",
+      "url": "https://www.postgresql.org/message-id/CA+renyXPEJYOVov3XtzTp3NusGkObc9UeW-Nm78K8_nsWSnnfg@mail.gmail.com",
+      "author": "Paul Jungwirth",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "视图",
+        "崩溃"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "用检查约束换来非分区列上的分区裁剪",
+      "summary": "分区裁剪通常只在按分区键过滤时才生效，按别的列查就得扫遍所有分区。Haki Benita 给出的办法是用检查约束把数据分布告诉优化器：给每个分区上一条形如 session_id BETWEEN 1 AND 4320 的约束，优化器就能靠约束排除法把不相干的分区剪掉。遇到离群值可以写成析取形式的约束，思路借自 PG14 的多区间 BRIN 操作符类；找连续区间用 gaps and islands 那套写法。前提是数据只追加、且过滤列与分区键强相关。",
+      "url": "https://hakibenita.com/postgresql-partition-pruning",
+      "author": "Haki Benita",
+      "source": "hakibenita.com",
+      "source_date": "2026-07-08",
+      "image": "https://hakibenita.com/images/02-postgresql-partition-pruning-session-range.png",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "查询优化"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pglayers 把 53 个扩展做成可叠加的镜像层",
+      "summary": "pglayers 把 53 个 PostgreSQL 扩展分别打成从 scratch 构建的最小 Docker 镜像层，用 COPY --from 就能叠到官方 PostgreSQL 镜像上，不必自己编译或装包，项目也提供包含全部扩展的预构建镜像。支持 PostgreSQL 17、18、19 与 amd64、arm64。对 18 及以上版本，它借 extension_control_path 做隔离布局，避免文件冲突，允许同一个库多版本共存。",
+      "url": "https://pgsql.cc/about/news/pglayers-postgresql-docker-3340/",
+      "author": "pglayers",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "容器"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "PDU 在实例起不来时直接从数据文件捞数据",
+      "summary": "实例起不来的时候，常规 SQL 工具都用不上。PDU 直接读数据文件和 WAL 归档，不修改原始数据目录，在离线状态下重建库、schema 和表的元数据，把单表、整个 schema 或整库导出成 CSV。对误删误改，它还能从 WAL 记录或归档里还原受影响的行，不依赖 VACUUM 之前残留的元组。支持 PostgreSQL 14 到 18。作者把它定位成应急恢复的辅助手段，不能替代常规备份或时间点恢复。",
+      "url": "https://github.com/wublabdubdub/PDU-PostgreSQLDataUnloader",
+      "author": "PDU 项目",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-07-08",
+      "image": "https://opengraph.githubassets.com/f6cd86b4852774c767b9c12657dff604f958a9bfcc9a20f7eef4d9ebeeaebc5e/wublabdubdub/PDU-PostgreSQLDataUnloader",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "WAL",
+        "工具"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Barman 3.19 让标准恢复命令直接用上云端备份",
+      "summary": "Barman 是 EDB 维护的 PostgreSQL 远程备份与灾难恢复工具，基于时间点恢复，让 DBA 在一处管理多台远端服务器的备份目录和恢复流程。3.19.0 与 3.19.1 分别发布于 5 月 20 日和 26 日，本次一并公告。3.19.0 的重点是云存储恢复：标准的 barman restore 命令现在可以直接用于云上备份；同时引入了备份的导出与导入命令，另有若干改进和缺陷修复。3.19.1 是在此基础上的修复版本。",
+      "url": "https://pgbarman.org/",
+      "author": "EDB",
+      "source": "Barman",
+      "source_date": "2026-07-08",
+      "image": "https://www.pgbarman.org/assets/images/logo_barman.jpg",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Autobase 2.9.0 把日常集群管理搬进界面",
+      "summary": "Autobase 2.9.0 把重心放在部署之后的日常管理。认证从共用一个访问令牌改成按邮箱和密码的独立用户，操作日志随之记录每次变更由谁执行，审计链条补齐。PostgreSQL 参数、pg_hba.conf 和连接池配置现在都能直接在界面里改，专家模式还内置了带 diff 的 YAML 编辑器，应用前可以先看变更。Autobase 面向自托管环境，目标是在自有基础设施上提供接近 DBaaS 的 PostgreSQL 管理体验。",
+      "url": "https://github.com/autobase-tech/autobase/releases/tag/2.9.0",
+      "author": "vitabaks",
+      "source": "Autobase",
+      "source_date": "2026-07-08",
+      "image": "https://opengraph.githubassets.com/fac4e8871eadc6cebe29fc3ade9d95bfa01e8d6fc9d72765c313143aa7ce9535/autobase-tech/autobase/releases/tag/2.9.0",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "运维"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 1,
+      "title": "PgDog 解释为什么还要再写一个连接池",
+      "summary": "PgDog 用一篇文章解释为什么还要再写一个连接池：它想把连接池化、路由、分片和运维手感放在同一个代理层里解决，而不是让用户各拼一套。PostgreSQL 的规模化瓶颈常常不在某条 SQL，而在连接数、代理、拓扑和运维控制面。文章在 Hacker News 上热度不低，说明社区确实还想要一个比 PgBouncer 更贴合分片与云环境的 Postgres 原生代理。选型时仍要看清它与 PgBouncer、Odyssey、pgcat 在成熟度和运维经验上的差距。",
+      "url": "https://pgdog.dev/blog/why-yet-another-connection-pooler",
+      "author": "PgDog",
+      "source": "PgDog 博客",
+      "source_date": "2026-07-07",
+      "image": "https://pgdog.dev/assets/images/logo_social.png?v=b2c435b048",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "代理",
+        "分片"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "refint 模块将在 PostgreSQL 20 中移除",
+      "summary": "外键原生支持之前用触发器实现参照完整性的老模块，清理补丁由 Nathan Bossart 提交。",
+      "url": "https://www.postgresql.org/message-id/ak7AE78uJ5Kjv-Kz@nathan",
+      "author": "Nathan Bossart",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "contrib"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "提案给每个后端加上异步 IO 统计",
+      "summary": "新函数会报告已发起、同步执行、异步执行、自行完成与句柄等待等计数，开销尚有争议。",
+      "url": "https://www.postgresql.org/message-id/ak3ndoKYC2gCDoqY@bdtpg",
+      "author": "Bertrand Drouvot",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AIO",
+        "监控"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "libpq 拟把 .pgpass 查找端口与连接端口分开",
+      "summary": "走 SSH 隧道或连接池时本地端口和真实端口不一致，用通配端口绕开又不安全。",
+      "url": "https://www.postgresql.org/message-id/3627ee74-7355-4614-ad23-68b09415485b@gmail.com",
+      "author": "Diego",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "口令"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "pg_upgrade 保留复制源 OID 的补丁进到 v10",
+      "summary": "争议在于活跃复制源数量该和哪个值比较，用户自建且被跟踪的源同样要算进去。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uAsgc5--4dCut2mmQd+Yxe-jfVQR=AY38dzeEe0+yaH4g@mail.gmail.com",
+      "author": "Shlok Kyal",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade",
+        "逻辑复制"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "libpq 的 SSL 大记录补丁提交后又发现两处问题",
+      "summary": "Peter Eisentraut 指出出错返回 -1 时仍被累加进 inEnd，格式串也会把 -1 打成巨大无符号数。",
+      "url": "https://www.postgresql.org/message-id/34844e8c-267c-4daf-b1e0-f26059a4a7d3@eisentraut.org",
+      "author": "Peter Eisentraut",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "缺陷"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 20 的最低依赖版本开始摸底",
+      "summary": "OpenSSL 1.1.1 仍是拦路石；若把几个老发行版移出统计，Python 3.9 有望成为下限。",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+no9i7kMWTJULib=gxxdPcP5bWmL6oih4Y4YJkuoGiDLQ@mail.gmail.com",
+      "author": "Jacob Champion",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建",
+        "依赖"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "有人实测了 23 种 EC2 实例上的 Postgres 性价比",
+      "summary": "Show HN 项目，把各实例类型的吞吐与单位成本放在一起对比。",
+      "url": "https://postgres.saneengineer.com",
+      "author": "",
+      "source": "Show HN",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "基准",
+        "成本"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "同一条查询在 ParadeDB 与原生全文检索下的三种结果",
+      "summary": "ParadeDB 复盘自家基准的迭代过程，说明测法不同结论就会不同。",
+      "url": "https://www.paradedb.com/blog/benchmarker-iteration",
+      "author": "ParadeDB",
+      "source": "ParadeDB 博客",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "基准"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "TimescaleDB 被提议做 AI 数据中心的时序数据层",
+      "summary": "按 Purdue 模型分层部署，用超表和连续聚合关联 GPU 负载与供电制冷遥测。",
+      "url": "https://www.tigerdata.com/blog/data-layer-ai-data-center",
+      "author": "Hien Phan",
+      "source": "Tigerdata 博客",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "可观测"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "RDS 与 Hetzner 自托管的 Postgres 基准对比",
+      "summary": "作者把托管服务与自建机器放在同一组负载下测，重点落在成本与吞吐的比值。",
+      "url": "https://hostim.dev/blog/postgres-benchmark-rds-vs-hostim-vs-self-hosted/",
+      "author": "",
+      "source": "hostim.dev",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "基准",
+        "成本"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 2,
+      "title": "sqlite-utils 4.0 补上了 schema 迁移能力",
+      "summary": "本地优先工具和 agent 越来越多地用 SQLite，迁移能力是长期维护的门槛。",
+      "url": "https://simonwillison.net/2026/Jul/7/sqlite-utils-4/",
+      "author": "Simon Willison",
+      "source": "Simon Willison 博客",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "enable_partitionwise_join 让连接按分区配对进行",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_partitionwise_join/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "SQL/PGQ 标签缓存查询失败的修复已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAExHW5uNRS9tcgnHCc03rh5oQhFPz-wrC1YF+_XUhPdwK2fbXw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "psql 与转储工具的最低支持版本提到 v10",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ak7Ekv2-L-G55-YD@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "内联属性宏拟改名并回合到稳定分支",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/4370bec0-df13-40f3-92ee-75974182e41f@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "位图集新增整体位移函数并已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAApHDvphYj=Xps7AkQ90xxVwaLr+MYYrSaUFrrvXarE82Rpy2A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "恢复目标参数的赋值钩子将被整个删掉",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwE7NZJUdvOPg40hYNRcnS=UMohLBtf83W3PRDy1vFXV0A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "psql 描述查询里未限定的目录引用被修正",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/36a1871d7ba625197c023ceb5118045786c6fe5f.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别在交替分支上会错误匹配",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zDOz9T=Rr8rY2CCAxOCgiMcN6QF=7rAQgyAQkiEgvyNjg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "自定义扫描节点拟支持汇总并行工作进程的指标",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAGCUe0JRZP-=rOefQz0AYLPpeg=EN=a=TcD9=ZSDup1Mn+Sanw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "注入点的等待唤醒机制改用原子操作",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ak3uWDZDO4QTQCFB@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "open_pg_tde 提供另一套透明数据加密实现",
+      "summary": "",
+      "url": "https://github.com/commandprompt/open_pg_tde",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Chorus 做了一个面向对象存储的快速预写日志",
+      "summary": "",
+      "url": "https://rockwotj.com/blog/chorus/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "SQLite 的向量扩展发布 0.7 版",
+      "summary": "",
+      "url": "https://sqlite.org/forum/forumpost/a09b103d9d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "Apache Airflow 发布 3.3.0",
+      "summary": "",
+      "url": "https://github.com/apache/airflow/releases/tag/3.3.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 34
+    }
+  ]
+}

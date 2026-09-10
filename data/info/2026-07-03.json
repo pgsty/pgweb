@@ -1,0 +1,494 @@
+{
+  "date": "2026-07-03",
+  "origin": "chronicle 2026-07-03: pgnexus #196, planet 5, daily",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Postgres 19 支持在线开启数据校验和",
+      "summary": "数据校验和能发现存储层悄悄损坏的页，过去只能在初始化集簇时决定开关，事后转换要用 pg_checksums 停机离线跑，中断还无法续跑。PostgreSQL 18 已把校验和设为新集簇默认，19 再提供 pg_enable_data_checksums()，由后台工作进程在线遍历数据页完成转换，并像基于代价的 VACUUM 一样限速。data_checksums 参数会显示转换进度，关闭时不重写页面，几乎瞬时完成。",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-checksums-for-all",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "校验和",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "执行器批处理补丁改用扫描槽内嵌批次",
+      "summary": "PostgreSQL 执行器一次只处理一行，扫描节点的每行开销在分析型查询里格外明显。Amit Langote 发出执行器批处理补丁第 8 版，相比上一版重新设计：批次直接内嵌在扫描槽里，新增两个 TableAM 回调，去掉 RowBatch 容器、executor_batch_rows 参数和 EXPLAIN BATCHES 输出，批次固定为堆表一页的可见元组。本轮只改造顺序扫描，count(*) 在全可见页上快 20–21%。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqHv1CggSbpn=n+GU=Cp1AqDD25=hzx_PTYyqjMyZO2+mA@mail.gmail.com",
+      "author": "Amit Langote",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "性能",
+        "补丁"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "REPACK CONCURRENTLY 生成列报错已修复",
+      "summary": "REPACK CONCURRENTLY 在含生成列的表上会失败，并发出现非 HOT UPDATE 时报出找不到列的生成表达式。Álvaro Herrera 已提交修复，把 catalog 行的复制限制在并发模式下。同一轮还改了 updatedCols 的构建，忽略已删除的列：它们不可能是索引键列，标记为已更新在语义上就是错的。Ewan Young 用注入点测试验证了两处修复，后一处只轻微影响 btree 索引提示。",
+      "url": "https://www.postgresql.org/message-id/akeN0fZ_Dc4SSjN0@alvherre.pgsql",
+      "author": "Álvaro Herrera",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "缺陷修复"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "effective_io_concurrency 调高会耗尽本地缓冲区",
+      "summary": "把 effective_io_concurrency 设到 64 或更高之后，对带 TOAST 数据的临时表做顺序扫描，ReadStream 的预读会把全部本地缓冲区 pin 住，TOAST 索引查找随即报出没有空闲本地缓冲区。Induja Sreekanthan 给出复现步骤和补丁，把 max_pinned_buffers 限制为本地缓冲区的 75%。根因与另一个已知缺陷相同，PostgreSQL 19 已把预读预算削到四分之一，是否回合 18 待定。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7UdOg6dWYNeVbY4A+5Kg4ESfsvkFGtB_6w3EaqLo736hA@mail.gmail.com",
+      "author": "Induja Sreekanthan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "预读",
+        "缺陷"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "enable_nestloop 该临时关掉而不是长期关掉",
+      "summary": "嵌套循环是唯一能配合任意连接条件的方式，不等值连接和交叉连接都只能靠它，所以 enable_nestloop 默认打开。Christophe Pettus 在 GUC 逐项解读系列里写道，它出问题的典型形态是规划器以为外侧只返回五行，实际来了几十万行，本来便宜的索引查找被执行几十万次，查询从几毫秒拖成几分钟。临时关掉可以确认病灶，但病根是基数估算偏差，该去 ANALYZE、调统计目标或建扩展统计。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_nestloop/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-07-03",
+      "image": "https://thebuild.com/media/media/2c42145627114c1ebf0add917ee6981e.png",
+      "domain": "pg",
+      "tags": [
+        "查询规划",
+        "参数",
+        "调优"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "DBOS 主张把工作流状态放进同一个 Postgres",
+      "summary": "工作流引擎通常自带存储，与业务数据分处两地，一致性只能靠补偿逻辑维持。DBOS 的这篇文章主张把 workflow 状态与应用数据放进同一个 Postgres，用一次数据库事务解决其中一部分分布式系统复杂性，durable execution 和 agent 工作流因此重新向数据库靠拢。文章原发于 6 月 15 日，7 月初重新热起来。真这么用，先撞上的通常是运维边界：队列表膨胀、VACUUM 压力和长事务持锁。",
+      "url": "https://www.dbos.dev/blog/co-locating-workflow-state-with-your-data",
+      "author": "DBOS",
+      "source": "DBOS 博客",
+      "source_date": "2026-06-15",
+      "image": "https://cdn.prod.website-files.com/672411cbf038560468c9e68f/6a302850af242b318fadeb41_Transactional-outbox-idempotency-atomicity2.jpg",
+      "domain": "pg",
+      "tags": [
+        "架构",
+        "工作流",
+        "队列"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "log_statement_max_length 已提交并修好构建",
+      "summary": "Fujii Masao 提交后 buildfarm 因 verbose 日志插入 SQLSTATE 而失败，修复已推送。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwFOV+7nOdfoO=kfVH=-fRA9aQE1YcHHLYty3nfQ9rQ4RA@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "日志"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志历史表首批补丁已入主干",
+      "summary": "并发 ALTER SUBSCRIPTION 会因过期快照踩到断言，pg_subscription 两个新列的文档也已补上。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uA+ZcDr6vgmWEQBLEkANxt88sQcg_2JJA7bCzM4p1enhw@mail.gmail.com",
+      "author": "Shlok Kyal",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "本地缓冲区错用共享描述符的问题已修复",
+      "summary": "Michael Paquier 应用 v3，把两个缓冲区描述符取值函数的参数统一改为有符号整数。",
+      "url": "https://www.postgresql.org/message-id/akbyXWQ_jpc79Li1@paquier.xyz",
+      "author": "Ayush Tiwari",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "wal_compression 默认改用 LZ4 的提案被撤回",
+      "summary": "Michael Paquier 与 Fujii Masao 反对 on 的含义随编译选项变化，需要 lz4 就显式指定。",
+      "url": "https://www.postgresql.org/message-id/SY7PR01MB10921C1429F001C87B6ECDB6BB6F42@SY7PR01MB10921.ausprd01.prod.outlook.com",
+      "author": "wenhui qiu",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "EDB Developer U 蒙特利尔聚会聚焦规划器",
+      "summary": "这个 PostgreSQL 贡献者培养计划的第三次线下聚会，总结了议题、已提交补丁与下一步方向。",
+      "url": "https://www.enterprisedb.com/blog/meeting-montreal-developer-u-planner-patches",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "贡献者"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "LMDB 发布 1.0，嵌入式 KV 路线重新被讨论",
+      "summary": "这个基于 mmap 的极简键值库是许多底层系统的长期依赖，1.0 让它重回选型对比表。",
+      "url": "http://www.lmdb.tech/doc/",
+      "author": "LMDB",
+      "source": "LMDB 文档",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "存储引擎"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "CRED 用 RDS 蓝绿部署做规模化升级",
+      "summary": "AWS 给出的案例把重点放在预生产镜像、复制延迟、切换窗口与回滚条件，而不是功能可用性。",
+      "url": "https://aws.amazon.com/blogs/database/how-cred-uses-amazon-rds-blue-green-deployments-at-scale/",
+      "author": "AWS",
+      "source": "AWS Database 博客",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "升级",
+        "运维"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Podman 发布 6.0.0 主版本，含破坏性变更",
+      "summary": "官网已把 6.0.0 标为最新稳定版，升级前需核对 Buildah、Skopeo、Netavark 版本与本地数据迁移。",
+      "url": "https://github.com/podman-container-tools/podman/releases",
+      "author": "Podman",
+      "source": "GitHub Releases",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 开放 Copilot 代理会话数据流式导出",
+      "summary": "企业管理用户可经流式端点或 REST API 取会话记录，并接入审计日志与 Microsoft Purview。",
+      "url": "https://github.blog/changelog/2026-07-02-copilot-agent-session-streaming-is-now-in-public-preview/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "审计",
+        "AI"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "前端工具改用新接口替换不安全的 PQcancel",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DJPAH0WPJV3K.1PYZ8P0QXZVMX@jeltef.nl",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁 v50 集中处理导航偏移量",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxFfMJAMc0R6g4f7Bwr47QDY+OBr2vzqqMRbCzjdD9vR2g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "uuidv7 错误接受 1970 年之前的时间戳",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+fm-RM5sNuGrufK7cMstQu=3BJrXxLzsMYp6GGiKBOBn2cE4g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "GSoC 提案讨论 B-tree 索引膨胀的页面合并",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/A7BEE70F-ED6B-4998-9ACC-26DA81983DA4@yandex-team.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 将转发用户原始 EXPLAIN 选项",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0t_5rMsjFficztwJD7nuupbS4GDj0suKxfShdRXjm7c0A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "发布模式拟支持 TABLES IN SCHEMA 的 EXCEPT",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABdArM7mJsqFCGe2AyaS-E6n7rk4SoDTSKD+D3hUNO=UaDPStA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "AlterSubscription 加锁后重读订阅可消除竞态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB12149E944D7ECABF0C1DDCCB4F5F42@OS9PR01MB12149.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "连接统计信息补丁 v8 收到规划开销评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/02dd92ff-b1ee-4e69-9f7c-abc60dfb4142@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "左连接条件恒假时可跳过右表索引扫描",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/bb73a0a0-70e6-46a1-900b-55dd75c2669d@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "CAST FORMAT 语法的实现路线仍未取得共识",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAKFQuwYATL7bW6yc5CwgZ91aZ2hSH_z9MV=p94DO9SPgG+L2GA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "libpq 异步接口将支持超过 8KB 的 SSL 记录",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/990a4710-fed1-411a-aba4-ddc25825ee48@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "复制槽拟统计实际发往下游的字节数与事务数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAE9k0PnWMWM7PgcWRwNitcpEDhOnmku2iyrnTDDGbwZ-cL_-4A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "pgEdge Cloud 上用 API 搭建 RAG 服务器",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/how-to-build-a-rag-server-on-pgedge-cloud-via-the-api",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "有人把 Commodore 64 BASIC 做成了过程语言",
+      "summary": "",
+      "url": "https://thombrown.blogspot.com/2026/07/load-plcbmbasic81-commodore-64-basic.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "PL/PHP 过程语言项目在 Hacker News 被重提",
+      "summary": "",
+      "url": "https://github.com/commandprompt/plPHP",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "爱沙尼亚 PostgreSQL 用户组举办线下聚会",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/07/02/estonia-pug-meetup/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Amazon RDS for Oracle 支持数据脱敏",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/data-masking-in-amazon-rds-for-oracle/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "FoundationDB 的 Flow 把 actor 并发引入 C++",
+      "summary": "",
+      "url": "https://apple.github.io/foundationdb/flow.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "ZeroFS 把 S3 包装成日志结构文件系统",
+      "summary": "",
+      "url": "https://www.zerofs.net/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 34
+    }
+  ]
+}

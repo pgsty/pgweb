@@ -4,13 +4,13 @@
 
 ## 1. 定义
 
-「博览」是 pgsql.cc 自己编辑的中文资讯栏目：每天 10–30 条，以 PostgreSQL 为主，兼顾数据库与云计算。地址 `/info/`。它有独立的全文检索，不进入文档检索和搜索弹窗。
+「博览」是 pgsql.cc 自己编辑的中文资讯栏目：每天 20–40 条（一档 5–12 条），按与 PostgreSQL 的相关度排序，兼顾数据库与云计算。地址 `/info/`。它有独立的全文检索，不进入文档检索和搜索弹窗。
 
 三档条目：
 
 | 档 | 名称 | 内容 | 展示 |
 | --- | --- | --- | --- |
-| 1 | 大新闻 | 中文标题、一段摘要（一个完整自然段，80–300 字）、原文链接、作者、发布方、原文日期、可选配图 | 标题直接外链原文；下一行日期 · 作者 · 发布方；再下一行左侧固定位置放 5:3 配图，右侧摘要，无图时摘要占满整行 |
+| 1 | 大新闻 | 中文标题、一段摘要（150–220 字，约四行）、原文链接、作者、发布方、原文日期、5:3 配图（必有；暂缺的显示空位，待生成批次补齐） | 标题直接外链原文；下一行日期 · 作者 · 发布方；再下一行左侧固定位置放 5:3 配图，右侧摘要，无图时摘要占满整行 |
 | 2 | 小新闻 | 中文标题、一句话说明（≤ 80 字）、原文链接 | 标题外链，说明另起一行；不配图 |
 | 3 | 迷你 | 仅标题，可带链接 | 一行一条的紧凑列表，不带作者与说明 |
 
@@ -52,7 +52,7 @@
 | `/info/search/?q=` | 博览检索，每页 20 条 |
 | `/info/rss/` | 最近 50 条一、二档条目 |
 
-布局沿用站内内页：`container-fluid margin pg-page` 两栏，左侧 `.pg-sidecard`（搜索框 + 最近 30 天日期与条数 + 归档入口），右侧 `#pgContentWrap`。条目样式在 `media/css/info.css`，只用 `--pg-*` 令牌与现有排版规则（`.pg-prose` 的字号行高、酒红内容链接、外链图标）。三档的区别靠密度和字号，不用彩色卡片。
+布局沿用站内内页：`container-fluid margin pg-page` 两栏，左侧 `.pg-sidecard`（搜索框 + 「新闻博览」入口 + 最近 30 天日期与条数 + 归档入口），右侧 `#pgContentWrap`。条目样式在 `media/css/info.css`，只用 `--pg-*` 令牌与现有排版规则（`.pg-prose` 的字号行高、酒红内容链接、外链图标）。三档的区别靠密度和字号，不用彩色卡片。
 
 入口：顶部导航「博览」放在最后（「支持」之后），下拉为 最新收录 / 每日更新 / 归档 / 搜索；在博览页面按 `/` 聚焦博览搜索框而不是文档检索弹窗（⌘K 仍打开弹窗）；页脚「社区」栏加「博览」；首页在「最新新闻」之前加一个「博览」区块，列出最近一天的大新闻标题（≤ 4 条，标题 + 一句摘要 + 发布方）和「更多」链接。搜索页、每日页、归档页对搜索引擎 `noindex`（信息流首页与每日页可收录）。主站爬虫（`tools/search/crawler`）跳过 `/info/` 路径。
 
@@ -64,17 +64,21 @@
 
 ```
 ~/pgsty/daily/YYYY-MM-DD.md ─┐
-                              ├─ tools/info/extract_daily.py ─► tmp 候选 JSON ─► 编辑（模型）─► data/info/YYYY-MM-DD.json ─► manage.py info_import ─► 本地与生产
-pgnexus.ai 每日更新（可选）──┘
+postgresql.org 新闻（本地库）─┤
+Planet PostgreSQL（本地库）───┼─ tools/info/chronicle.py ─► tmp/info/chronicle/DATE.json ─► 编辑（模型）─► data/info/DATE.json ─► enrich.py ─► publish.py ─► 本地与生产
+pgnexus.ai 每日更新 ──────────┘
 ```
 
-- `tools/info/extract_daily.py DATE`：确定性解析日报的「今日重点」「简讯」「重磅新闻」，输出候选（标题、链接、作者/发布方/日期、原文摘要、分类标签、HN 热度）；`--pgnexus JOBID` 用 headless Chrome 读取 pgnexus 页面文本，补充技术博客与 hackers 讨论候选。
+- `tools/info/chronicle.py FROM TO`：把四类来源按天合并、去重（同一链接只归首次出现的那天，之后的天列入 `repeats`）、把链接解析到最终页面并标出失效链接，输出紧凑候选文件；`--stats` 打印每天各来源条数。来源覆盖：postgresql.org 新闻长期有；pgnexus 自 2026-03-04（#71，早期有缺号）；Planet 自 2026-03-14；本地日报自 2026-05-06。因此栏目从 2026-03-01 起回补，之前的日子只有零星新闻，不单独成天。
+- `tools/info/enrich.py data/info/DATE.json`：把条目链接解析到最终地址、标出失效链接、为一档补 og:image（排除 `tools/info/generic-images.txt` 里的站点通用图）；`--missing-images 清单.jsonl` 列出仍无配图的一档条目。
+
+- `tools/info/extract_daily.py DATE`：确定性解析日报的「今日重点」「简讯」「重磅新闻」，输出候选（标题、链接、作者/发布方/日期、原文摘要、分类标签、HN 热度）；`--pgnexus JOBID` 读取 pgnexus 每日更新，补充技术博客与 hackers 讨论候选。chronicle.py 内部复用这两个解析器。
 - 编辑步骤由模型完成（Codex / Opus 均可），输入候选 JSON 与 `tools/info/CURATION.md` 的编辑规则，输出批次文件；批次文件进仓库 `data/info/`，本地和生产导入同一文件。
 - `manage.py info_import data/info/2026-09-10.json`：按 `key` 幂等写入（新增 / 更新 / 不变），同时写 `search_vector`；`--hide-missing` 把该日批次里已不存在的条目置为 hidden。`--check` 只校验不写。
 - `tools/info/publish.py DATE [--check] [--target production]`：包装 `info_import`；生产模式把文件经 `ssh pg` 送到远端临时目录用远端 Django 配置导入，与代码拉取无关。
 - 日常：日报每天 08:30 落盘后运行一次 extract → 编辑 → publish（本地与生产），批次文件提交进仓库；操作步骤见 `tools/info/README.md`。
 
-编辑规则（`tools/info/CURATION.md` 保存完整版）：每天 10–30 条；PostgreSQL 优先，其次数据库，再次云与基础设施；AI 内容只收开发者工具与基础设施相关；剔除营销稿、泛消费科技、无一手来源的传闻；条目不足时从 pgnexus 与日报「简讯」补数据库云与云数据库资讯，仍不足则宁少勿滥。一档摘要独立成段、不逐句翻译原文；标题 ≤ 40 字；中文与英文、数字间留空格；不写免责声明。
+编辑规则（`tools/info/CURATION.md` 保存完整版）：每天 20–40 条、一档 5–12 条；按与 PostgreSQL 的相关度排序，PostgreSQL 优先，其次数据库，再次云与基础设施；AI 内容只收开发者工具与基础设施相关；剔除营销稿、泛消费科技、无一手来源的传闻；枯水期先放宽标准，再把前一两天没用上的候选匀过来，仍不足则宁少勿滥。链接直指最终内容页；一档摘要 150–220 字独立成段、不逐句翻译原文；标题 ≤ 40 字；中文与英文、数字间留空格；不写免责声明。导入器把一档 > 12 条、全日 > 45 条、摘要超长当作错误，把条数不足与缺配图当作警告。
 
 ## 6. 实施与分工
 
@@ -87,3 +91,11 @@ pgnexus.ai 每日更新（可选）──┘
 | E. 日常 | 每日流水线脚本与 crontab；AGENTS.md 记录操作 | 主会话 |
 
 验收要点：三档展示正确；每日页与信息流顺序一致；检索能定位到当日锚点；`/info/` 不出现在文档检索和弹窗；生产与本地条目数一致。
+
+## 7. 缩略图
+
+每条一档都有一张 500 × 300 的 WebP 缩略图，存在 `info_item.thumb`（bytea），由 `/info/img/<key>.webp` 提供（`Cache-Control: public, max-age=604800`）。源文件是 `data/info/img/<key>.webp`，随批次文件进仓库；导入器在写行时读取同名文件，文件变化算一次更新。批次文件的 `image` 字段只记录来源图地址，页面优先用本地缩略图，没有缩略图时退回 `image`，两者都没有时显示空位。
+
+- `tools/info/thumbs.py fetch DATE…`：下载一档的 `image`，居中裁成 5:3、缩到 500 × 300、转 WebP；`missing … --out 清单.jsonl` 列出仍没有缩略图的一档；`convert 图片…` 把任意图片按文件名（= key）转成缩略图；`orphans [--delete]` 清理已无条目的缩略图。需要 ImageMagick。
+- `tools/info/gen_thumbs.py 清单.jsonl [--batch 8 --parallel 4]`：把清单分批交给 `codex exec`，用 Codex 的图像工具（GPT Image）按统一风格（扁平矢量、大象蓝配色、无文字无标志）为每条生成 1536 × 1024 图，再裁成缩略图。每张约一分钟；失败的留到下次运行。
+- `tools/info/relink.py`：把第三方公告从 postgresql.org 新闻页改到本站译文页（PostgreSQL 自身发布与安全公告保留）；`tools/info/dedupe.py`：跨天重复链接只留档位更高、日期更早的一条。回补后先 relink、dedupe，再 thumbs、gen_thumbs，最后 publish。

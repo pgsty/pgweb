@@ -1,0 +1,484 @@
+{
+  "date": "2026-08-12",
+  "origin": "chronicle 2026-08-12: pgsty-daily 2026-08-12.md, pgnexus #236, news 4, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "plx 让你用熟悉的语言写 PostgreSQL 函数",
+      "summary": "Command Prompt 发布扩展 plx，允许用熟悉的语言方言编写存储函数和触发器。执行 CREATE FUNCTION 时，plx 把函数体翻译成 PL/pgSQL 存进 pg_proc.prosrc，运行时仍由自带的解释器执行，后端不会加载额外的语言运行时。可用方言包括 Ruby、PHP、JavaScript、Python、Oracle PL/SQL 和 Go，名称都带 plx 前缀，可与原生的 PL/Ruby 共存。它只改写法，不改数据库实际执行的内容。",
+      "url": "https://github.com/commandprompt/plx",
+      "author": "Command Prompt, Inc",
+      "source": "项目仓库",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "过程语言",
+        "PL/pgSQL"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Dasha 是无代理的 PostgreSQL 性能仪表盘",
+      "summary": "Dasha 是一个开源性能仪表盘，用只读角色连接数据库，主机上不装代理也不需要额外扩展。一个实例可以服务多个集群和它们的副本：因为多数统计是实例级且不会复制，它会分别读取每台主机再合并分析，比如主库上看着没人用的索引，可能正扛着备库的全部读负载。功能包括按八类指标算健康分、分析高频查询、对比 pg_stat_statements 快照、检查索引膨胀、查看锁树与等待事件。要求 PostgreSQL 14 以上。",
+      "url": "https://github.com/dbulashev/dasha",
+      "author": "Dmitry Bulashev",
+      "source": "项目仓库",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "性能",
+        "工具"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "SynchDB 1.4 支持 Oracle 容器数据库",
+      "summary": "Hornetlabs 发布 SynchDB 1.4，这个扩展负责把异构源库实时复制到 PostgreSQL 或 IvorySQL。新版把 Oracle 容器数据库支持扩展到全部三条路径：内嵌 Debezium 引擎做变更捕获、oracle_fdw 做初始快照、Openlog Replicator 做基于日志的复制。建连接器时按 CDB/PDB 格式写源库名，SynchDB 会自动连到对应的 PDB 服务，该路径已在 Oracle 23ai 上测试。初始快照现在也能走加密连接。",
+      "url": "https://github.com/Hornetlabs/synchdb/releases/tag/v1.4",
+      "author": "Hornetlabs Technology",
+      "source": "项目仓库",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "Oracle",
+        "扩展"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "CYBERTEC 发布自家的 Kubernetes Operator",
+      "summary": "CYBERTEC 开源了 CYBERTEC PG Operator。在 CloudNativePG、Zalando postgres-operator、Crunchy PGO 和 StackGres 都已成熟的情况下，他们做新 operator 的核心动机是支持多站点部署。除了标准的生命周期管理，它重点实现多站点集群：跨站点复制、自动故障转移，以及在多个 Kubernetes 环境之间验证过的部署模型。源码已放在 GitHub 上。",
+      "url": "https://www.cybertec-postgresql.com/en/introducing-the-cybertec-pg-operator/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "CYBERTEC",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "高可用",
+        "开源"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "跨大版本升级 Aurora 时保住 Debezium 连接器",
+      "summary": "Arko Dutta 给出一种在 Amazon Aurora PostgreSQL 跨大版本升级时让 Debezium 连接器继续跑的做法，避免全量重新快照。思路是用原生逻辑复制在源集群和目标集群之间搭一座同步桥。切换时先停掉订阅，手工同步序列值，在目标集群上建新的复制槽，再把连接器指向目标集群并设 snapshot.mode=never。因为保持同一个 topic 前缀，消费者只会看到短暂中断，文中测试切换耗时约 2 秒。",
+      "url": "https://aws.amazon.com/blogs/database/migrate-amazon-aurora-postgresql-across-major-versions-with-active-debezium-cdc-connectors-using-native-logical-replication/",
+      "author": "Arko Dutta",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-08-12",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/08/07/DBBLOG-5694-featured-image.png",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "CDC",
+        "升级"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Neon Functions 把后端逻辑搬到数据旁边",
+      "summary": "Neon 推出 Neon Functions，一个基于 Node.js 24 的计算层，可以直接部署到 Neon 分支上，与 Lakebase Postgres 数据库跑在同一区域，DATABASE_URL 会自动注入。这个运行时支持长连接，智能体可以连续流式输出数分钟，WebSocket 或服务端推送连接也能在传输期间保持打开。设计意图是让后端逻辑和数据库在物理上足够近，从而降低数据密集型负载的延迟。",
+      "url": "https://neon.com/blog/neon-functions-backend-logic-next-to-your-data",
+      "author": "Carlota Soto",
+      "source": "Neon 博客",
+      "source_date": "2026-08-12",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/neon-functions-backend-logic-next-to-your-data/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "Serverless",
+        "延迟"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "两个 IO 合并参数要一起调才有效",
+      "summary": "Christophe Pettus 讲 io_combine_limit 与 io_max_combine_limit：前者是 PostgreSQL 17 引入的会话级参数，默认 128kB，把相邻块合并成一次读以减少系统调用；后者是 18 新增的 postmaster 级参数，同样默认 128kB，改动需要重启，它决定异步 IO 子系统在启动时预留多少共享内存。实际生效的是两者中较小的那个，而 SHOW 显示的是你设的值不是实际值，只抬高一个会被悄悄截断。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-io_combine_limit-and-io_max_combine_limit/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-12",
+      "image": "https://thebuild.com/media/media/14b5497aee624cbe9f82fdd0f42165a9.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "IO",
+        "调优"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "两千五百万字符串测出排序规则的变动地图",
+      "summary": "Jeremy Schneider 一篇里讲了三件事。检查点上他仍不建议把 checkpoint_timeout 从五分钟往上调，理由是高可用副本救不了：主库重启后副本的恢复时间一样长。排序规则方面，他用 Docker 重做了两千五百万字符串的排序折磨测试，做成彩色网格：glibc 2.28 起多数语言的排序慢到两小时，德语和俄语的顺序在 Debian 12 与 RHEL 9 变过，日语一直稳定，ICU 每个版本都变。",
+      "url": "https://ardentperf.com/2026/08/12/postgres-checkpoint-followup-and-collation-visualization-and-codex-luna/",
+      "author": "Jeremy Schneider",
+      "source": "ardentperf.com",
+      "source_date": "2026-08-12",
+      "image": "https://ardentperf.com/wp-content/uploads/2026/08/image.png",
+      "domain": "pg",
+      "tags": [
+        "排序规则",
+        "检查点",
+        "升级"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "分区拆分与合并会静默丢弃 RLS 策略",
+      "summary": "Melanie Plageman 指出 SPLIT 与 MERGE PARTITIONS 会丢掉分区上的行级安全策略、索引、外键和权限，建议至少报警告。",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFMNhEF85h7h1su30h9E4cExGKpSSViZ2EqggNqAX+Xtng@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "安全"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GRAPH_TABLE 里的聚合函数会触发内部错误",
+      "summary": "外层引用的聚合和图模式 WHERE 子句都没被拦住，报的是规划器内部错误；Tom Lane 建议新增表达式类别统一检查。",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0tvdYODLQvYwVzAxUPe5=E3vSe8Zy7TvrQq+syvGKpHSQ@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ",
+        "缺陷"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "外键快速路径重读索引的问题列入 v19 待办",
+      "summary": "Mihail Nikalayeu 确认此前分开讨论的两个问题其实是同一个缺陷，发布管理员已把它加进 PostgreSQL 19 的 Open Items。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZHoAf6Mprv-WVsjOvZ=nVrPagCNUg+MSGQapRbZ-wAVQ@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "PG19"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "两个备库提升到同一时间线会难住 pg_rewind",
+      "summary": "有人提议在历史文件里加 UUID 作为辅助标识，反对方认为时间线唯一性应由归档管理层保证，分歧未解。",
+      "url": "https://www.postgresql.org/message-id/8cb012f7-1058-41ee-a727-90f3ecbecb58@gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_rewind",
+        "复制"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "vacuum 统计信息补丁被指可能堆积过期条目",
+      "summary": "关系与数据库删除时缺少对应钩子，过期条目会留在共享内存并持久化到统计文件，OID 复用还可能张冠李戴。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdud=YAi6Bnmzt4RgPmtshOJw9kHa9PLbfhBAbonJng7_g@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "vacuum",
+        "统计信息"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "libpq 拟把 LibreSSL 拆成独立实现",
+      "summary": "Daniel Gustafsson 提议为 LibreSSL 单开源文件，Peter Eisentraut 担心重复维护，与会者同意 PG20 弃用 1.1.1",
+      "url": "https://www.postgresql.org/message-id/f3806b11-7d89-4888-8cdd-4ec453b5abe3@eisentraut.org",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TLS",
+        "libpq"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "研究称会议记录服务 tl;dv 暴露超过十八万场会议",
+      "summary": "会议录音、转录与摘要常含客户数据与凭据片段，值得先复核工作区的公开链接、访客权限与导出记录。",
+      "url": "https://bobdahacker.com/blog/tldv-hack",
+      "author": "",
+      "source": "研究者博客",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "数据泄露"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "OpenSSH 10.5 与 10.5p1 发布",
+      "summary": "SSH 是生产管理面，升级前应在预发环境验证密钥类型、证书、跳板与 ProxyJump，发行版打包可能与上游有差异。",
+      "url": "https://www.openssh.org/releasenotes.html#10.5",
+      "author": "",
+      "source": "OpenSSH",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "SSH",
+        "发布"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Mozilla 轮换发布签名用的 GPG 密钥",
+      "summary": "离线镜像、自动下载校验和内部软件源可能仍依赖旧信任根，需要更新受控 keyring 并做一次独立验证演练。",
+      "url": "https://blog.mozilla.org/security/2026/08/10/updated-gpg-key-for-signing-firefox-and-thunderbird-releases/",
+      "author": "",
+      "source": "Mozilla 安全博客",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "签名",
+        "供应链"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "Mojo 1.0 正式发布",
+      "summary": "1.0 是评估语言可用性和迁移风险的节点，但生态并未随之完成，试点应覆盖 ABI 与 FFI、打包、调试和性能回归。",
+      "url": "https://www.modular.com/blog/modular-26-5-mojo-1-0-is-here",
+      "author": "",
+      "source": "Modular",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "语言",
+        "发布"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "HashJoin 的 Bloom filter 下推补丁进入 v9 审查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/a44e3007-3f5a-4a98-9fcb-4a712e8590de@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "索引预取补丁更新到 v32",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wzk=s6FnqwKMXttX3r6jq=XkNTWO4DV10-Dy+ofd8+UCzw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别在视图里可能出现列引用歧义",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxHhm29mpV_qc6xt33LaUvwZ+LHAQuy3EGuzqJoTYrxvow@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "用 psystem 全面取代 system 被认为过于激进",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/bf4e5496-ec09-429e-b8df-7d450c721154@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "psql 反斜杠命令的小内存泄漏拟全分支回移",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEh3R3=1tx_a5=fTDJ+ycuwxWMEn6bG_Yt4B5P+hE7AVw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "限制 GRAPH_TABLE 路径组合数列入 v19 待办",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/anzVT_-uh3tbKp8U@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "pgbench 继续执行模式的统计口径待澄清",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/anzTI-2jsrV5Ajfu@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Dbctx 把 PostgreSQL 库编译成智能体可查询的上下文",
+      "summary": "",
+      "url": "https://github.com/shrsv/dbctx",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "微软 8 月安全更新发布",
+      "summary": "",
+      "url": "https://msrc.microsoft.com/update-guide/releaseNote/2026-Aug",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Chicken Scheme 6.0 发布",
+      "summary": "",
+      "url": "https://code.call-cc.org/releases/6.0.0/NEWS",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Pulp 自称每秒写入 2800 万条日志",
+      "summary": "",
+      "url": "https://github.com/superwired-labs/Pulp",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Canario Terminal 关闭源码",
+      "summary": "",
+      "url": "https://rapha.land/closing-canario-terminal-source-code/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Google 谈 Go 为何适合 AI 辅助开发",
+      "summary": "",
+      "url": "https://developers.googleblog.com/why-go-is-an-ideal-language-for-ai-assisted-software-engineering/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "有人用中间人代理观察 Copilot 的实际流量",
+      "summary": "",
+      "url": "https://www.lighthousenewsletter.com/p/i-put-github-copilot-behind-a-mitm",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 32
+    }
+  ]
+}

@@ -1,0 +1,280 @@
+{
+  "date": "2026-05-01",
+  "origin": "chronicle 2026-05-01: pgnexus #133, news 1, planet 5；借用 2026-04-29 三条",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的 212 项改动只有四项要紧",
+      "summary": "PostgreSQL 19 的发布说明列了 212 项改动，Christophe Pettus 认为多数运维只需盯住其中四项：由工作进程自动管理、参数可调的异步 I/O；针对 LEFT JOIN 形态改进的查询规划；pgstattuple 借流式读取明显提速；以及扩展从此必须按 C11 而非 C99 编译。他把这一版定性为面向管理与监控的版本，改进多是渐进的运维体验，没有面向用户的招牌特性。扩展维护者要留意编译标准的变化。",
+      "url": "https://thebuild.com/blog/two-hundred-and-twelve-things/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-01",
+      "image": "https://thebuild.com/media/media/8b34d230a2e94b6d997b88b53e7a0f95.png",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "异步 IO",
+        "扩展"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "可见性映射漏注册缓冲区会毁掉增量备份",
+      "summary": "Melanie Plageman 提交补丁修复可见性映射的 WAL 记录缺陷：清除 VM 位时没有把 VM 缓冲区注册进 WAL 记录，而 WAL 摘要器只统计已注册的页面，增量备份便会漏掉这些改动，产出损坏的备份。修法是清位时注册缓冲区，并在关键区间持有排他锁。Andres Freund 指出 heap_update 可能以任意顺序获取多个 VM 页锁而死锁，建议按块号升序加锁。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoYFughWFgiyq-csQkB6k9EorqED0AWTDu8+OVKFX_r_wA@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "增量备份",
+        "可见性映射",
+        "缺陷"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制拟把冲突记录写进历史表",
+      "summary": "Dilip Kumar 正按评审意见推进逻辑复制的冲突日志历史表，让冲突记录进表而不只是打进日志。当前争议在 ConflictLogDest 的表示上：log、table、all 三个目标用位图还是普通枚举，Peter Smith 主张位图以便直接做位运算，另一派认为普通枚举更好扩展。此外还有订阅所有权变更时的归属处理，以及非超级用户访问 pg_conflict 对象的权限问题待定。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-vhJxRW5NQ628oidnk0KtHwKt11dW9-+vxqpXLTgjiYiA@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突处理"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "行模式识别补丁一次追加四十个增量改动",
+      "summary": "Henson Choi 在 v46 基础上放出 40 个增量补丁推进行模式识别。0001 到 0031 保持不变以保留既有评审状态，新增的 0032 到 0040 回应 Tatsuo Ishii 的意见：修正绕过 A1 帧优化的测试、改写注释与报错语态、用 Max() 和 Min() 宏替换手写极值代码、把设计说明挪进 README.rpr、跑 pgindent 并统一 pg_proc.dat 描述。另有三件事推后处理。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zBdwAUDNs_WFdLkFF=ewhkDkv-AqizVEVzhsfremGFb4w@mail.gmail.com",
+      "author": "Henson Choi",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "行模式识别"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PGX 接手 pgBackRest，延续分支叫 pgxbackup",
+      "summary": "pgBackRest 原作者 David Steele 收手之后，PostgreSQL Experts 接手做了一个延续性分支 pgxbackup，并应 Steele 的要求不再沿用原名。分支保留并行备份恢复、时间点恢复、页级校验和、加密、多仓库与归档管理等能力。PGX 承诺的范围是关键缺陷修复、跟进新 PostgreSQL 版本的兼容性，以及保证已有备份仓库仍能正确恢复，不引入破坏性改动。代码沿用原许可证并接受外部贡献。",
+      "url": "https://thebuild.com/blog/pgxbackup-continuity-support-for-pgbackrest/",
+      "author": "PostgreSQL Experts",
+      "source": "thebuild.com",
+      "source_date": "2026-05-01",
+      "image": "https://thebuild.com/media/media/noun-armchair-129971.png",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "pgBackRest",
+        "分支"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 发布开源的 AI DBA Workbench",
+      "summary": "pgEdge 发布开源的 AI DBA Workbench，定位是给 PostgreSQL 团队一个随叫随到、仍由人复核的运维副驾驶。它持续采集查询性能、VACUUM 活动、连接健康、WAL 吞吐和复制延迟等指标，异常检测分三层：统计基线、基于向量相似度的模式匹配，再加 AI 分类。团队可以先不开 AI 功能，只当传统可观测性工具用，准备好了再打开。pgEdge 给出的背景是 DBA 难招、成本高，强监管行业还要走数月的安全审查。",
+      "url": "https://pgsql.cc/about/news/pgedge-ai-dba-workbench-ai-3281/",
+      "author": "pgEdge",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-04-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "AI",
+        "开源工具"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "HiveMQ 用内置连接器把产线数据写进 TimescaleDB",
+      "summary": "Doug Pagnutti 讲了在一家炸药制造厂用 HiveMQ 企业版 MQTT 代理解决产线数据的经历：需要把 SCADA 的实时数据送到外部机器学习服务器做参数优化。他的评价是传输可靠、配置简单，需求变化时加主题也容易。其内置的 PostgreSQL 连接器与 TimescaleDB 搭配处理时序负载，因为后者本身就是 PostgreSQL 扩展，接入只需配好连接器并对齐表结构，查询不用改。",
+      "url": "https://www.tigerdata.com/blog/hivemq-and-timescaledb-it-just-works",
+      "author": "Doug Pagnutti",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-05-01",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/05/thumbnail-copy.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "物联网",
+        "时序"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Ubuntu 服务遭 DDoS 攻击导致大面积中断",
+      "summary": "一个黑客组织宣称对 Ubuntu 与 Canonical 站点的分布式拒绝服务攻击负责，攻击导致多项服务中断，用户一度无法更新系统。受影响的是分发侧的关键设施，管理员依赖的安全补丁与软件维护渠道随之受阻，波及范围覆盖全球。事件把开源软件分发渠道在协同攻击面前的脆弱性摆上台面：镜像和更新服务一旦不可用，下游的补丁节奏就会被打乱。用 Ubuntu 源部署数据库的团队值得回头检查本地镜像与离线包的兜底。",
+      "url": "https://techcrunch.com/2026/05/01/ubuntu-services-hit-by-outages-after-ddos-attack/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-05-01",
+      "image": "https://techcrunch.com/wp-content/uploads/2026/05/ubuntu-failed-update-ddos-attack.png?resize=1200%2C751",
+      "domain": "infra",
+      "tags": [
+        "Ubuntu",
+        "DDoS",
+        "供应链"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "在线切换校验和的功能漏掉了 unlogged 关系",
+      "summary": "SATYANARAYANA NARLAPURAM 发现它对 unlogged 关系也发 WAL，补丁改用 RelationNeedsWAL() 保护。",
+      "url": "https://www.postgresql.org/message-id/CAHg+QDeGrpZbNZdLjd_T4b43xKEEXZN0HGhkFm-1bkBdyzK7AQ@mail.gmail.com",
+      "author": "SATYANARAYANA NARLAPURAM",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据校验和",
+        "缺陷"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "walsender 提前退出的修复已经提交",
+      "summary": "Fujii Masao 确认补丁已进主干，Chao Li 此前在 macOS 上跑通了 make check-world。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwH8egmzpQ-Et+LXi_dUXDOyGVo_aG5dvm4A=jvG3VaK0w@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "跨会话访问临时表要不要修，提交者意见不一",
+      "summary": "Michael Paquier 反对回迁，Daniil Davydov 认为这就是缺陷，Jim Jones 追问下一步怎么走。",
+      "url": "https://www.postgresql.org/message-id/f851a9ff-c551-4e2d-b52a-e3c9fb0c0606@uni-muenster.de",
+      "author": "Jim Jones",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "争议"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "序列同步补丁在构建农场的失败已修复",
+      "summary": "根因是 Windows 上的 SSPI 认证没给 regress_seq_repl 配好，补上 auth_extra 后由 Amit Kapila 推送。",
+      "url": "https://www.postgresql.org/message-id/CAFPTHDad911HUMkHgD1KZk+WOvTopiBcYf4C_8Fqj1-sZk3xgw@mail.gmail.com",
+      "author": "Ayush Tiwari",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "序列",
+        "构建农场"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制 DDL 之争转向目录反解析的可行性",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoAg0UnVna7XmCo9a5HP=KZEPft4Ng5TB=cQ_BLawthSZw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "DDL"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "pgEdge 讲会话变量在 Postgres 里的用法",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/it-depends-using-session-variables-in-postgres",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会话变量"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解系列讲 authentication_timeout",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-authentication_timeout/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PG DATA 2026 最期待的演讲清单第二部分",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/04/30/pg-data-2026-the-talks-i-am-most-excited-about-part-2/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "五角大楼与 Nvidia、微软和 AWS 签约部署机密网络 AI",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/05/01/pentagon-inks-deals-with-nvidia-microsoft-and-aws-to-deploy-ai-on-classified-networks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AI",
+        "政府"
+      ],
+      "position": 17
+    }
+  ]
+}

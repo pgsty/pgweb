@@ -1,0 +1,467 @@
+{
+  "date": "2026-06-13",
+  "origin": "chronicle 2026-06-13: daily, pgnexus #176, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "规划器内存优化把峰值从 9.3 GB 压到 6.1 GB",
+      "summary": "子查询上拉会让 jointree 的搜索空间迅速膨胀，规划阶段的内存也跟着失控。Tomas Vondra 写了一组补丁，在连接路径生成、等价类处理以及归并连接和哈希连接过程中释放临时子列表，极端场景下峰值内存从 9.3 GB 降到 6.1 GB。Andrei Lepikhov 在评审中指出 list_concat() 创建的是数组而不是简单引用，同类问题可能散布在代码库各处。内存分析这边，Valgrind 的 massif 可用。",
+      "url": "https://www.postgresql.org/message-id/b7d94d36-77c3-4d0d-be74-c72cdfb25533@gmail.com",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "内存",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "研究者在 FFmpeg 中披露 21 个 0-day",
+      "summary": "Depth First 公布了一批 FFmpeg 漏洞，共 21 个 0-day，具体的 CVE 编号、补丁状态和各发行版的回补进度还要跟踪官方公告。FFmpeg 被浏览器、播放器、转码服务、社交平台以及 AI 数据管道广泛嵌入，一个解析漏洞可能由用户上传的文件、模型数据集或媒体处理队列触发。服务端处理用户媒体时应隔离 FFmpeg 进程、限制文件大小与格式、启用 seccomp 或容器沙箱，并把媒体解析器当作高危依赖来盯补丁。",
+      "url": "https://depthfirst.com/research/21-zero-days-in-ffmpeg",
+      "author": "Depth First",
+      "source": "Depth First",
+      "source_date": "2026-06-12",
+      "image": "https://depthfirst.com/uploads/r_ffmpeg.png",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "解析器",
+        "媒体"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "WASI 0.3 让组件模型更接近生产沙箱",
+      "summary": "Bytecode Alliance 发布 WASI 0.3，把它描述为组件模型生态更完整的一步，面向多语言组件互操作和更贴近现实的系统接口。Wasm 要成为数据库扩展、边缘函数、插件沙箱、CI 任务和无服务器工作单元的通用执行层，前提是有稳定的 I/O、网络和异步模型，这个版本正是朝这个方向的里程碑。评估数据库插件沙箱时，还要跟踪 Wasmtime 与 Wasmer 的支持、各 Preview 版本的兼容性和宿主 API 边界。",
+      "url": "https://bytecodealliance.org/articles/WASI-0.3",
+      "author": "Bytecode Alliance",
+      "source": "Bytecode Alliance",
+      "source_date": "2026-06-12",
+      "image": "https://bytecodealliance.org/images/avatar.png",
+      "domain": "infra",
+      "tags": [
+        "Wasm",
+        "沙箱",
+        "扩展"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "超过 400 个 Arch Linux 包被投毒",
+      "summary": "BleepingComputer 报道称超过 400 个 Arch Linux 包被入侵，用于分发 rootkit 和信息窃取程序，规模比前一天的初步报道大得多。AUR、Homebrew tap、npm、PyPI 和 Go 模块有一个共同点：安装过程往往会执行维护者提供的脚本或构建逻辑，而用户贡献生态的审核成本很高。使用社区包的机器应逐个审查 PKGBUILD、固定来源、在隔离环境中构建，生产环境尽量不要依赖未经审计的用户贡献包。",
+      "url": "https://www.bleepingcomputer.com/news/security/over-400-arch-linux-packages-compromised-to-push-rootkit-infostealer/",
+      "author": "BleepingComputer",
+      "source": "BleepingComputer",
+      "source_date": "2026-06-12",
+      "image": "https://www.bleepstatic.com/content/hl-images/2025/07/18/arch-linux-white.jpg",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "Linux",
+        "恶意软件"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Anthropic 研究模型辅助的 N-day 漏洞利用",
+      "summary": "Anthropic 的红队发布了一份关于 N-day 漏洞利用的研究。防御侧长期依赖一个假设：补丁发布到大规模武器化之间存在窗口期。如果大模型能显著缩短 N-day 利用代码的开发时间，这个窗口就会被压缩，补丁的时限目标、资产暴露面管理、规则生成和验证流程都需要相应提速。可行的做法是把模型辅助的漏洞利用写进威胁模型，收紧高危漏洞的修补时限，准备可复现的验证沙箱，减少直接暴露在公网的服务，并为自动生成的漏洞报告制定分诊策略。",
+      "url": "https://www.anthropic.com/research/n-days",
+      "author": "Anthropic Red Team",
+      "source": "Anthropic",
+      "source_date": "2026-06-12",
+      "image": "https://cdn.sanity.io/images/4zrzovbb/website/6d4a0d28992ade92d6fa63646fd9c9d318245c6c-2400x1260.jpg",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "漏洞管理"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "分区外部表的 DELETE ... USING 会删错行",
+      "summary": "Nikita Malakhov 的用例里按 ID 删除却命中了别的行，改写成 CTE 就正常，怀疑与删除时的行检查有关。",
+      "url": "https://www.postgresql.org/message-id/CAN-LCVOTB-L7gw89u4RMqOgAFQ34CnzywB_iuXie8iNwgmWREw@mail.gmail.com",
+      "author": "Nikita Malakhov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外部表",
+        "分区"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表的锁限制被建议简化",
+      "summary": "当前只放行 ACCESS SHARE 以支持 pg_dump，Amit Kapila 认为按锁模式过滤不值得，不如当普通表处理。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-sL7MVgbWh-_2YkC-dtHjZUEk8u1rBicM2+WQiFAUjKjw@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "锁"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Swift 重写 TrueType hinting 解释器",
+      "summary": "把高危解析器从 C 迁到内存安全语言，走的是减少缺陷类别、隔离风险组件的路子，而不是加更多扫描器。",
+      "url": "https://www.swift.org/blog/migrating-truetype-hinting-to-swift/",
+      "author": "Swift.org",
+      "source": "Swift.org",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "内存安全",
+        "系统编程"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "伪造的 Sentry 报错可以劫持编码 agent",
+      "summary": "agent 既读工单又能改代码、跑命令、开 PR，来自日志与工单的指令性文本应当默认视为不可信输入。",
+      "url": "https://tenetsecurity.ai/blog/agentjacking-coding-agents-with-fake-sentry-errors/",
+      "author": "Tenet Security",
+      "source": "Tenet Security",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "agent 安全",
+        "提示注入"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Actions 将强制自托管 runner 最低版本",
+      "summary": "长期不升级的自托管 runner 既积累安全风险，也可能因协议变化突然让工作流中断。",
+      "url": "https://github.blog/changelog/2026-06-12-github-actions-minimum-version-enforcement-timeline-for-self-hosted-runners/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "AMD 在 124 天后修复漏洞却未付赏金",
+      "summary": "这是 Ryzen Master 远程代码执行事件的延续，报道称研究者没有拿到承诺的一万美元赏金。",
+      "url": "https://www.gadgetreview.com/amd-stiffs-researcher-10000-bug-bounty-after-critical-security-flaw-takes-124-days-to-fix",
+      "author": "GadgetReview",
+      "source": "GadgetReview",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "漏洞赏金"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 给 Copilot 代码评审加上配置与控制",
+      "summary": "需要自行定义适用文件类型、禁止访问密钥、区分建议与阻塞，并跟踪误报率和评审耗时的变化。",
+      "url": "https://github.blog/changelog/2026-06-12-copilot-code-review-new-configurations-and-controls/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "代码评审",
+        "治理"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "copyObject 改用 typeof_unqual 后构建失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ai1JPsL_If6mbGX4@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "扩展访问 numeric 内部数据的接口仍待重设计",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJBL5DMac-ONGvSnmpVZEZTd2kRT1=xFy5K2yW16pov3dtzpiA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "API"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁进入第 48 版评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260613.114831.102648086806206558.ishii@postgresql.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "窗口函数"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "逐个梳理 GUC：default_table_access_method",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-defaulttableaccessmethod/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_kpart：一个新的 PostgreSQL 扩展",
+      "summary": "",
+      "url": "https://hexacluster.ai/blog/pg-kpart-postgresql-extension",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "分区"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Exasol 把 agent 控制面放进数据库",
+      "summary": "",
+      "url": "https://www.exasol.com/blog/exasol-agent-control-plane/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "agent"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "AI 生成的数据库变更能过关却难恢复",
+      "summary": "",
+      "url": "https://explainanalyze.com/p/death-by-a-thousand-cuts-the-ai-database-failure-you-cant-restore/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "迁移",
+        "风险"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Google Highway 团队建议不用 std::SIMD",
+      "summary": "",
+      "url": "https://github.com/google/highway/blob/master/g3doc/std_simd_comparison.md",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "SIMD",
+        "性能"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 控制台与 API 出现故障",
+      "summary": "",
+      "url": "https://www.cloudflarestatus.com/incidents/443x5fm5hzch",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "故障",
+        "控制面"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "SkyPilot 给 agent 代码提供 Kubernetes 沙箱",
+      "summary": "",
+      "url": "https://skypilot.ai/blog/sandboxes",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "沙箱"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Geiger 用来分析凭据泄露的影响半径",
+      "summary": "",
+      "url": "https://github.com/puck-security/geiger",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "凭据",
+        "应急响应"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "用 QEMU 与 OVMF 入门 UEFI HTTPS 启动",
+      "summary": "",
+      "url": "https://blog.yadutaf.fr/2026/06/12/introduction-to-uefi-https-boot-qemu-ovmf/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "裸金属",
+        "启动"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker 无服务器微调支持 Nemotron 模型",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-sagemaker-ft-nemotron-3/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "微调"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "EC2 机器学习容量块进入 GovCloud 区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-ec2-capacity-blocks-ml-govcloud/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容量预留"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Lake Formation 表权限扩展到 S3 底层数据",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-lake-formation-access-data-amazon-s3/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据湖",
+        "权限"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "EKS 在 Outposts 上的本地集群支持实例存储",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-eks-aws-outposts-ec2-instance-store/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "存储"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "在 macOS 上搭一套本地编码 agent",
+      "summary": "",
+      "url": "https://ikyle.me/blog/2026/how-to-setup-a-local-coding-agent-on-macos",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "本地部署"
+      ],
+      "position": 29
+    }
+  ]
+}

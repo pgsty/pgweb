@@ -4,7 +4,7 @@ from datetime import datetime
 
 from django.core.paginator import Paginator
 from django.db.models import Count, Max, Min
-from django.http import Http404, HttpResponseRedirect
+from django.http import Http404, HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_safe
 
@@ -145,6 +145,19 @@ def archive(request):
     context.update(sidecard())
     seo(context, 'PostgreSQL 博览归档', '按月份列出博览收录过的日期与条数。', '/info/archive/', noindex=True)
     return render(request, 'info/archive.html', context)
+
+
+@queryparams()
+@require_safe
+def thumb(request, key):
+    """The stored 500 × 300 WebP for one item. Immutable per key + update time."""
+    item = published().filter(key=key).exclude(thumb=None).only('key', 'thumb', 'updated_at').first()
+    if item is None or not item.thumb:
+        raise Http404('No picture')
+    response = HttpResponse(bytes(item.thumb), content_type='image/webp')
+    response['Cache-Control'] = 'public, max-age=604800'
+    response['ETag'] = '"{}-{}"'.format(key, int(item.updated_at.timestamp()))
+    return response
 
 
 @queryparams('q', 'page')

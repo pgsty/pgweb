@@ -1,0 +1,371 @@
+{
+  "date": "2026-04-30",
+  "origin": "chronicle 2026-04-30: pgnexus #132, planet 16",
+  "items": [
+    {
+      "tier": 1,
+      "title": "数据校验和可在运行中的集群里开关",
+      "summary": "数据校验和过去只在 initdb 时决定，事后要改就得停下实例跑 pg_checksums 或者重建。Daniel Gustafsson 在收到 Ayush Tiwari 的评审意见后，提交了在运行中的集群里启用或禁用数据校验和的补丁集，落地前又做了一轮编辑性修改。这意味着管理员不必完全停机或重建数据目录，就能给已有集群打开校验和，对排查静默数据损坏是一项实打实的运维改进。补丁进的是主干，现有版本仍需沿用离线流程。",
+      "url": "https://www.postgresql.org/message-id/6011EEE0-2D34-4A63-8B88-2437173486FE@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "数据校验和",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "procsignal barrier 竞态会让启动阶段死锁",
+      "summary": "Masahiko Sawada 确认 procsignal barrier 存在竞态：一个进程发出屏障信号时，另一个进程正处在槽位代号与 pid 初始化之间，等待函数便无限期等下去，表现为启动阶段死锁。Alexander Lakhin 用插入睡眠的补丁复现了这一场景。问题从 v15 一直存在到 master，只是早前版本用到屏障的地方少、命中概率低，去年 12 月扩大屏障用途的提交让报告多了起来。建议把修复回迁到 v15。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoAiPyHqCT2LrBJoMT4PYmr=QaKzzdLL9EM=B-4whV47xA@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "缺陷",
+        "回迁"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制支持 DDL 的两条路线再起争论",
+      "summary": "逻辑复制自动同步 DDL 的路线又吵了一轮，焦点是两条：现有的 JSON deparsing 把解析节点转成 JSON，再在订阅端还原；另一条从系统表变更反向重构语句。Amit Kapila 主张沿用前者，因为过滤和模式映射更灵活。Masahiko Sawada 担心维护成本，也不满它对输出插件不够中立。Andres Freund 指出反向重构会丢掉 ALTER COLUMN 的 USING 子句这类语义信息。事件触发器管理仍无定论。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KXbXSMvkZnZunhHCwDF-tV2SWs3rbQN2-bJsRn813BVA@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "DDL",
+        "设计讨论"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgagroal 2.1.0 补上健康检查与故障切换脚本",
+      "summary": "连接池 pgagroal 发布 2.1.0，补齐监控与高可用。新增查看 Prometheus 指标的 Web 控制台；故障切换后可执行脚本，用来通知其余备库；新增健康检查工作进程定期查询主备，pgagroal-cli ping 随之显示各服务器健康状态；启动时校验备库与主库版本是否一致。配置侧新增 pgagroal-config 命令，可交互生成配置，也可脚本化修改。测试套件亦重构并扩大覆盖。",
+      "url": "https://fluca1978.github.io/2026/04/30/pgagroal2.1.0.html",
+      "author": "pgagroal 项目",
+      "source": "Luca Ferrari 博客",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "高可用",
+        "发布"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pgBackRest 停止维护之后的备份路线选择",
+      "summary": "pgBackRest 停止维护，Christophe Pettus 给出一份替代品对照。他先说明没有能直接顶替的工具：其价值在并行备份恢复、块级增量、delta restore、异步 WAL 归档和多存储后端这一整组能力上。替代路径有四条：有独立备份主机的机房用 Barman，跑 S3 兼容存储的用 WAL-G，单个小集群可用 pg_basebackup 加脚本，云上则用 barman-cloud。他强调不必着急，先并行验证再迁移。",
+      "url": "https://thebuild.com/blog/after-pgbackrest/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-30",
+      "image": "https://thebuild.com/media/media/836a1478be6f463c94bbbc64cf0c8f0e.png",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "pgBackRest",
+        "选型"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "pgvectorscale 让向量索引落盘并支持混合检索",
+      "summary": "Christophe Pettus 实测 Tiger Data 的 pgvectorscale，并给出不靠 Elasticsearch 的混合检索写法。其核心是 StreamingDiskANN 索引：完整向量留在 SSD 上，内存只放压缩向量用于遍历估距，配合每维一到两位的统计二值量化，绕开 HNSW 必须常驻内存的限制；标签过滤在遍历中生效。他在 100 万条 1536 维向量上测得 p95 延迟约为 HNSW 的九分之一。",
+      "url": "https://thebuild.com/blog/on-pgvectorscale-and-hybrid-search-without-an-elasticsearch-sidecar/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-30",
+      "image": "https://thebuild.com/media/media/517aabda6645483b8c313947d977130a.png",
+      "domain": "pg",
+      "tags": [
+        "向量检索",
+        "扩展",
+        "索引"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Percona 给出逻辑复制延迟的系统排查方法",
+      "summary": "Percona 的 Jobin Augustine 把逻辑复制延迟的排查整理成一套依赖等待事件和统计信息的流程。文章拿积压 4.5TB 的真实案例做示范，说明 WalSenderWriteData 等待事件如何指向两端之间的网络问题。他把延迟归为三类：订阅端应用得慢、网络饱和、大事务突发。判断方法是把两端等待事件形态、LSN 差值和日志对照着看，据此区分瓶颈在发送端、订阅端还是链路本身。",
+      "url": "https://www.percona.com/blog/troubleshooting-logical-replication-delay-made-easy/",
+      "author": "Jobin Augustine",
+      "source": "Percona 博客",
+      "source_date": "2026-04-30",
+      "image": "https://www.percona.com/wp-content/uploads/2026/04/CaseLogicalLag.png",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "性能诊断",
+        "等待事件"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "EDB 发布 Postgres AI 数据与 AI 平台",
+      "summary": "EDB 称平台面向常驻运行的 AI 智能体，官方引用的预测是 2028 年企业 AI 数据库支出增长两倍。",
+      "url": "https://www.enterprisedb.com/blog/edb-postgresr-ai-sovereign-data-and-ai-platform-agentic-enterprise",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EDB",
+        "AI"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "语义缓存遇到易变查询会一直答错",
+      "summary": "作者主张在应用层用正则加 LLM 预分类识别易变问题，让它们绕开缓存直接问模型。",
+      "url": "https://www.pgedge.com/blog/volatile-queries-and-semantic-caching-how-to-make-sure-it-always-returns-the-right-answer",
+      "author": "Muhammad Aqeel",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "语义缓存",
+        "向量"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Parallel Apply 补丁集按评审意见更新",
+      "summary": "Zhijie Hou 说明了 HTAB、dshash、simplehash 三种哈希表的分工，并调整命名与补丁顺序。",
+      "url": "https://www.postgresql.org/message-id/TYRPR01MB14195C3DA27B155A7EF48582B94352@TYRPR01MB14195.jpnprd01.prod.outlook.com",
+      "author": "Zhijie Hou",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "并行"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "walsender 应在确认远端刷新前退出",
+      "summary": "Fujii Masao 直接在 WalSndDone() 里加循环，避免 CommandComplete 之后追加 COPY 消息违反协议。",
+      "url": "https://www.postgresql.org/message-id/997E77BA-DF0A-470B-9F9E-64A8A02C95D9@gmail.com",
+      "author": "Fujii Masao",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "缺陷"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 的字符串处理准备改用安全写法",
+      "summary": "Corey Huinker 给了两版改法：pg_mbcliplen 配 memcpy 防多字节截断，或干脆去掉字符串缓冲区。",
+      "url": "https://www.postgresql.org/message-id/CADkLM=eLnEf3aFSqDYgHZ8s4MmOsNLicei4HKAY_8Kxjpt2yaw@mail.gmail.com",
+      "author": "Corey Huinker",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "发布相关报错将带上模式限定的表名",
+      "summary": "Dilip Kumar 的补丁让 CREATE 和 ALTER PUBLICATION 的报错显示完全限定名，同名表不再有歧义。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uCFTiwBBhKnU=Vbxc+i_yRZ5zKxvsau5zay4CY59OXF8A@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "报错信息"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "按 max_log_size 截断日志的补丁重基主干",
+      "summary": "Jim Jones 把补丁同步到最新主干，这轮只是常规维护更新，没有新的评审反馈。",
+      "url": "https://www.postgresql.org/message-id/a474927a-a918-4a1f-9b9e-b7847a78c14b@uni-muenster.de",
+      "author": "Jim Jones",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "日志"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Cybertec 用视频博客记录 SCALE 23x 的社区活动",
+      "summary": "",
+      "url": "https://www.cybertec-postgresql.com/en/scale-23x-vlog-postgresql-in-southern-california/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PGConf India 演讲追踪元组在逻辑复制中的流转",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/following-a-tuple-through-postgresql-logical-replication-at-pgconf-india-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "会议"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Stormatics 说最好的 PostgreSQL 库刻意做到无聊",
+      "summary": "",
+      "url": "https://stormatics.tech/blogs/the-best-postgresql-databases-are-boring-on-purpose",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解系列讲 array_nulls 的作用",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-array_nulls/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "CALM 平台测试用来检验 PostgreSQL 策略",
+      "summary": "",
+      "url": "https://vibhorkumar.wordpress.com/2026/04/30/the-calm-platform-test-is-your-postgresql-strategy-enterprise-ready/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "选型"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Luca Ferrari 谈如何参与 PostgreSQL 开源贡献",
+      "summary": "",
+      "url": "https://fluca1978.github.io/2026/04/30/OpenSourceContributionPostgreSQL.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "lcov 升级后 PostgreSQL 覆盖率报告生成失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1035642.1777589139@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Percona 撰文说开源不会死，只是断了资金",
+      "summary": "",
+      "url": "https://percona.community/blog/2026/04/30/open-source-doesnt-die-it-gets-unfunded/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "PHP 改用 BSD 许可证",
+      "summary": "",
+      "url": "https://thebuild.com/blog/php-goes-bsd/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "许可证"
+      ],
+      "position": 23
+    }
+  ]
+}

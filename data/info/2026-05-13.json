@@ -1,0 +1,645 @@
+{
+  "date": "2026-05-13",
+  "origin": "chronicle 2026-05-13: daily, pgnexus #145, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 五月安全更新预警：11 个 CVE",
+      "summary": "Robins Tharakan 在 Planet PostgreSQL 上预告 2026 年 5 月的 PostgreSQL 安全更新，涉及 11 个 CVE，覆盖 14 到 18 全部受支持版本。他列出的方向包括 multirange 权限、内存溢出、pg_basebackup 的路径穿越、逻辑复制相关的 SQL 注入。正式公告尚未发布，可以先盘点实例、扩展和备份复制链路，等官方 release notes 再定升级动作。",
+      "url": "https://www.robins.in/2026/05/postgres-may-2026-security-update-11.html",
+      "author": "Robins Tharakan",
+      "source": "Planet PostgreSQL",
+      "source_date": "2026-05-13",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjxdU4L2d-r89-mMtLEPQX46GjfDWC9mPIdBRLJxZ7trWzJ9BXqm4iiLJ471btHEFLtZN6TSR6ykTukbMX6KJQJvj31e_6m5BBugI0OityVe6xP3OEq3plE0EmkTF-PMrW2nUgzsQXPr9XhU-b4Legz9ea0y1pVrRfWTm-UtKuSITW87gVNtRIAtm6wfk1d/w1200-h630-p-k-no-nu/image.png",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "CVE",
+        "升级"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pgcrypto 的 OpenPGP 漏洞藏了二十年",
+      "summary": "CVE-2026-2005 是 pgcrypto OpenPGP 代码路径上的堆缓冲区溢出，可以以数据库进程的身份执行任意代码。Christophe Pettus 指出这段代码是 2002 年移植的 C 实现，长期缺少模糊测试，又归在 contrib 下，审视强度低于内核，于是漏洞随每个版本一路发布了二十年。补丁在 18.3、17.9、16.13、15.17 和 14.22 里，只用 digest() 与 crypt() 的不受影响。",
+      "url": "https://thebuild.com/blog/twenty-years-in-pgcrypto/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgcrypto",
+        "安全",
+        "contrib"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "CloudNativePG 给出从 Crunchy PGO 迁移的配方",
+      "summary": "Snowflake 收购 Crunchy Data 后，Crunchy PGO v6 上的集群要考虑退路。Gabriele Bartolini 给了两条路：离线那条用 CloudNativePG 内置的 pg_dump 导入，停机随数据量增长；在线那条用逻辑复制持续同步，由 Publication 与 Subscription 两个 CRD 描述，切换时排空队列，停机以秒计。序列仍要手工同步，原生支持要等 PostgreSQL 19。",
+      "url": "https://www.gabrielebartolini.it/articles/2026/05/cnpg-recipe-24-migrating-from-crunchy-pgo-to-postgresql-18-with-cloudnativepg/",
+      "author": "Gabriele Bartolini",
+      "source": "Gabriele Bartolini 博客",
+      "source_date": "2026-05-13",
+      "image": "https://www.gabrielebartolini.it/articles/2026/05/cnpg-recipe-24-migrating-from-crunchy-pgo-to-postgresql-18-with-cloudnativepg/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "CloudNativePG",
+        "迁移",
+        "Kubernetes"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_statviz 1.0 给统计可视化接上 AI 分析",
+      "summary": "Jimmy Angelakos 发布 pg_statviz 1.0，给这套 PostgreSQL 统计可视化工具加了可选的 --ai 分析，支持 Claude、Gemini 和本地 Ollama 三种后端，并把用户派生的数据包裹起来以防提示注入。仪表盘、规则和大模型解释拼在一起能降低读统计信息的门槛，但错误建议和数据外传的风险也同时上升。把生产统计发给外部 API 之前，要确认配置项、角色名、复制槽和查询文本里有没有业务敏感信息。",
+      "url": "https://vyruss.org/blog/pg_statviz-1-0-released-ai-analysis.html",
+      "author": "Jimmy Angelakos",
+      "source": "Planet PostgreSQL",
+      "source_date": "2026-05-13",
+      "image": "https://vyruss.org/blog/images/pg_statviz_hires.png",
+      "domain": "pg",
+      "tags": [
+        "可观测性",
+        "AI",
+        "扩展"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "DuckDB 发布 Quack 远程客户端服务器协议",
+      "summary": "DuckDB 介绍了 Quack 协议，让 DuckDB 实例之间以客户端服务器的方式访问远程数据。文章把它明确放在原有的进程内架构之外，是新增能力而不是替代。DuckDB 已经是本地分析、ETL 和应用内 SQL 的常见选择，官方远程协议会把它推向服务化分析、边缘数据和轻量 BI，也可能省掉为共享数据而绕道 PostgreSQL 或 Flight SQL 的那一层。上生产前仍要看权限、并发和稳定性。",
+      "url": "https://duckdb.org/2026/05/12/quack-remote-protocol",
+      "author": "DuckDB",
+      "source": "DuckDB 博客",
+      "source_date": "2026-05-12",
+      "image": "https://duckdb.org/images/blog/thumbs/quack-release.jpg",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "协议",
+        "分析"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Kubernetes v1.36 推进工作负载感知调度",
+      "summary": "Kubernetes v1.36 引入 scheduling.k8s.io/v1alpha2 下的 Workload 与 PodGroup 对象，以及新的 PodGroup 调度周期，配合拓扑感知调度、成组调度和 DRA 的 ResourceClaim。GPU 训练和多 Pod 分布式任务靠逐个 Pod 调度效率很低，这批 API 进入主线，说明 AI 负载正在反过来塑造云原生控制面。平台团队可以跟踪它的成熟度，避免过早绑死私有调度器。",
+      "url": "https://kubernetes.io/blog/2026/05/13/kubernetes-v1-36-advancing-workload-aware-scheduling/",
+      "author": "Kubernetes",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "调度",
+        "批处理"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "dnsmasq 将发布六个严重漏洞的 CVE",
+      "summary": "dnsmasq 维护者在邮件列表上说明，CERT 即将发布六个严重安全漏洞的 CVE。dnsmasq 是那种看不见却到处都在的 DNS 与 DHCP 组件，家用路由器、小型办公网络、Linux 桌面、开发用虚拟网络和嵌入式设备里都有它，多个严重漏洞同时释放，意味着补丁传播和设备厂商的响应会很不均匀。可以先盘点基础镜像、路由器固件和虚拟机开发网络里的用法，等发行版公告后优先升级，升不动的边缘设备做网络隔离。",
+      "url": "https://lists.thekelleys.org.uk/pipermail/dnsmasq-discuss/2026q2/018471.html",
+      "author": "Simon Kelley",
+      "source": "dnsmasq-discuss 邮件列表",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "DHCP",
+        "安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "XBOW 披露 Exim 未认证远程代码执行漏洞",
+      "summary": "XBOW 公布了编号 CVE-2026-45185 的 Dead.Letter 漏洞，称在 Exim 中发现未认证的远程代码执行。Exim 是部署量很大的邮件传输代理，邮件服务器通常直接暴露在公网上，历史上又长期是自动化扫描的目标。运维 Exim 的团队应尽快关注上游与发行版的补丁和临时缓解措施：即便邮件不在核心业务链路上，这类主机也常常成为进入内网的第一跳。",
+      "url": "https://xbow.com/blog/dead-letter-cve-2026-45185-xbow-found-rce-exim",
+      "author": "XBOW",
+      "source": "XBOW 博客",
+      "source_date": "2026-05-12",
+      "image": "https://cdn.sanity.io/images/1lq2ca9s/production/188458dcff269bb13c2ee663ca1a6e5f825b7553-1200x627.png?rect=3%2C0%2C1194%2C627&amp%3Bw=1200&amp%3Bh=630&amp%3Bfm=jpg&amp%3Bq=80&amp%3Bfit=crop",
+      "domain": "infra",
+      "tags": [
+        "Exim",
+        "RCE"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 复盘内核 idle 优化触发的 QUIC 故障",
+      "summary": "Cloudflare 复盘了一个看上去与协议无关的故障：Linux 内核的一项 idle 优化会触发 QUIC 行为异常，形成他们所说的死亡螺旋，文章记录了从现象到定位再到修复的完整路径。基础设施团队遇到 QUIC 或 UDP 问题时习惯先怀疑网络或应用实现，这次复盘说明内核优化和 CPU 空闲策略同样可能被放大成协议层故障。跑高吞吐 QUIC、RPC、数据库代理或边缘网关的团队值得把 CPU 电源状态和尾延迟一起纳入观测。",
+      "url": "https://blog.cloudflare.com/quic-death-spiral-fix/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-05-12",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW46EVPXPR2FQVM566WBCSJQ.png",
+      "domain": "infra",
+      "tags": [
+        "QUIC",
+        "Linux 内核",
+        "性能"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Ardent 把 Postgres 沙箱做成开发基础设施",
+      "summary": "Launch HN 项目称零迁移、几秒拉起 Postgres 沙箱，用于测试与预览环境。",
+      "url": "https://www.tryardent.com/",
+      "author": "",
+      "source": "Ardent",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "开发环境"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Petri 给每个测试分配独立的 Postgres 库",
+      "summary": "5432 直通、5433 按连接 fork，用 CREATE DATABASE ... TEMPLATE 建库，断开即清理。",
+      "url": "https://github.com/taktekhq/petri",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "CI"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "SPLIT PARTITION 会造出边界重叠的分区",
+      "summary": "拆分含 DEFAULT 的分区时漏检上边界，开启分区剪枝后查询会返回空结果。",
+      "url": "https://www.postgresql.org/message-id/C18878AB-DEB2-4A61-9995-A035DD644B81@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "缺陷"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志表补丁进入第 33 版",
+      "summary": "Peter Smith 建议把位图换回枚举，并收紧冲突表权限，只放开 DELETE 与 TRUNCATE。",
+      "url": "https://www.postgresql.org/message-id/CAHut+PtWV=Y76LTNXiBZgFb3fB_XzOSP5FQ8qcGO0N83vB8jcw@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突处理"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 拟为外键连接引入连接统计信息",
+      "summary": "Alexandra Wang 的补丁想改进连接的代价估算，目前先征求 catalog 设计层面的意见。",
+      "url": "https://www.postgresql.org/message-id/CACJufxFOe4rx=J+0+=_g+K=bnhxs1OUdMJCgQ+tV0KdkQ_2aeQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "统计信息"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "贪心连接搜索算法有望取代 GEQO",
+      "summary": "测试里 GOO 稳定在 84 到 88 秒，GEQO 则在 51 到 575 秒之间大幅波动。",
+      "url": "https://www.postgresql.org/message-id/CANWCAZZqm9wcn_W0S=V_WSt2h6zGUSQTfz3nFOUoj97=r5z_9A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "连接"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "backend_flush_after 与内核回写策略",
+      "summary": "Christophe Pettus 梳理这组写回参数，提醒尾延迟同样取决于 fsync 与页缓存行为。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-backendflushafter/",
+      "author": "",
+      "source": "thebuild.com",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "性能"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Aurora DSQL 新增五个可用区域",
+      "summary": "AWS 同时给出连接驱动与连接串的最佳实践，兼容 PostgreSQL 的分布式 SQL 铺得更开。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-aurora-dsql-five-additional-aws-regions/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Aurora DSQL",
+        "分布式 SQL"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 把 Browser Run 迁到 Containers",
+      "summary": "迁移后提高了用量上限、性能与可靠性，容器状态用 D1 和 Queues 管理。",
+      "url": "https://blog.cloudflare.com/browser-run-containers/",
+      "author": "",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "浏览器自动化",
+        "容器"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "Docker 提醒 NVD 富化收窄影响容器扫描",
+      "summary": "建议把 CNA、厂商公告与 CISA KEV 一并接入，不要把没有 CVSS 当成没有风险。",
+      "url": "https://www.docker.com/blog/nist-narrows-the-nvd-what-container-security-programs-should-reassess/",
+      "author": "",
+      "source": "Docker 博客",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器安全",
+        "CVE"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 2,
+      "title": "扫描发现欧洲政府站点暴露上千个 phpMyAdmin",
+      "summary": "Internet Cleanup Foundation 的基线扫描还指出政府邮件加密普遍不达标。",
+      "url": "https://internetcleanup.foundation/2026/05/european-governments-3000-tracking-sites-1000-phpmyadmins-and-99pct-poorly-encrypted-email-introducing-securitybaseline-eu/",
+      "author": "",
+      "source": "Internet Cleanup Foundation",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "攻击面",
+        "phpMyAdmin"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "postgres-contrib 汇总 2026 年第 18 周贡献",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/82/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "pg_duckdb 让 Postgres 借 DuckDB 跑分析",
+      "summary": "",
+      "url": "https://github.com/duckdb/pg_duckdb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DuckDB",
+        "扩展"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "补丁移除 EUC-KR 例程里无效的 SS2/SS3 处理",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/agQIymqNr3pdVkqi@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "编码"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "孤立对象依赖补丁加入锁与权限检查断言",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmobtzkG9HzGtDXbgb3KVE46qHuSvGcuKHgAGQ1aejCoLLw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "依赖",
+        "并发"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "子查询上拉补丁收到七个方面的审阅意见",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/bdb5eb21-9aac-41bb-9514-66fd11e28d8b@yandex.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Aurora DSQL 的驱动、连接串与连接实践",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/amazon-aurora-dsql-connections-drivers-strings-and-best-practices/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Aurora DSQL"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "ClickHouse 发布 26.4 月度版本",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/clickhouse-release-26-04",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Avride 用 ClickHouse Cloud 做自动驾驶分析",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/avride",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "用 AWS Glue 过滤和转换 DynamoDB 导出",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/filter-transform-and-load-your-dynamodb-table-exports-using-aws-glue/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DynamoDB",
+        "Glue"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "一篇文章细数 SQL 里容易写错的语义",
+      "summary": "",
+      "url": "https://chreke.com/posts/sql-incorrect-by-construction",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQL"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Chrome 的 IndexedDB 换成 SQLite 后端",
+      "summary": "",
+      "url": "https://chromestatus.com/feature/5161589557821440",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "浏览器"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Redshift 推出基于 Graviton 的 RG 实例",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-redshift-rg-instances-powered-by-graviton/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Redshift",
+        "Graviton"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Karpenter 支持 ARC 的可用区切换",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/karpenter-arc-zonal-shift/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Karpenter",
+        "EKS"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 托管实例支持按计划伸缩",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-lambda-managed-instances/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Lambda"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "ENA Express 支持跨可用区流量",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/ena-express-availability-zones/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "EC2",
+        "网络"
+      ],
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "AWS Security Agent 支持全仓库代码审查",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-security-agent-full-repository-code-review/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "代码审查",
+        "安全"
+      ],
+      "position": 36
+    },
+    {
+      "tier": 3,
+      "title": "一篇离开 GitHub 转投 Forgejo 的记录",
+      "summary": "",
+      "url": "https://jorijn.com/en/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Forgejo",
+        "开源治理"
+      ],
+      "position": 37
+    },
+    {
+      "tier": 3,
+      "title": "Trail of Bits 分叉 Go 工具链补上 fuzzing",
+      "summary": "",
+      "url": "https://blog.trailofbits.com/2026/05/12/go-fuzzing-was-missing-half-the-toolkit.-we-forked-the-toolchain-to-fix-it./",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Go",
+        "模糊测试"
+      ],
+      "position": 38
+    },
+    {
+      "tier": 3,
+      "title": "Obsidian 说明插件生态的下一步",
+      "summary": "",
+      "url": "https://obsidian.md/blog/future-of-plugins/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "插件生态"
+      ],
+      "position": 39
+    },
+    {
+      "tier": 3,
+      "title": "数据中心供电与选址争议进入地方政治",
+      "summary": "",
+      "url": "https://fortune.com/2026/05/12/lake-tahoe-data-center-49000-residents-power-source/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据中心",
+        "电力"
+      ],
+      "position": 40
+    }
+  ]
+}

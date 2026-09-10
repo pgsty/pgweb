@@ -1,0 +1,500 @@
+{
+  "date": "2026-07-14",
+  "origin": "chronicle 2026-07-14: pgnexus #207, news 1, planet 4, daily 11",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Odyssey 1.5.1 发布，重构扩展协议支持",
+      "summary": "Yandex 发布多线程连接池 Odyssey 的 1.5.1。新增简单共享池、事务池的 pool_pin_on_listen 选项、cpu_affinity、用 aws-lc 构建、SSLKEYLOGFILE 支持，以及 avg_wait_time 和 total_wait_time 两个排队指标。扩展协议支持经过重构，修掉多处协议违规并提升流水线性能，取消请求的竞态也一并修复。",
+      "url": "https://pgsql.cc/about/news/odyssey-151-3343/",
+      "author": "Yandex",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "Odyssey"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 发布 pg_re2，把 RE2 引入 PostgreSQL",
+      "summary": "ClickHouse 发布 pg_re2，提供基于 RE2 的函数、算子和索引支持，厂商称自有基准里函数快 1.8 到 8.6 倍，B-tree 与 GIN 检索快 1.1 到 1.8 倍。另一个动机是让正则语义与 pg_clickhouse 的推送路径保持一致。RE2 以有限自动机为基础，运行时间上界更可控，但这个保证来自受限的特性集，不是无成本替换，切换前应以原生结果为基准做差分测试。",
+      "url": "https://clickhouse.com/blog/introducing-pg_re2-regex-in-postgres",
+      "author": "ClickHouse",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "正则",
+        "扩展",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的 GRAPH_TABLE 会改写成普通连接",
+      "summary": "Hans-Jürgen Schönig 解释 PostgreSQL 19 的 SQL/PGQ 本质上是解析层的改写：图查询被转成针对底层表的普通 join，交给标准优化器规划，所以性能可预期，现有索引直接生效，EXPLAIN 输出的也是普通连接树。索引策略与外键列一致，反向遍历要在目标列上单独建索引。当前不支持可变长度路径、ANY SHORTEST 和路径变量绑定，这些仍要用 WITH RECURSIVE。",
+      "url": "https://www.cybertec-postgresql.com/en/how-sql-pgq-rewrites-to-joins-on-postgresql-19/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "Cybertec",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ",
+        "图查询",
+        "PG19"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "批量时钟扫描补丁到 v6，VACUUM 快约 19%",
+      "summary": "Greg Burd 提交了三个补丁：把 clock sweep 批处理以减少 nextVictimBuffer 上的原子竞争；用 HOT 和 COOL 两态的冷却阶段驱逐器取代按 usage_count 的扫描；移除 BufferAccessStrategy。AWS m6id.metal 上的基准显示批量 UPDATE 慢约 5%，批量 INSERT 慢约 8 到 10%，VACUUM 快约 19%。回退主要来自失去 ring 策略的写回延迟。",
+      "url": "https://www.postgresql.org/message-id/96dc1db7-58a2-41ba-ae2e-bea86fa2fb3a@app.fastmail.com",
+      "author": "Greg Burd",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "驱逐",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "把原子操作搬到 C11 stdatomic 的第四版补丁",
+      "summary": "Greg Burd 提交第四版补丁，把 port/atomics.h 重新实现在 C11 <stdatomic.h> 之上，由 -Duse_stdatomic 选项启用，默认关闭。关键发现是读操作必须用 seq_cst 而不是 relaxed，因为传统 volatile 读隐含的编译器排序需要等价保证，这由 RISC-V 上并行哈希连接的失败测试验证。写操作用 relaxed，避开 aarch64 上约 5 倍的争用开销。",
+      "url": "https://www.postgresql.org/message-id/f5e5d7d8-fb92-4b83-b5c9-65b97640d34f@app.fastmail.com",
+      "author": "Greg Burd",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "原子操作",
+        "可移植性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "文档将警告授予 TRIGGER 与 REFERENCES 的风险",
+      "summary": "Robert Haas 提交文档补丁，警告授予 TRIGGER 和 REFERENCES 权限的安全风险：这两种权限都可能让被授权方以表所有者的身份执行自己选择的代码，措辞参考了现有的 pg_execute_server_program 说明。Nathan Bossart 建议做成 note 或 warning 标记。Greg Sabino Mullane 等人主张干脆移除这两个权限，Tom Lane 指出它们是 SQL 规范要求的。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmobrjCHBuWHrvX3=2vndUCO2thUOdevrCcMDFW86cqCYvw@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限",
+        "安全",
+        "文档"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "缺少 backup_label 的基础备份将拒绝启动",
+      "summary": "David Steele 的补丁给 ControlFileData 加一个 backupLabelRequired 标志，确保 pg_basebackup 生成的基础备份在缺少 backup_label 文件时无法恢复。补丁此前因长期无人跟进被撤回，后来重新提交了简化版。Solai 在 PostgreSQL 20devel 上测过：恢复后缺 backup_label 时集群拒绝启动并报错。标志在写备份控制文件时设置，恢复期间检查。",
+      "url": "https://www.postgresql.org/message-id/CAF0whueXubW3F4aaHOzMTbz92smb1bQ1MY_MiqXnmh-t1JmeYQ@mail.gmail.com",
+      "author": "David Steele",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare Precursor 把 bot 判定改成会话级",
+      "summary": "Precursor 在页面注入客户端脚本，持续产生信号并由 Cloudflare 更新会话状态，可以选择尽量少打扰用户，或者先用轻量 challenge 建立完整验证。官方文档说明它取代 JavaScript Detections 的单次执行，但不替代 challenge 页面；启用之后可能让已有的 clearance 失效，或在会话中再次要求验证。稳妥做法是先在低风险 zone 分流，比较分数分布、转化率和误封申诉。",
+      "url": "https://blog.cloudflare.com/introducing-precursor/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-07-14",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KX7293QZ61Y5A1GE93AGE3KX.png",
+      "domain": "infra",
+      "tags": [
+        "Bot 管理",
+        "安全"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 1,
+      "title": "报告称 Grok Build 会上传整个仓库的 Git bundle",
+      "summary": "一份抓包报告称，在特定版本和配置下观察到 Grok Build 独立上传 Git bundle，其中包含 agent 被要求不要读取的文件和提交历史。报告本身明确说没有证明每个用户都受影响、xAI 用这些数据训练或所有文件都被收集，xAI 的产品页把该工具标为早期测试版。稳妥做法是暂停在敏感仓库使用该客户端，保留日志，在隔离网络复测出网行为并轮换凭据。",
+      "url": "https://www.penligent.ai/hackinglabs/grok-build-cli-repository/",
+      "author": "Penligent",
+      "source": "Penligent",
+      "source_date": "2026-07-13",
+      "image": "https://www.penligent.ai/hackinglabs/wp-content/uploads/2026/07/Grok-Build-CLI-Repository-Uploads-What-the-Wire-Capture-Proved.png",
+      "domain": "infra",
+      "tags": [
+        "编码 agent",
+        "数据外泄"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "hackers 讨论为窗口函数加 QUALIFY 子句",
+      "summary": "难点是 PostgreSQL 没有通用的行过滤节点，ExecResult 不支持逐行循环过滤。",
+      "url": "https://www.postgresql.org/message-id/DJYI5N41GXF4.2VMPVJZ1HQN8P@gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "窗口函数"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "walsummarizer 在时间线切换时卡住的补丁进入审查",
+      "summary": "Andrey Borodin 指出恢复侧存在对称缺陷，回退路径每页都会重开 segment。",
+      "url": "https://www.postgresql.org/message-id/5FEEA309-3417-43D6-8961-67D311C680D3@yandex-team.ru",
+      "author": "Robert Haas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "备份"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "JSON_TABLE 的 PLAN 子句修复已推送提交",
+      "summary": "0005 修掉 NESTED PATH 约 3.7 倍的性能回退，0006 把冗余错误改成断言。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdsc53QMgb9b5_gz-JZHdZN1d_H9azobn0=bGVodQKb9OQ@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON_TABLE"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "清除可见性位的 WAL 修复发到 v5",
+      "summary": "heap_update() 在两个位处于同一 VM 页时注册了错误的缓冲区标签。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZMzhYdADNjpTzJaQbvH4cYr22-wSzuS=atMVtD_+W6yA@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可见性图",
+        "WAL"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "运行时过滤器倾向在规划期生成候选路径",
+      "summary": "后处理方案不影响计划结构，却算不进代价，EXPLAIN 的行数也会对不上。",
+      "url": "https://www.postgresql.org/message-id/3b3867d4-522e-4c8d-98cc-6018ee8bdd31@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "Bloom filter"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "hba 新格式拟先支持 JSONC 再扩到 JSON5",
+      "summary": "Tristan Partin 的补丁同时覆盖递归下降解析器与增量解析器。",
+      "url": "https://www.postgresql.org/message-id/DJYMTU0CKKBE.KRG5EMVMV4BB@partin.io",
+      "author": "Tristan Partin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置",
+        "解析器"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "pg_buffercache 按关系汇总的补丁去掉内存上限",
+      "summary": "Robert Haas 认为超出 work_mem 极罕见，写进文档比直接报错更合适。",
+      "url": "https://www.postgresql.org/message-id/CAONt3B0VnKVaM=Ka-hm5+y=APGrnn=0985Ldp2wZLxLxzkaeQw@mail.gmail.com",
+      "author": "Khoa Nguyen",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_buffercache"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Regina Obe 讲怎样把 pg_timetable 装成 Linux 服务",
+      "summary": "这是用 pg_timetable 替代 pgAgent 系列的第二篇。",
+      "url": "https://www.postgresonline.com/journal/index.php?%2Farchives%2F424-Replacing-pgAgent-with-pg_timetable-Part-2-Installing-pg_timetable-as-a-service-in-Linux.html=",
+      "author": "Regina Obe",
+      "source": "Postgres OnLine Journal",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "调度",
+        "运维"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "Lobsters 把站点迁到 SQLite",
+      "summary": "公开条目没有给出容量、复制与灾备的工程细节，只能说明部署确实变了。",
+      "url": "https://lobste.rs/s/ko1ji1",
+      "author": "Lobsters",
+      "source": "lobste.rs",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "运维"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "三档 GPT-5.6 模型在 Amazon Bedrock 转入可用",
+      "summary": "缓存断点可以复用固定系统指令与工具定义，各档模型的可用区域并不相同。",
+      "url": "https://aws.amazon.com/blogs/machine-learning/openai-gpt-5-6-sol-terra-and-luna-are-now-generally-available-on-amazon-bedrock/",
+      "author": "AWS",
+      "source": "AWS 博客",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Bedrock",
+        "模型接入"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 2,
+      "title": "clawk 给编码 agent 每个项目一台一次性虚拟机",
+      "summary": "工作树与会话状态分开持久化，出网走虚拟机之外的 DNS 感知白名单。",
+      "url": "https://github.com/clawkwork/clawk",
+      "author": "clawk",
+      "source": "GitHub",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "沙箱",
+        "agent"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 2,
+      "title": "Meta 把 Louisiana 的园区扩到 5 GW",
+      "summary": "公告列出七座燃气机组、三套电网级电池和核电增容等供电安排。",
+      "url": "https://about.fb.com/news/2026/07/teachers-local-businesses-win-as-meta-expands-louisiana-data-center/",
+      "author": "Meta",
+      "source": "Meta",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据中心",
+        "电力"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "OpenSSL 修复补丁去掉与属性检查重复的 Assert",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/9AFE0980-BE95-446F-8F58-2FEFE405A4F2@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "REASSIGN OWNED 过滤订阅的补丁收到断言建议",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uAAs9+9SY+LJDa_+d_LfX7azOR1zjj8px8OGi3Zy=MB6g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "订阅改指到 PG19 之前的发布端将直接报错",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+6JnnCs_2=Odtz0PK7_Kq+CxZeo+ob8ND42-NQiZ9zEw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别的标识符改名推迟到缺陷修完之后",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260714.212047.525303007784395461.ishii@postgresql.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "在线改校验和的补丁仍有几处读了旧字段",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHWVJhF1ONypFiDRQ+B-DSGdb7my4cs-Ekq6gMYKRbywXJbR8A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "pg_log_query_plan 讨论加上 queryId 输出",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/f582bec3-22e8-4cdf-bd4b-37d69efb300f@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "key joins 把存储相关改动拆成独立提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/cb01993a-c540-4c6c-9607-3788fa74e40a@malkut.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Pettus 逐项讲 GUC：escape_string_warning",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-escape_string_warning/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Jimmy Angelakos 直播讲怎样修糟糕的 SQL",
+      "summary": "",
+      "url": "https://vyruss.org/blog/linkedin-live-fixing-bad-sql-in-postgresql.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Noisia 收集 PostgreSQL 的破坏性负载用于故障演练",
+      "summary": "",
+      "url": "https://github.com/lesovsky/noisia/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Logseq 2.0 的数据库版本进入公开测试",
+      "summary": "",
+      "url": "https://github.com/logseq/logseq/releases/tag/2.0.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "有用户投诉 GPT-5.6 Sol 会自行删除文件",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/07/14/openais-new-flagship-model-deletes-files-on-its-own-people-keep-warning/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 33
+    }
+  ]
+}

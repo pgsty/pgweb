@@ -1,0 +1,288 @@
+{
+  "date": "2026-08-14",
+  "origin": "chronicle 2026-08-14: pgnexus #238, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "io_method 与 io_workers 决定谁来执行 I/O",
+      "summary": "PostgreSQL 18 的异步 I/O 落地后，由谁执行 I/O 取决于 io_method 和 io_workers。sync 退回同步行为，只用于排查；默认的 worker 走后台进程池；io_uring 交给 Linux 内核最快，但需要 liburing 构建与放行的安全策略，容器里常被禁止，此时服务器会直接启动失败。io_workers 默认 3、上限 32，可在线调整，冷读负载建议提到 CPU 线程数的四分之一到一半。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-io_method-and-io_workers/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-14",
+      "image": "https://thebuild.com/media/media/06e00f4e7fee4939b6abe72f17af8bc4.png",
+      "domain": "pg",
+      "tags": [
+        "PG18",
+        "异步 I/O",
+        "参数"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "querymem 扩展在执行前估算查询内存上限",
+      "summary": "work_mem 按操作而非按查询生效，一条语句里的多个排序、哈希节点各占一份，哈希节点还要乘 hash_mem_multiplier，预估总量没有趁手工具。作者用 raw_parser() 解析、planner() 生成计划，再遍历计划树累加倍率乘上 work_mem 得到最坏情况，做成扩展 querymem 挂在 ExecutorStart 钩子上，可记日志或拒绝超限查询。在 pgbench 上，含两个哈希的连接估到 28 MB。",
+      "url": "https://www.pgedge.com/blog/lets-build-a-postgres-extension-for-estimating-memory-usage",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "内存",
+        "work_mem"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "连续聚合的迟到数据可能永远不会被重算",
+      "summary": "TimescaleDB 的连续聚合靠 invalidation 日志和定时刷新保持同步，start_offset 是回溯窗口，end_offset 是新鲜度下限。Damaso Sanoja 指出一个容易忽略的坑：迟到写入若落在已物化且超出回溯窗口的 bucket 上就永远不会重算，聚合结果静默保持错误值，而 real-time aggregation 只覆盖 watermark 之后尚未物化的部分，救不了这种情况。",
+      "url": "https://www.tigerdata.com/blog/continuous-aggregate-refresh-demystified",
+      "author": "Damaso Sanoja",
+      "source": "TigerData 博客",
+      "source_date": "2026-08-14",
+      "image": "https://assets.tigerdata.com/blog/2026/08/Continuous-Aggregate-Refresh.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "连续聚合"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "分区合并拆分静默丢弃 RLS，pg19 先改为报错",
+      "summary": "PostgreSQL 19 计划引入的 MERGE/SPLIT PARTITIONS 在合并拆分时会静默丢弃分区级属性，包括 RLS 策略、ACL、索引等。多位审阅者认为静默丢弃 RLS 是安全隐患，文档也只用「等等」一笔带过。Alexander Korotkov 提议 pg19 先对涉及 RLS 的操作直接报错，完整支持推迟到 pg20，实现该检查的补丁已经提交。",
+      "url": "https://www.postgresql.org/message-id/7F07A4B7-CEAE-4A6F-8FC6-B9A051E45865@yesql.se",
+      "author": "Alexander Korotkov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "RLS",
+        "PG19"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "WAL 压缩补丁到 v9，wal_compression 默认选 zstd",
+      "summary": "Andrey Borodin 的 WAL 压缩补丁系列更新到 v9：复用 zstd 上下文加快压缩解压、在按 FPI 压缩之外增加整条记录压缩，跨记录流式压缩仍在开发。审阅者指出 v8 与新提交冲突。v9 完成变基，修掉 EXEC_BACKEND 下 XLOGShmemAttach() 的 Windows bug，文档同步注明 wal_compression = on 默认优先选用 zstd。",
+      "url": "https://www.postgresql.org/message-id/SY7PR01MB10921F68279E006DFE75222E2B6DA2@SY7PR01MB10921.ausprd01.prod.outlook.com",
+      "author": "Andrey Borodin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩",
+        "zstd"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "Neon 集成的 agent skills 进入 Vercel CLI",
+      "summary": "安装集成时 CLI 会自动为项目建库并配好 skills，编码 agent 初始化后可直接访问数据库。",
+      "url": "https://neon.com/blog/neon-skills-landed-in-the-vercel-cli",
+      "author": "Carlota Soto",
+      "source": "Neon 博客",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "AI"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "索引统计与表统计拆分为独立类型已提交",
+      "summary": "提交 f2ccb8e6c591 落地：索引条目直接返回副本，表条目先并入子事务计数；下一步转向 relfilenode。",
+      "url": "https://www.postgresql.org/message-id/an5dz-RpHT_yK8XX@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "事务中途刷新统计信息补丁更新到第二版",
+      "summary": "新版把索引统计独立成型，增加 pgStatFlushInProgress 防重入，未变化条目用 memcmp 跳过取锁。",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0u+mb3H7in2=ZjZE4P6Aujm=oph1KOTQLtoOZD2phyOvw@mail.gmail.com",
+      "author": "Sami Imseih",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgstat"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "基于 XID 年龄的复制槽失效机制讨论进展",
+      "summary": "备机上的 synced slot 不再豁免检查；但过期 catalog_xmin 可能落在主库物理槽上，仍未覆盖。",
+      "url": "https://www.postgresql.org/message-id/an6cWBJAc7QN1F2A@bdtpg",
+      "author": "Bertrand Drouvot",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "并行 vacuum 的索引进度如何暴露仍有分歧",
+      "summary": "无权限用户查 pg_stat_activity 时 leader_pid 为空，视图聚合失效；数组还是每 worker 一行也未定。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACWWLroPgkB4SV0Jo6is9GmSLmJSCGmCFMuXWtovYg4AmA@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "监控"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Parquet 与 Iceberg 分工概览",
+      "summary": "Parquet 是列式文件格式，Iceberg 是记录一张表由哪些文件构成的元数据层；Postgres 可经扩展读取 Parquet。",
+      "url": "https://www.commandprompt.com/blog/parquet-and-iceberg-an-overview/",
+      "author": "Joshua Drake",
+      "source": "Command Prompt 博客",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据湖",
+        "分析"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "发布的 TABLES IN SCHEMA 增加 EXCEPT 子句支持",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uAg-pMq37fBd7SAyGVwCCPyG1pGQAOEDkMU7kJuLUN3KQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "共享缓冲区哈希表重构补丁的并发删除方案之争",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAE8JnxPvC5S-EHzAhBhdZ-Gp6wQqJSK0pc8DZxPOxcn_ZKtUzg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Checkpointer 写合并补丁审查未发现正确性问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/BDE96C3B-3179-4A5E-B3C2-005D35E4686C@yandex-team.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检查点"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "注入点支持条件字符串的两个补丁已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/an6yuHhq-gJ2jNao@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "物化视图刷新查询该用 ALTER 而非 CREATE OR REPLACE",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+renyW8xM3wycsYCk7nDkx4ytTNLNntaGh5-4CXNi-ns8dCOw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "物化视图"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别文档补充列引用歧义导致恢复失败的警告",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260814.111213.1896056991296813109.ishii@postgresql.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "文档"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "log_statement 文档更新说明日志收集器的阻塞行为",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABV9wwPJ6jLcPzACU5adLormC39paSpRTfZUkcWbuPzDSJSNiQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "文档"
+      ],
+      "position": 18
+    }
+  ]
+}

@@ -1,0 +1,473 @@
+{
+  "date": "2026-08-06",
+  "origin": "chronicle 2026-08-06: pgnexus #230, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Neon 推出分支感知的 S3 兼容对象存储",
+      "summary": "Neon 把分支能力从数据库延伸到了文件。新推出的 Neon Object Storage 是直接集成在 Neon 后端的 S3 兼容对象存储，与既有的数据库分支机制打通：创建分支时，对象存储里的相关文件会一并纳入该分支，几秒之内就能得到数据库与文件的完整隔离副本。对于把用户上传、模型产物或报表文件与关系数据放在一起的应用，这意味着测试环境不必再单独复制一份存储桶，也不必自己维护两套数据的版本对齐。",
+      "url": "https://neon.com/blog/building-neon-object-storage",
+      "author": "Carlota Soto",
+      "source": "Neon 博客",
+      "source_date": "2026-08-06",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/building-neon-object-storage/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "对象存储",
+        "分支",
+        "Neon"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "CloudNativePG 用镜像目录统一分发扩展",
+      "summary": "CloudNativePG 1.29 引入的 ClusterImageCatalog 让扩展镜像与运行镜像一同分发，集群清单只需按名称引用扩展，镜像地址、库路径和环境变量由 operator 从匹配当前大版本的目录项解析。扩展升级不必再逐个集群改镜像摘要，也能避免 ABI 不匹配。前提是 PostgreSQL 18 的 extension_control_path 与 Kubernetes 1.35，社区目录目前只收录七个扩展。",
+      "url": "https://www.gabrielebartolini.it/articles/2026/08/cnpg-recipe-26-extension-image-catalogs/",
+      "author": "Gabriele Bartolini",
+      "source": "作者博客",
+      "source_date": "2026-08-06",
+      "image": "https://www.gabrielebartolini.it/articles/2026/08/cnpg-recipe-26-extension-image-catalogs/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "扩展",
+        "CloudNativePG"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "ignore_checksum_failure 只该用于抢救数据",
+      "summary": "Christophe Pettus 的 GUC 逐项谈这一期讲 ignore_checksum_failure：打开之后页面校验和失败由错误降级为警告，损坏页照样进入共享缓冲区。它默认关闭，超级用户可以在会话内 SET，但影响是集群级的，损坏页会被所有 backend 读到，一旦被修改还会按损坏内容重算校验和，抹掉证据。唯一合理的用法是既无可用备份也无干净副本时，在文件级副本上开一个会话 COPY 抢救数据，随后立刻关掉。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-ignore_checksum_failure/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-06",
+      "image": "https://thebuild.com/media/media/a7db3130d1744098bedd412c5c486df5.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "数据损坏",
+        "运维"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ControlCom 用 TimescaleDB 承接月三亿数据点",
+      "summary": "ControlCom Connect 由六人团队开发，把数千个工业设施资产的遥测数据写入 TimescaleDB，每月处理三亿多个数据点。团队比较 InfluxDB 和 AWS 方案之后选择它，理由是作为 PostgreSQL 扩展不必引入新查询语言和额外的连接池。边缘服务器本地跑一份实例保证断网可用，再与 Tiger Cloud 上的中心实例同步。厂商称成效包括仪表盘即时重新分桶，以及查出一笔十六万美元的水电账单计费错误。",
+      "url": "https://www.tigerdata.com/blog/controlcom-case-study-tiger-data",
+      "author": "Andrew Stebbins",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-08-06",
+      "image": "https://assets.tigerdata.com/blog/2026/08/ControlCom-Community-Spotlight-1.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "TimescaleDB",
+        "案例"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge：把数据库当计算层而不是停车场",
+      "summary": "pgEdge 的 Antony Pegg 认为 PostgreSQL 已经是 Agentic AI 的默认数据库，但多数团队仍只把它当成存储。文章把生产负载归为语义检索、智能体草稿区、检索管道和工作流编排四类，主张用数据库自身的能力承接协调：SELECT FOR UPDATE SKIP LOCKED 做原子任务队列，LISTEN/NOTIFY 触发事件响应，咨询锁与 MVCC 处理并发写入。结论是把向量、关系与可观测负载收进同一个实例。",
+      "url": "https://www.pgedge.com/blog/postgres-for-agentic-ai-your-database-is-a-compute-layer-not-a-parking-lot",
+      "author": "Antony Pegg",
+      "source": "pgEdge 博客",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AI",
+        "pgvector",
+        "架构"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "ORBIT 把企业 AI 的可靠性落在 PostgreSQL 上",
+      "summary": "Vibhor Kumar 提出 ORBIT，一套面向企业 AI 的执行规范，关注点不是模型本身而是运行纪律。五个字母对应：调用外部动作之前先写 outbox 表持久化意图；用共享状态而不是进程内计数器做限流与协调；把后台任务当作执行的基本单元；从第一天起保证幂等以便安全重试；完整记录模型版本、检索到的文档与提示词以备审计。文中的实现全部落在 PostgreSQL 上，用事务和咨询锁保证原子性与协调。",
+      "url": "https://vibhorkumar.wordpress.com/2026/08/06/orbit-an-execution-framework-for-reliable-enterprise-ai/",
+      "author": "Vibhor Kumar",
+      "source": "作者博客",
+      "source_date": "2026-08-06",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/08/image-10.png",
+      "domain": "pg",
+      "tags": [
+        "AI",
+        "可靠性",
+        "架构"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "窃取 165 家 Snowflake 客户数据者认罪",
+      "summary": "Connor Moucka 就入侵并窃取逾 165 家 Snowflake 客户数据一案认罪。据 TechCrunch 报道，他与同伙从中勒索获利超过 250 万美元，受影响的大多是 Snowflake 的企业级客户，这是近年波及范围最广的云数据平台安全事件之一。认罪本身说明针对主流数据存储服务的定向攻击有明确的利益驱动。运维托管数据仓库的团队值得据此复核账号的多因素认证覆盖面与凭据轮换周期。",
+      "url": "https://techcrunch.com/2026/08/06/hacker-pleads-guilty-to-stealing-data-from-more-than-165-snowflake-customers/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-08-06",
+      "image": "https://techcrunch.com/wp-content/uploads/2024/11/snowflake-data-breaches.jpg?resize=1200%2C800",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "Snowflake",
+        "云"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "WAL 压缩的默认算法定为 zstd",
+      "summary": "Tomas Vondra 的基准测试显示 zstd 通常能把 WAL 体积压掉一半而 CPU 开销与 lz4 相当，他据此撤回了 lz4 提案。",
+      "url": "https://www.postgresql.org/message-id/3ebe2c65-7fe5-49cb-ad49-84c1d0cf567b@vondra.me",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "预读耗尽本地缓冲区的缺陷已回合到 PG18",
+      "summary": "effective_io_concurrency 不小于 64 时 ReadStream 预读会耗尽本地缓冲区，提交 da6874635db 已修复。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7WvfMZ_yOSu0xW0GeqOek63s_GCkC4AE6XXF_Mshko-aQ@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "缺陷"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "RANGE 分区裁剪会错误排除默认分区",
+      "summary": "多列分区键且尾列取 MAXVALUE 时，SELECT、UPDATE 与运行时裁剪都会静默返回错误结果，补丁已给出修复。",
+      "url": "https://www.postgresql.org/message-id/CAON2xHO=sqdqp=z8zWkybnWp0AuvefnAi2ez2vOYWrhXB6hHWQ@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "正确性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "vacuum 进入 failsafe 后不再使用环形缓冲区",
+      "summary": "提交 112c26838 之后 Melanie Plageman 发现它会对每个页面重复清除 strategy，修复补丁赶在封版前推送。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_YLE-DS+K=jB5fsBE6u3u+a3nMdFLG=_+c_TSjLjL80mw@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "vacuum",
+        "IO"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "归档恢复竞态可能在改名前删掉 WAL 文件",
+      "summary": "Michael Paquier 以提交 1200dfd60c36 修复 HEAD，权衡回合风险后暂不进稳定分支，WIN32 上窗口仍在。",
+      "url": "https://www.postgresql.org/message-id/anPJiIxl_uU947DJ@paquier.xyz",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "恢复"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "SQL 槽函数报错时不释放复制槽",
+      "summary": "该缺陷自 PG14 起存在，可能造成槽泄漏和 vacuum 异常，v10 补丁已完成审查，计划回移到 PG14 及以上。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uBSZcoVK+YUezoupcgB9y+pr1WvOz-0yBkCZrBatZzJEw@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "缺陷"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "外键快速路径在可空唯一约束下崩溃",
+      "summary": "缓存失效回调可能在用户自定义转换函数执行期间触发，导致已释放的 fpmeta 被继续使用，该补丁暂时搁置。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqHdhyUx4v9M8sAUh6_7Nb+3UjYv+uOgrwRhNTEmJ1HkkQ@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "缺陷"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "CYBERTEC 与 Meniko 合作进入毛里求斯市场",
+      "summary": "Meniko 将在当地提供 PGEE、Migrator 与 Patroni，面向数据治理要求严格的受监管行业。",
+      "url": "https://www.cybertec-postgresql.com/en/cybertec-and-meniko-data-solutions-announce-strategic-partnership/",
+      "author": "Bilal Ibrar",
+      "source": "CYBERTEC",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生态"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制拟增加冲突历史表 pg_conflict_history",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KF30U9=gMGzji6N7nb96Q1BC+e-g9sA7bu3Vt6DoNYLg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "UUID 解析拟复用 SIMD 十六进制解码函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBVZTkg_E+Bam7Df6KgCur+rhBL9+hWZqR+YMsAoVgbxw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "索引统计与表统计拟拆分为独立类型",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/anPsJU7MvZF0PpD3@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "复制槽拟支持按 XID 年龄自动失效",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoDeYQa76j5f6JSnwp5ffZykgu7cmkOZDSZd+JCPj6aKgQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Parallel INSERT SELECT 尝试用 relcache 缓存",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1e511a22-0d1b-48e6-ac36-34b5f99acede@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "CREATE INDEX CONCURRENTLY 优化补丁完成 rebase",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADzfLwW=q71fw0hye9K3vBnS7RR50rTcCM91ZbWkiKeU+5s4_g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 是否该写 WAL 同步备库存在分歧",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/a9b5c9c8-a918-4b5e-a1b2-4d3b865a2006@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "订阅端拟增加逻辑解码消息的处理钩子",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/9C6AC94E-135C-47D4-A9C6-6668E5BA14DA@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "AlterSubscription 加锁后重新读取订阅状态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANhcyEWSOZyna3PGEHx0MUs92=wrjTHCD3wQ2VeeEripAsVWAw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "var_eq_const 在非确定性排序规则下的估算修正",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/tencent_C169F926D0BEC32CBBA9B31B2BE059DBA409@qq.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "oid 排序拟改用专用 uint32 比较函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANWCAZb1oyzAva=gp1U666Uyf+oVpQm9GkDkCbU_mGRuck_JOQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "副本模式跳过外键检查拟扩展到 ADD FK 与 TRUNCATE",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAMT0RQR_PeqFzSsg_Sr7dXnHF43qTEn-LqBA-yZYGs-7y-p-5g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "vacuumdb 对分区表改用 ANALYZE ONLY",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/87BC0949-448C-4B84-8B47-7D044F87B9C9@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 拟用 REMOTE 选项展示远端执行计划",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAF0whudOpa7dkL-J6aAwHJi4SvHpt2B4PU9spUZMWP_zo6Ys8Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "缓存 ccbin 反序列化结果的旧补丁寻找接手人",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOM+1peuVRgWL1i8XMuuNt0z7bk62=m_NrOQH9jqKZXGHvysfw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "toast.* 存储选项问题的补丁集继续推进",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/anT-1AlQKmXtcfrP@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "v19 贡献者致谢名单正在社区校对",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADkLM=c5p2Tgs=9jB5QyDn16H0KSBbBr-stkjhKMbJ6R8-3amw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 32
+    }
+  ]
+}

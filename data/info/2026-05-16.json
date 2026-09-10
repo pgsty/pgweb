@@ -1,0 +1,405 @@
+{
+  "date": "2026-05-16",
+  "origin": "chronicle 2026-05-16: daily, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "RDS for PostgreSQL 为 11/12/13 发布延长支持补丁",
+      "summary": "AWS 为 Amazon RDS for PostgreSQL 的 Extended Support 发布 11.22、12.22 与 13.23 三个小版本，修复旧大版本里已知的安全漏洞和缺陷。这三个大版本已离开社区标准支持，Extended Support 最长再提供三年关键修复，升级可走维护窗口、自动小版本升级或蓝绿部署。仍留在这三个版本上的实例应把补丁列进安全例外清单，同时安排迁出。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-rds-postgresql-extended-support/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "托管数据库",
+        "生命周期"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "bgwriter 的两个节奏参数建议保持默认",
+      "summary": "Christophe Pettus 的 GUC 系列讲后台写入器：bgwriter_delay 决定它多久醒来一次写出脏页，避免查询在需要干净缓冲区时卡在 I/O 上；bgwriter_flush_after 在写出一定字节后提示内核回刷，防止页缓存堆积脏数据。他建议两个都保持默认，先调 bgwriter_lru_maxpages 与 bgwriter_lru_multiplier，因为延迟控制的是节奏而非吞吐。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-bgwriterdelay-and-bgwriterflushafter/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-16",
+      "image": "https://thebuild.com/media/media/3abbc918-3178-46d8-a779-5867d1d35453.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "性能",
+        "缓冲区"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 把 ClickHouse 的瓶颈定位在计划阶段",
+      "summary": "一次分区策略调整让 Cloudflare 的 PB 级计费管道卡住，时间并没有花在扫描上，而是耗在查询尚未执行的计划阶段：parts 数量膨胀后 planner 的锁竞争成了瓶颈。团队缩小锁范围、改进 planner 路径，并利用分区键有序性对 parts 做二分裁剪，3 月上线的这项优化把查询时延降低约一半，修改已提交上游。用 ClickHouse 做计费或多租户指标的团队值得监控 parts 数量与 planner 耗时。",
+      "url": "https://blog.cloudflare.com/clickhouse-query-plan-contention/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-05-14",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW46Y0AHFEWFTVG3SC2P6F5V.png",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "性能",
+        "OLAP"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Kubernetes 混合版本代理进入 Beta 并默认启用",
+      "summary": "HA 控制面滚动升级时，旧的 API server 遇到不认识的资源会直接返回 404，CRD、聚合 API 和新内置资源的访问因此出现异常。Kubernetes v1.36 把 Mixed Version Proxy 提到 Beta 并默认启用：旧 API server 把这类请求代理给版本更新的对等节点应答。升级到 v1.36 的平台团队应确认特性开关与多副本 API server 配置，并把版本偏斜补进故障演练。",
+      "url": "https://kubernetes.io/blog/2026/05/15/kubernetes-1-36-feature-mixed-version-proxy-beta/",
+      "author": "Kubernetes",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "控制面",
+        "升级"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "@tanstack 系列 npm 包被投毒，可信发布也遭滥用",
+      "summary": "GitHub Advisory Database 记录了 @tanstack 系列 npm 包被投毒，恶意版本会收集云凭据、GitHub token 和 SSH 私钥。受影响项目本来使用 Trusted Publishing，OIDC 短期凭据减少了长期 token 暴露，攻击者转而瞄准 CI 的信任边界、缓存污染和运行时 token 抽取。用可信发布的项目仍需审计 pull_request_target 与缓存键，收紧发布流程权限。",
+      "url": "https://github.com/advisories/GHSA-g7cv-rxg3-hmpx",
+      "author": "GitHub Advisory Database",
+      "source": "GitHub Advisory Database",
+      "source_date": "2026-05-11",
+      "image": "https://github.githubassets.com/assets/advisory-database-show-f32c8207dfb2.png",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "npm",
+        "安全"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "VLDB 论文讨论应该怎样往 SSD 写数据",
+      "summary": "写入路径的组织方式直接影响 SSD 表现，与数据库存储引擎的写放大设计相关。",
+      "url": "https://www.vldb.org/pvldb/vol19/p1469-lee.pdf",
+      "author": "",
+      "source": "VLDB",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "存储",
+        "论文"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "一组用于识别交易欺诈的 SQL 模式",
+      "summary": "作者整理了自己在交易数据里排查欺诈时反复使用的查询写法。",
+      "url": "https://analytics.fixelsmith.com/posts/sql-fraud-patterns/",
+      "author": "",
+      "source": "fixelsmith",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQL",
+        "分析"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "AWS 多云私有互联把 OCI 纳入预览",
+      "summary": "预览先在 us-east-1 开放，可用控制台、CLI 或 API 创建，规范同时公开。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-announces-AWS-interconnect-multicloud-oci-preview/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "多云网络"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "AWS Organizations 的 SCP 配额翻倍",
+      "summary": "商业区、GovCloud 与中国区自动生效，无需申请，被压缩合并的策略可以重新拆开。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-organizations-increased-scp-quotas/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "云治理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "CloudWatch Logs 查询结果上限提到十万条",
+      "summary": "所有商业区域可用，控制台、CLI、CDK 与 SDK 同步支持，代价是更大的查询成本。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/cloudwatch-logs-query-results/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "可观测性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes v1.36 新增云路由同步指标",
+      "summary": "指标加在 cloud-provider 的路由控制器里，多 AZ、多 VPC 场景可用它验证 watch 式协调。",
+      "url": "https://kubernetes.io/blog/2026/05/15/ccm-new-metric-route-sync-total/",
+      "author": "",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "网络"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "npm 上出现被投毒的 node-IPC 版本",
+      "summary": "StepSecurity 记录了这批恶意版本，npm 与 GitHub 的正式 advisory 仍待跟进。",
+      "url": "https://www.stepsecurity.io/blog/node-ipc-npm-supply-chain-attack",
+      "author": "",
+      "source": "StepSecurity",
+      "source_date": "2026-05-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "npm"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 调整漏洞赏金规则强调报告质量",
+      "summary": "平台把共同责任写进规则，背景是 AI 辅助挖洞带来的低质量与重复报告增多。",
+      "url": "https://github.blog/security/raising-the-bar-quality-shared-responsibility-and-the-future-of-githubs-bug-bounty-program/",
+      "author": "",
+      "source": "GitHub 博客",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "漏洞治理"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "CNCF 演示用 Rust 扩展 AI 网关 kgateway",
+      "summary": "示例可在本地 kind 集群跑通，把策略、审计与请求转换下沉到网关而不是散在应用里。",
+      "url": "https://www.cncf.io/blog/2026/05/15/extending-ai-gateways-with-rust-custom-transformations-in-kgateway/",
+      "author": "",
+      "source": "CNCF",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "CNCF",
+        "网关"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "npm 包 pgserve 4 月曾出现恶意版本",
+      "summary": "",
+      "url": "https://www.stepsecurity.io/incidents",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "供应链"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Amazon EMR Serverless 新增六个可用区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-emr-serverless-aws-regions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Amazon Managed Grafana 支持原地升级到 12.4",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-managed-grafana-v12-update/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "可观测性"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "KubeStellar 称 AI 提交的 PR 有 81% 被接受",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/05/14/when-ai-agents-become-contributors-how-kubestellar-reached-81-pr-acceptance/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "CNCF",
+        "AI Agent"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "数据中心把美国最大电力市场价格推高 75%",
+      "summary": "",
+      "url": "https://www.theregister.com/on-prem/2026/05/15/datacenters-slurping-juice-help-drive-75-jump-in-pjm-power-prices/5241491",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据中心",
+        "电力"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "欧洲主权云绕不开对处理器的依赖",
+      "summary": "",
+      "url": "https://www.theregister.com/systems/2026/05/16/europe-built-sovereign-clouds-to-escape-us-control-then-forgot-about-the-processors/5237735",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "主权云"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Epiq 把 issue 跟踪放回 Git 仓库",
+      "summary": "",
+      "url": "https://ljtn.github.io/epiq/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发者工具"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "LFK 是一个追求速度的 Kubernetes TUI",
+      "summary": "",
+      "url": "https://github.com/janosmiko/lfk",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "开发者工具"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 复盘通用可访问性 agent 的构建过程",
+      "summary": "",
+      "url": "https://github.blog/ai-and-ml/github-copilot/building-a-general-purpose-accessibility-agent-and-what-we-learned-in-the-process/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI Agent"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Amazon Bedrock 推出提示词优化与迁移工具",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-bedrock-advanced-prompt-optimization-migration-tool/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AWS",
+        "Bedrock"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Sx 给 AI skills 与 MCP 配置做包管理",
+      "summary": "",
+      "url": "https://github.com/sleuth-io/sx",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MCP",
+        "开发者工具"
+      ],
+      "position": 25
+    }
+  ]
+}

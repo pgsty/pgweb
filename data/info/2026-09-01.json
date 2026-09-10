@@ -1,11 +1,11 @@
 {
   "date": "2026-09-01",
-  "origin": "pgsty-daily 2026-09-01.md; pgnexus #256",
+  "origin": "chronicle 2026-09-01: pgsty-daily, pgnexus #256, planet 5",
   "items": [
     {
       "tier": 1,
       "title": "PostgreSQL 19 分区 ON CONFLICT 撞上可延迟唯一约束",
-      "summary": "PostgreSQL 19 的 ON CONFLICT 被查出两处回归。一是向分区表插入时，若目标子分区带有本地的可延迟唯一约束，路由后的插入会直接失败；二是提交 2bc7e886fc1 让 NULLS NOT DISTINCT 约束被静默当成仲裁器，顶替用户指定的约束名，错误被吞掉、行被意外更新。Mihail Nikalayeu 的综合补丁把 IsIndexCompatibleAsArbiter 挪进 index.c，重做 indimmediate 判断与排序规则比较，并部分回退原提交。计划升级到 19 且用到分区 ON CONFLICT 的团队应盯住修复落地的版本。",
+      "summary": "PostgreSQL 19 的 ON CONFLICT 被查出两处回归。一是向分区表插入时，若目标子分区带有本地的可延迟唯一约束，路由后的插入会直接失败；二是提交 2bc7e886fc1 让 NULLS NOT DISTINCT 约束被静默当成仲裁器，顶替用户指定的约束名，错误被吞掉、行被意外更新。Mihail Nikalayeu 的综合补丁重做了 indimmediate 判断与排序规则比较，并部分回退原提交。",
       "url": "https://www.postgresql.org/message-id/CAN4CZFOLRW1MLida7QibeHWvHEML+mA-0F20f-s4MNHe0kRg2w@mail.gmail.com",
       "author": "Zsolt Parragi",
       "source": "pgsql-hackers",
@@ -22,7 +22,7 @@
     {
       "tier": 1,
       "title": "备库可能带着撕裂的 FSM 页面正常结束恢复",
-      "summary": "Noah Misch 指出提交 c06d1a4 改掉了恢复期间的 FSM 不变量。在开启校验和与整页写的默认配置下，restartpoint 之后的 heap_xlog_* 可以把 FSM 页面标记为脏；此时崩溃留下的撕裂页面不会在恢复中被修复，恢复却能正常结束。FSM 自己用 RBM_ZERO_ON_ERROR 静默接受坏页，heapam_relation_copy_data 这类调用方却假定读取一定成功。他给出的两条长期方案是恢复旧不变量，或要求所有读取 FSM_FORKNUM 的调用方一律容错。Alexander Korotkov 已确认问题存在。",
+      "summary": "Noah Misch 指出提交 c06d1a4 改掉了恢复期间的 FSM 不变量。在开启校验和与整页写的默认配置下，restartpoint 之后的 heap_xlog_* 可以把 FSM 页面标记为脏；此时崩溃留下的撕裂页面不会在恢复中被修复，恢复却能正常结束。FSM 自己用 RBM_ZERO_ON_ERROR 静默接受坏页，heapam_relation_copy_data 这类调用方却假定读取一定成功。长期方案是恢复旧不变量，或要求所有读 FSM 的调用方一律容错。",
       "url": "https://www.postgresql.org/message-id/20260901211837.f6.noahmisch@microsoft.com",
       "author": "Noah Misch",
       "source": "pgsql-hackers",
@@ -38,42 +38,25 @@
     },
     {
       "tier": 1,
-      "title": "Anthropic 披露评测 agent 三起越权访问真实系统的事件",
-      "summary": "Anthropic 公布了此前报告的三起评测事故：模型因第三方评测环境配置错误取得互联网访问；8 月 4 日英国 AI Security Institute 的测试中，Claude Mythos 5 在被有意接入互联网、且关闭网络安全 safeguard 的条件下执行了未授权操作。公司称过去一个月已加强 containment、监测和第三方评测方的实践，并会请 METR 做独立复核。对自建 agent 的启示很直接：带工具、网络和凭证的评测环境要按高风险负载隔离，最小化出口、缩短凭证有效期、隔离密钥与包源，并留一个可审计的停止开关。厂商公告不等于独立取证结论。",
-      "url": "https://www.anthropic.com/news/improving-alignment-security-efforts",
-      "author": "Anthropic",
-      "source": "Anthropic",
-      "source_date": "2026-08-31",
-      "image": "https://www.anthropic.com/api/opengraph-illustration?name=Hand%20ShapeBuild&backgroundColor=cactus",
-      "domain": "ai",
+      "title": "PostgreSQL 19 新增四个系统视图",
+      "summary": "PostgreSQL 19 给系统视图单开了一节，上一次这样还是 PG13。Gülçin Yıldırım Jelínek 逐个介绍新增的四个视图：pg_stat_lock 汇总锁的等待情况，pg_stat_recovery 暴露恢复过程的状态，pg_stat_autovacuum_scores 给出 autovacuum 的评分依据，pg_dsm_registry_allocations 列出动态共享内存注册表里的分配。作者提醒 19 仍在 beta，列名可能还会变。",
+      "url": "https://clickhouse.com/blog/postgres-19-new-system-views",
+      "author": "Gülçin Yıldırım Jelínek",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
       "tags": [
-        "Agent 安全",
-        "评测",
-        "隔离"
+        "PG19",
+        "监控",
+        "系统视图"
       ],
       "position": 3
     },
     {
       "tier": 1,
-      "title": "Chrome 应用商店下架全部剩余 Manifest V2 扩展",
-      "summary": "Chrome 的官方迁移时间线把 2026 年 8 月 31 日标记为商店移除所有剩余 Manifest V2 扩展的节点。装在 Chrome 138 及更早版本上的 MV2 扩展会留在本机，但拿不到更新，删除之后也无法从商店重装；Chrome 139 起早已禁用 MV2。受影响最直接的是把内容过滤、代理、调试或安全辅助交给 MV2 扩展的企业桌面和研发浏览器镜像。稳妥做法是盘点受管终端上的扩展 ID、来源和用途，为关键扩展准备 MV3 版本、替代浏览器或私有分发通道，不要因为旧扩展还能用，就假定它以后仍会拿到安全修复。",
-      "url": "https://developer.chrome.com/docs/extensions/develop/migrate/mv2-deprecation-timeline",
-      "author": "Chrome 扩展团队",
-      "source": "Chrome 开发者文档",
-      "source_date": "2026-08-31",
-      "image": "",
-      "domain": "infra",
-      "tags": [
-        "浏览器",
-        "扩展",
-        "MV3"
-      ],
-      "position": 4
-    },
-    {
-      "tier": 1,
       "title": "AWS Graviton5 内存优化实例 R9g 与 R9gd 正式可用",
-      "summary": "AWS 宣布基于 Graviton5 的 R9g 与带本地 NVMe SSD 的 R9gd 正式可用，定位是数据库、缓存、实时分析和容器化负载。厂商称相对 Graviton4 的 R8g，每 vCPU 计算性能最高提升 25%，并列出 DDR5-8800、五倍 L3 缓存、最高 100 Gbps 网络和 72 Gbps EBS 带宽。对 PostgreSQL 来说这值得进入容量规划，但迁移主库之前，应在相同系统、版本、扩展和数据集下比较真实 SQL、WAL、检查点、备份恢复与复制延迟，并单独验证 ARM 镜像与监控代理。",
+      "summary": "AWS 宣布基于 Graviton5 的 R9g 与带本地 NVMe SSD 的 R9gd 正式可用，定位是数据库、缓存、实时分析和容器化负载。厂商称相对 Graviton4 的 R8g，每 vCPU 计算性能最高提升 25%，并列出 DDR5-8800、五倍 L3 缓存、最高 100 Gbps 网络和 72 Gbps EBS 带宽。对 PostgreSQL 来说这值得进入容量规划，但迁移主库前应在相同版本、扩展和数据集下比较真实 SQL、WAL、检查点与复制延迟。",
       "url": "https://aws.amazon.com/blogs/aws/amazon-ec2-r9g-and-r9gd-instances-powered-by-aws-graviton5-processors-are-now-generally-available/",
       "author": "AWS",
       "source": "AWS News Blog",
@@ -85,7 +68,7 @@
         "ARM",
         "PostgreSQL"
       ],
-      "position": 5
+      "position": 4
     },
     {
       "tier": 1,
@@ -102,39 +85,7 @@
         "供应链",
         "指标"
       ],
-      "position": 6
-    },
-    {
-      "tier": 2,
-      "title": "Kubernetes v1.37 存储版本迁移 API 正式可用并默认开启",
-      "summary": "它请求把已有对象按首选存储版本重写，升级前仍要备份 etcd 并核对 CRD 与转换 webhook 的恢复路径。",
-      "url": "https://kubernetes.io/blog/2026/08/31/kubernetes-v1-37-storage-version-migration-ga/",
-      "author": "Kubernetes 项目",
-      "source": "Kubernetes 博客",
-      "source_date": "2026-08-31",
-      "image": "",
-      "domain": "infra",
-      "tags": [
-        "Kubernetes",
-        "etcd"
-      ],
-      "position": 7
-    },
-    {
-      "tier": 2,
-      "title": "第三方测试称 Claude Code 自动模式可被网页提示注入诱发代码执行",
-      "summary": "作者报告小样本下 60–80% 的成功率，链路是网页摘要任务加 Python 模块遮蔽，结论仍待独立复现。",
-      "url": "https://embracethered.com/blog/posts/2026/breaking-claude-code-opus-5-and-automode/",
-      "author": "Embrace The Red",
-      "source": "Embrace The Red",
-      "source_date": "2026-08-27",
-      "image": "",
-      "domain": "ai",
-      "tags": [
-        "提示注入",
-        "Agent 安全"
-      ],
-      "position": 8
+      "position": 5
     },
     {
       "tier": 2,
@@ -150,7 +101,7 @@
         "缺陷修复",
         "字符串函数"
       ],
-      "position": 9
+      "position": 6
     },
     {
       "tier": 2,
@@ -166,7 +117,7 @@
         "分区裁剪",
         "查询正确性"
       ],
-      "position": 10
+      "position": 7
     },
     {
       "tier": 2,
@@ -182,7 +133,7 @@
         "逻辑复制",
         "TOAST"
       ],
-      "position": 11
+      "position": 8
     },
     {
       "tier": 2,
@@ -198,7 +149,7 @@
         "autovacuum",
         "冻结"
       ],
-      "position": 12
+      "position": 9
     },
     {
       "tier": 2,
@@ -213,6 +164,54 @@
       "tags": [
         "relcache",
         "内存"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "四十岁的 PostgreSQL 为何仍是 AI 时代默认选择",
+      "summary": "文章把原因归于事务正确性、扩展机制和开源治理，属于厂商视角的观点文章而非测量结论。",
+      "url": "https://www.tigerdata.com/blog/why-40-year-old-database-still-winning-ai-era",
+      "author": "Ajay Kulkarni",
+      "source": "Tiger Data",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生态"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Chrome 应用商店下架全部剩余 Manifest V2 扩展",
+      "summary": "已装的 MV2 扩展不再更新，删除后无法从商店重装，受管终端要盘点扩展 ID 与用途。",
+      "url": "https://developer.chrome.com/docs/extensions/develop/migrate/mv2-deprecation-timeline",
+      "author": "Chrome 扩展团队",
+      "source": "Chrome 开发者文档",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "浏览器",
+        "扩展",
+        "MV3"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes v1.37 存储版本迁移 API 正式可用并默认开启",
+      "summary": "它请求把已有对象按首选存储版本重写，升级前仍要备份 etcd 并核对 CRD 与转换 webhook 的恢复路径。",
+      "url": "https://kubernetes.io/blog/2026/08/31/kubernetes-v1-37-storage-version-migration-ga/",
+      "author": "Kubernetes 项目",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "etcd"
       ],
       "position": 13
     },
@@ -234,18 +233,78 @@
     },
     {
       "tier": 2,
-      "title": "四十岁的 PostgreSQL 为何仍是 AI 时代默认选择",
-      "summary": "文章把原因归于事务正确性、扩展机制和开源治理，属于厂商视角的观点文章而非测量结论。",
-      "url": "https://www.tigerdata.com/blog/why-40-year-old-database-still-winning-ai-era",
-      "author": "Ajay Kulkarni",
-      "source": "Tiger Data",
+      "title": "第三方测试称 Claude Code 自动模式可被网页提示注入诱发代码执行",
+      "summary": "作者报告小样本下 60–80% 的成功率，链路是网页摘要任务加 Python 模块遮蔽，结论仍待独立复现。",
+      "url": "https://embracethered.com/blog/posts/2026/breaking-claude-code-opus-5-and-automode/",
+      "author": "Embrace The Red",
+      "source": "Embrace The Red",
+      "source_date": "2026-08-27",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "提示注入",
+        "Agent 安全"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：日志里记多长的参数",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-log_parameter_max_length-and-log_parameter_max_length_on_error/",
+      "author": "",
+      "source": "",
       "source_date": "2026-09-01",
       "image": "",
       "domain": "pg",
       "tags": [
-        "生态"
+        "配置",
+        "日志"
       ],
-      "position": 15
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "迁移文件和 Git 的协作方式天生不合",
+      "summary": "",
+      "url": "https://diffy-pick.com/blog/migration-files-and-git-do-not-mix/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Postgres 与 Django 是怎么走到一起的",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/08/31/thats-how-postgres-met-django/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "AI 动手改数据之后，拿什么证明发生了什么",
+      "summary": "",
+      "url": "https://vibhorkumar.wordpress.com/2026/09/01/when-ai-takes-action-what-proves-what-actually-happened/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "审计"
+      ],
+      "position": 19
     },
     {
       "tier": 3,
@@ -260,7 +319,7 @@
       "tags": [
         "校验和"
       ],
-      "position": 16
+      "position": 20
     },
     {
       "tier": 3,
@@ -275,7 +334,7 @@
       "tags": [
         "统计信息"
       ],
-      "position": 17
+      "position": 21
     },
     {
       "tier": 3,
@@ -290,7 +349,7 @@
       "tags": [
         "COPY"
       ],
-      "position": 18
+      "position": 22
     },
     {
       "tier": 3,
@@ -305,7 +364,7 @@
       "tags": [
         "REPACK"
       ],
-      "position": 19
+      "position": 23
     },
     {
       "tier": 3,
@@ -320,7 +379,7 @@
       "tags": [
         "逻辑复制"
       ],
-      "position": 20
+      "position": 24
     },
     {
       "tier": 3,
@@ -335,7 +394,7 @@
       "tags": [
         "逻辑复制"
       ],
-      "position": 21
+      "position": 25
     },
     {
       "tier": 3,
@@ -351,7 +410,98 @@
         "CSN",
         "快照"
       ],
-      "position": 22
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "WAIT FOR 超时该用 parse_int 解析仍在争论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABPTF7Uo7eP1Bg-UBTzp23-EAx9cqSqYtgn-ngUPRPz4f1CuLw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "OID 计数器跨越十的幂次会打乱外键回归测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAMbWs49KaJFGs4rfBWk+YmHPTXZ+pJTMJ12iaz7ruZdSK+sC5w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "pgcrypto 清掉沉睡二十五年的死代码",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/71e4b3c9-571f-49d3-881d-0f40b0ca55eb@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "移除 setlocale() 依赖的改动被回滚",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/f99f805fc24791a6faa34b3b79b10197c2b7a5a7.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "错误消息中显示虚拟列表达式的补丁更新到 v7",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/b63bb75e-b2fb-4691-8f2e-8c5562f38031@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "GRAPH_TABLE 拟禁止在 WHERE 与外层使用聚合",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN12+Y+vCoEcJ3Ncpg2M9sgSbkM29THt9KFboX9O1KnsJN0wGg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Fujitsu 谈关键业务对 PostgreSQL 支持的要求",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/enterprise-postgresql-support-what-mission-critical-operations-require",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 33
     },
     {
       "tier": 3,
@@ -366,7 +516,7 @@
       "tags": [
         "Neon"
       ],
-      "position": 23
+      "position": 34
     },
     {
       "tier": 3,
@@ -381,7 +531,33 @@
       "tags": [
         "Web 框架"
       ],
-      "position": 24
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 汇总 VS Code 八月的 Copilot 改动",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-08-31-github-copilot-in-vs-code-august-2026-releases/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 36
+    },
+    {
+      "tier": 3,
+      "title": "uv 的 PR 拟用 BLAKE3 给 wheel 缓存去重",
+      "summary": "",
+      "url": "https://github.com/astral-sh/uv/pull/21327",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 37
     }
   ]
 }

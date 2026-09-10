@@ -1,0 +1,375 @@
+{
+  "date": "2026-05-18",
+  "origin": "chronicle 2026-05-18: daily, pgnexus #150, news 1, planet 6；并入 2026-05-17 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 Beta 里最能被感觉到的四项变化",
+      "summary": "Christophe Pettus 挑出 PostgreSQL 19 里最能被感觉到的四项变化：MultiXact 成员计数器扩到 64 位，高并发共享行锁不再耗尽四十亿成员空间、逼出停机 vacuum；autovacuum 可以并行处理索引，代价是每个工作进程各占一份 maintenance_work_mem；UPDATE 与 DELETE 支持 FOR PORTION OF，按子区间改写时段行；jit 默认关闭，靠代码生成的 OLAP 需要显式打开。",
+      "url": "https://thebuild.com/blog/postgresql-19-beta-the-four-features-youll-actually-feel/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-18",
+      "image": "https://thebuild.com/media/media/89009977ed2d464a907d6be10f6df32c_0.png",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "新特性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "MultiXact 回绕是 XID 回绕同样凶险的孪生兄弟",
+      "summary": "MultiXact ID 是 32 位计数器，一行被多个事务同时加锁、xmax 放不下时由它指向锁列表，它与 XID 各自独立回绕。SELECT FOR SHARE 会生成 MultiXact，外键检查隐含的 FOR KEY SHARE 也会，后者对开发者不可见。年龄逼近默认四亿的冻结上限时，数据库开始拒绝部分写入。作者建议用 mxid_age() 盯住库级与表级年龄，重点看外键父表。",
+      "url": "https://richyen.com/postgres/2026/05/18/multixact_wraparound.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MultiXact",
+        "VACUUM",
+        "监控"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_sorted_heap 0.14.0 把有序堆与向量检索并进规划器",
+      "summary": "Sergey Kuznetsov 发布 pg_sorted_heap 0.14.0，扩展提供物理有序的堆存储、zone map 裁剪和与规划器集成的向量检索。新版本把 PostgreSQL 16 加入已验证矩阵，与 17、18 并列，并把跨大版本的升级路径纳入发布门禁；sorted_hnsw 通过索引访问方法对规划器可见，覆盖父表在叶子分区 HNSW 索引之上的 Merge Append 形态。扩展已发布到 PGXN。",
+      "url": "https://github.com/skuznetsov/pg_sorted_heap/releases/tag/v0.14.0",
+      "author": "Sergey Kuznetsov",
+      "source": "GitHub",
+      "source_date": "2026-05-18",
+      "image": "https://opengraph.githubassets.com/901567d13f880f770491ccb66eef087daad89158a2d32cb0b035ffe83c63d3bc/skuznetsov/pg_sorted_heap/releases/tag/v0.14.0",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "向量检索",
+        "存储"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "CloudNativePG 与 Crunchy PGO 的选型对比",
+      "summary": "Gabriele Bartolini 对比两个 Kubernetes 上的 PostgreSQL operator，维度包括架构、镜像、备份、大版本升级、可观测性与社区健康度。作者是 CloudNativePG 的联合创始人，立场并不中立，但这份清单值得照着问：在 Kubernetes 上跑 PostgreSQL 已从能不能跑，变成谁为备份恢复、升级、故障转移和漏洞响应负责。评估时应看升级语义、恢复演练和多可用区故障模型。",
+      "url": "https://www.gabrielebartolini.it/articles/2026/05/cloudnativepg-and-crunchy-pgo-an-honest-opinionated-comparison/",
+      "author": "Gabriele Bartolini",
+      "source": "Planet PostgreSQL",
+      "source_date": "2026-05-18",
+      "image": "https://www.gabrielebartolini.it/articles/2026/05/cloudnativepg-and-crunchy-pgo-an-honest-opinionated-comparison/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "operator",
+        "选型"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "EDB 的 AIDB 把向量流水线搬进数据库",
+      "summary": "AIDB 是 EDB 推出的 PostgreSQL 扩展，把 AI 数据准备流程放在数据库内部：新数据写入后自动完成分块、生成嵌入和维护向量索引，不再需要外部管道逐步处理。官方博客用一份调查报告 PDF 演示，把含多个实体与关系的复杂文档转成可查询的知识库，全程无需人工干预。对已经把非结构化文档放在 PostgreSQL 里的团队，这类扩展把嵌入生成与索引更新的调度交给数据库自身，少了一处同步失败和数据陈旧的来源。",
+      "url": "https://www.enterprisedb.com/blog/ai-data-pipeline-automation-aidb-0",
+      "author": "EnterpriseDB",
+      "source": "EDB 博客",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "向量",
+        "AI"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Fabricked 用 Infinity Fabric 配置击破 SEV-SNP",
+      "summary": "Fabricked 项目展示了如何通过错误配置 Infinity Fabric 突破 AMD SEV-SNP 的威胁模型，论文投向 USENIX Security 2026。机密计算的边界不只在客户机内部，还包括固件、fabric、平台初始化和 hypervisor 可触达的配置，一处配置错误就可能影响客户机的完整性与机密性。依赖机密虚拟机的云数据库与推理服务应跟进 AMD、OEM 和云厂商的响应，把证明链与平台配置纳入评估。",
+      "url": "https://xca-attacks.github.io/fabricked/",
+      "author": "Fabricked 研究团队",
+      "source": "Fabricked",
+      "source_date": "2026-05-17",
+      "image": "https://xca-attacks.github.io/preview.png?123456=",
+      "domain": "infra",
+      "tags": [
+        "机密计算",
+        "AMD",
+        "安全"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Grafana Labs 源码被窃并拒绝支付赎金",
+      "summary": "Grafana Labs 确认系统被入侵、源代码被窃取，攻击者以公开代码库相要挟索要赎金，公司公开拒绝支付。做监控与可观测性的厂商同样会成为目标，被窃的专有代码是否最终会被公开尚不确定。拒付符合业界抵制勒索的方向，但也意味着要为代码外泄做准备：核对是否有凭据、密钥随代码一起泄露，检查构建与发布链路的可信度，并跟进厂商后续的事件说明与补救措施。",
+      "url": "https://techcrunch.com/2026/05/18/open-source-tool-maker-grafana-labs-says-hackers-stole-its-code-refuses-to-pay-ransom/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-05-18",
+      "image": "https://techcrunch.com/wp-content/uploads/2024/03/cash-ransomware-ransom-payments-hackers-getty.jpg?resize=1200%2C675",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "勒索",
+        "开源"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "kubectl debug 留下的证据缺口值得写进事故流程",
+      "summary": "CNCF 的一篇文章指出临时容器的退出码只在很短时间内可见，它没有普通容器的 lastState 与 restartCount 语义，这是 API 设计的结果而不是简单缺陷。事故现场用 debug 容器观察到的状态往往是唯一的一手证据，Pod 后续一更新就无从追溯，影响复盘与合规审计。平台团队应把调试会话的命令、输出、目标容器、时间戳和退出码记进独立的审计或事故笔记，不要指望 Kubernetes API 长期保留这些上下文。",
+      "url": "https://www.cncf.io/blog/2026/05/18/what-kubectl-debug-doesnt-tell-you-the-silent-evidence-gap/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-05-18",
+      "image": "https://www.cncf.io/wp-content/uploads/2026/04/Dragonfly-8.png",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "事故响应"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "序列访问方法补丁移出 commitfest 后仍在讨论",
+      "summary": "Andrei Lepikhov 说逻辑复制插件需要它管理跨实例序列，Michael Paquier 称缺少其他核心开发者反馈。",
+      "url": "https://www.postgresql.org/message-id/e10e3067-9e95-40f0-be84-de59787bf742@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "序列",
+        "补丁"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Zilliz 反思八年向量检索优化的方向",
+      "summary": "文章讲 AI 改写计算模型之后，向量数据库的优化重心也随之转移。",
+      "url": "https://zilliz.com/blog/we-spent-8-years-making-vector-search-faster-then-ai-changed-the-compute-model",
+      "author": "",
+      "source": "Zilliz",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量检索"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Turso 向所有用户开放无限活跃数据库",
+      "summary": "产品分档随之调整，此前活跃数据库数量是各档位的主要限制之一。",
+      "url": "https://turso.tech/blog/turso-now-includes-unlimited-databases-for-everybody",
+      "author": "",
+      "source": "Turso",
+      "source_date": "2026-05-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "产品"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "AI 漏洞报告淹没 Linux 安全邮件列表",
+      "summary": "Torvalds 称列表已几乎无法管理，项目转向复现要求、自动分诊和研究者信誉机制。",
+      "url": "https://www.theregister.com/security/2026/05/18/linus-torvalds-says-ai-powered-bug-hunters-have-made-linux-security-mailing-list-almost-entirely-unmanageable/5241633",
+      "author": "",
+      "source": "The Register",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源",
+        "安全"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Metabase 谈开源安全正在被露天开采",
+      "summary": "低质量报告泛滥消耗维护者信任，与 Linux 安全邮件列表的困境同属一条线。",
+      "url": "https://www.metabase.com/blog/strip-mining-era-of-open-source-security",
+      "author": "",
+      "source": "Metabase",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源",
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Semble 主打给 agent 用的低 token 代码搜索",
+      "summary": "项目面向 Claude Code、Codex 等场景，称比 grep 加读文件省约 98% 的 token。",
+      "url": "https://github.com/MinishLab/semble",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-05-17",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "代码搜索",
+        "AI Agent"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "GUC 梳理：bgwriter 的两个 LRU 参数",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-bgwriterlrumaxpages-and-bgwriterlrumultiplier/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "GUC 梳理：block_size 与页大小的影响",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-blocksize/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "有人主张 PostgreSQL 可以做企业 AI 的记忆层",
+      "summary": "",
+      "url": "https://vibhorkumar.wordpress.com/2026/05/18/beyond-vector-search-why-postgresql-could-become-the-memory-layer-for-enterprise-ai-systems/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "向量",
+        "AI"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "一位 PostgreSQL 社区作者记录 AI 的实际帮助",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/05/18/i-think-ai-can-actually-help-me/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "VLDB 论文讨论标量函数的 GPU 加速",
+      "summary": "",
+      "url": "https://www.vldb.org/pvldb/vol19/p1441-rajan.pdf",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "论文",
+        "GPU"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Linux 7.1-rc4 发布，本轮以常规修复为主",
+      "summary": "",
+      "url": "https://lkml.org/lkml/2026/5/17/896",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Mozilla 向英国监管机构为 VPN 辩护",
+      "summary": "",
+      "url": "https://blog.mozilla.org/netpolicy/2026/05/15/mozilla-to-uk-regulators-vpns-are-essential-privacy-and-security-tools-and-should-not-be-undermined/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "隐私",
+        "政策"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "PyPI 上的包数量正在快速增长",
+      "summary": "",
+      "url": "https://rushter.com/blog/pypi-packages/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Python",
+        "生态"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "OpenClaw 公布自托管 agent 的安全路线",
+      "summary": "",
+      "url": "https://openclaw.ai/blog/where-openclaw-security-is-heading",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-17",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI Agent",
+        "安全"
+      ],
+      "position": 23
+    }
+  ]
+}

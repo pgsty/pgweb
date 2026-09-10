@@ -1,0 +1,302 @@
+{
+  "date": "2026-04-13",
+  "origin": "chronicle 2026-04-13: pgnexus #112, planet 5；并入 2026-04-11（pgnexus #110）与 2026-04-12（pgnexus #111, planet 1）",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 用 RDTSC 降低计时开销",
+      "summary": "PostgreSQL 19 换掉了 EXPLAIN ANALYZE 的取时方式。pganalyze 的 Lukas Fittl 解释，旧的 RDTSCP 指令会阻塞并发执行，5000 万行的 COUNT(*) 开计时要 4200 毫秒、不开只要 1900 毫秒。19 改用不阻塞的 RDTSC，平均计时开销从 5–10% 降到 2–3%，并新增 timing_clock_source，x86-64 上默认走 TSC。",
+      "url": "https://pganalyze.com/blog/5mins-postgres-19-reduced-timing-overhead-explain-analyze",
+      "author": "Lukas Fittl",
+      "source": "pganalyze 博客",
+      "source_date": "2026-04-11",
+      "image": "https://pganalyze.com/blog/5mins-postgres-19-reduced-timing-overhead-explain-analyze/pganalyze_OG_5-mins-of-Postgres-E122.png",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "EXPLAIN",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "autovacuum 成本延迟归零会引发写入风暴",
+      "summary": "Jeremy Schneider 复盘了把 autovacuum_vacuum_cost_delay 设成 0 的后果。归零等于关掉成本控制，autovacuum 全速运行，靠提示位刷出大量脏页，WAL 量随之暴涨。现场表现是 COMMIT 上 IPC:SyncRep 等待激增，一张只做 INSERT 的 40GB 表里出现连片 FPI_FOR_HINT。改回默认的 2 毫秒后波动收敛，复制延迟和应用延迟都回落。",
+      "url": "https://ardentperf.com/2026/04/12/zero-autovacuum_cost_delay-write-storms-and-you/",
+      "author": "Jeremy Schneider",
+      "source": "ardentperf",
+      "source_date": "2026-04-12",
+      "image": "https://ardentperf.com/wp-content/uploads/2026/04/image.png",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "WAL",
+        "调优"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "从 pg_stat_activity 读懂 LWLock 等待事件",
+      "summary": "Richard Yen 讲解怎么用 pg_stat_activity 的 wait_event_type 与 wait_event 两列读懂后端卡在哪里，重点是保护共享缓冲区、WAL 缓冲区、锁表和 SLRU 的 LWLock。文中逐个说明 buffer_content、WALWriteLock、WALInsertLock、ProcArrayLock 的竞争场景。方法是先按等待事件分组统计，再结合并发写入和事务速率判断负载热点。",
+      "url": "https://richyen.com/postgres/2026/04/13/wait_events.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "等待事件",
+        "LWLock",
+        "诊断"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "column_encrypt v4.0 简化列级加密模型",
+      "summary": "Vibhor Kumar 发布 column_encrypt v4.0，这个扩展用 encrypted_text 与 encrypted_bytea 两种类型做列级透明加密。新版把管理函数收进 encrypt schema，三角色权限模型简化为单一的 column_encrypt_user，日志脱敏改为自动完成；函数更名为 register_key、load_key、rotate 与 verify。升级需先经 v3.3 过渡。",
+      "url": "https://vibhorkumar.wordpress.com/2026/04/12/column_encrypt-v4-0-a-simpler-safer-model-for-column-level-encryption-in-postgresql/",
+      "author": "Vibhor Kumar",
+      "source": "Vibhor Kumar 博客",
+      "source_date": "2026-04-12",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/04/image-3.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "加密",
+        "安全"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pg_clickhouse 0.2.0 扩大查询下推范围",
+      "summary": "David E. Wheeler 团队发布 pg_clickhouse 0.2.0，这是在 PostgreSQL 里查询 ClickHouse 的接口。这一版扩大了下推范围，覆盖日期、时间、数组和正则函数。PostgreSQL 用 POSIX 正则、ClickHouse 用 RE2，新代码会检查兼容性并自动补上 (?-s)，关掉 ClickHouse 默认开启的 s 标志。0.2.0 完全向后兼容。",
+      "url": "https://justatheory.com/2026/04/pg_clickhouse-0.2.0/",
+      "author": "David E. Wheeler",
+      "source": "Just a Theory",
+      "source_date": "2026-04-13",
+      "image": "https://justatheory.com/icon-512x512.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "ClickHouse",
+        "下推"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "用 RDS Proxy 连接 .NET Lambda 与 Aurora",
+      "summary": "AWS 的 Ken Zhang 演示了把 .NET Lambda 接到 Amazon Aurora PostgreSQL 的做法：连接池交给 RDS Proxy，凭证放进 Secrets Manager，驱动用 Npgsql。文章附了一份 CloudFormation 模板，再给出 C# Lambda 取凭证、经代理连库查询的代码。对从 SQL Server 迁往 PostgreSQL 的团队尤其省事。",
+      "url": "https://aws.amazon.com/blogs/database/connecting-net-lambda-to-amazon-aurora-postgresql-via-rds-proxy/",
+      "author": "Ken Zhang",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-04-13",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/04/02/BDB-41261-1220x630.png",
+      "domain": "pg",
+      "tags": [
+        "Aurora",
+        "Lambda",
+        "连接池"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 把 JIT 默认关闭，构建农场需自行开启",
+      "summary": "改动推送后测试覆盖成问题，Tomas Vondra 已在五台构建农场机器上手工打开 JIT。",
+      "url": "https://www.postgresql.org/message-id/ebfe51f8-ac31-4714-97ab-2dcd70bffb16@vondra.me",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "内核"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "规则动作里的生成列读到了旧值",
+      "summary": "DO ALSO 规则中的 NEW.gen 更新时返回旧行、插入时返回 NULL，存储列与虚拟列都受影响。",
+      "url": "https://www.postgresql.org/message-id/CAHg+QDexGTmCZzx=73gXkY2ZADS6LRhpnU+-8Y_QmrdTS6yUhA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "生成列"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "跨会话访问临时表的问题改在读流入口拦截",
+      "summary": "v16 补丁在 read_stream_begin_relation() 和 StartReadBuffersImpl() 中加校验，已确认拦住越界访问。",
+      "url": "https://www.postgresql.org/message-id/CAMtXxw9nzcUAERM6ScpYrVXAm4gut_+chrEp4H-aznzvv5qckg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "临时表"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 死锁处理：提议让检测器预判锁升级",
+      "summary": "Andres Freund 主张把 ShareUpdateExclusiveLock 视作将升级为 AccessExclusiveLock，避免多余的会话取消。",
+      "url": "https://www.postgresql.org/message-id/CADzfLwURKVNQ++Dpi7bjoGfj-8pchDQEVex3eWBx0NCYn6TbDQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "锁"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "504 Extensions：拓展 PostgreSQL 的版图",
+      "summary": "",
+      "url": "https://vonng.com/en/pg/extension-504/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "pg_trgm GIN 索引构建优化的后续修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/2a2f9cb0-f00d-413c-8517-4a3ad220d104@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁转入代码质量与测试阶段",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260414.075225.867535045131251890.ishii@postgresql.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "test_compression 模块引发测试膨胀之争",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/adw647wuGjh1oU6p@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "ECPG 在连接为 NULL 时崩溃的补丁评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADrsxdbPw1ZYcuqH1-DTNhAvRN=tRTTY+_dFy8wU2g4DQb67Bg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "提案：为 pg_createsubscriber 增加日志文件",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/0485e0b3-b0ec-4f36-8b61-99692b71990c@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "REPACK CONCURRENTLY 的 sanitizer 报错修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/182883.1776073323@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "重新审视 CREATE INDEX CONCURRENTLY 的性能",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADzfLwWC+KxYWb-2QotWaz-q1LK8koLNVUR1Q8obAtt+R_sORA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_database_ddl 的崩溃已有修复补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHg+QDdWtv9PKtPZEokwGCNtbv4MVnfYw5wMZrsEj4xizSNe5Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "2026 年第 14 周 PostgreSQL 贡献汇总",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/78/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    }
+  ]
+}

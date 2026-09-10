@@ -1,0 +1,435 @@
+{
+  "date": "2026-06-29",
+  "origin": "chronicle 2026-06-29: daily, pgnexus #192, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "小元数据表上的过期统计会拖慢大查询",
+      "summary": "文章举例说明小表怎么拖慢大查询：devices 表从 600 行长到 10000 行，pg_statistic 仍是旧数据，规划器于是选错 join 策略，改用嵌套循环代替哈希连接，原本 20 毫秒的查询变成好几秒。根子在 autovacuum_analyze_scale_factor 默认 0.2，增长缓慢的小表几乎不会自动触发 ANALYZE。办法有三种：单独调低该参数、手动 ANALYZE，或把稳定元数据冗余进事实表。",
+      "url": "https://www.tigerdata.com/blog/small-postgres-metadata-tables",
+      "author": "Tigerdata",
+      "source": "Tigerdata 博客",
+      "source_date": "2026-06-29",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/06/metadata-tables.jpg",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "查询计划",
+        "autovacuum"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "灾难恢复是一套演练过的流程，不是一件工具",
+      "summary": "Richard Yen 在灾难恢复系列第二篇里说，处理得好的团队与手忙脚乱的团队，差别通常不在工具，而在演练过的流程。他给出三件具体的事：把 runbook 写成逐步操作，标明确切命令、成功标准、回滚路径和责任人；按难度递进做演练，先练恢复与切换，再加时间限制，再模拟关键人不在场；指定技术指挥和对外沟通两个角色，约定升级链路与授权门槛。他建议每月演练一次，记录各阶段耗时，把实际能达到的 RTO 与 RPO 和业务方对齐。",
+      "url": "https://richyen.com/postgres/2026/06/29/disaster_recovery_is_a_process_part_2.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "灾难恢复",
+        "演练",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 加 ClickHouse 的全开源数据栈",
+      "summary": "Lionel Palacin 给出一套全开源组合：PostgreSQL 作为记录系统，ClickHouse 承接分析负载，中间由 PeerDB 做变更数据捕获，再用 pg_clickhouse 扩展把查询下推过去。落地方式有两种，一种是 CDC 近实时复制数据，另一种是拆分写入，事件与日志直接进 ClickHouse，事务仍留在 PostgreSQL。仓库里给了可本地部署的示例配置，针对分析查询本身就是产品功能的场景。",
+      "url": "https://clickhouse.com/blog/postgres-clickhouse-oss",
+      "author": "Lionel Palacin",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-01-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分析",
+        "CDC",
+        "ClickHouse"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "用 TLA+ 复查 SQLite 存在 16 年的检查点缺陷",
+      "summary": "Canonical 的 Marco Manino 与 Alberto Carretero 用 TLA+ 复查了 SQLite 里一个 2010 年就存在的数据损坏缺陷：检查点与写入并发地重置 WAL 文件时会发生竞态。他们为追加页面和检查点行为写了形式化规格，模型检查器很快找出触发问题的执行序列。SQLite 的修复办法是比较检查点前后的 WAL salt，变了就跳过。dqlite 不受影响，它在两种操作期间都持有写锁。",
+      "url": "https://ubuntu.com//blog/hunting-a-16-year-old-sqlite-bug-with-tla-is-dqlite-affected",
+      "author": "Marco Manino、Alberto Carretero",
+      "source": "Ubuntu 博客",
+      "source_date": "2026-06-25",
+      "image": "https://ubuntu.com/wp-content/uploads/f847/Isometric-One-logo-Dark.jpg",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "形式化验证",
+        "WAL"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "三大内存厂商被诉操纵价格，DRAM 短缺看到 2028 年",
+      "summary": "三星、SK 海力士和美光在美国被起诉操纵内存价格，同一天美光又预测 DRAM 短缺至少持续到 2028 年。数据库和 AI 基础设施都高度依赖内存容量与带宽，价格上行会直接传导到云实例账单、自建硬件预算和推理部署成本。做容量规划时，内存价格和供货周期值得作为单独的风险项列出；高内存的数据库节点、向量检索和推理缓存尤其需要提前锁预算或调整规格。",
+      "url": "https://en.sedaily.com/international/2026/06/29/samsung-sk-hynix-micron-sued-in-us-over-memory-price-fixing",
+      "author": "Seoul Economic Daily",
+      "source": "Seoul Economic Daily",
+      "source_date": "2026-06-29",
+      "image": "https://wimg.sedaily.com/news/cms/2026/06/29/rcv.YNA.20260622.PRU20260622334401009_P1.jpg",
+      "domain": "infra",
+      "tags": [
+        "内存",
+        "供应链",
+        "成本"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "给 GitHub Actions 的每个 job 一个真实身份",
+      "summary": "Riptides 的文章讲的是把 GitHub Actions 工作流里的长期 secret 删掉，让每个 job 拿到属于自己的短期身份，而不是共享一份长期有效的凭证。供应链攻击往往从 CI 里的 secret、包发布 token 和云凭证开始，静态密钥一旦泄漏，影响范围和有效期都不可控。发布包、构建镜像或部署云资源时，可以优先改用 OIDC 联合身份、短期 token 和最小权限角色，把凭证的生命周期压缩到单次运行之内。",
+      "url": "https://riptides.io/blog/your-github-actions-job-deserves-a-real-identity/",
+      "author": "Riptides",
+      "source": "Riptides 博客",
+      "source_date": "2026-06-29",
+      "image": "https://riptides.io/_astro/blog-og.CDt-Qr5B_2kFJcw.webp",
+      "domain": "infra",
+      "tags": [
+        "CI/CD",
+        "凭证",
+        "供应链"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "有人重启了 QUALIFY 子句的提案",
+      "summary": "SQL 标准已收录 QUALIFY，作者给出改写为子查询和让它成为 planner 一等构件两套实现供社区选择。",
+      "url": "https://www.postgresql.org/message-id/DJLM1EHPGO3K.3PDCCHL8OZ08V@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "窗口函数"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "自动清理受阻时报告最旧 xmin 的来源",
+      "summary": "v7 补丁被指出与 ComputeXidHorizons 可能逐渐失步，恢复路径也没有考虑 KnownAssignedXids。",
+      "url": "https://www.postgresql.org/message-id/20260629.172207.542761264338459554.horikyota.ntt@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "监控"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "synchronized_standby_slots 与仲裁复制行为不一致",
+      "summary": "补丁被两位审阅者认为状态良好，等 committer 介入；争论点是 FIRST 与 ANY 是否都要保留去重测试。",
+      "url": "https://www.postgresql.org/message-id/CAE9k0Pk_mfiwxEqbDnHDXdeFMr3bcrBCbbS+_o_abPr_ZyVqvQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "同步复制",
+        "复制槽"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "重新审视 CREATE INDEX CONCURRENTLY 的优化空间",
+      "summary": "Mihail Nikalayeu 把补丁基于当前代码重新变基，多位贡献者仍在审查，本轮没有新的设计变动。",
+      "url": "https://www.postgresql.org/message-id/CADzfLwXQAOkW9yYeNiv5Z5hxRLjnqHx1VBCXSXaqTuxsY=HyPA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "并发"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "CNCF 发布 OTel 与 mesh 派生指标的 2026 参考",
+      "summary": "可观测性与 etcd 生命周期管理是平台的底层能力，文中给出指标命名与来源的统一口径。",
+      "url": "https://www.cncf.io/blog/2026/06/29/otel-and-mesh-derived-metrics-a-2026-reference/",
+      "author": "",
+      "source": "CNCF 博客",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "OpenTelemetry"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：enable_incremental_sort",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_incremental_sort/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 第 25 周贡献汇总",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/88/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Swiss PGDay 2026 见闻",
+      "summary": "",
+      "url": "https://www.cybertec-postgresql.com/en/swiss-pgday-2026-impressions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "有人提议用 SIMD 加速 UUID 解析",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABXr29GkTK9RUqBuV9iK_mYKjjUu1sWg7j7ZB_wtQNv93Z0WYA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "补丁实现 CAST(expr AS type FORMAT '模板') 语法",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABXr29FyPC7terFF7E+r462BEHhYgv06oUVoBrhkH7xhshuE6A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 的 --dry-run 日志有问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/a699024f-26d0-4bbe-b5ce-0437682bbe25@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "讨论只读 CTE 的删除是否过于激进",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALdSSPgzBj=4OHUhnV0H-uOYdbx6_YokWVbb9PxdjF_CCn6ojA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "查询执行计划日志记录方案的 RFC",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/82f73973f6fbdb1d2ae31e7c40e4a4f1@oss.nttdata.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "副本标识为 full 时逻辑复制的索引选择优化",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA9pdKf1jUvFDzRxiEYjzUh4Rq-cUOb7QcnpvB0OFmtZbOEGFw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "DocumentDB：建在 PostgreSQL 上的文档数据库",
+      "summary": "",
+      "url": "https://documentdb.io/",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cockroach Labs 谈 AI 规模下的 PostgreSQL 兼容",
+      "summary": "",
+      "url": "https://www.cockroachlabs.com/blog/postgresql-compatible-databases-ai-scale/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Sling CLI：开源的数据接入与复制工具",
+      "summary": "",
+      "url": "https://github.com/slingdata-io/sling-cli",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GalaxDB：开源的 AI 原生数据库",
+      "summary": "",
+      "url": "https://github.com/zentrix-innovative-labs/galaxdb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "etcd-operator 加入 Cozystack 并换用新 API",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/29/etcd-operator-joins-cozystack-with-a-new-v1alpha2-api/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "数据泄露波及六家 ISP 的 1.42 亿个邮箱账号",
+      "summary": "",
+      "url": "https://www.bleepingcomputer.com/news/security/data-breach-exposes-up-to-142-million-email-logins-at-six-isps/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "如何写出优秀的漏洞报告",
+      "summary": "",
+      "url": "https://daniel.haxx.se/blog/2026/06/29/do-excellent-vulnerability-reports/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "AMD 的 Linux 补丁引入低功耗 CPU 核心类型",
+      "summary": "",
+      "url": "https://www.phoronix.com/news/AMD-Low-Power-CPU-Core-Linux",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "龙芯推出 16 核服务器 CPU",
+      "summary": "",
+      "url": "https://www.tomshardware.com/pc-components/cpus/chinas-loongson-launches-homegrown-16-core-server-cpu-built-on-loongarch-architecture-40w-chip-with-ddr4-ecc-and-32-pcie-lanes-targets-cheap-smb-file-database-and-web-servers",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "LLDB 加入 MCP 支持",
+      "summary": "",
+      "url": "https://lldb.llvm.org/use/mcp.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 30
+    }
+  ]
+}

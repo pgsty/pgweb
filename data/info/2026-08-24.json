@@ -1,0 +1,322 @@
+{
+  "date": "2026-08-24",
+  "origin": "chronicle 2026-08-24: pgnexus #248, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的分区合并与分割功能面临回退",
+      "summary": "ALTER TABLE MERGE/SPLIT PARTITIONS 已提交进 PostgreSQL 19，收尾阶段却暴露出大量边界情况。Jian He 提交补丁，提议在存在触发器、本地约束、不属于分区索引层次的本地索引、列默认值不一致或访问方法不同时直接报错，因为没有机制重建这些对象。Robert Haas 强烈反对保留：操作全程持有 AccessExclusiveLock，数据全量复制且没有优化，产出的分区既不是源分区的克隆也不是干净的新分区，他主张在发布前回退。",
+      "url": "https://www.postgresql.org/message-id/CACJufxGzR4vJZJNTULW2tfrx0jbpetB89M7nNirXLGOLfSQ3Lw@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "分区",
+        "回退"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostGIS 3.7.0rc1 发布，修掉多个几何解析缺陷",
+      "summary": "PostGIS 团队发布 3.7.0rc1，3.7 大版本的候选版，相对 beta2 只做缺陷修复，要求 PostgreSQL 14 至 19rc1 与 GEOS 3.10 以上。修复集中在几何输入的健壮性：NURBSCURVE 包围盒遇到非有限控制点会让后端 CPU 陷入拒绝服务，畸形 SRID 前缀和畸形多边形环也能绕过校验，多项问题来自 OSS-Fuzz 与安全扫描。升级后执行 postgis_extensions_upgrade() 即可。",
+      "url": "https://postgis.net/2026/08/PostGIS-3.7.0rc1/",
+      "author": "Regina Obe",
+      "source": "PostGIS",
+      "source_date": "2026-08-24",
+      "image": "https://postgis.net/postgis-logo-horizontal.png",
+      "domain": "pg",
+      "tags": [
+        "PostGIS",
+        "扩展",
+        "安全"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制冲突日志表遇超大字段值会中断",
+      "summary": "冲突日志历史表的提案里发现一个缺陷：conflict_log_destination 设为 table 时，冲突行里的超大字段值会让逻辑复制中断。根因是 JSON 转义膨胀，escape_json 把控制字符展开成 6 字节序列，190 MB 的值膨胀到约 1.14 GB，越过 varlena 的 1 GB 上限。Amit Kapila 主张省略超大列的值并在原位留标记，Dilip Kumar 据此把每列上限定为 64 KB。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1LvgUX53XpEdWqcSiADg=qmXyCJ8YEZEzvh7G==FUfLvA@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "预备语句的第六次执行为何让查询突然变慢",
+      "summary": "Christophe Pettus 拆解了 PostgreSQL 的计划缓存。简单查询协议下的文本 SQL 每次都要重新解析、重写、规划再丢弃，PostgreSQL 没有跨会话的共享计划缓存，计划只挂在预备语句、PL/pgSQL 和 SPI 这类对象上。带参数的预备语句真正的分岔点在第六次执行：此前用定制计划，之后才可能改用通用计划，不少“什么都没改查询却变慢了”正出自这一刻。文中结论以 PostgreSQL 18 核对。",
+      "url": "https://thebuild.com/blog/the-sixth-execution/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "计划缓存",
+        "预备语句",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Neon 用 WAL 加 S3 重做面向智能体的存储层",
+      "summary": "Neon 的 Carlota Soto 认为传统 OLTP 数据库的笨重来自基础设施层，而不是 PostgreSQL 本身。文章介绍 Lakebase 的存储设计：把 WAL 与 S3 结合，面向 AI agent 的负载，让实例可以随时分支、随用随弃，不必为每个短暂环境准备一整套常驻基础设施。作者的主张是数据库基础设施要匹配 agent 的使用方式，只要存储层选对，PostgreSQL 完全能承担这类场景。这是厂商视角的架构介绍，开销与恢复行为没有给出数据。",
+      "url": "https://neon.com/blog/wal-s3-lakebase-storage-for-the-era-of-agents",
+      "author": "Carlota Soto",
+      "source": "Neon 博客",
+      "source_date": "2026-08-24",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/wal-s3-lakebase-storage-for-the-era-of-agents/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "存储",
+        "AI"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "分区叶子索引重建会丢失注释与统计目标",
+      "summary": "Melanie Plageman 发现 ALTER COLUMN TYPE 重建索引丢失的不只是副本标识，注释、统计目标和 reloptions 同样会掉。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ajK0QhmOA3N2-QynT7hXx-VVV99RTXrae3sc51we2TSA@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "索引"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "备库从归档切回流复制被重新定位为正确性问题",
+      "summary": "备库长期停在归档恢复会让主库的物理复制槽不推进，磁盘可能耗尽，PG17 的 slot sync 下还会阻塞逻辑复制。",
+      "url": "https://www.postgresql.org/message-id/CAE9k0Pn9P-JAPcR1pV7xF307P=h-AiMwcL=bbQup4APOzDGpMA@mail.gmail.com",
+      "author": "Ashutosh Sharma",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "WAL"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "在线开启校验和的测试失败源于 buildfarm 配置",
+      "summary": "Tomas Vondra 确认是 debug_parallel_query 耗尽 worker 所致，224 台 buildfarm 中有 203 台开着它。",
+      "url": "https://www.postgresql.org/message-id/2bcd05e4-c98c-4b0e-a561-90e75a60206c@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "测试"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "在线启用校验和改用 ReadStream 读取数据块",
+      "summary": "Andrey Borodin 审阅 v2 未发现正确性问题，改造减少了系统调用与耗时，也为直接 I/O 和异步 I/O 铺路。",
+      "url": "https://www.postgresql.org/message-id/90C92FF4-F4E1-4041-BB46-A0A4939C92C1@yandex-team.ru",
+      "author": "Andrey Borodin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "IO"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "临时复制槽在子事务回滚时的清理会触发 PANIC",
+      "summary": "Bharath Rupireddy 主张子事务路径只做槽释放不做清理，并指出释放时罕见的文件重命名失败会导致栈溢出。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACUuAgDJ3kCXJHNnV3R=ziZvuGHiBH8zfcT1wJg5+q=Pww@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "apply worker 可能选中无效索引做全行匹配",
+      "summary": "indisvalid 检查刻意留在调用方：移进函数会让 DROP INDEX CONCURRENTLY 刚失效索引时的断言误触发。",
+      "url": "https://www.postgresql.org/message-id/pOgLiz9X0MzmdfOoow5M-J8Y43PnUK405e88aMSeKQ3T_ZLhl2wxil4_E4WXoqaN1aZQI5OAiZhXSeL8ILwP6nn9RWRnysCuGrw71ZLQpXk=@proton.me",
+      "author": "Mikhail Nikalayeu",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "索引"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "schema 级发布的 EXCEPT 语义定下差异化规则",
+      "summary": "分区表排除根表即排除整棵树并跨 schema 生效，继承表的 EXCEPT 只在本 schema 内生效，显式按名包含的表优先。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uCPxQLT5skNYxSFV=TU2Q1hN3TvUSAWUrjusMe-QFqN6w@mail.gmail.com",
+      "author": "Nisha Moond",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "发布",
+        "逻辑复制"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：listen_addresses 的正确设法",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-listen_addresses/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "COSCUP 2026 上的台北 PostgreSQL 社区",
+      "summary": "",
+      "url": "https://www.highgo.ca/2026/08/24/postgresql-in-taipei-connecting-taiwan-to-the-global-postgresql-community-coscup-2026/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "bms_offset_members 为 Bitmapset 补上位移支持",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAApHDvokmqpUk8yoBrK+nAA7ONarXF3pXji-5zPNSCiVh75xSw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "stringToNode 与 pg_strtok 的线程安全改造收尾",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEze2WhRQq15AKUdosxDF2k=HNgdu9sF5jJcuQxVfKh4dkoDaA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Nathan Bossart 提交 toast.* reloptions 的修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aoy4_gx0RkS3NsN_@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "FDW 函数扫描下推的 unnest 测试结果不稳定",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0v7Eag=LLQgGDgydnxQ9JJ=wCK+=9JAveLkKnZYdsS-Ug@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "事务内刷新统计的补丁修掉结构体填充隐患",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aowFezMGPX4VTeFa@bdtpg",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "tablesync 的 COPY 缓冲区改用只读 StringInfo",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/tencent_38512B35E6C163B6ADD1CE4C0C7C8F59C60A@qq.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_replication_slots 将报告下发字节与事务数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAE9k0PmtTYcayY5i3oDFazbZy0QqVYYiYqxP9FF-EY8RZcsj_g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    }
+  ]
+}

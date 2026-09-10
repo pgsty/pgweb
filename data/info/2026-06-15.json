@@ -1,0 +1,554 @@
+{
+  "date": "2026-06-15",
+  "origin": "chronicle 2026-06-15: daily, pgnexus #178, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 为何没有 remote_receive 同步级别",
+      "summary": "synchronous_commit 在 local 与 remote_write 之间还缺一档：WAL 到达备库内存即可返回。Robins Tharakan 把它实现了一遍，备库状态消息扩到 42 字节以携带 receivePtr，walreceiver 在写盘前先回复。SSD 上两种模式只差 0.06%；慢速 HDD 备库上它起初反而更慢，因为 TCP 包翻倍引发调度抖动。十轮测试后中位数领先 4.9%，他认为抵不过复杂度损失。",
+      "url": "https://www.robins.in/2026/06/why-postgres-doesnt-have-remotereceive.html",
+      "author": "Robins Tharakan",
+      "source": "robins.in",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "同步提交",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Richard Yen：灾难恢复是一套流程而不是一个工具",
+      "summary": "PostgreSQL 自带 pg_dump、pg_basebackup 与 pg_stat_replication，外围还有 pgBackRest 和 Barman，但 Richard Yen 认为恢复现场失手的极少是工具。他把灾难定义为任何持续损害可用性、正确性或业务信任的事件，切换后的性能回退、坏迁移和 WAL 归档缺失都算，并把失败拆成基础设施、流程和人三层。RPO 与 RTO 则是一条成本曲线，需要与业务一起谈定。此为上篇。",
+      "url": "https://richyen.com/postgres/2026/06/15/disaster_recovery_is_a_process.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份恢复",
+        "高可用",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Neon 发布 neon.ts，用 TypeScript 管理项目配置",
+      "summary": "Neon 把项目配置搬进了代码。neon.ts 是一份 TypeScript 写成的基础设施即代码配置文件，开发者在其中声明 Neon 服务、配置分支设置，并直接拿到类型安全的环境变量，不必再回控制台逐项点选。Neon 近来把自己定位成面向应用和 AI agent 的后端平台，数据库资源的程序化管理因此越来越重要。工具现已可用，想把数据库分支和环境变量纳入版本控制、让 CI 或 agent 自动创建实例的团队可以先试。",
+      "url": "https://neon.com/blog/introducing-neon-ts",
+      "author": "Andre Landgraf",
+      "source": "Neon 博客",
+      "source_date": "2026-06-15",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/introducing-neon-ts/cover.png",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "IaC",
+        "TypeScript"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Orca 披露 Splunk Enterprise 未认证文件操作漏洞",
+      "summary": "Orca Security 公布 CVE-2026-20253 等一组 Splunk Enterprise 漏洞，核心是未经认证的文件操作可以一路走到远程代码执行。日志与可观测性平台通常握着大量凭据、内部拓扑和访问路径，被攻破后的影响面常常超过普通业务系统。受影响版本与补丁状态仍以 Splunk 官方公告为准。对外暴露过 Splunk 的团队应立刻确认版本和补丁、收紧访问控制与网络隔离，并回查是否留有异常的文件读写痕迹。",
+      "url": "https://orca.security/resources/blog/cve-2026-20253-splunk-enterprise-rce-unauthenticated-file-operations/",
+      "author": "Orca Security",
+      "source": "Orca Security",
+      "source_date": "2026-06-14",
+      "image": "https://orca.security/wp-content/uploads/2026/06/orca-blog-rapid-response-critical-splunk-enterprise-vulnerabilities.jpg?resize=808%2C480",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "CVE",
+        "可观测性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Linux 7.1 主线发布，进入新的维护周期",
+      "summary": "Linus Torvalds 在 LKML 发出 Linux 7.1 的发布邮件，主线由此进入新一轮维护周期。内核主线版本会牵动数据库性能的方方面面：文件系统、网络栈、cgroup、io_uring、BPF 和容器 runtime 行为都可能变化，具体改动仍以 changelog 和各发行版的 backport 为准。生产环境的 PostgreSQL 节点不必追主线，可以先留意 IO、调度与文件系统方向的改动。",
+      "url": "https://lore.kernel.org/lkml/CAHk-=wi4BF4bMhZNZ1tqs+FFV4OuZRe3ZqdWB+LxRLmRweUzQw@mail.gmail.com/T/#u",
+      "author": "Linus Torvalds",
+      "source": "LKML",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "内核"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "CISA BOD 26-04 要求按风险排定补丁优先级",
+      "summary": "CISA 发布约束性操作指令 BOD 26-04，把联邦机构的安全更新从逐条清点 CVE 改成按风险排序。资产和漏洞数量都很大时，真正的难题不是知道有哪些 CVE，而是把可利用性、暴露面、业务关键性和打补丁本身的风险合成一个优先级。指令面向联邦机构，方法论却适用于任何要维护大量数据库和中间件的团队：把互联网暴露、利用活跃度、资产重要性、补丁可得性和回滚成本一并入表，替代只看 CVSS 分数的做法。",
+      "url": "https://www.cisa.gov/news-events/directives/bod-26-04-prioritizing-security-updates-based-risk",
+      "author": "CISA",
+      "source": "CISA",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "漏洞管理",
+        "合规"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志表补丁进入 v50 审查",
+      "summary": "pg_conflict 模式下手工建同名表会触发断言，加锁与权限策略仍有分歧，设计意图是只允许 SELECT、DELETE、TRUNCATE 和 LOCK。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uD9GDnGBQ4L9dUks6K+cTjggmsk89iQ3rzMiyCO9OXifA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "补丁"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_restore 选择性恢复会漏掉统计信息",
+      "summary": "用 --schema、--table 或 --index 过滤时，v18/v19 会跳过关系与属性统计，v4 补丁已修并将回移到 v18。",
+      "url": "https://www.postgresql.org/message-id/2CF02867-1D9C-40D9-A32F-B87040C84330@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_restore",
+        "统计信息"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "MERGE PARTITIONS 合并大行分区时报错",
+      "summary": "createPartitionTable() 漏掉了 NewRelationCreateToastTable() 调用，带测试的修复补丁已备好待推送。",
+      "url": "https://www.postgresql.org/message-id/ai_c4-v8iLA2kXFV@pryzbyj2023",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "缺陷"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "UnlockBufHdrExt 位操作顺序丢掉 BM_IO_ERROR",
+      "summary": "TerminateBufferIO 会意外清除该标志，Andres Freund 打算改成先减后加并在代码里写明约束，测试等写路径完成 AIO 改造再补。",
+      "url": "https://www.postgresql.org/message-id/kbxmel4wair2vljofva327ralg6oyjjay2nhojdyup4zwvsmni@fxkknoi7ytp6",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "缺陷"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "libcurl 8.20.0 回归导致 OAuth 测试在 macOS 失败",
+      "summary": "设备流程的 CPU 占用异常升高，8.21.0 已修复；临时方案是检测到 8.20.0 就跳过该测试，但回移到 PG18、PG19 较为复杂。",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+=yrwMSsHuNJ1V14isA4iSix5Xb3P3VEp1X0BS61MdV4A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "OAuth",
+        "测试"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Neon 上架 Vercel CLI Marketplace",
+      "summary": "终端里执行 vercel integration add neon 即可创建数据库，面向项目初始化与 agent 驱动的自动化流程。",
+      "url": "https://neon.com/blog/provision-neon-vercel-cli-marketplace",
+      "author": "Taraneh Dohmer",
+      "source": "Neon 博客",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "Vercel"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "HexaCluster 对比 Claude Code 与自家迁移工具",
+      "summary": "文章用同一批 Oracle 对象做基准，比较通用编码 agent 和 HexaRocket 在模式与 PL/SQL 转换上的完成度。",
+      "url": "https://hexacluster.ai/blog/claude-code-vs-hexarocket-for-oracle-to-postgresql-migrations-benchmarking",
+      "author": "HexaCluster",
+      "source": "HexaCluster",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "Oracle"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "DuckDB-WASM 扩展测试：编译通过不等于能跑",
+      "summary": "作者演示 Wasm 沙箱下 ABI、运行时、文件系统与线程限制引发的运行期失败，扩展流水线需要 smoke test。",
+      "url": "https://rusty.today/blog/testing-duckdb-wasm-extensions/",
+      "author": "",
+      "source": "rusty.today",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "WebAssembly"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Arch Linux AUR 再现恶意包",
+      "summary": "Phoronix 报道用户贡献仓库中出现新的恶意软件，官方复盘尚未公布；构建环境不应直接信任 AUR 一类的第三方源。",
+      "url": "https://www.phoronix.com/news/Arch-Linux-AUR-More-Malware",
+      "author": "Phoronix",
+      "source": "Phoronix",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "安全"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Google 发布 Open Knowledge Format 开放规范",
+      "summary": "把面向 agent 的知识包定为厂商无关的开放格式，并给出参考实现的读写工具。",
+      "url": "https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing/",
+      "author": "Google Cloud",
+      "source": "Google Cloud 博客",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "元数据",
+        "AI Agent",
+        "数据共享"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐条梳理：default_text_search_config",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-defaulttextsearchconfig/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_publication_tables 竞态修复提交 v7 补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACVc3G118VfMtS04JwE0c0Y_vsVwh3LVAMAVgBR6qNFo8g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制统计拟新增 sent_bytes 列",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAExHW5uCYoessP7TtCZiPBjXz4JOAkW0nZ5SAEiGLMzSY_hkDA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "监控"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "FOR TABLES IN SCHEMA 发布拟支持 EXCEPT 子句",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+G-b+=KqwwakEbpYx995NHRDzXSB-8g-MSDD6NgyReUQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 拟对所有源版本保留复制源 OID",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KzGSANd=g1S8xpcyiwh3M-c+Uaa4+447v-+N8chX7K3g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "synchronized_standby_slots 行为不一致待修",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAE9k0PkxvD_Rbz1qm3ZHOX_n-JXaOiPV2wusvb6KVwQqifpt6w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "无需 ANALYZE 记录运行中查询计划的补丁更新到 v54",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/4372fb202217256483a015f662d2b474@oss.nttdata.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁继续重构与审查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxFAQhbOD9EVCTAy-VwDbG4446N10GsxCcgdpFnjHO1Efw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "共享内存回调持锁的设计得到澄清",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAExHW5sHs+eSiTDOd14buayc6JbBX=Hm5ssFMBK0Ki9sTGEOuA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "共享内存"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "统一运算符命名空间的提议遭 Tom Lane 反对",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ail31FA1LVIyM5F_@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "search_path"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "XML 回归测试改用 psql 条件指令，已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/127189.1781478744@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Pistachio：声明式 PostgreSQL schema 迁移工具",
+      "summary": "",
+      "url": "https://github.com/winebarrel/pistachio",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "SchemaFlow 示范数据库变更影响分析与护栏",
+      "summary": "",
+      "url": "https://developers.openai.com/cookbook/examples/partners/schemaflow_design_guide/schemaflow_cookbook",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "变更管理"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "wtdb 给每个 Git worktree 分配独立数据库",
+      "summary": "",
+      "url": "https://github.com/willhackett/wtdb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "浏览器内把 SQL DDL 直接画成 ER 图的工具走红",
+      "summary": "",
+      "url": "https://sqltoerdiagram.com/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "建模"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "IssunDB：内嵌图数据库，带向量与文本检索",
+      "summary": "",
+      "url": "https://github.com/IssunDB/issun-db",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图数据库"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Cilium 讲述如何锁定 CI/CD 的依赖来源",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/12/securing-ci-cd-for-an-open-source-project-locking-down-dependencies/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "供应链"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "Awsmap 用 SQL 或自然语言离线查询 AWS 资产",
+      "summary": "",
+      "url": "https://github.com/TocConsulting/awsmap",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "zeroserve 与 Caddy 的性能兼容性实测",
+      "summary": "",
+      "url": "https://su3.io/posts/zeroserve-caddy-compat",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "HTTP"
+      ],
+      "position": 35
+    }
+  ]
+}

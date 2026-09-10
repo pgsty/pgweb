@@ -1,0 +1,466 @@
+{
+  "date": "2026-06-20",
+  "origin": "chronicle 2026-06-20: daily, pgnexus #183, news 1, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "HypoPG 1.4.3 修复长期缺陷并支持 PostgreSQL 19",
+      "summary": "HypoPG 为 PostgreSQL 9.2 以上版本提供假设索引，可以在不真正建索引的前提下评估索引对执行计划的影响。Julien Rouhaud 发布的 1.4.3 修复了一个长期存在的 Int8GetDatum 缺陷，并补上对 PostgreSQL 19 的兼容，两项改动都由他本人完成，报告缺陷的用户列在 CHANGELOG 里。做索引调优的团队可以直接升级，源码与发布包在 GitHub 仓库获取。",
+      "url": "https://github.com/HypoPG/hypopg/releases/tag/1.4.3",
+      "author": "Julien Rouhaud",
+      "source": "HypoPG",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "索引",
+        "发布"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "dynamic_shared_memory_type 应当保持平台默认值",
+      "summary": "dynamic_shared_memory_type 决定 PostgreSQL 启动之后用哪种内核机制分配共享内存，并行查询的运行期空间由它管理。Christophe Pettus 建议保持平台默认，Linux 上是 posix：sysv 受制于陈旧的内核限制，mmap 会把进程间内存变成磁盘 I/O，都只为老平台和调试保留。容器里 /dev/shm 默认只有 64 MB，并行查询会报共享内存无法扩展，正确做法是调大容器共享内存。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-dynamicsharedmemorytype/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-20",
+      "image": "https://thebuild.com/media/media/defad1e7d86e4377bd5e4590019aefe3.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "并行查询",
+        "容器"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "多态关联的三项规划器优化仍在 hackers 讨论中",
+      "summary": "多态关联用一个判别列把基表指向多张子类型表，规划器会为每行探测 N 张表，只有一次连接真正命中，规模上去后出现性能悬崖。Andrei Lepikhov 梳理了三条正在 pgsql-hackers 上讨论的改进：Result 过滤在进入内表之前先做单侧条件求值；排序下推把 ORDER BY 与 LIMIT 的排序放到基表扫描之上；SubLink 重定位把 EXISTS 转换出的半连接挪到被引用表附近。三者截至发文都尚未提交。",
+      "url": "https://danolivo.substack.com/p/optimising-polymorphic-associations",
+      "author": "Andrei Lepikhov",
+      "source": "Andrei Lepikhov 博客",
+      "source_date": "2026-06-20",
+      "image": "https://substackcdn.com/image/fetch/$s_!ZZl0!,w_1200,h_675,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F36577121-d2a9-4592-8907-d9e1356c98f4_1774x887.jpeg",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "连接",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 开源十周年，贡献者已达 2632 人",
+      "summary": "ClickHouse 以彩窗为喻纪念开源十年。Tyler Hannan 给出的数字来自项目自身：system.contributors 表当时列出 2632 位贡献者；截至 2026-03-19，GitHub 上 issue 与 PR 合计突破十万，27600 个 issue 关闭了 23016 个，71284 个 PR 关闭了 70362 个。文章还举了 cBioPortal 的例子，接入之后筛选查询从分钟级降到秒级。",
+      "url": "https://clickhouse.com/blog/ten-years-of-open-source-a-stained-glass-view",
+      "author": "Tyler Hannan",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "开源",
+        "社区"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 推出面向 AI agent 的临时账户",
+      "summary": "AI agent 会自动执行部署、调试、查询和配置修改，继续复用长期 token 和共享账号会迅速积累安全债。Cloudflare 发布 Temporary Accounts，把 agent 的身份生命周期做成平台原语，让人类用户与自动化主体分开治理，凭证短期有效并可撤销。这与 MCP 的企业认证、GitHub Actions 触发权限收紧是同一条线索：AI 工具链需要身份、审计和回收机制，而不是只靠 API key 约束。",
+      "url": "https://blog.cloudflare.com/temporary-accounts/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-06-19",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW9WMJ2M6QPE8YMRE25ZGNJ3.png",
+      "domain": "cloud",
+      "tags": [
+        "身份",
+        "AI Agents",
+        "访问控制"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "OOM 之后的异常行为修复已提交 PostgreSQL 主干",
+      "summary": "Michael Paquier 调整注释后只提交到 HEAD 未回移，并提交了第二个相关修复。",
+      "url": "https://www.postgresql.org/message-id/ajYtKGiz6qjbu3vv@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存",
+        "补丁"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 上线 pull request 数量限制帮维护者降噪",
+      "summary": "AI 让低质量 PR 的生成成本骤降，平台开始用限流手段保护维护者的注意力。",
+      "url": "https://github.blog/open-source/maintainers/how-pull-request-limits-are-cutting-down-the-noise/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源",
+        "维护者"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 讲怎么把漏洞验证做成可复用 harness",
+      "summary": "把一次性 PoC 变成能进 CI 的回归资产，扩展、镜像和控制面都可以照此收敛。",
+      "url": "https://blog.cloudflare.com/build-your-own-vulnerability-harness/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全测试",
+        "CI"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "AWS 河内 Local Zone 正式可用",
+      "summary": "Local Zone 的服务覆盖、价格、配额与合规能力都要单独确认，不等同完整区域。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-local-zones-hanoi-vietnam/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "边缘"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "CloudWatch Synthetics 支持多地点 canary",
+      "summary": "单区域探针会掩盖 DNS、CDN 与跨洲网络故障，多地点更接近真实用户体验。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-cloudwatch-synthetics-multilocation/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性",
+        "监控"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Grafana 发布 Pyroscope 2.0 加快持续性能剖析",
+      "summary": "持续 profiling 的采集与查询速度提升，feed 未给发布日期，需要按官方公告复核。",
+      "url": "https://grafana.com/blog/pyroscope-2-0-release/",
+      "author": "Grafana",
+      "source": "Grafana 博客",
+      "source_date": "",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "性能剖析"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 公开内部数据分析 agent 的搭建过程",
+      "summary": "风险集中在权限、语义层、查询成本与幻觉，比聊天机器人更接近生产系统。",
+      "url": "https://github.blog/ai-and-ml/github-copilot/how-we-built-an-internal-data-analytics-agent/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据分析",
+        "Agent",
+        "权限"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Copilot 用量指标 API 增加按用户的 AI credits",
+      "summary": "企业可以按人查看 AI 额度消耗，把成本归因和异常用量纳入工程治理指标。",
+      "url": "https://github.blog/changelog/2026-06-19-ai-credits-consumed-per-user-now-in-the-copilot-usage-metrics-api/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "成本治理",
+        "指标"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "PyTorch 2.12.1 修复回归与静默正确性问题",
+      "summary": "涉及 B200 与相关 attention kernel，静默错误会直接影响训练与推理结果可信度。",
+      "url": "https://github.com/pytorch/pytorch/releases/tag/v2.12.1",
+      "author": "PyTorch",
+      "source": "GitHub Releases",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "PyTorch",
+        "正确性"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "LMSYS 发布新一代投机解码 DFlash 与 Spec V2",
+      "summary": "推理侧的算法优化直接影响单位 token 成本和交互延迟，比模型榜单更有参考价值。",
+      "url": "https://www.lmsys.org/blog/2026-06-15-next-generation-speculative-decoding-dflash-v2/",
+      "author": "LMSYS",
+      "source": "LMSYS 博客",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "推理",
+        "性能"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁厘清 DEFINE 子句的求值边界",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260620.121719.209332541992434500.ishii@postgresql.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "hackers"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "有人用 Rust 写了带 135 个工具的 PostgreSQL MCP 服务",
+      "summary": "",
+      "url": "https://github.com/corporatepiyush/mcp-pg-rust",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MCP"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Moby API v1.55.0 新增镜像证明查询接口",
+      "summary": "",
+      "url": "https://github.com/moby/moby/releases/tag/api/v1.55.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "SBOM"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Moby 客户端 v0.5.0 暴露镜像证明声明",
+      "summary": "",
+      "url": "https://github.com/moby/moby/releases/tag/client/v0.5.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "SBOM"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 允许用 CKS 考试延长 CKA 证书有效期",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/17/expanding-care-passing-cks-can-now-extend-your-cka-certification/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "CNCF"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "KubeCon 中国站与 OpenInfra、PyTorch 大会合并举办",
+      "summary": "",
+      "url": "https://www.cncf.io/announcements/2026/06/18/kubecon-cloudnativecon-openinfra-summit-and-pytorch-conference-unite-in-china-to-scale-ai/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "会议",
+        "CNCF"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Sekoia 记录 APT28 攻击手法的最新演进",
+      "summary": "",
+      "url": "https://www.sekoia.com/blog/apt28-an-evolution-of-tradecraft",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "一个 7 KB 文件牵出持续十三年的后门行动",
+      "summary": "",
+      "url": "https://anchor.host/from-a-7-kb-file-to-a-13-year-backdoor-operation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "微软发现可自我传播的窃取加密货币后门",
+      "summary": "",
+      "url": "https://arstechnica.com/security/2026/06/microsoft-spots-new-self-propagating-malware-for-stealing-cryptocurrency/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "用 Airgap 把密钥与 AI agent、npm install 隔开",
+      "summary": "",
+      "url": "https://sauleau.com/notes/airgap-security-for-the-modern-ai-age.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "密钥管理"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "把 NixOS 安装镜像从 458 MiB 压到 183 MiB",
+      "summary": "",
+      "url": "https://natkr.com/2026-06-19-nixos-but-smol/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "NixOS"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "有观点认为 AI GPU 的实际寿命超过三年",
+      "summary": "",
+      "url": "https://www.seangoedecke.com/ai-gpus-live-longer-than-three-years/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "硬件",
+        "折旧"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "OCaml 5.5.0 发布，多核运行时继续演进",
+      "summary": "",
+      "url": "https://discuss.ocaml.org/t/ocaml-5-5-0-released/18265",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编程语言"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "有人做了个 MCP 服务器就绪度评分工具",
+      "summary": "",
+      "url": "https://isyourmcpready.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MCP"
+      ],
+      "position": 29
+    }
+  ]
+}

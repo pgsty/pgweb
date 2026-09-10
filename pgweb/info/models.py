@@ -27,6 +27,8 @@ class InfoItem(models.Model):
     source = models.TextField(blank=True, default='')
     source_date = models.DateField(null=True, blank=True)
     image = models.TextField(blank=True, default='')
+    # 500 × 300 WebP served at /info/img/<key>.webp; loaded from data/info/img/<key>.webp
+    thumb = models.BinaryField(null=True, blank=True, editable=False)
     domain = models.CharField(max_length=8, default='pg')
     tags = ArrayField(models.TextField(), default=list, blank=True)
     status = models.CharField(max_length=10, choices=STATUSES, default='published')
@@ -54,6 +56,15 @@ class InfoItem(models.Model):
     @property
     def anchor_url(self):
         return '{}#{}'.format(self.day_url, self.key)
+
+    @property
+    def thumb_url(self):
+        return '/info/img/{}.webp'.format(self.key) if self.thumb else ''
+
+    @property
+    def picture_url(self):
+        """The local thumbnail when it exists, else the source picture."""
+        return self.thumb_url or self.image
 
     @property
     def domain_label(self):

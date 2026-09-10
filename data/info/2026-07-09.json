@@ -1,0 +1,552 @@
+{
+  "date": "2026-07-09",
+  "origin": "chronicle 2026-07-09: pgnexus #202, planet 4, daily 30",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG19 外键批处理缺陷让约束被误标为已验证",
+      "summary": "Amit Langote 为 PostgreSQL 19 的外键快速路径批处理提交三个修订补丁，起因是 Noah Misch 批评此前把批处理限制在顶层事务。0001 移除该限制，改用子事务标记跟踪缓存条目。0002 修一处数据损坏：PL/pgSQL 的 EXCEPTION 块捕获外键检查错误后 firing_depth 未递减，同一事务里后续的 ALTER TABLE ... ADD FOREIGN KEY 会在有违规行时静默通过。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqGHa3tc6MZFSLyLrvwySdrmpkb1TqkH2jGd3HtKGGZ6cQ@mail.gmail.com",
+      "author": "Amit Langote",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "数据损坏",
+        "PG19"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "整库 VACUUM 的权限检查修复接近提交",
+      "summary": "全库 VACUUM 遇到并发删表的修复补丁走到 v8，关键是防止无特权用户对无权访问的关系申请 AccessExclusiveLock。缺少权限检查时，普通用户执行 VACUUM FULL 就能把强锁请求排进队列，阻塞所有新连接。Bharath Rupireddy 指出在 get_all_vacuum_rels() 的 ACL 检查里改用 _ext() 变体可以避开回归。Nathan Bossart 确认数日内提交。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACWNu-Jw12GeYrrtnYHtEEt1OTA0+iJc92BWCtMmp_MBbQ@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "权限",
+        "锁"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_dump 并行 worker 拟在所有平台改用线程",
+      "summary": "Bryan Green 重整了补丁，把 pg_dump 的并行 worker 统一到线程实现。0001 与 0002 是 Windows 专属改动：fmtId() 的缓冲区改为 _Thread_local，进程内 channel 取代回环 socket。0003 到 0005 依赖 Thomas Munro 的 pg_threads.h 推广到其他平台，删掉 fork() 与 pgpipe()，64 个 worker 的上限也一并取消。",
+      "url": "https://www.postgresql.org/message-id/fd31555d-1c51-41df-a25e-af022c5a1efd@gmail.com",
+      "author": "Bryan Green",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_dump",
+        "并行",
+        "线程"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_buffercache 拟加按关系汇总函数，快约 25 倍",
+      "summary": "pg_buffercache 正在讨论新增 pg_buffercache_relations()，把按关系的缓冲区聚合放到 C 层完成。Khoa Nguyen 在 shared_buffers 为 400GB 的机器上测 v2 补丁，比 SQL 侧聚合快约 25 倍。v3 把 usagecount_avg 换成 usagecount_total，并加上 work_mem 上限控制。超限时报错还是只写进文档，目前仍有分歧。",
+      "url": "https://www.postgresql.org/message-id/CAONt3B0HS=HKC8QkCo5LdYxCxh19xXk6=JA79a-w-1ji+i8y5w@mail.gmail.com",
+      "author": "Khoa Nguyen",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_buffercache",
+        "缓冲区",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 20 拟把 OpenSSL 最低版本提到 3.0",
+      "summary": "Jacob Champion 和 Michael Paquier 一致认为把 OpenSSL 3.0 定为 PostgreSQL 20 的最低要求合理，这意味着放弃 1.1.1。Michael 指出 OpenSSL 3.0 自身将在 2026 年 9 月停止维护，但对 PG20 可以接受。Jacob 原以为 3.0 会像 1.0.2 那样被发行版长期保留，RHEL 中途升到 3.5 出乎意料。Tom Lane 认为动因是后量子密码学。",
+      "url": "https://www.postgresql.org/message-id/ak8zIOUFZ9x6ypi2@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "OpenSSL",
+        "PG20",
+        "依赖"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "hackers 讨论用 TOML 或 JSON5 重写 pg_hba.conf",
+      "summary": "Zsolt Parragi 提议用结构化格式替换 pg_hba.conf、pg_ident.conf 这些配置文件，候选是 TOML 和 JSON5。Matthias van de Meent 反对 TOML，理由是依赖上下文的表语义不适合配置文件。Andrew Dunstan 认为在现有解析器里加 JSON5 改动很小，主要在词法分析器。Greg Sabino Mullane 要求先给出默认 pg_hba.conf 在新格式下的样子。",
+      "url": "https://www.postgresql.org/message-id/CAD5tBcLFQvaV7+-onng6DUAJFZY9KFvP4w3XOxQp6X0_AHi+YQ@mail.gmail.com",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_hba.conf",
+        "配置",
+        "认证"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Neon CLI 新增 neon api 命令面向 agent 自动化",
+      "summary": "Neon 给自家 CLI 加了 neon api 命令，同时解决两个问题：面向人设计的 CLI 通常落后于底层 API 的完整能力，而让 AI agent 直接调用原始 API 又有泄露密钥的风险。新命令把 API 访问包成可预期的受控调用，保留完整能力的同时把凭证留在 CLI 一侧。作者 Anthony Giuliano 称它更适合 agent 驱动的自动化工作流。",
+      "url": "https://neon.com/blog/introducing-neon-api-command",
+      "author": "Anthony Giuliano",
+      "source": "Neon 博客",
+      "source_date": "2026-07-09",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/introducing-neon-api-command/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "CLI",
+        "agent"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Amazon Aurora DSQL 的变更数据捕获正式可用",
+      "summary": "AWS 在 7 月 8 日宣布 Amazon Aurora DSQL 的 change data capture 一般可用。分布式 SQL 数据库缺少稳定的变更捕获就很难接进真实的生产数据流，CDC 转入 GA 意味着 Aurora DSQL 开始补齐从 OLTP 到事件、分析和搜索系统的下游链路。在它与 Aurora PostgreSQL 之间选型时，可以把 CDC 是否生产可用一并纳入评估。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-aurora-dsql-cdc-ga/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Aurora DSQL",
+        "CDC",
+        "AWS"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志表先落地了基础设施",
+      "summary": "已合并的提交只建了冲突日志表骨架，真正写入冲突记录的补丁仍在审查。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-sHeA=A+054KcOGue_q4tiT65rRvKxfdmJL3xjMwa2Kow@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "按 XID 年龄失效复制槽的活交给 checkpointer",
+      "summary": "vacuum 对持有中的槽直接跳过，最坏情况要等一个 checkpoint_timeout 才被清理。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoCPMHdu2G3uEK7d7t7_akW6OF5MUHKwBRJfwFzfC=bc-Q@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "autovacuum"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "json/jsonb 缓存 FmgrInfo 带来约两成性能提升",
+      "summary": "Tom Lane 指出 fmgr_info_copy() 会重置 fn_extra，VARIADIC 的每个参数都要重填缓存。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoZTQN8oXtB0JiwagG1cAkPOO+gA2+Hnf3w=O5t4ZwOJkA@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "jsonb",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "libpq 处理超过 8kB 的 SSL 记录后补上两处修复",
+      "summary": "pqDrainPending() 先更新 inEnd 再查错误返回，另修 LibreSSL 下缺 INT_MAX 的编译失败。",
+      "url": "https://www.postgresql.org/message-id/4cdfc0dc-9f66-4113-ad00-6e7a2cfa7211@iki.fi",
+      "author": "Heikki Linnakangas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "SSL"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "JSON_TABLE 的 PLAN 子句被测出四处缺陷",
+      "summary": "兄弟 NESTED PATH 的列会静默丢失，反解析丢括号，dump 丢掉 ERROR ON EMPTY 子句。",
+      "url": "https://www.postgresql.org/message-id/CAN-LCVNPbGjXqsAnce3MVW4iwQi9XAp9HA+6NXyGG9rBsvBXfA@mail.gmail.com",
+      "author": "Thom Brown",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON_TABLE",
+        "缺陷"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "standby 等待 WAL 回放到指定 LSN 的补丁再评审",
+      "summary": "每条 WAL 记录多出三次唤醒调用处在热路径，拟按等待类型分层把内存屏障合并成一次。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7UkddAnG=6X0JLHEOVWO-xoG3XYXgc1uWhbjj5eHRjipw@mail.gmail.com",
+      "author": "Xuneng Zhou",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "备库"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Fastware：企业并不是要放弃关系型数据库",
+      "summary": "压力来自创新节奏、负载增长和 AI 数据需求，问题被归到平台可扩展性而非关系模型。",
+      "url": "https://www.postgresql.fastware.com/blog/why-enterprises-outgrow-relational-databases",
+      "author": "Timothy Steward",
+      "source": "Fujitsu Enterprise Postgres",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "企业",
+        "选型"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Charity Majors 称 ClickHouse 正在赢下可观测性",
+      "summary": "列式数据库在日志与事件分析上的采用，会改变它与 PostgreSQL、Loki 等系统的边界。",
+      "url": "https://charity.wtf/p/have-you-heard-clickhouse-is-winning",
+      "author": "Charity Majors",
+      "source": "charity.wtf",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "可观测性"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 公开全球分布式共识系统 Meerkat",
+      "summary": "边缘平台的竞争正从 CDN 与 Worker 延伸到全球状态、一致性和配置传播。",
+      "url": "https://blog.cloudflare.com/meerkat-introduction/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "共识",
+        "边缘"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "Bun 宣布用 Rust 重写运行时",
+      "summary": "实现语言迁移会牵动安全、性能、贡献者生态和长期维护，不只是短期跑分问题。",
+      "url": "https://bun.com/blog/bun-in-rust",
+      "author": "Bun",
+      "source": "Bun 博客",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Bun",
+        "Rust"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 的内源安全公告转入正式可用",
+      "summary": "企业内部 fork 的组件从此有一等的安全通告、私有修复协作和补丁传播流程。",
+      "url": "https://github.blog/changelog/2026-07-08-innersource-security-advisories-are-generally-available/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "GitHub"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 20 为 uuid 加上 min() 与 max() 聚合",
+      "summary": "",
+      "url": "https://www.depesz.com/2026/07/09/waiting-for-postgresql-20-add-min-and-max-aggregate-support-for-uuid/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "log_statement_max_length 补丁按审查意见改到 v2",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEQgFn9UF3wG+LXszM=HMLm6nkEv-Jg2uX7M9M5VLKYkQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "CAST 的 FORMAT 子句是否必要仍有争议",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/33b9c141-dc4d-44a7-a1b8-9bd0a58cf954@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "DROP SUBSCRIPTION 拟新增 NOCONNECT 选项",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+tyYSpPxMBy1974kjivuGeR7YY=yopwRGrK3+vCTysdg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "pg_attribute_always_inline 拟改名并回合别名",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAApHDvpwjsxBYEsLLj5Z==zqZK4JZn2S_uc0Pi3dGACSsgOQyw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别重构引入 FIRST(expr, n) 前向范围回归",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxG9yPZhK9WKee_HEuKo35XkU-eLEhWFUiYAukSAat0G=g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus：版本号说明不了全部问题",
+      "summary": "",
+      "url": "https://thebuild.com/blog/the-version-number-is-not-the-territory/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL、AI 治理与 C.A.L.M. 平台测试",
+      "summary": "",
+      "url": "https://vibhorkumar.wordpress.com/2026/07/09/postgresql-ai-governance-and-the-c-a-l-m-platform-test/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "EDB 将在 PGConf.Brasil 2026 带来 13 场演讲",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/edb-heads-pgconfbrasil-2026-what-well-be-talking-about",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "schema_ferry 把 MySQL 模式持续迁移到 PostgreSQL",
+      "summary": "",
+      "url": "https://github.com/kyuuri1791/schema_ferry",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Amazon Redshift RG 实例进入 trailing track",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-redshift-graviton-rg-instances-trailing-track/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "用 DMS 把 Amazon RDS for Db2 回切到本地 AIX",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/fail-back-from-amazon-rds-for-db2-to-on-premises-aix-db2-using-dms/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "AWS Security Hub 新增网络扫描识别公网可达资源",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/07/aws-security-hub-network-scanning/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "npm 收紧安装期安全并弃用 GAT bypass2fa",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-08-npm-install-time-security-and-gat-bypass2fa-deprecation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 为 VS Code 与 CLI 提供企业级 OTel 导出",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-08-enterprise-managed-opentelemetry-export-for-vs-code-and-cli/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "OpenMandriva 就发行版遭破坏企图发表声明",
+      "summary": "",
+      "url": "https://forum.openmandriva.org/t/statement-regarding-attempted-distribution-sabotage/8997",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "研究显示防御型安全 agent 可被劫持执行远程代码",
+      "summary": "",
+      "url": "https://ainowinstitute.org/publications/friendly-fire-exploit-brief",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 36
+    },
+    {
+      "tier": 3,
+      "title": "Kubernetes v1.37.0-alpha.3 发布",
+      "summary": "",
+      "url": "https://github.com/kubernetes/kubernetes/releases/tag/v1.37.0-alpha.3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 37
+    }
+  ]
+}

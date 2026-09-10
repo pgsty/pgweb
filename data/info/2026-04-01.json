@@ -1,0 +1,313 @@
+{
+  "date": "2026-04-01",
+  "origin": "chronicle 2026-04-01: pgnexus #100, news 1, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Percona Operator 2.9.0 默认版本升到 PG 18",
+      "summary": "在 Kubernetes 上跑生产 PostgreSQL 的团队又多了几件趁手工具。Percona Operator for PostgreSQL 2.9.0 把默认版本提升到 PostgreSQL 18，新增基于 PVC 快照的备份，用卷快照替代逐文件拷贝以缩短恢复时间，并支持 LDAP 认证接入企业目录，另有数据库生命周期管理与可观测性方面的改进。升级前要确认存储类支持快照，并按新的默认版本核对扩展兼容性。",
+      "url": "https://www.percona.com/blog/percona-operator-for-postgresql-2-9-0-postgresql-18-default-pvc-snapshot-backups-ldap-support-and-more/",
+      "author": "Slava Sarzhan",
+      "source": "Percona 博客",
+      "source_date": "2026-04-01",
+      "image": "https://www.percona.com/wp-content/uploads/2026/04/Blog_PG18-1-1024x572-1.png",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "备份",
+        "LDAP"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_ivm 1.14 修复外连接增量视图维护缺陷",
+      "summary": "pg_ivm 让物化视图在基表变化时只计算增量，不必整表重算。1.14 版修复了两处外连接场景下的维护错误：视图里带交叉连接时增量维护会失败，连接条件列出现 NULL 值时同样无法正确维护。两种情况都会让视图停在过期状态，而未必给出明显报错。用到外连接增量视图的实例升级后建议重新校验一次视图内容，确认与基表一致。",
+      "url": "https://github.com/sraoss/pg_ivm/releases/tag/v1.14",
+      "author": "pg_ivm 项目组",
+      "source": "pg_ivm 发布说明",
+      "source_date": "2026-04-01",
+      "image": "https://opengraph.githubassets.com/97fb7b355434a481381f26c494a91245e51cd6f9b18d3073bdc48129c633fca3/sraoss/pg_ivm/releases/tag/v1.14",
+      "domain": "pg",
+      "tags": [
+        "物化视图",
+        "扩展"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_background v1.9 增加标签与结构化错误信息",
+      "summary": "pg_background 把 SQL 交给后台工作进程执行，调用会话不必阻塞，还能做自治事务。Vibhor Kumar 发布的 v1.9 加了四件运维向功能：给工作进程贴最长 64 字节的标签便于辨认；error_info_v2 返回 sqlstate、消息、明细与上下文；result_info_v2 不消费结果就能读到行数和完成状态；另有批量 detach 与 cancel。作者提醒它不是作业调度器的替代品。",
+      "url": "https://vibhorkumar.wordpress.com/2026/04/01/pg_background-v1-9-a-calmer-more-practical-way-to-run-sql-in-the-background/",
+      "author": "Vibhor Kumar",
+      "source": "Vibhor Kumar 博客",
+      "source_date": "2026-04-01",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/04/image.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "后台任务"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 用 MCP 自定义工具复刻 CrystalDBA 能力",
+      "summary": "pgEdge Postgres MCP Server 把 PostgreSQL 接给 Claude Code 这类客户端，自定义工具只能在库内跑 SQL、PL/pgSQL 函数或匿名块，不能发 HTTP 或访问文件系统。Antony Pegg 用一份 1668 行的 YAML 写了三个工具：按耗时或调用次数排慢查询、七项健康检查、以及索引建议。索引建议在没有 HypoPG 时退化成启发式，装了 HypoPG 就用假想索引验证代价。",
+      "url": "https://www.pgedge.com/blog/replicating-crystaldba-with-pgedge-mcp-server-custom-tools",
+      "author": "Antony Pegg",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MCP",
+        "诊断",
+        "索引"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "TigerData 谈文档数据库与时序负载的错配",
+      "summary": "MongoDB 在灵活模式和快速迭代上有优势，问题出在被拿去扛时序负载。Matty Stratton 指出时序数据是带时间戳的扁平、统一测量值，不是可变的层次化文档：WiredTiger 面对高频追加写吃力，没有原生的按时间分区，大范围时间聚合也慢。他同时提醒换成普通 Postgres 并不自动解决问题，两者在时序存储模型上有类似限制，真正的取舍是文档存储还是 TimescaleDB 这类专用方案。",
+      "url": "https://www.tigerdata.com/blog/document-databases-be-honest",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-01",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/Document-Databases_-Be-Honest-V2.png",
+      "domain": "db",
+      "tags": [
+        "时序",
+        "MongoDB"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "元组解构优化提交后出现断言失败",
+      "summary": "SELECT JSON_ARRAY(VALUES (('', ''))) 会触发 heaptuple.c 的断言，David Rowley 正在查修复方案。",
+      "url": "https://www.postgresql.org/message-id/80aeac57-8f50-4732-a5b4-c2373c3f8149@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "回归"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_waldump 解析 PAX 格式 tar 归档时出错",
+      "summary": "ZFS、BTRFS 上 GNU tar 生成的扩展头未被识别，pg_verifybackup 同样受影响，倾向直接拒绝。",
+      "url": "https://www.postgresql.org/message-id/CA+hUKG+Pqz5=YQG_=8ho0YsTfn2HWOsJQWqS4j0q8QQWweJP9w@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "WAL"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "基于 XID 年龄的复制槽失效补丁进入 v8",
+      "summary": "Masahiko Sawada 建议把 xmin 存进 VacuumCutoffs 统一算界限，测试也去掉了多余的订阅端。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoB61CgA921J2FwXzxfxUsxQzi7GYAZaH05PHmb6HFe_hg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "索引预取补丁 v20 重整表访问方法接口",
+      "summary": "index_fetch_tuple 改名 fetch_tid，批处理环缓冲区的所有权整体移交表访问方法。",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wz=nz-zr=gaXL1od_F7dcr=7d+3jEEveqY-bgcAKF6wZJQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "并行 autovacuum 在大表测试中提速 1.8 倍",
+      "summary": "新增表级 autovacuum_parallel_workers，7 个工作进程时提速 1.8 倍，默认开关仍有分歧。",
+      "url": "https://www.postgresql.org/message-id/CAJDiXggvE=e=0+HnZ1XjwUcXYTb0dw77pRUts5gqY997YaxVjQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "并行"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "MacOS CI 报错牵出 Perl 模块供应链担忧",
+      "summary": "IO::Tty 更新到 1.240.0 后 dup2 失败，开发者注意到上游有异常合并与 AI 生成代码。",
+      "url": "https://www.postgresql.org/message-id/CAN55FZ3VOUSO2ZmBUE9wRNnL9fUQfGv5qWefk_1pWYqgJ1bRSQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "供应链"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_autovacuum_priority 补丁接近提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0uVZLsX_k33QoWt8iRes73jyqs+EjypL9+1wW1v8NsYbg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "PGOAUTHDEBUG 将拆成更细的调试开关",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/89B8BFC0-582F-4A59-97D3-1829EFA04E45@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "OAuth 错误提示改进补丁完成变基",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+mvFS7Ukmacb1z=xWO7M+DPF41GZsJiJ6sh4U1Qm_yWOA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "REPACK 与逻辑解码的快照构建冲突待解",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1L58pxsOPoFD7+4CaNXTfkKJz7x_ZiS4nskMUq8FsEsGA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "libpq 将先试完主机全部地址再换下一个",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+mbOYRDYDb7aeqdRtDdxLBXACgsqS5DuRAgdemXC0fLNQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "表访问方法的选项位掩码补丁已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/40E570EE-5A60-49D8-B8F7-2F8F2B7C8DFA@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "ALTER TABLE 不递归到分区时将给出提示",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/74084E4E-4763-4A23-9886-FEB4DF67859B@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "槽同步进程退出日志将降级并回补到 17",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABdArM4XdB=vtQMVBBAowgf2PT7V8Dw56LfsYOAfyuxzcda6Ow@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 日志文件方案仍有分歧",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+f3d=mkbCKrJPP8dH_Rs5COvKZZg5DaSh-1XS_Nzwv3Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "发布模式变更补丁通过审查，宏问题另开线程",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+PuzgDiBcD6rp_31RzqbGLpMwqGrNKznFUA_fpBpZYPe9Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    }
+  ]
+}

@@ -1,0 +1,386 @@
+{
+  "date": "2026-07-29",
+  "origin": "chronicle 2026-07-29: pgnexus #222, daily 19, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "TimescaleDB 2.28 放宽持续聚合刷新锁并终止 PG15 支持",
+      "summary": "TimescaleDB 2.28 集中处理了持续聚合的运维痛点：刷新从表级锁改为行级锁，允许并发执行；持续聚合支持 ADD COLUMN，无需重建即可演进 schema；增量刷新还能把大时间窗口拆成多个小事务。压缩数据一侧，first/last 聚合可直接读批次元数据，CASE 表达式支持向量化，稀疏索引可对已有 chunk 更新配置而不必重新压缩。此版本起终止对 PostgreSQL 15 的支持，只保留 PG16 到 PG18。",
+      "url": "https://www.tigerdata.com/blog/timescaledb-2-28",
+      "author": "Nicole Ghalwash",
+      "source": "TigerData 博客",
+      "source_date": "2026-07-29",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/07/timescaledb2.28.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "时序",
+        "持续聚合"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg-java 发布：面向 JVM 的 PostgreSQL 原生驱动",
+      "summary": "JVM 侧的 PostgreSQL 驱动长期由 pgjdbc 一家承担。Sehrope Sarkuni 公布了 pg-java，以协议为先、JDBC 只作兼容层：原生 API 直接暴露 $1 参数，用面向虚拟线程的阻塞式写法而非响应式回调，批量写入改写成 unnest 数组参数后吞吐翻倍。项目要求 Java 21，采用 PostgreSQL 许可证，pgjdbc 测试套件通过 6851/7331，尚未进入 Maven Central。",
+      "url": "https://launchbylunch.com/posts/2026/Jul/29/introducing-pg-java/",
+      "author": "Sehrope Sarkuni",
+      "source": "launchbylunch.com",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "驱动",
+        "Java",
+        "JDBC"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "hash_mem_multiplier 该在什么时候调大",
+      "summary": "work_mem 之外，PostgreSQL 给哈希操作单独留了一个乘数。Christophe Pettus 说明 hash_mem_multiplier 只作用于哈希连接、哈希聚合和 Memoize，排序仍只拿基础 work_mem。它自 13 引入，默认值在 15 从 1.0 提到 2.0。判断依据是 Hash 节点的 Batches 大于 1：一般负载保持默认，落盘而调大 work_mem 又有风险时，按会话或角色单独提高。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-hash_mem_multiplier/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-07-29",
+      "image": "https://thebuild.com/media/media/a0c71d3c89c1474b8f94ace628b5d52f.png",
+      "domain": "pg",
+      "tags": [
+        "参数调优",
+        "work_mem",
+        "哈希"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "npm 发布后自动扫描恶意包，双用途包须声明",
+      "summary": "过去把包出现在 registry 当作可安装信号的发布流水线，现在要多等一步。npm 对新发布的包自动扫描，结果可能是正常发布、转人工审核或被阻止，GitHub 称常见延迟约五分钟，复杂内容可能超过 15 分钟。带双用途能力的包还需在 package.json 里声明 contentPolicy、在根目录放 DISCLOSURE，并使用强制 2FA 的发布方式，已声明的元数据不能在新版本里移除。发布、可安装与部署应拆成独立检查。",
+      "url": "https://github.blog/changelog/2026-07-28-npm-publish-time-malware-scanning-and-dual-use-metadata/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-28",
+      "image": "https://github.blog/wp-content/uploads/2026/07/628107626-4efdd993-0cd9-4311-aeef-4e9b97c64483.jpg",
+      "domain": "infra",
+      "tags": [
+        "npm",
+        "供应链",
+        "恶意包"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "MCP 新规范把 Streamable HTTP 改为无会话优先",
+      "summary": "MCP 2026-07-28 规范是协议层的实质迁移，不是一次普通 SDK 修订。传输层不再隐藏 session，改由每次请求携带协商信息，需要状态时由服务端显式返回 handle；MRTR 取代依赖长连接的服务端发起交互，路由头让基础设施按方法和工具计量，列表结果可声明缓存，OAuth 发行者校验与凭据绑定被加固。Roots、Sampling、Logging 和旧的 HTTP+SSE 进入弃用，过渡期至少 12 个月。",
+      "url": "https://blog.modelcontextprotocol.io/posts/2026-07-28/",
+      "author": "Model Context Protocol",
+      "source": "MCP 官方博客",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MCP",
+        "协议",
+        "Agent"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "REFRESH SEQUENCES 与序列同步进程的竞态已修复",
+      "summary": "改为对每个序列加短暂锁，读取后立即释放，避免并发 DROP 或 RENAME 改掉标识。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1K8Sf0sN9NYPeOLOejrqPWy9pS8Wx3+xNqo05FJi4CLxw@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "序列"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "refint contrib 模块将在 PostgreSQL 20 中移除",
+      "summary": "Daniel Gustafsson 已把弃用说明回补到 v14 至 v19 文档，引导改用内置外键。",
+      "url": "https://www.postgresql.org/message-id/9D6D52C1-B081-45F0-9C07-9875EDE92B0C@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "contrib",
+        "弃用"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "批量 clock sweep 缓冲淘汰补丁遭到质疑",
+      "summary": "Greg Burd 报微基准提升 68–75%，Andres Freund 认为该基准并未反映真实瓶颈。",
+      "url": "https://www.postgresql.org/message-id/8bd912c8-22bb-4667-a656-3be843709be2@app.fastmail.com",
+      "author": "Greg Burd",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲池",
+        "NUMA"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "SP-GiST 仅索引扫描的可见性缺陷出现回归",
+      "summary": "新的压力测试框架复现了原问题，现有修复应用之后 SP-GiST 又出现新的失败。",
+      "url": "https://www.postgresql.org/message-id/CADzfLwW1q8Feyk7UsEiszn0DAUDv0+ipvgq1T7kLwb2R-E_vvw@mail.gmail.com",
+      "author": "Mihail Nikalayeu",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GiST",
+        "索引"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "执行器批处理补丁把批能力移到 TupleTableSlot",
+      "summary": "Denis Smirnov 称 v4 在 500 万到 1000 万行表上比 master 快 8% 到 24%。",
+      "url": "https://www.postgresql.org/message-id/B7042D9E-2A8E-4CF5-8655-87DFA1A71521@gmail.com",
+      "author": "Denis Smirnov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "性能"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pg_rewind 无法区分复用同一时间线 ID 的分叉",
+      "summary": "有人提议用 UUID 唯一标识时间线实例，讨论认为归档策略本身也保证不了唯一。",
+      "url": "https://www.postgresql.org/message-id/CANwKhkO0jA5-V+OhQtPOwscLrq1+O9sCZXfuo4MYecjd1r9wag@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_rewind",
+        "时间线"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Dependabot 告警接入 OpenSSF 恶意包数据",
+      "summary": "开启恶意软件告警的组织会收到新告警，数据来自 OpenSSF malicious-packages。",
+      "url": "https://github.blog/changelog/2026-07-28-dependabot-alerts-on-malicious-packages-across-more-ecosystems/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Dependabot",
+        "供应链"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Actions 将自动暂挂可疑的 workflow run",
+      "summary": "需有写权限的协作者在 web 会话中批准，目前只覆盖 github.com 的公共仓库。",
+      "url": "https://github.blog/changelog/2026-07-28-github-actions-holds-potentially-malicious-workflows-for-approval/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub Actions",
+        "CI"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "OpenAI 开源 Codex Security 的 CLI 与 SDK",
+      "summary": "支持路径与 diff 目标、SARIF 导出和 --fail-on-severity，但本地 CLI 并非离线扫描。",
+      "url": "https://github.com/openai/codex-security",
+      "author": "OpenAI",
+      "source": "GitHub",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "应用安全",
+        "开源"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Zig 增量编译把无效化精度做到声明级",
+      "summary": "作者称首次构建约 5 秒，之后常见改动重建在 50–70 毫秒，但完整能力只在 master。",
+      "url": "https://mlugg.co.uk/posts/incremental-compilation-internals/",
+      "author": "",
+      "source": "mlugg.co.uk",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Zig",
+        "编译器"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "CREATE SUBSCRIPTION 的权限校验拟推迟到建连接时",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB121498B4C6146A66793E036C1F5CA2@OS9PR01MB12149.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "buffile.c 拟改用 repalloc_array() 防整数溢出",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DKBAWPZ2QDOS.10Y3JDUNKFMXX@partin.io",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存管理"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "规划阶段拟按 RelOptInfo 跟踪唯一键",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/29958.1785351979@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "内部函数 getdatabaseencoding() 已更名",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1F36EE6F-D130-4D36-A106-E351C642C1EA@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "函数"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "publicationcmds.c 里的 list_free 调用将被整体删除",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uA4uVCknX=QzxNLrt4vP7Y=xKT54hEchahx9cWHB_Tr8g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "发布"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 拟保留复制源的 OID",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uAz64iQtovGK1ccaLs6oCmg9kfwjRRyWDxiyeyKL=nD5g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "DBeaver 社区版加入交互式 AI 聊天",
+      "summary": "",
+      "url": "https://stokerpostgresql.blogspot.com/2026/07/dbeaver-recently-introduced-interactive.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "ProOpenSource 成为开放 PostgreSQL 教育联盟支持者",
+      "summary": "",
+      "url": "https://proopensource.it/blog/now-oape-member",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "reflex-dev/xy 发布 GPU 加速的 Python 交互绘图库",
+      "summary": "",
+      "url": "https://github.com/reflex-dev/xy",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可视化"
+      ],
+      "position": 24
+    }
+  ]
+}

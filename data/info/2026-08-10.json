@@ -1,0 +1,415 @@
+{
+  "date": "2026-08-10",
+  "origin": "chronicle 2026-08-10: pgsty-daily 2026-08-10.md, pgnexus #234, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostGIS 3.7.0beta2 发布",
+      "summary": "PostGIS 发布 3.7.0beta2，官方建议搭配 PostgreSQL 19 Beta2 与 GEOS 3.15.0beta2，支持范围是 PostgreSQL 14 到 19beta2、GEOS 3.10 以上、Proj 6.1 以上。这一版在 beta1 基础上修了 ST_GeometryN 与 ST_DWithin 的内存泄漏，加固了可写模式下攻击者可控的对象解析，补上畸形几何的校验，并修正大端平台与 32 位整数处理。",
+      "url": "https://postgis.net/2026/08/PostGIS-3.7.0beta2/",
+      "author": "Regina Obe",
+      "source": "PostGIS",
+      "source_date": "2026-08-10",
+      "image": "https://postgis.net/postgis-logo-horizontal.png",
+      "domain": "pg",
+      "tags": [
+        "PostGIS",
+        "扩展",
+        "测试版"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "选分区键要先看查询而不是先看数据量",
+      "summary": "Umair Shahid 提醒，分区之所以快靠的是分区裁剪，而裁剪只在查询按分区键过滤时才生效。他给的方法是先把最频繁、最贵的十条查询列出来，看它们的 WHERE 条件；如果过滤列五花八门，分区不会带来均匀收益。其次要看数据分布，不只是不同值的个数，还要看行怎么落在这些值上。哈希分区适合 UUID 一类天然均匀的键，按租户 ID 做哈希会造成热点。时间序按范围分区最合适，还能靠删分区做数据保留。",
+      "url": "https://stormatics.tech/blogs/choosing-the-right-postgresql-partition-key",
+      "author": "Umair Shahid",
+      "source": "Stormatics",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "性能",
+        "设计"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "integer_datetimes 只剩下一个取值",
+      "summary": "Christophe Pettus 讲的这个参数只读，报告的是日期时间类型的内部表示：以微秒计的 64 位整数，还是以秒计的浮点数。PostgreSQL 早期用双精度浮点存时间戳，整数表示在 7.x 时代作为编译选项出现，8.4 起成为默认，到 10 时移除了关闭它的编译开关，此后恒为 on。它还留在启动信息里，是因为支持二进制协议的驱动要靠它解码时间戳。8.4 之前用浮点构建的老集群无法用 pg_upgrade 升级。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-integer_datetimes/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-10",
+      "image": "https://thebuild.com/media/media/b3bb0908f28f40fe8738b2e348a5857c.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "时间类型",
+        "升级"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Restoredrill 想把备份验证做成日常演练",
+      "summary": "Restoredrill 把自己定位成证明 PostgreSQL 备份确实能恢复的工具。仓库在本窗口仍然很新，从项目说明推不出它已经覆盖复杂拓扑、加密、归档、时间点恢复或云备份插件。备份最常见的失败并不是没有备份，而是真要恢复时才发现对象不全、密钥不可用、版本不兼容、时间线缺失或恢复时间不达标。它更适合作为恢复演练清单的输入：先准备独立的恢复目标，做抽样与全量恢复，校验数据、对象与权限，给恢复时间计时，并把结果与生产严格隔离。",
+      "url": "https://github.com/ahmadpiran/restoredrill",
+      "author": "Ahmad Piran",
+      "source": "项目仓库",
+      "source_date": "2026-08-09",
+      "image": "https://opengraph.githubassets.com/0bc42b5be369147717db4519df8a2c85dbf9fcb16004672bd315051e1af4022e/ahmadpiran/restoredrill",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "灾备",
+        "演练"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Apple 私有云计算漏洞细节公开",
+      "summary": "研究者披露了 Apple Private Cloud Compute 的 CVE-2026-20685 细节：在 Apple 提供的虚拟研究环境里，利用 darwin-init 的解压路径处理，让构造的归档以 root 身份写入持久数据卷，并借此影响日志转发。NVD 记录把影响描述为具备特权网络位置的攻击者可能泄露敏感信息，修复版本是 PCC Release 5E290.3，并非新披露的零日。即使可验证的系统镜像不变，运行时的可写状态仍是独立边界。",
+      "url": "https://blog.sentry.security/beyond-prompt-injection-hacking-apples-private-cloud-compute/",
+      "author": "Sentry Security",
+      "source": "Sentry Security 博客",
+      "source_date": "2026-05-18",
+      "image": "https://storage.ghost.io/c/3c/85/3c852989-e4b5-4868-8226-9c9bebdfb8f2/content/images/size/w1200/2026/07/blogcve-04-1.png",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "Apple",
+        "机密计算"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "pg_verifybackup 查不出被截断的压缩备份",
+      "summary": "解压器读完输入就停下，不检查压缩库是否给出流结束信号，zstd、gzip 与 lz4 都有此问题，补丁改为逐格式跟踪完成状态。",
+      "url": "https://www.postgresql.org/message-id/91EEEF17-A331-4CEA-ABEA-E63C4FBDB173@gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "缺陷"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "B-tree 叶页合并补丁存在并发缺陷",
+      "summary": "GSoC 项目发现插入与页面合并同时发生时，元组可能落到已标记 BTP_MERGED_AWAY 的页上，后续索引扫描找不到该行。",
+      "url": "https://www.postgresql.org/message-id/CAD3G6s1hTiy+P7L5pp2ep7pbkjb2AGcuN6FA7EPR5kELqz4ufw@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "并发"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_control_checkpoint 将补上校验和状态列",
+      "summary": "提交 f19c0eccae 只给 pg_controldata 加了字段，函数里漏掉了；审查建议改名为 data_checksum_state 并返回文本状态。",
+      "url": "https://www.postgresql.org/message-id/CAB8KJ=hb765sE8bKC-6sh=Yp3sCjN8xs474yuBrkwyoTM2pgZA@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "监控"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "物化视图刷新将不再做多余的目录更新",
+      "summary": "只在 populated 状态真需要改变时才调用，避免产生死元组，并减少给所有 backend 发失效消息造成的计划缓存抖动。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEpFT=hiqC_jxWEsnoOVLz=wsfVXGLVL0Tnkpmf2=6ACA@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "物化视图",
+        "性能"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突历史表的记录范围定了下来",
+      "summary": "只记录造成数据分歧的冲突，触发 ERROR 中断复制的留在服务器日志；新增 resolution 列说明每条冲突的处理方式。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1J4G+=Z==wPwgNdsa-DK=qq1kx1gOpYAYFhaJ3Ht1O17Q@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "OpenChamber 把并行智能体收进一个工作台",
+      "summary": "基于 OpenCode，最多五个模型并行运行并融合结果，建议默认只绑定 localhost。",
+      "url": "https://openchamber.dev/",
+      "author": "OpenChamber",
+      "source": "项目站点",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Agent",
+        "开源",
+        "开发工具"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Streambed 用 SQLite 承担内容寻址存储的压实",
+      "summary": "把元数据职责交给嵌入式数据库能降低工程复杂度，代价是事务边界、可达性判定与删除时序成为核心设计。",
+      "url": "http://streambed.dev/blog/introducing-compaction/",
+      "author": "",
+      "source": "Streambed",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "存储",
+        "SQLite"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Nixpkgs-multiverse 想保留每一个历史版本",
+      "summary": "面向可复现构建与事故回溯，但完整版本存档会放大存储、索引与安全治理压力，回滚时可能带回已撤销的依赖。",
+      "url": "https://fzakaria.com/2026/08/09/nixpkgs-multiverse-every-version-that-ever-existed",
+      "author": "",
+      "source": "作者博客",
+      "source_date": "2026-08-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "Nix"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "CREATE 与 ALTER TABLE 的 DDL 反解析补丁更新",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoDtueBCmmyd2b7rU=Jd_T1_rX5QAHnRcfpxm+SKnCk6hQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "walsummarizer 在切换时间线时可能卡住",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoYHsXbGeL5hUFq-0hz=3pE3reOxdfr2matWswHDintcqA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "可动态扩容共享内存的测试修好了可移植性问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALfch1_mT+K4xea8S7w-TiWQUS1BRA6r4xjLAQLjHmOmg_65aQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "CREATE SUBSCRIPTION 被报可能空指针解引用",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/68d2a8e0e373294cb04910dd080ad1d04421fde8.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "拟增加 SQL 层的 pg_datum_image_equal 函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAF0whucG==EBY_8-nHF26daxHVhUfjOmvDMuKDv5U9jc0XvLPg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "服务器日志写入拟增加等待事件",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAKZiRmwd4sEMYNUh4G3R5_n1E+OYpSMRESWJTOaTTdi8trzQUQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "发布相关的错误提示措辞修正已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+PuddtXAEKrwFrAoXLW0zk8hoWOvSJLNW2-X6ys_vHNcMw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "OpenTableList 缺少 list_free 的讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOVWO5q8+MBoLDq1u4BfufKtiYnHS48cJNJ5PaNm9m_aZb90tA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "EDB 预告将参加瓦伦西亚的 PGConf EU 2026",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/edb-ready-valencia-meet-team-pgconf-eu-2026-0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Albedo 用 Zig 写单文件可监听文档数据库",
+      "summary": "",
+      "url": "https://github.com/klirix/albedo",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Preloop 把 GitHub Actions 放进隔离 microVM",
+      "summary": "",
+      "url": "https://preloop.dev",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "RunOnMine 做本机 MCP 安全网关",
+      "summary": "",
+      "url": "https://github.com/ademisler/RunOnMine",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Wardline 提供带身份与预算的 agent 控制面代理",
+      "summary": "",
+      "url": "https://github.com/kabirnarang39/wardline",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "us-vs-them 从 Git 历史推导代码的人机来源",
+      "summary": "",
+      "url": "https://github.com/eighttrigrams/us-vs-them",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Project Oberon 移植到 RISC-V",
+      "summary": "",
+      "url": "https://github.com/rochus-keller/OberonSystem/tree/op2-rv32",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 28
+    }
+  ]
+}

@@ -1,0 +1,510 @@
+{
+  "date": "2026-06-10",
+  "origin": "chronicle 2026-06-10: daily, pgnexus #173, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG19 外键快速路径修复越界写入与漏检",
+      "summary": "Nikolay Samokhvalov 报告了 PostgreSQL 19 外键快速路径批处理的三个缺陷：重入的外键检查会越界写入、子事务里的违规被漏掉、批处理过程中留下孤立行。Amit Langote 给出两个补丁，前者为每个条目加刷新标志并调整操作顺序，后者把批处理限制在顶层事务并加上缓存范围的重入保护。测试确认三个缺陷都已修复，现在会正确抛出外键违规而不是静默通过。补丁改用边界检查而不是重排来保留测试覆盖，计划在最终评审后提交。",
+      "url": "https://www.postgresql.org/message-id/CAM527d_2OpJ3KCOT1QqGh4neCPpgZTgM+VUxTqVgOSweOzTDQw@mail.gmail.com",
+      "author": "Amit Langote",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "外键",
+        "数据正确性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "AWS 用模板打包 Oracle 到 Aurora 的迁移流程",
+      "summary": "AWS 数据库博客用一套 CloudFormation 模板把 Oracle 迁往 Amazon Aurora PostgreSQL 的过程拆成两步。第一步用 DMS Schema Conversion 把 Oracle 的模式、数据类型和 SQL 代码转成 PostgreSQL 兼容形式，多数对象自动完成，需要人工处理的会被单独标出；第二步用 DMS 搬运数据。模板会一并部署 Oracle RDS、Aurora 集群和复制实例。",
+      "url": "https://aws.amazon.com/blogs/database/how-to-migrate-from-oracle-to-amazon-aurora-postgresql-using-aws-cloudformation-part-1/",
+      "author": "Fahad Farrukh",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-06-10",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/06/04/DB5013.png",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "Aurora",
+        "DMS"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "统一命名空间下 historian 表结构该用窄表",
+      "summary": "Tiger Data 讨论统一命名空间（UNS）架构下历史库的表结构该怎么定。作者的判断是标签变动在 UNS 里属于常态，按资产建宽表、把标识编码进列名的做法因此不再适用，改个名字就要付出 ALTER TABLE 的代价。推荐做法是两张窄表：一张命名空间表用代理键存 ISA-95 层级，一张 tag_history 通过外键引用它。标识与路径解耦之后，重命名标签只是一次 UPDATE，工厂重组和标签停用都不必迁移数据。",
+      "url": "https://www.tigerdata.com/blog/unified-namespace-historian-schema",
+      "author": "Damaso Sanoja",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-06-10",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/06/uns-historian-1.jpg",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "建模",
+        "工业"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Apple 发布 container 1.0.0 官方容器工具",
+      "summary": "Apple 把自家的容器工具 container 发到 1.0.0。项目 README 要求 Apple Silicon 和 macOS 26，底层依赖 Apple 的 Containerization Swift 包。macOS 开发机此前多靠 Docker Desktop、Colima 和 OrbStack，官方工具如果稳定，会改变本地容器运行时、虚拟化和网络的开发体验。本地数据库测试可以先观察它的网络、卷与 OCI 兼容性。",
+      "url": "https://github.com/apple/container",
+      "author": "Apple",
+      "source": "GitHub",
+      "source_date": "2026-06-09",
+      "image": "https://repository-images.githubusercontent.com/993475914/123bf50d-9ae2-48d9-94f7-7a345bf82c15",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "macOS",
+        "开发环境"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "npm v12 将带来一批破坏性变更",
+      "summary": "GitHub 提前公布了 npm v12 的破坏性变更清单，给生态留出迁移期。真正的风险不在变更本身，而在持续集成镜像悄悄升级 npm，或者开发者本地与生产构建用的 npm 大版本不一致。npm 是规模极大的软件供应链入口，即使变更不涉及安全漏洞，也会影响构建、发布和依赖更新机器人。建议逐个检查 Node 项目的 engines 字段、lockfile、CI 基础镜像和发布权限，并给发布链路固定 npm 大版本。",
+      "url": "https://github.blog/changelog/2026-06-09-upcoming-breaking-changes-for-npm-v12/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "npm",
+        "供应链",
+        "构建"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "ServiceNow 通知客户部分数据曾暴露在公网",
+      "summary": "工作流自动化平台 ServiceNow 通知客户，一个漏洞让部分客户数据暴露在公网上，未经授权的外部访问可以读到本应受限的信息。公司称已经联系受影响的客户，但暴露范围、持续时间和具体涉及哪些客户仍不清楚。ServiceNow 被大量大型企业用来自动化内部业务流程，这些系统里沉淀的运营数据敏感度很高，一次事故的影响面通常不小。对同类企业软件的使用方来说，值得借这次事件复核数据分级、外部可达性和访问日志的留存周期。",
+      "url": "https://techcrunch.com/2026/06/10/servicenow-tells-customers-a-bug-left-some-of-their-data-exposed-to-the-internet/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-06-10",
+      "image": "https://techcrunch.com/wp-content/uploads/2024/06/GettyImages-1782807384.jpg?w=1024",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "数据泄露",
+        "SaaS"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 与 pg_hint_plan 或在 v20 合并",
+      "summary": "Michael Paquier 说新钩子让 pg_hint_plan 净减两千多行代码，提议把行提示、并行提示等一并放进 contrib。",
+      "url": "https://www.postgresql.org/message-id/aiiuBUwve3ZZQRfZ@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "提示"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_stat_statements 新增执行开始时间列被推迟",
+      "summary": "Andres Freund 反对在自旋锁下再加内容，认为要先完成 pg_stat_statements 的重新设计再谈扩展。",
+      "url": "https://www.postgresql.org/message-id/emb8fcc6a9-d9a1-4d4c-a4e6-8d39d4c3c455@cybertec.at",
+      "author": "Pavlo Golub",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "性能"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PgDog 把连接池、负载均衡与分片做进一个进程",
+      "summary": "项目以 AGPL-3.0 开源，GitHub 约 4.4k 星，最新发布是 6 月 4 日的 v0.1.43，这次只是被提交到 HN。",
+      "url": "https://pgdog.dev/",
+      "author": "PgDog",
+      "source": "PgDog",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "分片"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Neon 为分支优先的开发流程加三个 CLI 命令",
+      "summary": "link、checkout 和 env pull 同时面向人和自动化代理，属于即将开放私有预览的 Platform 的一部分。",
+      "url": "https://neon.com/blog/branch-first-dev-loop",
+      "author": "Andre Landgraf",
+      "source": "Neon 博客",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分支",
+        "开发流程"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 给第三方 coding agent 加入安全校验",
+      "summary": "agent 会读仓库、开 PR、跑 CI 甚至触发部署，接入之前仍要核对授权范围、密钥访问和分支保护。",
+      "url": "https://github.blog/changelog/2026-06-09-security-validation-for-third-party-coding-agents/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "agent",
+        "平台治理"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 把前沿模型的攻击能力当作防御输入",
+      "summary": "承接前一天的实时威胁情报规则，主张 WAF、bot 识别、限流和身份体系都要按自动化攻击重新建模。",
+      "url": "https://blog.cloudflare.com/frontier-model-defense/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "WAF"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Microsoft 给 AI 活动调查给出取证流程",
+      "summary": "Purview、Defender 与 Sentinel 串起 Copilot 和 Azure AI 的遥测，把 agent 行为纳入正式事件响应。",
+      "url": "https://www.microsoft.com/en-us/security/blog/2026/06/09/reconstructing-ai-activity-investigations/",
+      "author": "Microsoft Security",
+      "source": "Microsoft 安全博客",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "审计"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AWS FinOps Agent 进入预览",
+      "summary": "把账单、资源、规则和审批连起来，仍需检验解释性、最小权限以及变更建议是否可审计。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-finops-agent-preview/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "成本治理"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Copilot CLI 支持文件化的自定义 agent",
+      "summary": "把重复任务写成可以版本控制和评审的 agent 配置，但不要把密钥和生产凭据写进提示词。",
+      "url": "https://github.blog/ai-and-ml/github-copilot/from-one-off-prompts-to-workflows-how-to-use-custom-agents-in-github-copilot-cli/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "agent",
+        "开发流程"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "psql 目录引用限定补丁已提交，操作符暂不加固",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aijEfGcHUJvqjzNj@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql",
+        "安全"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "分区外部表上多行 DELETE/UPDATE 出现异常",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aij4NSMQYpQxtRMF@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外部表",
+        "分区"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "shm_mq 错误路径的双重 pfree 导致崩溃",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/b8b40954-e155-41b3-9af8-ad4f261a1b64@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并行查询"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "MarkBufferDirtyHint 误对本地缓冲区取描述符",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aijctocPL6fUibrH@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "LLVM 19 加 ASAN 构建下 JIT 查询必崩",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zD6jGANGZFKnHLKHF8izqmqqJbVe=NOuERFwN_Spj5VOA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "psql 的 \\dCN 无法按表名过滤约束",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/19eb2df5fa0.43034f3c3151107.3042967838443745451@highgo.ca",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "md5_password_warnings 的角色与库级设置被忽略",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/AE46E42D-5966-4D76-9E64-95EAB01B9FB5@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "synchronized_standby_slots 与仲裁复制行为不一致",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uBR-8-d__LgfqqUbFvLBvzL6bY_kjUmBWAVsLLu1QZEPA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "同步复制"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "SQL 调用复制槽函数出错时的清理待统一",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHg+QDfZV_U2SQDrGy7DyBFtb45rQ_4Ln2NiQBk3p74bFTj40Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "ALTER PUBLICATION 的 EXCEPT 参数补上文档",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABdArM5Xjv2WAhUo=_VUYp1T1rVj9jb4GQMCq-rVHPBh-VTDpg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "文档"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "逐个梳理 GUC：deadlock_timeout",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-deadlocktimeout/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Richard Yen 写下 PGDay Boston 2026 参会记",
+      "summary": "",
+      "url": "https://richyen.com/postgres/2026/06/10/pgday_boston_2026_writeup.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "pgEdge 拆解 AI DBA Workbench 里的 Ellie",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/inside-the-pgedge-ai-dba-workbench-how-ellie-actually-works",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "AI"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "PGM-index 主打范围查询与更新的空间效率",
+      "summary": "",
+      "url": "https://pgm.di.unipi.it/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "索引"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Manticore Search 讲 More Like This 的演进",
+      "summary": "",
+      "url": "https://manticoresearch.com/blog/the-evolution-of-more-like-this/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "搜索"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Dependabot 支持 Deno 生态",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-09-dependabot-version-updates-now-support-the-deno-ecosystem/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "依赖治理"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "EMR Serverless 支持 Spark Connect 交互会话",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-emr-serverless-spark-connect/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据平台"
+      ],
+      "position": 32
+    }
+  ]
+}

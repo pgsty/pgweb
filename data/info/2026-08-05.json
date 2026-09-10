@@ -1,0 +1,408 @@
+{
+  "date": "2026-08-05",
+  "origin": "chronicle 2026-08-05: pgnexus #229, daily 24, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "TOAST 过程中丢锁可能让外键约束被绕过",
+      "summary": "更新一行大值时，缓冲区锁会在 TOAST 期间被放开，这个窗口足以让外键校验失效。Rui Zhao 复核初版补丁后指出还剩三个问题：TOAST 之后的重检条件与释放锁的条件不一致，孤立的外键行因此能存活；toaster 原样返回输入元组时，新元组的 xmax 错误保留了仅锁定标志；存在真实的键共享锁定者时，更新事务号会在多事务标记里被重复写入。他给出了修复补丁和基于注入点的隔离测试。",
+      "url": "https://www.postgresql.org/message-id/CAHWVJhGtxkEhiKU7ntFGQ2Lw9kUTebJD3N-xR8Q9OXem37A+Ug@mail.gmail.com",
+      "author": "Rui Zhao",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "TOAST",
+        "数据完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "count(DISTINCT) 会关掉整条语句的并行",
+      "summary": "去重聚合没有合并函数，工作进程无法把各自的去重结果拼起来，于是这一个关键字就让整条语句退回串行。Radim Marek 的改法是把去重下推成 GROUP BY，先在子查询里按列分组再数行数，这样可以走并行哈希。在 1000 万行的表上，串行去重聚合耗时 1211 毫秒并落盘 115 MB，改写后只要 360 毫秒且全在内存，快约 3.4 倍。要近似值可以用 postgresql-hll。",
+      "url": "https://boringsql.com/posts/distinct-in-your-count/",
+      "author": "Radim Marek",
+      "source": "boringsql.com",
+      "source_date": "2026-08-05",
+      "image": "https://boringsql.com/og-images/distinct-in-your-count-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "COUNT",
+        "并行查询",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "keyv 等 npm 包家族被入侵，波及数百个包",
+      "summary": "签名只能证明谁发布了某次构建，证明不了发布前的仓库状态没被改过。Aikido 报告攻击者接管维护者的 GitHub 账户，向多个包注入 preinstall 脚本，再由合法的 Actions 流水线发布，产物因此带着「正常」的出处。截至 8 月 4 日观察到至少 434 个包、1381 个版本。keyv 家族位于大量 Node.js 工具链的间接依赖路径上，命中受影响版本的开发机或 CI 应按凭据泄露处置。",
+      "url": "https://www.aikido.dev/blog/keyv-and-friends-compromised-in-npm-supply-chain-attack",
+      "author": "Aikido",
+      "source": "Aikido 安全博客",
+      "source_date": "2026-08-04",
+      "image": "https://cdn.prod.website-files.com/642adcaf364024654c71df23/6a71ca1f4e190f1129a4d78a_Social_ShaiHulud-Template-Light_16x9.png",
+      "domain": "infra",
+      "tags": [
+        "npm",
+        "供应链",
+        "凭据轮换"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 讲清了大小写折叠为何要先去掉提前退出",
+      "summary": "文本规范化被搜索、日志和索引反复执行，微小操作会被放大。GitHub 的 Blackbird 索引超过 1.8 亿个仓库、480 TB 源码，它开源的 casefold crate 对 ASCII 做一次没有数据相关退出的扫描。作者在 Apple M4 上用 5.7 KB 缓冲区测得从朴素循环的约 3.1 GiB/s 提到完全矢量化后的 45 GiB/s 以上。文章指出只把条件写成无分支却保留数据相关退出，反而更慢。",
+      "url": "https://github.blog/engineering/architecture-optimization/dont-stop-early-case-folding-source-code-at-memory-speed/",
+      "author": "GitHub",
+      "source": "GitHub 工程博客",
+      "source_date": "2026-07-31",
+      "image": "https://github.blog/wp-content/uploads/2026/01/generic-github-invertocat-logo.png?fit=1920%2C1080",
+      "domain": "infra",
+      "tags": [
+        "性能工程",
+        "Rust",
+        "代码搜索"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "外键快速路径在可空唯一约束下会崩溃",
+      "summary": "Amit Langote 的 v2 补丁改为在约束缓存失效回调里连同元数据一起删除，避免悬空指针。",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWUFBZNs_UN5MAAK7vG4_DEmv0FiT8552CWuOcggDUki2g@mail.gmail.com",
+      "author": "Amit Langote",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "崩溃"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "归档恢复的竞态可能在重命名前删掉 WAL 段",
+      "summary": "Michael Paquier 计划只在主干修复并补注释，暂不回补稳定分支以规避回归风险。",
+      "url": "https://www.postgresql.org/message-id/CAA3qoJnKn3-dWydK6hXOO45BMKgiBvansxaniVug1krOWZyM1w@mail.gmail.com",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "归档恢复"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "effective_io_concurrency 到 64 以上会耗尽本地缓冲区",
+      "summary": "Melanie Plageman 确认修复已回补到 18，并分析 17 在非刻意构造的场景下不会触发。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZjLj7pzGNqPm0dtG1dtdgJJKWz91L4BjafN4=uyEJvew@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "预读",
+        "缓冲区"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "刷新发布与删除订阅并发会留下孤立的目录行",
+      "summary": "ALTER SUBSCRIPTION 在加锁前就读了订阅信息，删除完成后它仍会重建 init 状态的行。",
+      "url": "https://www.postgresql.org/message-id/CANhcyEVAqvm+ONcghSGbq4m94PuQ2JqB4sykVQv-iLKuiEO60A@mail.gmail.com",
+      "author": "Shlok Kyal",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "竞态"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 拟用 COPY 协议加速批量插入",
+      "summary": "新增专用回调，每批元组以文本格式经 COPY FROM STDIN 流到远端，有行后触发器时不生效。",
+      "url": "https://www.postgresql.org/message-id/CAFY6G8ekRx2U9Bno7ft9fTkth2HX1rA9GKNVnJtqn=2X76Xcyw@mail.gmail.com",
+      "author": "Matheus Alcantara",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "批量写入"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "CREATE OR REPLACE 物化视图的补丁被指出多个问题",
+      "summary": "事件触发器触发时会段错误，命令标签不一致，改表空间还可能把索引留在旧表空间。",
+      "url": "https://www.postgresql.org/message-id/CA+renyWJgjatyvJEKr9_GSnr3xr-sqLfhLR+rvw3MSygowR9xA@mail.gmail.com",
+      "author": "Paul A Jungwirth",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "物化视图",
+        "DDL"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "补丁为 JSON 字段引入 SQL:2023 的点号访问写法",
+      "summary": "两种实现取舍不同：转成 JSON_QUERY 更贴标准，转成 -> 操作符更快但标量会被数组包裹。",
+      "url": "https://www.postgresql.org/message-id/CAF4Au4yFBw1GHOWbJhwASvzOr-8xuzrwdXipB2SHnAY6AJ5BvA@mail.gmail.com",
+      "author": "Alexandra Wang",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON",
+        "SQL 标准"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Flowise 宣布停止运营并给出归档时间表",
+      "summary": "8 月 10 日仓库转为归档、包与镜像标记弃用，8 月 31 日官方支持结束，源码仍可 fork。",
+      "url": "https://flowiseai.com/sunset",
+      "author": "Flowise",
+      "source": "Flowise",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "项目下线",
+        "迁移"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "研究者称 WebKit 有三条路径会绕过应用设定的代理",
+      "summary": "涉及 DNS 预取、WebAuthn 关联来源校验与 WebTransport，报告方称 iCloud 私密转发同受影响。",
+      "url": "https://mysk.blog/2026/08/04/webkit-proxy-icloud-private-relay-ip-leak/",
+      "author": "Mysk",
+      "source": "Mysk 博客",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "隐私",
+        "WebKit"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Unit 42 描述端点失陷后针对 passkey 的三类攻击",
+      "summary": "前提是终端已被恶意软件控制，重点提醒依赖方必须自行校验 WebAuthn 的用户验证标志。",
+      "url": "https://unit42.paloaltonetworks.com/passwordless-authentication-security-risks/",
+      "author": "Unit 42",
+      "source": "Palo Alto Networks",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "passkey",
+        "WebAuthn"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "一份关于 HOT 更新调优的 HammerDB 基准测试",
+      "summary": "",
+      "url": "https://hexacluster.ai/blog/tuning-postgresql-hot-updates-a-hammerdb-benchmark",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "HOT 更新",
+        "基准测试"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：idle_session_timeout",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-idle_session_timeout/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "会话"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "并发建索引的性能改进补丁被指出多处实现问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEze2WhcnPrb1F2urn1M3RAm292FXkTJ5zXQ=dCUyab47JJ0mw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "并发"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "生成列改表达式后重建约束的修复只治了表象",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEze2Whn3j2DdbysDxbzZBbB0AcpLoPkqA5yowEEzeQYBNsk7A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "约束"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "删列时如何处理引用整行的索引与约束仍有分歧",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEze2Wgg-GbHNJ7iijUoRX7yWPwTJSwZ+q9kQK+9-yVw=jLucg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL",
+        "依赖"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "两阶段流式复制测试的日志偏移取得过晚导致超时",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/TY4PR01MB177187B1A2B34DC0F1010EBDF94D32@TY4PR01MB17718.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "两阶段提交"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "事务回卷警告的增强补丁已提交入库",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwE9xk=6j7Po5C3h-euJryMuM+jnQxYXQMqgytXwWf=e0w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务 ID"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Castform 直接从 Neon 的库内容生成训练数据集",
+      "summary": "",
+      "url": "https://neon.com/blog/how-castform-neon-beats-frontier-models-on-price-and-efficiency",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "数据管道"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "慕尼黑市资助 libexpat 维护者全职工作最长六个月",
+      "summary": "",
+      "url": "https://blog.hartwork.org/posts/libexpat-city-of-munich-open-source-sabbatical/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源维护"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "社区给出单张 MI300X 承载 DeepSeek V4 Flash 的配置",
+      "summary": "",
+      "url": "https://github.com/ryanzhou/deepseek-v4-flash-mi300x",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AMD",
+        "推理"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Swiftlet 从 SSD 按需读取 MoE 专家以压低内存占用",
+      "summary": "",
+      "url": "https://github.com/leonickson1/Swiftlet",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "本地推理",
+        "MoE"
+      ],
+      "position": 25
+    }
+  ]
+}

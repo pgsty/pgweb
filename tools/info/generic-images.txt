@@ -1,0 +1,35 @@
+# 站点通用标志与默认社交图：这些不是文章题图，enrich.py 抓 og:image 时跳过。
+# 每行一个片段，按小写子串匹配整个图片地址；# 起头是注释。
+# 新增之前先确认它确实是全站或整栏目共用的一张图，而不是某篇文章自己的封面。
+
+# PostgreSQL
+press/elephant.png
+
+# 代码托管与开发者博客
+github.blog/wp-content/themes/
+generic-github-logo-left.png
+developers.cloudflare.com/og-changelog.png
+blog.modelcontextprotocol.io/og-image.png
+api-docs.deepseek.com/img/deepseek-social-card.jpeg
+
+# Google Cloud 博客的栏目通用图（images/NN_-_栏目名）
+gweb-cloudblog-publish/images/09_-_data_analytics
+gweb-cloudblog-publish/images/10_-_databases
+
+# 厂商与项目的全站标志、默认分享图
+www.rust-lang.org/static/images/rust-social
+www.mozilla.org/media/img/m24/og.
+www.redhat.com/themes/custom/rhdc/img/red-hat-social-share.jpg
+mullvad.net/press/mullvadvpn_logo
+qubes-logo-icon-name-slogan-fb.png
+proofcraft.systems/proofcraft.png
+collusion.wiki/img/social.png
+
+# 头像不是题图
+cdn.bsky.app/img/avatar_thumbnail/
+
+# 各站默认分享图的常见文件名
+default-og-image
+
+# CloudNativePG 全站 hero 图
+cloudnative-pg.io/images/hero_image.png

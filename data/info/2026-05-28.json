@@ -1,0 +1,325 @@
+{
+  "date": "2026-05-28",
+  "origin": "chronicle 2026-05-28: pgnexus #160, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgcrypto 与 pg_trgm 的三个溢出由 AI 找出",
+      "summary": "Christophe Pettus 记下 pgcrypto 与 pg_trgm 里的三个堆溢出。最严重的 CVE-2026-2005 在 pgcrypto 的 PGP 处理中，可致任意代码执行，另两个涉及畸形 UTF-8 解密和三元组扩展。受影响的是 15.18、16.14、17.10 和 18.4 之前的版本。其中两个由自动化工具静态分析找到，办法是跟踪污点数据找出缺失的长度检查。作者说漏洞长期没被发现不是隐蔽，而是没人看。",
+      "url": "https://thebuild.com/blog/twenty-years-three-cves-one-ai/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-28",
+      "image": "https://thebuild.com/media/media/190ce39d5e5649e88ddf6cbe4758161d.png",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "pgcrypto",
+        "CVE"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Percona 的 PostgreSQL 算子 3.0.0 完成硬分叉",
+      "summary": "Percona Operator for PostgreSQL 3.0.0 完成了对 Crunchy Data 算子的硬分叉。自定义资源定义改到专用 API 组，两套算子可以共存于同一个 Kubernetes 集群。这一版修好了 OpenShift 生命周期管理器的命名空间作用域问题，此前算子会盯错命名空间；大版本升级改用官方发行镜像，与生产运行时保持一致。支持 14.23 到 18.4，2.7.0 用户必须先升到 2.8.x 再迁。",
+      "url": "https://www.percona.com/blog/percona-operator-for-postgresql-3-0-0-hard-fork-olm-scoping-major-upgrades/",
+      "author": "Slava Sarzhan",
+      "source": "Percona 博客",
+      "source_date": "2026-05-28",
+      "image": "https://www.percona.com/wp-content/uploads/2026/05/Percona-Operator-for-PostgreSQL-3.0.0.png",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "Operator",
+        "发布"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "用 HypoPG 加大模型做索引调优",
+      "summary": "Stormatics 介绍 pg_index_search 的流程：先从 pg_stat_statements 取出调用超过 50 次、执行超过 5 毫秒的语句，用解析器从 WHERE、JOIN 和 ORDER BY 中抽出可索引列，再生成单列与多列候选。候选交给 HypoPG 建虚拟索引，在不落盘也不加锁的前提下让规划器评估，用贪心搜索按加权代价挑组合。模型可以补充表达式索引，但所有建议都要过 HypoPG 验证并人工确认。",
+      "url": "https://stormatics.tech/blogs/automating-postgresql-index-tuning-using-ai",
+      "author": "Warda Bibi",
+      "source": "Stormatics 博客",
+      "source_date": "2026-05-28",
+      "image": "https://stormatics.tech/wp-content/uploads/2026/05/performance-whitepaper.webp",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "HypoPG",
+        "调优"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "在事务里调用 AI 接口的几种翻车方式",
+      "summary": "Vibhor Kumar 总结了在事务中直接调用外部 AI 接口的失效模式：持锁期间等待 I/O 会让请求排队，触发限流后各 worker 同步重试形成风暴，事务回滚也收不回已花掉的 token 和已发出的 webhook，长调用还会占满连接池。他提出 ORBIT 五条原则：先写出箱表再异步执行、限流状态放共享内存、以后台进程为调度单位、从第一天就保证幂等、所有调用留下可审计轨迹。",
+      "url": "https://vibhorkumar.wordpress.com/2026/05/28/postgres-as-an-execution-environment-for-ai-failure-modes-hooks-and-the-orbit-framework/",
+      "author": "Vibhor Kumar",
+      "source": "Vibhor Kumar 博客",
+      "source_date": "2026-05-28",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/05/image-19.png",
+      "domain": "pg",
+      "tags": [
+        "AI",
+        "事务",
+        "架构"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "在线开关数据校验和的修复赶在 beta1 前",
+      "summary": "Daniel Gustafsson 和 Tomas Vondra 在收尾 PostgreSQL 19 的在线开关数据校验和。已确认的缺陷是状态更新时没有发出 procsignalbarrier，而这是维持集群一致所必需的；Daniel 写好了测试，打算在 beta1 之前上三个补丁修掉备库提升时的问题。分歧在 DELAY_CHKPT_START：Daniel 主张先留着、到 20 再删，Vondra 倾向于趁 19 还有几个月就地改掉。",
+      "url": "https://www.postgresql.org/message-id/FAE6FC0E-AA0B-4CF4-B49B-BA6C2FC55FB8@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "PostgreSQL 19",
+        "补丁"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "replica 级别下开逻辑解码的开放项拟关闭",
+      "summary": "PostgreSQL 19 有一个开放项：wal_level 为 replica 时不重启就启用逻辑解码。Masahiko Sawada 提议把它标为非缺陷并关闭，理由是拥有 REPLICATION 权限的用户本来就能通过物理流复制读到全部数据并影响清理时点，让这类用户创建逻辑槽不带来新的安全风险。与其限制建槽，不如把力气放到监控上，比如按会话或按用户跟踪 WAL 产生量。Amit Kapila 表示赞同。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KePhRS5ssamAtf=t9N_42BVvGYnbYAaFz--tzn6Zr6tA@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "权限",
+        "PostgreSQL 19"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 补丁进到 v4",
+      "summary": "Amit Kapila 担心长时间运行时 catalog_xmin 不推进，作者认为这与 CLUSTER 一样，应单独解决。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1Jpfe+nhV_KX0qKHTdLjwLEOPFVLrvCrXxLUxWptT6x5g@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "复制槽"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "按模式发布支持 EXCEPT 排除表的补丁到 v7",
+      "summary": "TABLES IN SCHEMA 发布可以排除指定表，这一版统一了命名并修好了分区祖先的内存清理。",
+      "url": "https://www.postgresql.org/message-id/CABdArM7rH+3GekRgufEOwrJxUeQk=LB182CQwJD35e0oN7q8ZA@mail.gmail.com",
+      "author": "Nisha Moond",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "发布"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 拟用 COPY 加速批量插入",
+      "summary": "旧版补丁对含换行的文本转义不当会报语法错误，新方案先把转义逻辑抽成可复用函数。",
+      "url": "https://www.postgresql.org/message-id/DITUGI3X54S8.346G3XFY7DRDK@gmail.com",
+      "author": "Matheus Alcantara",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "COPY"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "手动同步复制槽重试时的内存泄漏已修复",
+      "summary": "改为每次重试单独建内存上下文，提交者认为再加临时上下文反而会让逻辑变脆。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7WpEb8hBYyLU7wKjmxuMrtjgyKN-AMLsyTb+RhS9pFatw@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "内存"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "用多个 agent 把车间三种协议统一进一张表",
+      "summary": "Modbus/TCP、OPC UA 和 MQTT 各由一个 agent 对接，共享数据契约，另有审查与校验 agent 把关。",
+      "url": "https://www.tigerdata.com/blog/unify-plant-floor-data-claude-code-timescaledb",
+      "author": "Damaso Sanoja",
+      "source": "TigerData 博客",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "工业数据"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "贡献者谈逻辑复制还能怎么改进",
+      "summary": "逻辑复制已广泛用于跨版本升级、多地域部署和实时分析，功能上仍有不少空档。",
+      "url": "https://www.postgresql.fastware.com/blog/how-to-hack-logical-replication-in-postgresql",
+      "author": "Zhijie Hou",
+      "source": "Fujitsu Enterprise Postgres 博客",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "commit_delay 与 commit_siblings 的取舍",
+      "summary": "Christophe Pettus 的 GUC 系列新篇，讲这两个参数怎么用组提交换吞吐。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-commitdelay-and-commitsiblings/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "提交"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表遇到大元组超出堆页限制的问题",
+      "summary": "remote_tuple 等 JSON 列超过 8KB 会让应用进程报 row is too big，且 disable_on_error 失效。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+h=QV4Zi=PW8Zt2D6be5ki5Mu2HgdXcfUophptx6Mt_A@mail.gmail.com",
+      "author": "Nisha Moond",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "冲突日志",
+        "TOAST"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "通用计划补丁修掉一处释放后使用",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqGqAHhJmJn5=n9363R8UkcTpu3Uxj4Q2DmuG527ERDt8A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区裁剪"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁收到内存与文档方面的意见",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxGX17thWuEOq1tM5xbRHz2HXm1asooZC3GV25MYGmYqLQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "复制槽释放补丁 v6 修好编译失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwFCLWw7nVYoR+9Z6DtzYNnDXv6YHseNRjaCXmdQsKnoWg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "ECPG 的 GET/SET DESCRIPTOR 行为与文档不符",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwE9C_X4=bWFyLA_UGuajOMJufxxut-WSTXuUtr33xkswA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ECPG"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Stefan Fercot 记录 PGConf.dev 2026 见闻",
+      "summary": "",
+      "url": "https://dataegret.com/2026/05/memories-from-pgconf-dev-2026/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Neon 称不必为 AI 另造一套数据库基础设施",
+      "summary": "",
+      "url": "https://neon.com/blog/were-building-backends",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon"
+      ],
+      "position": 20
+    }
+  ]
+}

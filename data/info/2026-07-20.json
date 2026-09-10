@@ -1,0 +1,353 @@
+{
+  "date": "2026-07-20",
+  "origin": "chronicle 2026-07-20: pgnexus #213, daily, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_hardstorage 给出不动恢复策略的迁移路径",
+      "summary": "CYBERTEC 的 Hans-Jürgen Schönig 介绍如何从 pgBackRest、Barman 或 WAL-G 迁移到自家开源备份工具 pg_hardstorage 而不改动恢复策略：新旧仓库并行运行，新备份写入 pg_hardstorage，历史备份仍用原工具访问，直到旧的保留周期自然结束。兼容层让已有脚本和定时任务照原样运行，可以先验证恢复流程再退役旧仓库。项目以 Apache 2.0 开源。",
+      "url": "https://www.cybertec-postgresql.com/en/moving-to-pg_hardstorage-without-changing-your-recovery-strategy/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-07-20",
+      "image": "https://www.cybertec-postgresql.com/wp-content/uploads/2026/07/CYBERTEC-Blog-Moving-to-pg-hardstorage-without-changing-your-recovery-strategy-Hans.png",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复",
+        "迁移"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "checkpointer 写合并补丁称 p99 延迟降七成",
+      "summary": "Melanie Plageman 的 v15 补丁让 checkpointer 扫描共享缓冲区里相邻的脏页，把写 IO 合并到 io_combine_limit 大小。在 IOPS 受限的环境下，基准测试显示 TPS 提升 30%、p99 延迟下降 75%，后端自己写出脏页时收益最大。Haibo Yan 对设计提出疑问：全成功或全失败的 BufferWriteBatch 是否与将来的 AIO 和直接 IO 兼容，聚合逻辑能否与读端共用。",
+      "url": "https://www.postgresql.org/message-id/CABXr29Fe5wmVP+pvtty1j8G1AUHE0-87ubXP7wgEh6S+HPqSiQ@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "checkpoint",
+        "IO",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "读取流补上向后 I/O 合并，反向扫描快四倍",
+      "summary": "Nazir Bilal Yavuz 提交补丁，在 read stream 层实现向后 I/O 合并：不改动 aio 和 bufmgr，而是在流内部把向后的请求反转后交给下层，再按逆序返回缓冲区，主要为索引预取服务。他的基准显示，能合并时向后扫描最高快 4 倍。Tomas Vondra 在索引预取场景独立验证：裸机上向后访问原本比正向慢约 30 倍，索引预取把差距降到约 5 倍，再加向后合并后缩到约 1.5 倍。",
+      "url": "https://www.postgresql.org/message-id/CAN55FZ1nB1p_mqnzVY1_CA-OXgQD1yTEJdHXX4E1hDZxVHQRQA@mail.gmail.com",
+      "author": "Nazir Bilal Yavuz",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "预取",
+        "IO",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "HashJoin 布隆过滤器下推卡在规划开销上",
+      "summary": "Tomas Vondra 发布 hashjoin 布隆过滤器下推补丁的 v6：修好并行路径规划和带 pathkeys 的最廉路径漏掉过滤器的问题，确保 Gather 节点不传递过滤器，并试验按连接关系构建过滤器，关系数最多 3 个。Matheus Alcantara 的星型模式基准显示规划时间超线性增长，六个维度时 56ms，关闭时只要 8ms，执行时间没有改善。下一步是在候选生成阶段更早剪枝。",
+      "url": "https://www.postgresql.org/message-id/c8004acc-bbe8-4575-b233-b70bb3afe84c@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "HashJoin"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Hugging Face 证实内部数据集与凭据泄露",
+      "summary": "Hugging Face 证实平台遭入侵，内部数据集和存储的访问凭据受影响，官方要求所有用户立即轮换访问令牌，并检查账户是否有异常活动。这个平台托管着大量研究者和开发者日常使用的模型、数据集与工具，凭据泄露的影响会顺着构建流水线和推理服务扩散。把令牌写进 CI 或数据管道的团队应先清点存放位置，轮换之后核对镜像与缓存里的旧令牌，再回看近期的数据集下载和推送记录。",
+      "url": "https://techcrunch.com/2026/07/20/hugging-face-confirms-breach-affected-internal-datasets-and-credentials-urges-users-to-take-action/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-07-20",
+      "image": "https://techcrunch.com/wp-content/uploads/2026/07/hugging-face-2219339362.jpg?resize=1200%2C800",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "凭据",
+        "AI 平台"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "级联备库回收不了 WAL 的问题提交 v6 补丁",
+      "summary": "walsender 把主库的归档状态向下游转发，并新增 archive_status_report_interval 控制上报频率。",
+      "url": "https://www.postgresql.org/message-id/CALdSSPj=7DnBXjFCWtTeiRrc22vHtnXUi_U9J9vd9nXvfrXyAg@mail.gmail.com",
+      "author": "Kirill Reshke",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "流复制",
+        "归档"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "REFRESH SEQUENCES 的竞态改用订阅锁修复",
+      "summary": "先前的补丁 f38afa4ab 已回退，新方案借 AlterSubscription 已持有的排他锁挡住并发 worker。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uDVb9iHC532U7bKrr+-63voPnxA1kPSu-GdNGZJfYMWgg@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "序列"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "恢复目标 GUC 钩子不再抛错的补丁已提交",
+      "summary": "Fujii Masao 合入后 skink 上的测试失败，原因是目标 LSN 记录太晚，改到切换 WAL 之前记录。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEP_9fZeEqKU5ab4GeTYcd1tzhMrR7Egy+pCKBnTgqNOQ@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "GUC"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "FOR PORTION OF 剩余行的 RLS 检查已修复",
+      "summary": "Peter Eisentraut 提交 v6，文档改称 leftover rows，插入剩余行按设计不需要 INSERT 权限。",
+      "url": "https://www.postgresql.org/message-id/a1e965bc-01c0-47cd-8588-4cb3e60a1184@eisentraut.org",
+      "author": "Peter Eisentraut",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RLS",
+        "时态表"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "OOM 注入暴露的缓存残留问题陆续修复",
+      "summary": "Michael Paquier 已修 pgstat 条目引用，partcache 的 rd_partcheck 残留与内存泄漏补丁待评审。",
+      "url": "https://www.postgresql.org/message-id/al3GMfsYHn1BCgkM@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓存",
+        "缺陷修复"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pg_rewind 会留下时间线偏高的 WAL 段",
+      "summary": "源集群时间线较低时 keepwal 用了目标端 TLI，补丁改取两者较小值，并附上 TAP 测试复现。",
+      "url": "https://www.postgresql.org/message-id/CAGWv16+G5Pu8PG-bDoqtCi+c4KmpSEwkB2q90=864ihPS-=tVQ@mail.gmail.com",
+      "author": "Alena Vinter",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_rewind",
+        "WAL"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Anthropic 讲大规模代码迁移的工程闭环",
+      "summary": "先建能同时评判新旧实现的裁判器，再整理规则表与依赖图，用小批可审查 diff 和多轮重跑推进。",
+      "url": "https://claude.com/blog/ai-code-migration",
+      "author": "Anthropic",
+      "source": "Anthropic 博客",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "代码迁移",
+        "工程实践"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "GIN 清理循环恢复 vacuum_delay_point 调用",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/al3LFmvcsdBF_Gqn@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GIN",
+        "VACUUM"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "pg_control 拟记录 backup_label 是否必需",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/15ae0c5e-fa91-4328-942c-d559c56f77a0@pgbackrest.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "清除可见性图为何不必注册 WAL 缓冲区",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1065814.1784514869@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可见性图"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "按模式发布新增 EXCEPT 子句的补丁到 v22",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+PvCeJ6yDdRu3Qo7-M5fMzZnV1aEDPckW3oLmgY4xPw3HA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制冲突日志表提案讨论错误恢复安全",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1Jx2dHyPAry5=PGHUvFygpXErDzuNkNgtLWzpBC49-Bqw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 绕过游标支持并行计划的补丁获审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoYZjnJnuMUwu=ancqrsLYADVp99_HReR4P7k0f9A=1dHA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "CI 按主版本隔离 ccache 命名空间",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DK3OXY9DSO0B.3HUAWS1MF0LOP@jeltef.nl",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CI"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "按后端类型配置 log_min_messages 的清理补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/al4PzUn6y82eP-t1@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "日志"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：extra_float_digits",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-extra_float_digits/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Claude Code 被指改用 Rust 版 Bun 分发",
+      "summary": "",
+      "url": "https://simonwillison.net/2026/Jul/19/claude-code-in-bun-in-rust/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "工具链"
+      ],
+      "position": 22
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "date": "2026-03-05",
+  "origin": "chronicle 2026-03-05：pgnexus #72",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Robert Haas 撰文解释 pg_plan_advice 三模块",
+      "summary": "计划不稳定是 PostgreSQL 长期缺少直接手段的问题。Robert Haas 撰文介绍他为 PostgreSQL 19 提交的补丁集，包含三个新的 contrib 模块：pg_plan_advice 定义计划建议的表达方式，pg_collect_advice 从已执行的查询里收集建议，pg_stash_advice 按查询 ID 匹配并覆盖计划。目标是让用户不改写 SQL 也能获得计划稳定性。作者也说不确定这组补丁能否赶上 19。",
+      "url": "https://rhaas.blogspot.com/2026/03/pgplanadvice-plan-stability-and-user.html",
+      "author": "Robert Haas",
+      "source": "Robert Haas 博客",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "规划器",
+        "扩展"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 2,
+      "title": "默认 TOAST 压缩改用 lz4 导致构建农场大面积失败",
+      "summary": "上百台构建机报错，Tom Lane 主张回退，最后折中为只在 --with-lz4 构建时把 lz4 设为默认。",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+meTT0NbLbnVqOJD5OKwCtHL86PQ+RZZTrn6umfmHyWaw@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "压缩"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "发布排除指定表的 EXCEPT TABLE 已进入主干",
+      "summary": "Amit Kapila 推送了第 56 版，逻辑复制的 ALL TABLES 发布从此可以排除掉指定的表。",
+      "url": "https://www.postgresql.org/message-id/CABdArM4qh7Uc2nWo9vfDozuLbnwtqHF--AvRpMj_TkVaEAHzig@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "内核"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "pg_sync_replication_slots 同步失败改为循环重试",
+      "summary": "错误级别从 ERROR 降为 LOG，等备库追上主库再继续，重试只针对处于临时状态的槽位。",
+      "url": "https://www.postgresql.org/message-id/TY4PR01MB16907630F7DE9263795978897947CA@TY4PR01MB16907.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "高可用"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 3,
+      "title": "前主库改作备库启动卡住的测试缺陷已定位",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aafDsb5snkfkNfdS@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 5
+    },
+    {
+      "tier": 3,
+      "title": "Portal 游标选项提案改用协议选项而非改协议版本",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADK3HHKO0jXxj+r5f=qLJG-L20w0kw6mm9rR0dvUStwqiM+zkA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 18 的 EXPLAIN ANALYZE 变更补丁到第三版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADXhmgR-0nD_uMDhpBOHbYKys6XGF4Bi9_tsSeC9HDDNPLu+qw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "OAuth 发现日志因并发后端导致测试不稳定",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+nVzkoLjzNk_58e0NnUPi9uVXwmurK2QP6CzC2WOpqwbg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "扩展统计导入测试的重复查询考虑收进视图",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADkLM=dRYs1RKhQwWS5sXnxU-f++3GpKP47Lsc-FzHL8Hm65JQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "file_fdw 补上 ON_ERROR set_null 的回归测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwGmPc6aHpA5=WxKreiDePiOEitfOFsW2dSo5m81xWXgRA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    }
+  ]
+}

@@ -1,0 +1,562 @@
+{
+  "date": "2026-06-25",
+  "origin": "chronicle 2026-06-25: daily, pgnexus #188, news 1, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PGX 开卖已停止维护版本的 PostgreSQL 补丁",
+      "summary": "很多实例因为各种原因迟迟无法升级，却仍然需要打补丁。PGX 推出 PGX Longevity，为社区已经停止发版的 PostgreSQL 提供关键安全问题和数据完整性问题的回补，覆盖 9.6 到 13；PostgreSQL 14 在今年 11 月拿到最后一个社区版本之后也会纳入。计费按客户固定价格，而不是按实例或 CPU 核心数，并可提供服务级别协议。PGX 同时对所有版本提供包含升级在内的技术咨询。",
+      "url": "https://www.postgresql.org/about/news/pgx-announces-support-for-eol-versions-of-postgresql-3334/",
+      "author": "PGX, Inc.",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生命周期",
+        "支持",
+        "安全"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "AWS 写了一份 Aurora 上跑 pgvector 的运维指南",
+      "summary": "Stefan Aichholzer 把 Aurora PostgreSQL 上跑生产级 RAG 负载的经验写成一篇指南：HNSW 与 IVFFlat 怎么选，数据集小或已分区、需要百分之百召回时干脆别建索引；文中给出基准 schema，讲了距离算子选择、pgvector 0.8.0 的迭代扫描、用 halfvec 与二值量化省空间，以及靠 REINDEX CONCURRENTLY 处理 HNSW 碎片。",
+      "url": "https://aws.amazon.com/blogs/database/running-pgvector-in-production-on-amazon-aurora-postgresql/",
+      "author": "Stefan Aichholzer",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-06-25",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/06/23/5501.png",
+      "domain": "pg",
+      "tags": [
+        "pgvector",
+        "向量检索",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的 SQL/PGQ 已能表达异构图",
+      "summary": "Hans-Jürgen Schönig 演示了用 PostgreSQL 19 的 SQL/PGQ 建异构图：一个属性图里同时有 person、company 两类顶点和 knows、works_at 两类边，跨表关系照常查。他也点出眼下的限制，MATCH 子句还不支持逗号分隔的多个路径模式，替代做法是把多个 GRAPH_TABLE 子查询按 ID 列连接。另有两个坑：多标签图里用匿名边会悄悄合并所有边类型，可变长度路径也还没实现。",
+      "url": "https://www.cybertec-postgresql.com/en/heterogeneous-graphs-in-sql-pgq-on-postgresql-19/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "CYBERTEC",
+      "source_date": "2026-06-25",
+      "image": "https://www.cybertec-postgresql.com/wp-content/uploads/2026/06/CYBERTEC-Blog-Graph-Relationship-Series-Heterogeneous-Graphs-in-SQLPGQ-on-PostgreSQL-19-Hans.png",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ",
+        "图查询",
+        "PG19"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "自托管 TimescaleDB 要按平台工程投入来算账",
+      "summary": "Matty Stratton 说，把 TimescaleDB 自托管到关键业务上，本质不是一次数据库选型，而是一笔持续的平台工程投入。文章以一家每天采集数十亿条传感器数据的汽车零部件供应商为例，把可用性、恢复、扩展、生命周期管理和合规治理的实际成本逐项摊开：维持生产级部署大约需要 1.5 到 3 名专职平台工程师、稳定的值班轮换、每季度演练和每年一次大版本升级，而且随着数据量和业务重要性增长只会更重。",
+      "url": "https://www.tigerdata.com/blog/self-hosting-timescaledb-platform-ownership",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-06-25",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/06/thumb-parent-pixel.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "自托管",
+        "成本"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "用 TLS 传输替代 SSH 跑 pgBackRest 灾备",
+      "summary": "Shridhar Khanal 讲了怎么让灾备端通过 TLS 而不是 SSH 连 pgBackRest 仓库。好处是证书体系比逐台预置 SSH 密钥好管，且灾备机只持有一张认证到 TLS 守护进程的证书，被攻陷也拿不到备份节点的 shell。备份节点用 tls-server-auth 把证书 CN 映射到 stanza。注意 pgBackRest 不支持证书吊销列表，撤权得改配置重启；恢复出的实例还留着生产归档命令，启动前必须关掉。",
+      "url": "https://stormatics.tech/blogs/postgresql-disaster-recovery-with-pgbackrest-tls-transport",
+      "author": "Shridhar Khanal",
+      "source": "Stormatics",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgBackRest",
+        "灾备",
+        "TLS"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "PostHog 重写 SQL 解析器后快了七十倍",
+      "summary": "PostHog 称重写 SQL parser 之后拿到 70 倍提升。具体倍数要结合负载来读，但它说明这类基础工程债确实能直接换成用户可感知的性能。SQL 解析器处在查询编辑器、权限分析、查询重写、语法高亮、自动补全、血缘和优化建议的入口，慢下来会拖累整条开发体验链路。维护数据库控制台、SQL 审计或 AI 生成 SQL 的团队，解析层应该有独立的基准和回归测试，而不是只靠数据库端报错兜底。",
+      "url": "https://posthog.com/blog/sql-parser",
+      "author": "PostHog",
+      "source": "PostHog 工程博客",
+      "source_date": "2026-06-24",
+      "image": "https://d36j3rcgc2qfsv.cloudfront.net/blogsql-parser.jpeg",
+      "domain": "db",
+      "tags": [
+        "SQL 解析",
+        "性能",
+        "工具"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "社区在讨论要不要为 MultiXact 回归发计划外版本",
+      "summary": "14 到 16 的最新小版本重放旧版本 WAL 时会死锁，多位用户已在流复制和恢复场景复现。",
+      "url": "https://www.postgresql.org/message-id/50D52121-30FF-4A2D-9230-0EFD953A2C36@yandex-team.ru",
+      "author": "Michael Banck",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "回归",
+        "复制",
+        "发布"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "minRecoveryPoint 是否该推过检查点仍无定论",
+      "summary": "Nitin Jadhav 认同它只是一致性下限而非恢复进度指标，是否继续推进交给提案人决定。",
+      "url": "https://www.postgresql.org/message-id/CAMm1aWaTyzzjSYX+iPU65JTcNpCsRJKnFJdsdv7-Ydv2Q=qVhg@mail.gmail.com",
+      "author": "Nitin Jadhav",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "检查点"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "回卷警告的措辞正在被逐字推敲",
+      "summary": "争的是要不要保留 transaction ID space 这种说法，统一术语可能推到 v20 单独处理。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACXk=r3WYzFoWz1Hh60PQ-=f+73qkW2Ne4avXwngncxc5Q@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "回卷",
+        "日志"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "两个重排序开关默认打开，只该拿来诊断",
+      "summary": "分组与去重的键顺序可由规划器重排，用户写的顺序始终保留为候选之一，升级后回退再查。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enabledistinctreordering-and-enablegroupbyreordering/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "优化器"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Elastic 宣布裁员 7%",
+      "summary": "搜索、日志与可观测性栈的用户要重新评估供应商路线、许可与自托管迁移成本。",
+      "url": "https://www.elastic.co/blog/ceo-ash-kulkarni-announcement-to-elastic-employees",
+      "author": "Elastic",
+      "source": "Elastic",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "行业",
+        "裁员"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "NVIDIA 把 45°C 液冷说成 AI 工厂的一等设计",
+      "summary": "厂商称水耗接近零；散热、供电与机柜密度正成为集群规模的新上限。",
+      "url": "https://blogs.nvidia.com/blog/liquid-cooling-ai-factories/",
+      "author": "NVIDIA",
+      "source": "NVIDIA 博客",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据中心",
+        "液冷",
+        "能耗"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GuardDuty 开始用 AI 辅助做安全调查",
+      "summary": "仍是预览，把 IAM、VPC、CloudTrail 事件串起来之前，别让它直接触发破坏性响应。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-guardduty/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "AI"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 支持自助撤销泄露的凭证",
+      "summary": "泄露 token 与 CI 凭证横向移动时，响应速度直接决定影响范围，不必再走工单。",
+      "url": "https://github.blog/changelog/2026-06-24-self-service-credential-revocation-for-incident-response/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "凭证"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Snyk 裁员并把原因归到 AI 头上",
+      "summary": "安全工具厂商同期收缩，开源基础设施商业化的压力正在集中显现。",
+      "url": "https://snyk.io/blog/a-note-to-our-customers-and-partners/",
+      "author": "Snyk",
+      "source": "Snyk",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "行业",
+        "裁员"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Fastly 用基尼系数来规划边缘容量",
+      "summary": "平均值会误导容量规划，用集中度指标识别热点，同样适用于镜像站与对象存储。",
+      "url": "https://www.fastly.com/blog/using-gini-coefficient-plan-edge-capacity",
+      "author": "Fastly",
+      "source": "Fastly 博客",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容量规划",
+        "CDN"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "bytea(uuid) 转换函数是否漏标 proleakproof",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBCfgHWO-H4ZRq3B6UPCjWMmhhMrZk66A8oahFq-DBxyw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "类型"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "有人提议用 SIMD 加速 UUID 解析",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoCqeR4UQU77Q_yOMNNzJ7AVeiO5QZT+4HnzPm4Wm-e02Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "UUID",
+        "性能"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_statements 清理 ereport 里多余的括号",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1b6a678e24e9d52dc48644b990ffd045@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "代码风格"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_autovacuum_scores 的阈值描述将改写",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/E3ABDC6B-80CA-4C37-BA0B-A519D49F4C66@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "文档"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "分区键含整行引用时将禁止单独改列",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/tencent_0B1A45E1D9DB7468A12730BF512D53A83709@qq.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "EDB 谈 AI 驱动的数据分析怎么落地",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/role-ai-data-analytics-moving-hype-high-octane-utility",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EDB",
+        "分析"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Amazon Neptune 的全局数据库支持 CloudFormation",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-neptune-aws-cloudformation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图数据库"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "AWS 演示用 Aurora DSQL 写 Spring Boot 接口",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/build-a-spring-boot-rest-api-with-amazon-aurora-dsql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Aurora DSQL"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "RDS 多可用区集群的跨账号刷新可以自动化",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/automating-cross-account-refresh-for-amazon-rds-multi-az-db-clusters/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "RDS"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "AWS EMR Serverless 支持在线更新配置",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-emr-serverless/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据平台"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Node.js 三条线同窗发布 26.4、24.18 与 22.23.1",
+      "summary": "",
+      "url": "https://github.com/nodejs/node/releases/tag/v26.4.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Node.js"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 把 OAuth 开放给所有开发者",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/oauth-for-all/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "OAuth"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Minimus 把最小化容器基础镜像做成免费",
+      "summary": "",
+      "url": "https://images.minimus.io/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "镜像"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Tigris 用 objgit 在对象存储上实验 Git 语义",
+      "summary": "",
+      "url": "https://www.tigrisdata.com/blog/objgit/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "对象存储"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "CRAN 投稿量过载暴露开源包治理压力",
+      "summary": "",
+      "url": "https://rworks.dev/posts/too-many-R-packages/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "调查称一半的 LG 与三星电视应用内嵌住宅代理",
+      "summary": "",
+      "url": "https://cyberinsider.com/50-of-lg-and-samsung-smart-tv-apps-embed-residential-proxies/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "安全"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "EC2 给 AMI 加水印以便治理镜像来源",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/ec2-image-watermarks-allowed-images/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "镜像治理"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "有人主张把系统调优也放进 CI/CD",
+      "summary": "",
+      "url": "https://ucbskyadrs.github.io/blog/levi/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI/CD",
+        "调优"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "Haystack 把生产级 RAG 与智能体框架开源",
+      "summary": "",
+      "url": "https://haystack.deepset.ai/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "RAG"
+      ],
+      "position": 35
+    }
+  ]
+}

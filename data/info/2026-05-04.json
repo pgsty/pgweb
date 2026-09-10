@@ -1,0 +1,262 @@
+{
+  "date": "2026-05-04",
+  "origin": "chronicle 2026-05-04: pgnexus #136, planet 5；并入 2026-05-03 四条，借用 2026-04-28 四条",
+  "items": [
+    {
+      "tier": 1,
+      "title": "数据校验和的 TAP 测试暴露崩溃恢复竞态",
+      "summary": "Tomas Vondra 给刚进主干的在线切换数据校验和写了一套 TAP 测试，用大约 80 个注入点检查状态变更与 checkpointer 之间的竞态。状态分散在四处，各由不同的锁保护。测试发现崩溃恢复后的最终状态会在 on 和 off 之间摇摆，取决于启动器写 XLOG2_CHECKSUMS 记录与 checkpointer 读共享内存做 REDO 的先后。他质疑 DELAY_CHKPT_START 是否真能挡住这类竞态。",
+      "url": "https://www.postgresql.org/message-id/9e1331e1-93a0-4e27-934a-17b89342be4d@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据校验和",
+        "竞态",
+        "测试"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "REPACK 并发版的压力测试仍在报错",
+      "summary": "REPACK 的并发执行仍有正确性问题。Mihail Nikalayeu 报告说即使打上针对 SNAPBUILD_CONSISTENT 的最新修复，压力测试照样失败：唯一索引创建时报重复键，pgbench 侧出现除零错误。008 号并发测试被那个修复治好了，007 号仍稳定复现；把 need_shared_catalogs 置为 true 能绕过，说明当前方案有根本缺陷。Antonin Houska 承认要查旧问题。",
+      "url": "https://www.postgresql.org/message-id/85813.1777901089@localhost",
+      "author": "Antonin Houska",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "并发",
+        "缺陷"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "流复制与 WAL 归档的协调补丁进到第五版",
+      "summary": "Grigory Smolkin 提交第 5 版补丁，处理流复制与 WAL 归档之间的交互，问题出在管着数千个集群的生产环境里。v5 的主要改动是只传时间线 ID 和段号而不是完整 WAL 文件名，把一部分工作挪到归档进程，并为 walreceiver 与归档进程加共享内存协调。四个设计问题待定：备库要不要更新 pg_stat_archiver、两类 ready 文件怎么处理、切换点计算能否简化、强制归档是否全收进归档进程。",
+      "url": "https://www.postgresql.org/message-id/4516e7e8-46f0-4ded-907a-db5a7c0c75b3@gmail.com",
+      "author": "Grigory Smolkin",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "流复制",
+        "WAL 归档"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "冲突日志表的权限拟授给 pg_create_subscription",
+      "summary": "逻辑复制的冲突日志历史表卡在权限上：非超级用户的订阅所有者访问不了 pg_conflict 模式里的冲突日志表，原因是查询分析阶段过早做了 ACL 检查。Dilip Kumar 试过绕开模式检查和干脆取消限制，都不合适；Shveta Malik 提议单给订阅所有者授 USAGE，但订阅所有者本身没有授权的权限。最后 Amit Kapila 提议把该模式的使用权授给 pg_create_subscription 角色，表级操作仍限本人。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uC8=dH0oBgMFKg8onT9PHa9DsgVUmiujQJhkP8-V-DSwA@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "权限"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "故障转移复制槽两年后仍要手动同步",
+      "summary": "Christophe Pettus 回顾故障转移复制槽的两年。PostgreSQL 17 引入三件套：订阅的 failover 选项、备库的 sync_replication_slots、主库的 synchronized_standby_slots；18 只修缺陷；19 增加动态 wal_level 与 slotsync_skip_reason 列。它保证提升后新主库的槽位不会跑到订阅者前面。但槽位复制是异步的，提升前必须手动核对位置。",
+      "url": "https://thebuild.com/blog/failover-slots-two-years-on/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-04",
+      "image": "https://thebuild.com/media/media/640c80a175714a0f80281b46c66b4e5e.png",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "高可用",
+        "PostgreSQL 19"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "把 Postgres 当任务队列的天花板比想象中低",
+      "summary": "Richard Yen 讲清了拿 Postgres 做任务队列会撞上什么。高并发下大量工作进程用 SELECT FOR UPDATE SKIP LOCKED，多个事务会短暂引用同一行，产生的 MultiXact ID 堆进固定大小的 SLRU 缓冲区，后端排队在 LWLock:MultiXactSLRU 上，吞吐随之塌陷。任务行反复更新删除，死元组产生得比 autovacuum 回收快，几兆有效数据的队列表能涨到几十 GB。",
+      "url": "https://richyen.com/postgres/2026/05/04/postgres_job_queue.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "任务队列",
+        "MultiXact",
+        "膨胀"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "PgQue 靠两个快照定义批次，代价是秒级延迟",
+      "summary": "Christophe Pettus 拆解了 PgQue 的做法：消费时完全不改事件表。事件写进轮转的表，事务 ID 作列默认值；一个 ticker 每秒抓一次 pg_snapshot，相邻两个快照之间就是一个批次，消费端据此判断可见性；三张表靠 TRUNCATE 轮转，不做垃圾回收。算法出自 Marko Kreen 2007 年前后的设计。代价是事件要等下一个 tick 才可见，端到端一到两秒。",
+      "url": "https://thebuild.com/blog/pgque-two-snapshots-and-a-diff/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-04",
+      "image": "https://thebuild.com/media/media/3d7d52ab99d2424cad40f5bde5a4cd0b.png",
+      "domain": "pg",
+      "tags": [
+        "消息队列",
+        "PgQue"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "pgBackRest 归档提出的是治理而非许可证问题",
+      "summary": "Vibhor Kumar 借 pgBackRest 被原作者 David Steele 归档一事，把开源许可证和运营可持续性分开来谈。项目做了十三年，用的是 MIT 许可证，法律和结构上完全开放，谁都可以分支，但归档意味着它已无人维护。他的看法是一个项目可以在法律上开放、在运营上脆弱。给企业的建议是别只查许可证合规，还要问治理：有没有共享的维护权、透明的决策和可持续的资金。",
+      "url": "https://vibhorkumar.wordpress.com/2026/05/04/when-open-source-becomes-infrastructure-the-pgbackrest-lesson/",
+      "author": "Vibhor Kumar",
+      "source": "vibhorkumar.wordpress.com",
+      "source_date": "2026-05-04",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/05/image.png",
+      "domain": "pg",
+      "tags": [
+        "开源治理",
+        "pgBackRest"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "libpq 的服务端 SNI 补丁改返回类型声明",
+      "summary": "Tom Lane 指出 load_hosts() 的返回类型声明不一致，并嫌函数名太泛，Daniel Gustafsson 认可修法。",
+      "url": "https://www.postgresql.org/message-id/359473.1777922840@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "TLS"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "属性图删掉最后一个标签会触发断言失败",
+      "summary": "Peter Eisentraut 要求改局部变量名并补锁，担心并发 DROP LABEL，同时反对顺手加 OidIsValid。",
+      "url": "https://www.postgresql.org/message-id/3762a2e0-d3be-40e7-83d2-52dc3e1a21b2@eisentraut.org",
+      "author": "Peter Eisentraut",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "属性图",
+        "缺陷"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "s_lock.h 里残留的 tas() 引用准备清掉",
+      "summary": "Nathan Bossart 要删已被移除的实现引用，Tom Lane 同意清死代码但主张保留 HAS_TEST_AND_SET。",
+      "url": "https://www.postgresql.org/message-id/afkUeI7UhacZ5ZFm@nathan",
+      "author": "Nathan Bossart",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "自旋锁",
+        "清理"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "跨会话临时表的测试先作为独立补丁提交",
+      "summary": "Daniil Davydov 同意先作为 0003 提交，评审定案后再并回 0001 和 0002，以免 cfbot 报错。",
+      "url": "https://www.postgresql.org/message-id/CAJDiXgiyy+GG6a5=nDPQeOQTjdQo53+6N0rAzZ=M3baWGPJNsA@mail.gmail.com",
+      "author": "Daniil Davydov",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "测试"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解系列讲 autovacuum_freeze_max_age",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuumfreezemaxage/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解系列讲两个 autovacuum analyze 阈值",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuumanalyzescalefactor-and-autovacuumanalyzethreshold/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG DATA 2026 最期待的演讲清单第三部分",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/05/03/pg-data-2026-the-talks-i-am-most-excited-about-part-3/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Coatue 计划为数据中心买下靠近电源的土地",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/05/01/coatue-has-a-plan-to-buy-up-land-for-data-centers-possibly-for-anthropic/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据中心"
+      ],
+      "position": 16
+    }
+  ]
+}

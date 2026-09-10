@@ -1,0 +1,319 @@
+{
+  "date": "2026-03-27",
+  "origin": "chronicle 2026-03-27：pgnexus #95、news 1、planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Greenmask 连发九个版本并支持 PostgreSQL 18",
+      "summary": "Greenmask 是无状态的逻辑备份与脱敏工具，不改 schema，可以直接替代 pg_dump 与 pg_restore，常用来把生产数据做成能进测试环境的脱敏副本。从 0.2.9 到 0.2.17 这一串版本补上了 PostgreSQL 18 支持，恢复端新增 -C 参数，validate 改走内存存储，list-dumps 增加 --quiet，并提供官方安装脚本；转换器新增邮编脱敏与多列公司数据生成。修复覆盖继承逻辑的栈溢出与 ACL 恢复等问题。",
+      "url": "https://pgsql.cc/about/news/greenmask-029-0217-3258/",
+      "author": "Greenmask",
+      "source": "Greenmask",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "脱敏",
+        "备份",
+        "工具"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "NOT VALID 与 NOT ENFORCED 约束不是一回事",
+      "summary": "PostgreSQL 18 从 SQL:2023 引入了 NOT ENFORCED 约束，它和早就存在的 NOT VALID 完全不同。NOT VALID 允许先把约束加上而不立即校验存量数据，适合校验代价高昂的大表；NOT ENFORCED 则在数据库生命周期管理里承担另一种角色。EnterpriseDB 这篇文章把两者的定位讲清楚，指出它们针对的是同一类难题：数据量到了 TB 级之后，传统的约束强制执行本身就可能变成性能瓶颈。",
+      "url": "https://www.enterprisedb.com/blog/subtle-shift-understanding-not-valid-vs-not-enforced-constraints-postgresql-0",
+      "author": "EnterpriseDB",
+      "source": "EDB 博客",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "约束",
+        "PG18"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "峰值吞吐基准测不出生产里真正的瓶颈",
+      "summary": "基准跑出每秒 8 万次插入、延迟也漂亮，并不代表生产能长期扛住。Matty Stratton 认为真正该看的是持续吞吐上限，也就是 autovacuum、检查点、WAL 归档和复制这些维护进程能够无限期跟上的写入速率。这个上限会随数据增长而下降，文章归纳了四个推动机制，最先出现的是热数据超出可用内存和 autovacuum 跟不上回收。容量规划应当按这条持续上限来做，而不是按峰值数字。",
+      "url": "https://www.tigerdata.com/blog/postgres-performance-why-peak-throughput-benchmarks-miss-real-problem",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-27",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/The-Database-Question-Nobody-Asks.png",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "容量规划"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Neon 用预热把计划内打补丁做成无感",
+      "summary": "Neon 的计算与存储分离，让它可以在维护之前后台先起一台新的 Postgres 计算节点，既不影响当前主节点也不计费。Hans Norheim 介绍的预热做法是把主节点缓存中的页面清单发给新节点，新节点从共享存储层把这些页读进缓存，再订阅 WAL 只接收与自身缓存有关的记录保持同步；随后旧主节点退出，新节点用 pg_promote 提升，省掉一次完整重启。10GB 的 pgbench 测试里预热后吞吐几乎立刻恢复，只读负载收益最明显。",
+      "url": "https://neon.com/blog/prewarming",
+      "author": "Hans Norheim",
+      "source": "Neon 博客",
+      "source_date": "2026-03-27",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/prewarming/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "缓存",
+        "无停机"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PG Phriday：把负载挡在数据库前面",
+      "summary": "一条 2 到 3 秒的查询，遇上 4000 个用户要求 60 秒内出结果，就变成 67 个并发执行，两核机器根本吃不下。Shaun Thomas 给出分层的替代方案：物化视图配 pg_cron 定时刷新，适合分钟级新鲜度的报表；pg_ivm 用触发器做增量维护，把秒级的全量刷新压到毫秒，代价是写入变重；再往外是 Redis 一类共享缓存，由后台进程按固定周期刷新；最外层用 CDN 或 Varnish 缓存 HTTP 响应。核心是让查询发生得更少。",
+      "url": "https://www.pgedge.com/blog/pg-phriday-absorbing-the-load",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓存",
+        "物化视图",
+        "架构"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 正在淘汰 MD5 口令认证",
+      "summary": "Ninad Shah 梳理了这条弃用路线，建议管理员盘点仍在使用 md5 的实例并换到更强的认证方式。",
+      "url": "https://www.percona.com/blog/postgresql-bye-bye-md5-authentication-whats-next/",
+      "author": "Ninad Shah",
+      "source": "Percona 博客",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证",
+        "安全"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 调度的评分改造已经提交",
+      "summary": "讨论就此收尾，Nathan Bossart 确认变更进入代码库，David Rowley 对这项改造表示认可。",
+      "url": "https://www.postgresql.org/message-id/acafxccEv5ZcU0Ym@nathan",
+      "author": "Nathan Bossart",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "PG19"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "缓冲区锁定的长期改造已经推送完毕",
+      "summary": "Andres Freund 在 valgrind 复核和最后一轮审阅之后提交，这项涉及提示位、校验和与异步写的工作耗时远超预期。",
+      "url": "https://www.postgresql.org/message-id/q6trx7a5vd3j5tddamwxahrojopboov6eeue2jkjmfpkhdfgjj@w3hapotwxroo",
+      "author": "Andres Freund",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "异步 IO"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "在线开关数据校验和的补丁接近提交",
+      "summary": "Daniel Gustafsson 完成变量改名与文档整理，Heikki Linnakangas 支持先提交 0001，测试开销仍是问题。",
+      "url": "https://www.postgresql.org/message-id/452D5390-4F89-4DED-9835-8E9EA2A01E19@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "NamedLWLockTranche 清理提交后弄坏了 buildfarm",
+      "summary": "Heikki Linnakangas 的重构在动态成员上失败，Sami Imseih 建议统一改用 user-defined tranches 的说法。",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0s+-_d6RBSfmLvekGLTCi2EZ7hiHp3RhMVDEexGXq=7Vg@mail.gmail.com",
+      "author": "Heikki Linnakangas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "轻量锁"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "OAuth 认证失败时的报错细节仍在打磨",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+mxcvtJ9QJhxd4SbYHk=+L9r3VrK0xJ1DsM+H3pFFUtGg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "pgindent 会截断没有末尾换行的文件",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/c5ffe163-4758-4562-b3f6-6bfb00e58f49@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具链"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "jsonpath 新增字符串方法的补丁需要重整",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1eb15091-660d-477b-acda-b61d00bc9ffb@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "COPY 的 SIMD 补丁用预扫描消除 CSV 回退",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+K2Runq+1gy8p6a-DsxpT2OkEkEu3cUGsZ9tdiGNrg_=P39gg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "SIMD"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "备库提升时 slotsync 进程该收哪个信号",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uBhJB4HqouLXegD=miSkZfZp86tTC2K0K6nf=bHCcsPLQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "REPACK 的进度报告推迟到功能冻结之后",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/90700.1774627975@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 在特定 GUC 组合下断言失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/0afba1ce-c946-4131-972d-191d9a1c097c@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "make 与 ninja 拟增加 format 目标跑格式化",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/4645a523-8774-45d8-894e-9c83d5954155@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具链"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "存储与虚拟生成列的测试对齐补丁已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/0dddf337-dc15-4172-b9e5-58c24fdb64cd@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "生成列"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "维也纳办起了第一场自组织的 PostgreSQL 聚会",
+      "summary": "",
+      "url": "https://cornelia-biacsics.medium.com/my-first-self-organized-postgresql-meetup-in-vienna-49445d7393a3?source=rss-fe5b12268441------2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 20
+    }
+  ]
+}

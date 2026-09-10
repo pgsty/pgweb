@@ -1,0 +1,194 @@
+{
+  "date": "2026-04-24",
+  "origin": "chronicle 2026-04-24: pgnexus #124, planet 5",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Huge Pages 从配置到验证的完整走法",
+      "summary": "大页把 TLB 覆盖的内存从 6MB 量级抬到 GB 量级，大幅减少 TLB 未命中。Christophe Pettus 给出完整步骤：用 shared_memory_size_in_huge_pages 算出需要多少页，96GB 缓冲池约需 49152 个 2MB 页；在内核命令行预留，再把 huge_pages 设为 on 而不是 try。透明大页设成 madvise 而非 always，启动后查 /proc/meminfo 核对。",
+      "url": "https://thebuild.com/blog/huge-pages-end-to-end/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-24",
+      "image": "https://thebuild.com/media/media/d1f8e72932e34506ba564cff5c4801c7.png",
+      "domain": "pg",
+      "tags": [
+        "大页",
+        "内存",
+        "配置"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Postgres 走向湖仓的两条路：pg_lake 与 Lakebase",
+      "summary": "Christophe Pettus 把两种湖仓路线摆在一起看。pg_lake 是 Snowflake 那一路，作为扩展直接在 Postgres 后端读写 Iceberg 表与对象存储文件，本质是外部数据包装器，查询时把 OLTP 与湖仓联邦起来。Lakebase 走 Databricks 这一路，把 Neon 的存算分离搬进湖仓，本身就是湖仓里的无服务器 Postgres。前者适合已有两套系统一起查，后者适合要写时复制分支的负载。",
+      "url": "https://thebuild.com/blog/postgres-goes-to-the-lake-two-ways/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-24",
+      "image": "https://thebuild.com/media/media/elephants-to-the-lake.png",
+      "domain": "pg",
+      "tags": [
+        "湖仓",
+        "Iceberg",
+        "架构"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "一个实例塞进多个库会撞上结构性天花板",
+      "summary": "Shaun Thomas 说单实例多库撞到的往往不是硬件上限，而是共享资源。所有库抢同一份缓冲池，某个库扫 500GB 大表就会挤掉另一个库延迟敏感的热页；一个库疏于回收，事务 ID 回卷会让整个实例拒绝新事务；行级锁的 multixact 成员在实例级有 21GB 上限，一个库锁得凶就会拖住其他库；WAL 重放又是单线程，写入密集的主库产出速度可能结构性地超过副本的消化能力。他主张按库拆成独立实例。",
+      "url": "https://www.pgedge.com/blog/the-scaling-ceiling-when-one-postgres-instance-tries-to-be-everything",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展性",
+        "多租户",
+        "架构"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "高频系统里用反范式换掉连接开销",
+      "summary": "表过了 5 亿行以后，连接带来的读放大和 CPU 开销会变成主要瓶颈。Jake Hertz 的做法是有选择地放弃范式：先用 pg_stat_statements 找出连接税落在哪些语句上，再把高频访问、低基数的元数据列迁进主表，把模式压平，省掉昂贵的连接；冗余出来的数据交给列式压缩处理。这样做减少了缓冲池压力和存储占用，把一个受 I/O 限制的系统变成 CPU 效率更高的系统。代价是写入侧要自己维护一致性。",
+      "url": "https://www.tigerdata.com/blog/balance-relational-purity-speed-high-frequency-systems",
+      "author": "Jake Hertz",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-24",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/balance-relational-purity-speed-in-high-frequency-systems.png",
+      "domain": "pg",
+      "tags": [
+        "反范式",
+        "性能",
+        "列式压缩"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Neon 给组织加上消费上限",
+      "summary": "自动扩缩容的托管数据库最常见的抱怨，是流量一涨账单跟着失控，而多数云厂商只在费用产生之后才发通知。Neon 新增组织级消费上限，让团队为 PostgreSQL 负载预先设定预算阈值，把成本控制从事后告警挪到事前拦截。对按需扩缩的用法来说，这条限制决定了扩容会不会一路跑到月底才被发现，预算与自动扩容的边界需要一起规划。",
+      "url": "https://neon.com/blog/introducing-organization-spending-limits",
+      "author": "Jeffrey Christoffersen",
+      "source": "Neon 博客",
+      "source_date": "2026-04-24",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/introducing-organization-spending-limits/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "成本",
+        "托管服务"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "pg_test_timing 的单位标注错误已修复并回补",
+      "summary": "Chao Li 发现 v10 到 v18 把微秒标成 ms，Fujii Masao 同时修掉了 v19 纳秒改动引入的溢出。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEp21h5JUHLP0Rj2GMuOVtH_5E7y3J=BW9yVT8gNaSgLQ@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "回补"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志历史表转入 pg_conflict 模式的权限核查",
+      "summary": "Dilip Kumar 说设计问题基本收敛，剩下的是确认这个内部模式不会被用户随手改动。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uADckX3O9AqoxV+ZX5yUTwwUQFsPFgLLyqtxm=hNnrR=w@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "并行 Apply 的内部消息倾向统一成一种格式",
+      "summary": "Shveta Malik 与 Amit Kapila 支持方案二，既不污染对外协议，也不必保留两条处理路径。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uCRMkH7vBwqh83yMoLsShaDEttP+bWYVvM9=HykiXOrsg@mail.gmail.com",
+      "author": "Zhijie Hou",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "并行"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "跨会话临时表补丁建议先补 TAP 测试记录现状",
+      "summary": "Michael Paquier 主张先测出错误命令静默成功的现状，再改 read_stream.c 与 bufmgr.c。",
+      "url": "https://www.postgresql.org/message-id/98c1c0d9-7962-4669-90f2-deb28a665a55@uni-muenster.de",
+      "author": "Jim Jones",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "测试"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "范围类型的连接选择度估计补丁重新归属作者",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABXr29HyNDjVYza0op20aKt1mdtdzbxMLvzCKdtMu45_TH4NGw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解：application_name",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-application_name/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "寻找牙买加的地理中心",
+      "summary": "",
+      "url": "https://auchindown.com/blog/2026/finding-jamaicas-centre",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    }
+  ]
+}

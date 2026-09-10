@@ -1,0 +1,148 @@
+{
+  "date": "2026-05-31",
+  "origin": "chronicle 2026-05-31: pgnexus #163, planet 1；补 2026-05-29 与 05-30 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "walsender 关闭超时补丁的新测试不稳定",
+      "summary": "Alexander Lakhin 报告刚推送的 walsender 关闭超时补丁带来的测试在构建农场上失败：它没等到那条 walsender 因超时退出的告警，看到的却是数据库关闭和连接失败的报错。原因像是时序问题，接收端的就绪标志在主循环跑起来之前就被置上了。他在 walreceiver 里插入 500 毫秒延迟复现了失败，证实存在竞态。结论是测试对时序的假设要重写，得容得下接收端启动与发送端关闭的异步性。",
+      "url": "https://www.postgresql.org/message-id/923f6d11-f43b-48c8-a8ed-3f7da6493374@gmail.com",
+      "author": "Alexander Lakhin",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "测试",
+        "竞态"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "config_file 只能在启动时指定",
+      "summary": "config_file 指出 postgresql.conf 的位置。默认在数据目录下，但发行版会改，Debian 和 Ubuntu 就放在 /etc/postgresql/ 下。它不能写在配置文件里，也不能 ALTER SYSTEM SET，只能启动时用 -c 指定，否则就是循环依赖。配套的还有 data_directory、hba_file 和 ident_file。Pettus 建议接手机器时先 SHOW 这四个，比猜目录靠谱。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-configfile/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-31",
+      "image": "https://thebuild.com/media/media/46a90a1e5a2641259e27b9b7be745dc9.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "配置文件",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表补丁调整错误处理与字段命名",
+      "summary": "断言换成 elog 以便报错，字段名去掉冗余的 log 前缀，权限不足时给出更具体的提示。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-sKqOUbd71PvCX0bB0PSt9zWez=X4pe0Edn_yboZLyU5A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突日志"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "AWS Budgets 可以直接放进账单面板",
+      "summary": "新的预算小组件把预算监控挪到账单与成本管理仪表盘里，不必再来回切页面。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/monitor-aws-budgets-using-dashboards/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "成本"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 3,
+      "title": "Amazon Connect 支持提前 90 天排程任务",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-connect-customer-tasks-90day-schedule/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 3,
+      "title": "AWS 的商业 RCS 消息新增 20 个国家",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-rcs-countries/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "Secluso 做端到端加密的开源家庭安防",
+      "summary": "",
+      "url": "https://github.com/secluso/core",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "加密",
+        "开源"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "Pandoc Templates 汇总现成的排版模板",
+      "summary": "",
+      "url": "https://pandoc-templates.org/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "文档工具"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "DocOCR 在本地把文档图片转成 Markdown",
+      "summary": "",
+      "url": "https://github.com/riddleling/docOCR",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-30",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "本地工具"
+      ],
+      "position": 9
+    }
+  ]
+}

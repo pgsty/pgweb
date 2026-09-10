@@ -1,0 +1,227 @@
+{
+  "date": "2026-07-26",
+  "origin": "chronicle 2026-07-26: pgnexus #219, daily, planet 2；补入 2026-07-23 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "大记录整体压缩的 WAL 补丁拆成三部分",
+      "summary": "Andrey Borodin 发布 WAL 压缩补丁的 v7，拆成三部分。0001 让 zstd 压缩上下文在后端生命周期内复用，省掉每次压缩全页镜像时的分配与释放，全页镜像多的场景提速约 12%。0002 新增整条记录压缩：超过 wal_compression_threshold 默认 512 字节的记录整体压缩，支持 lz4 和 zstd，B-tree 建索引时 WAL 明显变小。0003 还是原型，从任意 LSN 开始读无法解码。",
+      "url": "https://www.postgresql.org/message-id/33EDA443-E905-4E15-A7B0-F734C369A19B@yandex-team.ru",
+      "author": "Andrey Borodin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "开创性功能不妨先在分支里长大",
+      "summary": "Andrei Lepikhov 认为，PostgreSQL 社区把稳定和可维护放在创新之前，每一行新代码都是全社区要背的维护负担，所以开创性功能更适合先在分支里做：让代码在真实负载和真实边界情况下跑一段时间，暴露设计缺陷而不动摇主干。他以并行查询访问临时表为例，两家厂商的分支先后尝试三种做法，每种都撞上意料之外的复杂度。难点在于回到上游时如何争取社区注意力。",
+      "url": "https://danolivo.substack.com/p/why-your-pioneering-postgres-feature",
+      "author": "Andrei Lepikhov",
+      "source": "danolivo",
+      "source_date": "2026-07-26",
+      "image": "https://substackcdn.com/image/fetch/$s_!BPCR!,w_1200,h_675,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb3f6c7d4-8c41-4677-8007-05810b8c57a4_1672x941.png",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "开发流程"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Debian 就是否允许 LLM 协助贡献投票",
+      "summary": "Debian 于 7 月 24 日开始讨论一项关于在 Debian 中使用 LLM 的普遍决议。其中提案 A 主张禁止由 LLM 或其他生成式 AI 协助的直接贡献，覆盖打包、官方软件、网站和文档翻译，但不包括上游项目及上游的补丁与安全修复；它目前只是投票中的一个选项。Debian 的打包和基础设施处在大量下游供应链的关键位置，规则一旦改变，影响的不只是维护者怎么写代码，还有来源声明、审查和补丁接受流程。结果未定前不宜预设。",
+      "url": "https://www.debian.org/vote/2026/vote_002",
+      "author": "Debian",
+      "source": "Debian 投票页",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理",
+        "供应链"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Claude Code 删掉八成以上系统提示",
+      "summary": "Anthropic 说明面向 Claude Opus 5 和 Fable 5 的上下文工程做法：Claude Code 的系统提示删去八成以上，在其编码评测上没有观察到可测的损失。文章建议把验证和评审说明挪进按需加载的 skills，少堆示例、多在工具接口上下功夫。长上下文里互相矛盾的规则会消耗注意力，但把“模型判断力更强”理解成“不再需要硬护栏”同样危险，审计和人工审批仍要留着。",
+      "url": "https://claude.com/blog/the-new-rules-of-context-engineering-for-claude-5-generation-models",
+      "author": "Anthropic",
+      "source": "Anthropic 博客",
+      "source_date": "2026-07-24",
+      "image": "https://cdn.prod.website-files.com/68a44d4040f98a4adf2207b6/6a639c6b2e881afef80764c6_og_the-new-rules-of-context-engineering-for-claude-5-generation-models.jpg",
+      "domain": "ai",
+      "tags": [
+        "上下文工程",
+        "AI 代理"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PyTorch Monarch 把容错训练带到 ROCm",
+      "summary": "PyTorch 与 AMD、Meta 的作者说明 Monarch 的 ROCm 支持：把 CUDA 桥接换成 HIP，用 RCCL 对接集合通信，保留 libibverbs 的 RDMA 路径，官方称相关贡献通过 1171 项测试，并支持 actor、监督树和张量分片。大规模训练里节点故障是常态，健康节点能继续跑、失败节点再归队，就能减少全局检查点重启带来的 GPU 空转。",
+      "url": "https://pytorch.org/blog/bringing-pytorch-monarch-to-amd-gpus-single-controller-distributed-training-on-rocm/",
+      "author": "PyTorch",
+      "source": "PyTorch 博客",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "训练",
+        "容错",
+        "ROCm"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "连接消除补丁修好外连接条件提升的缺陷",
+      "summary": "v3 改按是否引用被移除关系来判断提升条件，v4 补上断言与测试，另有可选补丁支持一次消除多个自连接。",
+      "url": "https://www.postgresql.org/message-id/2933135.1785032128@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "连接消除"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PGSync Pro 只在语义变化时重新嵌入",
+      "summary": "产品页称为 PostgreSQL 提供实时语义与混合检索，数据库仍是权威来源，一致性需自行验证。",
+      "url": "https://pgsync.com/pro/",
+      "author": "PGSync",
+      "source": "PGSync",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检索",
+        "向量"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 保留复制源补丁遇到计数不一致",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHWVJhF7X53jx3Hwkj4yOLmRgJCAM2SwhkA2rOFFCqY+eJC0mQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：geqo 系列",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-the-geqo-family/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "优化器"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "Android 拟允许限定 adbd 的监听接口",
+      "summary": "",
+      "url": "https://kitsumed.github.io/blog/posts/android-may-soon-restrict-on-device-adb/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "调试",
+        "安全"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "awsmux 让代理的变更走不可变计划与审批",
+      "summary": "",
+      "url": "https://github.com/0hardik1/awsmux",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "AI 代理"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "Bitchat 的仓库出现在 Radicle 节点网络",
+      "summary": "",
+      "url": "https://radicle.network/nodes/rosa.radicle.network/rad%3Az2v9tRJz1oknFAqCSY5W5c76nVvm6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码托管"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "Yorishiro 把编码代理包进 macOS 终端",
+      "summary": "",
+      "url": "https://github.com/sktkkoo/Yorishiro",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Echo 试验用开放权重模型池做集成路由",
+      "summary": "",
+      "url": "https://echo.tracerml.ai/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "模型路由"
+      ],
+      "position": 14
+    }
+  ]
+}

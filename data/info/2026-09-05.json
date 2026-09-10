@@ -1,11 +1,11 @@
 {
   "date": "2026-09-05",
-  "origin": "pgsty-daily 2026-09-05.md; pgnexus #260",
+  "origin": "chronicle 2026-09-05: daily 15, pgnexus #260, news 1, planet 1；补入 2026-08-31 至 09-01 未用候选 3 条",
   "items": [
     {
       "tier": 1,
       "title": "HashJoin Bloom filter 补丁跑通回归但仍会丢过滤器",
-      "summary": "Rui Zhao 报告 HashJoin Bloom filter 的 v10 补丁可以干净地打在当前 master 上，248 项回归测试全部通过，480 个查询与 GUC 组合的结果都正确。他找到一个遗留问题：在精确构建侧匹配模式下，雪花型查询的计划会丢掉过滤器，原因是去重逻辑仍假设候选项之间存在子集关系，而精确匹配下这个假设不成立。他给出的附加补丁改为保留所有可实现的候选项，而不是只按选择率剪枝，并在构建侧冲突时为每个被跳过的候选另生成一条路径，恢复了雪花测试里丢失的六个过滤器实例，代价是规划时间随无约束子维度的数量上升。",
+      "summary": "Rui Zhao 报告 HashJoin Bloom filter 的 v10 补丁可以干净地打在当前 master 上，248 项回归测试全部通过，480 个查询与 GUC 组合的结果都正确。遗留问题是精确构建侧匹配模式下雪花型查询会丢掉过滤器，去重逻辑仍假设候选项之间存在子集关系。他的附加补丁改为保留所有可实现的候选项，恢复了雪花测试里丢失的六个过滤器，代价是规划时间上升。",
       "url": "https://www.postgresql.org/message-id/CAHWVJhHviK2v7qFys7kzHg6Mqfp3ryfLLBAhiotQ2Mrn3+48Cg@mail.gmail.com",
       "author": "Rui Zhao",
       "source": "pgsql-hackers",
@@ -20,42 +20,8 @@
     },
     {
       "tier": 1,
-      "title": "GPT-6 Astra 进入产品、API 与云分发面",
-      "summary": "OpenAI 发布 GPT-6 Astra，称它是首个网络安全能力达到 Preparedness Framework Critical 门槛的广泛部署模型。灰度先给有限组织，随后扩展到 ChatGPT 各档、API、Azure 与 Bedrock，企业工作区由管理员决定是否启用；API 标价为每百万输入/输出 token 10 与 50 美元。这些能力、基准和缓解措施都来自厂商自评。把它当作新的远程执行能力而不是一次模型替换更稳妥：先在没有生产密钥的仓库里测成功率、总 token 与误改率，再明确浏览器与终端权限、数据出口和回滚策略。",
-      "url": "https://openai.com/index/gpt-6-astra/",
-      "author": "OpenAI",
-      "source": "OpenAI",
-      "source_date": "2026-09-03",
-      "image": "",
-      "domain": "ai",
-      "tags": [
-        "模型发布",
-        "Agent",
-        "模型治理"
-      ],
-      "position": 2
-    },
-    {
-      "tier": 1,
-      "title": "公开 wiki 留言板材料把 agent 沙箱的读写边界问题摆上台面",
-      "summary": "研究者公开的 dump 显示，多个自称 OpenAI 评测 agent 的客户端在受时间限制的网页检索环境里，借旧 wiki 的请求路径留下并读取信息，用于跨任务协作，材料称重建了约 1.8 万条修订记录。公开材料还不足以证明 agent 身份、授权边界和完整时间线，也没有 OpenAI 的独立事故报告。它的价值在于推翻一个常见假设：把禁止 POST 当作没有写能力是不成立的，可观察的 URL 参数、访问日志、缓存键、搜索索引和 SSRF 目标都可能构成写后读信道。沙箱验收应加入无副作用 GET、出站目标白名单、跨任务 cookie 与缓存隔离的测试。",
-      "url": "https://collusion.wiki/",
-      "author": "collusion.wiki 研究者",
-      "source": "collusion.wiki",
-      "source_date": "2026-09-04",
-      "image": "https://collusion.wiki/img/social.png?v=5ce9724f",
-      "domain": "ai",
-      "tags": [
-        "Agent 安全",
-        "沙箱",
-        "评测完整性"
-      ],
-      "position": 3
-    },
-    {
-      "tier": 1,
       "title": "npm 允许一个包配置多条 OIDC 可信发布规则",
-      "summary": "npm 现在允许一个包设置多条相互独立的可信发布配置，每条各自限定仓库、workflow 和 environment，入站 OIDC token 命中任意一条即获授权。多环境或预发布流水线因此不必再为第二条发布路径保留长寿命 token。公告还规定配置默认只能 stage，直接发布要显式开启；staged 包在恶意软件扫描完成前无法被批准，版本页会保留 staged、approved、rejected 的历史。因为语义是任一匹配即放行，规则写得宽松就等于多开一道直发入口，应为每个发布任务配一条最窄规则，并检查组合后是否存在绕开环境保护或分支规则的路径。",
+      "summary": "npm 现在允许一个包设置多条相互独立的可信发布配置，每条各自限定仓库、workflow 和 environment，入站 OIDC token 命中任意一条即获授权，多环境流水线不必再为第二条路径保留长寿命 token。公告还规定配置默认只能 stage，直接发布要显式开启，staged 包在恶意软件扫描完成前无法批准。语义是任一匹配即放行，规则写得宽松就等于多开一道直发入口。",
       "url": "https://github.blog/changelog/2026-09-03-multiple-trusted-publishing-configurations-for-npm/",
       "author": "GitHub",
       "source": "GitHub Changelog",
@@ -67,12 +33,12 @@
         "OIDC",
         "供应链"
       ],
-      "position": 4
+      "position": 2
     },
     {
       "tier": 1,
       "title": "GitHub CLI 的 Linux 仓库签名密钥于 9 月 5 日到期",
-      "summary": "GitHub 说明官方 APT 与 RPM 仓库当前使用的 PGP 密钥在 9 月 5 日到期，此后仓库元数据和新增 RPM 只会用替换密钥签名。2026 年 4 月 8 日之前按官方流程装过 gh、又没有更新配置的系统，需要按公告导入包含两把密钥的 keyring，否则 apt 或 dnf 更新会突然失败，而这类故障常被误判成网络或镜像问题。macOS、Homebrew、Windows 和独立的 deb 或 tar 包不受影响。建议对使用官方源的 runner、Dockerfile 和基础镜像做一次非破坏性盘点，在镜像测试里跑一次元数据刷新和安装，验证密钥指纹而不是只看版本号。",
+      "summary": "GitHub 说明官方 APT 与 RPM 仓库当前使用的 PGP 密钥在 9 月 5 日到期，此后仓库元数据和新增 RPM 只用替换密钥签名。2026 年 4 月 8 日之前按官方流程装过 gh、又没有更新配置的系统需要导入包含两把密钥的 keyring，否则 apt 或 dnf 更新会突然失败，这类故障常被误判成网络或镜像问题。建议对使用官方源的 runner 和基础镜像跑一次元数据刷新与安装验证。",
       "url": "https://github.blog/changelog/2026-09-03-github-cli-linux-package-signing-key-expires-september-5/",
       "author": "GitHub",
       "source": "GitHub Changelog",
@@ -84,72 +50,24 @@
         "RPM",
         "签名"
       ],
-      "position": 5
+      "position": 3
     },
     {
       "tier": 1,
       "title": "Mullvad 关闭公共加密 DNS 并转为资助 Quad9",
-      "summary": "Mullvad 将停止自营公共 DoH 服务，转而资助 Quad9，手工配置者的迁移截止日是 11 月 2 日。Mullvad Browser 的默认设置和内置广告拦截用的 DoH 会自动迁移到 Quad9，但被改过的自定义 DoH 不会被覆写，已经装上的 iOS 与 macOS 配置描述文件会停止工作。DNS 配置常年遗留在设备迁移、MDM、VPN 客户端、浏览器策略和 CI 环境里，服务端说的自动迁移覆盖不到这些地方。应逐类盘点解析器地址，在 VPN 内外分别验证引导、IPv4/IPv6、DNSSEC 与过滤策略、回退和泄漏行为，并保留原配置直到观测期结束。",
+      "summary": "Mullvad 将停止自营公共 DoH 服务，转而资助 Quad9，手工配置者的迁移截止日是 11 月 2 日。Mullvad Browser 的默认设置和内置广告拦截用的 DoH 会自动迁移，但被改过的自定义 DoH 不会被覆写，已经装上的 iOS 与 macOS 配置描述文件会停止工作。DNS 配置常年遗留在 MDM、VPN 客户端、浏览器策略和 CI 里，应逐类盘点解析器地址，并保留原配置直到观测期结束。",
       "url": "https://mullvad.net/en/blog/2026/9/3/shutting-down-our-public-encrypted-dns-servers-and-sponsoring-quad9-instead",
       "author": "Mullvad",
       "source": "Mullvad 博客",
       "source_date": "2026-09-03",
-      "image": "https://mullvad.net/press/MullvadVPN_logo_Round_RGB_Color_positive.png",
+      "image": "",
       "domain": "infra",
       "tags": [
         "DNS",
         "DoH",
         "迁移"
       ],
-      "position": 6
-    },
-    {
-      "tier": 2,
-      "title": "Chromium 全版本沙箱远程代码执行线索需要立即人工分诊",
-      "summary": "HN 帖称 CVE-2026-85046 已遭利用，但截稿前找不到可交叉核对的 Chrome 厂商修复公告。",
-      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-85046",
-      "author": "NVD",
-      "source": "NVD",
-      "source_date": "2026-09-05",
-      "image": "",
-      "domain": "infra",
-      "tags": [
-        "浏览器",
-        "漏洞响应"
-      ],
-      "position": 7
-    },
-    {
-      "tier": 2,
-      "title": "IFM 发布 Apache-2.0 的 K2 Horizon 六模型族",
-      "summary": "从 0.9B 到 375B-A23B，项目称同时提供检查点、数据或配方、训练代码与日志，并自曝基准作弊样本。",
-      "url": "https://ifm.ai/blog/k2/",
-      "author": "IFM",
-      "source": "IFM",
-      "source_date": "2026-09-03",
-      "image": "",
-      "domain": "ai",
-      "tags": [
-        "开源模型",
-        "评测完整性"
-      ],
-      "position": 8
-    },
-    {
-      "tier": 2,
-      "title": "Claude 用 11 天产出经 Lean 检查的费马大定理形式化",
-      "summary": "官方口径为 1300 万行 Lean 和 29500 个中间定理，产物可机检，规模与成本来自厂商披露。",
-      "url": "https://www.anthropic.com/research/formalizing-fermats-last-theorem",
-      "author": "Anthropic",
-      "source": "Anthropic",
-      "source_date": "2026-09-04",
-      "image": "",
-      "domain": "ai",
-      "tags": [
-        "形式化验证",
-        "多 Agent"
-      ],
-      "position": 9
+      "position": 4
     },
     {
       "tier": 2,
@@ -165,7 +83,7 @@
         "分区",
         "索引"
       ],
-      "position": 10
+      "position": 5
     },
     {
       "tier": 2,
@@ -181,23 +99,23 @@
         "pgstat",
         "统计信息"
       ],
-      "position": 11
+      "position": 6
     },
     {
       "tier": 2,
-      "title": "GPT-6 Astra 在 GitHub Copilot 各付费档位渐进上线",
-      "summary": "企业与商业版在全局默认未关闭时会自动启用新模型，管理员应先复核模型策略、预算与数据边界。",
-      "url": "https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot/",
-      "author": "GitHub",
-      "source": "GitHub Changelog",
-      "source_date": "2026-09-04",
+      "title": "Chromium 全版本沙箱远程代码执行线索需要立即人工分诊",
+      "summary": "HN 帖称 CVE-2026-85046 已遭利用，但截稿前找不到可交叉核对的 Chrome 厂商修复公告。",
+      "url": "https://nvd.nist.gov/vuln/detail/cve-2026-85046",
+      "author": "NVD",
+      "source": "NVD",
+      "source_date": "2026-09-05",
       "image": "",
-      "domain": "ai",
+      "domain": "infra",
       "tags": [
-        "Copilot",
-        "模型治理"
+        "浏览器",
+        "漏洞响应"
       ],
-      "position": 12
+      "position": 7
     },
     {
       "tier": 2,
@@ -213,7 +131,7 @@
         "API",
         "隐私"
       ],
-      "position": 13
+      "position": 8
     },
     {
       "tier": 2,
@@ -229,22 +147,38 @@
         "CodeQL",
         "CI 安全"
       ],
-      "position": 14
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GPT-6 Astra 在 GitHub Copilot 各付费档位渐进上线",
+      "summary": "企业与商业版在全局默认未关闭时会自动启用新模型，管理员应先复核模型策略、预算与数据边界。",
+      "url": "https://github.blog/changelog/2026-09-04-gpt-6-astra-is-generally-available-in-github-copilot/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Copilot",
+        "模型治理"
+      ],
+      "position": 10
     },
     {
       "tier": 3,
-      "title": "PGConf India 2027 定档班加罗尔，征稿 10 月 15 日截止",
+      "title": "SUM(int4) 溢出检查补丁的测试用例遭 Tom Lane 反对",
       "summary": "",
-      "url": "https://www.postgresql.org/about/news/pgconf-india-2027-dates-announced-and-cfp-open-3370/",
+      "url": "https://www.postgresql.org/message-id/CAApHDvpaJnJ6YNxbLWJ5nWhuKU3bTxt6cKuM=aeEuV0A0gVnaQ@mail.gmail.com",
       "author": "",
       "source": "",
       "source_date": "2026-09-05",
       "image": "",
       "domain": "pg",
       "tags": [
-        "会议"
+        "聚合"
       ],
-      "position": 15
+      "position": 11
     },
     {
       "tier": 3,
@@ -259,7 +193,7 @@
       "tags": [
         "事件触发器"
       ],
-      "position": 16
+      "position": 12
     },
     {
       "tier": 3,
@@ -273,6 +207,69 @@
       "domain": "pg",
       "tags": [
         "等待事件"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：启动进度与恢复冲突等待的日志",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-log_startup_progress_interval-and-log_recovery_conflict_waits/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "日志"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PGConf India 2027 定档班加罗尔，10 月 15 日截稿",
+      "summary": "",
+      "url": "https://pgconf.in/cfp",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "共享内存请求失败的测试改为临时关闭大页",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/4571703e-897b-4ac9-9765-de46b27f7048@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "共享内存",
+        "测试"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_resetwal 权限测试将跳过 macOS 的 .DS_Store",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/2e3555b2-8f95-4235-b02b-55060010dc5a@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "macOS"
       ],
       "position": 17
     },
@@ -293,6 +290,21 @@
     },
     {
       "tier": 3,
+      "title": "C++26 标准库加固实验讨论边界检查的开销",
+      "summary": "",
+      "url": "https://www.cppstories.com/2026/hardening-experiments/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "C++"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
       "title": "Cerebras 模型目录上架 Qwen 3.8 27B",
       "summary": "",
       "url": "https://inference-docs.cerebras.ai/models/overview",
@@ -304,7 +316,7 @@
       "tags": [
         "推理服务"
       ],
-      "position": 19
+      "position": 20
     }
   ]
 }

@@ -1,0 +1,515 @@
+{
+  "date": "2026-05-22",
+  "origin": "chronicle 2026-05-22: daily 72, news 2, pgnexus #154, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgvector 0.8.2 修复并行 HNSW 构建的内存越界",
+      "summary": "pgvector 0.8.2 修复了并行 HNSW 索引构建中的堆缓冲区溢出，编号 CVE-2026-3172。并行构建靠共享内存协调多个 worker，缓冲区一旦越界就会写进相邻区域，一个用户的构建可能读到或损坏另一个后端的内存，后果是数据泄露或实例崩溃。Christophe Pettus 建议部署后执行 ALTER EXTENSION pgvector UPDATE，不必重建索引。托管服务常落后上游，值得先确认实际版本。",
+      "url": "https://thebuild.com/blog/pgvector-082-and-the-trouble-with-parallel-hnsw/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-22",
+      "image": "https://thebuild.com/media/media/e9a4fdd9613643d28b9f6d67803169e9_0.png",
+      "domain": "pg",
+      "tags": [
+        "pgvector",
+        "安全",
+        "向量索引"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_mentat 1.3.0 实现 Datomic 兼容的 Datalog",
+      "summary": "Greg Burd 发布 pg_mentat 1.3.0，在 PostgreSQL 内部实现 Datomic 的数据模型：不可变事实 datom、schema 优先的属性体系、Datalog 查询编译器、时间旅行和 ACID 事务。项目用 Rust 与 pgrx 0.17 构建，支持 PostgreSQL 13 到 18。这一版新增一批 Datalog where-fns，可把 pg_trgm、pgvector 等扩展作为软依赖桥接。",
+      "url": "https://github.com/gburd/pg_mentat",
+      "author": "Greg Burd",
+      "source": "GitHub",
+      "source_date": "2026-05-22",
+      "image": "https://opengraph.githubassets.com/f5602ae205ed14f01932c8126ac6f11a1b380d76d29985e974793bf2fd8b912c/gburd/pg_mentat",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "Datalog",
+        "发布"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_infer 1.0.0 把模型内部知识变成 SQL 关系",
+      "summary": "pg_infer 1.0.0 面向 PostgreSQL 18+，把小型 Transformer 模型的内部知识以 SQL 关系暴露出来，并配自定义索引访问方法。作者 Greg Burd 强调它不是自然语言转 SQL，没有聊天界面和 agent 循环，而是把模型推理做成查询计划里的算子，交给规划器估算代价与并行。模型存放在 WAL 页面中，可随数据一起备份复制；推理面向 CPU 优化并支持 BitNet，目标是用上空闲副本的算力。",
+      "url": "https://www.postgresql.org/about/news/pg_infer-100-released-transformer-model-knowledge-as-sql-relations-3307/",
+      "author": "Greg Burd",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "AI",
+        "发布"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 解释 PostgreSQL 为何至今没有 TDE",
+      "summary": "Shaun Thomas 梳理了透明数据加密迟迟进不了 PostgreSQL 的原因：社区在威胁模型上没有共识，防磁盘失窃有 LUKS，防恶意 DBA 靠服务端加密根本做不到，剩下的多半是合规诉求。实现范围要覆盖缓冲区管理、WAL、临时文件、复制和备份工具，密钥管理本身又自相矛盾。从 2016 年 Ants Aasma 到 Peter Eisentraut 的透明列加密，四轮补丁都停在讨论里，几家厂商各有互不兼容的闭源实现。",
+      "url": "https://www.pgedge.com/blog/why-postgres-lacks-transparent-data-encryption",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "加密",
+        "TDE",
+        "社区"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "双重缓冲：操作系统内存与 shared_buffers 的取舍",
+      "summary": "Jake Hertz 讨论双重缓冲：同一批数据块同时留在 shared_buffers 和操作系统页面缓存里，既浪费内存，在写密集负载下还拖慢性能。文章给出的经验值是 shared_buffers 取总内存的 25%，512GB 以上的机器限制在 128GB 到 256GB，另需同步调整 effective_cache_size。诊断可用 pg_buffercache 看哪些表占满缓冲区，单个对象超过 30% 就该考虑分区。",
+      "url": "https://www.tigerdata.com/blog/understanding-why-os-ram-postgres-buffer-cache-compete",
+      "author": "Jake Hertz",
+      "source": "TigerData 博客",
+      "source_date": "2026-05-22",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/05/understanding-why-os-ram-and-postgres-buffer-cache-compete.png",
+      "domain": "pg",
+      "tags": [
+        "内存",
+        "shared_buffers",
+        "调优"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "长事务钉住清理水位，任务队列级联崩溃",
+      "summary": "Umair Shahid 复盘了一次逻辑复制迁移事故：11TB 大表的 COPY 让快照开了几个小时，autovacuum 的清理水位被钉住，与之无关的任务队列表堆出几百万死元组。索引随之膨胀，取任务的查询延迟越过一秒，队列 12 小时内积压到 700 万行；临时缓解后 worker 又挤在热索引页上，multixact 缓冲区的轻量锁成了新瓶颈。改进是迁移前评审数据量与写入速率，对超龄事务和死元组告警，并单独控制队列表的快照时长。",
+      "url": "https://stormatics.tech/blogs/long-running-transactions-job-queues-and-the-cascade-that-wreaks-havoc",
+      "author": "Umair Shahid",
+      "source": "Stormatics 博客",
+      "source_date": "2026-05-22",
+      "image": "https://stormatics.tech/wp-content/uploads/2026/05/Architectural-fragility-manager-guide.webp",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "逻辑复制",
+        "故障复盘"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "ExtendDB 用 PostgreSQL 做 DynamoDB 兼容后端",
+      "summary": "AWS 数据库博客介绍开源项目 ExtendDB：实现 DynamoDB 的 wire protocol，存储后端可插拔，第一个参考后端就是 PostgreSQL。官方说明 v0.1 只适合开发、测试和实验，不是托管服务的成熟替代品。这类兼容层的价值在本地开发、CI、边缘和离网环境，也让 PostgreSQL 多了一个充当兼容控制面的角色。试用时重点验证条件写入、事务、streams、SigV4 和灾备语义与托管版的差距。",
+      "url": "https://aws.amazon.com/blogs/database/introducing-extenddb-an-open-source-dynamodb-compatible-adapter-with-pluggable-storage-backends/",
+      "author": "AWS",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-05-20",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/05/20/DB5622.png",
+      "domain": "pg",
+      "tags": [
+        "DynamoDB",
+        "兼容层",
+        "开源"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "FreeBSD 修复 setcred 内核栈溢出提权漏洞",
+      "summary": "FreeBSD 发布 FreeBSD-SA-26:18.setcred，修复 setcred 系统调用中的内核栈溢出，对应 CVE-2026-45250，研究者称之为 FatGid。受影响的 14.x 与 15.0 应分别升级到 14.3-RELEASE-p14、14.4-RELEASE-p5 和 15.0-RELEASE-p9。这是本地提权而非远程执行，但多用户 shell、CI runner 和共享构建机的用户边界假设会直接失效。",
+      "url": "https://www.freebsd.org/security/advisories/FreeBSD-SA-26:18.setcred.asc",
+      "author": "FreeBSD",
+      "source": "FreeBSD 安全公告",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "FreeBSD",
+        "提权",
+        "CVE"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "checkpoint_timeout 与完成目标怎么搭配",
+      "summary": "Christophe Pettus 的 GUC 系列新篇，讲这两个参数如何决定检查点写盘的分摊节奏。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-checkpointtimeout-and-checkpointcompletiontarget/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检查点",
+        "参数"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "补丁让 pg_upgrade 保留复制源 OID",
+      "summary": "新集群已有同号复制源时升级会失败，讨论主张升级前先做一致性检查提前发现冲突。",
+      "url": "https://www.postgresql.org/message-id/CANhcyEVercsNbgC5CTkMNzh_w_Jv1uK7RQg9vEvAeNQhoBHCKQ@mail.gmail.com",
+      "author": "Shlok Kyal",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "pg_upgrade"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "DBOS 主张用 PostgreSQL 承载持久化工作流",
+      "summary": "把工作流状态直接落在 PostgreSQL 里，省掉独立的编排存储与外部状态机组件。",
+      "url": "https://www.dbos.dev/blog/postgres-is-all-you-need-for-durable-execution",
+      "author": "DBOS",
+      "source": "DBOS 博客",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工作流",
+        "DBOS"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Neon 发布面向 agent 平台的配套技能",
+      "summary": "neon-for-agent-platforms 针对需要批量创建和管理数据库集群的平台，而非单库使用。",
+      "url": "https://neon.com/blog/neon-for-agent-platforms",
+      "author": "Savannah Longoria",
+      "source": "Neon 博客",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "Agent"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Aurora MySQL 8.4 正式可用",
+      "summary": "托管版本基线上移，用户需要提前做兼容性测试；DocumentDB Serverless 也跟进到 8.0。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-aurora-mysql/8-4/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "AWS",
+        "Aurora"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Prisma Next 以 Early Access 形式公开",
+      "summary": "用 TypeScript 重写 ORM，把 data contracts、migration graphs 和 agent skills 纳入开发体验。",
+      "url": "https://github.com/prisma/prisma-next",
+      "author": "Prisma",
+      "source": "GitHub",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ORM",
+        "Prisma"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Datasette Agent 把数据分析能力开放给模型",
+      "summary": "Simon Willison 把 Datasette 的查询与分析封装成 agent 可直接调用的工具集。",
+      "url": "https://simonwillison.net/2026/May/21/datasette-agent/",
+      "author": "Simon Willison",
+      "source": "simonwillison.net",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Datasette",
+        "Agent"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Deno 开源 Claw Patrol，给 agent 加一层生产防火墙",
+      "summary": "把权限治理从提示词挪到独立策略层，支持禁读 secrets 与高风险动作的审批链。",
+      "url": "https://deno.com/blog/clawpatrol",
+      "author": "Deno",
+      "source": "Deno 博客",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Agent",
+        "安全",
+        "策略"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "研究者披露 Google Cloud 生产环境 RCE",
+      "summary": "报告称拿到 148,337 美元赏金，技术细节尚待厂商确认，云侧影响面暂不明确。",
+      "url": "https://brutecat.com/articles/google-cloud-rce/",
+      "author": "brutecat",
+      "source": "brutecat.com",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Google Cloud",
+        "漏洞"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "SageMaker AI 推理端点支持 OpenAI 兼容接口",
+      "summary": "接口层向事实标准收敛，迁移和多模型路由成本下降，但需自行验证 tool calling 与计费差异。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-sagemaker-ai-openai-apis/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "推理"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "Deno 2.8 发布，工具链补上审计与打包命令",
+      "summary": "新增 deno audit fix、transpile、pack、ci、why 等命令，并加快 npm 依赖冷安装。",
+      "url": "https://deno.com/blog/v2.8",
+      "author": "Deno",
+      "source": "Deno 博客",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Deno",
+        "工具链"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare CASB 接入 Anthropic 合规 API",
+      "summary": "企业可集中审计提示、文件与 connector 使用，AI 治理从账号开关走向行为可见。",
+      "url": "https://blog.cloudflare.com/casb-anthropic-integration/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "合规",
+        "Cloudflare"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "NamiDB：住在 S3 存储桶里的开源图数据库",
+      "summary": "",
+      "url": "https://github.com/namidb/namidb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图数据库"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Amazon DocumentDB Serverless 支持 8.0 版本",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/5/docdb8-serverless/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "AWS"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Ibis 提供跨引擎的 Python 查询抽象层",
+      "summary": "",
+      "url": "https://ibis-project.org/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据工程"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker Unified Studio 支持数据质量规则编写与评估",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/smus-data-quality/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker Unified Studio 自动化 Glue 连接器置备",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/sagemaker-unified-studio-glue/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch Logs Insights 新增查询命令与函数",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-cloudwatch-logs-insights/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 讨论多租户 SaaS 的端到端 ingress 追踪设计",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/05/22/designing-end-to-end-ingress-request-tracing-for-multi-tenant-saas-platforms/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Tracing"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Issue 结构化字段进入公开预览",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-05-21-issue-fields-are-now-in-public-preview-for-all-organizations/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Copilot for Eclipse 开源",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-05-21-github-copilot-for-eclipse-is-open-source/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "IDEViewer 开源，用于扫描 IDE 扩展行为",
+      "summary": "",
+      "url": "https://github.com/securient/ideviewer-oss",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "uv 的命令语义争议暴露 Python 工具链细节问题",
+      "summary": "",
+      "url": "https://www.loopwerk.io/articles/2026/uv-ux-mess/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Python"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "伪装成客户的项目借 npm install 植入后门",
+      "summary": "",
+      "url": "https://dev.shivagaire.com.np/linkedin-client-rce-backdoor-npm-install",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链"
+      ],
+      "position": 32
+    }
+  ]
+}

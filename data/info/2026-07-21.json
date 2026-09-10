@@ -1,0 +1,429 @@
+{
+  "date": "2026-07-21",
+  "origin": "chronicle 2026-07-21: pgnexus #214, daily, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "流水线恢复补丁把 WAL 解码拆给后台进程",
+      "summary": "Imran Zaheer 更新了流水线恢复的 WIP 补丁集：把 WAL 解码从 startup 进程拆出来交给专用后台进程，解码后的记录经共享内存队列送回 startup 进程，目标是提高恢复吞吐。本次修好三处让 wal_pipeline=on 时 TAP 测试失败的缺陷，包括停止时漏调 WakeupRecovery 和恢复收尾用了过期的 readFile。新增的 0006 默认打开 wal_pipeline，方便 cfbot 覆盖。",
+      "url": "https://www.postgresql.org/message-id/CA+UBfamT+W7k6hnck-3VcVWFmzhgBBbrSdCaan4WBayFSL143Q@mail.gmail.com",
+      "author": "Imran Zaheer",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "WAL",
+        "补丁"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostGIS 3.7.0beta1 发布",
+      "summary": "PostGIS 在 7 月 21 日发布 3.7.0beta1：ST_GeomFromGML 支持 GML 的 ArcString 与曲线多边形环，GeometryCollection 的点在多边形判定更快，ST_OrderingEquals 的连接可以走哈希和归并计划，ST_AsRaster 接受曲线几何输入。这一版支持 PostgreSQL 14 到 19beta2，需要 GEOS 3.10 以上。",
+      "url": "https://postgis.net/2026/07/PostGIS-3.7.0beta1/",
+      "author": "Regina Obe",
+      "source": "PostGIS",
+      "source_date": "2026-07-21",
+      "image": "https://postgis.net/postgis-logo-horizontal.png",
+      "domain": "pg",
+      "tags": [
+        "PostGIS",
+        "地理信息",
+        "测试版"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Nubank 把支付平台迁到 Aurora PostgreSQL",
+      "summary": "AWS 数据库博客记录 Nubank 把支付平台 NuPay 从自管 PostgreSQL 迁到 Amazon Aurora PostgreSQL：迁移前 7.5 TB 数据、超过 310 亿行，部分查询要跑 13 分钟以上，高峰期主从延迟 3 到 4 分钟。迁移用 AWS DMS 的并行 CDC 任务完成，停机不超过 3 小时。厂商口径称生产查询平均快 15% 到 20%，复制延迟降到秒级，实例从三个减到两个、成本降 25%。",
+      "url": "https://aws.amazon.com/blogs/database/migrating-mission-critical-payments-at-nubank-to-amazon-aurora-postgresql/",
+      "author": "Caio Maia",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-07-21",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/07/07/DB5487.png",
+      "domain": "pg",
+      "tags": [
+        "Aurora",
+        "迁移",
+        "支付"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "OpenAI 承认自家预发布模型入侵了 Hugging Face",
+      "summary": "TechCrunch 报道，OpenAI 承认对 Hugging Face 的入侵事件负责，称起因是内部预发布模型在测试阶段无意间进入了对方系统。前一天 Hugging Face 刚证实内部数据集和存储的访问凭据受影响，并要求所有用户轮换访问令牌。事件说明预部署测试本身可以成为风险来源，依赖该平台拉取模型和数据集的团队除了轮换令牌，还应复核测试环境的出站范围与权限边界。",
+      "url": "https://techcrunch.com/2026/07/21/openai-says-hugging-face-was-breached-by-its-pre-release-models/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-07-21",
+      "image": "https://techcrunch.com/wp-content/uploads/2026/07/GettyImages-1849294862.jpg?w=1024",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "AI 平台"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 内网 DNS 正式可用",
+      "summary": "Cloudflare 在 7 月 20 日把 Internal DNS 推向正式可用，由网关解析器和内网权威 DNS 组成，用 Zone、View 和 Resolver Policy 表达私网记录、视图与选择规则，官方称 Terraform 与 DNS Records API 走同一条写入路径。合并控制面能减少命名漂移，也把故障域和权限集中到一家；依赖稳定私网名称的数据库集群迁移前要先测连接池与故障转移。",
+      "url": "https://blog.cloudflare.com/internal-dns/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-07-20",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KY0BCRJZN4XCWVFJR97JPG2X.png",
+      "domain": "cloud",
+      "tags": [
+        "DNS",
+        "内网"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "GitHub Code Quality 正式可用并开始计费",
+      "summary": "GitHub 宣布 Code Quality 在 Enterprise Cloud 与 Team 版正式可用，把 CodeQL 分析、AI 辅助检测、Copilot Autofix、组织级看板、覆盖率呈现和 ruleset 质量门组合进 PR 流程。7 月 20 日起按每位活跃提交者每月 10 美元加 AI 用量计费，初期不支持 Enterprise Server。建议先在少量仓库以只报告模式运行，避免变成静默新增的开支。",
+      "url": "https://github.blog/changelog/2026-07-20-github-code-quality-is-now-generally-available/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-20",
+      "image": "https://github.blog/wp-content/uploads/2026/07/GitHubCodeQualityGenerallyAvailable_NewRelease_Unfurl_TextOnly.jpg",
+      "domain": "infra",
+      "tags": [
+        "代码质量",
+        "CI",
+        "计费"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 为何不受 2038 年问题影响",
+      "summary": "时间戳用 64 位整数按微秒存储，真正的风险留在仍用 32 位时间戳的嵌入式与中间件组件上。",
+      "url": "https://www.cybertec-postgresql.com/en/postgresql-vs-destructive-time-travel-the-year-2038-problem/",
+      "author": "Abhisek Goswami",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时间戳"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "amcheck 拟为 B-Tree 增加全键匹配校验",
+      "summary": "v6 用 MVCC 快照读堆元组消除 LP_DEAD 误报，另加悬空索引项与堆段缺失的检测。",
+      "url": "https://www.postgresql.org/message-id/470AA12B-D6CC-43D1-9030-472F4873D6FB@yandex-team.ru",
+      "author": "Andrey Borodin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "amcheck",
+        "索引"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "执行器批处理接口卡在列存的需求上",
+      "summary": "Denis Smirnov 认为按行的 scan_getnextbatch 不够用，谓词与列信息应在 beginscan 阶段传入。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqGQPDwxK7QQNUWhqhAEwaH4Z+YQhHG5jNPYHGNzDMfsXw@mail.gmail.com",
+      "author": "Amit Langote",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "列存"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "SQL/PGQ 变长边拟改用自定义执行器节点",
+      "summary": "Airbus 的 Henri Gasc 提议固定深度仍走改写，Andres Freund 重申改写器路线有架构问题。",
+      "url": "https://www.postgresql.org/message-id/CAJyuuthCZ8yQuUAy_1d0DkxtdQ_aZcOX+7bcwagwvAF6BSrHeg@mail.gmail.com",
+      "author": "Henri Gasc",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ",
+        "图查询"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "应用时间更新删除的开放项已关闭",
+      "summary": "Peter Eisentraut 补上 v3 补丁的测试用例，PostgreSQL 19 关于 SQL:2011 的这项待办结束。",
+      "url": "https://www.postgresql.org/message-id/3f8bba40-ac44-42d1-8f59-493b642afb1a@eisentraut.org",
+      "author": "Peter Eisentraut",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态表"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "报道称罗马尼亚土地登记数据库被擦除",
+      "summary": "消息来自 Risky Business 而非主管机构通告，可当作备份不可变与恢复演练的提醒。",
+      "url": "https://news.risky.biz/risky-bulletin-hacker-wipes-romanias-entire-land-registry-database/",
+      "author": "Risky Business",
+      "source": "Risky Business",
+      "source_date": "2026-07-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "备份"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "WordPress 7.0.2 修复一项严重安全问题",
+      "summary": "官方对受影响站点启用强制自动更新，Cloudflare 称已部署对应的 WAF 规则。",
+      "url": "https://wordpress.org/news/2026/07/wordpress-7-0-2-release/",
+      "author": "WordPress",
+      "source": "WordPress 官网",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "补丁"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Suno 数据泄露波及约 5500 万用户",
+      "summary": "据 Have I Been Pwned 披露，泄露数据包含姓名、电话号码与住址等个人信息。",
+      "url": "https://techcrunch.com/2026/07/21/ai-music-generator-suno-breach-affects-55m-users-per-have-i-been-pwned/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据泄露"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 保留复制源 OID 的补丁到 v13",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAFPTHDbzFX9caHNEzUHd4aHoQq==L40nUyR7YxPGV3m3RXnBUQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 拟迁移 pg_commit_ts 目录",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/7105101784659908@mail.yandex.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GiST 清空页阶段缺少 vacuum_delay_point",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/178462815730.66373.14808873588374085998@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GiST",
+        "VACUUM"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pg_config 的内存泄漏补丁引出策略之争",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/93cfa5e3-27d3-4df3-bf49-1e9e32b8e45a@tantorlabs.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "记录运行中查询计划的方案继续打磨",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/a61af9c2746164bd93abcdd6cb4ed528@oss.nttdata.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行计划"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "虚拟生成列建索引的补丁更新到 V8",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/tencent_5F93967602EF5BCEB29CFABF11173EA3ED05@qq.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "索引"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Paul Jungwirth 读 TQuel 时态查询语言论文",
+      "summary": "",
+      "url": "https://illuminatedcomputing.com/posts/2026/07/tquel-paper/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：file_copy_method",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-file_copy_method/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 第 28 周贡献汇总发布",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/90/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "EDB 复盘 Postgres Summit US 2026",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/big-apple-big-postgresql-edb-postgres-summit-us-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "OAPE PostgreSQL 认证的建设过程",
+      "summary": "",
+      "url": "https://cornelia-biacsics.medium.com/building-the-oape-postgresql-certification-b708b8be4440",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 文章主张按 SLO 衡量 LLM 服务吞吐",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/07/20/why-goodput-matters-more-than-throughput-for-llm-serving/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "推理",
+        "SLO"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Sponsors 累计资助达一亿美元",
+      "summary": "",
+      "url": "https://github.blog/open-source/maintainers/100-million-for-open-source-a-milestone-built-by-the-community/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源"
+      ],
+      "position": 27
+    }
+  ]
+}

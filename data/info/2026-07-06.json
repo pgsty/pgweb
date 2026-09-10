@@ -1,0 +1,431 @@
+{
+  "date": "2026-07-06",
+  "origin": "chronicle 2026-07-06: pgnexus #199, news 4, planet 7, daily",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL JDBC 42.7.12 修复通道绑定静默降级",
+      "summary": "pgJDBC 42.7.12 修复 CVE-2026-54291。连接参数写了 channelBinding=require 时，握手仍可能从带通道绑定的 SCRAM-SHA-256-PLUS 静默降级为普通 SCRAM-SHA-256，中间人防护就此失效。成因有两处：内置 SCRAM 客户端库无法为某些证书推导通道绑定哈希时返回空字节数组而不报错，pgJDBC 的认证器又没强制执行该要求。受影响的是 42.7.4 到 42.7.11。",
+      "url": "https://www.postgresql.org/about/news/postgresql-jdbc-42712-security-release-3340/",
+      "author": "JDBC Project",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "JDBC",
+        "CVE"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_dump 目录格式被指存在路径遍历风险",
+      "summary": "pg_dump 的目录格式存在路径遍历风险：攻击者构造恶意的 toc.dat 或 blobs_*.toc 条目，就能把写入路径指到任意位置，例如让 blob_16388.dat 落到上级目录的 /etc/passwd。Dilip Kumar 提出直接匹配 . 和 .. 两个字符串，Daniel Gustafsson 指出这盖不住嵌在路径中间的 .. 序列，主张改用更精确的模式匹配，并补上恶意 TOC 文件的测试。",
+      "url": "https://www.postgresql.org/message-id/21C26CF6-BB18-4ACC-8EC8-53C20EA86E6A@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "pg_dump"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Robert Haas 要求回退冲突日志表的预备补丁",
+      "summary": "逻辑复制冲突日志历史表的预备补丁 a5918fd 刚进主干，Robert Haas 就提出两处设计问题。其一，在 try/catch 中途暂存错误再调用 AbortOutOfAnyTransaction()，若调用栈上还有未执行的 catch 块，行为不可预期。其二，往冲突日志表插入记录本身失败时，这张表会与被复制的表永久失去同步。他认为方案从根上就有缺陷，呼吁回退提交并重新设计。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-vuhMhMwCdArfMx_t+HH-3d5=OBLMaD12m=Ft_Nr5id=A@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "设计争议"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 20 将提供按后端统计的锁信息",
+      "summary": "Bertrand Drouvot 编写、Michael Paquier 于 6 月 30 日提交的这个特性，给 PostgreSQL 20 加上按后端统计的锁信息。新函数 pg_stat_get_backend_lock() 接收一个进程号，按锁类型每种返回一行，字段有 locktype、waits、wait_time 和 fastpath_exceeded。它与 pg_stat_activity 连接后就能看到某个连接实时的锁等待行为，补上了聚合视图看不到单连接的短板。",
+      "url": "https://www.depesz.com/2026/07/06/waiting-for-postgresql-20-add-backend-level-lock-statistics/",
+      "author": "Hubert Lubaczewski",
+      "source": "depesz.com",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG20",
+        "监控",
+        "锁"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PG14 到 16 最新小版本回放旧 WAL 会自死锁",
+      "summary": "5 月 14 日发布的 PostgreSQL 14.23、15.18、16.14 带来一个复制死锁：备库或时间点恢复实例回放由 14.20、15.15、16.11 及更早版本产生的 WAL 时，startup 进程会在 MultiXactOffsetSLRU 锁上自死锁，pg_stat_activity 里表现为该锁的等待事件，恢复就此挂住。修复已在 5 月 27 日提交，下个小版本计划 8 月 13 日发布。在那之前可退回第一季度版本，或分两步升级。",
+      "url": "https://www.credativ.de/en/blog/postgresql-en/replication-deadlock-bug-in-current-postgres-releases-14-16/",
+      "author": "Michael Banck",
+      "source": "credativ 博客",
+      "source_date": "2026-07-06",
+      "image": "https://www.credativ.de/wp-content/uploads/2019/07/Portfolio-Loesungen.jpg",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "缺陷",
+        "升级"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "CloudNativePG 1.30.0 引入声明式角色管理",
+      "summary": "CloudNativePG 1.30.0 新增 DatabaseRole CRD，用声明式、适合 GitOps 的方式管理 PostgreSQL 角色，并引入基于 Kubernetes Lease 的主节点选举以提升故障切换安全性。安全方面修掉两个漏洞：CVE-2026-55769 靠固定 search_path 防止权限提升，CVE-2026-55765 在建角色和改角色前把明文口令转成 SCRAM-SHA-256。",
+      "url": "https://github.com/cloudnative-pg/cloudnative-pg/releases/tag/v1.30.0",
+      "author": "CloudNativePG 贡献者",
+      "source": "CloudNativePG",
+      "source_date": "2026-07-06",
+      "image": "https://opengraph.githubassets.com/b63b78987e245dd817c83b1a1b121bf2520708f616ba214ae54d306a00a48066/cloudnative-pg/cloudnative-pg/releases/tag/v1.30.0",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "安全",
+        "发布"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "pg_ivm 1.15 让 IMMV 熬过 dump 与大版本升级",
+      "summary": "pg_ivm 提供可增量维护的物化视图 IMMV。IVM Development Group 发布的 1.15 最要紧的变化是支持 pg_dump 与 pg_upgrade 场景下的元数据恢复：还原数据库或大版本升级之后不必再手动删掉重建 IMMV，新增的 pg_ivm_dump_metadata 工具和 restore_immv() 函数会把元数据恢复回来。这一版还修掉外连接视图维护时的段错误。",
+      "url": "https://github.com/sraoss/pg_ivm/releases/tag/v1.15",
+      "author": "IVM Development Group",
+      "source": "pg_ivm",
+      "source_date": "2026-07-06",
+      "image": "https://opengraph.githubassets.com/04088423d2bd5fa5b828f897560103a80c0a70a366a8cc4c3622d78473c9ee74/sraoss/pg_ivm/releases/tag/v1.15",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "物化视图"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "pg_hardstorage 用内容寻址存储替掉增量链",
+      "summary": "pgBackRest、Barman 这类工具的增量链有个脆弱之处：链上任何一个备份损坏或被删掉，下游备份就全部作废，而这种事往往等到凌晨三点恢复时才发现。Hans-Jürgen Schönig 解释 pg_hardstorage 为何干脆不做增量链，改用内容寻址存储：每个数据块以 SHA-256 哈希为标识，不同备份共享相同的块，删掉任意一个都不影响其他备份。一套 487 GiB 的生产库按小时备份一周，去重率 87.5%。",
+      "url": "https://www.cybertec-postgresql.com/en/why-pg-hardstorage-has-no-incremental-chain/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "Cybertec 博客",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "去重"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "ILIKE 在 C 排序规则下的行为在 19 里变了",
+      "summary": "Jeff Davis 确认这是重构提交 5a38104 带来的回归，相关修复已拆成四个补丁。",
+      "url": "https://www.postgresql.org/message-id/9f7b9f8b3689f8d78fcdb4f246f25b9b25ca001c.camel@j-davis.com",
+      "author": "Jeff Davis",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "排序规则",
+        "回归"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "CloudNativePG 1.30 的声明式角色与免密 TLS 实操",
+      "summary": "Gabriele Bartolini 的 CNPG 配方第 25 篇，演示新版角色 CRD 与证书认证怎么配。",
+      "url": "https://www.gabrielebartolini.it/articles/2026/07/cnpg-recipe-25-declarative-roles-and-passwordless-tls-in-cloudnativepg-1.30/",
+      "author": "Gabriele Bartolini",
+      "source": "gabrielebartolini.it",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "POSETTE 2026 的 44 场演讲全部上线 YouTube",
+      "summary": "6 月 16 至 18 日的免费线上会议，录像提供 16 种语言字幕，含 Postgres 19 黑客圆桌。",
+      "url": "https://posetteconf.com/",
+      "author": "Microsoft Azure",
+      "source": "POSETTE",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "哈希连接下推 Bloom 过滤器的补丁进到 v4",
+      "summary": "Tomas Vondra 归纳出四个待解问题，其中代价估算与分区表多消费者下推最棘手。",
+      "url": "https://www.postgresql.org/message-id/d43186bc-dffa-473c-84c0-0b7232ff6ef9@vondra.me",
+      "author": "Matheus Silva",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询优化"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "WAL LSN 回放等待被指在热路径上多加了三次调用",
+      "summary": "Heikki Linnakangas 建议把唤醒逻辑收进 ApplyWalRecord()，性能测试尚未做。",
+      "url": "https://www.postgresql.org/message-id/e4e98e40-40d5-4d53-85de-6c456c2b301a@iki.fi",
+      "author": "Heikki Linnakangas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "性能"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "pg_stat_kind_info 视图讨论新增 entry_size 列",
+      "summary": "Tristan Partin 主张取 shared_data_len，因为部分内置统计项根本不上报 shared_size。",
+      "url": "https://www.postgresql.org/message-id/DJRUUR0GTF9C.1MCIRTMDBBEDN@partin.io",
+      "author": "Tristan Partin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "基础备份补丁误删导出函数，触发 ABI 检查失败",
+      "summary": "Fujii Masao 已在 15 到 18 各分支恢复 basebackup_progress_done()，外部备份工具可能仍在调用。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEwt8wTWMPr7Xt5wBAn-FnVEHRwVbxc2AxiVZDEAbezWg@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "ABI"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "包一层 reader 就让 Go 丢掉了 sendfile 快路径",
+      "summary": "作者实测包装后的路径每字节 CPU 开销约为直接 io.Copy 的 3.4 倍。",
+      "url": "https://segflow.github.io/post/zero-copy-sendfile-splice/",
+      "author": "Segflow",
+      "source": "segflow.github.io",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Go",
+        "性能"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 的 .ready 文件到底意味着什么",
+      "summary": "",
+      "url": "https://richyen.com/postgres/2026/07/06/are_you_ready.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "enable_partition_pruning 决定分区裁剪何时发生",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_partition_pruning/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "\\d 性能回归的第三版补丁改从表达式排序规则入手",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DJRG61N6ISDV.13P5KBP27CNQ0@jeltef.nl",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "全局临时表 v7 补上子事务追踪并暴露冻结 XID",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/SY7PR01MB10921AF179BFC56D15C70894FB6F12@SY7PR01MB10921.ausprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pg_threads.h 重新设计成 14 个补丁的抽象层",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+hUKG+K+LmYtz54+Sv1j5Zu1Qo6szzAMbMyuKSeQmb7De4Ewg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 拟支持把函数扫描下推到外部服务器",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdtxrvDkGsdxEnaGB4f2apHnHHS0BPySYgZ39gFoBt1F=g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "提案用信号导出正在运行查询的执行计划",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/d8fc44c750a3ba08a97284e9a0a039cc@oss.nttdata.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "执行器批处理的新表 AM 回调遭到质疑",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3D8D1BA5-B8A6-400A-B605-42EEE37890B4@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "非确定性排序规则下 LIKE 匹配反斜杠的补丁被简化",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAH5HC96PgZNCTPmfmkP1GmOtV=eWhxn4T0zZjOTCQd_SGAk3ng@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "按大版本号隔离 ccache 的提案被否",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/71837b73-768c-4f58-b799-a4462ef0e102@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "首届 PostgreSQL 伊斯坦布尔线下聚会举办",
+      "summary": "",
+      "url": "https://people.planetpostgresql.org/devrim/index.php?%2Farchives%2F125-Inaugural-PostgreSQL-Istanbul-Meetup-was-a-blast%21.html=",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Fly.io 谈怎么让 agent 不把自己搞崩",
+      "summary": "",
+      "url": "https://fly.io/blog/building-agents-that-dont-break-themselves/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "DMARC 的 NP 标签在 DNSSEC 下可能失效",
+      "summary": "",
+      "url": "https://dmarcwise.io/blog/dmarc-np-incompatibility-with-dnssec",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 29
+    }
+  ]
+}

@@ -1,0 +1,239 @@
+{
+  "date": "2026-03-23",
+  "origin": "chronicle 2026-03-23：pgnexus #91、planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgEdge 开源 MM-Ready 检查多主复制可行性",
+      "summary": "把现成的库改成多主复制往往先要动 schema：UPDATE 与 DELETE 的复制依赖主键，外键级联会制造冲突，一些序列类型和扩展也不兼容。pgEdge 产品经理 Antony Pegg 把这套评估做成了命令行工具 MM-Ready，围绕 schema、复制配置、扩展、序列、触发器和 SQL 写法执行 56 项检查，结果按严重程度分成四级。工具有连库扫描、只读结构文件、审计已部署的 Spock 和长期观察四种模式。",
+      "url": "https://www.pgedge.com/blog/mm-ready-an-origin-story",
+      "author": "Antony Pegg",
+      "source": "pgEdge 博客",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "多主复制",
+        "Spock",
+        "工具"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "EXPLAIN 的五个冷门选项各自能看到什么",
+      "summary": "Richard Yen 整理了 EXPLAIN 里容易被忽略的五个选项。BUFFERS 区分 shared hit 与 shared read，用来判断是缓存没命中还是内存吃紧；MEMORY 单独报告规划阶段用掉和申请的内存；WAL 给出记录数、整页写和字节数，适合看批量导入与复制压力；SETTINGS 列出影响规划的参数；VERBOSE 展开列引用与模式限定名，能看清视图展开和规则重写。他建议组合使用，并把同样的开关配进 auto_explain。",
+      "url": "https://richyen.com/postgres/2026/03/23/explain_options.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "性能诊断"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 19 拟把 jit 默认改为关闭",
+      "summary": "社区已形成共识，Tomas Vondra 准备提交；分区表查询上 JIT 的编译成本常常压过收益。",
+      "url": "https://www.postgresql.org/message-id/gPNlX1QTDtJW2Cyi3fA2OGFvoIybkehUYKCHCe2r3Ujm_0y9V1T13CPI2MA6RyPhLi8zNwNczq1DNrbh1l47eVn6tOwz-qzG2yXw_XtptTQ=@pinaraf.info",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "PG19"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 调度改用评分决定表的先后",
+      "summary": "Nathan Bossart 的补丁按死元组与 XID 年龄打分，评分参数保持全局，另计划补一个系统视图。",
+      "url": "https://www.postgresql.org/message-id/acFan6knPZljm1Ay@nathan",
+      "author": "Nathan Bossart",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY v43 改用 table AM 与槽",
+      "summary": "Álvaro Herrera 用元组槽替代 HeapTuple 省掉反复的形式化开销，审阅指出索引下标与数组越界问题。",
+      "url": "https://www.postgresql.org/message-id/12105.1774261203@localhost",
+      "author": "Álvaro Herrera",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "膨胀"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "AI 代理催生的只读连接模式引发权限之争",
+      "summary": "Greg Sabino Mullane 主张沿用现有角色体系，Jelte Fennema-Nio 认为派生只读角色的门槛过高。",
+      "url": "https://www.postgresql.org/message-id/CAGECzQSmRUw9qfpeJFApnhywH_FmLRCHKt4Gncn7zC-MDffchQ@mail.gmail.com",
+      "author": "Jelte Fennema-Nio",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限",
+        "AI"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "GoAway 协议消息拟扩展到单个后端",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAMFBP2rSvyj6DYAw0EEBGR2UUP85ByKAC_D0djJm7rdypuMvdQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "协议",
+        "负载均衡"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "xl_heap_visible 补丁卡在分区表的重复关系上",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_bgP-DMZs=D2j2N0+U9+uWU5cVagw-yZLOuhYbWj_KwnA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "CREATE INDEX CONCURRENTLY 改进补丁继续打磨",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADzfLwVeQikArGV885zRMiSDW2-y=h=bvQiROvdq1Re1ojx9QA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "自定义 OAuth 验证器选项拟改用验证器名前缀",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFMxQzFD0ZJS7pX5Ajdei7TmpROEZKG5vxmfmhCQEQX3fA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "触发器报错会丢掉 WAL 与缓冲区计量数据",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/da7ad516-37d1-47e5-afae-26a7ef7b60f8@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 报告函数改名并已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uAwPNG3GN5+jTajnccLe+F1mW6dZh-9112u3QQQYugA=Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "发布排除表的 EXCEPT 语法争论括号怎么放",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uAyf71QSYitBf4WbCYq22HDR6LPdxB12TpTgTRpczwphw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "语法"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "rdtsc 补丁争论 CPUID 寄存器该怎么写",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANWCAZZ2kpm7BN93NkN7b2WRSAQcdBcdbjCOAzd6r9AS0nNHbg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "postgres-contrib 发布 2026 年第 11 周贡献汇总",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/75/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 15
+    }
+  ]
+}

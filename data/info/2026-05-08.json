@@ -1,0 +1,552 @@
+{
+  "date": "2026-05-08",
+  "origin": "chronicle 2026-05-08: pgsty-daily, pgnexus #140, planet 5",
+  "items": [
+    {
+      "tier": 1,
+      "title": "S3 Vectors 加 Aurora 用 SQL 查十亿级向量",
+      "summary": "AWS 给出一种把十亿级向量放在 Amazon S3 Vectors、再用 Aurora PostgreSQL 的标准 SQL 查询的做法。中间靠 Lambda 做转换层，由 Aurora 的 aws_lambda 扩展调用 S3 Vectors 接口，关系数据留在 Aurora，大规模向量存在 S3，一条 SQL 里就能把向量检索与关系过滤、连接写在一起。官方给的成本对照是每 GB 0.06 美元对 0.10 美元。",
+      "url": "https://aws.amazon.com/blogs/database/query-billion-scale-vectors-with-sql-integrating-amazon-s3-vectors-and-aurora-postgresql/",
+      "author": "Shayon Sanyal",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-05-08",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/05/07/DBBLOG-5278.png",
+      "domain": "pg",
+      "tags": [
+        "向量检索",
+        "Aurora",
+        "S3"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 可选存储引擎实地盘点",
+      "summary": "Christophe Pettus 盘点了 PostgreSQL 的可选存储引擎，分四类。堆替代品里 OrioleDB 用 undo 日志加写时复制检查点，仍在公开测试、不建议上生产，EDB 的 ZHeap 自 2019 年就停了。列存类有只能追加、压缩三到十倍的 Citus columnar 及其分支 Hydra。湖仓类包括 pg_mooncake、pg_duckdb 与 ParadeDB。他的结论是可选项比宣传材料显示的少得多。",
+      "url": "https://thebuild.com/blog/a-field-guide-to-alternative-storage-engines-for-postgresql/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-08",
+      "image": "https://thebuild.com/media/media/3e2f6a6df57443ffb8c61e4f47293d1a.png",
+      "domain": "pg",
+      "tags": [
+        "存储引擎",
+        "列存",
+        "选型"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_lake 与 Lakebase 是两条不同的路",
+      "summary": "两个都叫 Postgres 加湖仓，路子完全不同。pg_lake 出自 Snowflake，是一组开源扩展加托管服务：堆表、MVCC 和本地 WAL 照旧，只在旁边接一层湖仓访问，分析查询交给 DuckDB 边车去读 Iceberg 表。Lakebase 是 Databricks 基于 Neon 引擎的托管服务，保留 PostgreSQL 的编程界面，但把存储子系统整个换掉，页面按需从 pageserver 取。",
+      "url": "https://thebuild.com/blog/pglake-vs-lakebase-two-very-different-things-called-postgres-lakehouse/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-08",
+      "image": "https://thebuild.com/media/media/dd2c07228e824378bb21942c682eb2a4.png",
+      "domain": "pg",
+      "tags": [
+        "湖仓",
+        "架构",
+        "对比"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "用硬件断点追踪 PostgreSQL 的内部变量",
+      "summary": "Jan Kristof Nidzwetzki 演示了用硬件断点而不是 uprobe 追踪 PostgreSQL。做法是让 CPU 监视某个内存地址，被访问时触发 eBPF 程序，不必替换指令，适合盯高频访问的变量。文中的例子是用 bpftrace 的 watchpoint 探针盯住事务 ID 生成用的 nextXid，每次写入就打印进程号和新值。他测得硬件断点约有三成开销、uprobe 约三成八，两者都因 CPU 模式切换而不便宜。",
+      "url": "https://jnidzwetzki.github.io/2026/05/08/ebpf-hw-breakpoints-postgresql.html",
+      "author": "Jan Kristof Nidzwetzki",
+      "source": "jnidzwetzki.github.io",
+      "source_date": "2026-05-08",
+      "image": "https://jnidzwetzki.github.io//assets/img/header/header1.jpeg",
+      "domain": "pg",
+      "tags": [
+        "eBPF",
+        "观测",
+        "调试"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "REPACK 的按库快照要么修好要么在 19 回退",
+      "summary": "REPACK 并发执行依赖的按数据库划分快照，问题清单又长了一截。Antonin Houska 指出 COMMIT 记录可能出现在比运行事务记录更高的 LSN 上，会破坏清理机制。Amit Kapila 补了几条：按库解码器处理集群级记录时会触发过多 WAL 写入，重排序缓冲区的清理阈值太保守造成内存压力，这项优化还与槽位同步用的故障转移槽冲突。Alvaro Herrera 认为这些不算根本性问题，但必须在 19 里解决，否则回退。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1LygCDP3FiFzXY9iVNFcHxhf7TT_DFf7tryTu2oipmfpA@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "逻辑解码"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "OpenSSL 4.0 支持将进包括 14 在内的所有分支",
+      "summary": "给所有分支加 OpenSSL 4.0.0 支持的方案定了下来，包括最老的 REL_14_STABLE。Daniel Gustafsson 的补丁在所有受支持的 OpenSSL 与 LibreSSL 版本上都能无告警编译并通过测试。此前的顾虑是把仍在用旧 OpenSSL 的用户逼着升级，确认 PostgreSQL 14 还剩八月和十一月两个小版本之后，团队同意把 14 也带上。Tom Lane 建议下周发布之后不久动手，留三个月暴露问题。",
+      "url": "https://www.postgresql.org/message-id/1A5104C0-E9EF-4D90-9627-23D3D909104B@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "OpenSSL",
+        "回迁"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "连接爆炸是实时仪表板变慢的主因",
+      "summary": "Jake Hertz 讲了实时仪表板在规模上来之后为什么会塌。表超过五亿行时，原本正常的多表连接开始明显变慢，简单查询从 100 毫秒涨到 1.5 秒，原因是规范化模式带来的连接爆炸：数据库要遍历多个 B-tree 索引再把仪表板视图拼起来。他给的解法是把连接成本从读时移到写时，在摄入阶段预先把元数据拍平，文中有建表、批量迁移和触发器的完整写法，并建议用缓冲区命中数衡量效果。",
+      "url": "https://www.tigerdata.com/blog/how-relational-complexity-crushes-real-time-dashboards",
+      "author": "Jake Hertz",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-05-08",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/05/realtional-complexity-real-time-dashboards.png",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "建模",
+        "仪表板"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Dirtyfrag 把两个 page cache 缺陷串成本地提权",
+      "summary": "Dirtyfrag 公开了一条链式利用路径，把两个与 Linux page cache 写入相关的问题串起来拿到 root，Cloudflare 同日发布 Copy Fail 的缓解复盘。这类漏洞不是远程 RCE，但在多租户主机、CI runner、开发沙箱、Kubernetes 节点和共享工作站上很危险：有了公开 PoC，发行版补丁又不同步，本地用户提权到 root 的窗口就变得现实。应立刻盘点内核版本、模块加载策略与 CI 隔离。",
+      "url": "https://github.com/V4bel/dirtyfrag",
+      "author": "V4bel",
+      "source": "GitHub",
+      "source_date": "2026-05-07",
+      "image": "https://opengraph.githubassets.com/9bcbf72bb78d453d00ebe2b49c0ad543e5af8a022fdd0cb456c1731ca80307c9/V4bel/dirtyfrag",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "提权",
+        "安全"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 1,
+      "title": "React 与 Next.js 多个高危漏洞需要升级框架",
+      "summary": "Cloudflare 汇总了多条 React 与 Next.js 的高危公告，建议升级到 React 19.0.6、19.1.7 或 19.2.6，以及 Next.js 15.5.16 或 16.2.5。它说明自家托管规则集对部分拒绝服务类问题已有覆盖，但中间件绕过和 SSRF 一类问题不能只靠 WAF 挡住。框架层的漏洞会横跨前端、服务端与边缘部署，不是打个 npm 补丁那么简单。",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-05-06-react-nextjs-vulnerabilities/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 变更日志",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "React",
+        "Next.js"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "跨会话临时表的修复将回迁到 PostgreSQL 17",
+      "summary": "Alexander Korotkov 主张回迁到引入问题的 17，Michael Paquier 无异议，但认为本轮小版本不急。",
+      "url": "https://www.postgresql.org/message-id/af2AdMw3HjXgkzWJ@paquier.xyz",
+      "author": "Alexander Korotkov",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "回迁"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "COMPACT 命令原型想替掉 local_update_limit",
+      "summary": "James Locke 的概念验证加了 heap_relocate 原语，在页间搬元组不必走完整 UPDATE 的开销。",
+      "url": "https://www.postgresql.org/message-id/CAGEtbYUFNMQ1XqX2VFNM-RZ_2AZaUmU970V20Guvx2L6soMw9Q@mail.gmail.com",
+      "author": "James Locke",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "表压缩",
+        "膨胀"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "虚拟生成列的整行索引引用能绕开唯一约束",
+      "summary": "谓词在 SQL 层为真、在索引评估时为假，于是重复行得以存在；是否只限虚拟列仍在争论。",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWVmfHyooKCj30suW8=Y6b8be7WcyYmuAKMD=2mTPFpDkg@mail.gmail.com",
+      "author": "Ayush Tiwari",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "索引",
+        "缺陷"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "带外层引用的子查询上拉补丁收到详细评审",
+      "summary": "评审建议分开处理 WHERE 与连接树，并质疑重复调用 canonicalize_qual() 的必要性。",
+      "url": "https://www.postgresql.org/message-id/6b0da757-c63e-4abd-8fda-4f38e7dfd222@postgrespro.ru",
+      "author": "Alena Rybakina",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "子查询"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "表空间 DDL 函数把权限报错指错了对象",
+      "summary": "检查的是 pg_tablespace 的 SELECT 权限，报错却说表空间无权限，Chao Li 给了一行修复。",
+      "url": "https://www.postgresql.org/message-id/53D05145-CE87-424F-A492-BB22A09BBE11@gmail.com",
+      "author": "Chao Li",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "报错信息",
+        "权限"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "只插入的表也需要自己的 vacuum 策略",
+      "summary": "GUC 系列讲插入触发的两个阈值，提醒别按死元组比例给所有表配同一套参数。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuumvacuuminsertscalefactor-and-autovacuumvacuuminsertthreshold/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "参数"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "AlphaEvolve 把 Spanner 的写放大降了两成",
+      "summary": "Google 称它已是基础设施优化的常规工具，还参与下一代 TPU 设计与 LSM 合并策略调优。",
+      "url": "https://deepmind.google/blog/alphaevolve-impact/",
+      "author": "Google DeepMind",
+      "source": "DeepMind 博客",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "AI",
+        "存储引擎"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "AWS 的 JDBC Wrapper 支持客户端加密",
+      "summary": "敏感字段可以在驱动层加密，但索引能力、查询方式和密钥轮换都要重新盘算。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-advanced-jdbc-wrapper-encryption/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "加密",
+        "JDBC"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "模型在 Firefox 150 里找出 271 个缺陷",
+      "summary": "Mozilla 称四月共修 423 个安全缺陷，关键是配套的验证、去重、分级与补丁交付流水线。",
+      "url": "https://hacks.mozilla.org/2026/05/behind-the-scenes-hardening-firefox/",
+      "author": "Mozilla",
+      "source": "Mozilla Hacks",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "AI 审计"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "AgentCore Payments 让 agent 自己付费买服务",
+      "summary": "预览版支持会话级消费上限、钱包鉴权和稳定币支付凭证，支付权限要按云权限同等看待。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/04/amazon-bedrock-agentcore-payments-preview/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AI agent",
+        "支付"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制表同步后要不要释放解析状态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/tencent_B56532E9785E072776FBA169850EB5032908@qq.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pgEdge 讲怎么用纯 SQL 写扩展",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/no-compiler-required-writing-sql-only-postgres-extensions",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "并发更新与插入为何拖垮 PostgreSQL 性能",
+      "summary": "",
+      "url": "https://medium.com/fever-engineering/why-concurrent-updates-and-inserts-can-severely-impact-postgresql-performance-73b14bad5ee9",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并发",
+        "性能"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "DBOS 用 Postgres 做低延迟可靠通知",
+      "summary": "",
+      "url": "https://www.dbos.dev/blog/low-latency-reliable-messaging-with-postgres",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "消息",
+        "可靠性"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "pg_flight_recorder 给 Postgres 做服务端飞行记录",
+      "summary": "",
+      "url": "https://github.com/dventimisupabase/pg_flight_recorder",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "观测",
+        "原型"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 说明如何缓解 Copy Fail 漏洞",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/copy-fail-linux-vulnerability-mitigation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "Linux"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "React 放出三条安全补丁版本",
+      "summary": "",
+      "url": "https://github.com/react/react/releases",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "React"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Next.js 发布 16.2.6 与 16.3 候选",
+      "summary": "",
+      "url": "https://github.com/vercel/next.js/releases",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Next.js"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Node.js 26.1.0 带来实验性的 node:ffi",
+      "summary": "",
+      "url": "https://nodejs.org/en/blog/release/v26.1.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Node.js"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Kubernetes v1.36 继续推进动态资源分配",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/05/07/kubernetes-v1-36-dra-136-updates/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "DRA"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Amazon OpenSearch 支持 VPC 出向连接",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-opensearch-service-vpc/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "OpenSearch",
+        "网络"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Amazon RDS for SQL Server 支持 AMD EPYC 实例",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/rds-sqlserver-supports-amd-instances/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "RDS"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "us-east-1 单可用区 EC2 故障暴露伪多 AZ 架构",
+      "summary": "",
+      "url": "https://health.aws.amazon.com/health/status?t=2026-05-07",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "故障",
+        "AWS"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Docker 比较几种 AI agent 沙箱方案",
+      "summary": "",
+      "url": "https://www.docker.com/blog/comparing-sandboxing-approaches-ai-agents/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "沙箱",
+        "安全"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "FreeBSD 一个二十一年的远程命令执行漏洞被披露",
+      "summary": "",
+      "url": "https://aisle.com/blog/aisle-discovers-cve-2026-42511-a-21-year-old-freebsd-remote-command-execution-vulnerability",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "FreeBSD",
+        "CVE"
+      ],
+      "position": 34
+    }
+  ]
+}

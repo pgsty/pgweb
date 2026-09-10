@@ -1,0 +1,504 @@
+{
+  "date": "2026-07-17",
+  "origin": "chronicle 2026-07-17: pgnexus #210, planet 2, daily 17",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Turso 要用 Rust 核心做一个新的 Postgres 前端",
+      "summary": "Turso 把自己定位成数据库的 LLVM：一个 Rust 核心承接多个 SQL 前端，SQLite 是第一个，Postgres 是下一个。官方说目标是核心功能兼容而不是 100% 兼容，并设想非进程内连接、浏览器嵌入、单文件和自动更新的物化视图等形态。目前没有发布包，只能从源码构建。名字里有 Postgres 不等于通过了协议和语义验收，把它当生态实验看更合适。",
+      "url": "https://turso.tech/blog/a-new-modern-version-of-postgres-in-rust",
+      "author": "Turso",
+      "source": "Turso 博客",
+      "source_date": "2026-07-16",
+      "image": "https://turso.tech/images/blog/a-new-modern-version-of-postgres-in-rust/cover.png",
+      "domain": "pg",
+      "tags": [
+        "兼容性",
+        "Rust",
+        "生态"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PlanetScale 用 768 台服务器解释分片与副本的区别",
+      "summary": "文章以 256 个分片、每分片一主两副本、共 768 台服务器承载约 1 PB 和数百万 QPS 的设想展开。副本提供读扩展和高可用，却分摊不了主库的 WAL 写入和数据容量；分片把数据和查询分给独立的主库，代理与路由层则要掌握分布规则、连接复用、查询路由、跨分片和故障期间的排队行为。真正的难点在控制面，不是加更多只读副本。",
+      "url": "https://planetscale.com/blog/making-768-servers-look-like-1",
+      "author": "PlanetScale",
+      "source": "PlanetScale 博客",
+      "source_date": "2026-07-15",
+      "image": "https://planetscale.com/assets/making-768-servers-look-like-1-social-DXjwbEP8.png",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "扩展性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "并行堆 vacuum 补丁到 v20，回调移出表访问方法",
+      "summary": "Bharath Rupireddy 提交了面向 PostgreSQL 20 的并行堆 vacuum v20。这一版主要回应 Andres Freund 的意见：并行 vacuum 的回调不该放进 table AM 接口，因为 vacuum 本身就是表访问方法内部的操作，于是改为通过 vacuumparallel.c 本地的回调结构体传递。补丁集精简为两个，一个重构堆扫描状态，另一个给 vacuum 第一阶段加并行支持。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACUMbUrcYzzbdSoPgsv+3kFdkGovDZe6aP3e6XQCzFqy9g@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "并行"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "relcache 缓存分区索引父 OID 让 TPS 提升三成",
+      "summary": "Ayush Tiwari 提议在 relcache 里缓存分区索引的父 OID，减少 INSERT ... ON CONFLICT 在分区表上反复扫描 pg_inherits 的开销，v1 在热缓存下最高快 2.9 倍。Álvaro Herrera 建议改缓存完整祖先列表，但 pg_inherits 变更不触发 relcache 失效，索引重新挂载时会留下脏数据。v2 改为让整个后代索引子树失效，TPS 最高提升 31%。",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWUV3Tz5A161y2EcCMqnmCYqKNm6Jt=rXCx9bEOJ-hqL=A@mail.gmail.com",
+      "author": "Ayush Tiwari",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "relcache",
+        "分区表",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "序列刷新的竞态将靠加锁根治，先回退相关提交",
+      "summary": "commit f38afa4ab 带来一个竞态：sequencesync worker 还在运行时执行 ALTER SUBSCRIPTION ... REFRESH SEQUENCES 会报错，在 valgrind 的慢环境里，worker 因权限不足退出重启之后再执行就会失败。Tom Lane 质疑该提交的设计，认为应该在后端修而不是给测试打补丁。Amit Kapila 提出在 REFRESH 期间加 AccessExclusiveLock，并计划先回退这次提交。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm2mSAAjAX3d=E-XUXWZgVyy-dtcAhh+whe0a=6JTM0Bgg@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "序列",
+        "回退"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Tiger Cloud 更新：压缩数据上的聚合最高快 70 倍",
+      "summary": "TimescaleDB v2.26 和 v2.27 给 Tiger Cloud 带来明显提速：压缩数据上的聚合查询最高快 70 倍，压缩 chunk 上的 UPDATE 和 DELETE 最高快 160 倍。企业计划的存储规格提到 80000 IOPS、最大 64 TB。此外 pg_textsearch v1.0.0 在 Postgres 内原生支持 BM25 全文检索，PostgreSQL Source Connector 转入生产可用。",
+      "url": "https://www.tigerdata.com/blog/whats-new-in-tiger-cloud",
+      "author": "Nicole Ghalwash",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-07-17",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/07/51559a69-5f60-4d49-99b4-ea4abe73b0d4.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "压缩",
+        "托管"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "GROUP BY ALL 的相关改动已被回退",
+      "summary": "Tom Lane 等了一段时间无人反对后推送回退，还需从 PG19 发布说明里删掉。",
+      "url": "https://www.postgresql.org/message-id/4103705.1784319344@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "回退"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "索引预取补丁到 V31，首个补丁再推迟一周",
+      "summary": "限制 get_actual_variable_range 叶页读取的补丁被排到了 0002 的位置。",
+      "url": "https://www.postgresql.org/message-id/CAH2-WzmpQV7wqbwE_bW+1Ja32chnh87i=wx2Y6NkhFiuEVsBzw@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "共享缓冲区专用哈希表补上动态扩缩容",
+      "summary": "借鉴 dynahash 的线性哈希，桶数与条目数用共享内存里的原子变量记录。",
+      "url": "https://www.postgresql.org/message-id/CAAStW3Kq5_55X_G74P=aovoDBuUEeE_pionGVQ6F_dS7BThLqg@mail.gmail.com",
+      "author": "Dhruv Aron",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "哈希表"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "执行器的堆局部批处理发到第三版",
+      "summary": "Antonin Houska 质疑强制回调会让不支持批处理的表访问方法出问题。",
+      "url": "https://www.postgresql.org/message-id/80692DF4-04F0-4292-8AF0-E13D5E13CE74@gmail.com",
+      "author": "Denis Smirnov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "批处理"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "base64url 引入的截断规则回归已修复",
+      "summary": "填充检查没有区分 base64url 与标准 base64，修复已在 v19 发布前推入。",
+      "url": "https://www.postgresql.org/message-id/31BB7C38-5B75-4C02-BC59-73FF6331C591@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "base64",
+        "缺陷修复"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "拟新增 pg_stat_kind_info 视图暴露统计元数据",
+      "summary": "争议在条目大小该取哪个字段，文档需说明它不等于实际内存占用。",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0v_v2iM+K=iFym3mU7-hFk+3+qHRs=bEXxeK0mtT76AFA@mail.gmail.com",
+      "author": "Sami Imseih",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "视图"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "AWS 账单缺陷让部分客户看到数十亿美元欠费",
+      "summary": "Amazon 正在修复，目前尚未公布根本原因和受影响的客户数量。",
+      "url": "https://techcrunch.com/2026/07/17/amazon-fixing-bug-that-billed-some-aws-customers-billions-of-dollars/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "计费"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "visibilitymap_clear 的运行时检查回退已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Y9DZ7=AXpUfX+ESgavoHFbS8if_2gmp-B6tP6vJxzXWA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_control_checkpoint() 拟一并暴露逻辑解码状态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEkp1-1n5iC38+yHSNh955+KshwtCL6DzA0vk_vuUF_Eg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "修好 ccache 依赖追踪的 -fpch-deps 补丁已推入",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN55FZ1EO7QJczZxDrBQrU6v32r9TGX53jeZn3-NE+ZPYafVaQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "日志写入等待事件到 v6，把 openlog() 也包进来",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACdN0M7jc76Rf-3ogEYJbE-3BPOQMUU14ffGfm0MNGAB=mhx=A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Rocky 10.2 上 libxml2 弃用警告暂无好的修法",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ZR2PPFF1830B8772632FA23847D7482168FD2C62@ZR2PPFF1830B877.CHEP278.PROD.OUTLOOK.COM",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "有人提议把 getdatabaseencoding() 改名并补文档",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAB8KJ=iQQ3j1ZzJkgF_CGF5TvJsugp6JFOrS-LB7kT=XivV_Vg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Meson 的 LLVM bitcode 支持补丁到 v15",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN55FZ26ohMftt20NUtVAxU8Feqjhz-jEfUvFKATYEaRR+xmqg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "监控资源属主变化的断言将在 v19 RC 前删除",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/31349.1784290817@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "EXCEPT 发布补丁拟抽出 get_partition_root 函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+PtzpgpeWkay9v_zfsLLeO7GirZnGqTUWm_hix+yFNiDvw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "EXISTS 转 ANY 的子计划将改名 exists_to_any",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAF0whuefnuvSP5aaMBRf8Ca+hqk7DoAjr4tFpW_U17BaQQpjgw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "DROP SUBSCRIPTION 的文档补丁已推送到各分支",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+6v5u7yNyp2OddS1iv7sCPhwEoEk6BE=MEGYoALb8eAg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "PGLZ 还值不值得优化，参与者看法不一",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAGjGUAJi=K6pBgQoxaCqnMd2LbejZ7RzozwabSUQ+xGUG5_XBQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 保留复制源 OID 的补丁收到措辞意见",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uAq4M+cDCkgWd1vG-y6uoUwbL43v5y-1P8EqftkZKWFNw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "汇总所需的检查点记录不必落在特定 WAL 段内",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA-aLv7cbyMd=7h3WvWTacQw=mfry8d2e55t7SVw3uHMtdapxA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "文档将澄清 wal_sender_shutdown_timeout 取小值的行为",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/AF4FE756-A220-4DA7-87B7-A126F3F307FD@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Shaun Thomas 展望 PostgreSQL 19 的检查点控制",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-checkpoint-control",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 逐项讲 GUC：exit_on_error",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-exit_on_error/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "uplpgsql 尝试把 PL/pgSQL 编译成原生代码",
+      "summary": "",
+      "url": "https://github.com/nextgres/uplpgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 托管 runner 开放 Xcode 27 预览镜像",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-16-xcode-27-runner-image-now-in-public-preview/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "仓库管理员现在可以归档 pull request",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-16-repository-admins-can-archive-pull-requests/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "Mojibake 用 C 实现 Unicode 规范化与分段",
+      "summary": "",
+      "url": "https://mojibake.zaerl.com/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "LM Studio 推出本地优先的 agent 应用 Bionic",
+      "summary": "",
+      "url": "https://lmstudio.ai/blog/introducing-lm-studio-bionic",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 35
+    }
+  ]
+}

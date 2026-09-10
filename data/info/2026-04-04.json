@@ -1,0 +1,125 @@
+{
+  "date": "2026-04-04",
+  "origin": "chronicle 2026-04-04: pgnexus #103（周六，仅 hackers 线程）",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 新增 autovacuum 评分视图",
+      "summary": "哪张表最急着被 autovacuum 处理，此前只能靠 DBA 自己推算。Nathan Bossart 提交了 pg_stat_autovacuum_scores 视图的前三个补丁，把 autovacuum 的评分摆成系统视图，并对所有用户开放。争论集中在要不要同时给出是否够格清理的布尔列，最终采用 autovacuum 真正决策时用的 dovacuum 与 doanalyze。",
+      "url": "https://www.postgresql.org/message-id/adB6FQeoUst6gHA0@nathan",
+      "author": "Nathan Bossart",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-04-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "监控",
+        "PostgreSQL 19"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 2,
+      "title": "索引预取 v22 引入 amgetbatch 批量接口",
+      "summary": "索引访问方法可一次返回一页内的多个匹配项，Andres Freund 指出内存分配与溢出隐患。",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wzn0L6z6PO+qM6-66KWr7qJshZF9nWZFEcELORvZ30E4zg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "Heikki 提出新的共享内存结构管理 API",
+      "summary": "用 ShmemRequestStruct 与回调取代两阶段流程，为将来可调整大小的共享内存铺路。",
+      "url": "https://www.postgresql.org/message-id/7d3ba240-9350-4dfc-bbe1-be6584aee236@iki.fi",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "共享内存",
+        "内核"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "EXPLAIN ANALYZE 计时开销拟用 rdtsc 降低",
+      "summary": "Lukas Fittl 的补丁已到第 18 版，重整了 CPU 特性标志并把 hypervisor 检测单独归类。",
+      "url": "https://www.postgresql.org/message-id/CAP53Pky=vngs0orKn2=UDmMUhf7Zahn2nRcg7T5OiLidDTNmxw@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 赶在 v19 冻结前稳定测试",
+      "summary": "Tom Lane 建议把测试改串行或直接移除，Robert Haas 认为失败率低，还想再收集数据。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoY+g1u-fN=3igXG-8u0Ho3V4u-ooWXCj-FQ9DA=uGek9g@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "计划稳定性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 3,
+      "title": "REPACK 与回卷 autovacuum 的冲突待理顺",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB121494749F57A32A17D73F4B1F55FA@OS9PR01MB12149.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "缓存计划的初始分区裁剪改由调用方加锁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqGAT8jKSgjsfPvW2Ft=5xWCCfq05j9=jJKxP34Qqe68Pg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "PG19 发布说明是否收录共同作者引发讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEze2WgLEa_vHO9jJY+HRahToV9W2CfWwQUVoCObUQ46Y4_7Mg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 8
+    }
+  ]
+}

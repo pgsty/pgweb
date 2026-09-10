@@ -1,0 +1,140 @@
+{
+  "date": "2026-04-19",
+  "origin": "chronicle 2026-04-19: news 2, pgnexus #119；并入 2026-04-18（news 1, pgnexus #118）与 2026-04-17 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Apache Cloudberry 2.1.0 发布",
+      "summary": "Apache Cloudberry（孵化中）社区发布 2.1.0，这是脱胎于 PostgreSQL 与 Greenplum 的 MPP 分析数据库。新版加入 UDP2 互连协议提升 segment 间通信效率，ORCA 优化器补上 CTE 裁剪与部分聚合下推，PAX 存储格式支持 LZ4 压缩，append-optimized 表拿到 fast ANALYZE，并引入 MCP 服务器对接 LLM 工具。内核升级到 16.x 仍在推进。",
+      "url": "https://cloudberry.apache.org/releases/",
+      "author": "Apache Cloudberry",
+      "source": "Apache Cloudberry",
+      "source_date": "2026-04-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MPP",
+        "分析",
+        "Greenplum"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 2,
+      "title": "沙箱不可信代码的方案撞上困惑代理问题",
+      "summary": "Robert Haas 发现自己提的两条沙箱规则都挡不住诱导可信用户执行危险函数的攻击。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoZgODUbMEcogibZJejmQWky3rnHfT50_n_DWU7oLm2ghA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "沙箱"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 死锁预防出现两套方案",
+      "summary": "Antonin Houska 想在 LOCK 里标记升级中的锁，Mihail Nikalayeu 主张在 PGPROC 里预先声明未来锁。",
+      "url": "https://www.postgresql.org/message-id/44458.1776540188@localhost",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "死锁"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "WAL 削减提交后 btree_gist 测试变得不稳定",
+      "summary": "提交 378a21618 让 ANALYZE 也扩大可见性映射覆盖，计划从位图扫描转为仅索引扫描。",
+      "url": "https://www.postgresql.org/message-id/46733d68-aec0-4d09-8120-4c66b87047a4@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "可见性映射"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "PGDay Armenia 2026 公布日程并开售早鸟票",
+      "summary": "4 月 30 日在埃里温举行，是亚美尼亚首届 PostgreSQL 大会。",
+      "url": "https://pgdayarmenia.com/",
+      "author": "",
+      "source": "Armenia Postgres User Group",
+      "source_date": "2026-04-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "PGConf.EU 2026 征集社区活动日提案",
+      "summary": "大会 10 月 20 至 23 日在西班牙瓦伦西亚举行，活动日提案 4 月 27 日截止。",
+      "url": "https://2026.pgconf.eu/call-for-community-events/",
+      "author": "",
+      "source": "PGConf.EU",
+      "source_date": "2026-04-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "Bitmapset 测试模块的五处问题已修复推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/12754d02-855c-4b11-ae7c-48a73124e715@app.fastmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "REPACK 注释仍引用已删除的 bgworker_die()",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/e60318b8-be75-4bfd-82f0-0829f51fa839@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "并行 Apply 补丁继续讨论提交顺序",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aeHIVhNiFtfGss4b@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    }
+  ]
+}

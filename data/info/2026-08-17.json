@@ -1,0 +1,511 @@
+{
+  "date": "2026-08-17",
+  "origin": "chronicle 2026-08-17: pgnexus #241, news 1, planet 9",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG19 的 GRAPH_TABLE 只是改写器，定长遍历零开销",
+      "summary": "Alexander Ioffe 实测 PostgreSQL 19 的 SQL/PGQ：GRAPH_TABLE 不是图存储引擎，而是把属性图元数据改写成关系连接。跳数固定的模式与手写连接编译出一样的计划，四跳类型链在 60 万到 240 万行上都在 0.29 毫秒内完成。变长量词则被 beta 直接拒绝，可达性查询只能退回递归 CTE，用时 59 至 2189 毫秒，Apache AGE 还要慢 1.4 至 2.1 倍。",
+      "url": "https://exobench.ai/blog/pg19-graph-queries-part-1",
+      "author": "Alexander Ioffe",
+      "source": "exobench.ai",
+      "source_date": "2026-08-17",
+      "image": "https://exobench.ai/exobench_full_pose.png",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "SQL/PGQ",
+        "图查询"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "超过 16 个索引的热表会把整个系统拖进锁管理器",
+      "summary": "Christophe Pettus 解释 max_locks_per_transaction 与快速路径的关系：17 及更早版本的快速路径固定 16 槽，一条查询要拿的关系锁超过这个数就会溢出到共享锁表，几百个后端同时撞上 LWLock:LockManager 等待。18 起快速路径按参数以 16 为单位分组，默认 64。出路有三条：用预备语句只锁真正用到的索引、升到 18、删掉热表上零使用的索引。",
+      "url": "https://thebuild.com/blog/sixteen-locks-ought-to-be-enough-for-anybody/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-17",
+      "image": "https://thebuild.com/media/media/4822e2cd64c240468407fb4e4d41dee3.png",
+      "domain": "pg",
+      "tags": [
+        "锁",
+        "索引",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "在线调整 shared_buffers 的补丁补上压力测试",
+      "summary": "Ashutosh Bapat 为免重启调整缓冲池大小的补丁系列加了成套压力测试，覆盖调整与 CHECKPOINT、pg_prewarm、pg_buffercache 之间的同步。测试暴露出多个缺陷：BufferSync() 需要修正、缓冲区扫描循环里的 CFI 调用位置要挪、pg_prewarm 误以为 NBuffers 恒定。Palak Chaturvedi 的增量修复改成逐个缓冲区处理，非 NUMA 路径快约 25%。",
+      "url": "https://www.postgresql.org/message-id/CAExHW5ts93Rnof7pjFFYrY9aTOmCo+xsdQazqeqN1BaKozTBvA@mail.gmail.com",
+      "author": "Ashutosh Bapat",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "shared_buffers",
+        "缓冲区"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制行过滤会静默丢弃未变更的 TOAST 列",
+      "summary": "行过滤器可能把 UPDATE 转成 INSERT，于是不属于 replica identity 的未修改 toasted 列值被静默丢掉。社区在 DDL、UPDATE、解码和应用四个时机之间权衡修法，目前倾向：回归分支采用应用端报错，可用 ALTER SUBSCRIPTION SKIP 恢复，master 再加一层按行的检查。Matthias van de Meent 反对把逻辑复制的限制转嫁给普通 DML 用户。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+EFf7k2cKuzhLd6mq=Fb2qRKR6YZ59k0cytYwwU5z1vA@mail.gmail.com",
+      "author": "Zhijie Hou",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "TOAST",
+        "数据丢失"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "WAL 压缩补丁漏掉 PageSetLSN，崩溃后会丢提示位",
+      "summary": "Surya Poondla 审查 WAL 记录压缩补丁时发现违反 WAL-before-data 规则的问题：补丁为纯提示位变更写紧凑记录时没有更新页面 LSN，而 FlushBuffer() 完全靠页面 LSN 保证顺序，跳过 PageSetLSN() 会让 XLogFlush() 变成空操作，页面可能先于对应的 WAL 记录落盘。一旦崩溃，页面上已有的提示位无法通过 WAL 恢复。",
+      "url": "https://www.postgresql.org/message-id/CAOVWO5q5mWyGjLABCiKRa1LaGq95OiV0ShXmDnFyUT6Rjjgb7A@mail.gmail.com",
+      "author": "Surya Poondla",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩",
+        "正确性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "覆盖索引的写入代价：插入慢 28%，体积大六倍",
+      "summary": "Alexander Ioffe 在 200 万行订单表上比较了无二级索引、单列索引和带 INCLUDE 的覆盖索引。覆盖索引会让被包含列的更新失去 HOT 优化，插入比单列索引慢 28%、比无索引慢 88%，更新分别慢约 25% 和 30%，占用 112 MB 而单列索引只要 18 MB，换来的是读取快 1.26 倍。他的结论是：只有当每个分析查询对应的写入低于每分钟约 4300 次时，覆盖索引才划算。",
+      "url": "https://exobench.ai/blog/covering-index-write-cost",
+      "author": "Alexander Ioffe",
+      "source": "exobench.ai",
+      "source_date": "2026-08-17",
+      "image": "https://exobench.ai/exobench_full_pose.png",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "HOT",
+        "基准"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "JIT 的三个代价阈值不该调，该按库关掉",
+      "summary": "jit_above_cost 默认 100000 触发编译，jit_inline_above_cost 与 jit_optimize_above_cost 默认 500000，分别再加内联和 LLVM 优化。Christophe Pettus 指出根本矛盾：计划代价衡量的是取页数和行数，JIT 的收益却取决于表达式执行多少次、有多复杂，分区扫描加 sum(id) 会白白编译。他建议 OLTP 库直接关掉 JIT。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-jit_above_cost-jit_inline_above_cost-and-jit_optimize_above_cost/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-17",
+      "image": "https://thebuild.com/media/media/4ce7bdda7c2c4805b58b96850c30f280.png",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "参数"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "用 CloudNativePG 给 OpenBao 当存储后端",
+      "summary": "Gabriele Bartolini 演示把 Linux 基金会的 Vault 分支 OpenBao 部署在 Kubernetes 上，用三副本 CNPG 集群作 postgresql 存储驱动的后端：客户端证书由 DatabaseRole 签发，配合 pg_hba.conf 实现免密码双向 TLS，openbao-rw 角色只对两张表有读写权限。要注意 OpenBao 只在启动时打开连接池，证书 90 天轮换后必须滚动重启 Pod。",
+      "url": "https://www.gabrielebartolini.it/articles/2026/08/cnpg-recipe-27-running-openbao-on-kubernetes-with-a-cloudnativepg-postgresql-backend/",
+      "author": "Gabriele Bartolini",
+      "source": "个人博客",
+      "source_date": "2026-08-17",
+      "image": "https://www.gabrielebartolini.it/articles/2026/08/cnpg-recipe-27-running-openbao-on-kubernetes-with-a-cloudnativepg-postgresql-backend/cover.png",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "CloudNativePG",
+        "密钥"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 1,
+      "title": "powa-archivist 5.3.0 发布，修复 PG19 兼容性",
+      "summary": "PoWA 团队发布核心扩展 powa-archivist 5.3.0。PoWA 是 PostgreSQL 负载分析工具，通过一组覆盖各子系统的扩展从多个实例采集并聚合指标，提供实时图表，还能给出全局或按查询的索引建议。这一版只有一处改动：适配 pg19beta2 中 pg_stat_lock.wait_time 的数据类型变更，修复由 Julien Rouhaud 提交。已在跟 19 beta 做兼容性验证的用户需要同步升级。",
+      "url": "https://pgsql.cc/about/news/powa-archivist-530-3366/",
+      "author": "PoWA 团队",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PoWA",
+        "扩展",
+        "PG19"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "basebackup 跳过校验和启用前页面的补丁已合入",
+      "summary": "Daniel Gustafsson 合入补丁并补上文档，测试用 PG_TEST_EXTRA 门控；PG19 先保持简单实现。",
+      "url": "https://www.postgresql.org/message-id/aoJ7AiHczXjYklhj@bdtpg",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "校验和"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "备份遇到单页损坏时校验失败计数不会增加",
+      "summary": "统计更新写在 checksum_failures > 1 的条件里，单页损坏被静默忽略，缺陷自 6b9e875f728 就存在。",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFN+Bi6XmaH8zOdMWjoycYFx9nKtOr+dzQf0o-UQ+Rdqmw@mail.gmail.com",
+      "author": "Yilin Zhang",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "统计信息"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "流水线恢复补丁把 WAL 解码与重放解耦",
+      "summary": "v6 收到状态交接与字段所有权的质疑，建议让 startup 独占策略，producer 退化为纯 WAL 读取器。",
+      "url": "https://www.postgresql.org/message-id/CAMm1aWYzqyVn4P6TgYuFq8ojRm=yoA-Xey2MXArXTGEqE8svtQ@mail.gmail.com",
+      "author": "Jakub Wartak",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "WAL"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "UUID 解析复用 SIMD 十六进制解码，快约五倍",
+      "summary": "hex_decode_safe() 会静默跳过空白，解码结果不足 16 字节时回退标量解析；strlen() 也改成 strnlen()。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoDpMR7=emNWSepAg6A1q-45S-epduDkEyR4Tt4TYgjkMQ@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "UUID",
+        "SIMD"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "hstore 构造大值时的整数溢出得到修复",
+      "summary": "尺寸计算全面改用 Size 与 add_size()/mul_size()，Michael Paquier 认为不必回移到旧分支。",
+      "url": "https://www.postgresql.org/message-id/CAHewXN=d02mKiJsOgkg10CkdwXO=sAkJ8uFpxFSSJ1WBf6WsWw@mail.gmail.com",
+      "author": "Tender Wang",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "hstore",
+        "溢出"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "AI 生成的缺陷报告正在挤占社区审查资源",
+      "summary": "Tomas Vondra 解释 CustomScan 钩子补丁为何搁置：夏季本就是稳定期，今年又涌入大量 AI 生成的报告。",
+      "url": "https://www.postgresql.org/message-id/b82f5ee7-4fff-4d7d-bcf6-66f4e1701585@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "审查"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Neon 把 LLM 调用收进后端，推出 AI Gateway",
+      "summary": "开发者不必再分别管理各家模型账号，可以像用文件存储和身份验证那样在 Neon 内部调用模型。",
+      "url": "https://neon.com/blog/llms-belong-in-your-backend",
+      "author": "Carlota Soto",
+      "source": "Neon 博客",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "AI"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "实测三款 CDC 连接器在 YugabyteDB 上的表现",
+      "summary": "协议兼容只是起点，作者指出有一个核心概念决定了这些 PostgreSQL CDC 工具能否真正跑通。",
+      "url": "https://www.yugabyte.com/blog/postgresql-cdc-tools-on-yugabytedb/",
+      "author": "Bakul Gupta",
+      "source": "Yugabyte 博客",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "CDC",
+        "YugabyteDB"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "JSONB 该用路径表达式、GIN 索引还是拆成列",
+      "summary": "",
+      "url": "https://exobench.ai/blog/jsonb-paths-or-gin-or-columns",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSONB"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "为什么 PostgreSQL 会跳过我建的索引",
+      "summary": "",
+      "url": "https://exobench.ai/blog/postgres-default-from-2002",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Flyway validate 到底检查了哪些东西",
+      "summary": "",
+      "url": "https://diffy-pick.com/blog/what-flyway-validate-actually-checks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "GIN VACUUM 损坏问题的复现测试与修复分工确定",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wzm0Ubays3hYovn4YQ5ChYanGW7s1PiYdJPcMXep0U8kXA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GIN"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "分区合并拆分遇到 RLS 直接报错的方案获认可",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdvDMqNuV1iw+TtcD1ECsubQbCtMBn3-aD8nNUExqi6-Hg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "RLS"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "walsummarizer 在时间线切换测试中再现新缺陷",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/417c58cc-284b-4280-8c6f-1c18e0b2a317@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 保留复制源 OID 的补丁完成审查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHWVJhH5FQ3muGhZ_25R7OFqnAqH9LSUWcHJ053QNcMrDm-r-g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "test_decoding 输出将跳过虚拟生成列",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoDooPqAY6DnbkS9=RZkVA3F+zC3fk7oAbNAeymYb01bLA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "TOAST reloptions 修复的前三个补丁已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aoNqVz4Nf50FGfld@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "repeat() 提速补丁的最优上限随硬件而变",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/5c979c2b-c8b3-401c-81bc-406be183c033@planetscale.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "reloption 三值类型该放在哪个头文件仍无定论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3b230dc4-9495-46b6-8634-e04f9833d45e@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "reloptions"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "数据校验和启动器的 SIGINT 处理已修复提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3BC4169A-CDE1-4EE2-AB07-3544B650CFC9@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "FDW 函数扫描下推补丁通过审查准备合入",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/c6de48bf1f09e2c1a22b5f680d4d9099@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "澄清 BgBufferSync 中 reusable_buffers 含义的补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAExHW5tGRNuXPwVBQOY3MhDgwFkr03Sn2B_nLbNbth0aOhyAhQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "在 Next.js 中用幂等键防止表单重复提交",
+      "summary": "",
+      "url": "https://devfieldnotes.dev/guides/prevent-duplicate-form-submissions-nextjs",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "幂等"
+      ],
+      "position": 32
+    }
+  ]
+}

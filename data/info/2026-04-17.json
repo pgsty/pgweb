@@ -1,0 +1,204 @@
+{
+  "date": "2026-04-17",
+  "origin": "chronicle 2026-04-17: news 2, pgnexus #117, planet 2；并入 2026-04-16（pgnexus #116）",
+  "items": [
+    {
+      "tier": 1,
+      "title": "逐字节拆开 PostgreSQL 的 MVCC",
+      "summary": "Radim Marek 用 pageinspect 把 MVCC 拆到字节。元组头里两个 32 位事务号，t_xmin 记插入者、t_xmax 记删除或更新者，为 0 表示仍然活跃；t_infomask 用 HEAP_XMIN_COMMITTED 之类的位缓存提交状态。要点是 UPDATE 只追加新版本，旧版本等 VACUUM 回收；SELECT 首次碰到新数据会设提示位，把页标脏引出 IO。",
+      "url": "https://boringsql.com/posts/postgresql-mvcc-byte-by-byte/",
+      "author": "Radim Marek",
+      "source": "boringsql",
+      "source_date": "2026-04-17",
+      "image": "https://boringsql.com/og-images/postgresql-mvcc-byte-by-byte-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "MVCC",
+        "存储",
+        "膨胀"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "跨分区强制唯一约束的四种做法",
+      "summary": "pgEdge 的 Shaun Thomas 讲分区表上的老问题：唯一约束和主键必须包含全部分区键列，因为每个分区各有索引，没有全局索引来判断某个值是否已存在于别的分区。他给了四种绕法：BEFORE INSERT 触发器扫全部分区，开销随分区数线性上升，200 万行从 7 秒涨到 25 秒；改为维护一张不分区的去重表，开销恒定约 2 倍，200 万行 14 秒；对去重表本身做哈希分区；或用 hashtextextended() 算去重键。",
+      "url": "https://www.pgedge.com/blog/enforcing-constraints-across-postgres-partitions",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "约束",
+        "触发器"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Neon 在 OpenAI Codex 上架官方插件",
+      "summary": "Neon 在 OpenAI Codex 市场上架了官方插件，用 MCP 把 Codex 与自家的 PostgreSQL 托管服务连起来。装上之后可以在 Codex 的对话里直接开库、建实例、改配置和查看资源，不用在 IDE 与控制台之间来回切。对已经把 AI 助手放进开发流程的团队，这意味着数据库操作也能用自然语言完成。",
+      "url": "https://neon.com/blog/neon-codex-plugin",
+      "author": "Andy Hattemer",
+      "source": "Neon 博客",
+      "source_date": "2026-04-16",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/neon-codex-plugin/neon-codex-plugin-2-1024x538-acc5ad39.jpg",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "MCP",
+        "AI"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Ignition 的历史库改用 TimescaleDB",
+      "summary": "Tiger Data 的 Doug Pagnutti 讲 Ignition 的 SQL Historian 怎么接 TimescaleDB。Ignition 把标签历史写进 PostgreSQL，而行式存储是为事务设计的，面对窄表、只追加的时序数据并不合适。TimescaleDB 按时间自动切块，旧块转列式压缩，新块保持行式以维持写入速度。接法是关掉 Ignition 内置分区，把历史表转成超表，再加压缩与保留策略。",
+      "url": "https://www.tigerdata.com/blog/ignition-and-timescaledb-perfect-pairing",
+      "author": "Doug Pagnutti",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-04-17",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/Ignition-Integration-Guide.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "物联网",
+        "压缩"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 会损坏压缩的 TOAST 数据",
+      "summary": "restore_tuple() 重建 varlena 头时丢掉压缩标志，压缩数据被当成未压缩读出乱码，补丁已验证。",
+      "url": "https://www.postgresql.org/message-id/98247BB5-5FE5-4F32-A23D-0A3ED808AB19@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "数据损坏"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志历史表补丁完成 rebase",
+      "summary": "Dilip Kumar 的补丁把复制冲突记进专用表，Nisha Moond 因无法干净应用要求重做基线。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-tgMWr=TGPhs9BxaPuSC_jhM7sJJ4fHedE5W6=h40jLfA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "本地缓冲区 pin 上限拟降到四分之一",
+      "summary": "Andres Freund 建议 GetLocalPinLimit() 返回 num_temp_buffers/4，代价是临时表预读距离变短。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_anydVV7wC7RWSQsrsOsxVRznS04h99DUiTib4VOP-ydQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "临时表"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Swiss PGDay 2026 开放报名",
+      "summary": "6 月 25 至 26 日在瑞士 Rapperswil，第 9 届，英语与德语双轨，完整议程 4 月底公布。",
+      "url": "https://2026.pgday.ch/registration/",
+      "author": "",
+      "source": "Swiss PostgreSQL Users Group",
+      "source_date": "2026-04-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PGConf.BE 2026 公布初步议程并开放报名",
+      "summary": "5 月 5 日在比利时 Haasrode 举行，距布鲁塞尔约 25 公里，讲者名单与日程已上线。",
+      "url": "https://pgconf.be/",
+      "author": "",
+      "source": "PGConf.BE",
+      "source_date": "2026-04-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "并行 Bitmap Heap Scan 的每工作进程统计缺失",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/326831c0-df02-435a-8c2c-428d59222a91@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_database_ddl() 应拒绝无效数据库",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqFW7uY3Jknf8VzjWoXa1bf0-U6-+JgM+o1ggJ+onyOHHA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "报错时 log_statement_max_length 不截断语句",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACsxBjB5+HLw6jJ17qR5vSg+kBb2G5ACSbd_ytZ0HvvD22JqkQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 的功能边界继续讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmobwW=BH6wXitn2LPyJ732dC3VFjRijdPrspT6Q5SPXdAw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    }
+  ]
+}

@@ -1,15 +1,49 @@
 {
   "date": "2026-08-22",
-  "origin": "pgsty-daily 2026-08-22.md; pgnexus #246",
+  "origin": "chronicle 2026-08-22: pgnexus #246, daily, planet 1",
   "items": [
     {
       "tier": 1,
+      "title": "SQL/PGQ 属性图的目录表示与 pg_dump 存在多处缺陷",
+      "summary": "PostgreSQL 19 的 SQL/PGQ 属性图在目录层面还很粗糙。Andres Freund 指出属性图不该有 pg_attribute 条目，pg_dump 的依赖追踪也不完整，遗漏属性类型依赖会导致恢复顺序出错，属性图被塞进 dumpTableSchema() 而没有独立处理函数。AI 辅助审查还发现 CASCADE 删除后残留孤立元数据、performDeletion() 缺少缓存失效、图与物化视图的循环依赖无法恢复。",
+      "url": "https://www.postgresql.org/message-id/dqa5mstx5mna3i7s23pdwl4m6bek7gqsgfccef44wjpswizufi@3aa6vzri3cat",
+      "author": "Andres Freund",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ",
+        "pg_dump",
+        "PG19"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "local_preload_libraries 的安全模型只有一个目录",
+      "summary": "local_preload_libraries 在建立连接时把共享库加载进后端，与 session_preload_libraries 类似但更严：后者只有超级用户能设，前者任何角色都能设，代价是只许从 $libdir/plugins 加载。这个目录就是它全部的安全模型，PostgreSQL 从不往里放东西，得由管理员自己决定放什么。Christophe Pettus 建议 DBA 优先用 ALTER ROLE 配 session_preload_libraries。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-local_preload_libraries/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-22",
+      "image": "https://thebuild.com/media/media/4a0ed550fec6488485bf7eabc4e6ca1f.jpeg",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "安全",
+        "参数"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
       "title": "Glue 6.0 升级 Spark 4.1 并完整支持 Iceberg v3",
-      "summary": "AWS Glue 6.0 已在所有可用区域 GA，API 不变，通过 --glue-version 选择。运行时底座换成 Apache Spark 4.1、Python 3.12 和 Scala 2.13，并支持 Iceberg 1.11.0 的完整 v3 规范：VARIANT 与 shredding 让 JSON、日志和事件数据不必预先展平，新增 Geometry、Geography 与纳秒时间戳，还有 Arrow 原生的 Python UDF 和面向无状态流任务的 Real-Time Mode。AWS 称价格比前版低 30%，但该口径不含存储、catalog、网络和 DPU 利用率。",
+      "summary": "AWS Glue 6.0 已在所有可用区域正式发布，API 不变，用 --glue-version 选择。运行时底座换成 Spark 4.1、Python 3.12 和 Scala 2.13，并支持 Iceberg 1.11.0 的完整 v3 规范：VARIANT 与 shredding 让 JSON、日志和事件数据不必预先展平，另有 Geometry、纳秒时间戳和 Arrow 原生的 Python UDF。AWS 称价格比前版低 30%，该口径不含存储与网络。",
       "url": "https://aws.amazon.com/blogs/aws/aws-glue-6-0-now-available-with-30-lower-price-and-full-apache-iceberg-v3-support/",
       "author": "AWS",
       "source": "AWS 博客",
-      "source_date": "2026-08-21",
+      "source_date": "2026-08-22",
       "image": "https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2024/11/13/Glue-feat-img2.png",
       "domain": "db",
       "tags": [
@@ -17,46 +51,12 @@
         "Iceberg",
         "ETL"
       ],
-      "position": 1
-    },
-    {
-      "tier": 1,
-      "title": "SQL/PGQ 属性图的目录表示与 pg_dump 存在多处缺陷",
-      "summary": "PostgreSQL 19 的 SQL/PGQ 属性图在目录层面还很粗糙。Andres Freund 指出属性图不应有 pg_attribute 条目，pg_dump 的依赖追踪不完整，遗漏 pg_propgraph_property.pgtypid 依赖会导致恢复顺序出错；属性图被塞进 dumpTableSchema() 而没有独立处理函数，pg_class 条目的必要性也不清楚。AI 辅助审查还发现 CASCADE 删除后残留孤立图元数据、performDeletion() 缺少缓存失效、图与物化视图的循环依赖无法恢复等问题。他建议对 propgraph 子系统做更全面的审查。",
-      "url": "https://www.postgresql.org/message-id/dqa5mstx5mna3i7s23pdwl4m6bek7gqsgfccef44wjpswizufi@3aa6vzri3cat",
-      "author": "Andres Freund",
-      "source": "pgsql-hackers",
-      "source_date": "2026-08-22",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "SQL/PGQ",
-        "pg_dump",
-        "v19"
-      ],
-      "position": 2
-    },
-    {
-      "tier": 1,
-      "title": "DeepSeek 上线实验性视觉模型并开放 Files API",
-      "summary": "低成本的截图和图片理解会直接改变 coding agent 与 browser agent 的工具链。DeepSeek 以 deepseek-v4-flash-vision-exp 提供图文混合调用，纯文本能力对齐 V4-Flash，图片支持 base64、外部 URL 和 Files API 三种引用方式。计费按缩放后的尺寸换算 token，单图上限 384 tokens，超大图约缩到 800×800，因此 OCR、中文表格和高密度 UI 的精度必须自建验收集实测。Files API 同日开放，上传后可用 file_id 复用，但保留与删除策略需先核对服务条款。",
-      "url": "https://api-docs.deepseek.com/guides/vision/",
-      "author": "DeepSeek",
-      "source": "DeepSeek 文档",
-      "source_date": "2026-08-21",
-      "image": "https://api-docs.deepseek.com/img/deepseek-social-card.jpeg",
-      "domain": "ai",
-      "tags": [
-        "多模态",
-        "API",
-        "成本"
-      ],
       "position": 3
     },
     {
       "tier": 1,
       "title": "过期 nameserver 让研究者接管三个国家码 ENUM 区",
-      "summary": "e164.arpa 把电话号码映射到 SIP 和 VoIP 路由，作者扫描时发现三个国家码 zone 仍指向失效的 nameserver。以约 5 欧元买下过期的 enum.org.uk 之后，作者成为 +290、+246、+247 的 fallback 权威服务器，并记录到大量 ENUM 查询元数据。原文强调这套公开系统整体已极少使用，HN 也指出源 IP 多在美国不足以证明每条请求都对应军事基地通话。可确认的结论是被遗忘的 delegation 会长期泄露路由元数据。原文发表于 7 月 30 日，本期只是重新传播。",
+      "summary": "e164.arpa 把电话号码映射到 SIP 和 VoIP 路由，作者扫描时发现三个国家码区仍指向失效的 nameserver。以约 5 欧元买下过期的 enum.org.uk 之后，作者成为 +290、+246、+247 的兜底权威服务器，并记录到大量 ENUM 查询元数据。原文强调这套公开系统整体已极少使用，可确认的结论是被遗忘的委派会长期泄露路由元数据。原文发表于 7 月 30 日，本期只是重新传播。",
       "url": "https://lina.sh/blog/hijacking-e164-arpa",
       "author": "Lina",
       "source": "lina.sh",
@@ -72,33 +72,33 @@
     },
     {
       "tier": 2,
-      "title": "PostgreSQL 19 发布说明的主要功能列表仍在打磨",
-      "summary": "Jonathan Katz 指出遗漏了 MERGE/SPLIT PARTITIONS，Andrew Dunstan 主张按影响力排序。",
-      "url": "https://www.postgresql.org/message-id/e2324238-abec-4026-bd44-9b3e6c70bd49@postgresql.org",
-      "author": "",
-      "source": "pgsql-hackers",
-      "source_date": "2026-08-22",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "v19",
-        "发布说明"
-      ],
-      "position": 5
-    },
-    {
-      "tier": 2,
       "title": "PG19 外键快速路径的三个修复补丁全部提交",
       "summary": "修复批量约束检查的越界写入与漏检，缓存键改为约束 OID 与查询深度的组合，并按子事务跟踪批次。",
       "url": "https://www.postgresql.org/message-id/CA+HiwqFC3UUvMQbJU1P-C2_RFEs2DpXdMvGKvxrUJnQ1qD11RQ@mail.gmail.com",
       "author": "Amit Langote",
-      "source": "pgsql-hackers",
+      "source": "PostgreSQL hackers",
       "source_date": "2026-08-22",
       "image": "",
       "domain": "pg",
       "tags": [
         "外键",
-        "v19"
+        "PG19"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 19 发布说明的主要功能列表仍在打磨",
+      "summary": "Jonathan Katz 指出遗漏了 MERGE/SPLIT PARTITIONS，Andrew Dunstan 主张按影响力排序。",
+      "url": "https://www.postgresql.org/message-id/e2324238-abec-4026-bd44-9b3e6c70bd49@postgresql.org",
+      "author": "Jonathan Katz",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "发布说明"
       ],
       "position": 6
     },
@@ -107,8 +107,8 @@
       "title": "内置聚合能否挂载 prosupport 引发设计分歧",
       "summary": "Tom Lane 反对让扩展修改内置聚合，担心多个扩展作用于同一聚合时冲突，倾向直接改 pg_proc。",
       "url": "https://www.postgresql.org/message-id/a943e222-70b5-4086-8f97-c18808fcb5aa@gmail.com",
-      "author": "",
-      "source": "pgsql-hackers",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
       "source_date": "2026-08-22",
       "image": "",
       "domain": "pg",
@@ -120,56 +120,40 @@
     },
     {
       "tier": 2,
-      "title": "App Engine flexible 的 Cloud SQL 代理升到 v2",
-      "summary": "动机是获得现代安全修复并支持 MySQL 8.4+，已运行实例需重启或重新部署才会用上新容器。",
-      "url": "https://docs.cloud.google.com/release-notes",
-      "author": "Google Cloud",
-      "source": "Google Cloud 发布说明",
-      "source_date": "2026-08-20",
-      "image": "",
-      "domain": "cloud",
-      "tags": [
-        "Cloud SQL",
-        "连接"
-      ],
-      "position": 8
-    },
-    {
-      "tier": 2,
       "title": "Bigtable 允许在物化视图填充完成前读取",
       "summary": "新的 allow_incomplete_view 提示把不完整性暴露给调用方，对账和导出任务需自行加完整性保护。",
       "url": "https://docs.cloud.google.com/bigtable/docs/release-notes",
-      "author": "",
+      "author": "Google Cloud",
       "source": "Google Cloud 发布说明",
-      "source_date": "2026-08-20",
+      "source_date": "2026-08-22",
       "image": "",
       "domain": "db",
       "tags": [
         "物化视图",
         "流式"
       ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "App Engine flexible 的 Cloud SQL 代理升到 v2",
+      "summary": "动机是获得现代安全修复并支持 MySQL 8.4+，已运行实例需重启或重新部署才会用上新容器。",
+      "url": "https://docs.cloud.google.com/release-notes",
+      "author": "Google Cloud",
+      "source": "Google Cloud 发布说明",
+      "source_date": "2026-08-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Cloud SQL",
+        "连接"
+      ],
       "position": 9
     },
     {
       "tier": 2,
-      "title": "Agent Runtime 可导出 gen_ai 语义的应用指标",
-      "summary": "需 ADK 2.6.0 以上并设置环境变量才会发往 Cloud Monitoring，是否记录提示与响应仍由观测设置决定。",
-      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/release-notes",
-      "author": "",
-      "source": "Google Cloud 发布说明",
-      "source_date": "2026-08-21",
-      "image": "",
-      "domain": "ai",
-      "tags": [
-        "可观测性",
-        "OpenTelemetry"
-      ],
-      "position": 10
-    },
-    {
-      "tier": 2,
       "title": "Rust Glancer 试图用两个数量级更少的内存做 LSP",
-      "summary": "作者明确 proc macro、build script 执行与增量分析仍是关键边界，目前更像值得观察的架构实验。",
+      "summary": "作者明确 proc macro、构建脚本执行与增量分析仍是关键边界，目前更像值得观察的架构实验。",
       "url": "https://matklad.github.io/2026/08/21/rust-glancer.html",
       "author": "matklad",
       "source": "matklad 博客",
@@ -179,6 +163,22 @@
       "tags": [
         "Rust",
         "IDE"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Agent Runtime 可导出 gen_ai 语义的应用指标",
+      "summary": "需 ADK 2.6.0 以上并设置环境变量才会发往 Cloud Monitoring，是否记录提示与响应仍由观测设置决定。",
+      "url": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/release-notes",
+      "author": "Google Cloud",
+      "source": "Google Cloud 发布说明",
+      "source_date": "2026-08-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "可观测性",
+        "OpenTelemetry"
       ],
       "position": 11
     },
@@ -215,32 +215,32 @@
     },
     {
       "tier": 3,
-      "title": "Gemini Enterprise 的 AI 开发者工具进入 GA",
+      "title": "Waltier 试图把 Cursor 的对象存储 WAL 做成通用实现",
       "summary": "",
-      "url": "https://docs.cloud.google.com/gemini/enterprise/docs/release-notes",
+      "url": "https://github.com/danthegoodman1/waltier",
       "author": "",
       "source": "",
-      "source_date": "2026-08-20",
+      "source_date": "2026-08-22",
       "image": "",
-      "domain": "cloud",
+      "domain": "db",
       "tags": [
-        "开发工具"
+        "存储",
+        "WAL"
       ],
       "position": 14
     },
     {
       "tier": 3,
-      "title": "Nari Labs 公开 Qwen3-TTS 的服务实现与基准",
+      "title": "Gemini Enterprise 的 AI 开发者工具进入 GA",
       "summary": "",
-      "url": "https://nari-labs.com/blog/qwen3-tts-speed-cost-frontier/",
+      "url": "https://docs.cloud.google.com/gemini/enterprise/docs/release-notes",
       "author": "",
       "source": "",
-      "source_date": "2026-08-19",
+      "source_date": "2026-08-22",
       "image": "",
-      "domain": "ai",
+      "domain": "cloud",
       "tags": [
-        "语音",
-        "推理"
+        "开发工具"
       ],
       "position": 15
     },
@@ -251,7 +251,7 @@
       "url": "https://fergusfinn.com/blog/what-happens-when-a-gpu-reads-memory/",
       "author": "",
       "source": "",
-      "source_date": "2026-08-13",
+      "source_date": "2026-08-22",
       "image": "",
       "domain": "infra",
       "tags": [
@@ -262,18 +262,49 @@
     },
     {
       "tier": 3,
+      "title": "Waymo 公开车载计算的组成与实体约束",
+      "summary": "",
+      "url": "https://waymo.com/blog/2026/08/look-under-our-trunk/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "边缘计算"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Nari Labs 公开 Qwen3-TTS 的服务实现与基准",
+      "summary": "",
+      "url": "https://narilabs.com/blog/qwen3-tts-speed-cost-frontier/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "语音",
+        "推理"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
       "title": "Proliferate 自称可自托管的 coding agent 工作台",
       "summary": "",
       "url": "https://github.com/proliferate-ai/proliferate",
       "author": "",
       "source": "",
-      "source_date": "2026-08-21",
+      "source_date": "2026-08-22",
       "image": "",
       "domain": "ai",
       "tags": [
         "agent"
       ],
-      "position": 17
+      "position": 19
     }
   ]
 }

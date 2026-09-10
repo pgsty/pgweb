@@ -1,0 +1,309 @@
+{
+  "date": "2026-03-18",
+  "origin": "chronicle 2026-03-18: pgnexus #86, news 1, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的发布可以排除指定表",
+      "summary": "Amit Kapila 在 3 月 4 日提交了 vignesh C 等人的补丁：PostgreSQL 19 的 FOR ALL TABLES 发布可以排除若干张表，写作 FOR ALL TABLES EXCEPT TABLE (public.t5, s1.t1)，被排除表的数据不再发往订阅端。分区表按根表排除，现有和将来的分区一并生效。限制也明确：已有的 FOR ALL TABLES 发布不能事后增删排除项，硬来会报错。",
+      "url": "https://www.depesz.com/2026/03/18/waiting-for-postgresql-19-allow-table-exclusions-in-publications-via-except-table/",
+      "author": "Hubert 'depesz' Lubaczewski",
+      "source": "depesz 博客",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "逻辑复制"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "只读连接模式的提案在邮件列表上摊开讨论",
+      "summary": "起因是想给 AI 工作流一个安全入口。Andrei Lepikhov 提出用 pg_readonly 扩展解决，反问是否真要改内核。Bruce Momjian 认为随着 MCP 越用越多，只读应当是数据库自带的能力。Peter Eisentraut 坚持只读是事务属性，不是访问控制。Andres Freund 举出计划内切换和优雅关闭的场景，认为临时只读本身有价值。悬而未决的是做成会话级还是集群级，以及要不要连 vacuum 一起挡住。",
+      "url": "https://www.postgresql.org/message-id/e6079ccd-64c0-492a-8f6f-8c8912fca278@eisentraut.org",
+      "author": "Andrei Lepikhov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "只读",
+        "MCP",
+        "安全"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Specific 用 Neon 为编码代理批量开数据库",
+      "summary": "Specific 是一家 Y Combinator 公司，做编码代理的云平台，每个编码任务配一个独立数据库，避免代理之间互相干扰。这套东西建在 Neon 上：用分支功能从快照秒建副本，新任务一来数据库立刻可用，规模上到数千个库。联合创始人 Iman Radjavi 说，选 Neon 看中的正是即时创建与分支这两点，正好对上代理式基础设施随建随弃的用法。这类场景里单个库都很小，但数量极多、生命周期很短，和传统实例规划的思路不同。",
+      "url": "https://neon.com/blog/how-specific-provisions-thousands-of-databases-for-coding-agents-using-neon",
+      "author": "Andy Hattemer",
+      "source": "Neon 博客",
+      "source_date": "2026-03-18",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/how-specific-provisions-thousands-of-databases-for-coding-agents-using-neon/cover.png",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "AI 代理",
+        "多租户"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "把 RAG 的记忆放进 SQL 引擎里换一致性",
+      "summary": "Ibrar Ahmed 数了常见 RAG 栈的几处毛病：检索无状态，同一个问题两次问出不同答案；多个代理并发写入时操作只完成一半，向量与原文脱节；记忆如何演变没有记录，事后无法复盘或审计；外部向量库的最终一致性还会在并发写时返回旧数据。他主张把 PostgreSQL 当作事务型记忆引擎，让向量、元数据和会话状态在一个事务里提交：pgvector 提供 HNSW 与 IVF 索引，外键杜绝孤立向量，行级安全隔离租户，WAL 记下每次变更。",
+      "url": "https://www.pgedge.com/blog/rag-with-transactional-memory-and-consistency-guarantees-inside-sql-engines",
+      "author": "Ibrar Ahmed",
+      "source": "pgEdge 博客",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RAG",
+        "pgvector",
+        "AI"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Takton 两个月用 Tiger Data 做出设备监控产品",
+      "summary": "Takton 的 Sense Manufacturing 给中小制造商监控机器功率与振动，设备每几秒往 Tiger Cloud 送一次数据。团队在写生产代码之前就定下了数据平台：起初考虑 InfluxDB，最后选 Tiger Data，理由是数千台设备的高频写入更扛得住，整条链路能统一在 SQL 上，托管服务也省掉运维。从第一次提交到设备进客户现场只用了两个月。平台保留全分辨率时序数据做异常检测，按厂商口径已提前数天发现过设备故障。",
+      "url": "https://www.tigerdata.com/blog/how-startup-takton-shipped-just-two-months-tiger-data",
+      "author": "Farbod Moghaddam",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-18",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/takton-tiger-data-case-study.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "IoT",
+        "案例"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "libpq 的服务端 SNI 支持已推送",
+      "summary": "Daniel Gustafsson 在多平台与多版本 OpenSSL 上验证后提交，两处构建农场失败已随 OpenSSL 升级解决。",
+      "url": "https://www.postgresql.org/message-id/BAA4F15D-6295-41DD-A1F8-6F5C1E1ECC52@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TLS",
+        "libpq"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_backup_stop() 拟直接返回 pg_control 内容",
+      "summary": "David Steele 的补丁避免备份中途拷到损坏的控制文件，19 版拟只做基础备份协议那一半。",
+      "url": "https://www.postgresql.org/message-id/3b23e3b7-53d2-4784-b482-05cca3327acb@pgbackrest.org",
+      "author": "David Steele",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "pg_basebackup"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制初始 COPY 提速受限于函数签名兼容",
+      "summary": "Masahiko Sawada 改用函数重载保留旧签名，避免 18 及更早版本的订阅端失效。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KoSi60dtakJzn0MxNnHF1Yf4indSAffTjJxQG_31jsgQ@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "性能"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 并发版的崩溃找到时序原因",
+      "summary": "重打包关系号在解码起点确定之后才设置，导致无关变更混入重排序缓冲区触发断言。",
+      "url": "https://www.postgresql.org/message-id/CAFC+b6qk3-DQTi43QMqvVLP+sudPV4vsLQm5iHfcCeObrNaVyA@mail.gmail.com",
+      "author": "Antonin Houska",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "缺陷"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "COPY TO 输出 JSON 时两种 null 无法区分",
+      "summary": "SQL NULL 与 JSON null 都序列化成同一形式，重新导入后无法还原，往返保真成为难点。",
+      "url": "https://www.postgresql.org/message-id/fc61429f-76a1-4385-a2bd-999967da306f@manitou-mail.org",
+      "author": "Daniel Vérité",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "JSON"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "提案允许在协议层为 Portal 设置游标选项",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADK3HHJHGPrzWpwmVPErq9XOcdg8nue-gPfoSz_=kabiKoZCOg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "协议"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "后台工作进程终止补丁反而加剧了测试失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1020519.1773863522@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "测试"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "默认开启严格原型警告后暴露 ecpg 头文件问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/dfb1373e-258f-42b7-ac76-0f5858936dfa@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "CREATE SUBSCRIPTION SERVER 拟按订阅分配内存上下文",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/15e7ae32-ee3b-4ba5-987a-8454fb6f07a4@app.fastmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 被 Coverity 查出内存泄漏",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoYRJdDh7MPK-cLs4w4gmYqEaWM3Y0o+2-YAKfJ=5rHNyA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "缺陷"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "消除 xl_heap_visible 的补丁集收到逐条评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/jlsvov4o5xswxjvjhvuchz6y55ncvoc457grvxct7cub5gcxuj@4e2toesujnpr",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "拟用静态分析检查 WAL 结构体的未初始化填充",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFPWL_9-ZRO4PKaAWmoUxBnbOSdmxXX_zhairaG0eY4p_w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "安全"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Robert Haas 的 4 至 5 月黑客研讨会开放报名",
+      "summary": "",
+      "url": "https://rhaas.blogspot.com/2026/03/hacking-workshop-for-aprilmay-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "vacuum"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Ryan Lambert 记录用 Ollama 搭本地大模型",
+      "summary": "",
+      "url": "https://blog.rustprooflabs.com/2026/03/local-llm-openweb-ui-ollama",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-18",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "LLM"
+      ],
+      "position": 19
+    }
+  ]
+}

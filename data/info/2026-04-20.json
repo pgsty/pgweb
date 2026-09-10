@@ -1,0 +1,282 @@
+{
+  "date": "2026-04-20",
+  "origin": "chronicle 2026-04-20: pgnexus #120, news 2, planet 7",
+  "items": [
+    {
+      "tier": 1,
+      "title": "HighGo 逐段拆解 PostgreSQL 19 的 REPACK 实现",
+      "summary": "REPACK 是 PostgreSQL 19 新增的表压缩命令，靠重写存储回收空间，同时保持表的 OID 与目录身份不变。Chao Li 顺着 repack.c 梳理了两种模式：非并发模式全程持排他锁，重写完再建索引；并发模式先在较弱的锁下建好新索引，由后台工作进程从临时复制槽解码 WAL，把拷贝期间的增量重放到新堆，最后才短暂升级排他锁完成切换。并发模式要求表上有副本标识索引或非延迟主键，否则无法定位待重放的更新与删除。",
+      "url": "https://www.highgo.ca/2026/04/20/understanding-postgresql-repack-through-repack-c/",
+      "author": "Chao Li",
+      "source": "HighGo 博客",
+      "source_date": "2026-04-20",
+      "image": "https://www.highgo.ca/wp-content/uploads/2020/02/cropped-highgo.png",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "PG19",
+        "源码"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_pathcheck 扩展揪出规划器里的隐形悬垂指针",
+      "summary": "PostgreSQL 规划器生成路径时会淘汰下层关系里的 Path，上层结构却可能仍持有指向它的指针。查询结束前没人解引用这些悬垂指针，Valgrind 很难发现；分配器按 2 的幂划分尺寸类，被释放的 Path 转眼被回收成别的节点。Andrei Lepikhov 从一次 postgres_fdw 分片方案的间歇崩溃查起，写了约 600 行 C 的 pg_pathcheck，遍历可达路径校验 NodeTag 与父关系归属两条不变式。",
+      "url": "https://danolivo.substack.com/p/finding-invisible-use-after-free",
+      "author": "Andrei Lepikhov",
+      "source": "Substack",
+      "source_date": "2026-04-20",
+      "image": "https://substackcdn.com/image/fetch/$s_!Rui_!,w_1200,h_675,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff3c4ae91-8b23-4a24-9267-750186cf814c_960x640.jpeg",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "内存安全",
+        "扩展"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "credcheck v4.7 新增超级用户豁免与禁止改密开关",
+      "summary": "credcheck 在建用户、改口令和改名时执行凭证策略，可限定口令字符集、有效期、重用策略与认证失败次数。HexaCluster 发布的 v4.7 新增两个 GUC，一个让超级用户的变更跳过口令策略，另一个禁止修改密码；同时修复了 plpgsql 代码块中执行 CREATE ROLE 时口令有效期的行为。升级后需重启 PostgreSQL 重新加载该库。",
+      "url": "https://github.com/HexaCluster/credcheck/releases/tag/v4.7",
+      "author": "HexaCluster",
+      "source": "GitHub",
+      "source_date": "2026-04-19",
+      "image": "https://opengraph.githubassets.com/aa2997ea182a22e77ee0ed31b99700f06540c03773fd1ac1208472fb3d7228b7/HexaCluster/credcheck/releases/tag/v4.7",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "安全",
+        "口令策略"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_dbms_job v2.0 把 Perl 调度器重写为 C 后台进程",
+      "summary": "pg_dbms_job 让 PostgreSQL 以 Oracle DBMS_JOB 的方式创建和调度定时任务，任务体可以是 SQL、plpgsql 代码块或已有存储过程。HexaCluster 发布的 v2.0 把原先独立运行的 Perl 调度守护进程重写成 C 写的 background worker，不再需要额外进程；休眠间隔与任务队列间隔改为可配置，run_duration 列换成 interval 类型。",
+      "url": "https://github.com/HexaCluster/pg_dbms_job/blob/v2.0/ChangeLog",
+      "author": "HexaCluster",
+      "source": "GitHub",
+      "source_date": "2026-04-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "定时任务",
+        "Oracle 兼容"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "TigerData 测算每次写入的 3 到 4 倍写放大",
+      "summary": "写入密集负载下，PostgreSQL 落盘的字节数远多于应用提交的逻辑数据。Matty Stratton 按 1KB 一行测算，堆元组的 MVCC 头、索引维护和 WAL 记录合计产生约 2.5KB 实际写入，每秒 50MB 应用数据会变成 150 到 190MB 磁盘写入。结构性来源是 WAL 二次写入和检查点后的整页写，索引数量再线性叠加，每多一个约增 0.3 倍。调整检查点与精简索引能压到 2.5 倍左右，但消不掉底线。",
+      "url": "https://www.tigerdata.com/blog/write-amplification-in-postgres-the-3-4x-tax-on-every-insert",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-20",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/thumbnail--1-.png",
+      "domain": "pg",
+      "tags": [
+        "写放大",
+        "WAL",
+        "性能"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Vercel 确认客户数据经 Context AI 被窃取",
+      "summary": "Vercel 披露了一起客户数据被窃取的安全事件，并把源头指向 AI 编码助手服务 Context AI 此前遭到的攻击。攻击者利用 Context AI 的漏洞劫持了一名 Vercel 员工的账号，进而未授权访问 Vercel 的系统与客户信息，事件期间有敏感客户数据外泄，公司已通知受影响客户并着手加固。这是一条典型的第三方服务横向渗透链路：开发者平台接入的 AI 助手、CI 集成和 OAuth 应用都是攻击面。",
+      "url": "https://techcrunch.com/2026/04/20/app-host-vercel-confirms-security-incident-says-customer-data-was-stolen-via-breach-at-context-ai/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-04-20",
+      "image": "https://techcrunch.com/wp-content/uploads/2026/04/vercel-2249343327-smaller.jpg?resize=1200%2C800",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "供应链",
+        "泄露"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "WAIT FOR LSN 补丁集完成重设计并补齐测试",
+      "summary": "Alexander Korotkov 合入了内存屏障读写与唤醒机制的修补，并补上跨时间线场景的测试与说明。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdupZ3ooxmnJvhjx7rnZ7VMcz_uyxGC4drMSEM_P3PtGzw@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "补丁"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 不再要求 REPLICATION 权限",
+      "summary": "Antonin Houska 的补丁又暴露出误要求 LOGIN 权限，以及 wal_level=minimal 下回归测试失败。",
+      "url": "https://www.postgresql.org/message-id/22189.1776671085@localhost",
+      "author": "Antonin Houska",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "权限"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "跨会话访问临时表的修复补丁通过审查",
+      "summary": "Alexander Korotkov 建议把沿用多年、已被翻译成多语的错误信息改写单独拆成一个补丁。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdtsGSywUExfKMakAuRz8-+61d-4XHkVf=pNQeYTZTVYoA@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "补丁"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "COPY TO FORMAT JSON 将真正实现 ENCODING 转换",
+      "summary": "Tom Lane 否决了直接拒绝该选项的做法，要求用 pg_server_to_any() 与 text、CSV 行为对齐。",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWVTarpEyFyx=ivXO88ORcAM35FNwgO35nnNSNGdEhN1aw@mail.gmail.com",
+      "author": "Ayush Tiwari",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "编码"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "查询提示系列开篇：除 PostgreSQL 外各家都有 hints",
+      "summary": "Oracle 的百余个内联提示最典型，SQL Server 与 Db2 则走计划向导和 XML 配置的带外路线。",
+      "url": "https://thebuild.com/blog/hints-part-1-the-state-of-the-art-everywhere-but-here/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询提示",
+        "规划器"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Postgres 性能三角：内存、磁盘与并发互相牵制",
+      "summary": "Richard Yen 类比摄影曝光三角，主张先看清代价当前落在哪里，再决定要把它挪到何处。",
+      "url": "https://richyen.com/postgres/2026/04/20/throughput_triangle.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "调优"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "RI 触发器快速路径补丁存在常量正确性问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/548600ed-8bbb-4e50-8fc3-65091b122276@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "xl_heap_visible 削减提交引发回归测试不稳定",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_arG0imObUfqtr8tjJzynq+dn3qk9kUP1+hdF3VmGms6g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "改为 UNLOGGED 的表将自动移出发布",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm2VghC-CSyS6jwyMMcpwSWjQ09t9AkkL0Sz7dsb1VGF3A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Hints 系列（二）：PostgreSQL 不想要的提示特性",
+      "summary": "",
+      "url": "https://thebuild.com/blog/hints-part-2-features-we-do-not-want/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解：allow_alter_system",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-allow_alter_system/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "2026 年第 15 周 PostgreSQL 贡献速览",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/79/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    }
+  ]
+}

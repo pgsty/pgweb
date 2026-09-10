@@ -1,0 +1,465 @@
+{
+  "date": "2026-05-24",
+  "origin": "chronicle 2026-05-24: daily 80, pgnexus #156, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "TOAST：PostgreSQL 把大字段藏在哪里",
+      "summary": "Radim Marek 讲清了 TOAST 的机制：堆元组必须放进 8KB 页，超过约 2032 字节就触发瘦身，先压缩 EXTENDED 列，再把值挪到伴生的 TOAST 表，每块约 2000 字节，压缩可选 pglz 或 lz4。实用结论有几条：SELECT * 会把宽列全部解 TOAST；pg_column_size() 只读指针很便宜，length() 却要完整解压；改一个 1MB 的 jsonb 会重写全部分块。",
+      "url": "https://boringsql.com/posts/postgresql-toast/",
+      "author": "Radim Marek",
+      "source": "boringsql.com",
+      "source_date": "2026-05-24",
+      "image": "https://boringsql.com/og-images/postgresql-toast-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "存储",
+        "jsonb"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "ORM 的多态关联为什么会拖垮规划器",
+      "summary": "Andrei Lepikhov 讨论 ORM 常见的多态关联：一列要指向多张互不相关的表，通常用类型加 id 的判别式外键，再用一串带类型条件的 LEFT JOIN 还原。问题出在规划器：连接链上的选择率误差会逐级相乘放大，当 join_collapse_limit 被突破、EXISTS 子查询没能放到合适位置时，基表行要走完整条 LEFT JOIN 链才被过滤。作者说这篇先界定问题，后续再给优化器改法。",
+      "url": "https://danolivo.substack.com/p/on-polymorphic-associations-in-postgres",
+      "author": "Andrei Lepikhov",
+      "source": "danolivo.substack.com",
+      "source_date": "2026-05-24",
+      "image": "https://substackcdn.com/image/fetch/$s_!pWz9!,w_1200,h_675,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1ac3bea1-ece2-40da-895c-e0dc7112df0a_1536x1024.jpeg",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "ORM",
+        "连接"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "client_encoding 交给 libpq 协商就好",
+      "summary": "Christophe Pettus 的 GUC 系列讲到 client_encoding：它声明客户端使用的字符编码，默认跟随服务端编码。两端不一致时，来往的每个字符都要过一次转换表，目标编码放不下某个字符就直接报错。常见的三类麻烦是默认值不匹配导致老数据报错、SQL_ASCII 库完全关掉编码校验，以及跨编码的转储恢复。他的建议是别在服务端配置里设它，交给 libpq 协商，确需非 UTF-8 编码时在连接串或角色级别指定。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-clientencoding/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-24",
+      "image": "https://thebuild.com/media/media/69ab5dde1c2446c19ce4dab0a3b1607f.png",
+      "domain": "pg",
+      "tags": [
+        "编码",
+        "参数",
+        "UTF-8"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "更正：Snowflake Postgres 就是社区版 Postgres",
+      "summary": "Christophe Pettus 更正了此前关于 Snowflake Postgres 的推断：它就是社区版 PostgreSQL，不是带专有存储层的分支，之前对 table access methods 的猜测也不成立。更正本身的价值在于提醒读者，号称 Postgres 兼容的产品差别极大：有的是真 PostgreSQL，有的只是协议兼容，有的是分支。评估时应问清版本来源、扩展支持、系统目录行为、WAL 与备份语义和迁移退出路径。",
+      "url": "https://thebuild.com/blog/a-correction-snowflake-postgres-is-just-postgres/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-24",
+      "image": "https://thebuild.com/media/media/591b2368f73448a0b70e0ed0f2dba51b.webp",
+      "domain": "pg",
+      "tags": [
+        "Snowflake",
+        "兼容性",
+        "云数据库"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "把版本号改成年份的提案在 hackers 遭到反对",
+      "summary": "有人提议把 PostgreSQL 的版本号从顺序编号改为年份，比如 19 改叫 2026。Tom Lane 反对，认为这会给发布计划套上不必要的约束：原定 2027 年发布的版本若延到 2028，后面的周期都会被打乱。Peter Eisentraut 补充说，很多产品在某年年底发布却按下一年的版本号做营销，年份并不能消除歧义。Philip Alger 则担心 12 月发布的版本几周后就显得过时，用户会因版本号的年代感而非实际需要去升级。",
+      "url": "https://www.postgresql.org/message-id/0e41a002-ec9d-4acd-bb2c-3104c12607e3@eisentraut.org",
+      "author": "Tom Lane、Peter Eisentraut",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "版本号",
+        "社区",
+        "发布计划"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 集成 Rust 版 Delta Kernel",
+      "summary": "ClickHouse 把 Rust 写的 Delta Kernel 集成进来，用于读取 Delta Lake 表。湖仓格式的难点不在读 parquet，而在事务日志、schema 演进、版本语义和写入一致性；各引擎各自实现协议容易产生偏差，直接接入共享 kernel 能减少这类分歧。对用 ClickHouse 查询 Delta Lake 的团队，值得关注新实现的兼容性与性能差异，写入、时间旅行和 schema 演进最好单独压测。",
+      "url": "https://clickhouse.com/blog/integrating-rust-delta-kernel",
+      "author": "ClickHouse",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "Delta Lake",
+        "湖仓"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "npm 的分阶段发布正式可用并加入安装来源控制",
+      "summary": "GitHub 让 npm 的 staged publishing 正式可用，并新增安装期的来源控制选项。改动针对的是发布与安装的安全模型，而不是某个具体漏洞：staged publishing 把发布前的验证前置，来源白名单则限制本地路径、git URL、link 等安装方式被滥用。发布 npm 包的团队可以把它加进发布清单，JavaScript 项目可以在 CI 里收紧安装来源策略。",
+      "url": "https://github.blog/changelog/2026-05-22-staged-publishing-and-new-install-time-controls-for-npm/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "npm",
+        "供应链",
+        "GitHub"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 用全文检索加分析对标 Elasticsearch",
+      "summary": "厂商口径的对比，分词、相关性排序、权限模型和高并发查询仍需自行验证。",
+      "url": "https://clickhouse.com/blog/elasticsearch-log-analytics-clickhouse",
+      "author": "ClickHouse",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "日志"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 介绍原生随机采样",
+      "summary": "用 SAMPLE BY 做近似查询，适合在超大表上换取可接受误差下的响应速度。",
+      "url": "https://clickhouse.com/blog/native-random-sampling",
+      "author": "ClickHouse",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "采样"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 复盘一次被中间设备干预的 ping",
+      "summary": "路径上的策略与限速会让 ICMP 结果失真，排障不能只依赖单一探测手段。",
+      "url": "https://blog.cloudflare.com/the-day-my-ping-took-countermeasures/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "排障"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "报道称有人批量投毒 5.5 万个 GitHub 仓库",
+      "summary": "投毒可经依赖复制、搜索结果、typosquatting 与 CI 凭证扩散，来源为媒体转述。",
+      "url": "https://www.theregister.com/security/2026/05/22/megalodon-chums-the-waters-in-55k-github-repo-poisonings/5245342",
+      "author": "The Register",
+      "source": "The Register",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "GitHub"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Secrets Manager 托管外部密钥支持 Snowflake",
+      "summary": "Snowflake 个人访问令牌与 Datadog 密钥可纳入集中创建、轮换和审计。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/secrets-manager-managed-external-secrets-datadog-snowflake/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "密钥",
+        "AWS"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "AWS Transform 给迁移评估加上 agent 能力",
+      "summary": "评估提速的同时，假设、输入数据与 TCO 参数的可审计性变得更重要。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/assessment-capabilities-transform/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "迁移",
+        "AWS"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AWS Security Agent 能生成渗透发现的复现脚本",
+      "summary": "安全报告从文字走向可执行证据，但脚本本身的权限与副作用需要审查。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-security-agent/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "AWS"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "一篇四年用云复盘重新点燃成本讨论",
+      "summary": "真实成本除实例单价外还含网络、托管服务溢价、迁移摩擦与运维人力。",
+      "url": "https://www.adventuresinoss.com/aws-four-years/",
+      "author": "Adventures in OSS",
+      "source": "adventuresinoss.com",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "云成本"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "那些半夜压垮生产的 AWS 服务配额",
+      "summary": "部分配额无法快速提升，容量规划应把配额上限当作硬约束提前申报。",
+      "url": "https://medium.com/@yalovoy/the-aws-service-quotas-that-will-take-down-your-production-at-3-am-and-you-cannot-raise-them-fast-d88723fcfcb7",
+      "author": "Serhii Yalovoy",
+      "source": "Medium",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "配额",
+        "运维"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Constraint Decay 研究 agent 改后端代码时的约束流失",
+      "summary": "多步修改容易丢掉事务、权限与幂等约束，这些应写进测试而不是提示词。",
+      "url": "https://arxiv.org/abs/2605.06445",
+      "author": "arXiv",
+      "source": "arXiv",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "论文",
+        "代码生成"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker 域管理打通 Identity Center 与 IAM 域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/domain-management-iam-idc/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker 在 IAM 域中加入业务元数据与治理",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/sagemaker-catalog-iam-domains/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "诈骗者滥用微软内部账户群发垃圾链接",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/05/21/scammers-are-abusing-an-internal-microsoft-account-to-send-spam/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "身份"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "综述称 AI 辅助挖洞正在改变 Linux 漏洞态势",
+      "summary": "",
+      "url": "https://www.theregister.com/security/2026/05/23/ai-eyes-scanning-for-bugs-create-a-worrisome-linux-security-trend/5244742",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "安全"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "一篇质疑 JWT 必要性的文章引发认证设计讨论",
+      "summary": "",
+      "url": "https://www.dusanmalusev.dev/blog/jwt-is-a-scam-and-your-app-doesnt-need-it",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "认证"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "BambuStudio 被指自分叉起违反 PrusaSlicer 的 AGPL",
+      "summary": "",
+      "url": "https://www.theverge.com/tech/931532/bambu-agpl-pawel-jarczak-open-source-threat-dmca-github",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源许可"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Bun 加入内置图像处理 API Bun.Image",
+      "summary": "",
+      "url": "https://bun.com/docs/runtime/image",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Bun"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Aube 用 Rust 重写 Node.js 包管理器",
+      "summary": "",
+      "url": "https://aube.sh/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "包管理"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "workerd 发布 v1.20260524.1",
+      "summary": "",
+      "url": "https://github.com/cloudflare/workerd/releases/tag/v1.20260524.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Cloudflare"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "LLMKube 用 Kubernetes 编排本地大模型",
+      "summary": "",
+      "url": "https://llmkube.com/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "一篇文章讨论跳过读代码的 agent 信任边界",
+      "summary": "",
+      "url": "https://olano.dev/blog/dangerously-skip/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "代码评审"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "TruLayer 为生产 LLM 提供追踪、评测与控制回路",
+      "summary": "",
+      "url": "https://trulayer.ai/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 29
+    }
+  ]
+}

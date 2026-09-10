@@ -1,0 +1,219 @@
+{
+  "date": "2026-04-14",
+  "origin": "chronicle 2026-04-14: pgnexus #114, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "物理复制才是摆脱 DBaaS 锁定的关键",
+      "summary": "CloudNativePG 的 Gabriele Bartolini 把托管数据库的锁定归到一处：WAL 流不对外开放。他的说法是持续的跨区域能力依赖 WAL 流，而托管方刻意不暴露，高可用与灾备的操作逻辑被关在专有控制平面里。他给出的退出路径分三步：先用逻辑复制搭起并行环境，再做一次受控切换，停机时间取决于复制延迟而非数据量，之后靠物理复制维持长期可迁移性。",
+      "url": "https://www.gabrielebartolini.it/articles/2026/04/owning-the-pipe-physical-replication-cloud-neutrality-and-the-escape-from-dbaas-lock-in/",
+      "author": "Gabriele Bartolini",
+      "source": "gabrielebartolini.it",
+      "source_date": "2026-04-14",
+      "image": "https://www.gabrielebartolini.it/articles/2026/04/owning-the-pipe-physical-replication-cloud-neutrality-and-the-escape-from-dbaas-lock-in/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "云中立",
+        "CloudNativePG"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "ParadeDB 成为 Railway 的官方集成",
+      "summary": "ParadeDB 是给 PostgreSQL 加全文、向量与混合搜索的扩展，现在成为 Railway 的官方集成。点一个按钮就能拉起 Docker 容器，用户名、密码和连接串等环境变量自动配好，官方口径是从零到可用实例不到一分钟。之后可以用 paradedb.create_bm25_test_table 建测试表，用 || 运算符做 BM25 检索，并用 pdb.score() 给结果排序。文章没有提到定价。",
+      "url": "https://www.paradedb.com/blog/railway",
+      "author": "Ming Ying",
+      "source": "ParadeDB 博客",
+      "source_date": "2026-04-14",
+      "image": "https://www.paradedb.com/blog/railway/images/opengraph-image.png",
+      "domain": "pg",
+      "tags": [
+        "搜索",
+        "扩展",
+        "部署"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "《AI-Ready PostgreSQL 18》讲接缝处的失败",
+      "summary": "Vibhor Kumar 与 Marc Linster 出版了新书《AI-Ready PostgreSQL 18》，副标题是用事务、分析与向量构建智能数据系统，随书附开源脚本和一套电商数据集。Kumar 的判断是 AI 项目很少败在模型本身，而是败在模型周围的接缝：数据真实性、治理和生产约束，比如无法强制当前价格与库存。他主张把向量和关系事实放进同一个 PostgreSQL，用 pgvector 做语义检索，靠 SQL 约束兜住正确性。",
+      "url": "https://vibhorkumar.wordpress.com/2026/04/14/ai-ready-postgresql-18-is-out-why-ai-applications-win-or-lose-at-the-seams/",
+      "author": "Vibhor Kumar",
+      "source": "Vibhor Kumar 博客",
+      "source_date": "2026-04-14",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/04/img_0056-1.jpeg",
+      "domain": "pg",
+      "tags": [
+        "向量",
+        "pgvector",
+        "图书"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 再快，数据管道也拖后腿",
+      "summary": "Tiger Data 的 Matty Stratton 承认 ClickHouse 分析查询比 PostgreSQL 快 10 到 100 倍，但基准测不出维护两套库的运维成本。把数据从 PostgreSQL 搬过去要 CDC、ETL 或流式管道，随之而来的是延迟、schema 漂移和新的故障模式；ClickHouse 没有 ACID 事务，订正要即时生效时会出问题。替代方案是用 TimescaleDB 就地做列式压缩与连续聚合。",
+      "url": "https://www.tigerdata.com/blog/clickhouse-is-fast-your-pipeline-isnt",
+      "author": "Matty Stratton",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-04-14",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/thumbnail-blog-thumbnail-1280x720--1-.png",
+      "domain": "db",
+      "tags": [
+        "分析",
+        "ClickHouse",
+        "架构"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "pg_get_*_ddl 的内存损坏修复已推送",
+      "summary": "Satyanarayana Narlapuram 改用 DatumGetArrayTypePCopy 解决角色设置崩溃，Andrew Dunstan 已推送。",
+      "url": "https://www.postgresql.org/message-id/786bceca-84c4-4a83-9c30-3ce49d81b274@dunslane.net",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "DDL"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "并行 Apply 补丁的消息分发设计遭质疑",
+      "summary": "Amit Kapila 认为 leader 与 worker 之间的内部消息不该走 apply_dispatch()，建议单开函数。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+jXOyZYeDmc1LVsgLpsWyKusis_y0ix_Ubv3vA3iFXuQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "并行"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "synchronized_standby_slots 语法向同步复制看齐",
+      "summary": "补丁拆成 ANY 法定人数与 FIRST N 优先级两步，是否重构通用解析器仍在评估。",
+      "url": "https://www.postgresql.org/message-id/CAE9k0P=WsXS6xbtzgf9kT+BvwrqYo0JfzbUM2hvYP7MRrUxxwA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "同步复制"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "模式级发布也要支持 EXCEPT 排除表",
+      "summary": "Nisha Moond 提议 TABLES IN SCHEMA 可排除个别表，非限定表名的归属歧义仍未定。",
+      "url": "https://www.postgresql.org/message-id/CABdArM5sw4Q1ZU8HGdo4BSc1A_+8xtUNq17j6wcir=yMUy19Cg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "发布"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "无主键表的逻辑复制该不该自动回退",
+      "summary": "Chao Li 提议无主键时副本标识自动降为 FULL，社区顾虑显式配置优于隐式便利。",
+      "url": "https://www.postgresql.org/message-id/6BD39478-8F32-48BD-9595-678E5B4BEE8C@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "副本标识"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "PGConf India 2026 参会回顾",
+      "summary": "",
+      "url": "https://andreas.scherbaum.la/post/2026-04-15_pgconf-india-2026-review/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 在复杂查询上报出规划不一致",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/c0c63979-43c2-4424-8fe8-56949934c9d8@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "vacuum 统计补丁完成 rebase 待评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/788e9ff4-3ed7-454c-8863-b40bc3288bc9@yandex.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "REPACK CONCURRENTLY 的用法与最佳实践",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/112208.1776173876@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "HINT 消息补句号该不该回移到旧分支",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJSLCQ08y3pECMLyLE7-GKZ9n3mHRx3Pru0ji_W0y0GX0O5zjg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    }
+  ]
+}

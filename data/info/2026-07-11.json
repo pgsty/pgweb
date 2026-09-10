@@ -1,0 +1,310 @@
+{
+  "date": "2026-07-11",
+  "origin": "chronicle 2026-07-11: pgnexus #204, planet 3, daily 12",
+  "items": [
+    {
+      "tier": 1,
+      "title": "索引预取补丁到 V30，首个补丁准备提交",
+      "summary": "Peter Geoghegan 准备好索引预取补丁系列的 V30，计划在 7 到 10 天内提交 0001。Tomas Vondra 审查后指出 heap_fill_ios_slot 的命名和注释有误导，已改名为 index_fill_ios_slot 并移到 indexam.c，让它真正与 table AM 无关。另一处行为变更是 pgstat_count_index_tuples 改为每批计一次，语义与位图索引扫描一致。",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wz=DhG5=sw9P1A5=bnXxCz4UJaWgH5WQA-3pEckXRucZdQ@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "新 GUC disconnect_requested 让客户端优雅断连",
+      "summary": "Jelte Fennema-Nio 提出一个只读 GUC disconnect_requested，是早前 GoAway 提案的重新设计，不改动协议。该值为 on 时服务器发送 ParameterStatus 消息，建议客户端在合适时机断开重连；可以用新函数 pg_request_disconnect_backend(pid) 手动触发，并在 smart 关机模式下自动启用。PgBouncer 这类代理可借此做无停机重启。",
+      "url": "https://www.postgresql.org/message-id/DJVLCL7PV7U6.35IJF87CZZ61Y@jeltef.nl",
+      "author": "Jelte Fennema-Nio",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "连接池",
+        "关机"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "在线开关数据校验和拟允许分散检查点",
+      "summary": "Tomas Vondra 的 v4 补丁让在线启用或禁用数据校验和时可以使用分散检查点。Ewan Young 发现文档把 pg_disable_data_checksums 的 fast 参数默认值误记为 false，实际是 true，v4 已改正。Fujii Masao 又指出读取 DataChecksumState->fast_checkpoint 时没有持 DataChecksumsWorkerLock。Tomas 认为加锁未必必要，但同意修文档。",
+      "url": "https://www.postgresql.org/message-id/8154744d-f5f9-43a6-8941-c80ad31bb0e2@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "检查点"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Key joins 特性拆成十个更小的补丁",
+      "summary": "Joel Jacobson 审查了 Arne Roland 为 Key joins 提交的修订补丁系列。这一版把实现拆成十个更聚焦的提交，内容包括在基表之间证明 FOR KEY joins、错误信息机制、派生表、GROUP BY 与 DISTINCT、FILTER (WHERE ...) 子句，以及引用与被引用过滤条件的追踪。Joel 认可这种细粒度拆分，并指出第一个补丁里 parse_key_join.c 已有 1487 行。",
+      "url": "https://www.postgresql.org/message-id/2606a427-466c-4d64-83f9-21f59ad5f4c6@app.fastmail.com",
+      "author": "Arne Roland",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "连接"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "relfilenode 统计重设计先清理索引的无用计数",
+      "summary": "Michael Paquier 正在重做 relfilenode 统计，重点是清理索引的关系统计：目前有大量字段常驻内存并写入磁盘，对索引却从来没被用过。Andres Freund 质疑索引统计的清理是否应该单独处理，而不是并进这次重设计。Michael 认为先把计数器分开，能让 relfilenode 统计的实现和 WAL 重放期间的重新计算逻辑都更清晰。Bertrand Drouvot 建议回到已有线程继续讨论。",
+      "url": "https://www.postgresql.org/message-id/alG8F9lVldB3WseN@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "索引"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "GhostLock 揭出 rtmutex 里存在十五年的提权缺陷",
+      "summary": "Nebula Security 的报告把 GhostLock 描述为 rtmutex 代理路径错误清理 current->pi_blocked_on 造成的内核栈悬垂指针，称无权限用户可借此形成可控写并提权，影响自 Linux 2.6.39 以来的代码路径。要害是上游已修而资产基线未必已修：多租户宿主机、CI runner 和 Kubernetes 节点需按发行版公告核对内核版本与重启状态，不能只看上游版本号。",
+      "url": "https://nebusec.ai/research/ionstack-part-2/",
+      "author": "Nebula Security",
+      "source": "Nebula Security",
+      "source_date": "2026-07-11",
+      "image": "https://nebusec.ai/_astro/social-preview.BvQ1tugL_ZfOXv3.jpeg",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "内核",
+        "漏洞"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Scarf 在生产用了七年 Haskell 后转向 Python",
+      "summary": "Scarf 保留原有的 Haskell API 和高性能 Gateway，把新增的 API route 放到 Python，两套并排部署、按路径路由逐步搬迁。作者给出的理由不是运行时性能，而是长冷构建、工具链和环境维护在多个编码 agent 并发时变成吞吐瓶颈。文中也强调迁移重新实现了认证、数据库访问、模型、镜像和测试。评估这类效率问题，值得量化从干净检出到第一个可靠测试结果的时间。",
+      "url": "https://avi.press/posts/2026-07-10-after-7-years-in-production-scarf-has-reluctantly-moved-away-from-haskell.html",
+      "author": "Scarf",
+      "source": "avi.press",
+      "source_date": "2026-07-10",
+      "image": "https://avi.press/images/og/2026-07-10-after-7-years-in-production-scarf-has-reluctantly-moved-away-from-haskell.png",
+      "domain": "infra",
+      "tags": [
+        "工程效率",
+        "迁移"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别的交替分支匹配错误已定位",
+      "summary": "jump 字段同时用于组跳转和分支链接产生歧义，jian he 另提交 v51 修回归测试。",
+      "url": "https://www.postgresql.org/message-id/20260711.145226.1379787098193674596.ishii@postgresql.org",
+      "author": "Tatsuo Ishii",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行模式识别"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "虚拟生成列建索引的补丁修好了回归测试",
+      "summary": "改为在 genericcostestimate() 里按 index->rel->tuples 重新估算 numIndexTuples。",
+      "url": "https://www.postgresql.org/message-id/tencent_FDF76D24B43F1338DF739626D4DD8DCFF008@qq.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "索引"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "让扩展拥有自己 schema 的安全补丁完成 rebase",
+      "summary": "扩展独占 schema 是为了降低权限提升风险，补丁等待其他人继续审查。",
+      "url": "https://www.postgresql.org/message-id/DJVO2V8NYGRK.D3LQO6HJXTIO@jeltef.nl",
+      "author": "Jelte Fennema-Nio",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "安全"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "旧服务器不可达时 ALTER SUBSCRIPTION 行为存疑",
+      "summary": "(connect = false) 在系统目录里没有独立状态，DROP SUBSCRIPTION 感知不到。",
+      "url": "https://www.postgresql.org/message-id/6820c19b30ba5131a6fef5eeabde2f34f17db26a.camel@j-davis.com",
+      "author": "Jeff Davis",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "订阅",
+        "逻辑复制"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "只处理当前库订阅的 REASSIGN OWNED 方案获支持",
+      "summary": "Amit Kapila 说 pg_subscription 设成共享目录只是为了跨库启动 worker。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1Lsv61zLoQ7Pzb6AJcbLOAf7BV=LLYeusUpG_wGV=QStA@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "订阅",
+        "目录"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Google 托管的 Apache Iceberg 湖仓表进入预览",
+      "summary": "目标是让 BigQuery 与开源引擎在共享存储上并发读写，减少重复管道。",
+      "url": "https://cloud.google.com/blog/products/data-analytics/whats-new-with-google-data-cloud",
+      "author": "Google Cloud",
+      "source": "Google Cloud 博客",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Iceberg",
+        "湖仓"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "论文提出用双重最小权限约束 Web agent 注入",
+      "summary": "按动态推导的信任等级给页面内容打标签，再限制可见范围与可用能力。",
+      "url": "https://arxiv.org/abs/2607.08147",
+      "author": "",
+      "source": "arXiv",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "提示注入",
+        "agent"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 逐项讲 GUC：enable_seqscan",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_seqscan/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL Buildfarm 客户端发布第 21 版",
+      "summary": "",
+      "url": "https://adpgtech.blogspot.com/2026/07/belatedly-announcing-release-21-of.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Andrei Lepikhov 谈 Postgres 社区活动的数字化",
+      "summary": "",
+      "url": "https://danolivo.substack.com/p/postgres-community-events-isnt-it",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Sighthound 开源基于 Tree-sitter 的 SAST 扫描器",
+      "summary": "",
+      "url": "https://github.com/Corgea/Sighthound",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "微软 Flint 给 agent 一套图表中间语言与 MCP server",
+      "summary": "",
+      "url": "https://github.com/microsoft/flint-chart",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "colibrì 用单个 C 文件实现本地 MoE 推理",
+      "summary": "",
+      "url": "https://github.com/JustVugg/colibri",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 20
+    }
+  ]
+}

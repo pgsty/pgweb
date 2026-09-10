@@ -1,0 +1,540 @@
+{
+  "date": "2026-07-16",
+  "origin": "chronicle 2026-07-16: pgnexus #209, news 1, planet 5, daily 17",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 Beta 2 发布",
+      "summary": "PostgreSQL 全球开发组发布了 PostgreSQL 19 的第二个 Beta。相比 Beta 1，这一版修掉了 vacuumdb --analyze-in-stages 在分区表上的回归、虚拟生成列的元组解构优化、FATAL 退出时 REPACK worker 未清理、逻辑解码激活时的竞态，以及 autovacuum 多事务年龄评分可能趋于无穷等问题。正式版预计 9 到 10 月发布。",
+      "url": "https://www.postgresql.org/about/news/postgresql-19-beta-2-released-3350/",
+      "author": "PostgreSQL 全球开发组",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "Beta",
+        "发布"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "CYBERTEC 开源备份工具 pg_hardstorage 1.0",
+      "summary": "CYBERTEC 发布 pg_hardstorage v1.0，Apache 2.0 授权，没有企业版分层，也不要求签 CLA。它通过原生复制协议流式接收 WAL，不需要配置 archive_command，可以直接用于 RDS、Cloud SQL、Aiven、Supabase 这类托管服务。特性包括 Patroni 感知的故障切换、内容寻址去重、五种 KMS 与存储后端、按租户的加密擦除和哈希链式审计日志。",
+      "url": "https://www.cybertec-postgresql.com/en/v1-0-pg-hardstorage-is-here/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "CYBERTEC",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "加密",
+        "开源"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "wal_compression = on 拟改为自动挑最优算法",
+      "summary": "目前 wal_compression = 'on' 固定映射到 pglz，那是 PostgreSQL 15 之前唯一支持的算法。提案要把 'on' 改成按 zstd、lz4、pglz 的优先级自动选择，默认值仍保持 'off'。Tomas Vondra、Andres Freund 和 Michael Paquier 都支持，Fujii Masao 反对。WAL 压缩数据不跨 pg_upgrade 保留，兼容风险比 TOAST 压缩低。",
+      "url": "https://www.postgresql.org/message-id/50d60598-3fbf-4344-8b07-bf02114f7fd0@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩",
+        "GUC"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "行模式识别匹配器经交叉验证查出三处缺陷",
+      "summary": "Henson Choi 用 Oracle 23ai 和 Trino 471 作参照，对约 1000 条 PATTERN 语句做了系统交叉验证。匹配器的优先级逻辑里查出三个正确性缺陷：循环守卫误判重复变量状态、空迭代停止规则处理不当、固定计数分组的快进顺序错误。上下文吸收优化里还发现两个错误结果和一处可能的规划期死循环。PostgreSQL 相比 Oracle 在解析阶段拒绝的 11 条查询都有记录在案的设计依据。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zBw5U=RNb39wGXyRC1FE0VG-m9zbvFeBpVGWUDDUVWRhQ@mail.gmail.com",
+      "author": "Henson Choi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行模式识别",
+        "正确性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PG19 Beta 1 在 track_io_timing 开启时会断言失败",
+      "summary": "PostgreSQL 19 Beta 1 有个由提交 999dec9ec6a 引入的崩溃：并行 worker 退出时 pgstat_bktype_io_stats_valid() 断言失败。复现条件是 track_io_timing=on，当 WaitReadBuffers() 等待别的 backend 发起的外部 IO 时，会以 cnt=0 调用计时函数，写入非零读取时间却不增加读取计数。目前的主要候选方案是跳过这段外部等待时间。",
+      "url": "https://www.postgresql.org/message-id/CAB8bMisd2y+R5PdiAh8+BgEV2xRZyWw7dJ4swwViKUh3gt3GXw@mail.gmail.com",
+      "author": "Andrey Rachitskiy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "PG19",
+        "缺陷"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "在线修改 wal_level 的两处后续修复已提交",
+      "summary": "Masahiko Sawada 审查在线修改 wal_level 的提交时发现两个问题。一是崩溃恢复期间的断言失败：实例在 wal_level='replica' 下建了逻辑槽，checkpointer 还没停用逻辑解码就崩溃，随后以 'minimal' 重启即触发。修复去掉了恢复结束时针对 minimal 的特殊处理，改为统一重算状态。二是 pg_controldata 没显示检查点记录里的逻辑解码状态。两个补丁都已提交。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoAnPAugUnDic+ESvrfXjXHk2bss9eHAD7zP0-Chy2UabA@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "wal_level",
+        "恢复"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "join MCV 统计让 ANALYZE 从 36 秒涨到九分钟",
+      "summary": "Ilia Evdokimov 在测试 join MCV 统计的 v8 补丁时发现严重性能问题：给一张 50 万行和一张 2 万行的表建立 join MCV 统计之后，ANALYZE 的执行时间从约 36 秒涨到九分钟以上。性能剖析显示瓶颈在索引扫描期间取堆元组的阶段，绝大部分时间花在为每条索引项申请和释放缓冲区锁上，真正的 btree 遍历只占极小比例。他暂时没有明显的优化方案。",
+      "url": "https://www.postgresql.org/message-id/9c16f5aa-06a4-4eb0-be2e-cb7122343bc2@tantorlabs.com",
+      "author": "Ilia Evdokimov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "ANALYZE",
+        "性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PGLZ 解压优化补丁引入滚动哈希与 SIMD",
+      "summary": "对无法重新压缩已有数据的系统来说，提升解压速度比换算法更现实。",
+      "url": "https://www.postgresql.org/message-id/CAGjGUAL6=2=gGTx_f4XeMpcJ0p8QMm+i8mX5rbC7VJXKbOGyNA@mail.gmail.com",
+      "author": "wenhui qiu",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "压缩",
+        "性能"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "visibilitymap_clear 的运行时检查将被恢复",
+      "summary": "改成 Assert 之后，非断言构建里传错缓冲区会静默改掉错误的 VM 页。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwF_PzOv5y7ucFh7Fqqqa8ar83zYwvWugqarRD6+7GCtEQ@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可见性图",
+        "安全检查"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Postgres Pro 给出分步的数据库安全加固指南",
+      "summary": "面向 DBA，按步骤覆盖认证强化、权限管理、网络访问控制与审计日志。",
+      "url": "https://postgrespro.com/blog/company/5973375",
+      "author": "Postgres Professional",
+      "source": "Postgres Pro 博客",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pg_hosts_file_rules() 的补丁修好了 CI 失败",
+      "summary": "新函数与视图暴露 pg_hosts.conf 的解析规则，面向 PostgreSQL 20 开发版。",
+      "url": "https://www.postgresql.org/message-id/CAF0whucmhnOtN_3hVHu6rpUoamVK8j64wfp_E5r78qOgQHFJWA@mail.gmail.com",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置",
+        "视图"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "vacuumdb 分阶段分析将对分区表改用 ANALYZE ONLY",
+      "summary": "此前 --analyze-only 与 --analyze-in-stages 会把子分区重复分析一遍。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHLMxQbsKK4JKM1pPopSgXixNkrQex8siJstDSo574bbA@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "vacuumdb",
+        "分区表"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "SQL Server 2016 结束支持，2014 的第二年 ESU 到期",
+      "summary": "ESU 只提供安全更新，第一到第三年分别延续到 2027、2028 和 2029 年。",
+      "url": "https://learn.microsoft.com/en-us/lifecycle/faq/sql-server-extended-security-updates",
+      "author": "Microsoft",
+      "source": "Microsoft Learn",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQL Server",
+        "生命周期"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "xAI 公开 Grok Build 的 Rust 源码",
+      "summary": "首方代码是 Apache-2.0，但仓库只是内部 monorepo 的定期同步，不收外部贡献。",
+      "url": "https://github.com/xai-org/grok-build",
+      "author": "xAI",
+      "source": "GitHub",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编码 agent",
+        "开源"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 把 AI 安全检测结果显示在 PR 上",
+      "summary": "预览功能，结果不阻塞合并，需要 CodeQL 默认配置并会消耗 AI credits。",
+      "url": "https://github.blog/changelog/2026-07-14-code-scanning-shows-ai-security-detections-on-pull-requests/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码扫描",
+        "安全"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "gcloud storage rsync 默认解压下载的 gzip 对象",
+      "summary": "576.0.0 起要保留旧行为得显式加 --do-not-decompress，同步脚本需回归。",
+      "url": "https://docs.cloud.google.com/sdk/docs/release-notes",
+      "author": "Google Cloud",
+      "source": "Google Cloud 文档",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "CLI",
+        "兼容性"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Crunchy Data 讲 PG19 从 pglz 换到 LZ4",
+      "summary": "",
+      "url": "https://www.crunchydata.com/blog/postgres-19-compression-from-pglz-to-lz4",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pgEdge 发布逻辑复制方案 Spock 6",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/spock-6-the-only-logical-choice",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "FOR PORTION OF 剩余行的 RLS 检查改到 v6",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEZATCXW3O9_cniVFtw76zFO5p9D06P1bwMvG8RU4_YFkm0iwA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "walsummarizer 卡住的 v2 补丁获确认有效",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+1TFdQbiuOsP+_=nTWwGZokHTtsw3mj4zf31bAv8onzg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "EXCEPT 发布补丁 v21 收到大量代码审查意见",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uCGXk5FuXemW1RZkfkUvEUc35aVuAOQxfhmUhYeE-WuQA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "DROP SUBSCRIPTION 的文档补丁覆盖 HEAD 到 PG14",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KzHQ_0rhN8uP+OB8dnB+uLBgod6tTx8j3GHxazz_=FiQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 并行补丁 v13 修好悬垂指针崩溃",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/40be12af.473c.19f69b40cb4.Coremail.jiezhilove@126.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 保留复制源 OID 的补丁再次更新",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAFPTHDapSfQeJJT8vyszhf5MShoT0L7bxGg4Hh4oWZ_jVHEVow@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "并发删除序列引发的断言失败已推入代码库",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFPfmF=EpT-9YOKYYzptPt5Q7D5xV-v_RrncbfsSZOAcDw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "历史遗留函数 getpgusername() 已被移除",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/allgZ34IHVFZo35b@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "大版本升级后旧 ccache 让 CI 构建出错版本",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/gch4hgdyxnrlqsndn5qln4frftabwtscul5fvqhjpv34tu6ool@gfblk57l7j6e",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "累积统计框架将拆出准备待定数据的独立函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/algvAXK8fKlU-DY1@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_statements 的 flush 回调拟改用枚举返回值",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260716.132240.1034537909765069601.horikyota.ntt@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "PG20 拟放弃 OpenSSL 1.1.1 与 SLES 12",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+=VJJ=1a-wHwWd2mTgQ3bkHzAUHCFssosF7h1y8TEN+iw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 逐项讲 GUC：event_triggers",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-event_triggers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Stormatics 记录用 pg_upgrade 从 9.6 升到 17",
+      "summary": "",
+      "url": "https://stormatics.tech/blogs/upgrading-postgresql-9-6-to-17-with-pg_upgrade",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 密钥扫描新增泄漏归因与默认推送保护",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-15-improvements-to-secret-scanning-and-public-monitoring/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "AWS CLI v1 改为与 botocore 一起打包更新",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/developer/aws-cli-v1-maintenance-mode-announcing-changes-to-dependency-updates/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "Puter 演示在 WebAssembly 里运行 Firefox",
+      "summary": "",
+      "url": "https://developer.puter.com/labs/firefox-wasm/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "misa77 以高解压吞吐为目标的实验性 LZ 编解码器",
+      "summary": "",
+      "url": "https://github.com/welcome-to-the-sunny-side/misa77",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 36
+    },
+    {
+      "tier": 3,
+      "title": "JetBrains 版 Copilot 扩展自带模型端点与本地沙箱",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-14-github-copilot-for-jetbrains-expands-byok-capabilities/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 37
+    }
+  ]
+}

@@ -1,0 +1,354 @@
+{
+  "date": "2026-07-19",
+  "origin": "chronicle 2026-07-19: daily, pgnexus #212, planet 3；并入 2026-07-18: pgnexus #211, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "wal_compression 的 on 拟改为选用 LZ4",
+      "summary": "Tomas Vondra 提议改掉 wal_compression = 'on' 的语义：不再固定用 pglz，而是选构建里最好的算法即 LZ4，默认值仍为 off。Andres Freund 明确支持，理由是 pglz 慢到引发过多起真实故障，用户只能关掉这个本身有价值的功能。Laurenz Albe 也赞成，但担心本轮开发周期已经来不及。已手工设成 lz4 的实例不受影响。",
+      "url": "https://www.postgresql.org/message-id/1314f5843859d5f83d5eb0a47b15d9291567cf40.camel@cybertec.at",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩",
+        "LZ4"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "CREATE SUBSCRIPTION 的 pg_dump 恢复失败已修",
+      "summary": "Jeff Davis 提交补丁，修复 commit 8185bb5 之后 CREATE SUBSCRIPTION ... SERVER 在 pg_dump 加 restore 时的两处失败：DDL 阶段对订阅属主、foreign server 的 ACL 和 user mapping 检查过严，而 pg_dump 先建订阅再改属主，第一步就会失败。这些条件在真正连接前还会变化，补丁因此放宽检查，并补了 SQL 测试。",
+      "url": "https://www.postgresql.org/message-id/35e50b0f80c850e5b9eb1dedcc0844852a2d2de0.camel@j-davis.com",
+      "author": "Jeff Davis",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "pg_dump",
+        "补丁"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PlanetScale 把 PgBouncer 纳入 Terraform",
+      "summary": "PlanetScale 的 Terraform provider v1.5.0 新增 planetscale_postgres_bouncer 资源，可声明 bouncer 规格、目标（主库、副本或按可用区亲和）、副本数和参数覆盖，控制面之外的改动也会被检出。连接池关系到连接风暴与容量治理，纳入 provider 后，容量与读写目标的调整可以走 plan、评审和审计。它仍是厂商专有控制面，上线前应确认 state 里不落密码。",
+      "url": "https://planetscale.com/changelog/terraform-provider-postgres-bouncer",
+      "author": "PlanetScale",
+      "source": "PlanetScale Changelog",
+      "source_date": "2026-07-17",
+      "image": "https://planetscale.com/assets/social-DtnN8vYG.png",
+      "domain": "pg",
+      "tags": [
+        "PgBouncer",
+        "Terraform",
+        "连接池"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Supabase 统一日志进入公开测试",
+      "summary": "Supabase 把 Unified Logs 放进 open beta，将 API 网关、Postgres、Auth、Storage、PostgREST、Realtime 和连接池的日志汇进同一个可检索视图，支持过滤、全文检索、实时 tail 和一次请求跨服务的详情路径。托管 Postgres 的故障常横跨网关、认证、连接池和数据库，统一视图省下的是人工跳页关联的时间，长期保留与告警仍要靠自建投递。",
+      "url": "https://supabase.com/blog/unified-logs-open-beta",
+      "author": "Supabase",
+      "source": "Supabase 博客",
+      "source_date": "2026-07-16",
+      "image": "https://supabase.com/images/blog/unified-logs-open-beta/og.jpg",
+      "domain": "pg",
+      "tags": [
+        "可观测性",
+        "日志",
+        "托管服务"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Julia Evans 记录运行 SQLite 的运维教训",
+      "summary": "Julia Evans 写下自己运行个人 SQLite 服务时踩过的坑，重点落在备份和 AWS 凭据管理上：她把上传备份用的 bucket 权限收到最小，避免一份泄露的凭据能读写全部历史备份。文章不是 SQLite 官方材料，也没有涉及高并发和分布式高可用。对 PostgreSQL 团队可以迁移的是那条原则：备份的正确性只能由真实恢复演练证明，直接复制数据库文件不等于一致性备份，持久卷、WAL、恢复目标时间与恢复点目标都该先写清楚。",
+      "url": "https://jvns.ca/blog/2026/07/17/learning-about-running-sqlite/",
+      "author": "Julia Evans",
+      "source": "jvns.ca",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "备份",
+        "运维"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 下划线数字解析修复已合入",
+      "summary": "扫描器原先用 strtoint 解析 1_000 这类写法，现改回 pg_strtoint32_safe() 并补上测试。",
+      "url": "https://www.postgresql.org/message-id/B4D97F21-5B10-4D33-9023-C642A8AF6326@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_plan_advice"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_subscription 拆表推迟到 v20",
+      "summary": "Jeff Davis 的 relisshared 依赖修复先行合入，共享目录里放数据库级 OID 的结构问题留到 v20。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KHLw61xc4VnLpiq9gDK3mg90cA5izqL5rs3PuuoWw9rg@mail.gmail.com",
+      "author": "Jeff Davis",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "系统目录",
+        "逻辑复制"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "libxml2 废弃函数在 Rocky 10.2 上触发警告",
+      "summary": "Tom Lane 按 Andrew Dunstan 的建议改用 xmlParseInNodeContext()，补丁待熟悉 XML 的人复核。",
+      "url": "https://www.postgresql.org/message-id/5c76c136-73df-4112-a583-7d652c387080@dunslane.net",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建",
+        "XML"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "WAL summarizer 在共享归档下切时间线会卡住",
+      "summary": "Andrey Borodin 说每个节点用独立归档目录不会复现，多节点共用归档时才触发，问题仍未解决。",
+      "url": "https://www.postgresql.org/message-id/A44B14F1-DE37-4E45-BEB4-FAC362A1E2EC@yandex-team.ru",
+      "author": "Andrey Borodin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "时间线"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Databricks 估值升至 1880 亿美元",
+      "summary": "TechCrunch 报道这家公司从数据分析平台转向以 AI 为核心的企业服务后，再次获得资本加注。",
+      "url": "https://techcrunch.com/2026/07/17/databricks-hits-188b-valuation-extending-its-run-as-ais-favorite-second-act/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据平台",
+        "融资"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Copilot 代码审查改读 head 分支的指令",
+      "summary": "指令文件改从 PR 的 head 分支读取，新增 copilot-code-review.yml 准备运行环境。",
+      "url": "https://github.blog/changelog/2026-07-17-copilot-code-review-customization-and-configurability-improvements/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码审查",
+        "供应链",
+        "CI"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Copilot 使用度量下钻到仓库与每日维度",
+      "summary": "新接口按天返回单个仓库里编码代理创建与合并的 PR 数，以及按评论类型划分的审查建议数。",
+      "url": "https://github.blog/changelog/2026-07-17-repository-level-github-copilot-usage-metrics-generally-available/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "度量",
+        "治理"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：extension_control_path",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-extension_control_path/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "扩展"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：external_pid_file",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-external_pid_file/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Andrei Lepikhov 谈开源项目的开放与被遗忘",
+      "summary": "",
+      "url": "https://danolivo.substack.com/p/openness-or-oblivion",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Prairie Postgres 七月聚会落地美国中西部",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/07/19/prairie-postgres-july-meetup-proudly-sourced-at-midwest/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区活动"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "CREATE TABLE LIKE 是否复制表注释引发讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/tencent_D0A4135EDF6E96A0D4478DABF0656D6DB408@qq.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Topcoat 尝试给 Rust 做全栈服务端框架",
+      "summary": "",
+      "url": "https://github.com/tokio-rs/topcoat",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Gleam 项目入驻去中心化代码托管 Tangled",
+      "summary": "",
+      "url": "https://tangled.org/gleam.run/gleam",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码托管"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Clx 经 C++20 后端把 Lua 预编译为可执行文件",
+      "summary": "",
+      "url": "https://github.com/samyeyo/clx",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Lua"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "SSH 蜜罐实时可视化站点在 Show HN 亮相",
+      "summary": "",
+      "url": "https://honeypotlive.cc/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "ds4 演示在 16 GB Mac 上流式运行 MoE 模型",
+      "summary": "",
+      "url": "https://github.com/hebrus-labs/hebrus",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "本地推理"
+      ],
+      "position": 22
+    }
+  ]
+}

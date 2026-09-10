@@ -1,0 +1,461 @@
+{
+  "date": "2026-07-01",
+  "origin": "chronicle 2026-07-01: daily, pgnexus #194, planet 5",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 Beta 里值得关注的几处变化",
+      "summary": "Craig Kerstiens 梳理了 PostgreSQL 19 Beta：REPACK CONCURRENTLY 把不加排他锁的表重组做进内核，不必再依赖 pg_repack；ALTER TABLE 新增分区的合并与拆分；逻辑复制补上序列值同步与 ALL SEQUENCES 发布；autovacuum 支持并行 worker，并新增 pg_stat_autovacuum_scores 视图；SQL/PGQ 让关系数据直接跑图查询。",
+      "url": "https://www.snowflake.com/en/blog/engineering/postgresql-19-features-beta/",
+      "author": "Craig Kerstiens",
+      "source": "Snowflake 工程博客",
+      "source_date": "2026-06-18",
+      "image": "https://www.snowflake.com/content/dam/snowflake-site/engineering-blog/featured-images/sf-eng-blog-ML-3.png",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "REPACK",
+        "逻辑复制"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "checkpointer 无限重试导致的一次生产停摆",
+      "summary": "Warda Bibi 复盘了一次事故：checkpointer 卡了几个小时。原因是 fsync 请求队列没有上限，在大 shared_buffers 和重写入负载下越涨越大，超过 1 GB 的内部分配上限后申请内存失败；checkpointer 捕获错误后不断重试，而两次尝试之间队列毫无变化，于是陷入死循环。13 到 16.9 都受影响，16.10 给队列加了一千万条的硬上限。临时办法是调小 shared_buffers。",
+      "url": "https://stormatics.tech/blogs/postgresql-checkpointer-bug-causing-infinite-retry-loop",
+      "author": "Warda Bibi",
+      "source": "Stormatics 博客",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检查点",
+        "缺陷",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "勒索软件之后，PostgreSQL 为什么特别难恢复",
+      "summary": "Zhang Chen 从一次勒索软件事故讲起：PostgreSQL 每张表一个文件，加密整个数据目录时所有系统表文件同时受损，没有冗余可用。pg_class、pg_attribute、pg_type、pg_namespace 四张核心目录表加起来通常不到 50 MB，很容易被完整加密，恢复的第一步重建库结构就走不下去。客户那份 100 GB 的二进制备份文件头也被加密，取出的数据无法对应回具体的表。",
+      "url": "https://pduzc.com/blog/postgresql-single-file-ransomware-recovery",
+      "author": "Zhang Chen",
+      "source": "PDU 博客",
+      "source_date": "2026-07-01",
+      "image": "https://pduzc.com/opengraph-image",
+      "domain": "pg",
+      "tags": [
+        "数据恢复",
+        "系统表",
+        "安全"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 开源 pg-healthcheck 体检工具",
+      "summary": "pgEdge 的 Ahsan Hadi 开源了 pg-healthcheck，一个直接查询 PostgreSQL 系统视图的诊断工具，分 14 组共 180 多项检查，覆盖 vacuum 与膨胀、WAL 与复制槽、事务 ID 回卷、数据完整性、可见性映射不一致以及 Spock 集群指标。下载预编译二进制或自行构建，带上连接参数即可运行。项目采用 PostgreSQL 许可证，可用于商业场景。",
+      "url": "https://www.pgedge.com/blog/introducing-pg-healthcheck-postgresql-health-diagnostics",
+      "author": "Ahsan Hadi",
+      "source": "pgEdge 博客",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "诊断",
+        "运维",
+        "工具"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PlanetScale 把流量治理做成数据库功能",
+      "summary": "PlanetScale 发布 Database Traffic Control，把治理能力放到数据库的访问路径上。数据库故障常常来自突发请求、写坏的查询或批处理任务，流量治理要解决的就是让数据库从被动承压变成主动防护。PostgreSQL 这边可以对照的是连接池与 pgBouncer、查询限流、角色级别的资源隔离，以及慢查询熔断这几类能力。",
+      "url": "https://planetscale.com/blog/introducing-database-traffic-control",
+      "author": "PlanetScale",
+      "source": "PlanetScale 博客",
+      "source_date": "2026-06-30",
+      "image": "https://planetscale.com/assets/introducing-database-traffic-control-social-DnWIhoFX.png",
+      "domain": "db",
+      "tags": [
+        "流量治理",
+        "可用性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "NVIDIA 讲 GPU 加速查询引擎怎么设计",
+      "summary": "NVIDIA 介绍了 GPU 加速查询引擎的设计思路和 GQE 的相关能力。AI 让 GPU 普及之后，分析型数据库和查询引擎会继续尝试复用这些算力，真正的难点不在写 kernel，而在执行计划、数据布局和传输成本。做分析数据库选型时值得区分有 GPU 支持和端到端查询路径真的受益；对 PostgreSQL 生态来说，GPU 加速更可能先出现在外部引擎、FDW 和 ETL 路径上。",
+      "url": "https://developer.nvidia.com/blog/designing-gpu-accelerated-query-engines-with-nvidia-gqe/",
+      "author": "NVIDIA",
+      "source": "NVIDIA 技术博客",
+      "source_date": "2026-06-30",
+      "image": "https://developer-blogs.nvidia.com/wp-content/uploads/2026/06/GQE.webp",
+      "domain": "db",
+      "tags": [
+        "GPU",
+        "查询引擎",
+        "分析"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "RDS 的 IAM 数据库认证支持更高连接速率",
+      "summary": "AWS 宣布 RDS 的 IAM 数据库认证支持更高的连接速率。很多团队想用 IAM 和短期凭证替换静态数据库密码，但认证路径的吞吐一旦不足，扩容、故障切换或连接池抖动时它就会变成瓶颈。在云上设计 PostgreSQL 或 MySQL 的 IAM 认证时，值得重新核对连接池配置、冷启动、failover 行为和认证速率配额；自建发行版也应该把认证面的容量纳入可用性模型。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-rds-iam/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "RDS",
+        "认证",
+        "IAM"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 的死锁修复推迟到 PG20",
+      "summary": "Álvaro Herrera 认为补丁逻辑不够直观、极端情况下有风险，建议留出更多审查与测试时间。",
+      "url": "https://www.postgresql.org/message-id/5463507c-b047-4547-a684-b4d1a7fbba3e@iki.fi",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "PostgreSQL 19"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "全局临时表补丁 v5 把 ON COMMIT 行为持久化",
+      "summary": "Dean Rasheed 还计划把全局临时表上 TRUNCATE 的锁级别降到 RowExclusiveLock，避免阻塞。",
+      "url": "https://www.postgresql.org/message-id/SY7PR01MB1092104CDB43530A408012EAFB6F62@SY7PR01MB10921.ausprd01.prod.outlook.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "补丁"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "md5_password_warnings 已合入主干",
+      "summary": "Fujii Masao 推送了该补丁，使用 MD5 加密口令做密码认证时会发出警告。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEdpUSuenbz8Lg7izJTveqrJbKB-8H17_yyBU7vhhzEjQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证",
+        "安全"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "有人把 Kubernetes 移植到了浏览器里",
+      "summary": "文章展示了完整的工程过程，讨论集中在运行边界，这类沙盒适合做培训、文档和问题复现。",
+      "url": "https://ngrok.com/blog/i-ported-kubernetes-to-the-browser",
+      "author": "",
+      "source": "ngrok 博客",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "WebAssembly"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：enable_material 与 memoize",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_material-and-enable_memoize/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "pgcopydb v0.18 发布",
+      "summary": "",
+      "url": "https://tapoueh.org/blog/2026/07/pgcopydb-v0.18/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "读 PostgreSQL 内部：数据库集簇与表",
+      "summary": "",
+      "url": "https://www.buraksen.dev/articles/internals-of-postgresql-db-cluster-and-tables",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 修复导入外表统计后的累计统计",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/5457c6ca-b6a8-4edd-b2e6-a2e2d47380b2@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "让 transformAExprIn() 直接返回展平的布尔表达式",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3651977.1782944475@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "POC：在 PL/pgSQL 里用 FOREACH 遍历 JSON 数组",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3648848.1782942004@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "一次提交之后出现宏重定义警告",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DJNDN9UQS9GP.11L4NJ1HHE1ZJ@partin.io",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "修复缓冲区锁等待消息里的语法问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ff9b435e-8ece-4ce3-bded-de7ea2dad400@126.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "用 gpexpand 在新主机上扩展 WarehousePG 集群",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/expanding-warehousepg-cluster-new-hosts-using-gpexpand",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "在 Supabase 上用 OpenCode 做智能体编程",
+      "summary": "",
+      "url": "https://supabase.com/blog/agentic-coding-on-supabase-with-opencode",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "时序数据库怎么工作，又在哪里不管用",
+      "summary": "",
+      "url": "https://www.honeycomb.io/blog/time-series-database",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Letos：创建、编辑与浏览 SQLite 数据库",
+      "summary": "",
+      "url": "https://letos.org/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "在数据库里做光线追踪",
+      "summary": "",
+      "url": "https://github.com/ClickHouse/RayTracer",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "ElastiCache 支持 Valkey 9.1",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/announcing-valkey-9-1-for-amazon-elasticache/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Aurora DSQL 的用户认证与会话管理",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/user-authentication-and-session-management-with-amazon-aurora-dsql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "为 AWS DMS 的性能管理长事务",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/manage-long-running-transactions-for-aws-dms-performance/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "EC2 发布基于 Graviton5 的 C9g 与 C9gd 实例",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/ec2-c9g-c9gd-instances-graviton5-processors-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Kepler 重构以提升功耗测量精度",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/30/kepler-re-architected-improved-power-accuracy-and-a-community-call-to-action/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Dragonfly v2.5.0 发布",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/30/dragonfly-v2-5-0-is-released/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 的开源许可证合规进入公开预览",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-30-open-source-license-compliance-is-in-public-preview/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Greg Kroah-Hartman 谈上游才是终极安全策略",
+      "summary": "",
+      "url": "https://openssf.org/podcast/2026/06/30/whats-in-the-soss-podcast-64-s3e16-the-heartbeat-of-the-kernel-why-upstream-is-the-ultimate-security-strategy-with-greg-kroah-hartman/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 32
+    }
+  ]
+}

@@ -5,6 +5,8 @@ import os
 import tempfile
 from datetime import date
 
+from unittest.mock import patch
+
 from django.core.cache import cache
 from django.core.management import CommandError, call_command
 from django.test import TestCase
@@ -126,7 +128,9 @@ class ImportTests(TestCase):
             'tier 1 without author': [item(1, 1, author='')],
             'tier 1 without source': [item(1, 1, source='')],
             'tier 1 with a short summary': [item(1, 1, summary='太短了。')],
-            'tier 1 with a long summary': [item(1, 1, summary='长' * 301)],
+            'tier 1 with a long summary': [item(1, 1, summary='长' * 241)],
+            'too many leads': [item(1, n, url='https://example.com/{}'.format(n)) for n in range(1, 14)],
+            'too many items': ([item(1, 1)] + [item(3, n, url='https://example.com/{}'.format(n)) for n in range(2, 47)]),
             'tier 2 without url': [item(1, 1), item(2, 2, url='')],
             'tier 2 with a paragraph': [item(1, 1), item(2, 2, summary='长' * 81)],
             'title too long': [item(1, 1, title='标' * 41)],
@@ -163,6 +167,48 @@ class ImportTests(TestCase):
     def test_index_without_rebuild_does_nothing(self):
         with self.assertRaises(CommandError):
             run('info_index')
+
+
+class ThumbTests(TestCase):
+    """data/info/img/<key>.webp is loaded into the row and served at /info/img/<key>.webp."""
+
+    def setUp(self):
+        cache.clear()
+        from . import importer
+        self.folder = tempfile.mkdtemp()
+        self.patch = patch.object(importer, 'IMG_DIR', self.folder)
+        self.patch.start()
+        self.addCleanup(self.patch.stop)
+
+    def test_a_thumbnail_file_is_stored_and_served(self):
+        key = item_key('2026-09-10', item(1, 1)['url'], '')
+        with open(os.path.join(self.folder, key + '.webp'), 'wb') as stream:
+            stream.write(b'RIFF....WEBPVP8 ')
+        run('info_import', batch())
+        row = InfoItem.objects.get(key=key)
+        self.assertEqual(bytes(row.thumb), b'RIFF....WEBPVP8 ')
+        response = self.client.get('/info/img/{}.webp'.format(key))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'image/webp')
+        self.assertIn('max-age', response['Cache-Control'])
+        page = self.client.get('/info/2026-09-10/')
+        self.assertContains(page, '/info/img/{}.webp'.format(key))
+
+    def test_without_a_file_the_source_picture_is_used_and_a_warning_is_reported(self):
+        reports = run('info_import', batch(items=[item(1, 1, image='https://example.org/a.png')]))
+        self.assertIn('没有本地缩略图', reports[0]['warnings'][-1])
+        key = item_key('2026-09-10', item(1, 1)['url'], '')
+        self.assertIsNone(InfoItem.objects.get(key=key).thumb)
+        self.assertEqual(self.client.get('/info/img/{}.webp'.format(key)).status_code, 404)
+        self.assertContains(self.client.get('/info/2026-09-10/'), 'https://example.org/a.png')
+
+    def test_adding_the_file_later_counts_as_an_update(self):
+        run('info_import', batch())
+        key = item_key('2026-09-10', item(1, 1)['url'], '')
+        with open(os.path.join(self.folder, key + '.webp'), 'wb') as stream:
+            stream.write(b'RIFF')
+        self.assertEqual(run('info_import', batch())[0]['updated'], 1)
+        self.assertEqual(run('info_import', batch())[0]['unchanged'], 3)
 
 
 class PageTests(TestCase):
@@ -383,9 +429,10 @@ class FeedTests(TestCase):
             self.assertIn('<guid isPermaLink="false">{}</guid>'.format(key), body)
 
     def test_the_feed_is_capped_at_fifty_items(self):
-        rows = [item(2, position, title='条目 {}'.format(position),
-                     url='https://example.org/many/{}'.format(position)) for position in range(1, 61)]
-        run('info_import', batch(day='2026-09-01', items=rows))
+        for day in ('2026-09-01', '2026-09-02'):
+            rows = [item(2, position, title='条目 {}'.format(position),
+                         url='https://example.org/many/{}/{}'.format(day, position)) for position in range(1, 31)]
+            run('info_import', batch(day=day, items=rows))
         self.assertEqual(self.client.get('/info/rss/').content.decode().count('<item>'), 50)
 
 

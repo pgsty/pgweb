@@ -1,0 +1,419 @@
+{
+  "date": "2026-08-07",
+  "origin": "chronicle 2026-08-07: pgsty-daily 2026-08-07.md, pgnexus #231, news 2, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Autobase 2.10 把集群运维操作搬进界面",
+      "summary": "Autobase 2.10 把日常集群运维搬进了界面。Console UI 新增 Actions 菜单，管理员可以直接执行主备切换、故障转移、副本重装、重启、停启和集群删除；Parameters 页面新增 System 标签页，用于配置区域设置、主机映射、DNS、NTP、内核参数与 SSH 公钥。新增的本地磁盘部署选项把卷大小设为 0 即可启用，不必再挂网络卷。还补上一批覆盖 Patroni 集群切换与生命周期管理的 playbook。",
+      "url": "https://github.com/autobase-tech/autobase/releases/tag/2.10.0",
+      "author": "vitabaks",
+      "source": "Autobase",
+      "source_date": "2026-08-07",
+      "image": "https://opengraph.githubassets.com/9b96632aeb51840733e315ac59322bf21b178ae3028b6aa6393d7825dbfa2e7a/autobase-tech/autobase/releases/tag/2.10.0",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "Patroni",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的三处语法变化",
+      "summary": "Shaun Thomas 梳理了 PG19 已进入的几项语法变化。ON CONFLICT DO SELECT 让 get-or-create 在冲突时返回既有行，支持 FOR UPDATE 行级锁与 WHERE 过滤。COPY 新增 FORMAT JSON，默认按行分隔，加 FORCE_ARRAY 可输出合法数组，但不支持 COPY FROM。另外 GROUP BY ALL 因与 ORDER BY 冲突已被回退。",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-syntax-potpourri",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "SQL",
+        "语法"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "给 AI 智能体配行级安全的可测试做法",
+      "summary": "Andrei Mironov 给出一份面向 AI 智能体的行级安全配置，强调要用智能体自己的连接验收。表属主与智能体角色分开，后者带 NOSUPERUSER 与 NOBYPASSRLS；表上同时 ENABLE 与 FORCE ROW LEVEL SECURITY，再按命令写 USING 和 WITH CHECK。文中点出四个坑：属主绕过策略、漏写 WITH CHECK 让行改到别的租户、租户上下文由客户端设定，以及 TRUNCATE 不受约束。",
+      "url": "https://datamcp.app/blog/postgresql-row-level-security-ai-agents",
+      "author": "Andrei Mironov",
+      "source": "datamcp.app",
+      "source_date": "2026-08-07",
+      "image": "https://datamcp.app/blog/postgresql-row-level-security-ai-agents/opengraph-image?a53005e8cac9496b=",
+      "domain": "pg",
+      "tags": [
+        "行级安全",
+        "多租户",
+        "AI"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ignore_invalid_pages 是撬棍不是开关",
+      "summary": "Christophe Pettus 的 GUC 逐项谈接着讲 ignore_invalid_pages：它把 WAL 重放时两处 PANIC 降级为警告，让引用了无效页面的实例仍能启动。该参数默认关闭，属于 postmaster 级别，改动需要重启，只在归档恢复、备库和时间点恢复时起作用。作者的警告很直接：不要为了止住崩溃一直开着，那样打开的库会在未知位置缺失未知数量的数据。合理用法只有在可丢弃的副本上打开它抢救可读数据。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-ignore_invalid_pages/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-07",
+      "image": "https://thebuild.com/media/media/595de48a8cbf434992d8f6d51b52bc51.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "恢复",
+        "数据损坏"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Metabase 披露已被利用的 0-day",
+      "summary": "Metabase 披露 1.58 及以上版本存在已被利用的未知漏洞。攻击者可经公开的 /api/session/reset_password 向应用库注入任意 SQL，进而取得应用管理员权限、修改配置、导出数据或拿到数据源连接凭据。Cloud 客户已修补，公告给出各大版本的最低安全点版，并建议升级后撤销会话、检查 API key 与日志。自托管实例应当立刻盘点版本与入口，轮换与数据源相关的高权限凭据。",
+      "url": "https://www.metabase.com/blog/security-update-6-aug-2026",
+      "author": "Metabase",
+      "source": "Metabase 安全公告",
+      "source_date": "2026-08-06",
+      "image": "https://cdn.metabase.com/images/posts/security-update-august-2026.webp",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "SQL 注入",
+        "BI"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Zapscape 公开 KVM 虚拟机逃逸细节",
+      "summary": "研究者公开了 KVM/x86 的虚拟机逃逸 Zapscape，编号 CVE-2026-64561。披露称问题出在 shadow MMU 的递归 zap 路径上，属于释放后使用，guest 侧操作可以损坏宿主机内核页面；PoC 在 AMD 平台、Linux 7.1.3 与 QEMU TCG 上演示，需要 L1 guest 的 root 权限，某些 /dev/kvm 可写的配置下也可能形成本地提权。自建 KVM 云应核验发行版回补状态。",
+      "url": "https://github.com/V4bel/Zapscape",
+      "author": "V4bel",
+      "source": "研究者披露与 PoC",
+      "source_date": "2026-08-06",
+      "image": "https://opengraph.githubassets.com/3c71fc41a5b52ce2e4845725084812e10d3ff80f4ff37746831557ed68eb8c0e/V4bel/Zapscape",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "虚拟化",
+        "KVM"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG19 外键快速路径存在数据损坏缺陷",
+      "summary": "PL/pgSQL 的 EXCEPTION 块捕获外键报错后 firing_depth 未回退，后续 ADD FOREIGN KEY 会漏报违约行却标记为已验证。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqEMOgXJoeCA_3JzN8Q6M5vXga2AHTZ0ibrK38h3Oc8xXQ@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "数据损坏"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PG19 的 wal_compression 将默认走 zstd",
+      "summary": "社区基本达成共识把 on 映射为 zstd，解压上下文复用推迟到 PG20，Christoph Berg 提醒发布说明要写明弃用 pglz。",
+      "url": "https://www.postgresql.org/message-id/CAGjGUA+rT0OczFZFSX0qgnfwbxWhzva+xKOQQzqj4e3KtjTkmg@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 开源内部 agent 工作台",
+      "summary": "以工作区、组织知识与 Skills、隔离运行时和安全治理为核心，公司内已有数千人使用。",
+      "url": "https://blog.cloudflare.com/cloudflare-os/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "开源",
+        "Agent",
+        "权限治理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Actions 与 Pages 出现长时间退化",
+      "summary": "状态页记录 8 月 6 日两项服务可用性下降，人工重试可能让镜像推送与数据库迁移执行两遍，发布需要幂等键。",
+      "url": "https://www.githubstatus.com/incidents/qcvjkzcs7j74",
+      "author": "",
+      "source": "GitHub Status",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "可靠性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 发布面向 agent 的浏览器 Kitesurf",
+      "summary": "beta 版跑在 Workers 的 V8 isolate 上，兼容 CDP 客户端，厂商称短任务开销低于 Chromium，暂不支持富媒体与长期登录态。",
+      "url": "https://blog.cloudflare.com/kitesurf/",
+      "author": "",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Agent",
+        "浏览器"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Deno 开源 celld 复刻 Durable Objects 模型",
+      "summary": "每个对象一个独立 SQLite 库，节点通过对象存储里的 CAS 与租约协调，没有独立的成员管理或共识服务。",
+      "url": "https://github.com/denoland/celld",
+      "author": "",
+      "source": "Deno",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "SQLite",
+        "分布式"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "AWS 开源 agent 运行时验证工具 Dogwood",
+      "summary": "以 Apache-2.0 发布并兼容 Cedar，新增时序条件，可表达审批必须先发生、读过敏感数据后不得外联等约束。",
+      "url": "https://aws.amazon.com/blogs/opensource/introducing-dogwood-runtime-verification-for-ai-agents/",
+      "author": "",
+      "source": "AWS Open Source",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Agent",
+        "授权"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AMD 收购推理芯片公司 Taalas",
+      "summary": "Taalas 主张把模型固化进芯片以降低算力与内存瓶颈，AMD 计划将其并入 Instinct 加速器路线，未披露价格与交付时间。",
+      "url": "https://ir.amd.com/news-events/press-releases/detail/1296/amd-acquires-taalas-to-advance-compute-solutions-for-rapidly-growing-ai-inference-market",
+      "author": "",
+      "source": "AMD 新闻稿",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "AI",
+        "芯片"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Postgres Summit US 2026 日程公布",
+      "summary": "",
+      "url": "https://postgresql.us/events/postgressummitus2026/schedule/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "postgres-contrib 发布第 29 与 30 周贡献动态",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/91/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "大型 WAL 记录整体压缩补丁进入 v8",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/A2BB6471-C150-423C-B6F5-BFEC46BE544B@yandex-team.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "发布的 EXCEPT 子句在继承子表上有两处缺陷",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm2r8LURFmXd_MZePU3UqnY=Za6Tt1ig7jWOjofRBdDSJg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "共享缓冲区哈希表重构的基准测试无显著回退",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAStW3LMwY=SW7GLmn81mzQGH=bH+dwZZCrsfNbM9b7eiptLjQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "冲突历史表拟只记录已自动处理的冲突",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAKjoqd4OHawe5S9y+5izi1aUFRrga3AtrT+jjYAOrAo7VhXZMw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "vacuum-truncate-auto 注入点永不触发引发去留之争",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0vV=CWB87OyQTKxaAF1nmibhHNrumJb4tLh+pyBH2M_dw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "pg_recvlogical 测试因 PID 复用偶发失败已修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHbtFfKUKQKQTGOJ1n_TOfpLL_8B5SX19K-0qUS+yArdQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "catqueue 用行锁在 PostgreSQL 上实现任务队列",
+      "summary": "",
+      "url": "https://github.com/karanrajsurya/CatQueue",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "PromptArmor 报告 Atlassian Rovo 可外带数据",
+      "summary": "",
+      "url": "https://www.promptarmor.com/resources/atlassian-rovo-exfiltrates-data",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "CopilotKit 开源 Channels SDK 接入聊天软件",
+      "summary": "",
+      "url": "https://github.com/CopilotKit/channels-sdk",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "研究称人工审批漏掉约三分之一恶意命令",
+      "summary": "",
+      "url": "https://scalex.dev/blog/ai-agent-permissions-stats/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Proxmox VE 推出 ARM64 官方版本",
+      "summary": "",
+      "url": "https://forum.proxmox.com/threads/proxmox-virtual-environment-now-available-for-64-bit-arm-arm64.185527/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Zed 推出 DeltaDB 记录代码的产生过程",
+      "summary": "",
+      "url": "https://zed.dev/deltadb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 28
+    }
+  ]
+}

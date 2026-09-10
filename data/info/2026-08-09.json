@@ -1,0 +1,180 @@
+{
+  "date": "2026-08-09",
+  "origin": "chronicle 2026-08-09: pgsty-daily 2026-08-09.md, pgnexus #233, planet 2；枯水期补 2026-08-07 与 08-08 未用候选 3 条",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PDU 作者谈 PostgreSQL 非常规恢复的四个阶段",
+      "summary": "新晋 PostgreSQL ACE 张晨解释他为什么把自己定位成数据库恢复专家。他做的是常规工具之外的非常规恢复，自研工具 PDU 走过四个阶段：离线抽取数据、从 WAL 里挖数据、碎片扫描恢复，以及不依赖数据字典的恢复，前两项已开源，后两项作为商业能力保留。他认为 Oracle 与 MySQL 的恢复服务早已成行，PostgreSQL 这块却少有人认真做。他的方法是从事故现场出发，先判断还剩多少数据、值不值得恢复。",
+      "url": "https://pduzc.com/blog/why-i-call-myself-postgresql-recovery-expert",
+      "author": "张晨",
+      "source": "作者博客",
+      "source_date": "2026-08-09",
+      "image": "https://pduzc.com/opengraph-image",
+      "domain": "pg",
+      "tags": [
+        "数据恢复",
+        "数据损坏",
+        "工具"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Fastmail 开出欧盟数据区域",
+      "summary": "Fastmail 宣布提供欧盟数据区域，把邮箱数据存放在欧洲。围绕这条公告的讨论把数据所在地与司法辖区、公司控制权、密钥归属和运维访问边界区分开来：区域标签只是部署参数，主备副本、日志、监控和工单系统里的数据未必跟着走。对邮件、对象存储和数据库托管一类服务，采购时值得要求供应商给出数据流图、各类副本的位置、密钥管理的控制权、破窗访问流程、实体与分包商清单，以及退出时的删除证明。",
+      "url": "https://www.fastmail.com/blog/fastmail-offers-eu-data-region/",
+      "author": "Fastmail",
+      "source": "Fastmail 博客",
+      "source_date": "2026-08-08",
+      "image": "https://www.fastmail.com/assets/images/data-center-hero-3jPa_k89iw-1200.png",
+      "domain": "cloud",
+      "tags": [
+        "数据主权",
+        "合规",
+        "托管"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "UTM 的 Triton 给 QEMU 虚拟机带来 DirectX 11",
+      "summary": "UTM 介绍了 Triton，用 Windows 的用户态与内核态驱动对接 VirtIO 和 Neptune，为 QEMU 里的 Windows 客户机提供 DirectX 11 支持。文章同时承认 macOS 后端、兼容性以及 Apple 相关组件的许可证仍有约束。Windows 客户机的图形加速长期是 QEMU 在桌面与 CI 场景里的难点，虚拟设备与宿主渲染器若能配合，ARM 上的 Windows 负载就少一层替代方案。",
+      "url": "https://blog.getutm.app/2026/introducing-triton-directx-11-driver-for-qemu/",
+      "author": "UTM",
+      "source": "UTM 博客",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "虚拟化",
+        "QEMU",
+        "图形"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "OWNS、CALM 与 ORBIT 组成企业 AI 信任栈",
+      "summary": "Vibhor Kumar 把此前提出的三套框架串成一个自上而下的结构。OWNS 是战略层，看的是平台选型中的成本、生态健康度、监管暴露面和规模化能力；CALM 是架构就绪层，判断平台能否可靠演进并被有效治理；ORBIT 是执行层，管的是模型决策能不落空、不重复、不出现无法解释的失败。作者的说法是三层依次依赖：没有就绪的战略只是愿景，没有执行的就绪只是架构表演。他强调平台需要同时承接事务、分析、向量检索与智能体负载。",
+      "url": "https://vibhorkumar.wordpress.com/2026/08/09/the-enterprise-ai-trust-stack-how-owns-calm-and-orbit-fit-together/",
+      "author": "Vibhor Kumar",
+      "source": "作者博客",
+      "source_date": "2026-08-09",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/08/image-14.png",
+      "domain": "ai",
+      "tags": [
+        "架构",
+        "治理",
+        "AI"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "btoidsortsupport 会给出错误的排序结果",
+      "summary": "Peter Geoghegan 报告提交 51cd5d6f 的缺陷：元组解构对四字节传值属性做符号扩展，OID 转 Datum 却做零扩展，比较时高位不一致。",
+      "url": "https://www.postgresql.org/message-id/CAH2-WznvXyKRah=MQ3ONGHiN8ahJcqpmtyikxCOO96A4usDPpg@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "排序",
+        "缺陷"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "8 字节 TOAST 值支持进入第二轮审查",
+      "summary": "Michael Paquier 的补丁集用 oid8 做 chunk_id，Yugo Nagata 的性能测试显示打补丁前后几乎没有差异。",
+      "url": "https://www.postgresql.org/message-id/CAMT0RQREHus8+dYoHsdeJrXA6tbOxkUG5MPdCNmZzfyec1zXJA@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "存储"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "堆表禁用 autovacuum 将连带 TOAST 表",
+      "summary": "TOAST 选项修复补丁把 autovacuum_enabled 改为三值并向 TOAST 表传播，Greg Burd 提醒这是需要写进文档的行为变更。",
+      "url": "https://www.postgresql.org/message-id/896e1dbc-5ca1-4d9d-9f85-ae5a2ccac4f4@app.fastmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "TOAST"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "统一扩展统计的列与表达式暴露多个问题",
+      "summary": "表达式常量折叠成普通列时定义被静默接受却不产生统计，版本检查仍写着 190000，统计对象名含 ON 会被错误解析。",
+      "url": "https://www.postgresql.org/message-id/BE2AB1CA-8187-4A68-8E00-0DFD55D39B7E@outlook.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "优化器"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "WAL 压缩补丁 v5 恢复 zstd 优先顺序",
+      "summary": "Tomas Vondra 把常量改名为 WAL_COMPRESSION_ON 以免与 GUC 默认值混淆，文档也会把 zstd 写在 lz4 之前。",
+      "url": "https://www.postgresql.org/message-id/9444bb52-136d-46e1-9989-ab514f127dc1@vondra.me",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "GrammaTech 开源双向反汇编工具 DDisasm",
+      "summary": "",
+      "url": "https://github.com/grammatech/ddisasm",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "wallfacer 用只读扫描汇总本地编码会话",
+      "summary": "",
+      "url": "https://github.com/pradipta/wallfacer",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 11
+    }
+  ]
+}

@@ -1,0 +1,476 @@
+{
+  "date": "2026-03-31",
+  "origin": "chronicle 2026-03-31: pgnexus #99, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "TigerData 发布 pg_textsearch 1.0 BM25 引擎",
+      "summary": "PostgreSQL 内置的 ts_rank 缺少逆文档频率与词频饱和，排序质量受限。TigerData 发布的 pg_textsearch 1.0 直接在 PostgreSQL 页面上实现完整 BM25 评分，用 Block-Max WAND 优化 top-k 查询，WAL、复制与 VACUUM 都照常工作。厂商测试称短查询比 ParadeDB 快 2.4 到 6.5 倍，目前不支持短语查询，只有 OR 语义。",
+      "url": "https://www.tigerdata.com/blog/pg-textsearch-bm25-full-text-search-postgres",
+      "author": "Todd J. Green",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-31",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/pg_textsearch.png",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "扩展",
+        "BM25"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Snowflake 撰文讲解 autovacuum 的触发与调优",
+      "summary": "MVCC 把删除的行留成死元组，vacuum 既要回收空间，也要冻结旧行避开事务号回卷。文章梳理了 autovacuum 的触发条件：死元组超过阈值 50 加表行数的 0.2 倍，千行表约 250 次更新即触发。作者建议按表把 autovacuum_vacuum_scale_factor 降到 0.1，用 cost_delay 与 cost_limit 控制 I/O 冲击，再用 pg_stat_user_tables 观察死元组。",
+      "url": "https://www.snowflake.com/en/blog/engineering/tuning-postgres-vacuum/",
+      "author": "Elizabeth Garrett Christensen",
+      "source": "Snowflake 工程博客",
+      "source_date": "2026-03-31",
+      "image": "https://www.snowflake.com/content/dam/snowflake-site/engineering-blog/featured-images/sf-eng-blog-ML-3.png",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "运维",
+        "调优"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "CYBERTEC 演示 Patroni 备库集群的级联复制",
+      "summary": "备库集群让整个 Patroni 集群跟随另一个集群：一个节点作 standby leader 从主集群复制，其余节点再从它级联复制，可用于灾备、跨机房迁移与就近只读。Umut TEKIN 给出的关键配置是 standby_cluster 的 host、port 与 primary_slot_name。要注意复制槽不会自动创建，与主集群共用 etcd 时 scope 必须不同，提升前先确认 LSN 追平。",
+      "url": "https://www.cybertec-postgresql.com/en/patroni-cascading-replication-with-stanby-cluster/",
+      "author": "Umut TEKIN",
+      "source": "CYBERTEC",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Patroni",
+        "高可用",
+        "复制"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_service.conf 用命名服务收敛 psql 连接参数",
+      "summary": "每个人都要记住主机、端口、库名和用户，而真实库名往往不是同事口头的叫法。Lætitia AVROT 介绍 pg_service.conf 这份 INI 格式的命名连接配置：用户级放 ~/.pg_service.conf，系统级放在 pg_config --sysconfdir 下，写好一段 [prod] 后 psql service=prod 即可连上。按环境拆文件而服务名保持一致，密码交给权限 0600 的 .pgpass。",
+      "url": "https://mydbanotebook.org/posts/pg_service.conf-the-spell-your-team-forgot-to-learn/",
+      "author": "Lætitia AVROT",
+      "source": "MyDBaNotebook",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql",
+        "连接",
+        "配置"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Ora2Pg 仍是 Oracle 迁移 PostgreSQL 的第一站",
+      "summary": "Deepak Mahto 梳理了这个二十多年老工具的完整路径。评估阶段用 SHOW_REPORT 导出 HTML 报告，给出对象清单、复杂度分级与人天估算；迁移阶段按对象类型导出表、约束、序列、索引与视图；之后用 TEST、TEST_COUNT、TEST_DATA 三级校验。类型改写靠 MODIFY_TYPE、REPLACE_AS_BOOLEAN 等指令，函数索引与 interval 分区仍要人工善后。",
+      "url": "https://databaserookies.wordpress.com/2026/03/31/why-ora2pg-should-be-your-first-stop-for-postgresql-conversion/",
+      "author": "Deepak Mahto",
+      "source": "Database Rookies",
+      "source_date": "2026-03-31",
+      "image": "https://i0.wp.com/databaserookies.wordpress.com/wp-content/uploads/2026/03/blue-modern-simple-animated-tutorial-online-course-youtube-thumbnail14.png?fit=1200%2C675#038;ssl=1",
+      "domain": "pg",
+      "tags": [
+        "Oracle",
+        "迁移",
+        "Ora2Pg"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "EDB 发布新一代 Postgres AI Factory 平台",
+      "summary": "把 AI 代理从演示搬进生产，卡住企业的往往不是模型而是数据与运维。EDB 发布新一代 Postgres AI Factory：Agent Studio 基于 Langflow 重写以简化代理搭建，向量基础设施改用 VectorChord 提升检索性能，企业部署的安全能力也有加强。EDB 的定位是让机构基于自己掌握的数据构建代理，填补概念验证与可上生产系统之间的落差。",
+      "url": "https://www.enterprisedb.com/blog/next-generation-edb-postgres-ai-factory-built-agent-era",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-03-31",
+      "image": "https://enterprisedb.com/sites/default/files/2026-03/ai-factory-marketecture-agent-studio.png",
+      "domain": "pg",
+      "tags": [
+        "EDB",
+        "向量",
+        "AI"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "EDB Postgres AI 公布 2026 年 Q1 版本亮点",
+      "summary": "WarehousePG 性能经基准验证，实时运营分析提速，向量库与代理能力增强，另有运维自动化更新。",
+      "url": "https://www.enterprisedb.com/blog/edb-postgres-ai-q1-2026-release-highlights",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EDB",
+        "发布"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "EDB 主张 Postgres 控制平面保持确定性",
+      "summary": "作者认为扩容与故障转移应交给策略驱动的自动化，AI 代理只适合做分析、分类与建议。",
+      "url": "https://www.enterprisedb.com/blog/agentic-confusion-why-i-keep-my-postgres-control-plane-deterministic",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "自动化"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 19 移除 xl_heap_visible WAL 记录",
+      "summary": "Melanie Plageman 的补丁已提交，改为访问时设置可见性映射，David Rowley 提出后续清理。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_YfoGTHNn0XxA+dCPj9hyO96vO4Eb+awRR6T8m22qC6ww@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "内核"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Peter Geoghegan 提交索引预取补丁第 19 版",
+      "summary": "热元组搜索移入新的 heapam_indexscan.c，Andres Freund 的意见集中在命名与批缓存回收。",
+      "url": "https://www.postgresql.org/message-id/CAH2-WzkFRoTjD9T8ykYDzOMxzGiWFqcAkbK8B=HjfpoMdM4E8A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 并行索引处理仍在争论默认开关",
+      "summary": "Masahiko Sawada 主张与手动 VACUUM 一致默认开启，Daniil Davydov 认为海量表实例应显式开启。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoAqkBtCYwuwbiJ6qA+Ny-pO4idpfgqZBDxE6tGgHTpm1A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "并行"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 的锁冲突处理尚未定案",
+      "summary": "最终交换阶段被 AccessShareLock 挡住时只能等到锁超时，讨论中提议主动取消冲突会话。",
+      "url": "https://www.postgresql.org/message-id/CAFC+b6of6_poBQ6EgK8N49VQwAUYX=uLkHiU-TP7y+DamBD5TQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "锁"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "社区讨论新增 pg_stat_autovacuum_priority 视图",
+      "summary": "视图对外暴露 autovacuum 评分，争议在于关闭 autovacuum 的表是否仍应显示评分。",
+      "url": "https://www.postgresql.org/message-id/acvqclvQI7-tHTJY@nathan",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "监控"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AIO 提交一度打断 PostgreSQL 19 无断言构建",
+      "summary": "test_aio 读取了只在断言构建里赋值的字段，修复已随提交 8519251ee975 推送。",
+      "url": "https://www.postgresql.org/message-id/acufieJk-t0euqJ1@msg.df7cb.de",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AIO",
+        "构建"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Andres Freund 调整 AIO 与读流的预取启发式",
+      "summary": "补丁让 WaitReadBuffers 返回是否等待过 IO，评审担心并行位图堆扫描出现性能回退。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_YvSjYvKtsTsRqm0=Jy0QhpUTsccRd66BsSKrdN-7ZA1g@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AIO",
+        "预取"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "EDB 用 WarehousePG 单集群承接高并发 BI",
+      "summary": "基于 PostgreSQL 的 MPP 架构改用容量计费而非自动扩缩，官方口径是成本更可预测。",
+      "url": "https://www.enterprisedb.com/blog/edb-pg-ai-for-warehousepg",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据仓库",
+        "MPP"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "CREATE/REINDEX CONCURRENTLY 优化补丁重新变基",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADzfLwWJGCRJsWdNH8x1nh_5anbCbGQDLSL3hA2+bj+--29ahg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PinBuffer 在等待缓冲区解锁时存在竞态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/5bf667f3-5270-4b19-a08f-0facbecdff68@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "CAST(... ON DEFAULT) 修复 EXPLAIN 输出格式",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxEUr33CoQMsZdEehNU7wj_QOiyk8VW=W+aB03PF2J_qKQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制初始 COPY 阶段的发布表查询待优化",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/190d9cec.558b.19d42883e66.Coremail.wanghaoyan20@163.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pgindent 将改进结构体字面量的空格处理",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/9a65055e-97db-4ce7-b07f-b9f81ab1d0cc@proxel.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "EXPLAIN ANALYZE 将展示 ReadStream 预取统计",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/6f541abf-f9e1-4830-93cc-4a849dbf2ecf@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "读取流不再为进行中的 IO 同步阻塞",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/6yhrh2q7tb2fxszsyjg34uzt66ejbbk4j6tmwov6xaezunzvxx@ghohuopucefv",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "OAuth 发现过程的日志改进已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+mBj5YAA3F=KFACkVU72SRbupMdb=kkpdT3XA_5AUYzDg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "libpq-oauth 的 ABI 稳定化补丁继续打磨",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+=78NhN+6K-p15Q6vJWYCvsuQtB5swM7g6wRn+gBWU0eA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "walsender 关闭超时参数修复快速关机挂起",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwELRshB7z4PdkON1AGXvFu88s4vbF61TX=Tn-2_c4_pYg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "ALTER/DROP DATABASE 终止后台进程的测试不稳",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/f913fba1-da59-404c-9eb3-07c7304be637@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "SIMD 加速 COPY 解析的补丁瞄准 PostgreSQL 20",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/acv2vu8miagnHG1B@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "槽同步工作进程的关闭信号与日志将调整",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABdArM6E2aBj0FUjr2870sZUQqc6mpV1xSM=sqUFd2tKbfUQHA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "SQL:2023 JSON 简化访问器补丁被退回",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/254e3055-821e-4bd1-9b79-707f53ad0ee6@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 日志文件改用 logging.c",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/4c2eb422-696c-4e34-84e7-6c6cd95781ab@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "发布中跳过模式变更的补丁已推送新版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+Ptzir7Xdb_CRDiiume+Y7bbkg+JAx4JucXAwaPKqHpZRA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 32
+    }
+  ]
+}

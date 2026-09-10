@@ -1,0 +1,193 @@
+{
+  "date": "2026-03-28",
+  "origin": "chronicle 2026-03-28：pgnexus #96、planet 1；借用 2026-03-27 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_duckpipe 三月更新加入透明查询路由",
+      "summary": "pg_duckpipe 是把 PostgreSQL 堆表经 WAL 持续同步到 DuckLake 列存表的扩展，让一套库同时承担事务与分析负载，不需要 Kafka、Debezium 或外部编排。三月这批更新最显眼的是透明查询路由：规划器钩子把分析型 SELECT 自动改写到列存副本，auto 模式下主键点查仍留在堆表。新增的 append 同步模式把每次变更写成不可变变更日志，带 SCD Type 2 语义，也支持没有主键的表。此外还有多库扇入与分区表同步。",
+      "url": "https://pgducklake.select/blog/pg-duckpipe-whats-new/",
+      "author": "pg_ducklake 项目组",
+      "source": "pg_ducklake 博客",
+      "source_date": "2026-03-28",
+      "image": "https://pgducklake.select/og/pg-duckpipe-whats-new.png",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "DuckLake",
+        "HTAP"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 2,
+      "title": "pg_createsubscriber 的日志目录功能已推送",
+      "summary": "Amit Kapila 合入 Gyan Sreejith 的补丁，新增 -l/--logdir 建带时间戳的目录分开存放服务端与内部日志。",
+      "url": "https://www.postgresql.org/message-id/CAEqnbaUjjozzfcbx_UDUFYLhQf41zvnS=9FjwTJ8476yDSrn_A@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "工具"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "pg_waldump 的 tar 测试在 FreeBSD 上持续失败",
+      "summary": "FreeBSD 13.1 起 tar 默认按稀疏格式打包 WAL，文件名多出 GNUSparseFile.0/ 前缀，解析逻辑认不出来。",
+      "url": "https://www.postgresql.org/message-id/CA+hUKGL2dppjO4o28ZY7n_LTWviKLAi-7KZ=tx5w2HGevCEYPA@mail.gmail.com",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "测试"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 3,
+      "title": "jsonpath 补丁补回缺失的 key_name 条目",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/278cb771-6008-44e5-8eaa-9d4acdb56c79@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 3,
+      "title": "pg_buffercache 该不该继续加专用聚合函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAExHW5sMsaz1j+hrdhyo-DJp7JCgJx87=q2iJfOc_9mwYWyvmw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 3,
+      "title": "并发建索引的改进补丁支持更高隔离级别",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADzfLwVWEgcC2s4Fgrr1j8y4-MM2wXdcgg4_LxPprgDes2v8ew@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "在线校验和切换的 0001 补丁获准先行提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/68e8b8f2-c40a-4f0a-9d3f-5092d89d7afe@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "xl_heap_visible 第 47 版拆开两个位图字段",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Yt76_HdfR6DtK_wtkSNSj9=VxSV_npt+6T2R=zTzp1Pg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "通用计划裁剪采用 prep/start/run/end 协议",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqHN9x7ufTz3EfAA3-Zq3NOTeZMKtBatmevMesybwBUaAw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "计划缓存"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "读取流补丁的初始化与整型转换问题获修",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/wmqrglrv4eq2m2kzgbjbtmmuctklg7q4ylwo22rks7r7mlbf3w@dn6txz6znmtr",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "异步 IO"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "发布排除表的写法定为 EXCEPT (TABLE ...)",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+PthJx_gZJNgF=mWSpkWjQJ58KyhrZ7D7CkX_TVq12wv7A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "语法"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "索引预取讨论批次数与 IO 饱和的关系",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wzk25zLGP8NGUP+RwGRL_Gq3fA254XCCuLKR=uEt9P7HBg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "IO"
+      ],
+      "position": 12
+    }
+  ]
+}

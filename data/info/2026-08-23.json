@@ -1,12 +1,46 @@
 {
   "date": "2026-08-23",
-  "origin": "pgsty-daily 2026-08-23.md; pgnexus #247",
+  "origin": "chronicle 2026-08-23: pgnexus #247, daily, planet 2",
   "items": [
     {
       "tier": 1,
+      "title": "PostgreSQL 社区重提明文密码的弃用计划",
+      "summary": "PostgreSQL 至今允许 CREATE ROLE ... PASSWORD 直接传明文口令，这会把口令写进日志和 pg_stat_statements。Jakub Wartak 重新激活了一份旧补丁，并附上概念验证：恢复取值 allow、warn、disallow 的 cleartext_passwords_action 参数，新增经扩展协议传口令的 PASSWORD 命令，抑制口令写日志。他倾向初期默认 allow，从 PG 20 起逐步标记废弃。",
+      "url": "https://www.postgresql.org/message-id/CAKZiRmwkv8iWwxfHjCyA5Ewq-P8zGgbLfnu=xNoTj8ks3Y2P8Q@mail.gmail.com",
+      "author": "Jakub Wartak",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "密码",
+        "合规"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostGIS Tiger Geocoder 2025.2 发布，也是倒数第二程",
+      "summary": "Regina Obe 发布 postgis_tiger_geocoder 2025.2，对应 2025 年美国人口普查 Tiger 数据集。这个纯 plpgsql 扩展曾是 PostGIS 核心的一部分，现在单独维护。本次修正了安装目标、并行构建和扩展依赖的模式限定三处问题，要求 PostgreSQL 16 及以上。升级执行 ALTER EXTENSION ... UPDATE。PostGIS 3.6 系列是最后一个包含它的版本。",
+      "url": "https://postgis.net/2026/08/PostGIS-Tiger-Geocoder-2025.2/",
+      "author": "Regina Obe",
+      "source": "PostGIS 博客",
+      "source_date": "2026-08-23",
+      "image": "https://postgis.net/postgis-logo-horizontal.png",
+      "domain": "pg",
+      "tags": [
+        "PostGIS",
+        "地理编码",
+        "扩展"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
       "title": "DuckDB 2.0 用 PEG 解析器替换 PostgreSQL 前端",
-      "summary": "parser 是 SQL 方言、错误信息、IDE 补全和语法扩展的共同入口。DuckDB 从 2018 年沿用至今的 PostgreSQL 派生解析器将在 2.0 被 PEG 解析器取代，新前端接受完整 DuckSQL 后转换成原有 AST，binder 和执行流水线不变。PEG 让语法分支的优先级显式化，避开 LALR 的移进归约冲突，扩展也可以直接扩展 tokenizer、语法规则和自定义匹配器，而不必等完整解析失败后接管。该解析器 1.2 起用于 CLI 补全、1.5 起作为可选实验，官方称既有查询应继续工作，升级前仍应用生产 SQL 语料回归。",
-      "url": "https://duckdb.org/2026/08/20/duckdb-20-peg-parser.html",
+      "summary": "解析器是 SQL 方言、错误信息、补全和语法扩展的共同入口。DuckDB 从 2018 年沿用至今的 PostgreSQL 派生解析器将在 2.0 被 PEG 解析器取代，新前端接受完整 DuckSQL 后转换成原有 AST，绑定器和执行流水线不变。PEG 让语法分支的优先级显式化，避开 LALR 的移进归约冲突，扩展也可以直接扩展词法器和语法规则。官方称既有查询应继续工作，升级前仍应用生产 SQL 语料回归。",
+      "url": "https://duckdb.org/2026/08/20/duckdb-20-peg-parser",
       "author": "DuckDB",
       "source": "DuckDB 博客",
       "source_date": "2026-08-20",
@@ -17,51 +51,17 @@
         "SQL",
         "扩展"
       ],
-      "position": 1
-    },
-    {
-      "tier": 1,
-      "title": "PostgreSQL 社区重提明文密码的弃用计划",
-      "summary": "PostgreSQL 至今允许 CREATE ROLE ... PASSWORD 直接传明文口令，这条路径会把口令写进服务器日志和 pg_stat_statements。Jakub Wartak 重新激活了 Greg Sabino Mullane 的旧补丁，并附上一组概念验证补丁：恢复取值为 allow、warn、disallow 的 cleartext_passwords_action GUC，新增经扩展协议传口令的 PASSWORD 命令，抑制口令写日志。他倾向初期默认 allow，从 PG 20 起逐步标记废弃，动因是 PCI DSS 合规与向后兼容的平衡。",
-      "url": "https://www.postgresql.org/message-id/CAKZiRmwkv8iWwxfHjCyA5Ewq-P8zGgbLfnu=xNoTj8ks3Y2P8Q@mail.gmail.com",
-      "author": "Jakub Wartak",
-      "source": "pgsql-hackers",
-      "source_date": "2026-08-22",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "安全",
-        "密码",
-        "合规"
-      ],
-      "position": 2
-    },
-    {
-      "tier": 1,
-      "title": "MCP 路线图把重心转向异步任务、HTTP 与身份",
-      "summary": "MCP 正从本地工具桥接扩展到远程、长生命周期、带身份和权限边界的服务。维护者把五件事列为下一版规范的优先域：agentic messaging primitives、HTTP-native transport 的统一与加固、agent identity 与企业级安全、primitives 改进，以及 SDK 开发体验。Tasks、subscriptions/listen 和进度通知会被梳理成一致的长任务与中途 steering 体验，progressive discovery 则让 server 先暴露小入口再逐步披露目录。这是路线图而不是兼容性承诺。",
-      "url": "https://blog.modelcontextprotocol.io/posts/mcp-roadmap/",
-      "author": "Model Context Protocol",
-      "source": "MCP 博客",
-      "source_date": "2026-08-22",
-      "image": "https://blog.modelcontextprotocol.io/og-image.png",
-      "domain": "ai",
-      "tags": [
-        "MCP",
-        "协议",
-        "身份"
-      ],
       "position": 3
     },
     {
       "tier": 1,
       "title": "Rust nightly 默认启用下一代 trait solver",
-      "summary": "开发近四年的下一代 trait solver 已在 nightly 默认启用，官方称这是 Rust 首次发布以来最大的单项变更。它重写了 where 子句求解、关联类型归一化等核心机制，为 Type Alias Impl Trait、Return Type Notation 和若干 unsoundness 修复扫清道路，官方称已知 200 多个 issue 会随之修复，并举 DataFusion 编译快逾 8 倍为特例。官方也预告存在非平凡 breakage，可临时用 -Znext-solver=coherence 回退并提交最小复现。",
+      "summary": "开发近四年的下一代 trait solver 已在 nightly 默认启用，官方称这是 Rust 首次发布以来最大的单项变更。它重写了 where 子句求解、关联类型归一化等核心机制，为 Type Alias Impl Trait 和若干不健全性修复扫清道路，官方称已知 200 多个问题会随之修复，并举 DataFusion 编译快逾 8 倍为特例。官方也预告存在非平凡的破坏，可临时回退并提交最小复现。",
       "url": "https://blog.rust-lang.org/2026/08/21/enabling-next-solver-on-nightly/",
       "author": "Rust Project",
       "source": "Rust 博客",
       "source_date": "2026-08-21",
-      "image": "https://www.rust-lang.org/static/images/rust-social-wide.jpg",
+      "image": "",
       "domain": "infra",
       "tags": [
         "Rust",
@@ -72,18 +72,18 @@
     },
     {
       "tier": 1,
-      "title": "Anthropic 把 Mythos 5 接入 Claude Security",
-      "summary": "强能力 cyber 模型的风险既在模型本身，也在向用户暴露的是原始交互还是被约束的产物。Claude Security 的 public beta 允许 Enterprise 客户用 Mythos 5 扫描代码库，返回 CWE 编号、严重性、置信度和建议修复，官方要求每个 patch 都经人工复核批准，不会把 Mythos 的交互式原始访问扩展到其他产品面。同期宣布的 Defender Advantage Fund 提供 3500 万美元 credits，支持广泛使用的开源项目修复漏洞与自动化修补。",
-      "url": "https://claude.com/blog/bringing-claude-mythos-5-to-more-defenders",
-      "author": "Anthropic",
-      "source": "Anthropic",
-      "source_date": "2026-08-21",
+      "title": "MCP 路线图把重心转向异步任务、HTTP 与身份",
+      "summary": "MCP 正从本地工具桥接扩展到远程、长生命周期、带身份和权限边界的服务。维护者把五件事列为下一版规范的优先域：智能体消息原语、HTTP 原生传输的统一与加固、智能体身份与企业级安全、原语改进，以及 SDK 开发体验。任务、订阅与进度通知会被梳理成一致的长任务与中途干预体验，渐进式发现则让服务端先暴露小入口再逐步披露目录。这是路线图而不是兼容性承诺。",
+      "url": "https://blog.modelcontextprotocol.io/posts/mcp-roadmap/",
+      "author": "Model Context Protocol",
+      "source": "MCP 博客",
+      "source_date": "2026-08-23",
       "image": "",
       "domain": "ai",
       "tags": [
-        "安全",
-        "代码扫描",
-        "开源"
+        "MCP",
+        "协议",
+        "身份"
       ],
       "position": 5
     },
@@ -93,7 +93,7 @@
       "summary": "Tom Lane 的 v3 在 CREATE AGGREGATE 中新增 SUPPORT 选项并补上 pg_dump 支持，已提交。",
       "url": "https://www.postgresql.org/message-id/228670.1787504132@sss.pgh.pa.us",
       "author": "Tom Lane",
-      "source": "pgsql-hackers",
+      "source": "PostgreSQL hackers",
       "source_date": "2026-08-23",
       "image": "",
       "domain": "pg",
@@ -105,11 +105,27 @@
     },
     {
       "tier": 2,
+      "title": "lo_compat_privileges 会悄悄关掉大对象的权限模型",
+      "summary": "它把大对象退回 8.4 的无主模式，任何角色都能读写删除，且不留日志；继承到就该关掉并逐条修查询。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-lo_compat_privileges/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "大对象",
+        "权限"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
       "title": "TABLES IN SCHEMA 的 EXCEPT 子句语义仍有分歧",
       "summary": "争议在于分区和继承子表跨 schema 时排除规则是否传播，两种模型各有安全与对称性问题。",
       "url": "https://www.postgresql.org/message-id/CAJpy0uCCF0QOqcZS7EYqTqf57J_yva=CORBaHa-A9S4PxNe7qA@mail.gmail.com",
-      "author": "",
-      "source": "pgsql-hackers",
+      "author": "Nisha Moond",
+      "source": "PostgreSQL hackers",
       "source_date": "2026-08-23",
       "image": "",
       "domain": "pg",
@@ -117,53 +133,37 @@
         "逻辑复制",
         "发布"
       ],
-      "position": 7
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "提案新增 pg_stat_vfdcache 视图暴露文件描述符缓存",
+      "summary": "v5 给出命中、未命中、已用与已分配条目、占用字节和命中率，审阅者要求补上真实统计值的测试。",
+      "url": "https://www.postgresql.org/message-id/CAF0whudj+vvqzPxfbQbFXKMo_4BfMB6anduQ4JMo9XNXU93gSg@mail.gmail.com",
+      "author": "Jakub Wartak",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "VFD"
+      ],
+      "position": 9
     },
     {
       "tier": 2,
       "title": "pg_log_query_plan 的异步语义引出可观测性问题",
       "summary": "记录到的计划可能属于 PL/pgSQL 内部子查询而非外层查询，建议给用户确认日志是否生成的机制。",
       "url": "https://www.postgresql.org/message-id/570fc999-51d3-4cf9-883a-bd590e203481@gmail.com",
-      "author": "",
-      "source": "pgsql-hackers",
+      "author": "Andrei Lepikhov",
+      "source": "PostgreSQL hackers",
       "source_date": "2026-08-23",
       "image": "",
       "domain": "pg",
       "tags": [
         "执行计划",
         "可观测性"
-      ],
-      "position": 8
-    },
-    {
-      "tier": 2,
-      "title": "GPT-5.6 Sol 促销价降至每百万 token 输入 4 美元",
-      "summary": "输出降到 20 美元，至少持续到 11 月 21 日；超过 272K token 的请求另按更高倍率计费。",
-      "url": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
-      "author": "OpenAI",
-      "source": "OpenAI 文档",
-      "source_date": "2026-08-21",
-      "image": "",
-      "domain": "ai",
-      "tags": [
-        "成本",
-        "API"
-      ],
-      "position": 9
-    },
-    {
-      "tier": 2,
-      "title": "NanoGPT Speedrun Frontier 公开 153 次自主运行",
-      "summary": "覆盖 18 个模型，同时展示 harness、预算、token、实验次数与耗时，说明它不是纯模型排行榜。",
-      "url": "https://www.primeintellect.ai/research/nanogpt-speedrun",
-      "author": "Prime Intellect",
-      "source": "Prime Intellect",
-      "source_date": "2026-08-22",
-      "image": "",
-      "domain": "ai",
-      "tags": [
-        "评测",
-        "agent"
       ],
       "position": 10
     },
@@ -259,18 +259,33 @@
     },
     {
       "tier": 3,
+      "title": "检查点写合并暂不引入基于使用计数的启发式",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/9FB15BAB-BD87-419E-B327-B63E6E443E08@yandex-team.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检查点"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
       "title": "Munder Difflin 把多个 CLI agent 包成本地控制面",
       "summary": "",
       "url": "https://munderdiffl.in/",
       "author": "",
       "source": "",
-      "source_date": "2026-08-22",
+      "source_date": "2026-08-23",
       "image": "",
       "domain": "ai",
       "tags": [
         "agent"
       ],
-      "position": 17
+      "position": 18
     },
     {
       "tier": 3,
@@ -285,7 +300,7 @@
       "tags": [
         "本地推理"
       ],
-      "position": 18
+      "position": 19
     },
     {
       "tier": 3,
@@ -300,7 +315,7 @@
       "tags": [
         "MCP"
       ],
-      "position": 19
+      "position": 20
     }
   ]
 }

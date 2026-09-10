@@ -1,0 +1,510 @@
+{
+  "date": "2026-08-18",
+  "origin": "chronicle 2026-08-18: pgnexus #242, daily, planet 7",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG19 外键快速路径有越界写入与漏检的约束",
+      "summary": "Amit Langote 发出针对 PG19 外键批量检查快速路径的 v2 补丁。先前的修复把批处理限制在顶层事务，Noah Misch 批评这在用 savepoint 时会掉性能，也不符合按子事务追踪资源的惯例。新版改为新增 AtEOSubXact_RI()，在每个缓存条目上记录子事务号。随后又发现缓存只以约束 OID 为键，导致同一约束的嵌套检查复用了外层条目，v2 把键改成约束 OID 加查询深度。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqH-89kqe7H3qxZTcz1AL_yJGkkysP1XvEyW_cF2a+BRug@mail.gmail.com",
+      "author": "Amit Langote",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "PG19",
+        "正确性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Kubernetes 的工作集内存指标在 Postgres 上会失真",
+      "summary": "Kubernetes 靠 container_memory_working_set_bytes 决定驱逐哪个 Pod，这个值只扣掉不活跃的页缓存 inactive_file。Jeremy Schneider 用六组测试说明：Postgres 的 shared buffers 以 shmem 形式存在，内核回收不了，而活跃页缓存明明可回收却被算了进去，指标给不出有用的预警。他建议改用当前用量减去全部页缓存，并把 shmem 与 anon 分开采集。",
+      "url": "https://ardentperf.com/2026/08/18/why-postgres-breaks-kubernetes-container_memory_working_set_bytes-metric/",
+      "author": "Jeremy Schneider",
+      "source": "ardentperf.com",
+      "source_date": "2026-08-18",
+      "image": "https://ardentperf.com/wp-content/uploads/2026/08/graph-repro-20260818t200953z-run_1.png",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "监控",
+        "内存"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 让一批旧调优建议失效",
+      "summary": "Christopher Winslett 复盘 Crunchy Data 过去写下的建议在 19 里的变化。异步 I/O 让后端可以排队多个读请求，云盘上最高快 3 倍，BRIN 与并行顺序扫描的取舍需要重新测。JIT 从 12 以来一直默认开启，19 因可靠性问题改为默认关闭，分析型负载要自己打开并复核计划。TOAST 默认压缩由 pglz 换成 LZ4，只影响新写入的值。",
+      "url": "https://www.crunchydata.com/blog/postgres-19-how-our-advice-has-changed-since-we-wrote-it",
+      "author": "Christopher Winslett",
+      "source": "Crunchy Data 博客",
+      "source_date": "2026-08-18",
+      "image": "https://imagedelivery.net/lPM0ntuwQfh8VQgJRu0mFg/cc6f1b2c-ed28-417e-3c0e-dc4604d15300/public",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "调优",
+        "JIT"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Aurora 上用二值量化把 pgvector 索引缩小 32 倍",
+      "summary": "Steve Dille 介绍 pgvector 的 HNSW 二值量化：binary_quantize() 把 float32 每维压成一比特，索引体积最多缩小 32 倍，普通实例的缓冲池就能装下完整索引，查询时再对候选做全精度重排补回召回率。在 LAION 100M、OpenAI 5M 和 Cohere 10M 上，向量分布均匀时建索引速度和查询吞吐都优于磁盘型 ANN。分布集中的嵌入模型量化后掉得厉害，上线前须用真实数据验证召回。",
+      "url": "https://aws.amazon.com/blogs/database/scale-pgvector-with-binary-quantization-on-amazon-aurora-postgresql/",
+      "author": "Steve Dille",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-08-18",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/08/13/DB5728.png",
+      "domain": "pg",
+      "tags": [
+        "pgvector",
+        "向量",
+        "Aurora"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PgColumnar 1.0 Alpha2 加入只读 Iceberg 支持",
+      "summary": "Command Prompt 发布列式表访问方法 PgColumnar 的 1.0 Alpha2。这一版新增只读的 Apache Iceberg 表支持和 S3 兼容对象存储上的 Parquet、Iceberg 读取，带来自动维护守护进程，并根据对抗性审计修掉六处内存安全问题。性能方面，参数化谓词现在能驱动块组跳过，删除向量改走索引而非顺序扫描。项目提醒接口在 1.0 之前仍可能变动。",
+      "url": "https://www.commandprompt.com/blog/pgcolumnar-10alpha2-released/",
+      "author": "Joshua Drake",
+      "source": "Command Prompt 博客",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "列存",
+        "Iceberg",
+        "扩展"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "YeSQL 用 24 节课在浏览器里讲 PostgreSQL",
+      "summary": "Dimitri Fontaine 放出免费教程 YeSQL：24 节短课，每节一个概念配一条可运行的查询，不需要注册。内容分 SQL 基础、窗口函数、聚合、连接、性能、模式设计六个方向，涵盖 NULL 语义、运行总计、LATERAL 连接和 EXPLAIN 阅读。查询用 PGlite 在浏览器里直接执行，数据是 F1 赛事等真实数据集。每节都链到《The Art of PostgreSQL》的对应章节。",
+      "url": "https://tapoueh.org/blog/2026/08/introducing-yesql-practical-postgresql-one-concept-at-a-time/",
+      "author": "Dimitri Fontaine",
+      "source": "tapoueh.org",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "教程",
+        "SQL"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "DuckDB 2.0 预览：从嵌入式走向服务端形态",
+      "summary": "DuckDB 公布 2.0 预览，计划秋季发布。列出的能力包括稳定版 Quack、远程 CONNECT、触发器、VARIANT 类型、异步 I/O、新的 SQL 解析器和新的默认存储格式。Quack 与远程连接改变了 DuckDB 一直以来只做嵌入式的部署假设，而解析器、存储格式和 C API 的变动意味着升级要当作一次真正的大版本迁移来对待，需要提前建立文件格式、扩展、各语言客户端和并发写入的兼容矩阵。",
+      "url": "https://duckdb.org/2026/08/17/duckdb-20-highlights",
+      "author": "DuckDB 团队",
+      "source": "DuckDB 博客",
+      "source_date": "2026-08-17",
+      "image": "https://duckdb.org/images/blog/thumbs/duckdb-preview-2-0.png",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "分析"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Snowflake 连接器的工作流注入漏洞暴露 CI 审计盲区",
+      "summary": "Wiz 称其 Red Agent 在 snowflake-connector-net 中发现工作流脚本注入：构造特定的 issue 标题就能让未认证用户在 runner 上执行任意命令。Wiz 称 6 月 23 日通报、当日修复并轮换凭据，随后修正措辞，只确认 Copilot 审查没有标出风险。把 issue 标题、分支名这类不可信元数据直接拼进 shell 的老问题依然存在，有 AI 辅助审查的流程同样会漏掉。",
+      "url": "https://www.wiz.io/blog/red-agent-snowflake-copilot-cicd-bug",
+      "author": "Wiz",
+      "source": "Wiz 博客",
+      "source_date": "2026-08-18",
+      "image": "https://www.datocms-assets.com/75231/1786964856-image.png?fm=webp",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "CI",
+        "供应链"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "流水线恢复把自旋锁换成原子操作，吞吐提升 1.35 倍",
+      "summary": "Jakub Wartak 发现补丁用大量自旋锁更新简单布尔值；长跑时提升会从约 42% 降到 14–20%。",
+      "url": "https://www.postgresql.org/message-id/CAKZiRmwFKbUO_T9232oMhzDa9x6mozG3CT6CvooPwjPVna-irw@mail.gmail.com",
+      "author": "Jakub Wartak",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "性能"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志表补丁查出两处竞态",
+      "summary": "streaming=on 时未恢复 remote_xid 会记错事务号，预备事务路径同样漏更新提交信息。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uCncJpC=HOR6QcJC8G79Ao-rEcp9GD8YmroOqxcjLrdzQ@mail.gmail.com",
+      "author": "Shveta Malik",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "PG18.5 崩溃修复引出测试模块的磁盘开销争论",
+      "summary": "Andres Freund 担心新测试模块要单独 initdb，完整测试在 macOS 上已产生约 73GB 写入。",
+      "url": "https://www.postgresql.org/message-id/ybzgsxz3txvjobmfukedadugxiks4toz5uvm2icsdmdriz5z33@vgumuqhuac5g",
+      "author": "Jeff Davis",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG18",
+        "测试"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "回顾 PostgreSQL 17 的故障转移槽同步",
+      "summary": "把逻辑复制槽提前同步到备机，主备切换后订阅者可直接续传，不必重建槽和全量重同步。",
+      "url": "https://www.postgresql.fastware.com/blog/failover-slot-synchronization-in-postgresql",
+      "author": "Ajin Cherian",
+      "source": "Fujitsu Fastware 博客",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "高可用"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "14 行 YAML 在 Kubernetes 上拉起高可用 PostgreSQL",
+      "summary": "用 CYBERTEC PG Operator 0.9.2 与 PostgreSQL 18.4 建双实例集群，单节点 minikube 需关掉 Pod 反亲和。",
+      "url": "https://www.cybertec-postgresql.com/en/highly-available-postgresql-on-kubernetes-in-10-minutes/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "高可用"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "三个 JIT 调试参数都不该出现在生产配置里",
+      "summary": "jit_dump_bitcode 会持续往数据目录写 .bc 文件且从不清理，开着就是定时的磁盘写满事故。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-jit_debugging_support-jit_dump_bitcode-and-jit_profiling_support/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "参数"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "校验和启用测试在慢速存储上间歇失败",
+      "summary": "DROP DATABASE WITH (FORCE) 终止的后端提交时被 WALWriteLock 挡住，重试五秒后放弃。",
+      "url": "https://www.postgresql.org/message-id/361531e2-52b5-499c-a126-815f277bbef2@gmail.com",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "测试"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "构建农场频繁报无法注册后台进程，原因未明",
+      "summary": "三周内两台机器在 test_shm_mq 上耗尽 max_worker_processes，autovacuum 已被排除。",
+      "url": "https://www.postgresql.org/message-id/1383452.1787067554@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建农场"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Turbopuffer 用本地持久意图换取控制面断连可用",
+      "summary": "每个集群的 agent 把操作转成 CRD，状态存本地 etcd，中心 API 靠操作 ID 去重并写只追加日志。",
+      "url": "https://turbopuffer.com/blog/control-plane",
+      "author": "Turbopuffer",
+      "source": "Turbopuffer 博客",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "控制面",
+        "数据库运维"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 多组件大范围故障已恢复，根因待发布",
+      "summary": "Git 操作、Webhooks、API、Issues、PR、Actions、Pages 与 Copilot 均受影响，21:15 UTC 标记解决。",
+      "url": "https://www.githubstatus.com/incidents/zkxwbgr0cnmx",
+      "author": "GitHub",
+      "source": "GitHub Status",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "故障"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_control_checkpoint() 将报告数据校验和版本",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aoPl1zv8R2mStUMs@bdtpg",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "basebackup 跳过早期页面校验的补丁已推送并回移",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aoPdLUrm8D8+mvDN@bdtpg",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "reorderbuffer 中一处 relcache 引用泄漏的防御性修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/7DD65D03-3B5A-43B2-99AD-8E6AF5372BAB@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "发布 EXCEPT 子句补丁走到 v28，仍在简化设计",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+Ptc6Dr1+jSYOETfs-QhNr1eOZs1KzYmZHDPzWVs2EMo-Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "PL/Perl 统一哈希键转换的补丁只进 HEAD",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAB8bMivTgGQrLzvRTf3q7FdyZQk_onxL9sBbmhpGvMGaGFEDBw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PL/Perl"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "test_decoding 跳过虚拟生成列的补丁已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACWZVDOpiTcJ=JZmYnCym_1NQ41QiFMZYQiySNO4vS6vyA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "复制槽 XID 年龄失效拟增加预警列",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1LsFi7GWtwtKwQm1kxgJWz_GvyDNSaO8=gr1zocPni-+g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "事务内刷新统计拟拆分事务性与非事务性计数器",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0vJHB+ce-MmPmhMDO9zw+btMT3P3nJjt_Gtvkx80vtxkw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgstat"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "执行器批处理之争：过滤与聚合该不该进 TTS",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/33B6F9A3-BCD9-407D-97B4-CD7E13B684A9@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "hstore 溢出修复已提交，Size 与 size_t 之争再起",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aoPvftW3_sHxrCI_@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "hstore"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Neon 新增命令行查询后端日志",
+      "summary": "",
+      "url": "https://neon.com/blog/query-neon-backend-logs",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "可观测性"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Prolly 开源内容寻址有序映射的 prolly tree 实现",
+      "summary": "",
+      "url": "https://github.com/crabbuild/prolly",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "存储"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "论文讨论 Rust 中可移植且安全的 GPU 卸载",
+      "summary": "",
+      "url": "https://arxiv.org/abs/2608.13759",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GPU",
+        "Rust"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Cursor Origin 进入早期测试，合并代码托管与智能体",
+      "summary": "",
+      "url": "https://cursor.com/changelog/origin-code-hosting",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-18",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 32
+    }
+  ]
+}

@@ -1,0 +1,263 @@
+{
+  "date": "2026-06-07",
+  "origin": "chronicle 2026-06-07: pgsty-daily, pgnexus #170, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "索引预取补丁 v26 让 GiST 扫描也能批量取页",
+      "summary": "Peter Geoghegan 放出索引预取的第 26 版补丁。最显眼的新增是 gistgetbatch，让 GiST 扫描也能做索引预取，效果与 nbtree 相当，例子里查询提速二十倍以上。补丁还清理了一批与 slot 相关的实现，仅索引扫描不再需要缓冲元组的 slot；接口上移除了 IndexFetchTableData 结构，新增 amcanmarkpos 声明标记与恢复能力。GiST 对使用距离操作符的有序扫描仍关掉预取。",
+      "url": "https://www.postgresql.org/message-id/CAH2-WzmAKApAYttMQfhh-usweXvRYpHcku-OKHYgDvb=wLSWHg@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "多表连接的规划内存有大块浪费",
+      "summary": "Tomas Vondra 排查调大 join_collapse_limit 之后的问题时，跟踪了一个十二表连接查询的内存分配：规划阶段吃掉约 2.5 GB，其中 find_mergeclauses_for_outer_pathkeys 占 671 MB，generate_join_implied_equalities 占 660 MB，合计约三分之二，原因是反复生成条目却不释放。Tom Lane 的小补丁把内存降到 1.8 GB。",
+      "url": "https://www.postgresql.org/message-id/6fea0269-d7c1-4042-befe-8d618b3af9f3@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "内存"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Jane Street 用 Claude Code 替代大半 Figma 工作",
+      "summary": "Jane Street 的工程师写了一篇实践总结：现在做产品设计，用 Claude Code 的时间比用 Figma 还多。差别在于产出不是静态稿子，而是可以直接交互的原型，改动能立刻跑起来看效果，设计探索的循环因此变快。这说明智能体工具的影响面正从 IDE 扩散到产品与设计。不过要补上视觉走查、浏览器测试、无障碍和代码评审，否则原型会直接变成没人管的生产代码。",
+      "url": "https://blog.janestreet.com/i-design-with-claude-code-more-than-figma-now-index/",
+      "author": "Jane Street",
+      "source": "Jane Street 博客",
+      "source_date": "2026-06-07",
+      "image": "https://blog.janestreet.com/i-design-with-claude-code-more-than-figma-now-index/figma-to-claude-hero.png",
+      "domain": "ai",
+      "tags": [
+        "智能体",
+        "设计"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "LWN 讨论如何走出 fork 加 exec 的进程模型",
+      "summary": "进程创建是容器、服务管理与智能体执行命令的底座，开销、描述符继承和权限都被重新审视。",
+      "url": "https://lwn.net/Articles/1076018/",
+      "author": "",
+      "source": "LWN",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "系统"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "Zeroserve 用 eBPF 把 Web 服务器变成可脚本化的",
+      "summary": "这是展示 eBPF 可编程能力的工程实验，不是 Nginx 的成熟替代品。",
+      "url": "https://su3.io/posts/introducing-zeroserve",
+      "author": "",
+      "source": "su3.io",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "eBPF"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "监察报告称 NIST 的失误让漏洞库形同虚设",
+      "summary": "漏洞库是整条依赖链的公共输入，评分与条目积压会直接影响各家的补丁优先级。",
+      "url": "https://therecord.media/nist-mistakes-vulnerability-database-inspector-general",
+      "author": "",
+      "source": "The Record",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "漏洞管理"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "论文开始拆解智能体编程的 token 成本",
+      "summary": "作者把 token 消耗按任务阶段分解，指出可优化的是上下文装载、工具接口和重试循环。",
+      "url": "https://arxiv.org/abs/2601.14470",
+      "author": "",
+      "source": "arXiv",
+      "source_date": "2026-06-07",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "成本",
+        "智能体"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Copilot 下线 GPT-5.2 与 GPT-5.2-Codex",
+      "summary": "依赖具体模型行为的自动化要留回归样例和成本基线，别把模型名写死成长期假设。",
+      "url": "https://github.blog/changelog/2026-06-05-gpt-5-2-and-gpt-5-2-codex-deprecated/",
+      "author": "",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "模型生命周期"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "把所有 GUC 排成一列：data_directory_mode",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-datadirectorymode/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "pgsql_tweaks 1.0.3 发布",
+      "summary": "",
+      "url": "https://pgsql-tweaks.org/blog/pgsql_tweaks-v1-0-3-released.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "pam_pg_sshkey 尝试用 SSH 密钥认证 PostgreSQL",
+      "summary": "",
+      "url": "https://github.com/OffgridwithJD/pam_pg_sshkey",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "Keybench 给键值存储做可编排的压测",
+      "summary": "",
+      "url": "https://github.com/guycipher/keybench",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "Sem 把代码实体做成 Git 上的原语",
+      "summary": "",
+      "url": "https://ataraxy-labs.github.io/sem/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Valve 的 P2P 网络库故障拖累一批依赖方",
+      "summary": "",
+      "url": "https://github.com/ValveSoftware/GameNetworkingSockets/issues/398",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Fuchsia 公开把 Zircon 的 C++ 移植到 Rust 的做法",
+      "summary": "",
+      "url": "https://cs.opensource.google/fuchsia/fuchsia/+/main:zircon/skills/cpp-to-rust-coder/SKILL.md",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "摩托罗拉路由器因云端服务中断变砖",
+      "summary": "",
+      "url": "https://mashable.com/tech/motorola-wifi-routers-stop-working-motosync-plus-app-down",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Universal Memory Protocol 想统一智能体记忆格式",
+      "summary": "",
+      "url": "https://universalmemoryprotocol.io/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "TakoVM 尝试隔离模型与工具的执行环境",
+      "summary": "",
+      "url": "https://github.com/Tako-Research/TakoVM",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-07",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 18
+    }
+  ]
+}

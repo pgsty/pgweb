@@ -1,0 +1,356 @@
+{
+  "date": "2026-03-16",
+  "origin": "chronicle 2026-03-16: pgnexus #84, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 第四次 CommitFest 特性综述",
+      "summary": "Pavel Luzanov 盘点 2026 年 1 月 CommitFest 进入 PostgreSQL 19 的改动。分区表可以合并与拆分，pg_dump 开始支持扩展统计信息。逻辑复制方面，打开 WAL 逻辑解码不再需要重启，槽同步延迟也可以监控。监控侧新增 pg_get_multixact_stats，vacuum 与 analyze 的进度信息更细，另有 vacuumdb 演练模式和 LISTEN/NOTIFY 的性能改进。",
+      "url": "https://postgrespro.com/blog/pgsql/5972815",
+      "author": "Pavel Luzanov",
+      "source": "Postgres Professional 博客",
+      "source_date": "2026-03-16",
+      "image": "https://postgrespro.com/img/logo2.png",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "CommitFest"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_gather 33 重做等待事件分析与巡检项",
+      "summary": "pg_gather 是 Percona 的 Jobin Augustine 维护的免安装 PostgreSQL 诊断工具，采集一次即可生成体检报告。33 版重做了等待事件部分：分类着色、汇总图表、悬停查文档，并按版本处理 16 与 17 之间改过的事件名。巡检项新增孤儿文件检测、pg_hba.conf 规则求值与 IP 计算、两个超时参数的检查，以及同步提交与备库名单的一致性判断，同时补上 PostgreSQL 18 的持续采集支持。",
+      "url": "https://www.percona.com/blog/what-is-in-pg_gather-version-33/",
+      "author": "Jobin Augustine",
+      "source": "Percona 博客",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "诊断",
+        "工具",
+        "等待事件"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgAdmin 4 新增用大模型解读执行计划",
+      "summary": "Dave Page 介绍了 pgAdmin 4 的 AI Insights：EXPLAIN 结果里多出一个页签，由大模型给出性能小结、按严重程度标出瓶颈，并给出可直接执行的修改建议。模型可以接 Anthropic、OpenAI 这类云端服务，也可以用 Ollama 或本地容器跑，在偏好设置里配置。前端会把 JSON 格式的执行计划连同原始 SQL 发给后端再组装提示词，接云端模型时要考虑这两样内容外发。官方提醒建议须自行验证。",
+      "url": "https://www.pgedge.com/blog/ai-features-in-pgadmin-ai-insights-for-explain-plans",
+      "author": "Dave Page",
+      "source": "pgEdge 博客",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgAdmin",
+        "AI",
+        "EXPLAIN"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Bruce Momjian 认为 COMMENT 因 MCP 重新变重要",
+      "summary": "数据库对象上的 COMMENT 长期被当作可有可无的文档。Bruce Momjian 指出，MCP 客户端要理解库里有什么才能干活，而它们能依据的只有表结构、对象命名和约束；有了注释，模型才更容易把用户的说法对上具体的表和列，生成的 SQL 也更靠谱。他给出两条路：一是让使用者手写注释，为 AI 客户端补上业务语境；二是反过来用生成式 AI 读取实际数据，自动产出合适的注释。文章只谈思路，没有给出具体写法。",
+      "url": "https://momjian.us/main/blogs/pgblog/2026.html#March_16_2026",
+      "author": "Bruce Momjian",
+      "source": "Momjian 博客",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MCP",
+        "AI",
+        "元数据"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Tiger Cloud 升级压缩数据查询与默认版本",
+      "summary": "TigerData 一次性放出 Tiger Cloud 的多项更新。TimescaleDB 升到 2.25，新增 ColumnarIndexScan 执行路径并改进连续聚合，厂商称压缩数据上的查询最高快 289 倍。平台默认版本换成 PostgreSQL 18，带来异步 I/O 相关的改进。此外新增 Azure Marketplace 自助注册、Azure 分层存储和 AWS 欧洲区域，控制台加了浮动 SQL 编辑器与作业时间线。",
+      "url": "https://www.tigerdata.com/blog/whats-new-tiger-cloud-faster-performance-easier-workflows-simpler-adoption",
+      "author": "Naveen Sukumar",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-16",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/tiger-cloud-2026.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "云服务"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "元组变形优化引入的崩溃已定位并修复",
+      "summary": "提交 c456e391138 后特定连接查询会崩溃，David Rowley 查出属性缓存偏移的起点算错并推送修复。",
+      "url": "https://www.postgresql.org/message-id/CAHewXNnb-s_=VdVUZ9h7dPA0u3hxV8x2aU3obZytnqQZ_MiROA@mail.gmail.com",
+      "author": "David Rowley",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "内核"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 并发版拟用专属复制槽池",
+      "summary": "现有实现要求 REPLICATION 权限，Álvaro Herrera 提议用新 GUC 划出默认 3 个槽的专用池。",
+      "url": "https://www.postgresql.org/message-id/22068.1773652380@localhost",
+      "author": "Antonin Houska",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "维护"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "HOT 更新拟扩展到表达式索引与部分索引",
+      "summary": "Greg Burd 放弃了争议较大的更新列改法，v36 转为把列判定逻辑下移到执行器。",
+      "url": "https://www.postgresql.org/message-id/b0404aab-65a1-4922-9cff-986163ad70bb@app.fastmail.com",
+      "author": "Greg Burd",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "HOT",
+        "索引"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 并行处理索引改为按工作进程限额",
+      "summary": "新参数 max_parallel_workers_per_autovacuum_worker 取代全局上限，省掉预留与释放逻辑。",
+      "url": "https://www.postgresql.org/message-id/CAJDiXghaazbrQMZZS08d9Ffh2y4w05TgH9dpBhqChv1qNTp+xA@mail.gmail.com",
+      "author": "Daniil Davydov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "并行"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "EXPLAIN 拟新增 IO 选项展示预取统计",
+      "summary": "Tomas Vondra 的补丁显示预读距离与 I/O 停顿次数，是否该像 BUFFERS 一样默认开启仍在议。",
+      "url": "https://www.postgresql.org/message-id/CAP53Pkx_x2WUtM40r6+GZMVCW5d2PE8KKYQc1=ArODn0-WYq+A@mail.gmail.com",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "IO"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 的连接提示语义引发争论",
+      "summary": "Robert Haas 坚持非对称写法，要求指明哪张表做哈希内侧；共享内存收集的开销也被质疑。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoanOwxP=VcCfs6kv3tyrwVamesLBna9LzoF=B4=7wa0kQ@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "扩展"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "共享内存管理拟换成注册式新接口",
+      "summary": "Heikki Linnakangas 提出在 _PG_init() 注册结构与哈希表，取代 ShmemInitStruct 与两个钩子。",
+      "url": "https://www.postgresql.org/message-id/CAExHW5v-hsRGpCP++Bck6MBnQuq=+SQb7nnmGauKWmH_bTouJA@mail.gmail.com",
+      "author": "Heikki Linnakangas",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "共享内存",
+        "内核"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "libpq 服务端 SNI 支持接近提交",
+      "summary": "新版补丁补上证书颁发机构替换、吊销列表和初始化互斥的测试，作者称几日内提交。",
+      "url": "https://www.postgresql.org/message-id/23D19F69-A8DE-4F89-99F6-5FC48762CE4D@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TLS",
+        "libpq"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "pg_stats 拟加表与属性编号供 pg_dump 使用",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/abhXqx-xffsknv3B@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计",
+        "pg_dump"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "copyObject 宏在 clang 位码编译下的报错拟临时修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/000e196b-3eb3-4ff4-a5e3-f535e6db2f91@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "读取流不再同步等待进行中的 IO 补丁到 v5",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_YV0D_9wWgGkHdWgQsooqmcc08Uqb3tqxzrwcDXHajDtA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "IO"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "OAuth 发现日志改用只发客户端的致命错误",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFOmym1BaV_U2V56aOyRp2JMrw5nfn6kwcAEcu_RWK-F3Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "复制槽视图拟新增 sent_bytes 列",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/abeoNFvwP1LHmPOb@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "监控"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "shared 归档模式下备库可能过早删除 WAL",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/50EF1E0E-9212-4BF2-9B2A-E38AC45D8ACD@yandex-team.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "归档",
+        "缺陷"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Richard Yen 用 pgEdge 的 RAG 快速学习 AI",
+      "summary": "",
+      "url": "https://richyen.com/postgres/2026/03/16/pgedge_ai_repos.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RAG"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 社区发布 2026 年第 10 周贡献汇总",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/74/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "芯片液冷公司 Frore 估值达到 16.4 亿美元",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/03/16/another-deep-tech-chip-startup-becomes-a-unicorn-frore-hits-1-64b/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "硬件",
+        "融资"
+      ],
+      "position": 22
+    }
+  ]
+}

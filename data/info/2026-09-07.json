@@ -1,0 +1,383 @@
+{
+  "date": "2026-09-07",
+  "origin": "chronicle 2026-09-07: pgnexus #262, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "SQL/PGQ 的回退在 19 与 master 两个分支完成",
+      "summary": "Melanie Plageman 提议在 PostgreSQL 19 回退 SQL/PGQ 的目录表示与 pg_dump 支持，理由是遗留问题不少，等到 20 不受向后兼容约束时再彻底修更合适。Peter Eisentraut 同意并追问回退范围，Robert Haas 主张 REL_19_STABLE 和 master 都退，认为这个功能需要大改。Peter Eisentraut 随后确认回退已经完成，线程没有留下其他待办。",
+      "url": "https://www.postgresql.org/message-id/2c117e19-4736-4486-89b4-e66c56d1bb12@eisentraut.org",
+      "author": "Peter Eisentraut",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "SQL/PGQ",
+        "发布管理"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "社区讨论把 PostgreSQL 19 推迟到 2027 年春季",
+      "summary": "PostgreSQL 19 的发布讨论进入关键阶段：多个功能面临回退，社区对这个版本的信心下降。Bruce Momjian 指出，移除功能之后还要再走一轮 beta 测试，这种情况前所未有。Joshua Drake 提议把发布推迟到 2027 年春季，理由是让存疑的功能有时间成熟，顺带解决夏季测试窗口的老问题，也免得大量开发工作被舍弃；他还说目前没有客户因为等 19 受阻，18 的采用率本来就偏低。",
+      "url": "https://www.postgresql.org/message-id/CAJvJg-TDxNL+HWm27N4h2_O8wZ=7YapGcdcbpPyYbpWgUuwS=g@mail.gmail.com",
+      "author": "Joshua Drake",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "发布管理"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "备库 FSM 撕裂页回归促成回退提交 c06d1a4",
+      "summary": "提交 c06d1a4 带来一个回归：恢复期间 heap_xlog_* 可能把 FSM 页标记为脏页，restartpoint 之后崩溃就可能留下撕裂写入，而恢复结束时并不会修复它们。FSM 自己用 RBM_ZERO_ON_ERROR 容忍撕裂页，但 heapam_relation_copy_data() 这类调用方没有这种容错。Alexander Korotkov 认为要求所有调用方都处理撕裂页不现实，已准备回退补丁并计划推送与回移。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdv6mC8ZH5B-+2OKjLuqpC_8H+KctMy2Caxoi5Q7_3VSFA@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FSM",
+        "恢复",
+        "数据正确性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "在线修改 shared_buffers 的补丁修掉两处 PANIC",
+      "summary": "不重启修改 shared_buffers 的补丁集这一轮修掉两个缺陷：收缩时 MADV_REMOVE 的范围越过 PROT_NONE 区域，在 Linux 5.10 上返回 EACCES 并直接 PANIC，改法是同时按当前分配边界和保留边界裁剪；EvictExtraBuffers 里还有竞态，缓冲区已置 BM_TAG_VALID 但 BM_VALID 未置时会被跳过，收缩后留下孤立映射。",
+      "url": "https://www.postgresql.org/message-id/CALfch1_K04G39nNrZCBw+pbqG4aXMXsAcv04A_MRhEtjJi2T8A@mail.gmail.com",
+      "author": "Palak Chaturvedi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "shared_buffers",
+        "内存管理"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Direct TOAST 用 TID 指针取代 OID 索引查找",
+      "summary": "Hannu Krosing 提交了 Direct TOAST 的 v2 补丁，用直接 TID 指针取代基于 OID 的索引查找来定位 TOAST chunk，作者给出的数据是写入 1MB 到 1GB 的值提速 7% 到 15%，数据进了 shared buffers 之后读取与原有 TOAST 相当。Michael Paquier 提出多项异议，包括 varatt_direct 实际是 20 字节而非 18 字节。",
+      "url": "https://www.postgresql.org/message-id/ap4r6H0A-5SD8pGj@paquier.xyz",
+      "author": "Hannu Krosing",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "存储",
+        "性能"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "COALESCE 选择率估算把连接条件当成限制条件",
+      "summary": "fcinfo 判断失效让嵌套 COALESCE 分支按限制条件估算，示例查询的行数高估约 6 倍。",
+      "url": "https://www.postgresql.org/message-id/e2df73aa-1631-4ab8-ad61-fedd936dc1ee@tantorlabs.com",
+      "author": "Ilia Evdokimov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划",
+        "选择率"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "SIMD 加速的 COPY FROM 在 FIFO 数据源上会挂住",
+      "summary": "缓冲区剩余不足一个向量时补丁会先补数据，遇到没有后续数据的 FIFO 就永久阻塞。",
+      "url": "https://www.postgresql.org/message-id/CAN55FZ1qFb4Yo3-MWeQfGQnu1_Ksx4xcFC2m3hyw8a--+eHQYQ@mail.gmail.com",
+      "author": "Nazir Bilal Yavuz",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "SIMD"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "解码进程启动失败会让 REPACK 后端无限等待",
+      "summary": "v3 补丁把等待拆成两段并正确处理 BGWH_STOPPED，避免 worker 启动失败时后端挂死。",
+      "url": "https://www.postgresql.org/message-id/32123.1788806780@localhost",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "逻辑解码"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "离线开关校验和会让备库的校验和状态出错",
+      "summary": "补丁改到 v13，Heikki Linnakangas 担心在线与离线操作交织出的状态机过于复杂。",
+      "url": "https://www.postgresql.org/message-id/5b08b4d1-0982-4b77-bac5-3bdffc6583f5@iki.fi",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "备库"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "pg_upgrade_replica 想免掉升级后备库的全量重建",
+      "summary": "新工具借 pg_basebackup --incremental 与 pg_combinebackup 实现，线程上出现疑似 LLM 生成的评审。",
+      "url": "https://www.postgresql.org/message-id/CA+HEvJB-TgMcFw5D2OnBofmUgqJdfROTYPLCE4N_hZMVyZmx0g@mail.gmail.com",
+      "author": "Bohyun Lee",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade",
+        "备库"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "让 pg_prewarm 为等待中的 DDL 让步的补丁再遇问题",
+      "summary": "LockHasWaiters() 误以为找到 LOCK 就一定有 PROCLOCK，快速路径锁并存时可能报错。",
+      "url": "https://www.postgresql.org/message-id/CALfch1809tLV-M5n=pC6fSPE+GyZQQuXEnidT+fsGiG=JyXy1A@mail.gmail.com",
+      "author": "Palak Chaturvedi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_prewarm",
+        "锁"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "执行器批处理的基准显示三个补丁互有得失",
+      "summary": "0002 在末列单条件查询上最多提速 35%，0003 在前置条件拒绝大量行时最多慢 34%。",
+      "url": "https://www.postgresql.org/message-id/CAHza6qf+VUsazdv1cBWbcdns0caB0j-gBuobCWviUm0NX+ueDQ@mail.gmail.com",
+      "author": "Tatsuya Kawata",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "性能"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "WAIT FOR LSN 的死锁修复补丁经 Korotkov 修订",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdtx7LayjD=+dD9t7QTydFf2C_WkCo7TwnzDao=w4+-6_w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAIT FOR"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "ON CONFLICT DO SELECT 缺谓词锁的根因定位到仲裁索引探查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEZATCUC+4orq35cqaWXpza57NRskq+jGsLc_A6Z8eqEsMgyTA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SSI"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "并发分离分区的修复将推送并回移到稳定分支",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1Ly8gdwBRGM+bfnX8X_HqTwGQG__FbUHXjxNTS5tF8A=Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁更新到第 52 版，修四处错误结果",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zDWbJUJWjfGBCp8eCyvaJcdr3jjXkAke8toVEd_zd8MUA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行模式识别"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "基准表明 sum() 改用内部中间态反而慢 1% 到 7%",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/2c61c2c2-6bf3-4155-b569-713ddbb5d22c@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "聚合",
+        "性能"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "更多场景复用 WAL 缓冲区读取的补丁更新到 v7",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACX_g6WSSwSY6pfVBV9a4+K+n_FM7QsBzHX+qawqq=iB-g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "BgBufferSync() 的可复用缓冲区计数逻辑被重构",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/F327EAD0-A49A-4413-8399-EA297600E3FE@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "允许表访问方法自定义 reloptions 的补丁进入第七版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAER375PcKhATYd=Pt-Rnmtz3GiEsDNRJ-D6cOpNn3Ec41pZ=zw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "表访问方法"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Python/pytest 测试框架补丁重回待审状态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/81454133-B2AD-43D1-98ED-841ED6EDBF65@yandex-team.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：logical_decoding_work_mem",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-logical_decoding_work_mem/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "postgres-contrib 汇总第 34、35 周的社区贡献",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/94/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "EnterpriseDB 号召读者到同好交流会上当讲者",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/birds-feather-how-about-being-speaker",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "会议"
+      ],
+      "position": 24
+    }
+  ]
+}

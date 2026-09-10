@@ -1,0 +1,204 @@
+{
+  "date": "2026-04-09",
+  "origin": "chronicle 2026-04-09: pgnexus #108, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 新增三个 pg_get_*_ddl 函数",
+      "summary": "Andrew Dunstan 在 4 月 5 日提交了三个函数：pg_get_database_ddl()、pg_get_role_ddl() 和 pg_get_tablespace_ddl()。它们都返回 SETOF text，用变参的名值对传选项：pretty 分行排版，owner 带上属主，memberships 输出角色的 GRANT。两点限制要记住：输出里不会包含密码，函数也只重建对象本身，不含库内的表、视图等对象。",
+      "url": "https://www.depesz.com/2026/04/09/waiting-for-postgresql-19-new-pg_get__ddl-functions/",
+      "author": "Hubert depesz Lubaczewski",
+      "source": "depesz.com",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "DDL"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_prewarm 在超大 shared_buffers 上会崩溃",
+      "summary": "PostgreSQL 的 palloc 对单次分配有 1GB 硬上限，而 autoprewarm 转储缓存页时要一次分配整个数组，每条记录 20 字节，算下来 shared_buffers 超过约 429GB 就会越界。700GB 的机器需要约 1.75GB，于是报出 invalid memory alloc request size，后台进程随即陷入每分钟数百次的重启循环。根治要升到 PostgreSQL 16.10 以上。",
+      "url": "https://stormatics.tech/blogs/the-1-gb-limit-that-breaks-pg_prewarm-at-scale",
+      "author": "warda bibi",
+      "source": "Stormatics",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_prewarm",
+        "内存",
+        "故障"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgcollection 2.0 支持整数键与范围删除",
+      "summary": "pgcollection 用关联数组帮 Oracle PL/SQL 代码搬到 PostgreSQL。2.0 新增整数键的 icollection，只存显式设过的键，避开原生数组用 NULL 填补稀疏下标的问题，键是 64 位整数、值可以是任意类型。delete() 现在支持删单键、删区间和清空并保留类型。要注意 Oracle 会自动给字符串键排序，pgcollection 保持插入顺序，需要时得自己调 sort()。",
+      "url": "https://mlodgenski.blogspot.com/2026/04/pgcollection-20-integer-keys-range.html",
+      "author": "Jim Mlodgenski",
+      "source": "Jim Mlodgenski 博客",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Oracle",
+        "扩展",
+        "PL/SQL"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "表膨胀会在高频写入下悄悄扩散",
+      "summary": "高频写入下，UPDATE 和 DELETE 留下的死元组积累速度会超过 autovacuum 回收的速度，页面碎片化，性能一路下滑。Jake Hertz 指出默认设置要等 20% 的行发生变化才触发清理，对大表意味着可以攒下几百万条死元组。文章给了测量膨胀率的查询，并建议把上亿行的高写入表的 autovacuum_vacuum_scale_factor 降到 0.01 到 0.02，让清理跑得更勤。",
+      "url": "https://www.tigerdata.com/blog/preventing-silent-spiral-table-bloat",
+      "author": "Jake Hertz",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-09",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/preventing-silents-spiral-table-bloat.png",
+      "domain": "pg",
+      "tags": [
+        "膨胀",
+        "autovacuum"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "跨会话访问临时表的防护被读流绕开",
+      "summary": "改用 read_stream_next_buffer() 后跳过了检查，将在读流开始与 StartReadBuffers 各补一处。",
+      "url": "https://www.postgresql.org/message-id/CAJDiXgiAObr4c+PTWSS19vcohrFSDLK3MC5FK3TekMB3U3DjfQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "缺陷"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 评分视图的内存占用改用新参数",
+      "summary": "十万张表约占 16MB，最终采用 will_free 指针，让调用方决定能否显式释放条目。",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0uiqzLPvZMXsooFPR5udpXUiVy8WvTLbduOvT2JPawYkA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "统计"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 的锁升级方案之争仍未收敛",
+      "summary": "标志位加 CheckTableNotInUse() 的做法被指漏洞太多，也会误伤 LOCK TABLE 这类操作。",
+      "url": "https://www.postgresql.org/message-id/CADzfLwUed3gmARGbHnsDbrXsqPRW0b0VUtZxi5iNJj0LTC2fJA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "锁"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "WAIT FOR LSN 的收尾补丁整理成五个部分",
+      "summary": "Andres Freund 建议改用带内存屏障的原子读写，并补上时间线切换等场景的测试。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfduhQsm44j_ziZ6ykFTDZ2SFvZp04iCrc5_dD9PGZUrhrw@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "WAL"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "终止信号信息改用统一的 pg_signal_info 结构",
+      "summary": "新方案把发送方信息作为参数传给处理器，UID 用 0 表示未知的做法仍有争议。",
+      "url": "https://www.postgresql.org/message-id/4D19BF33-3C16-49A3-918E-148369ADBCB2@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "信号",
+        "日志"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "并行 autovacuum 测试的时序问题已修",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/525d0f48-93f7-493f-a988-f39b460a79bc@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "日志截断补丁移到 PG20 的 CommitFest",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEc5Dn5KFU04sDp0Kyai2Te5yTuni3QW7pc2a3=343tJQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "并行 autovacuum 的表级覆盖之争仍无共识",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoACxi0vpPTbF3xea2gwxPO4sc4phW8vt1qssODN1=FNRQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "同步槽测试从一分多钟缩短到六秒",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uDYcKfKHHQ2rWXMUJ3NuMh65GYqcU1_DhEbYUMuxZhM2w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    }
+  ]
+}

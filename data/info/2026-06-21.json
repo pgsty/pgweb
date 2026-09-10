@@ -1,0 +1,182 @@
+{
+  "date": "2026-06-21",
+  "origin": "chronicle 2026-06-21: pgnexus #184, news 1, planet 3；补入 2026-06-20 未用候选 4 条",
+  "items": [
+    {
+      "tier": 1,
+      "title": "postgres-lsp 为 SQL 与 PL/pgSQL 提供语言服务器",
+      "summary": "编辑器里的 SQL 支持长期依赖正则启发式规则，跳转和补全都不可靠。Gavin M. Roy 发布的 postgres-lsp 基于 tree-sitter-postgres 实现语言服务器协议，用真正的 PostgreSQL 语法解析 .sql 文件，提供诊断、语义高亮、符号大纲、跳转定义、查找引用、上下文补全和函数签名，还能按 river、dbt、pg_dump 等风格格式化。PL/pgSQL 函数体通过语言注入解析。",
+      "url": "https://github.com/gmr/postgres-lsp",
+      "author": "Gavin M. Roy",
+      "source": "GitHub",
+      "source_date": "2026-06-21",
+      "image": "https://opengraph.githubassets.com/674e86798aa7814afed6990dab5c836fbe37aab94f6115d069275dcde52b701e/gmr/postgres-lsp",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "LSP",
+        "开发体验"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "effective_cache_size 只影响估算，建议设成内存的一半以上",
+      "summary": "effective_cache_size 不分配内存，只告诉规划器 shared_buffers 加操作系统页缓存大约有多少可用。规划器据此用 Mackert-Lohman 公式估算索引扫描的物理读页数：值大意味着重复访问多半命中缓存，索引扫描显得便宜；值小则更倾向顺序扫描与哈希连接。默认 4GB，Christophe Pettus 建议在数据库专用机上设成物理内存的 50%–75%，且必须大于 shared_buffers，宁高勿低。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-effectivecachesize/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-21",
+      "image": "https://thebuild.com/media/media/ed6a8c117e3e4542b8c61f6024246361.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "优化器",
+        "缓存"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Regina Obe 开始用 pg_timetable 替换 pgAgent",
+      "summary": "按 Regina Obe 的说法，pgAgent 正在退场，半年后完全退役，pgAdmin 里的界面也会随之消失。她原先看重的是它跨 Windows 与 Linux、界面内建在 pgAdmin 里、后端就是 PostgreSQL 数据库，一个作业还能包含多个有序步骤。这一篇讲迁移动机并介绍替代品 pg_timetable，第二篇讲怎么在 Linux 上把它配成服务；她还在 GitHub 上做一个仿 pgAgent 的管理界面。",
+      "url": "https://www.postgresonline.com/journal/index.php?%2Farchives%2F423-Replacing-pgAgent-with-pg_timetable-Part-1.html=",
+      "author": "Regina Obe",
+      "source": "Postgres OnLine Journal",
+      "source_date": "2026-06-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "调度",
+        "pgAgent",
+        "迁移"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "MERGE PARTITIONS 的表空间继承缺陷已有补丁",
+      "summary": "Justin Pryzby 发现合并出的表落到默认表空间，Alexander Korotkov 提交补丁对齐建表逻辑。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfduZ9Yd6vG0EOZUa_MOVxpEDMsZB-89pgNypwFzp2ax+NQ@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "缺陷"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志表提案仍在打磨错误处理",
+      "summary": "Amit Kapila 主张插入失败应报 ERROR，vignesh C 发现并发改订阅会静默丢掉冲突记录。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm1ZP5pO-q09M_MF3Qh8iR2GGmbkhp7bU+mpwvr6-As4Ow@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "pg_upgrade 保留复制源 OID 的补丁收到版本判断意见",
+      "summary": "Rui Zhao 指出旧集群里用户自建的 origin 会跳过前置检查，升级到 restore 阶段才失败。",
+      "url": "https://www.postgresql.org/message-id/CAHWVJhGoi+2bzZDNxtnB8Xc+DuFKB=YvqC0Xoc_HfzcgHAwMUg@mail.gmail.com",
+      "author": "Rui Zhao",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade",
+        "复制"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别补丁更新到 v50",
+      "summary": "修掉 DEFINE 求值的 use-after-free、导航函数命名空间冲突和一个休眠匹配的正确性缺陷。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zCsaf=WedELLjqLe3BV_8dWiO1DPDGA9sXj4qhe+=-XXw@mail.gmail.com",
+      "author": "Henson Choi",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RPR",
+        "补丁"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "Andreas Scherbaum 记录柏林五月的 PostgreSQL 聚会",
+      "summary": "",
+      "url": "https://andreas.scherbaum.la/post/2026-06-22_postgresql-berlin-may-2026-meetup/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "Pagecast 把报告发布到 Cloudflare Pages",
+      "summary": "",
+      "url": "https://github.com/Amal-David/pagecast",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "工具"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "有人撰文认为 agentic coding 是个陷阱",
+      "summary": "",
+      "url": "https://khalilstemmler.com/articles/agentic-coding-is-a-trap/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI 编程"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "OpenTunnel 把远程命令包装成本地 agent 的工具调用",
+      "summary": "",
+      "url": "https://github.com/akoenig/opentunnel",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-20",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Agent",
+        "工具"
+      ],
+      "position": 11
+    }
+  ]
+}

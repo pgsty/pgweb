@@ -1,0 +1,276 @@
+{
+  "date": "2026-03-17",
+  "origin": "chronicle 2026-03-17: pgnexus #85, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 18 开始对 MD5 口令发出弃用警告",
+      "summary": "PostgreSQL 18 在 password_encryption 设为 md5 且创建或修改口令时会发出警告，提示 MD5 已弃用、将来会移除，新参数 md5_password_warnings 可关掉这条提示。迁移路径是改用 scram-sha-256，它更安全且早已是默认值。要注意 MD5 口令无法直接转成 SCRAM，必须逐个重设所有用户的口令，确认客户端库支持 SCRAM，并改掉 pg_hba.conf 里的认证方式。",
+      "url": "https://www.cybertec-postgresql.com/en/from-md5-to-scram-the-next-security-shift-in-postgresql/",
+      "author": "Rafia Sabih",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "认证",
+        "SCRAM"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的 pg_dumpall 支持非文本格式",
+      "summary": "Andrew Dunstan 在 2 月底推送：pg_dumpall 不再只能输出纯 SQL 脚本，还支持 custom、directory 与 tar。非文本格式产出一个目录：toc.glo 存放角色与表空间等全局对象，map.dat 记录库 OID 与名字的对应，databases 下按 OID 存放各库归档。pg_restore 随之扩展，先恢复全局对象再逐库恢复，新增 --globals-only，也能从整集群备份挑单库恢复。",
+      "url": "https://www.depesz.com/2026/03/17/waiting-for-postgresql-19-add-non-text-output-formats-to-pg_dumpall/",
+      "author": "Hubert 'depesz' Lubaczewski",
+      "source": "depesz 博客",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "备份",
+        "pg_dump"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Redgate 的 pgNow 提供免代理的即时体检",
+      "summary": "pgNow 是 Redgate 出的轻量 PostgreSQL 诊断工具，不装代理，连上去就能看当前状态。它读 pg_stat_activity 与 pg_stat_statements，汇总查询负载与会话、索引使用和 vacuum 活动等指标。使用前要启用 pg_stat_statements，并建一个对相关系统视图有 SELECT 权限的监控用户。Linux 下解压后以非 root 运行，Windows 有安装包，目前免费。",
+      "url": "https://stormatics.tech/blogs/pgnow-instant-postgresql-performance-diagnostics-in-minutes",
+      "author": "Hamza Sajawal",
+      "source": "Stormatics 博客",
+      "source_date": "2026-03-17",
+      "image": "https://stormatics.tech/wp-content/uploads/2026/03/pgnow-architecture.png",
+      "domain": "pg",
+      "tags": [
+        "诊断",
+        "工具",
+        "监控"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Xata 用原生 Postgres 顶掉了一整套 OLAP 栈",
+      "summary": "Xata 把自家的产品分析仓库直接建在原生 PostgreSQL 上，理由是中小规模的分析负载用不着专门的 OLAP 系统。他们把认证、用量、计费和行为事件四套数据汇到一处：PostHog 走自带管道每日同步，数据库快照用 Kubernetes 定时任务拉取，计费数据用自写的批量上传程序。落地后用物化视图把 JSONB 事件属性摊平，用 pg_cron 定时刷新，用数据库分支安全地改表结构；分析压力上来再上 pg_duckdb。",
+      "url": "https://xata.io/blog/postgres-data-warehouse",
+      "author": "Noémi Ványi",
+      "source": "Xata 博客",
+      "source_date": "2026-03-17",
+      "image": "https://xata.io/api/og?title=Postgres+as+a+Data+Warehouse%3A+No+OLAP+Stack+Required&amp%3Bauthor=No%C3%A9mi+V%C3%A1nyi",
+      "domain": "pg",
+      "tags": [
+        "数据仓库",
+        "分析",
+        "pg_cron"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "工业数据放进 PostgreSQL 才好被 AI 代理查询",
+      "summary": "工业现场的统一命名空间架构通常把时序数据和设备层级上下文放在两套系统里，问一个有意义的问题就得先做集成。Damaso Sanoja 的做法是两边都放进 PostgreSQL：uns_namespace 表存 ISA-95 层级映射，tag_history 表存带时间戳的传感器读数，用外键在数据库层面保证质量，一条 SQL 连接即可完成上下文化。这样既能回答「多个厂区里哪台设备表现最好」，也让 AI 代理经由 MCP 直接理解工厂结构。",
+      "url": "https://www.tigerdata.com/blog/ask-factory-floor-anything-structuring-industrial-data-ai-agents",
+      "author": "Damaso Sanoja",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-17",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/ask-your-factory-floor-anything.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "工业",
+        "MCP"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "新 B 树访问方法把归并扫描带进索引",
+      "summary": "Alexandre Felipe 的方案针对前导列 IN、次列 ORDER BY 的查询，小 limit 下从 3409 毫秒降到 13 毫秒。",
+      "url": "https://www.postgresql.org/message-id/CAE8JnxM06S_B+2N-VU7LqwMhbf4pp94nnUTB=whZ2ou56++zVg@mail.gmail.com",
+      "author": "Alexandre Felipe",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "规划器"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "索引预取补丁到 v15，部分提交已入主线",
+      "summary": "新增合并取 LSN 与解锁的函数，避免 pgbench 只读回归，作者称如今略快于主线。",
+      "url": "https://www.postgresql.org/message-id/CAH2-WzkyG01682zwqyUTwV=Zq+M_qGgi1NbXwp1H-piRSfJsgQ@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "FreeBSD 上的 SIGBUS 崩溃疑与 15 版信号处理有关",
+      "summary": "Tom Lane 判断根源是 PostgreSQL 15 在信号处理函数里启动子进程，该做法违反 POSIX，16 版已修。",
+      "url": "https://www.postgresql.org/message-id/ablGaVLQ3N9WsHcc@disp.intra.daemon.contact",
+      "author": "Tom Lane",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "autovacuum"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "表 AM 的更新与删除选项拟改用位掩码",
+      "summary": "Álvaro Herrera 提议与插入接口对齐，动因是 REPACK CONCURRENTLY 需要传更多选项。",
+      "url": "https://www.postgresql.org/message-id/202603171606.kf6pmhscqbqz@alvherre.pgsql",
+      "author": "Álvaro Herrera",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "表访问方法"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "哈希索引提示位引发的断言失败已推送修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/sudacyezcakcgo2t2tkb56o6ccktf4o5pg2hlvdfojwrepy7v3@6zutptbg2wz2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "预取统计的 EXPLAIN 补丁改经表 AM 回调传递",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/0fa0794e-7e34-4fdb-8e35-a59ef8ce5246@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "SET ALL TABLES 被指缺少对序列发布的支持",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm2OOgmNOPpABUU+AXzHhfrLG9HMfSd3jfNe=t3dc-kp1Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 的 --logdir 选项进入评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uBPvz6S9VE8sLYmoju4BGYh94uks+UTocPdD094xqmZ2w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "逻辑复制"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "autovacuum 新调度器是否赶 19 版仍在权衡",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAApHDvqHXYCb=x0hHeR1e21ksqFNk4q3_zoPk6V-LLu0VL491Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Postgres Pro 发布企业版 18 的视频评测",
+      "summary": "",
+      "url": "https://postgrespro.com/blog/company/5972818",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "发行版"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "SCaLE 23x 讲了 CloudNativePG 的自愈机制",
+      "summary": "",
+      "url": "https://vyruss.org/blog/scale-23x-cloudnativepg-robust-self-healing-postgresql-kubernetes.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "会议"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "OpenAI 借 AWS 协议扩大对美国政府的供货",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/03/17/openai-expands-government-footprint-with-aws-deal/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "云服务"
+      ],
+      "position": 17
+    }
+  ]
+}

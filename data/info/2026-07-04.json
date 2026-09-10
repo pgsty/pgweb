@@ -1,0 +1,321 @@
+{
+  "date": "2026-07-04",
+  "origin": "chronicle 2026-07-04: pgnexus #197, planet 2, daily",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Ubicloud 为 Postgres 选择严格内存 overcommit",
+      "summary": "OOM killer 杀掉正在改共享内存的后端进程时，共享内存可能停在不一致状态，有损坏已存数据的风险；postmaster 随即终止所有后端，重启还要跑崩溃恢复。Ubicloud 的 Burak Yucesoy 说明他们把 vm.overcommit_memory 设为 2，用分配阶段的 ENOMEM 换掉这种又晚又暴烈的失败，vm.overcommit_kbytes 取总内存的 80% 加 2GB。代价是机器混跑别的负载时，数据库也会被牵连着拿到 ENOMEM。",
+      "url": "https://www.ubicloud.com/blog/postgresql-and-the-oom-killer-why-we-use-strict-memory-overcommit",
+      "author": "Burak Yucesoy",
+      "source": "Ubicloud 博客",
+      "source_date": "2026-07-03",
+      "image": "https://cdn.prod.website-files.com/64f9d9b4e737e7b37d4e39a4/69e8a268046b54c24dff01c2_OOM%20Killer%20(1).jpg",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "内存",
+        "Linux"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "psql 的 \\d tablename 退化成了顺序扫描",
+      "summary": "提交 85b7efa1cdd 带来一处回归，psql 的 \\d tablename 从索引扫描退化成顺序扫描，目录一大就明显变慢。Andres Freund 最先发现，Jelte Fennema-Nio 定位根因并给出恢复索引扫描的补丁。Tom Lane 审查后认为方向正确，但必须同时检查两个排序规则是否都是确定性的，只查一个不够。他还指出原提交说明有几处不准确：问题只影响精确匹配而不影响前缀匹配，正则表达式和 LIKE 模式都会中招。修订后的 v2 补丁已附在邮件里。",
+      "url": "https://www.postgresql.org/message-id/614120.1783196825@sss.pgh.pa.us",
+      "author": "Jelte Fennema-Nio",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql",
+        "性能回归"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "全局临时表补丁 v6 修掉一处数据损坏",
+      "summary": "Dean Rasheed 发布全局临时表补丁的 v6，修掉了 Nico Williams 借助大模型辅助审查找出的一批问题。最要紧的一处会造成数据损坏：TRUNCATE 把会话级的冻结 XID 错误写进了共享的 pg_class。其余包括 vacuum.c 的未初始化变量、少拿 ProcArrayLock、事务结束时没重置的计数器。设计上 v6 把 pg_class 里全局临时表的冻结 XID 一律置零，只更新 pg_temp_class。",
+      "url": "https://www.postgresql.org/message-id/CAEZATCWMYVFcvzPuGDwP1T=53zUs8+E2BGGi3YZYS3nh1thRDQ@mail.gmail.com",
+      "author": "Dean Rasheed",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "数据损坏"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "enable_parallel_append 管的是分区之间的并行",
+      "summary": "Parallel Append 让不同工作进程同时扫描不同的分区或 UNION ALL 分支，而不是全挤在同一个子节点上，是分区之间的粗粒度并行。Christophe Pettus 指出它还能混用可并行与不可并行的子节点，普通 Append 做不到，对只有非并行索引的分区表尤其有用。参数默认打开。小查询并行后反而变慢时，可以临时关掉确认是不是启动开销盖过收益，但正确的收尾是更新统计、调 parallel_workers 或代价阈值，再改回默认。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_parallel_append/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-07-04",
+      "image": "https://thebuild.com/media/media/cb662d579d784f28810b08b02847c011.png",
+      "domain": "pg",
+      "tags": [
+        "并行查询",
+        "分区",
+        "参数"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "攻击者借 Langflow 漏洞自动化勒索数据库",
+      "summary": "Sysdig 记录了一条名为 JADEPUFFER 的攻击链：入侵者利用 Langflow 的漏洞拿下实例，再自动化地对能触达的数据库实施勒索。这类 AI 与低代码工具往往被快速部署到公网，权限给得很大，硬化和补丁都跟不上，于是成了攻击者优先挑的软柿子。可行的对策是把 agent 与 flow 类服务默认放回内网、强制认证、限制出站访问，把数据库凭据与服务隔离开，并把它们纳入常规漏洞扫描，而不是当试验品放着不管。",
+      "url": "https://www.sysdig.com/blog/jadepuffer-agentic-ransomware-for-automated-database-extortion",
+      "author": "Sysdig",
+      "source": "Sysdig 博客",
+      "source_date": "2026-07-03",
+      "image": "https://cdn.prod.website-files.com/681e366f54a6e3ce87159ca4/6a451630b83bf82cf99abaff_blog%20card.png",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "勒索软件",
+        "AI"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "订阅命令的竞态修复扩展到发布与删除路径",
+      "summary": "Bertrand Drouvot 改用 SUBSCRIPTIONOID 查缓存，又确认 IF EXISTS 会忽略 missing_ok。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-th6yN9W6QUu4oT05O2YU1bL7LiGbuBFQbrQmXG7LzS1A@mail.gmail.com",
+      "author": "Bertrand Drouvot",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "文档称属性图支持安全标签，执行却报不支持",
+      "summary": "Noah Misch 发现提交 2f094e7 的文档与实现不符，并建议连带复查所有 RELKIND_VIEW 引用。",
+      "url": "https://www.postgresql.org/message-id/20260704221210.08.noahmisch@microsoft.com",
+      "author": "Noah Misch",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "属性图",
+        "文档"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Brume 让 Postgres 假名化后仍保住外键",
+      "summary": "Show HN 项目，声称在多张表之间做假名化替换时仍能维持外键引用的一致。",
+      "url": "https://brumeorg.github.io/",
+      "author": "Brume",
+      "source": "Show HN",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "脱敏",
+        "工具"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 讲述如何把凭据泄露告警清到零",
+      "summary": "文章复盘其内部推广 secret scanning、分流告警和跟进修复的做法。",
+      "url": "https://github.blog/security/application-security/how-github-used-secret-scanning-to-reach-inbox-zero/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "凭据"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "btree_gist 跨类型整数操作符补丁重做 rebase",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/52379f05-166d-4f51-9fc1-27765cd30e9f@Spark",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "json_table 的 PLAN 子句补丁推进到 v23",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdu-1oDzhKHXRF0vVSqab5Q3V5Sx1iQ5+tOmL_+nqY5_tA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别给出 CLASSIFIER 的存储结构设计",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxFDkF0_JjHh--d4cbakaCG6X=c7RHYENGMyrudKnBT1-g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "CAST FORMAT 或将走独立机制而非扩展现有转换",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxH0=2_5j3O6modqXhwsk8OKkZ-Vv6-7G=w9nSh1HphV3g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "PG DATA 2026 回顾与 2027 筹备",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/07/04/pg-data-2026-recap-and-looking-forward-to-pg-data-2027/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "数据库命令行客户端 mycli 发布 2.0",
+      "summary": "",
+      "url": "https://github.com/dbcli/mycli",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Bitcask 的日志结构哈希表论文被重新讨论",
+      "summary": "",
+      "url": "https://riak.com/assets/bitcask-intro.pdf",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "1GB 的 GML 文件逼出了矢量瓦片方案",
+      "summary": "",
+      "url": "https://geodataviewer.com/blog/why-vector-tiles-for-large-gis-datasets/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "FreeBSD 把我的内存吃光了",
+      "summary": "",
+      "url": "https://crocidb.com/post/freebsd-ate-my-ram/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Matthew Garrett 讨论如何给 agent 身份做授权",
+      "summary": "",
+      "url": "https://codon.org.uk/~mjg59/blog/p/securing-agentic-identity/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "本地运行前沿大模型的实践指南登上 HN 首页",
+      "summary": "",
+      "url": "https://github.com/jamesob/local-llm",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "mcpsnoop 给 MCP 交互加上抓包式观测",
+      "summary": "",
+      "url": "https://github.com/kerlenton/mcpsnoop",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Epoch AI 观察到高危漏洞数量出现阶段性激增",
+      "summary": "",
+      "url": "https://epoch.ai/data-insights/cve-severity-spike",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-03",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 22
+    }
+  ]
+}

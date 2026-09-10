@@ -1,0 +1,395 @@
+{
+  "date": "2026-08-13",
+  "origin": "chronicle 2026-08-13: pgsty-daily 2026-08-13.md, pgnexus #237, news 1, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 全系小版本与 19 Beta 3 发布",
+      "summary": "PostgreSQL 全球开发组发布了所有受支持版本的更新，包括 18.6、17.11、16.15、15.19、14.24，以及 19 的第三个 Beta。本次修掉 28 个安全漏洞和过去数月报告的一百一十多个缺陷。18.4 到 18.6 之间跳过了 18.5，原因是回归问题。三类情况升级后可能还要额外处理：并行 GIN 索引构建、btree_gist 与 ltree。另外 PostgreSQL 14 将在 2026 年 11 月 12 日停止接收修复。",
+      "url": "https://www.postgresql.org/about/news/postgresql-186-1711-1615-1519-1424-and-19-beta-3-released-3365/",
+      "author": "PostgreSQL 全球开发组",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "发布",
+        "安全",
+        "升级"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "高基数负载会把 pg_stat_statements 挤爆",
+      "summary": "Ryan Booz 这一篇讲怎么识别高基数负载，也就是持续产生的唯一归一化查询数超过 pg_stat_statements.max，导致统计被挤掉。常见来源是 ORM、动态 SQL、临时报表和 AI 辅助开发工具。文中用 Bluebox 造压：同一负载在 PostgreSQL 17 上产生 671 条唯一语句，在 18 上只有 120 条，差别来自 IN 列表归一化的改进。诊断方法是重置后观察填充速度，并盯住释放计数。",
+      "url": "https://pganalyze.com/blog/postgres-in-production-pg-stat-statements-deep-dive-part-6",
+      "author": "Ryan Booz",
+      "source": "pganalyze 博客",
+      "source_date": "2026-08-13",
+      "image": "https://pganalyze.com/blog/postgres-in-production-pg-stat-statements-deep-dive-part-6/pganalyze_OG_postgres-in-production-pg-stat-statements-part-6.png",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "pg_stat_statements",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_walviz 把 WAL 段画出来看",
+      "summary": "Bertrand Drouvot 发布了 pg_walviz，一个把 WAL 段文件的物理布局画到浏览器里的只读工具。它启动一个本地 HTTP 服务，四个联动视图分别显示按资源管理器活动着色的段热力图、选中页上的记录片段、解码后的记录头，以及按组成部分着色的原始字节。它补的是 pg_waldump 纯文本看不清的那部分。使用前提是只对归档或不可变的段副本操作，并配同版本的 pg_waldump。",
+      "url": "https://bdrouvot.github.io/2026/08/13/welcome-to-pg-walviz-postgresql-wal-segment-visualizer/",
+      "author": "Bertrand Drouvot",
+      "source": "作者博客",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "工具",
+        "可视化"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "io_max_concurrency 是每个进程的硬上限",
+      "summary": "Christophe Pettus 讲 io_max_concurrency：它规定单个进程同时能有多少个 IO 在途，是对 effective_io_concurrency 请求量的封顶。这个参数由 PostgreSQL 18 的异步 IO 子系统引入，默认 -1 表示启动时自动算，属于 postmaster 级别，改动要重启。前者最高能要到 1000，但单进程实际发出多少受这个上限约束。作者建议保持 -1，先用 pg_aios 核实真实并发。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-io_max_concurrency/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-13",
+      "image": "https://thebuild.com/media/media/f7795df56eb84d258e2a7fdc2213c405.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "异步 IO",
+        "调优"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Fastware 梳理 PostgreSQL 数据脱敏的落地难点",
+      "summary": "Diksha Sharma 从数据库管理员的实际处境出发，梳理 PostgreSQL 里做数据脱敏会遇到什么。难点有三类：要覆盖各式各样的数据类型，要能施加临时性的脱敏控制，还要把基于角色的脱敏策略做成可长期维护的东西而不是一次性脚本。文章的落点是在数据保护和业务可用之间找平衡，让需要用数据的团队照常工作，同时不让原始敏感值流出去。对准备把脱敏规范化的团队来说，它更像一份问题清单而不是具体实现方案。",
+      "url": "https://www.postgresql.fastware.com/blog/postgresql-data-masking-a-technical-deep-dive-into-protecting-sensitive-data",
+      "author": "Diksha Sharma",
+      "source": "Fujitsu Enterprise Postgres",
+      "source_date": "2026-08-13",
+      "image": "https://www.postgresql.fastware.com/hubfs/Images/Featured/Blog/img-featured-blog-postgresql-data-masking.jpg",
+      "domain": "pg",
+      "tags": [
+        "脱敏",
+        "安全",
+        "权限"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Tailscale 把一次数据损坏追到 SQLite 缺陷",
+      "summary": "Tailscale 公布了一次生产数据库损坏的排查结果，根因是 SQLite 的 WAL 重置竞态。官方说明触发条件相当苛刻：必须是 WAL 模式，同一文件至少有两个独立线程或进程连接，并在极窄的时刻并发写入和检查点。修复进入 3.51.3 及之后的版本，也回补到了 3.44.6 与 3.50.7。这属于数据损坏而不是一般可用性缺陷，受影响的版本跨度约十六年。合适的做法是先生成运行时版本清单，筛出 WAL 加多连接的部署，做备份恢复演练再升级。",
+      "url": "https://tailscale.com/blog/sqlite-wal-reset-bug",
+      "author": "Tailscale",
+      "source": "Tailscale 博客",
+      "source_date": "2026-08-13",
+      "image": "https://tailscale.com/api/og-image?id=45389fc1-da6e-4e0d-82f6-140651c6ba57",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "数据损坏",
+        "事故"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制行过滤会把未变更的 TOAST 列置空",
+      "summary": "UPDATE 因行过滤器被转成 INSERT 时，订阅端未变更的外联列会被静默写成 NULL；倾向先在应用进程报错并回移到 PG15 及以上。",
+      "url": "https://www.postgresql.org/message-id/TY4PR01MB177188334289F2A138EC6F35894DB2@TY4PR01MB17718.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "数据丢失"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "TimescaleDB 分享不改表访问接口的列式批处理",
+      "summary": "用自定义的 Arrow 元组槽让批处理对现有执行节点透明，配合延迟物化、按列解压和最小最大值跳过，再由批感知节点识别利用。",
+      "url": "https://www.postgresql.org/message-id/CACAa4VKb75kUpptWAg5r9tXmu0=bBkWyLtFLXTR2SJ_nZEcYqA@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "列式"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pageinspect 拟支持 GIN 的条目树与倒排树",
+      "summary": "补丁已 rebase，审查中发现 gin_entrypage_items() 缺少一处必要的元组描述符终结调用，已给出单行修复。",
+      "url": "https://www.postgresql.org/message-id/SY7PR01MB109210C8E9DEB6BF5FFEA7A81B6DB2@SY7PR01MB10921.ausprd01.prod.outlook.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GIN",
+        "pageinspect"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Neon 把数据库面板嵌进 Herdr 工作区",
+      "summary": "插件在工作区里加一个专属面板直接列出 Neon 项目，用快捷键就能创建分支、取连接串、暂停计算实例。",
+      "url": "https://neon.com/blog/neon-for-herdr-a-neon-pane-in-your-herdr-workspace",
+      "author": "",
+      "source": "Neon 博客",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "工具"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "SQLite 3.53.2 发布说明列出 WAL 重置修复",
+      "summary": "该修复并不只在 3.53 分支可得，3.44.6 与 3.50.7 也有回补版本，盘点时应按实际链接的库版本判断。",
+      "url": "https://www2.sqlite.org/releaselog/3_53_2.html",
+      "author": "",
+      "source": "SQLite",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "修复"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cockroach Labs 谈智能体循环的数据库模式",
+      "summary": "文章把事务边界、检查点和只追加审计当作设计清单，适合照着核对，但它是厂商工程文章而非产品发布。",
+      "url": "https://www.cockroachlabs.com/blog/agent-loops-production-database-patterns/",
+      "author": "",
+      "source": "Cockroach Labs",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Agent",
+        "架构"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Zed 1.16.0-pre 修复终端工具的路径穿越逃逸",
+      "summary": "同期的 1.15.0 修掉了 MCP 工作区线程、智能体终端，以及会吃掉大量磁盘的 npm 缓存问题。",
+      "url": "https://github.com/zed-industries/zed/releases/tag/v1.16.0-pre",
+      "author": "",
+      "source": "Zed",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "编辑器"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloud Run 的服务健康检查进入正式可用",
+      "summary": "HTTP 与 gRPC 就绪探针同时 GA，可做跨区域自动故障转移与回切，但仍依赖至少两个区域、最小实例与负载均衡。",
+      "url": "https://docs.cloud.google.com/run/docs/release-notes",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Cloud Run",
+        "高可用"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Chrome 的设备绑定会话凭据在 Windows 上正式可用",
+      "summary": "它针对的是会话令牌被窃后的账号接管，实际收益取决于身份提供方与站点是否接入。",
+      "url": "https://workspaceupdates.googleblog.com/2026/05/prevent-account-takeovers-with-DBSC-now-generally-available-in-the-Chrome-browser-for-Windows.html",
+      "author": "",
+      "source": "Google Workspace",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "浏览器"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "EXISTS 转 ANY 的子计划将改名为 exists_to_any",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwE3cCp0oUkG6m0yjPeVKY0mrCaD6x-sqN_g=jTmeoYkYg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "注入点拟支持按条件字符串触发",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/an1FE2vbnKDm3bbf@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "有人聊不上 PgBouncer 直接跑 Postgres 的经验",
+      "summary": "",
+      "url": "https://brandur.org/fragments/postgres-without-pgbouncer",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PDXPUG 九月聚会讲迁移到时态模式",
+      "summary": "",
+      "url": "https://pdxpug.wordpress.com/2026/08/13/pdxpug-septemter-8-2026-meetup-migrating-to-a-temporal-schema/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Antithesis 用测试复现了 SQLite 的 WAL 竞态",
+      "summary": "",
+      "url": "https://antithesis.com/blog/2026/wal-reset-bug/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Zed 1.15.0 修复智能体与 MCP 的多处问题",
+      "summary": "",
+      "url": "https://github.com/zed-industries/zed/releases/tag/v1.15.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Known Agents 统计智能体的抓取行为",
+      "summary": "",
+      "url": "https://knownagents.com/insights",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Woxi 尝试重新实现 Wolfram 语言",
+      "summary": "",
+      "url": "https://woxi.ad-si.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Delphi 13 社区版发布",
+      "summary": "",
+      "url": "https://blogs.embarcadero.com/delphi-13-community-edition-is-now-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GreenTree 按 Git 树而不是提交缓存测试结果",
+      "summary": "",
+      "url": "https://github.com/Reachpad/greentree",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "有人接手复活 Kubernetes Dashboard",
+      "summary": "",
+      "url": "https://github.com/isms-core-project/kubernetes-dashboard",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}

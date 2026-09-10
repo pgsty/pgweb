@@ -1,0 +1,237 @@
+{
+  "date": "2026-04-27",
+  "origin": "chronicle 2026-04-27: pgnexus #129, news 1, planet 6；并入 2026-04-25、2026-04-26 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgBackRest 唯一维护者宣布停手，Avrot 推荐 Barman",
+      "summary": "David Steele 独自维护 pgBackRest 十三年，在原赞助方兼雇主 Crunchy Data 被出售后另寻工作未果，宣布停止维护。Lætitia Avrot 指出，成百上千家机构在生产中用着它，出事时却只剩一个活跃赞助方，行业把钱投向 GPU 和模型，没人愿意养一个专职做数据完整性与灾难恢复的人。她给出的替代是 Barman：pg_basebackup 没有备份目录和 WAL 保留管理，pg_dump 谈不上时间点恢复。",
+      "url": "https://mydbanotebook.org/posts/pgbackrest-is-dead.-now-what/",
+      "author": "Lætitia Avrot",
+      "source": "mydbanotebook.org",
+      "source_date": "2026-04-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "开源可持续",
+        "pgBackRest"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的在线校验和要跑上几个小时",
+      "summary": "PostgreSQL 19 支持不停机开关数据校验和，命令立刻返回，集群照常服务，后台进程在后面逐页重写堆和索引。Christophe Pettus 提醒这才是真正的工作量：每个关系的页面都要读进缓冲区、算校验和、再经 WAL 写回，大集群要几个小时，I/O 压力接近 VACUUM FULL，会与 autovacuum、正常负载和备份抢资源，造成复制延迟，云上还可能耗尽突发 IOPS。中途打断会让集群停在混合状态，安全但不该长期挂着。",
+      "url": "https://thebuild.com/blog/online-checksums-are-not-instant/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-27",
+      "image": "https://thebuild.com/media/media/105b9337c6c742faa75022ca5c9525ed.png",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "PG19",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 开始提供按对象取 DDL 的函数",
+      "summary": "PostgreSQL 19 引入第一个零售式 DDL 函数 pg_get_database_ddl()，可直接重建 CREATE DATABASE 与 ALTER DATABASE 语句，并能选择是否美化输出、是否带上属主和表空间。以往要取单个对象的定义，只能 shell 出去跑 pg_dump -s 再 grep。Christophe Pettus 说它面向管理查询与模式比对工具，不是备份替代，后续还会覆盖表和索引。",
+      "url": "https://thebuild.com/blog/retail-ddl-arrives-one-function-at-a-time/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-27",
+      "image": "https://thebuild.com/media/media/retail-ddl.png",
+      "domain": "pg",
+      "tags": [
+        "DDL",
+        "PG19",
+        "工具"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgclone 4.0.0 用纯 SQL 完成克隆与脱敏",
+      "summary": "pgclone 是一个用 SQL 命令跨实例克隆数据库、schema 和表的 PostgreSQL 扩展，走 COPY 协议加自定义后台工作进程，在库内完成克隆，不依赖 pg_dump、pg_restore 或外部脚本。4.0.0 内置脱敏函数，可在克隆时匿名化邮箱、姓名、电话等字段，还会自动扫描源 schema 标出疑似敏感列。索引、约束、触发器、视图和序列都会保留，目标端已有对象可选报错、跳过、替换或改名。",
+      "url": "https://github.com/valehdba/pgclone/releases/tag/v4.0.0",
+      "author": "pgclone Project",
+      "source": "GitHub",
+      "source_date": "2026-04-22",
+      "image": "https://opengraph.githubassets.com/a3d395a973b0289a3fc2ba18506845b8b7ad5a45c3110b0101b03e8227781f7c/valehdba/pgclone/releases/tag/v4.0.0",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "克隆",
+        "脱敏"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Kajabi 升级 39TB Aurora 集群省下八成成本",
+      "summary": "Kajabi 要在近乎零停机的前提下升级一套 39TB 的 Aurora PostgreSQL 12，同时切到 Aurora I/O-Optimized 计费。常规升级路径撑不住动态负载，团队改用蓝绿部署叠加原生逻辑复制，用 6 到 8 个复制槽分摊高流量表的压力，并分两段走：先升到 13 以启用 I/O 优化存储，再升到 15。切换由 PgBouncer 接管流量，控制在 10 分钟以内，官方口径的成本降幅是 80.53%。",
+      "url": "https://aws.amazon.com/blogs/database/how-kajabi-optimized-costs-with-amazon-aurora-upgrades/",
+      "author": "Arpine Soghoyan",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-04-27",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/04/14/DB5018.png",
+      "domain": "pg",
+      "tags": [
+        "Aurora",
+        "升级",
+        "成本"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Richard Yen 讲清 Bitmap Heap Scan 的取舍",
+      "summary": "Bitmap Heap Scan 分两步：先用一个或多个索引建出匹配行的位图，再按物理顺序访问堆页，把随机 I/O 换成顺序 I/O。规划器一般在选择度居中时选它，也就是行数多于索引扫描划算的范围、又不值得全表顺序扫描。它还能用 BitmapAnd 和 BitmapOr 组合多个独立索引，省掉专门的复合索引。内存不够时位图退化成只记页面级信息，堆访问阶段要靠 Recheck Cond 补做过滤。",
+      "url": "https://richyen.com/postgres/2026/04/27/bitmap_heap_scan.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-04-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行计划",
+        "索引",
+        "性能"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "JSONB 标量提取拟省掉多余的包装解包",
+      "summary": "Haibo Yan 的五个补丁用类型转换钩子识别 cast(extract(...))，直接改写成带类型的提取函数。",
+      "url": "https://www.postgresql.org/message-id/CABXr29EZNEgjJVNRX3gLOjRZVjXT6tda2_m8DdxQTfr8s8mkEQ@mail.gmail.com",
+      "author": "Haibo Yan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSONB",
+        "性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表补丁暴露重名崩溃与权限缺口",
+      "summary": "Nisha Moond 发现表名已存在会触发 Assert 崩溃，非超级用户订阅所有者也读不到自己的表。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uC8=4jJrJUN43zUgc2yaxp=TspgfUtj=-+AyALaE7fBXg@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "并行 Apply 定案统一消息格式并改名类型",
+      "summary": "Hayato Kuroda 采纳方案二，把消息类型改名为 PAWorkerMsgType 并修正依赖跟踪逻辑。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uBkQmM6kw6RdKc_6M6_io0wc2MHdfoxKL5dSBv16ksQ9Q@mail.gmail.com",
+      "author": "Hayato Kuroda",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "并行"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "输出插件声明不访问共享目录的做法遭质疑",
+      "summary": "Andres Freund 担心缓存失效回调仍会间接访问，Amit Kapila 认为该实现尚未取得共识。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1JhuT5fyTosWDZ+Pgs+j7xEjObTyRMn80uNKgi_ivqHbw@mail.gmail.com",
+      "author": "Andres Freund",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "REPACK"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "并发 REPACK 提议用 upgradeIntent 标志破解死锁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADzfLwXbUWuS6H4uJEFVL1jS1kzsVnuJ+zX1+tAEhQxBnEiGKw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解：archive_library",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-archive_library/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解：archive_command",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-archive_command/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解：archive_cleanup_command",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-archive_cleanup_command/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 的弃用通知",
+      "summary": "",
+      "url": "https://thebuild.com/blog/notice-of-obsolescence/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    }
+  ]
+}

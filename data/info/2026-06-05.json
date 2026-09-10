@@ -1,0 +1,257 @@
+{
+  "date": "2026-06-05",
+  "origin": "chronicle 2026-06-05: pgnexus #168, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 用两个 contrib 模块给出查询提示",
+      "summary": "查询提示在 PostgreSQL 社区争论了二十年，19 的答案是 Robert Haas 写的 pg_plan_advice 和 pg_stash_advice 两个 contrib 模块。提示不写进 SQL：一种是设 pg_plan_advice.advice 这个 GUC 给建议，另一种是把命名的建议集放进共享内存按查询 ID 匹配，可按会话或数据库限定范围。可指定扫描方式、连接顺序、连接方法和并行度，聚合与集合运算仍管不了。",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-query-hints",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "优化器",
+        "查询提示"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "CloudNativePG 给出测试 19 Beta 的方法",
+      "summary": "PostgreSQL 19 Beta 1 发布次日，CloudNativePG 就在 postgres-containers 仓库放出 19beta1-minimal-trixie 系列镜像。做法很短：在 Cluster 资源里把 imageName 指向该镜像，设好实例数和存储，部署后用 kubectl exec 执行 select version() 确认版本。项目方明确 Beta 镜像不用于生产，目的是在正式发布前把缺陷试出来。",
+      "url": "https://cloudnative-pg.io/blog/postgresql-19-beta1/",
+      "author": "CloudNativePG",
+      "source": "CloudNativePG 博客",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "Beta",
+        "测试"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "行存导致的读放大是分析查询的瓶颈",
+      "summary": "PostgreSQL 按行存储，一张 15 列的表哪怕只查 2 列，扫描时仍要把匹配行的全部列读进来。文章给的例子是每行只需要 12 字节却读了 200 字节，放大约 16 倍；索引解决不了这件事，因为索引优化的是选哪些行，不是每行读多宽。列式存储按列组织数据，只读需要的列。TigerData 给出的折中是 Hypercore：新数据保持行格式保证写入速度，旧数据转成列格式提升分析扫描效率。",
+      "url": "https://www.tigerdata.com/blog/row-vs-columnar-storage-analytics-postgresql-scans",
+      "author": "NanoHertz Communications",
+      "source": "TigerData 博客",
+      "source_date": "2026-06-05",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/06/row-vs-columnar-storage-analytics-postgresql-scans.png",
+      "domain": "pg",
+      "tags": [
+        "列式存储",
+        "分析",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "社区提议在 PostgreSQL 20 移除 refint 模块",
+      "summary": "Ayush Tiwari 提议把 contrib 里的 refint 模块在 PostgreSQL 20 中删掉。文档早就写明它的功能已被内置外键取代，最近又接连暴露问题：级联 UPDATE 置空时崩溃、计划缓存损坏，维护成本超过了它作为示例代码的价值。补丁从 contrib/spi 移除相关文件并调整升级测试。Nathan Bossart、Daniel Gustafsson 和 Tom Lane 都赞成移除，建议先在文档里预告。",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWUHq8Ohc6-N-xamOPYz-q3qUYMtwQX-1=Zi=5N1Q_GSEQ@mail.gmail.com",
+      "author": "Ayush Tiwari",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "contrib",
+        "弃用"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "用 Docker 测试 PostgreSQL Beta 版",
+      "summary": "Andrew Atkinson 写了一份容器化的 Beta 试用步骤，不必动现有实例就能验证兼容性。",
+      "url": "https://andyatkinson.com/postgresql-beta-testing-docker",
+      "author": "",
+      "source": "Andrew Atkinson 博客",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "Docker"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "远程 NOTICE 是否该转给客户端起争议",
+      "summary": "dblink 与 postgres_fdw 的远程消息在 client_min_messages 为 log 时会传到客户端，改法未定。",
+      "url": "https://www.postgresql.org/message-id/396C3BEE-CD4D-450A-8D28-E708E9AA4075@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "日志"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "OAuth 的整数溢出修复赶在 Beta 1 之前",
+      "summary": "Jacob Champion 把毫秒计算的 static_assert 换成检查乘法，与现有溢出检查实践一致。",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+kKqSrU5c8D60rgSj6ybiNwsZkxgTJhef+w0-mRpw=m0A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "OAuth",
+        "缺陷"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "域默认值走快速路径后 ALTER TABLE 会报错",
+      "summary": "空表加带域默认值的列时，约束检查里的除零错误会让命令失败，与 CREATE TABLE 行为不一致。",
+      "url": "https://www.postgresql.org/message-id/7033D663-DDB4-4B35-922C-F33DE53B1502@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "DDL"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "提议给预处理语句加协议层命名空间",
+      "summary": "Jelte Fennema-Nio 想把 libpq 内部语句和应用语句分开，避免 DISCARD ALL 之后的冲突。",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+ndz7Dx5WdJu8zRPXLsA6U56jvcKnoT=ru2DhQtOKy=eA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "协议",
+        "libpq"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "把所有 GUC 排成一列：data_checksums",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-datachecksums/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "统计 PostgreSQL 发布说明里的 2026 年致谢名单",
+      "summary": "",
+      "url": "https://markwkm.blogspot.com/2026/06/acknowledged-individuals-in-postgresql.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "Lætitia Avrot 讲自己怎么成为补丁评审者",
+      "summary": "",
+      "url": "https://mydbanotebook.org/posts/a-reviewer-was-born/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "Fujitsu 记录 PGConf Germany 2026 的逻辑复制讨论",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/fujitsu-postgresql-innovations-and-logical-replication-discussions-at-pgconf-germany-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 保留复制源 OID 的补丁在评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm1L7++aSjacbFayEvgsj5zjdfa9tc3sGw6N9NVt7DSOKQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "表达式索引自动命名的 v3 补丁通过回归测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAF0whue3iOMfoxHX3Smqt_wWHO0U0iuuSSRXeD8Wjb3uSybZXg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别的 JIT 部分需要专家接手评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zBdR_23drKa38cyejE1YZ+4PtasVXGJ++uSeqpvXgJeOQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "synchronized_standby_slots 定为静默去重加报错",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/TY4PR01MB17718F364B2CB8108B34FA5FC94112@TY4PR01MB17718.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    }
+  ]
+}

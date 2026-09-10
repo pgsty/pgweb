@@ -1,0 +1,558 @@
+{
+  "date": "2026-05-06",
+  "origin": "chronicle 2026-05-06: pgsty-daily, pgnexus #138, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Figma 用 Go 自研 PGKeeper 顶替 PgBouncer",
+      "summary": "Figma 讲了为什么在 Postgres 前面换掉 PgBouncer：单线程带来纵向扩展上限、没有负载优先级、缺少 CoDel 之类的背压、连接抖动时容易压垮数据库。替代品 PGKeeper 用 Go 写成，基于 pgx，对外走 gRPC，部署在 NLB 后面，按优先级准入并用欠债机制照顾高优先级流量，配合自适应 LIFO 队列。单实例峰值超过 45000 QPS，上线后数据库 SLO 保持在 99.99% 以上。项目没有开源。",
+      "url": "https://www.figma.com/blog/pgkeeper-building-the-bouncer-we-needed-for-postgres/",
+      "author": "Figma Engineering",
+      "source": "Figma 博客",
+      "source_date": "2026-05-04",
+      "image": "https://cdn.sanity.io/images/599r6htc/regionalized/a6656bd7b0e1b3c1709cbf65beab5e28b0f1c293-3264x1836.png?w=1200&amp%3Bq=70&amp%3Bfit=max&amp%3Bauto=format",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "PgBouncer",
+        "架构"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "在线开关数据校验和的收尾补丁已推送",
+      "summary": "Daniel Gustafsson 推送了 0001 到 0003 三个补丁，收尾在运行中的集群里切换数据校验和这项功能。这批补丁针对的是 Ayush Tiwari 等人此前报告并复现的缺陷，推送前又做了小幅调整，Ayush 确认 v3 解决了他测试中遇到的问题。前几天暴露的成本限制参数失效、对 unlogged 关系多写 WAL、init fork 在恢复期仍需 WAL 才能保住备库一致，都在这一轮里处理掉了。",
+      "url": "https://www.postgresql.org/message-id/47C4D07F-3263-4FA0-9F54-7F460204B9A1@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据校验和",
+        "内核"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_control 竞态改成只传一个字段",
+      "summary": "Alexander Korotkov 给 pg_control 写入的竞态提了个更简单的解法。问题在于后端进程要在挂上共享内存之前读 pg_control。Thomas Munro 此前提议通过 BackendParameters 传一份原型控制文件副本，被指出有用到过期数值的风险。Korotkov 发现挂共享内存之前真正需要的只有 data_checksum_version 一个字段，补丁便只传这个值，也压低了读到陈旧数据的概率。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdvvPQGT_AST9zrFLZEQX5tDCbAzK6n6jpqprbrpNzk3Mg@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_control",
+        "竞态"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 把 MultiXact 成员扩到 64 位",
+      "summary": "PostgreSQL 19 把 MultiXactOffset 从 32 位扩到 64 位，pg_upgrade 时会自动重写 pg_multixact/offsets，生产规模的集群可能要几分钟。这消掉了一类紧急事故：MultiXactId 还有余量、成员空间却先耗尽，报 multixact members limit exceeded，逼着在写入高峰做紧急 vacuum。外键密集的多租户系统受益最大。",
+      "url": "https://thebuild.com/blog/multixact-members-at-64-bits-one-less-wraparound-to-worry-about/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-06",
+      "image": "https://thebuild.com/media/media/a353d6d9c6e34560ae1627bc1d01afc8.png",
+      "domain": "pg",
+      "tags": [
+        "MultiXact",
+        "回卷",
+        "PostgreSQL 19"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "用顾问锁替代可序列化隔离来做保留归档",
+      "summary": "Yugabyte 的 Mark Peacock 写了一种用 PostgreSQL 顾问锁替代可序列化隔离来防写偏斜的做法，场景是按保留期归档清理数据。传统做法靠分区管理来做保留清理，代价是分区维护的开销；改用顾问锁之后写入性能可预测，清理过程也更好控制。他把这归为数据建模层面的方案：既保住一致性，又不用背分区管理的复杂度，适合保留策略严格、写吞吐又高的应用。",
+      "url": "https://www.yugabyte.com/blog/advisory-locking-serializable-isolation-and-retention-archiving/",
+      "author": "Mark Peacock",
+      "source": "Yugabyte 博客",
+      "source_date": "2026-05-06",
+      "image": "https://www.yugabyte.com/wp-content/uploads/2026/05/advisory-locking-serializable-isolation-and-retention-archiving-blog-social.jpg",
+      "domain": "pg",
+      "tags": [
+        "顾问锁",
+        "隔离级别",
+        "归档"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Redis 一次公告五个 CVE 并放出五条补丁版本",
+      "summary": "Redis 发布安全公告，一次列出 CVE-2026-23479、CVE-2026-25243、CVE-2026-25588、CVE-2026-25589 和 CVE-2026-23631，同日 GitHub 上出现 7.2.14、7.4.9、8.2.6、8.4.3、8.6.3 五条对应发布。Redis 通常压在缓存、会话、队列和限流路径上，补丁拖着不打会放大暴露面。核对范围不能只看生产主集群，镜像基线和测试环境都要过一遍。",
+      "url": "https://redis.io/blog/security-advisory-cve202623479-cve202625243-cve-2026-25588-cve202625589-cve-2026-23631/",
+      "author": "Redis",
+      "source": "Redis 官方博客",
+      "source_date": "2026-05-05",
+      "image": "https://cdn.sanity.io/images/sy1jschh/production/76fc32c76ea797c73350d4067dfc1ca23e5c4574-1200x639.png",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "Redis",
+        "CVE"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": ".de 顶级域 DNSSEC 中断影响签名域名解析",
+      "summary": "DENIC 通报其 DNS 服务发生中断，带 DNSSEC 签名的 .de 域名可达性受影响，HN 上的讨论积到七百多分，集中在解析链路、DNSSEC 运维复杂度以及要不要临时关掉验证的取舍。顶级域一级的 DNSSEC 事故会跨越单站点、单云和单 ISP，影响面比普通宕机更难隔离。依赖 .de 域名的服务应回头检查外部健康检查是否覆盖 DNSSEC 验证，内部解析器有没有可审计的临时降级策略。",
+      "url": "https://blog.denic.de/en/denic-reports-dnssec-disruption-affecting-de-domains/",
+      "author": "DENIC",
+      "source": "DENIC 博客",
+      "source_date": "2026-05-06",
+      "image": "https://blog.denic.de/content/images/2026/05/Denic-Blog-Ausfall-3.png",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "DNSSEC",
+        "故障"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "ECPG 一个存在二十二年的线程缺陷将被修",
+      "summary": "连接失败时线程会误用兄弟线程的连接，Andrew Dunstan 的补丁强制连接归属线程，改动放到下个版本之后。",
+      "url": "https://www.postgresql.org/message-id/53e7527c-eb86-4ef5-a3fb-df98cd9c973a@dunslane.net",
+      "author": "Andrew Dunstan",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ECPG",
+        "线程"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "用 MCP 让模型按真实库表结构写 SQL",
+      "summary": "作者用 Model Context Protocol 把实时模式喂给模型，压住 LLM 编造表名和过时列名的 SQL 幻觉。",
+      "url": "https://www.enterprisedb.com/blog/building-real-time-data-aware-intelligence-postgres-and-model-context-protocol",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MCP",
+        "AI"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Firestore 补上 agent 开发与 MongoDB 兼容",
+      "summary": "Google Cloud 把 agent 开发体验、检索能力和 MongoDB 兼容一起做进 Firestore，兼容边界仍需自行验证。",
+      "url": "https://cloud.google.com/blog/products/databases/firestore-agentic-ai-search-and-mongodb-compatibility/",
+      "author": "Google Cloud",
+      "source": "Google Cloud 博客",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Firestore",
+        "兼容性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Valkey 同时放出三条补丁版本并撤回一条",
+      "summary": "9.0.4、8.1.7 与 7.2.13 同日发布，另有 8.0.8 被撤回，升级前先核对发行说明。",
+      "url": "https://github.com/valkey-io/valkey/releases",
+      "author": "Valkey",
+      "source": "GitHub",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Valkey",
+        "发布"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 与 Stripe 让 agent 自己开户买域名",
+      "summary": "agent 可代用户开户、订阅、注册域名并取得部署 token，需按非人类身份设预算与审计。",
+      "url": "https://blog.cloudflare.com/agents-stripe-projects/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-04-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AI agent",
+        "账号治理"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "OpenAI 把 MRC 网络协议贡献给 OCP",
+      "summary": "多路径与 SRv6 源路由面向十万卡以上以太网集群，官方称已在其 GB200 超算上运行。",
+      "url": "https://openai.com/index/mrc-supercomputer-networking/",
+      "author": "OpenAI",
+      "source": "OpenAI",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "OCP",
+        "AI 基础设施"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "ElastiCache 新增 13 个 CloudWatch 指标",
+      "summary": "新指标面向网络容量规划与引擎诊断，缓存问题常表现为应用尾延迟，值得纳入告警。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-elasticache-cloudwatch-metrics-network-engine-diagnostics/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "ElastiCache",
+        "监控"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Amazon MQ 支持 RabbitMQ 4 原地大版本升级",
+      "summary": "原地升级免去搬迁，但插件和客户端协议兼容性仍要先演练。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-mq-inplace-upgrades-rabbitmq4/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "消息队列",
+        "升级"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "OpenSSF 算了一笔公共包注册表的运行账",
+      "summary": "系列第二篇指出成本被外部化，建议企业自建镜像与缓存、管好 SBOM，并资助关键基础设施。",
+      "url": "https://openssf.org/blog/2026/05/06/open-infrastructure-is-not-free-part-ii-the-hidden-cost-of-running-package-registries/",
+      "author": "OpenSSF",
+      "source": "OpenSSF",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "开源"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "CNCF 给 GitHub Actions 依赖出了安全清单",
+      "summary": "要点是把 action 固定到 SHA、收紧 token 权限、用隔离 runner，CI 是供应链的高价值入口。",
+      "url": "https://www.cncf.io/blog/2026/05/04/securing-github-actions-ci-dependencies-recipe-card/",
+      "author": "CNCF",
+      "source": "CNCF",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "供应链"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "CVE-2026-31431 改变了 rootless 容器的威胁模型",
+      "summary": "研究文章拆解 Copy Fail 与 rootless 容器的关系，提醒核对运行时版本与默认配置。",
+      "url": "https://www.dragonsreach.it/2026/05/04/cve-2026-31431-copy-fail-rootless-containers/",
+      "author": "Dragonsreach",
+      "source": "Dragonsreach",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "安全"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "Node.js 26.0.0 成为 Current 版本",
+      "summary": "它将做未来六个月的 Current，计划十月转 LTS，原生插件与弃用 API 要先在非生产跑矩阵。",
+      "url": "https://nodejs.org/en/blog/release/v26.0.0",
+      "author": "Node.js",
+      "source": "Node.js",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Node.js",
+        "发布"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "冲突日志表原型仍要处理模式重命名与硬编码",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm1cJURibYKY4+DuNosjM72C9oGheUF-roMyff__+AsKBw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pgindent 将修结构体成员与 typedef 同名的格式化",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/6356E089-A04E-4CAE-9385-C2ABD6844CD2@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具链"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解系列讲 multixact 冻结上限",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuummultixactfreezemaxage/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 给出灾难响应的七条规则",
+      "summary": "",
+      "url": "https://thebuild.com/blog/christophes-seven-rules-of-disaster-reponse/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "pgEdge 做了三份 GitHub Codespaces 上手教程",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/i-built-three-github-codespaces-walkthroughs-for-our-products-would-you-use-them-",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "文档"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Cybertec 用 vlog 记录一周内的两场 PGDay",
+      "summary": "",
+      "url": "https://www.cybertec-postgresql.com/en/nordic-cool-meets-parisian-chic-vlog-two-pgdays-one-week/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "从数据库视角讲清数据湖的适用边界",
+      "summary": "",
+      "url": "https://thebuild.com/blog/what-a-data-lake-actually-is-and-why-you-probably-dont-need-one/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据湖"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "ClickHouse 发布 v26.4.1.1141-stable",
+      "summary": "",
+      "url": "https://github.com/ClickHouse/ClickHouse/releases/tag/v26.4.1.1141-stable",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Weaviate 1.35.19 修复递归 RAFT 命令",
+      "summary": "",
+      "url": "https://github.com/weaviate/weaviate/releases/tag/v1.35.19",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量数据库"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "MariaDB 的自定义数据类型系列写到第五篇",
+      "summary": "",
+      "url": "https://mariadb.org/adding-a-new-data-type-to-mariadb-with-type_handler-part-5/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MariaDB"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Azure Cosmos DB Conf 2026 回顾聚焦生产经验",
+      "summary": "",
+      "url": "https://developer.microsoft.com/blog/azure-cosmos-db-conf-2026-recap-lessons-from-production/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Cosmos DB"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Strix 披露一家国防承包商初创的多租户越权",
+      "summary": "",
+      "url": "https://www.strix.ai/blog/how-strix-found-zero-auth-vulnerability-dod-backed-startup",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "多租户"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Amazon OpenSearch 扩展 Cluster Insights",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-opensearch-cluster-insights/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "OpenSearch"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 发布 Kyverno 1.18",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/05/05/announcing-kyverno-release-1-18/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "策略"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 追问云原生团队为何还跑三套可观测栈",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/05/06/the-tools-are-ready-so-why-are-most-cloud-native-teams-still-running-three-observability-stacks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 维护者月开始，聚焦开源维护者",
+      "summary": "",
+      "url": "https://github.blog/open-source/maintainers/welcome-to-maintainer-month-celebrating-the-people-behind-the-code/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源"
+      ],
+      "position": 35
+    }
+  ]
+}

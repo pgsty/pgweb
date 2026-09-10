@@ -1,0 +1,392 @@
+{
+  "date": "2026-06-08",
+  "origin": "chronicle 2026-06-08: pgsty-daily, pgnexus #171, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Supabase 发布 Multigres v0.1 Alpha",
+      "summary": "Postgres 的水平扩展一直缺一个像 Vitess 那样的编排层。Supabase 把 Multigres 定位成 Postgres 的可扩展操作系统，目标覆盖分片、连接池、自动故障转移和备份编排，v0.1 Alpha 只开源、不面向生产，更像早期路线公布和征集合作。判断它能不能用要盯几处边界：分片键怎么选、跨分片事务怎么办、连接池放在哪一层、故障转移语义、备份恢复流程和扩展兼容性。",
+      "url": "https://supabase.com/blog/multigres-v0-1-alpha",
+      "author": "Supabase",
+      "source": "Supabase 博客",
+      "source_date": "2026-06-04",
+      "image": "https://supabase.com/images/blog/2026-06-01-multigres-v0-1-alpha/og.jpg",
+      "domain": "pg",
+      "tags": [
+        "水平扩展",
+        "高可用"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "AWS 用智能体自动改写 Oracle PL/SQL 到 PostgreSQL",
+      "summary": "AWS DMS 的模式转换能搬走大部分表结构，存储过程、函数和触发器这类复杂 PL/SQL 对象却往往要人工重写。AWS 的方案把 Bedrock 上的 Claude Sonnet 4.6、Strands Agents 框架和 AWS Knowledge MCP 服务器串起来：读 DMS 评估报告，从 Oracle 取源码，用模型转换，经 Lambda 部署到 Aurora PostgreSQL 做校验，再逐个对象跑九项自动测试，厂商测得的平均置信度是 92%。",
+      "url": "https://aws.amazon.com/blogs/database/automate-oracle-pl-sql-to-postgresql-migration-with-amazon-bedrock-and-strands-agents/",
+      "author": "Kavita Vellala",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-06-08",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/06/02/DB5498.png",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "Oracle",
+        "智能体"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 将撤销域默认值的快速路径",
+      "summary": "提交 a0b6ef29a 让带非易失约束的域也能走快速默认值，代价是行为不一致：给空表加一个带域默认值的列时，约束检查报错会让 ALTER TABLE 失败，等价的 CREATE TABLE 却能成功。Tom Lane 认为这对 pg_dump 的可靠性构成隐患，而且该优化处理域约束错误和其他运行时错误的方式并不一致。Andrew Dunstan 赞成在 19 里撤销，完整修复要等新的表访问方法回调，留给 20。",
+      "url": "https://www.postgresql.org/message-id/CACJufxH+qnnWaySKbJD8pBL5Q+aYFE+hffb6-byT_6uPRB1J2Q@mail.gmail.com",
+      "author": "Tom Lane",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "回退",
+        "DDL"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_background 2.0 收紧权限并支持到 19",
+      "summary": "pg_background 把 SQL 丢进独立的后台 worker 执行，事务生命周期与主事务分开，适合审计写入、缓存预热、建索引这类不该拖慢主流程也不该跟着回滚的活。2.0 做了三件事：函数名去掉 _v2 后缀，取消与等待合并成带可选参数的函数；收回所有函数的 PUBLIC 权限，改用 pgbackground_role 分配，worker 以发起者身份运行；新增超时统计与结构化错误字段。已在 14 到 19 beta 上测试。",
+      "url": "https://vibhorkumar.wordpress.com/2026/06/08/pg_background-2-0-run-sql-in-the-background-now-cleaner-safer-and-ready-for-postgresql-19/",
+      "author": "Vibhor Kumar",
+      "source": "个人博客",
+      "source_date": "2026-06-08",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/06/image.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "后台任务",
+        "权限"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "psql 的描述查询漏了目录表的模式限定",
+      "summary": "Chao Li 发现 psql 的若干描述查询直接引用 pg_foreign_server 等目录表，没有加 pg_catalog 限定。攻击者可以在自己的 search_path 里建一张同名表，污染描述命令的输出，让它显示伪造的服务器名。问题来自最近为订阅描述补充服务器信息的几次提交，一共四处：两处出现在 19，另外两处更早、可能要回补。修法是把目录引用改成完全限定，确保查的始终是系统表。",
+      "url": "https://www.postgresql.org/message-id/C809E3C7-2437-486E-B626-0BE5F40BBB6C@gmail.com",
+      "author": "Chao Li",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql",
+        "安全"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Troy Hunt 说泄露披露的延迟越来越糟",
+      "summary": "Troy Hunt 以经手过的上千起数据泄露为样本写道，行业成熟并没有让披露变快，通知延迟反而比以往更糟。对受影响的人来说，知道自己何时被波及、被泄露了什么、该做哪些补救，与修好漏洞同样要紧，而这部分恰恰不是技术能替代的。他的建议是提前准备好泄露通知的操作手册：证据保全、影响面判定、用户通知口径、凭证轮换、法务边界，以及对外状态页的更新节奏，等到出事再临时决定就来不及了。",
+      "url": "https://www.troyhunt.com/1000-data-breaches-later-the-disclosure-lag-is-worse-than-ever/",
+      "author": "Troy Hunt",
+      "source": "Troy Hunt 博客",
+      "source_date": "2026-06-08",
+      "image": "https://storage.ghost.io/c/fb/33/fb3391dc-723d-4e74-b95a-d641b5feb38e/content/images/2026/06/photo_2026-05-31_20-34-34.jpg",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "事故响应"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "提议给 LISTEN/NOTIFY 通道加通配符匹配",
+      "summary": "Matheus Alcantara 的原型让一条 LISTEN 订阅多个通道，Tom Lane 质疑它会抵消 19 的定向唤醒优化。",
+      "url": "https://www.postgresql.org/message-id/DJ3ZPD8STUW0.2IOZ8UCAOGQ8B@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "LISTEN/NOTIFY"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "继承表上的 FOR PORTION OF 缺陷已修复",
+      "summary": "Peter Eisentraut 提交了拆分后的补丁，UPDATE OF 相关的问题留给后续单独处理。",
+      "url": "https://www.postgresql.org/message-id/48f09746-11bd-49aa-894e-5d89c2082a2a@eisentraut.org",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态表",
+        "继承"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "一位开发者挑出 PostgreSQL 19 最看好的三个特性",
+      "summary": "Stefanie Janine 从 Beta 1 的特性表里挑了三项，说明它们在日常使用中意味着什么。",
+      "url": "https://proopensource.it/blog/postgresql-19-features",
+      "author": "",
+      "source": "proopensource.it",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Supabase 六月开发者更新列出月度进展",
+      "summary": "除 Multigres 外还有 pg-delta 模式差分引擎和 passkey 登录等条目。",
+      "url": "https://supabase.com/changelog/46689-developer-update-june-2026",
+      "author": "",
+      "source": "Supabase Changelog",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Supabase"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "CedarDB 用 Doom 给数据栈做基准测试",
+      "summary": "这类演示胜在直观，但要看懂结论仍需公开负载、参数、硬件和可复现的脚本。",
+      "url": "https://cedardb.com/blog/doombench/",
+      "author": "",
+      "source": "CedarDB",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "基准测试"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "技术拆解 Linear 为什么这么快",
+      "summary": "文章把可感知的流畅拆成本地优先的数据同步、交互设计和工程取舍，而不是某个单点优化。",
+      "url": "https://performance.dev/how-is-linear-so-fast-a-technical-breakdown",
+      "author": "",
+      "source": "performance.dev",
+      "source_date": "2026-06-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "性能",
+        "前端"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "把所有 GUC 排成一列：data_sync_retry",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-datasyncretry/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 换个角度讲计数",
+      "summary": "",
+      "url": "https://thebuild.com/blog/how-the-other-half-counts/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "移除 refint 的补丁补上了文档弃用条目",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWXoWWyB6JNAqi2Fpv7DgapM5TbHei8G=UsmWgXkSAccbg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "RISC-V 上的 Clang 向量化修复希望进 19",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/d39848c8-9b01-4838-90bc-cd0c34678251@app.fastmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "DROP PROPERTY GRAPH 的对象标识写法有争议",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aiYKqhUZyROUxlVs@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "syslogger 启动时的空指针解引用已修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aicBEBoCxhy_sk5j@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "备库逻辑解码测试会读到错误的时间线",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB1214908BA67A7811BD6281208F51C2@OS9PR01MB12149.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "CHECK 约束递归修复补丁补上栈深度检查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxE2B6nrfV9inubVifY-8Y6hObBAtyXHEAtPLA6JATXjgA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "catalog_xmin 的类型笔误将回补到 17",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwH56MEnJ79FSDCf9NpQ53DayL58F4qLZBchWfMBYHXL8A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_get_lock 的行数估计不必与实际对齐",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260608.142000.1993011436447649540.horikyota.ntt@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "SQL/PGQ 缓存修复补丁在 CI 上触发断言失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/bwfvxtdfmi6takrzrcvq5d6gd7jemvo3gy5wxypk3m3q2d635c@bgpfu6onhaoi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "冲突日志表补丁决定放开显式加锁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uDR1cTNaszCDZ2TFrXriWgtDOoFSqnVdexJE89hCt8GEw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 发布身份与访问管理白皮书",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/04/identity-and-access-management-whitepaper/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 讨论开源项目 CI 里谁能运行什么",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/04/securing-ci-cd-for-an-open-source-project-controlling-who-runs-what/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 故障让未登录访问 PR 和 Issue 失败",
+      "summary": "",
+      "url": "https://www.githubstatus.com/incidents/m7n7sm0sr1pz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 27
+    }
+  ]
+}

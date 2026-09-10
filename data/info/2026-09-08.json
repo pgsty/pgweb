@@ -1,0 +1,475 @@
+{
+  "date": "2026-09-08",
+  "origin": "chronicle 2026-09-08: pgnexus #263, planet 7",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 在两周内被撤下两项功能",
+      "summary": "Joshua D. Drake 盘点了 PostgreSQL 19 两周内被回退的两项功能：9 月 7 日回退 SQL/PGQ 属性图，连同建立在它上面的修复共 47 个提交；8 月 27 日回退 ALTER TABLE ... MERGE/SPLIT PARTITION，又去掉 14 个。提交信息给的理由是本轮周期来不及处理的多处设计问题。他建议升级规划仍按 18 走，14 的支持则在 11 月 12 日到期。",
+      "url": "https://www.commandprompt.com/blog/two-features-just-left-postgresql-19/",
+      "author": "Joshua D. Drake",
+      "source": "Command Prompt 博客",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "发布管理"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "外键快速路径的批处理层将从 19 回滚",
+      "summary": "Amit Langote 给 REL_19_STABLE 提了两个补丁：一个修外键快速路径逐行检查的快照顺序问题，READ COMMITTED 下先取快照再锁被引用关系会误报外键违规；另一个直接移除批处理层，只保留逐行快速路径。Amit Kapila 又指出快速路径与 SPI 路径的几处分歧，包括扫描键用了索引排序规则而不是列排序规则的缺陷。Robert Haas 支持这个方向，但对批处理能否赶上 20 仍有保留。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqEvyaZQibyj2Y3J8yZWXje0_GdtCL-BpV4Af5-Aien=NQ@mail.gmail.com",
+      "author": "Amit Langote",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "外键",
+        "发布管理"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 发布 chdb 扩展打通云存储导入",
+      "summary": "ClickHouse 发布 Postgres 扩展 chdb，用进程内的 chDB 引擎在 Postgres 与云存储之间做格式转换，读写 ClickHouse 支持的全部数据格式。官方基准是从 S3 导入 100 万行的 NYC Taxi 宽表：在 4 vCPU、32 GB 的机器上，pg_duckdb 和 pg_lake 处理 CSV、JSON、Parquet 要多花两到三倍时间，只有 aws_s3 接近它。",
+      "url": "https://clickhouse.com/blog/introducing-chdb-postgres",
+      "author": "David Wheeler",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "数据导入",
+        "ClickHouse"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PostGIS 3.7.0rc2 发布并移出两个扩展",
+      "summary": "PostGIS 团队发布 3.7.0rc2，修掉 3.7.0rc1 以来的问题，推荐搭配 PostgreSQL 19 Beta 3 与 GEOS 3.15.0，可用于 PostgreSQL 14 到 19beta3。这一版有几处破坏性变更：不再支持 PostgreSQL 12 和 13，也不再支持 GEOS 3.10 以下；address_standardizer 与 tiger_geocoder 迁出主仓库。",
+      "url": "https://postgis.net/2026/09/PostGIS-3.7.0rc2/",
+      "author": "PostGIS 项目组",
+      "source": "PostGIS",
+      "source_date": "2026-09-08",
+      "image": "https://postgis.net/postgis-logo-horizontal.png",
+      "domain": "pg",
+      "tags": [
+        "PostGIS",
+        "扩展",
+        "发布"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "给 AI agent 的数据库边界必须落在数据库里",
+      "summary": "Tiger Data 的 Nicole Ghalwash 主张 agent 的访问边界只能在数据库一侧强制，客户端限制不可靠：不要把管理员凭据复用给 agent，而是建专用只读角色；破坏性或试验性操作指向 fork 或只读副本；记录 agent 执行过的每一条查询；改 schema 引入人工审核。只读也挡不住 prompt injection。文章还提到当前 MCP server 实现质量参差，约三分之一通不过基本安全测试。",
+      "url": "https://www.tigerdata.com/blog/ai-agent-production-database-access",
+      "author": "Nicole Ghalwash",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-09-08",
+      "image": "https://assets.tigerdata.com/blog/2026/09/agent-db-access.png",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "Agent",
+        "MCP"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "用 Calico 给三层应用和数据库落默认拒绝策略",
+      "summary": "Cybertec 的 Wellingtone Luvonga 用 Calico 演示怎样把零信任落到 frontend、backend 与 PostgreSQL 三层：先在命名空间上加 default-deny ingress，再逐层按标签补 ingress 和 egress 规则。文中提醒通信要求两端同时放行；写 egress 策略必须放行到 kube-system 的 53 端口，否则 CoreDNS 解析会静默失败。",
+      "url": "https://www.cybertec-postgresql.com/en/the-default-deny-dilemma-a-practical-guide-to-kubernetes-network-policies/",
+      "author": "Wellingtone Luvonga",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "网络安全"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "复用 WAL 缓冲区几乎消掉了 walsender 的文件读取",
+      "summary": "Kirill Reshke 实测追赶型订阅者的 walsender 文件读取从 407 MB 降到 818 KB，滞后场景少 44%。",
+      "url": "https://www.postgresql.org/message-id/CALdSSPi6mg_X7zeSyoFY_uEuOkT1bMGb2-Yv2mw7MBfNQGs0Sw@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "复制",
+        "性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "并发分离期间被分离的分区仍在通过父表复制",
+      "summary": "MarkInheritDetached() 没让分区的 relcache 失效，pgoutput 的同步缓存因此一直是旧的。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uA6womAP7fkmT=sSfKG_0CfKUSb7HhP_J9mw071MXc39w@mail.gmail.com",
+      "author": "Shveta Malik",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "逻辑复制"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "v18 向 v19 复制分区表时 tablesync 会直接报错",
+      "summary": "用 publish_via_partition_root 时报 cannot copy from partitioned table，修复补丁已经合入。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoCHOsE7C4+xEZT1uAHHiDwsjFNJ6i7hO5DwHT+LrC6_0Q@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "分区"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "嵌套循环连接的断言失败定位到两处根因",
+      "summary": "克隆 RestrictInfo 与 create_join_clause 各自给同一条件分配了不同序号，补丁只推 HEAD 与 v19。",
+      "url": "https://www.postgresql.org/message-id/CAMbWs4-3yZeBMGQDpmYRPdV-sL_=6H2AN=MoeneOT+VUk28PPg@mail.gmail.com",
+      "author": "Richard Guo",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "TOAST 值改用 8 字节 OID 的补丁集更新到 v15",
+      "summary": "性能测试称堆增大约 15%、TOAST 索引增大约 40%，全表扫描时间几乎不受影响。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACWTM=VgjDU=2BBuYAh2Ae8Kq5NspJZsmhiAvNQkXZ=MjQ@mail.gmail.com",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "存储"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "var_eq_const 拟累加所有命中的 MCV 选择率",
+      "summary": "Tom Lane 认为关键是查询算子用的排序规则，而不是统计信息所用的排序规则。",
+      "url": "https://www.postgresql.org/message-id/63af64e5-f96b-4930-91dc-a6988f0c8398@tantorlabs.com",
+      "author": "Ilia Evdokimov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "选择率",
+        "查询规划"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Fujitsu 谈关键业务系统从 SQL Server 迁移的规划",
+      "summary": "文章把迁移拆成 schema 转换、应用兼容、数据完整性、性能验证与切换五段，每段都要预案。",
+      "url": "https://www.postgresql.fastware.com/blog/sql-server-database-migration-planning-for-mission-critical-systems",
+      "author": "Fujitsu",
+      "source": "Fujitsu Enterprise Postgres",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "SQL Server"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "pg_stat_progress_cluster 会错误显示成 CLUSTER",
+      "summary": "补丁改为返回 NULL；另发现关掉索引扫描时 REPACK ... USING INDEX 会显示成 VACUUM FULL。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwH6rAd+fxWKRw=-i+SbzFtFRGDA5VBGJdMNNEsPO9YTqg@mail.gmail.com",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "REPACK"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "在线调整 shared_buffers 又发现一处驱逐竞态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALfch18bfYdXz1E7OZO45ECKN9Sn=L-tYXg=mhWa0b2k3c7Qnw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "shared_buffers"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "社区倾向禁止在未开校验和的主库之下对备库跑 pg_checksums",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/2BB46FE3-96CD-417A-8913-1856456D0B09@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "SIMD 版 COPY FROM 的阻塞修复挪进缓冲区加载函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN55FZ3U2waD=5ZuVmju-HtZ4cO4onxHN4jXskk8Y11M6o3NOQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "禁止并发重整用户目录表的补丁已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aqABL-HzgIjAvCFp@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "表所有者缺 CONNECT 权限导致重整失败的修复已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aqBbeJsOm6EfWUx5@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "权限"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "用 C11 alignas 取代只为对齐而做的内存分配",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/94a128da-bf3e-46bd-9e2d-609573c484da@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "跨会话打印执行计划拟用请求编号关联日志",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/d9b5a15b2c996673da908704853005e6@oss.nttdata.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "表访问方法自定义 reloptions 时 VACUUM 会崩溃",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAER375N_RfkWev54wSj9wmX9dDjX5Ms7wEmpn3f8JJ9RA6QWug@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "表访问方法"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "把更多共享变量改成原子类型的补丁继续推进",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aqA_P7Uwub-MDXOO@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并发"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "sslinfo 的曲线组函数将用 NULL 行表示无名分组",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aqAlC4G8bTekShA5@ddolgov-thinkpadt14sgen1.rmtde.csb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "sslinfo"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "xmlserialize 的 CANONICAL 加上编译期守卫",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/8ed15b98-c78c-4d30-8b12-db81700bc687@uni-muenster.de",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "XML"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "非法输入可让 test_bitmapset 测试模块触发断言",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/af8ddd01-853d-4752-82f3-0808498c992c@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "PGXN 终于支持文档之间的相互链接与图片",
+      "summary": "",
+      "url": "https://blog.pgxn.org/post/827227334118604800/from-the-department-of-its-about-time",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PGXN"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "SCaLE 24x 征稿开放，欢迎提交 Postgres 演讲",
+      "summary": "",
+      "url": "https://gorthx.wordpress.com/2026/09/08/the-scale-24x-cfp-is-open-get-your-postgres-talks-in/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：maintenance_io_concurrency",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-maintenance_io_concurrency/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 与 Accenture 扩大企业 AI 落地合作",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/09/08/google-cloud-races-to-catch-up-in-the-ai-deployment-wars-with-accenture-deal/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "云服务"
+      ],
+      "position": 30
+    }
+  ]
+}

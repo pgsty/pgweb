@@ -1,0 +1,343 @@
+{
+  "date": "2026-08-16",
+  "origin": "chronicle 2026-08-16: pgnexus #240, daily, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "gistkillitems 重扫描时可能标错死元组",
+      "summary": "Peter Geoghegan 指出 gistkillitems() 在 rescan 时可能把 LP_DEAD 标记打到错误的元组上，问题很可能由提交 9c9ddf109 引入，只影响 master，但各版本在 rescan 时都没有正确重置状态。Michael Paquier 和 Andrey Borodin 确认，即便开着 wal_consistency_checking，buildfarm 也没能抓到，因为现有测试没进主回归套件。",
+      "url": "https://www.postgresql.org/message-id/aoD4hAr8pD2DCj1n@paquier.xyz",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GiST",
+        "索引"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "共享缓冲区哈希表改用两步删除，按 Buffer 删快三成",
+      "summary": "Heikki Linnakangas 指出新的 BufTableDelete() 让 InvalidateBuffer() 持缓冲区头部自旋锁的时间过长。Alexandre Felipe 认为问题不在持锁时长，而在自旋锁下操作的安全性难以论证，提出两步删除：取锁前完成查找，持锁期间只断开链表。他在 Dhruv Aron 的补丁上实现了这一方案，并加了按 Buffer 删除的变体，比按 BufferTag 删除快约 30%。",
+      "url": "https://www.postgresql.org/message-id/CAE8JnxOPr1JZ9xhhbgyAnTt3qFmtNO-OAwoxN_sq_ug1WWma9A@mail.gmail.com",
+      "author": "Alexandre Felipe",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PL/Perl 处理 tied 对象的缺陷得到系统性修复",
+      "summary": "Tom Lane 修掉 PL/Perl 的两个缺陷：hstore_plperl 的空指针解引用，以及处理 Perl tied 对象时的无限循环，两者都不算安全漏洞，未进上一轮安全补丁。修复后取到的却是 SQL NULL，Andrey Rachitskiy 解释 tied hash 不把值放在 HeVAL() 里，必须经 hv_iterval() 加 SvGETMAGIC() 才触发 FETCH，随后提交了覆盖所有转换路径的补丁和回归测试。",
+      "url": "https://www.postgresql.org/message-id/569769.1786901901@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PL/Perl"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgsonify 把数据库健康状况变成大象叫声",
+      "summary": "Dinesh Kumar 用 Go 写了 MIT 许可的 pgsonify，把数据库健康状况变成实时音效。它默认每 5 秒采样 pg_stat_activity、pg_locks、pg_stat_database 和检查点视图，不需要扩展或超级用户权限，据此算出 0 到 1 的压力分，驱动背景轰鸣的音高与节奏，分 CALM、ALERT、PANIC 三档。作者定位于开发、测试和教学，不替代生产监控。",
+      "url": "https://cortexridge.com/blog/pgsonify-hear-your-postgresql-health/",
+      "author": "Dinesh Kumar",
+      "source": "Cortex Ridge 博客",
+      "source_date": "2026-08-16",
+      "image": "https://cortexridge.com/og/blog/pgsonify-hear-your-postgresql-health.png",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "工具"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "JIT 的两个子开关只应在排查问题时使用",
+      "summary": "两个参数都默认开启，前者把 WHERE 子句、目标列表和聚合状态转换编译成机器码，后者生成专用的元组解构代码。Christophe Pettus 提醒两者并不对称：解构代码只在编译消费它的表达式时才产生，关掉 jit_expressions 整个 JIT 块就消失了。它们归在开发者选项下，只适合排查时用来判断是不是表达式编译器出错；要控制 JIT 开销应该调代价阈值或整体关闭。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-jit_expressions-and-jit_tuple_deforming/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-16",
+      "image": "https://thebuild.com/media/media/84bbaf6ee6dc40feb4f76bf5abfcf323.png",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "参数"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "GSoC 的 B-tree 叶页合并补丁修掉插入丢失问题",
+      "summary": "新插入的元组可能落在已标记 BTP_MERGED_AWAY 的页面上导致不可见，新补丁已修复，WAL 支持还没做。",
+      "url": "https://www.postgresql.org/message-id/CANBEAPHRK_MqaRtSFnShS07M8fDftHmDsRrwOYqyL7=MFtmGvA@mail.gmail.com",
+      "author": "Salma El-Sayed",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "B-tree",
+        "索引膨胀"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "执行器批处理方案收到来自存储引擎侧的异议",
+      "summary": "Mats Kindahl 反对强制转成原生列存格式，主张把过滤和聚合下推进 TTS，由存储引擎按自己的格式执行。",
+      "url": "https://www.postgresql.org/message-id/CAN305gAEbkPkKwU18BJzZp0-KrhViavMLV-_6mcBX+qkbmmyBA@mail.gmail.com",
+      "author": "Mats Kindahl",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "列存"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "备机同步槽将纳入 XID 年龄失效检查",
+      "summary": "同步槽的豁免会从 CanInvalidateXidAgedSlot() 移除，idle_replication_slot_timeout 的豁免保留。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACWTz5fKMPa0wNghRFdfPBzc+j3x+kcXSeCo+3twZmDdyg@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Debian 就 LLM 在发行版中的使用启动全体投票",
+      "summary": "九个选项从社会契约禁令到有条件接受，8 月 28 日截止，结果会影响补丁溯源与贡献审查方式。",
+      "url": "https://lists.debian.org/debian-devel-announce/2026/08/msg00002.html",
+      "author": "Debian 项目",
+      "source": "debian-devel-announce",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Debian",
+        "治理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Zsh 历史记录神秘消失的原因被定位到重写路径",
+      "summary": "作者改动 Zsh 让异常路径提早崩溃，再靠 core dump 收敛根因，问题出在历史文件的重写流程上。",
+      "url": "https://michael.stapelberg.ch/posts/2026-08-09-zsh-history-truncation-bug/",
+      "author": "Michael Stapelberg",
+      "source": "个人博客",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "调试"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "tsqueryout() 改用 StringInfo 替代自制缓冲区",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWVC5ajxoME3q0A55VYvUaJWMzLwHF3Lai7rkRjcFqrW-w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁收到 nodeWindowAgg 可读性建议",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxEb18fydJtNfjmFbDNP6iSg9jcVsd_DJQwcbHX0LxmCaQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RPR"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "Keeta 共识协议的形式化建模与验证论文",
+      "summary": "",
+      "url": "https://xescu.re/keeta-consensus.pdf",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "共识"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "BriskDB 作为早期数据库项目出现在 HN",
+      "summary": "",
+      "url": "https://github.com/schapman1974/briskdb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据库"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "GCC 16 保证不捕获的嵌套函数不需要 trampoline",
+      "summary": "",
+      "url": "https://uecker.codeberg.page/2026-07-14.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GCC"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "一篇 RISC-V 设计批评文章引发密集技术讨论",
+      "summary": "",
+      "url": "https://dmitry.gr/?r=06.+Thoughts&proj=12.+RV",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "RISC-V"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Racket 9.3 发布，可生成 Markdown 文档",
+      "summary": "",
+      "url": "https://blog.racket-lang.org/2026/08/racket-v9-3.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "语言"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Thunderbird 公开桌面日历重设计的过程",
+      "summary": "",
+      "url": "https://blog.thunderbird.net/2026/08/desktop-calendar-a-design-journey/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "桌面"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Hayward 市议会将于 9 月 15 日审议数据中心禁令",
+      "summary": "",
+      "url": "https://www.hayward-ca.gov/discover/news/aug26/hayward-council-consider-move-ban-data-centers-its-sept-15-meeting",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据中心"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "备份工具 Back In Time 发布 2.0.0-rc1",
+      "summary": "",
+      "url": "https://github.com/bit-team/backintime/releases/tag/v2.0.0-rc1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "备份"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "JetBrains 谈用 Rust 重写时的性能与失败模式",
+      "summary": "",
+      "url": "https://blog.jetbrains.com/rust/2026/08/10/rewriting-in-rust/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "44.3 万块 Backblaze 硬盘的可靠性研究被再报道",
+      "summary": "",
+      "url": "https://www.tomshardware.com/pc-components/hdds/peer-reviewed-study-of-443000-backblaze-drivers-ranks-hgst-most-reliable-and-toshiba-least",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "硬盘"
+      ],
+      "position": 22
+    }
+  ]
+}

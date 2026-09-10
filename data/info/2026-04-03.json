@@ -1,0 +1,261 @@
+{
+  "date": "2026-04-03",
+  "origin": "chronicle 2026-04-03: pgnexus #102, news 4, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_ash v1 给 PostgreSQL 补上活动会话历史",
+      "summary": "Oracle 的 ASH 在 PostgreSQL 上一直缺个对应物。PostgresAI 发布的 pg_ash v1 用 pg_cron 每秒采样一次 pg_stat_activity，把快照写进分区表，再用 32 个 SQL 函数做等待事件分析。纯 SQL 与 PL/pgSQL 实现，不需要 C 扩展或重启，RDS、Cloud SQL、Supabase 这类托管服务同样能用，支持 PostgreSQL 14 到 18。",
+      "url": "https://pgsql.cc/about/news/pg_ash-v1-postgresql-3242/",
+      "author": "PostgresAI",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "等待事件",
+        "监控",
+        "扩展"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Gavin M. Roy 一次放出四个 PostgreSQL 工具",
+      "summary": "Gavin M. Roy 一次放出四个 PostgreSQL 工具。tree-sitter-postgres 是 SQL 与 PL/pgSQL 的 Tree-sitter 语法，由 Bison 源码生成。libpgfmt 是 Rust 写的格式化库，内置多套风格预设，pgfmt 是它的命令行工具，能格式化也能查风格。libpgdump 用 Rust 读写 custom、directory 与 tar 三种转储格式。",
+      "url": "https://pgsql.cc/about/news/tree-sitter-postgreslibpgfmtpgfmt-libpgdump-3265/",
+      "author": "Gavin M. Roy",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "格式化",
+        "Rust"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "排序规则一变，索引里的数据就可能失踪",
+      "summary": "glibc 2.28 在 2018 年按 Unicode 规则改了排序，B-tree 索引里按旧顺序摆好的数据就此对不上：查询少返回行、唯一约束抓不到重复，而且没有告警。Shaun Thomas 梳理了应对之道：PostgreSQL 13 起记录排序规则版本并告警，17 提供内置 provider，pg_c_utf8 在大版本内不再变。老集群升级操作系统后要 REINDEX INDEX CONCURRENTLY。",
+      "url": "https://www.pgedge.com/blog/what-is-a-collation-and-why-is-my-data-corrupt",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "排序规则",
+        "索引",
+        "升级"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Estuary 的 PostgreSQL CDC 支持只读备库采集",
+      "summary": "Estuary 更新了 PostgreSQL 连接器。新增只读模式 CDC，不必往 watermarks 表写数据，可直接从只读备库采集，把复制开销移出主库；这条路要求 PostgreSQL 16 以上、开启逻辑解码并设 hot_standby_feedback = on，采集范围里还要带高频更新表或心跳表，否则 WAL 会一直堆积。源端与目标端都支持 IAM 认证，分区表还可按分区各自成流。",
+      "url": "https://pgsql.cc/about/news/postgresql-cdc-estuary-iam-3263/",
+      "author": "Estuary",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "复制"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "工作集超出内存时性能会掉下一道悬崖",
+      "summary": "数据装得进内存时一切都快，工作集一旦超过可用内存，响应时间就从毫秒跳到几百毫秒。Jake Hertz 解释这道悬崖来自缓存淘汰：新数据把旧页挤下磁盘，再查这些数据就要等慢速 I/O；分析查询扫历史数据会把热数据挤出内存，让情况更糟。可选的路子是加内存、水平分片，或改列存压缩体积。他建议用 pg_statio_user_tables 盯住缓存命中率，低于 95% 就是要出事的信号。",
+      "url": "https://www.tigerdata.com/blog/surviving-performance-cliff-disk-bound-data",
+      "author": "Jake Hertz",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-03",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/surviving-performance-cliff-disk-bound-data.png",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "缓存"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 将支持在线切换数据校验和",
+      "summary": "Daniel Gustafsson 已推送补丁，随后用 0036232ba8f 修好测试未等启动器退出的时序问题。",
+      "url": "https://www.postgresql.org/message-id/F2EA770C-275F-41B3-A6F8-9AB12FE12BFD@yesql.se",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "内核"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "LLVM 22 让 JIT 表达式编译难以优化",
+      "summary": "指针传参挡住了优化，讨论倾向用栈分配替代 palloc 的 FunctionCallInfoData。",
+      "url": "https://www.postgresql.org/message-id/CA+hUKG+skVJgFiqjxGo1E72rMULqSRs09PJc9sWKySpCvN8RKA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "LLVM"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "移除 xl_heap_visible 后出现 temp 表回归",
+      "summary": "特定构建下 SELECT count 报 no empty local buffer available，等待作者确认是否为回归。",
+      "url": "https://www.postgresql.org/message-id/97529f5a-ec10-46b1-ab50-4653126c6889@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "回归"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "JSONB 数值提取改写让类型转换快一倍",
+      "summary": "支持函数把 jsonb_object_field 的转换重写成类型化提取器，微基准提速 2.1 倍。",
+      "url": "https://www.postgresql.org/message-id/7487A577-7BDC-4B94-9FFA-741E95439BFC@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSONB",
+        "性能"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 改为每库一个后端并加限额 GUC",
+      "summary": "v50 引入默认值为 5 的 max_repack_replication_slots，另修 WAL 刷新与排斥约束问题。",
+      "url": "https://www.postgresql.org/message-id/90475.1775218118@localhost",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "max_log_size 截断扩展到扩展查询协议",
+      "summary": "第 9 版补丁覆盖 parse、bind 与 execute 路径，审查确认不受 CVE-2026-2006 影响。",
+      "url": "https://www.postgresql.org/message-id/0514f233-5f77-469b-88c3-e8eb7487afc2@uni-muenster.de",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "日志"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "索引预取 v21 重新划分表与索引访问方法",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAH2-WzkiCK=wELiXPgriN4r7cJzGb3Xg48E9YHrFEyEPTkynOw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "AIO 读流的预取启发式继续打磨",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_b+tymZQc2vv__k8oPHsVQppg9QmaeQLiupZ3t2AO=z3A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "并行 autovacuum 在十亿行表上提速 1.84 倍",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoACRVCT-ub+LTAtDaEZjxmwFcC7ON9_jfqpYegPdeXXOA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_waldump 测试改用 ustar 格式绕开差异",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0tt89MgNi4-0F4onH+-TFSsysFjMM-tBc6aXbuQv5xBXw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "jsonpath 的 btrim 文档示例确认无误",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/40bd5c82-639d-41cd-ad85-9cd2dffd0680@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "并行位图堆扫描缺失的统计信息将补回",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/dbd45d67-8fb9-464f-b3ed-6fe185f8c8c9@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    }
+  ]
+}

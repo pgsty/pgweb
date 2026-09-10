@@ -1,0 +1,437 @@
+{
+  "date": "2026-08-03",
+  "origin": "chronicle 2026-08-03: pgnexus #227, daily 25, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "一个藏了 13 年的流复制缺陷在 Kubernetes 上被逼了出来",
+      "summary": "级联备库做完归档恢复再连回上游时会永久失败，报「请求的起始位置超前于本服务器的 WAL 刷写位置」。原因是归档恢复按整段处理 WAL，备库的下一个读取位置正好落在段边界上，机械地超前于上游刷写点，而这里没有重试。缺陷自 9.3 起就在，传统部署很少搭出这种拓扑，CloudNativePG 用 YAML 几分钟就能组合跨区流复制与归档回退，于是稳定复现。修复随 18.5、17.11、16.15、15.19 和 14.24 发布。",
+      "url": "https://www.enterprisedb.com/blog/13-year-old-postgresql-bug-found-running-postgres-kubernetes-cloudnativepg",
+      "author": "Gabriele Bartolini",
+      "source": "EDB 博客",
+      "source_date": "2026-08-03",
+      "image": "https://enterprisedb.com/sites/default/files/2026-08/unnamed_22.png",
+      "domain": "pg",
+      "tags": [
+        "流复制",
+        "CloudNativePG",
+        "缺陷"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "数据库真卡住还是连接过期，五分钟就能分清",
+      "summary": "两种故障在应用日志里长得很像，处置方向却相反。Umair Shahid 给出判据：真卡住时连新开的会话都进不去，包括直接在机器上跑的 psql，根因多在数据库之下的内存、存储或 CPU；连接过期则是池里的连接报 connection reset by peer，而新建连接立刻成功，问题在网络路径。排查顺序是先在主机本地直连，再对比池化与新建连接，查日志里的重置记录，最后看 pg_stat_activity 里那个后端是否为 idle。",
+      "url": "https://stormatics.tech/blogs/postgresql-lockup-vs-stale-connection-how-to-tell-them-apart",
+      "author": "Umair Shahid",
+      "source": "Stormatics 博客",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "排障",
+        "连接池",
+        "超时"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "流式化改动的交互可能导致内存与数据损坏",
+      "summary": "两个属于「更多代码路径改用流式读」系列的提交，凑在一起会出问题。Mihail Nikalayeu 报告，其中一个提交缓存了元页指针，而 hashbulkdelete() 里调用 read_stream_begin_relation() 可能让它失效：调用链经表空间查找触发系统表扫描，进而处理失效消息并释放已缓存的指针，最终引用到无效的块号。他给出的修复只需重排少量代码，同时建议考虑更普遍的防护。该缺陷只影响主干。",
+      "url": "https://www.postgresql.org/message-id/CADzfLwVEJ2_7ioX3ZSB1P7qXW40ghUy_ZCzeFvhDLoa_3Muztg@mail.gmail.com",
+      "author": "Mihail Nikalayeu",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据损坏",
+        "缓冲区",
+        "主干"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ArcadeDB 26.7.3 同时修 MCP 身份边界与图数据丢失",
+      "summary": "把 MCP 接进数据库，等于把 agent 身份、工具调用和数据权限并到同一个暴露面。ArcadeDB 把 26.7.3 定为 26.7.2 的定向热修复，处理内部审计发现的 MCP 传输层认证主体绑定与信息泄露、触发器授权，并修掉 26.7.2 在超级节点边追加时的数据丢失回归。GitHub 安全公告库本窗口补入了对应记录，但缺少完整版本范围。开启 MCP 或使用高阶图的部署应以 26.7.3 为最低核查线。",
+      "url": "https://github.com/ArcadeData/arcadedb/releases/tag/26.7.3",
+      "author": "ArcadeDB",
+      "source": "GitHub Release",
+      "source_date": "2026-07-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ArcadeDB",
+        "MCP",
+        "安全"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 推迟到 PostgreSQL 20 周期",
+      "summary": "Álvaro Herrera 主张多留时间发现问题，Amit Kapila 认可，该条目将从 19 的未决列表移除。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1JN2STMUZXGB-3JWAPBGE6-hasCLRwBeCf91EWnCd71zg@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "PostgreSQL 19"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "VACUUM 进入应急模式后仍在使用环形缓冲区",
+      "summary": "流式读改造后活跃读流没有跟着切换策略，Melanie Plageman 为主干与旧分支各给一套方案。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZXqyZ89=sucFF73jfKT5p=TU_F5c5Y6qDxQYxZtgwCTA@mail.gmail.com",
+      "author": "Jingtang Zhang",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "缓冲区"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "在快速路径锁上调用 LockHasWaiters() 会导致崩溃",
+      "summary": "Robert Haas 主张该函数不应把快速路径锁提升进主锁表，查不到就直接返回 false。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACV-8pj3i3OduyJRo2Gc7rhRcpTTFvZbqm2h_6Jg73VhAg@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "锁",
+        "崩溃"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "整库 VACUUM 期间并发删除关系的处理已提交",
+      "summary": "Nathan Bossart 的补丁让 autovacuum 或手动整库清理遇到关系被删时不再报错或崩溃。",
+      "url": "https://www.postgresql.org/message-id/anEDqYA_A030nAiH@nathan",
+      "author": "Nathan Bossart",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "并发"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_savior 把部分误操作变成显式失败",
+      "summary": "拦无 WHERE 的 DELETE 与 UPDATE、TRUNCATE 和 DROP，但不覆盖 MERGE 和 DROP SCHEMA，仍是 pre-1.0。",
+      "url": "https://github.com/viggy28/pg_savior",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "变更管理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Neon 新增项目级权限，不必再靠组织级粗粒度授权",
+      "summary": "组织角色分为管理员、编辑者、查看者与协作者，可指定每个人或 agent 能访问哪些项目。",
+      "url": "https://neon.com/blog/neon-now-has-per-project-permissions",
+      "author": "Russ Dias",
+      "source": "Neon 博客",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "权限"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "事务内闲置会话超时该怎么设",
+      "summary": "用于终止在事务中闲置的会话，避免它一直压住清理与锁，属于生产上应当显式设定的一项。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-idle_in_transaction_session_timeout/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "事务"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "FreeRDP 的版本下限应核到 3.30.0",
+      "summary": "上游称修复了严重的服务端问题，新增公告也指向 3.30.0 之前的 Windows 剪贴板堆溢出。",
+      "url": "https://github.com/FreeRDP/FreeRDP/releases/tag/3.30.0",
+      "author": "FreeRDP",
+      "source": "GitHub Release",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "FreeRDP",
+        "安全更新"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "SP-GiST 仅索引扫描用错了元组 TID，v3 补丁已修正",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEze2Wi1FhPC0zkR1pz+Bzzpy2b45PoJPET+RkJcXE8tT7dvkg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SP-GiST",
+        "索引"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制拟增加冲突日志历史表",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoD1ON8p3p8=L_nW3dqejve3-SK5OP4g=4NEXmRXsGMC9w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "异步 MergeAppend 补丁修掉多处结果被跳过的问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/e8d502937d94eb6bd18e38ff1f240a05@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "异步"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "并发建索引期间定期重置快照的补丁被要求大改",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEze2WhwwAB_DVAWfunO=_1QZu-J+ThbpVbvdoOyycswQETFfw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "快照"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pageinspect 拟支持 GIN 的条目树与倒排树",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALdSSPgAZk7s_kSzFq=HzLL1EqxCPr6UbNnGYPPA=sMG53_dwg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GIN",
+        "pageinspect"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "注入点拟支持条件字符串，需先补一个使用它的测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/anB4qcuFd9qQY-PS@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "新增 C 函数 get_partition_root 的补丁迭代到 v6",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+PupwxEB9T9us81JsRd4+2zs8M9FqfS=9uNoux3-4nSAxQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区表"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "流水线恢复在长跑测试中的增益低于短测结果",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+UBfan4bSSRBgf8agdcF5Mwisozh5w=VdzNt-zdJReruY3yQA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "性能"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "统计信息导入的基础设施被拆成十五个补丁重构",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADkLM=exCGzyPMYxtHiuL0fr6Zqu4YWwcuiXvMMTBeHE_Fbr4g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "postgres_fdw"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "strto 系列函数的调用将改为更严格地符合 C 标准",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/am_UR27E4y3doKBW@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "代码规范"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Kakehashi 在 Linux arm64 上跑部分 Darwin CLI",
+      "summary": "",
+      "url": "https://github.com/wie-project/kakehashi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "跨平台"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "NixOS-DGX-Spark 给 GPU 一体机提供声明式配置",
+      "summary": "",
+      "url": "https://github.com/graham33/nixos-dgx-spark",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "NixOS",
+        "GPU"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Mu 把 67 个带副作用的工具接进一个 MCP 端点",
+      "summary": "",
+      "url": "https://github.com/micro/mu",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "MCP",
+        "权限"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Better Auth 多个旧版本被记入认证绕过等问题",
+      "summary": "",
+      "url": "https://github.com/advisories/GHSA-3q45-2fh7-66cj",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "身份认证"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "安全公告库新增 transformers 的高危路径穿越记录",
+      "summary": "",
+      "url": "https://github.com/advisories/GHSA-xrqw-3rrv-vx5w",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-02",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "依赖安全"
+      ],
+      "position": 27
+    }
+  ]
+}

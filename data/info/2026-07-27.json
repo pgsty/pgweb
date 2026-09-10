@@ -1,0 +1,324 @@
+{
+  "date": "2026-07-27",
+  "origin": "chronicle 2026-07-27: pgnexus #220, daily, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "夏令时跳变让两种时间戳比较出错",
+      "summary": "Jacob Brazeal 报告 datetime_ops 运算符族的一处不一致：在夏令时向前拨的那一小时里，timestamp 之间比较 02:30 小于 03:00，但同一个值与等于 03:00 的 timestamptz 比较时却被判为更大，于是索引扫描、合并连接和分区裁剪都可能给出错误结果。Laurenz Albe 建议把跨类型运算符移出运算符族，Tom Lane 列了几条修法：降级比较、改运算符语义或改转换规则，尚未定论。",
+      "url": "https://www.postgresql.org/message-id/CA+COZaDmCuOds-MnMoDZwMVjxxby=W4W7_S0mxqS2ZNOYq0iJA@mail.gmail.com",
+      "author": "Jacob Brazeal",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时间类型",
+        "索引",
+        "缺陷"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "备库冲突解决漏掉导入快照的后端",
+      "summary": "备库的冲突解决存在缺陷：ResolveRecoveryConflictWithSnapshot 只调用一次 GetConflictingVirtualXIDs，随后逐个等待返回的虚拟事务号消失。可是在 ProcArrayLock 释放之后，别的后端还能从这些冲突事务里导入快照，产生新的冲突事务号，这个函数完全看不到。后果是备库可能删掉仍被导入快照使用的元组版本或索引项。提议的修法是循环调用直到结果为空。",
+      "url": "https://www.postgresql.org/message-id/amadDbubjWo_Jag1@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "快照",
+        "缺陷"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "MVCC 的账单只是换个人付",
+      "summary": "Radim Marek 把 PostgreSQL 的 MVCC 摆上审判席：索引多的表更新一个未加索引的列，每行产生 7.1 条 WAL 记录，精简表只要 3.0；回滚掉的百万行更新让表涨到 178 MB、死元组占 47%；一个空闲事务持着快照就能让全库清理停摆。但换成别的引擎只是换人付账：Oracle 与 InnoDB 的 undo 让读者重建版本，SQL Server 把版本堆进 tempdb，LSM 用持续合并换掉 VACUUM。",
+      "url": "https://boringsql.com/posts/mvcc-bad-bad/",
+      "author": "Radim Marek",
+      "source": "boringsql",
+      "source_date": "2026-07-27",
+      "image": "https://boringsql.com/og-images/mvcc-is-bad-compared-to-what-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "MVCC",
+        "VACUUM",
+        "膨胀"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "EDB 把 WarehousePG 搬上 AWS",
+      "summary": "WarehousePG 是从 Greenplum 衍生出来的大规模并行分析型数据库。Greenplum 停止开源后，EnterpriseDB 接手维护，继续按 Apache 许可发布，如今在 AWS 上提供。与按用量计费、账单容易失控的云分析平台不同，它按核心数定价，成本可预期，厂商称总体拥有成本最多可降 58%。这类口径需要用自己的负载核算，但对已经用 Greenplum 的团队来说，至少给出一条有人维护的延续路线。",
+      "url": "https://www.enterprisedb.com/blog/warehousepg-aws-control-your-analytics-control-your-costs",
+      "author": "EnterpriseDB",
+      "source": "EDB 博客",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分析",
+        "MPP",
+        "成本"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "有人提议给 PostgreSQL 加软删除的表",
+      "summary": "Surya Poondla 的原型保留模式和 OID 命名，提供已删对象目录与恢复接口，先按 contrib 扩展做。",
+      "url": "https://www.postgresql.org/message-id/CAOVWO5qmGUP_nw6naGL_rjnCmeVLaFkueNNwfQ39eZKF+4QsnQ@mail.gmail.com",
+      "author": "Surya Poondla",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL",
+        "恢复"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "等待 WAL 回放的机制要修一处竞态",
+      "summary": "WAL 接收进程重启把已写位置回退时，被摘出堆的等待者可能再也收不到通知，改由等待方复查重注册。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7UtW_cAa=Qh4RDfKiUqu3pJJE22ai9tbWJVERbeRyssLw@mail.gmail.com",
+      "author": "Xuneng Zhou",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "复制"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "连接与外键的优化器统计补丁推进",
+      "summary": "争论集中在多表统计的锚表由谁指定、n 路连接是否先给实验补丁，以及无索引时回退顺序扫描采样。",
+      "url": "https://www.postgresql.org/message-id/CADkLM=cekpv_S3zNJ50T+L0nKuUGdOM5OzRLyW93+B8C6-DMEw@mail.gmail.com",
+      "author": "Corey Huinker",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计",
+        "优化器"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "CAST(... ON DEFAULT) 补丁 v32 获谨慎认可",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADkLM=fu2TSd3DjDVC4EvfVXaz9o4f3GsCQh7+VrhhYF2F0PWw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "类型转换"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "pg_datum_image_equal 想减少无谓的 TOAST 抖动",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEze2WhrDiJ+vYUn_aTNx7MyUs+8x8ObUOJf=BiiUmGE0pgxzQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "更新"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "并发启停逻辑解码的状态错误已修一半",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoCoAHrKEOLSEYzNOVMcNGLjY8EkiwOE8X9d_yPJkMfikA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "改列类型会让分区索引丢掉副本标识",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0s6P1q38rLdBbKCB6X4vXs-2uuUZOARkc03b-K1-uHQag@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "索引"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "表达式索引可能生成空的列名",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANWwWcp_DCJjq8pomeqp6W=fbygvzXXQO028VDJ9_6sLPjQnVA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "缺陷"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "外部服务器执行计划的补丁到 v5",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAP+B4TA1JDwjLnKtYdywc87L2+m66TxZ1S9D5hbWCS3kMb1cPg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "EXPLAIN"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：gin_fuzzy_search_limit",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-gin_fuzzy_search_limit/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "GIN"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Vibhor Kumar 提出 CALM 平台测试",
+      "summary": "",
+      "url": "https://vibhorkumar.wordpress.com/2026/07/27/the-calm-platform-test/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "方法论"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PGSimCity 用模拟界面解释 PostgreSQL 内部",
+      "summary": "",
+      "url": "https://nikolays.github.io/PGSimCity/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "教学"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GrapheneOS 说明锁定设备的取证防护",
+      "summary": "",
+      "url": "https://discuss.grapheneos.org/d/40700-grapheneos-protections-against-data-extraction-from-locked-devices",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "移动安全"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "ast-grep 用 Rust 重写解析层提速三成",
+      "summary": "",
+      "url": "https://ast-grep.github.io/blog/tree-sitter-rust-rewrite",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "静态分析"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "会话令牌转售市场进入公开讨论",
+      "summary": "",
+      "url": "https://vectoral.com/blog/token-relay-market",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "凭据",
+        "欺诈"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "go-tpm-tls 让 Go 的 TLS 私钥留在 TPM",
+      "summary": "",
+      "url": "https://github.com/bschaatsbergen/go-tpm-tls",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TLS",
+        "密钥"
+      ],
+      "position": 20
+    }
+  ]
+}

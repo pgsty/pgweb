@@ -1,0 +1,135 @@
+{
+  "date": "2026-05-02",
+  "origin": "chronicle 2026-05-02: pgnexus #134, news 4, planet 2；借用 2026-04-28 四条",
+  "items": [
+    {
+      "tier": 1,
+      "title": "行模式识别补丁 v47 补齐导航操作的 JIT 编译",
+      "summary": "行模式识别的补丁推进到 v47。Tatsuo Ishii 追问 JIT 编译除已支持的 PREV 和 NEXT 之外，是否也覆盖 FIRST、LAST 及其复合形式；Henson Choi 确认 v47 里这些导航操作都已支持 JIT，实现只用两个操作码，各操作之间的差异放在执行层处理而不进 JIT 层。随后 Tatsuo 发布 v47 补丁，带来导航操作的单槽模型、完整 JIT 编译和 tuplestore 修剪优化。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zCe1gj_UkapC4e_GVZmud+dxru8YONpKRhtY6c2RmXcZg@mail.gmail.com",
+      "author": "Henson Choi",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行模式识别",
+        "JIT"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PgQue 用纯 SQL 实现零膨胀的 Postgres 队列",
+      "summary": "PgQue 发布 0.1，用纯 SQL 与 PL/pgSQL 把 Skype 当年的 PgQ 架构搬到现代 Postgres 上，托管平台不提供 PgQ 扩展也能用。它不走 SKIP LOCKED 配合删改的热点路径，而是用基于快照的批处理加表轮转，避开库内队列在高负载下的死元组、VACUUM 压力和索引膨胀。安装只需一个 SQL 文件，支持 PostgreSQL 14 到 18，自带重试与死信队列。",
+      "url": "https://pgsql.cc/about/news/pgque-v01-postgres-3284/",
+      "author": "PgQue 项目",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-05-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "消息队列",
+        "扩展",
+        "发布"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgexporter 0.8 换用新的 Vault 机制并加告警",
+      "summary": "面向 PostgreSQL 的 Prometheus exporter pgexporter 发布 0.8.0。这一版引入新的 Vault 安全机制，已有部署需要迁移；指标大量补充，其中包含 PostgreSQL 18 的相关指标；仪表盘改用 Grafana 12；新增初始的告警子系统与 Web 控制台。同批发布的 pgagroal 2.1.0 与 pgmoneta 0.21.0 也换了同一套 Vault 机制。",
+      "url": "https://pgexporter.github.io/releases/pgexporter_0_8_0.html",
+      "author": "pgexporter 社区",
+      "source": "pgexporter",
+      "source_date": "2026-05-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "Prometheus",
+        "发布"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgmoneta 0.21 改进 S3 存储引擎",
+      "summary": "备份恢复工具 pgmoneta 发布 0.21.0，带来新的 Vault 安全机制（需要迁移）、S3 存储引擎改进、pgmoneta-walinfo 交互模式改进和一份西班牙语手册，另有大量增强与缺陷修复。它面向 PostgreSQL 14 及以上，支持全量与增量备份、恢复、gzip 与 zstd 等四种压缩、AES 加密、符号链接、WAL 归档传输以及热备。pgBackRest 停止维护之后，它是仍在活跃维护的开源备份方案之一。",
+      "url": "https://pgsql.cc/about/news/pgmoneta-021-3288/",
+      "author": "pgmoneta 社区",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-05-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "发布"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "扩展速查表列出用 Postgres 顶替七类数据库的写法",
+      "summary": "Tiger Data 的 Matty Stratton 整理了一份扩展速查表，逐条给出用 PostgreSQL 顶替七类专用数据库的 SQL 写法：pg_textsearch 做全文检索替 Elasticsearch，pgvector 做向量检索替 Pinecone，TimescaleDB 管时序替 InfluxDB，UNLOGGED 表做缓存替 Redis，pgmq 做队列替 Kafka，JSONB 存文档替 MongoDB。",
+      "url": "https://www.tigerdata.com/blog/postgres-extensions-cheat-sheet",
+      "author": "Matty Stratton",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-05-02",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/05/thumbnail-blog-thumbnail-1280x720--3-.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "选型"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "wal_sender_shutdown_timeout 到 PG19 才真正生效",
+      "summary": "旧行为下 walsender 关闭时用阻塞刷写，可能挂到 TCP 重传失败，修复因改了函数签名不回迁。",
+      "url": "https://thebuild.com/blog/walsendershutdowntimeout-now-actually-a-timeout/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "参数"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "跨会话临时表的修复拆成测试与实现两步",
+      "summary": "Alexander Korotkov 把补丁拆成 0001 加测试记录现状、0002 实现修复，并放行临时表的 LOCK TABLE。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdsOkkeobCfO9hJvaE2fRcdGmWJoX0umx--DnApmtmefCg@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "缓冲区"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解系列讲 autovacuum",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuum/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 8
+    }
+  ]
+}

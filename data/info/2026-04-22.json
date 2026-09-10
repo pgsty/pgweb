@@ -1,0 +1,148 @@
+{
+  "date": "2026-04-22",
+  "origin": "chronicle 2026-04-22: pgnexus #122, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_trgm 的 GIN 索引构建从 248 秒降到 144 秒",
+      "summary": "David Geier 提交的补丁系列针对 pg_trgm 的 GIN 索引构建做了三处优化：把 btint4cmp() 改成无分支实现、为 trigram 引入基数排序、在 ginInsertBAEntries() 里用哈希映射替换红黑树，最后一项把复杂度从键总数乘以唯一键对数降到线性加一次排序。lineitem 基准上索引构建从 248 秒缩短到 144 秒，下一个瓶颈落在 trigram 生成。",
+      "url": "https://www.postgresql.org/message-id/1586347e-2afd-4268-9a6e-03e0b6f8c788@iki.fi",
+      "author": "David Geier",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_trgm",
+        "GIN",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "TimescaleDB 2.26 的列存聚合与元数据扫描提速",
+      "summary": "TigerData 发布的 TimescaleDB 2.26 把向量化列存执行扩展到 time_bucket() 聚合，让查询留在列式路径上，聚合快约 3.5 倍。新增的 ColumnarIndexScan 直接用块元数据回答 COUNT、MIN、MAX 一类查询，不必解压数据，最高快 70 倍。复合布隆过滤器开始支持多列谓词，在解压前跳过无关批次，提速两倍以上。此外还有更快的文本聚合与更稳的复制，升级后自动生效。",
+      "url": "https://www.tigerdata.com/blog/timescaledb-2-26",
+      "author": "Brandon Purcell",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-22",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/thumbnail-TimescaleDB-2.26.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "列存",
+        "时序"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 推出 AI DBA Workbench 公测版",
+      "summary": "pgEdge 发布自托管的 PostgreSQL 监控平台 AI DBA Workbench，由采集器、告警器和服务端组成，跑在自家基础设施上，按 PostgreSQL 许可证分发。34 个内置探针不必在数据库主机上装 agent，异常检测分统计基线、向量相似度和 LLM 分类三层。名为 Ellie 的助手可以执行查询、分析执行计划、查看模式，最多做 50 轮多步诊断。现处公测，支持 PostgreSQL 14 以上。",
+      "url": "https://www.pgedge.com/blog/introducing-the-ai-dba-workbench-postgresql-monitoring-that-diagnoses-not-just-reports",
+      "author": "Antony Pegg",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "MCP",
+        "诊断"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Christophe Pettus 请甲方给顾问真正的库访问权",
+      "summary": "外聘 PostgreSQL 顾问却不给生产库访问权，是相当常见的做法。Christophe Pettus 说 PGX 的政策是不靠口述下达改库命令，远程指挥的出错率无法接受；培训和排障需要的条件也不同，事故处置要的是专注而不是边做边教。他认为安全顾虑被高估：云厂商本就有数十名员工能接触生产库，具名顾问配合限时凭证、会话日志、多因子和 IP 白名单，风险反而更低。静态副本复现不了与数据量、并发和复制相关的性能问题。",
+      "url": "https://thebuild.com/blog/give-us-access-already/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-22",
+      "image": "https://thebuild.com/media/media/give-us-access-already.webp",
+      "domain": "pg",
+      "tags": [
+        "咨询",
+        "安全",
+        "运维"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 并发测试暂定放进 contrib/test_decoding",
+      "summary": "Álvaro Herrera 说这些测试针对 REPACK 本身而非解码，但那里是眼下最少麻烦的落脚点。",
+      "url": "https://www.postgresql.org/message-id/aeiU2CZgM4j7zg8N@alvherre.pgsql",
+      "author": "Álvaro Herrera",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "测试"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "EXCEPT 排除的表转 UNLOGGED 后倾向维持现状",
+      "summary": "Peter Smith 主张直接报错，Shveta Malik 与 Amit Kapila 担心转回 LOGGED 时无法自动恢复。",
+      "url": "https://www.postgresql.org/message-id/CAHut+PvPRrm7GLp1i9qTiYqs8Okbh6vkhkkahiM2=Lo6e9qXTA@mail.gmail.com",
+      "author": "Vignesh C",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "发布"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "v19 新引入的变量遮蔽警告将单独清理",
+      "summary": "Chao Li 把 v19 专有告警与旧版问题拆开，避免回补冲突，其余留到 v20 再处理。",
+      "url": "https://www.postgresql.org/message-id/8B830174-7794-411F-B936-37DDB509EC5D@gmail.com",
+      "author": "Chao Li",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "编译",
+        "代码清理"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解：allow_in_place_tablespaces",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-allow_in_place_tablespaces/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 拿下 Thinking Machines 多年算力单",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/04/22/exclusive-google-deepens-thinking-machines-lab-ties-with-new-multi-billion-dollar-deal/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 9
+    }
+  ]
+}

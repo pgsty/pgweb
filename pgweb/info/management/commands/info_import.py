@@ -3,7 +3,7 @@ import json
 from django.core.management.base import BaseCommand, CommandError
 
 from pgweb.info.highlights import forget_highlights
-from pgweb.info.importer import BatchError, load, preview, upsert
+from pgweb.info.importer import BatchError, load, preview, upsert, warnings
 
 
 class Command(BaseCommand):
@@ -29,7 +29,8 @@ class Command(BaseCommand):
                 report = preview(rows)
             else:
                 report = upsert(rows, day, hide_missing=options['hide_missing'])
-            report.update({'file': path, 'date': day.isoformat(), 'items': len(rows)})
+            report.update({'file': path, 'date': day.isoformat(), 'items': len(rows),
+                           'warnings': warnings(path, rows)})
             for field in totals:
                 totals[field] += report[field]
             self.stdout.write(json.dumps(report, ensure_ascii=False, sort_keys=True))

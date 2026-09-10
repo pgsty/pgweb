@@ -1,11 +1,11 @@
 {
   "date": "2026-08-21",
-  "origin": "pgsty-daily 2026-08-21.md; pgnexus #245",
+  "origin": "chronicle 2026-08-21: pgnexus #245, daily, planet 4",
   "items": [
     {
       "tier": 1,
       "title": "判断慢查询是规划问题还是执行问题",
-      "summary": "EXPLAIN ANALYZE 同时给出 Planning Time 和 Execution Time，但工程师往往只看后者。在一张按天分了 500 个分区的表上，规划一条简单聚合查询的耗时可能是执行的 9 倍，因为 planner 必须逐个加载并评估分区才能完成剪枝；继续加索引只会让候选路径更多。执行侧的问题特征完全不同：溢写临时文件、大量 buffer 读取、过滤条件丢掉大批数据。对存在函数依赖的列可以用 CREATE STATISTICS 的 dependencies 改善估算，prepared statement 则能缓存计划、摊薄重复规划的开销。",
+      "summary": "EXPLAIN ANALYZE 同时给出 Planning Time 和 Execution Time，工程师却往往只看后者。在一张按天分了 500 个分区的表上，规划一条简单聚合查询的耗时可能是执行的 9 倍，因为规划器必须逐个加载并评估分区才能剪枝，继续加索引只会让候选路径更多。执行侧的特征完全不同：溢写临时文件、大量缓冲区读取、过滤条件丢掉大批数据。有函数依赖的列可以用 CREATE STATISTICS 改善估算。",
       "url": "https://www.tigerdata.com/blog/slow-query-planning-or-execution-problem",
       "author": "NanoHertz Communications",
       "source": "TigerData 博客",
@@ -21,46 +21,79 @@
     },
     {
       "tier": 1,
-      "title": "crates.io 出现构建期供应链投毒",
-      "summary": "恶意行为发生在依赖的 build script，工程即使从不调用库 API，一次构建也可能触发远程 payload。Rust 安全响应团队确认 proc-macro1 的 build script 会下载并执行恶意载荷，而 arrayref@0.3.10、internment@0.8.7 和 append-only-vec@0.1.9 被重新发布并加上了对它的依赖，暴露窗口分别约 86、90 和 107 分钟。团队已删除恶意版本、恢复被恶意 yank 的版本并锁定发布账号，初步判断是维护者设备或凭据失陷。处置范围应覆盖 Cargo.lock、CI 缓存和该窗口内用过的 secrets。",
-      "url": "https://blog.rust-lang.org/2026/08/20/supply-chain-attack-on-arrayref/",
-      "author": "Rust Security Response Team",
-      "source": "Rust 博客",
-      "source_date": "2026-08-20",
-      "image": "https://www.rust-lang.org/static/images/rust-social-wide.jpg",
-      "domain": "infra",
+      "title": "时间旅行者的主键：UUIDv7 与 Snowflake 的实测",
+      "summary": "随机的 UUIDv4 会把 B-tree 索引搅得七零八落：插入位置不可预测，页面在随机处反复分裂，留下一堆半空页。Shaun Thomas 在 100 万行上量了三种主键：随机 UUID 索引 38 MB，叶页填充率 71.53%，碎片率 49.89%；UUIDv7 把毫秒时间戳放在高位，索引 30 MB，填充率 89.98%，零碎片；Snowflake 式 BIGINT 只要 21 MB。单机系统仍该用序列。",
+      "url": "https://www.pgedge.com/blog/the-time-traveler-s-primary-key",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "pg",
       "tags": [
-        "供应链",
-        "Rust",
-        "cargo"
+        "主键",
+        "UUID",
+        "索引"
       ],
       "position": 2
     },
     {
       "tier": 1,
-      "title": "GitHub 把 8 月 17 日故障归因于容量未能跟上",
-      "summary": "GitHub 已经是代码、CI、issue、发布和 agent 入口的共享故障域，这份复盘给出的是完整因果链而不只是恢复通告。事故持续 7 小时 47 分钟，Central US 的关键组件没能随流量峰值扩容，压力扩散到认证和多项服务，Copilot 客户端的重试循环又在恢复期放大了流量。官方称月 commits 已从 4 月的 14 亿增至 29 亿，并新增逾 300 万 CPU 核心与 120 PB 高速存储，Azure 目前承载约 58% 平台负载。后续动作包括统一重试上限与预算、可变超时和面向大 monorepo 的线性读扩容。",
-      "url": "https://github.blog/news-insights/company-news/the-august-17-outage-and-the-work-ahead/",
-      "author": "GitHub",
-      "source": "GitHub 博客",
-      "source_date": "2026-08-20",
-      "image": "https://github.blog/wp-content/uploads/2026/01/generic-github-logo-left.png",
-      "domain": "infra",
+      "title": "lock_timeout 只该给迁移角色设，还要配重试",
+      "summary": "lock_timeout 限定一条语句等待某个重量级锁的时长，超时报 55P03，默认 0 即不限制。它与 statement_timeout 的区别在于只管等待，锁一旦拿到就可以一直持有；deadlock_timeout 默认一秒后才记录锁等待，把 lock_timeout 设得更低，语句会在留下日志之前就失败。Christophe Pettus 建议只给迁移角色和工具设 1 到 3 秒并配重试，注意每次取锁各算一次超时。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-lock_timeout/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-21",
+      "image": "https://thebuild.com/media/media/bb7dd81818ea4b5cb773341b243191e5.png",
+      "domain": "pg",
       "tags": [
-        "故障复盘",
-        "容量",
-        "可靠性"
+        "锁",
+        "DDL",
+        "参数"
       ],
       "position": 3
     },
     {
       "tier": 1,
+      "title": "导入时自带 id，序列就会停在原地",
+      "summary": "用 INSERT 显式指定 id 时，serial 或 GENERATED AS IDENTITY 的默认值根本不会求值，序列停在原地，表却一直在长。于是导入全程成功，应用发出的第一条插入却撞上主键冲突。Mikhail Shytsko 给出的修法是 setval 配合 pg_get_serial_sequence()，而不是硬写序列名；空表要用三参数形式避免静默失败，标识列则直接 ALTER TABLE ... RESTART WITH。",
+      "url": "https://seedfa.st/blog/postgres-sequence-out-of-sync",
+      "author": "Mikhail Shytsko",
+      "source": "seedfa.st",
+      "source_date": "2026-08-21",
+      "image": "https://seedfa.st/blog/postgres-sequence-out-of-sync-1.svg",
+      "domain": "pg",
+      "tags": [
+        "序列",
+        "标识列"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "把事务性 API 的边界移进数据库",
+      "summary": "Alexey Evlampiev 主张校验、鉴权和状态迁移本来就该在一个事务里完成，事务性 API 的边界应当从应用层移进 PostgreSQL。他把带类型契约、鉴权策略、隔离级别声明和测试的具名数据库函数当作设计单元，HTTP 路由、OpenAPI 与 MCP 工具都只是这些操作的绑定。路由目录做成可查询的表，版本差异写成谓词而非分叉代码，鉴权交给行级安全。流媒体与编排仍留在外层。",
+      "url": "https://vvka-141.github.io/pgmi/articles/request-becomes-a-transaction/",
+      "author": "Alexey Evlampiev",
+      "source": "个人博客",
+      "source_date": "2026-08-21",
+      "image": "https://vvka-141.github.io/pgmi/social-card.png",
+      "domain": "pg",
+      "tags": [
+        "架构",
+        "事务",
+        "API"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
       "title": "Bun 1.4 改用 Rust 重写并收紧 PostgreSQL TLS 行为",
-      "summary": "这一版把运行时主体从 Zig 重写为 Rust，同时加入无头浏览器、图像、Markdown、终端、cron、JSON5 与 XML 等内置能力，支持 Windows ARM64 和并行的 bun test。对连 PostgreSQL 的团队更要紧的是两处行为变化：Bun.sql 开始遵守 PGSSLMODE，环境为 require 而服务端没有 TLS 时连接会直接失败，不再静默明文回退；date 与 timestamptz 的 infinity 被映射为 JavaScript 的正负无穷而不是无效 Date。Linux 下 Bun 也不再为整个进程树关闭 THP。",
+      "summary": "这一版把运行时主体从 Zig 重写为 Rust，同时加入无头浏览器、图像、Markdown、cron 与 XML 等内置能力，支持 Windows ARM64 和并行的 bun test。对连 PostgreSQL 的团队更要紧的是两处行为变化：Bun.sql 开始遵守 PGSSLMODE，环境为 require 而服务端没有 TLS 时连接直接失败，不再静默明文回退；infinity 被映射为 JavaScript 的正负无穷。",
       "url": "https://bun.com/blog/bun-v1.4",
       "author": "Bun",
       "source": "Bun 博客",
-      "source_date": "2026-08-20",
+      "source_date": "2026-08-21",
       "image": "https://bun.com/og/blog/bun-v1.4.png",
       "domain": "infra",
       "tags": [
@@ -68,15 +101,49 @@
         "PostgreSQL 客户端",
         "TLS"
       ],
-      "position": 4
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "crates.io 出现构建期供应链投毒",
+      "summary": "恶意行为发生在依赖的构建脚本里，工程即使从不调用库 API，一次构建也可能触发远程载荷。Rust 安全响应团队确认 proc-macro1 的构建脚本会下载并执行恶意载荷，而 arrayref、internment 和 append-only-vec 被重新发布并加上了对它的依赖，暴露窗口分别约 86、90 和 107 分钟。团队已删除恶意版本、恢复被恶意撤回的版本并锁定发布账号。",
+      "url": "https://blog.rust-lang.org/2026/08/20/supply-chain-attack-on-arrayref/",
+      "author": "Rust Security Response Team",
+      "source": "Rust 博客",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "Rust",
+        "cargo"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 把 8 月 17 日故障归因于容量未能跟上",
+      "summary": "GitHub 已是代码、CI、议题、发布和智能体入口的共享故障域，这份复盘给出的是完整因果链。事故持续 7 小时 47 分钟，Central US 的关键组件没能随流量峰值扩容，压力扩散到认证和多项服务，Copilot 客户端的重试循环又在恢复期放大了流量。官方称月提交数已从 4 月的 14 亿增至 29 亿，后续动作包括统一重试上限与预算、可变超时和面向大仓库的线性读扩容。",
+      "url": "https://github.blog/news-insights/company-news/the-august-17-outage-and-the-work-ahead/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "故障复盘",
+        "容量",
+        "可靠性"
+      ],
+      "position": 8
     },
     {
       "tier": 2,
       "title": "PG 14.20 上报 TOAST 表 VACUUM 后损坏",
       "summary": "一个 TOAST 页上四个元组被判死清除，后续查询报 missing chunk number 0，备份已覆盖无法续查。",
       "url": "https://www.postgresql.org/message-id/C3B745B4-65BF-431E-9BA3-1ECFCD1A478B@yandex-team.ru",
-      "author": "",
-      "source": "pgsql-hackers",
+      "author": "Andrey Borodin",
+      "source": "PostgreSQL hackers",
       "source_date": "2026-08-21",
       "image": "",
       "domain": "pg",
@@ -84,79 +151,15 @@
         "TOAST",
         "数据损坏"
       ],
-      "position": 5
-    },
-    {
-      "tier": 2,
-      "title": "分区合并与分割会静默丢弃子分区的表访问方法",
-      "summary": "Zsolt Parragi 以 pg_tde 为例说明加密会被悄悄移除，倾向直接禁止有差异的合并与分割。",
-      "url": "https://www.postgresql.org/message-id/CAN4CZFMAZg_nUefJxsC_PcYvHqWPAMTrtCwMMkwiB3poWKkpkg@mail.gmail.com",
-      "author": "",
-      "source": "pgsql-hackers",
-      "source_date": "2026-08-21",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "分区",
-        "加密"
-      ],
-      "position": 6
-    },
-    {
-      "tier": 2,
-      "title": "HashJoin 的 Bloom filter 下推补丁走到 v10",
-      "summary": "探针成本改按实际取行数计算，但精确匹配让雪花模式下的 filter 使用次数减少，可能是一次回退。",
-      "url": "https://www.postgresql.org/message-id/DKUOIOKLR7YW.2QWNST28HI62A@gmail.com",
-      "author": "",
-      "source": "pgsql-hackers",
-      "source_date": "2026-08-21",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "优化器",
-        "连接"
-      ],
-      "position": 7
-    },
-    {
-      "tier": 2,
-      "title": "基于 XID 年龄的复制槽失效机制推进到 v14",
-      "summary": "备库上的同步槽若 catalog_xmin 过旧并阻塞主库 vacuum 也会被失效，新增了对应 TAP 测试。",
-      "url": "https://www.postgresql.org/message-id/CALj2ACUi0LeqKzomuXNPFsekzuQ+XbWZ5RamnO6tDzG4i1-KLw@mail.gmail.com",
-      "author": "",
-      "source": "pgsql-hackers",
-      "source_date": "2026-08-21",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "复制槽",
-        "VACUUM"
-      ],
-      "position": 8
-    },
-    {
-      "tier": 2,
-      "title": "checkpointer 写合并补丁按未来的 AIO 需求重命名",
-      "summary": "v16 调整了 API 命名，并用 LLM 草拟的 AIO 分支演示拆分方式，NVMe 上未测出延迟代价。",
-      "url": "https://www.postgresql.org/message-id/CABXr29EvZS4tC8K9stk8fcwhhC7Zy_ND0jDvreMuvepKntNiwg@mail.gmail.com",
-      "author": "",
-      "source": "pgsql-hackers",
-      "source_date": "2026-08-21",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "I/O",
-        "检查点"
-      ],
       "position": 9
     },
     {
       "tier": 2,
       "title": "逻辑解码快照可能与 CLOG 提交状态不一致",
-      "summary": "WAL 已记提交但 CLOG 未更新会让元组被误判为无效，同步复制下还会让进程无限循环等待。",
+      "summary": "WAL 已记提交而 CLOG 未更新会让元组被误判为无效，同步复制下还会让进程无限循环等待。",
       "url": "https://www.postgresql.org/message-id/aoiRAEAAzDnXfkDN@alvherre.pgsql",
       "author": "Álvaro Herrera",
-      "source": "pgsql-hackers",
+      "source": "PostgreSQL hackers",
       "source_date": "2026-08-21",
       "image": "",
       "domain": "pg",
@@ -168,11 +171,107 @@
     },
     {
       "tier": 2,
+      "title": "订阅 REFRESH 撞上并发 DROP 会空指针崩溃",
+      "summary": "缺陷可追溯到 PG16 引入 origin 检查的提交，v4 已验证，计划为 16 到 19 各分支准备回移补丁。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoC=O8k3HhordupsMy-9Bn4p8gjMGvWy97AG1ctPOEejzg@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "崩溃"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志写入表时遇超大行会让复制停摆",
+      "summary": "约 190 MB 的旧行转成字符串时超出 1 GB 上限，apply worker 崩溃；写日志文件则不受影响。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm0=5_2BMPhT=DSrSNKuREF70N2ne8RxEszBfCcQ43Tzug@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "分区合并与分割会静默丢弃子分区的表访问方法",
+      "summary": "Zsolt Parragi 以 pg_tde 为例说明加密会被悄悄移除，多数人倾向直接禁止有差异的合并与分割。",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFMAZg_nUefJxsC_PcYvHqWPAMTrtCwMMkwiB3poWKkpkg@mail.gmail.com",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "加密"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "HashJoin 的 Bloom filter 下推补丁走到 v10",
+      "summary": "探针成本改按实际取行数计算，但精确匹配让雪花模式下的过滤器少用了 6 次，可能是一次回退。",
+      "url": "https://www.postgresql.org/message-id/DKUOIOKLR7YW.2QWNST28HI62A@gmail.com",
+      "author": "Matheus Alcantara",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "连接"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "基于 XID 年龄的复制槽失效机制推进到 v14",
+      "summary": "备库上的同步槽若 catalog_xmin 过旧并阻塞主库 vacuum 也会被失效，新增了对应 TAP 测试。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACUi0LeqKzomuXNPFsekzuQ+XbWZ5RamnO6tDzG4i1-KLw@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "VACUUM"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "检查点写合并补丁按未来的异步 I/O 需求重命名",
+      "summary": "v16 调整了接口命名，并用大模型草拟的分支演示拆分方式，NVMe 上未测出额外延迟代价。",
+      "url": "https://www.postgresql.org/message-id/CABXr29EvZS4tC8K9stk8fcwhhC7Zy_ND0jDvreMuvepKntNiwg@mail.gmail.com",
+      "author": "Haibo Yan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "I/O",
+        "检查点"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
       "title": "提案为 pg_authid 增加角色最后修改时间列",
       "summary": "动机是让 operator 和 Terraform 低成本检测角色变更，Andres Freund 质疑为何只改这一张目录表。",
       "url": "https://www.postgresql.org/message-id/CA+VUV5pyUB-sXUCxnOATJdE_XDdos6rAgW5wPVTz-0AT8bLuGw@mail.gmail.com",
       "author": "Gabriele Bartolini",
-      "source": "pgsql-hackers",
+      "source": "PostgreSQL hackers",
       "source_date": "2026-08-21",
       "image": "",
       "domain": "pg",
@@ -180,12 +279,12 @@
         "角色",
         "声明式管理"
       ],
-      "position": 11
+      "position": 17
     },
     {
       "tier": 2,
       "title": "Linux 7.2 发布，调度、内存与 GPU 栈同时演进",
-      "summary": "带来 cache-aware scheduling、MGLRU 改进与多尺寸 THP 自动创建，DRM 公平策略因回归仍是 opt-in。",
+      "summary": "带来缓存感知调度、MGLRU 改进与多尺寸大页自动创建，DRM 公平策略因回归仍需显式开启。",
       "url": "https://www.igalia.com/2026/08/19/Linux-72-Released.html",
       "author": "Igalia",
       "source": "Igalia",
@@ -196,39 +295,39 @@
         "内核",
         "调度"
       ],
-      "position": 12
+      "position": 18
     },
     {
       "tier": 2,
-      "title": "Rust 1.98 新增显式的 algebraic 浮点运算 API",
+      "title": "Rust 1.98 新增显式的代数浮点运算 API",
       "summary": "允许编译器按实数代数性质重排加减乘除，结果不再逐位可复现，但官方保证不引入未定义行为。",
       "url": "https://blog.rust-lang.org/2026/08/20/Rust-1.98.0/",
       "author": "Rust Project",
       "source": "Rust 博客",
-      "source_date": "2026-08-20",
+      "source_date": "2026-08-21",
       "image": "",
       "domain": "infra",
       "tags": [
         "Rust",
         "浮点"
       ],
-      "position": 13
+      "position": 19
     },
     {
       "tier": 2,
-      "title": "Slack Code 把多个 coding agent 放进可审阅的频道",
-      "summary": "首批接入 Claude、Devin、Copilot 与 Vercel 等 agent，频道归档后保留记录作为审计日志。",
+      "title": "Slack Code 把多个编码智能体放进可审阅的频道",
+      "summary": "首批接入 Claude、Devin、Copilot 与 Vercel 等智能体，频道归档后保留记录作为审计日志。",
       "url": "https://www.salesforce.com/introducing-slack-code/",
       "author": "Salesforce",
       "source": "Salesforce",
-      "source_date": "2026-08-20",
+      "source_date": "2026-08-21",
       "image": "",
       "domain": "ai",
       "tags": [
         "agent",
         "协作"
       ],
-      "position": 14
+      "position": 20
     },
     {
       "tier": 3,
@@ -243,7 +342,7 @@
       "tags": [
         "迁移"
       ],
-      "position": 15
+      "position": 21
     },
     {
       "tier": 3,
@@ -258,7 +357,7 @@
       "tags": [
         "重构"
       ],
-      "position": 16
+      "position": 22
     },
     {
       "tier": 3,
@@ -273,7 +372,7 @@
       "tags": [
         "复制槽"
       ],
-      "position": 17
+      "position": 23
     },
     {
       "tier": 3,
@@ -288,7 +387,7 @@
       "tags": [
         "TOAST"
       ],
-      "position": 18
+      "position": 24
     },
     {
       "tier": 3,
@@ -303,7 +402,7 @@
       "tags": [
         "本地化"
       ],
-      "position": 19
+      "position": 25
     },
     {
       "tier": 3,
@@ -318,7 +417,7 @@
       "tags": [
         "物化视图"
       ],
-      "position": 20
+      "position": 26
     },
     {
       "tier": 3,
@@ -334,11 +433,11 @@
         "FDW",
         "并行"
       ],
-      "position": 21
+      "position": 27
     },
     {
       "tier": 3,
-      "title": "pgstat 支持在运行中的事务里刷新部分统计",
+      "title": "pgstat 事务内刷新补丁拆成两个提交",
       "summary": "",
       "url": "https://www.postgresql.org/message-id/CAA5RZ0vtd7Ghd5QKv3zfk-eapZz91mwt=Te3mbEUQ28=xTYVfg@mail.gmail.com",
       "author": "",
@@ -349,7 +448,37 @@
       "tags": [
         "统计信息"
       ],
-      "position": 22
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "内置聚合能否挂 support 函数仍无定论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1f2140fe-e4ae-4a52-9365-d5cbadcf5ae4@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "聚合"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别视图的反解析缺陷已修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260821.114002.2104892444825837489.ishii@postgresql.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RPR"
+      ],
+      "position": 30
     },
     {
       "tier": 3,
@@ -358,14 +487,14 @@
       "url": "https://blog.laserphile.com/2026/08/aliexpress-webpage-keeping-multipoint.html",
       "author": "",
       "source": "",
-      "source_date": "2026-08-20",
+      "source_date": "2026-08-21",
       "image": "",
       "domain": "infra",
       "tags": [
         "浏览器",
         "指纹"
       ],
-      "position": 23
+      "position": 31
     }
   ]
 }

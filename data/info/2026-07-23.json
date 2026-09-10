@@ -1,0 +1,343 @@
+{
+  "date": "2026-07-23",
+  "origin": "chronicle 2026-07-23: pgnexus #216, daily, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "预读补丁在高并发下耗尽本地缓冲区",
+      "summary": "Feike Steenbergen 报告，effective_io_concurrency 大于等于 64 时，ReadStream 的预读会把本地缓冲区吃光，PG19 生产实例在高峰每小时触发数十次。Melanie Plageman 确认把本地缓冲区预算限制在四分之一的提交应回合到 PG18，是否回合 PG17 还在评估。补丁到位前，可以调高 temp_buffers 或调低 effective_io_concurrency 缓解。",
+      "url": "https://www.postgresql.org/message-id/CAK_s-G3-KZ=Q91U-SikX6aNrcGmv_CUjQS5ZH-rDOwmEZ=Dn-Q@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "预读",
+        "缓冲区",
+        "缺陷"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "第三方 DBA 该拿什么权限",
+      "summary": "Shridhar Khanal 给出一份收窄外部 DBA 权限的做法：建专用登录角色，带 NOSUPERUSER、NOCREATEROLE、NOBYPASSRLS，并设 CONNECTION LIMIT 5。权限只授 pg_monitor 看内部状态、pg_signal_backend 取消失控查询，维护时再给 15 起的 pg_checkpoint 和 17 起的 pg_maintain，结束时 DROP ROLE 收回。",
+      "url": "https://stormatics.tech/blogs/the-right-way-to-give-a-third-party-dba-access-to-your-postgresql-database",
+      "author": "Shridhar Khanal",
+      "source": "Stormatics",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限",
+        "安全",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Hatchet 写下两年运行 PostgreSQL 的生存指南",
+      "summary": "Hatchet 的联合创始人把两年生产经验整理成一篇 PostgreSQL 运维文章：从访问模式反推表结构，让复合索引和 ORDER BY 对齐，理解顺序扫描与规划器的取舍，按真实写入量而不是默认值设 autovacuum，并为连接管理、迁移、批量操作和队列式并发预留机制。适合把每条建议改写成本集群的可测项：慢查询、索引覆盖率、连接池、死元组与 autovacuum 滞后、大表迁移的分块与回滚。",
+      "url": "https://hatchet.run/blog/postgres-survival-guide",
+      "author": "Hatchet",
+      "source": "Hatchet 博客",
+      "source_date": "2026-07-22",
+      "image": "https://hatchet.run/assets/og-PqKfvZWg.png",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "索引",
+        "autovacuum"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Kubernetes 上的多集群数据库难在操作权划分",
+      "summary": "这篇 CNCF 文章以 Percona 的 MongoDB Operator 为例讲多集群部署：所有节点属于同一个跨集群副本集，主站点的 operator 管理主节点、证书、用户和配置，副站点以 unmanaged 模式运行，防止第二个 operator 去接管副本集，服务发现靠 MCS API 的 ServiceExport 与 ServiceImport 加共享 DNS。单集群自愈不等于跨地域容灾，两个控制面争抢才是新增的故障面。",
+      "url": "https://www.cncf.io/blog/2026/07/22/multi-cluster-databases-on-kubernetes-architecture-and-deployment/",
+      "author": "Percona",
+      "source": "CNCF 博客",
+      "source_date": "2026-07-22",
+      "image": "https://www.cncf.io/wp-content/uploads/2026/07/Multi-Cluster-databases-on-K8s.jpg",
+      "domain": "db",
+      "tags": [
+        "Kubernetes",
+        "多集群",
+        "容灾"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "假招聘作业仓库靠 Git 钩子投毒",
+      "summary": "一位开发者收到 Python 岗位的带回家作业，发现仓库里预置了 Git 钩子：pre-commit 会按操作系统下载并在后台执行远端脚本，后续载荷再安装 Node 依赖并启动解释器。作者还发现参数化的 ID 会返回不同脚本，推测用于追踪受害者。这条路径绕开企业 CI，把求职者本机变成入口，评审外来仓库时要连 .git/hooks 和安装脚本一起看，并放进一次性环境里跑。",
+      "url": "https://citizendot.github.io/articles/fake-job-interview-git-hook-malware/",
+      "author": "Citizendot",
+      "source": "个人博客",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "安全",
+        "Git"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Confidential Containers 进入 CNCF 孵化",
+      "summary": "CNCF 技术监督委员会接纳 Confidential Containers 为孵化项目。它用 Kata Containers 抽象可信执行环境，支持 Intel TDX 和 AMD SEV-SNP，由 Trustee 先校验节点与工作负载完整性再下发密钥，公告还提到与 KServe 结合的机密 AI 场景。静态和传输加密盖不住运行时内存，把可信执行环境做成 Pod、运行时和证明服务的组合，等于把“云运营方看不到明文”变成可部署选项。",
+      "url": "https://www.cncf.io/blog/2026/07/22/confidential-containers-becomes-a-cncf-incubating-project/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-07-22",
+      "image": "https://www.cncf.io/wp-content/uploads/2026/07/Dragonfly-v2.5.0-is-released-8.png",
+      "domain": "cloud",
+      "tags": [
+        "机密计算",
+        "Kubernetes"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "逻辑解码漏掉快照构建期提交的事务",
+      "summary": "历史快照不追踪 BUILDING_SNAPSHOT 状态下的提交，几种修法各有边界情况，尚无定论。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoDYWJGtsbDg2CoNEQC9SSCXbKM8FR8vAtdLb_TyXH6FxQ@mail.gmail.com",
+      "author": "ChangAo Chen",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "快照"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "VACUUM 统计补丁改成核心加扩展的混合方案",
+      "summary": "v42 参照 pg_stat_statements：核心只填报告结构并留钩子，聚合与视图交给新扩展。",
+      "url": "https://www.postgresql.org/message-id/15a3a585-b55b-458e-be99-858238427329@yandex.ru",
+      "author": "Alena Rybakina",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "统计"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "EDB 主张用数据库权限给 AI 代理设护栏",
+      "summary": "文章把行级安全、基于角色的访问控制和审计日志当作限制自主代理破坏范围的主要手段。",
+      "url": "https://www.enterprisedb.com/blog/agentic-ai-security-data-guardrails",
+      "author": "EnterpriseDB",
+      "source": "EDB 博客",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "RLS",
+        "AI 代理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "工程师让代理用 Neon 后端搭出 Git 托管服务",
+      "summary": "作者称此前不懂 Git 服务端实现，全程由代理主导，用的是 Neon 尚在测试的后端套件。",
+      "url": "https://neon.com/blog/my-agent-cloned-github-using-the-neon-backend",
+      "author": "Roman Zaynetdinov",
+      "source": "Neon 博客",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AI 代理",
+        "应用开发"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 重构漏洞悬赏并加质量门槛",
+      "summary": "公开计划改为 250 到 10000 美元的固定赏金，另设邀请制 VIP 通道，最高 30000 美元以上。",
+      "url": "https://github.blog/security/next-chapter-restructuring-githubs-bug-bounty-program/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-07-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "漏洞悬赏",
+        "安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "GROUP BY 已保证唯一时消除 DISTINCT 的补丁撤回",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/f2cbfa30-e348-4573-b740-e08b88f0ea43@tantorlabs.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_publication_tables 的并发删表竞态待修",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoCV09zvbbteHDxe3USKWGVSpzoRR+1SK6wWgt2=Gc5o5Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_kind_info 视图补齐统计类型元数据",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DK63HNRZ12D8.14KZD4C7FL8Y@partin.io",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "JSON_ARRAY 子查询反解析会丢掉 FORMAT 子句",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAON2xHOd8X0npo-YfeNaKFudWY5+UumsxWTEZg5=7s9WuxYYow@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON",
+        "视图"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：from_collapse_limit",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-from_collapse_limit/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "优化器"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Kyverno 让离线策略测试模拟生产 informer",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/07/22/i-made-a-policy-engine-think-it-was-in-production/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "策略",
+        "测试"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 使用度量新增采用阶段看板",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-22-new-copilot-usage-metrics-impact-dashboard/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "度量"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "AMD 发布机架级 AI 系统 Helios",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/07/23/amd-takes-on-nvidia-with-its-helios-ai-rack-scale-system/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "硬件"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "AI 芯片公司 Etched 估值达 103 亿美元",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/07/23/ai-chip-startup-etched-defies-skeptics-hits-10-3b-valuation-from-big-name-investors/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "芯片",
+        "融资"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Gigatoken 用 SIMD 把分词吞吐推到 GB 每秒",
+      "summary": "",
+      "url": "https://github.com/marcelroed/gigatoken",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "分词",
+        "性能"
+      ],
+      "position": 21
+    }
+  ]
+}

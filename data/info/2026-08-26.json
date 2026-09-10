@@ -1,11 +1,28 @@
 {
   "date": "2026-08-26",
-  "origin": "pgsty-daily 2026-08-26.md; pgnexus #250",
+  "origin": "chronicle 2026-08-26: pgsty-daily, pgnexus #250, planet 6",
   "items": [
     {
       "tier": 1,
+      "title": "换用 UUID v7 主键后插入平均快 23 倍",
+      "summary": "Andrew Atkinson 记录了一次把 UUID 主键默认值从 v1、v4 换成 v7 的迁移，数据库跑在 PostgreSQL 18.4。改默认值只要一条 ALTER TABLE，但它需要表级排他锁，连 SELECT 都会被挡住，团队靠很短的锁超时、大量重试并主动取消持锁查询才完成切换。收益最大的是一张数十亿行、每分钟被调用一万两千次的多行插入语句，平均执行时间快了 23 倍。v7 的时间有序还能减少页分裂、缩小索引，进而省下 CPU 与 I/O。",
+      "url": "https://andyatkinson.com/postgresql-18-uuidv7",
+      "author": "Andrew Atkinson",
+      "source": "andyatkinson.com",
+      "source_date": "2026-08-26",
+      "image": "https://andyatkinson.com/assets/images/andyatkinson-com-social-share.jpg",
+      "domain": "pg",
+      "tags": [
+        "UUID",
+        "主键",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
       "title": "CORTO 用 Aurora PostgreSQL 承载 76 亿条向量",
-      "summary": "法律科技平台 CORTO 服务全球一万多家律所，把语义搜索建在 Amazon Aurora PostgreSQL 与 pgvector 上：单个 46 TB 集群存放 76 亿条向量，按 firm_id 哈希分区，每个租户单独建立 halfvec 类型的 384 维 HNSW 索引，在租户完全隔离的前提下拿到亚毫秒级查询延迟。嵌入模型从 1536 维的 OpenAI ADA 换成自托管的 384 维 Nomic 后，存储成本下降约 75%，召回率没有明显损失。存储职责也做了拆分，Aurora 只负责向量相似度检索，文档元数据和文本块放在 DynamoDB，冷数据归档到 S3。",
+      "summary": "法律科技平台 CORTO 服务全球一万多家律所，把语义搜索建在 Amazon Aurora PostgreSQL 与 pgvector 上：单个 46 TB 集群存放 76 亿条向量，每个租户单独建 halfvec 的 384 维 HNSW 索引，拿到亚毫秒级查询延迟。嵌入模型从 1536 维的 OpenAI ADA 换成自托管的 384 维 Nomic 后，存储成本下降约 75%。文档元数据和文本块放在 DynamoDB，冷数据归档到 S3。",
       "url": "https://aws.amazon.com/blogs/database/cortos-billion-scale-legal-semantic-search-with-aurora-postgresql-pgvector/",
       "author": "Anisa Dean",
       "source": "AWS 数据库博客",
@@ -17,7 +34,7 @@
         "向量检索",
         "Aurora"
       ],
-      "position": 1
+      "position": 2
     },
     {
       "tier": 1,
@@ -34,12 +51,29 @@
         "迁移",
         "生态"
       ],
-      "position": 2
+      "position": 3
     },
     {
       "tier": 1,
-      "title": "PostgreSQL 19 将回退分区 MERGE/SPLIT 功能",
-      "summary": "ALTER TABLE ... MERGE/SPLIT PARTITIONS 已经进入 PostgreSQL 19，但邮件列表上的评估并不乐观。Robert Haas 指出它整个操作期间对父表持有 AccessExclusiveLock，数据搬运毫无优化，相比手工 ATTACH/DETACH CONCURRENTLY 优势有限；jian he 回应说它至少只需一次扫描，并提交补丁拒绝触发器、本地约束等场景。发布管理团队的 Nathan Bossart 最终以设计问题未解决为由要求在 v19 回退，Alexander Korotkov 已着手准备回退提交，功能预期改到 v20 重新纳入。",
+      "title": "Red Hat 盘点 OpenStack 后量子迁移的 572 项问题",
+      "summary": "云控制面常把签名算法、密钥生成和 TLS 版本写死在应用层，底层库支持后量子密码并不能自动传导上来。Red Hat 组织 27 个团队审查了 90 多个仓库，记录 572 项妨碍加密敏捷的发现，覆盖 Barbican、Keystone、oslo.messaging 等组件，典型模式包括硬编码 RSA/ECDSA、强制 TLS 1.2 和仍在使用的 ssl.wrap_socket()。整改方向是先让算法可选，再迁到 SSLContext 并支持 ML-DSA 与 ML-KEM。",
+      "url": "https://www.redhat.com/en/blog/preparing-openstack-post-quantum-era-systematic-approach-crypto-agility",
+      "author": "Red Hat",
+      "source": "Red Hat 博客",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "后量子",
+        "OpenStack",
+        "TLS"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "发布管理团队要求在 PostgreSQL 19 回退分区合并与分割",
+      "summary": "Nathan Bossart 以设计问题未解决为由要求回退，Alexander Korotkov 着手准备回退提交。",
       "url": "https://www.postgresql.org/message-id/CACJufxEdoB=_enAHwMFTiLFsH47WU3Jy6nVgYu6SJy1jPHh3OA@mail.gmail.com",
       "author": "Nathan Bossart",
       "source": "pgsql-hackers",
@@ -51,41 +85,23 @@
         "v19",
         "回退"
       ],
-      "position": 3
-    },
-    {
-      "tier": 1,
-      "title": "Red Hat 盘点 OpenStack 后量子迁移的 572 项问题",
-      "summary": "云控制面常把签名算法、密钥生成和 TLS 版本写死在应用层，底层库支持后量子密码并不能自动传导上来。Red Hat 组织 27 个团队审查了 90 多个仓库，记录 572 项妨碍 crypto-agility 的发现，覆盖 Barbican、Keystone、oslo.messaging 等组件，典型模式包括硬编码 RSA/ECDSA、ES256 token 签名不可配置、强制 TLS 1.2 和仍在使用的 ssl.wrap_socket()。整改方向是先让算法可选，再迁到 SSLContext 并支持 ML-DSA 与 ML-KEM，这是清单和方法论，不等于现网已抗量子。",
-      "url": "https://www.redhat.com/en/blog/preparing-openstack-post-quantum-era-systematic-approach-crypto-agility",
-      "author": "Red Hat",
-      "source": "Red Hat 博客",
-      "source_date": "2026-08-25",
-      "image": "https://www.redhat.com/themes/custom/rhdc/img/red-hat-social-share.jpg",
-      "domain": "cloud",
-      "tags": [
-        "后量子",
-        "OpenStack",
-        "TLS"
-      ],
-      "position": 4
-    },
-    {
-      "tier": 1,
-      "title": "OpenAI 公布自研推理芯片 Jalapeño 首批实测",
-      "summary": "前沿模型公司正在把芯片、内存、网络和 serving 一起设计，Jalapeño 是 OpenAI 这条垂直整合路线第一次公开数据。官方称在 GPT-OSS 120B、DeepSeek R1 和 Kimi K2.5 1T 上，峰值吞吐时每瓦完成的 AI 工作量高 1.5 到 1.9 倍，端到端延迟低 1.7 到 3.6 倍，交互式负载性能高 2.1 到 4.1 倍。这些都是厂商自测，公告没有给出成本、供应和容量口径，也没有可采购硬件的独立横评，短期不构成改写 GPU 采购计划的依据。",
-      "url": "https://openai.com/index/jalapeno-first-results/",
-      "author": "OpenAI",
-      "source": "OpenAI",
-      "source_date": "2026-08-25",
-      "image": "",
-      "domain": "ai",
-      "tags": [
-        "推理芯片",
-        "能效",
-        "自研硬件"
-      ],
       "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "pgwatch v6 beta 可以直接抓取 Prometheus 端点",
+      "summary": "Prometheus 从输出端变成一等数据源，可与 PostgreSQL 源并列，补上 Patroni 角色和节点磁盘 I/O 这类库内看不到的指标。",
+      "url": "https://www.cybertec-postgresql.com/en/pgwatch-v6-prometheus-becomes-a-source-not-just-a-sink/",
+      "author": "Pavlo Golub",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "pgwatch"
+      ],
+      "position": 6
     },
     {
       "tier": 2,
@@ -101,7 +117,7 @@
         "shared_buffers",
         "内存"
       ],
-      "position": 6
+      "position": 7
     },
     {
       "tier": 2,
@@ -117,7 +133,7 @@
         "逻辑复制",
         "冲突"
       ],
-      "position": 7
+      "position": 8
     },
     {
       "tier": 2,
@@ -133,7 +149,7 @@
         "外键",
         "v19"
       ],
-      "position": 8
+      "position": 9
     },
     {
       "tier": 2,
@@ -149,7 +165,7 @@
         "快照",
         "备库"
       ],
-      "position": 9
+      "position": 10
     },
     {
       "tier": 2,
@@ -165,7 +181,23 @@
         "复制",
         "死锁"
       ],
-      "position": 10
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "join 消除后遗留的过期 Var 导致规划器出错",
+      "summary": "Richard Guo 认为 bug #19560 出在被移除子查询的 lateral 引用，建议把 rte->subquery 置空。",
+      "url": "https://www.postgresql.org/message-id/CAMbWs4-C4fwZTtY911MfAkW51G2d9TpqoRqmxCiJbjeO0GG1ug@mail.gmail.com",
+      "author": "Richard Guo",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "bug"
+      ],
+      "position": 12
     },
     {
       "tier": 2,
@@ -181,7 +213,7 @@
         "嵌入式",
         "向量检索"
       ],
-      "position": 11
+      "position": 13
     },
     {
       "tier": 2,
@@ -197,7 +229,7 @@
         "时序数据",
         "AWS"
       ],
-      "position": 12
+      "position": 14
     },
     {
       "tier": 2,
@@ -213,7 +245,7 @@
         "浏览器",
         "图像格式"
       ],
-      "position": 13
+      "position": 15
     },
     {
       "tier": 2,
@@ -229,7 +261,7 @@
         "开源治理",
         "平台风险"
       ],
-      "position": 14
+      "position": 16
     },
     {
       "tier": 2,
@@ -245,7 +277,7 @@
         "Batch",
         "ECS"
       ],
-      "position": 15
+      "position": 17
     },
     {
       "tier": 2,
@@ -261,7 +293,7 @@
         "Lambda",
         "私网"
       ],
-      "position": 16
+      "position": 18
     },
     {
       "tier": 2,
@@ -277,7 +309,64 @@
         "容器安全",
         "SBOM"
       ],
-      "position": 17
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "在 PostgreSQL 上用 pglayers 跑 DocumentDB",
+      "summary": "",
+      "url": "https://pglayers.github.io/blog/2026-08-26-mongodb-on-postgresql-documentdb.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "兼容层"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：连接日志的三个参数",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-logconnections-logdisconnections-and-loghostname/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置",
+        "日志"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "把部署脚本本身当成一段 PostgreSQL 程序",
+      "summary": "",
+      "url": "https://vvka-141.github.io/pgmi/articles/deployment-is-a-postgresql-program/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "分区叶子索引属性恢复改为直接更新 catalog",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/D088FD51-422F-436E-8650-85916A7D122D@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
     },
     {
       "tier": 3,
@@ -292,7 +381,7 @@
       "tags": [
         "监控"
       ],
-      "position": 18
+      "position": 24
     },
     {
       "tier": 3,
@@ -307,7 +396,7 @@
       "tags": [
         "函数"
       ],
-      "position": 19
+      "position": 25
     },
     {
       "tier": 3,
@@ -322,7 +411,7 @@
       "tags": [
         "构建"
       ],
-      "position": 20
+      "position": 26
     },
     {
       "tier": 3,
@@ -337,7 +426,7 @@
       "tags": [
         "分区"
       ],
-      "position": 21
+      "position": 27
     },
     {
       "tier": 3,
@@ -352,7 +441,7 @@
       "tags": [
         "pg_upgrade"
       ],
-      "position": 22
+      "position": 28
     },
     {
       "tier": 3,
@@ -367,7 +456,7 @@
       "tags": [
         "pg_upgrade"
       ],
-      "position": 23
+      "position": 29
     },
     {
       "tier": 3,
@@ -382,7 +471,7 @@
       "tags": [
         "逻辑复制"
       ],
-      "position": 24
+      "position": 30
     },
     {
       "tier": 3,
@@ -397,7 +486,7 @@
       "tags": [
         "逻辑复制"
       ],
-      "position": 25
+      "position": 31
     },
     {
       "tier": 3,
@@ -412,7 +501,20 @@
       "tags": [
         "形式化"
       ],
-      "position": 26
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 函数支持完整的 IAM 资源策略",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/aws-lambda-full-iam-resource-based-policies/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 33
     },
     {
       "tier": 3,
@@ -427,7 +529,7 @@
       "tags": [
         "同步协议"
       ],
-      "position": 27
+      "position": 34
     },
     {
       "tier": 3,
@@ -442,7 +544,7 @@
       "tags": [
         "Lambda"
       ],
-      "position": 28
+      "position": 35
     },
     {
       "tier": 3,
@@ -458,7 +560,7 @@
         "Git",
         "对象存储"
       ],
-      "position": 29
+      "position": 36
     }
   ]
 }

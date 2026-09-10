@@ -1,0 +1,165 @@
+{
+  "date": "2026-04-15",
+  "origin": "chronicle 2026-04-15: pgnexus #115, planet 5",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 支持在线开关数据校验和",
+      "summary": "PostgreSQL 19 可以在运行中的集群上开关数据校验和，不必再停机跑 pg_checksums。新增 pg_enable_data_checksums() 与 pg_disable_data_checksums()，两者都接受 cost_delay 与 cost_limit 控制 IO 强度。后台进程逐库把缓冲区标脏重算，状态先显示 inprogress-on 或 inprogress-off，等后端吸收屏障信号后才落定。",
+      "url": "https://www.depesz.com/2026/04/15/waiting-for-postgresql-19-online-enabling-and-disabling-of-data-checksums/",
+      "author": "Hubert depesz Lubaczewski",
+      "source": "depesz.com",
+      "source_date": "2026-04-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "校验和",
+        "内核"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Linux 7.0 上的 PostgreSQL 回退实为大页问题",
+      "summary": "Lætitia Avrot 复核 Linux 7.0 改用 PREEMPT_LAZY 后 PostgreSQL 变慢的说法。Salvatore Dipietro 在 96 vCPU 的 Graviton4 上跑 pgbench，1024 客户端、100GB 共享缓冲区并关掉 huge_pages，得到 7.0 仅为 6.x 的 0.51 倍。打开透明大页后两者都回到 185k tps。结论是瓶颈在大缓冲池的 4KB 缺页，不是抢占模式。",
+      "url": "https://mydbanotebook.org/posts/postgres-performance-regression-are-we-there-yet/",
+      "author": "Lætitia Avrot",
+      "source": "mydbanotebook.org",
+      "source_date": "2026-04-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "内核",
+        "大页"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Xata 把分支型 Postgres 平台以 Apache 2.0 开源",
+      "summary": "Xata 把自家的 Postgres 平台以 Apache 2.0 开源，提供秒级分支、计算自动休眠和原生 Postgres 运行。分支走写时复制：按块存储加元数据索引，克隆时只复制索引块，真正写入才复制数据，TB 级库也能在数秒内分出一份。存储与计算分离，用 NVMe over Fabrics 把存储引擎暴露到网络上。开源部分基于 CloudNativePG 与 OpenEBS，多区域部署代码和 Xatastor 存储引擎仍闭源。",
+      "url": "https://xata.io/blog/open-source-postgres-branching-copy-on-write",
+      "author": "Tudor Golubenco",
+      "source": "Xata 博客",
+      "source_date": "2026-04-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开源",
+        "分支",
+        "存储"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 用 Vectorizer 与 RAG Server 接住语义检索",
+      "summary": "pgEdge 的 Ahsan Hadi 的系列第二篇讲 RAG Server 架构与配置。Vectorizer 是一个后台工作进程扩展，靠触发器盯住源表的写入，把文本按 400 令牌切块、重叠 50 令牌，调用嵌入提供者写进 pgvector，嵌入提供者可选 Ollama、OpenAI 或 Voyage AI。RAG Server 是 Go 写的 API 服务，做向量相似度与 BM25 的混合检索，按令牌预算截断后交 LLM 生成答案。",
+      "url": "https://www.pgedge.com/blog/pgedge-vectorizer-and-rag-server-bringing-semantic-search-to-postgresql-part-2",
+      "author": "Ahsan Hadi",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RAG",
+        "pgvector",
+        "语义检索"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "LogTide 选 TimescaleDB 而非 ClickHouse",
+      "summary": "LogTide 是面向家庭实验室和小企业的开源可观测平台，目标是在 2GB 内存里每天处理数百万条日志。创始人 Giuseppe Pollio 选了 TimescaleDB 而不是 ClickHouse 或 MongoDB，理由是兼容 PostgreSQL。厂商口径的生产数据是列式压缩把 220GB 日志压到 25GB，查询快 33% 到 41%；典型批量下写入达每秒 14200 行，过滤查询比 MongoDB 快 650 倍。",
+      "url": "https://www.tigerdata.com/blog/how-timescaledb-outperforms-clickhouse-mongodb-logtides-observability-platform",
+      "author": "Giuseppe Pollio",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-04-15",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/Logtide-Tiger-Data-Case-Study.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "可观测性",
+        "压缩"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "终止信号里带上 PID 与 UID 的改动已推送",
+      "summary": "Andrew Dunstan 推送后 OpenBSD 构建农场失败，pg_basebackup 测试也暴露出疑似竞态。",
+      "url": "https://www.postgresql.org/message-id/6F78A2BD-4C0A-4620-AD98-18DF9D9FB4CD@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "信号",
+        "可观测性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "WAL LSN 回放等待机制补丁进入 Commitfest",
+      "summary": "补丁修掉纯归档恢复下 standby_write 等待者可能永久休眠的边角情况。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7W=P_PiKQ5SW-WmadC9vJ=q67MOwGM6iNRwSERF7OF0WA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "复制"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 的死锁预防仍在锁管理器与队列之间摇摆",
+      "summary": "Andres Freund 主张把死锁检测放进锁管理器，Antonin Houska 担心每次插锁都要取全部 LWLock。",
+      "url": "https://www.postgresql.org/message-id/25514.1776264611@localhost",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "锁"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "Tom Lane 提议移除 nodetag 的 ABI 稳定性检查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/2095866.1776276826@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "bms_offset_members() 改为返回新集合而非就地修改",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAApHDvoALVPgVSCuGdAfNUbxx_NacnAd0nuj8Hi=_-61AEqzaQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    }
+  ]
+}

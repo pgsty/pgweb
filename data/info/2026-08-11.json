@@ -1,0 +1,390 @@
+{
+  "date": "2026-08-11",
+  "origin": "chronicle 2026-08-11: pgsty-daily 2026-08-11.md, pgnexus #235, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Electric 团队并入 Databricks 旗下的 Neon",
+      "summary": "Databricks 收购 Electric 团队之后，Electric 将作为 Neon 的一部分并入。Electric 是 PGlite 与 Electric 同步引擎背后的团队：前者是基于 WebAssembly 的轻量 Postgres 运行时，可以直接在浏览器里跑；后者做的是实时数据同步。整合之后，Neon 的 serverless Postgres 平台会获得浏览器内执行与实时同步这两块能力。做本地优先应用的团队值得关注 PGlite 的许可与发布节奏是否照旧。",
+      "url": "https://neon.com/blog/electric-joins-neon",
+      "author": "Nikita Shamgunov",
+      "source": "Neon 博客",
+      "source_date": "2026-08-11",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/electric-joins-neon/neon-electric.jpg",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "PGlite",
+        "同步"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Crunchy PGO 的跨地域灾备与回切实操",
+      "summary": "Wellingtone Luvonga 记录了在 Kubernetes 上用 Crunchy PGO 做 PostgreSQL 跨区域灾备的完整流程，WAL 归档后端选用 MinIO。文章解决了三个难点：用 NGINX 反向代理给 pgBackRest 提供自签名 TLS、避免回切过程中 operator 死锁，以及处理时间线分裂造成的归档污染。步骤覆盖初始部署、复制验证、模拟区域故障切换，以及灾备站点提升为主库后如何把原主区域重建成备库。",
+      "url": "https://www.cybertec-postgresql.com/en/multi-region-postgresql-disaster-recovery-and-failback-with-crunchy-pgo/",
+      "author": "Wellingtone Luvonga",
+      "source": "CYBERTEC",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "灾备",
+        "Kubernetes",
+        "pgBackRest"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "在 RDS 与 Aurora 上强制 TLS 并管好证书轮换",
+      "summary": "Stefano D'Alessio 给出 Amazon RDS 与 Aurora PostgreSQL 的 TLS 做法。服务端把 rds.force_ssl 设为 1 拒绝明文连接，客户端用 sslmode=verify-full 校验服务端身份，证书颁发机构在三个可选 CA 里按需求选。文章还给了一套用 CDK 部署的监控：Lambda 配合 EventBridge 与 CloudWatch，提前 30 天发现将过期的证书。有无未加密连接查 pg_stat_ssl。",
+      "url": "https://aws.amazon.com/blogs/database/enforcing-tls-and-managing-certificate-rotation-for-rds-and-amazon-aurora-postgresql/",
+      "author": "Stefano D'Alessio",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-08-11",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/07/31/DBBLOG-5611-featured-image.png",
+      "domain": "pg",
+      "tags": [
+        "TLS",
+        "AWS",
+        "证书"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "用 pgcrypto 做多租户自带密钥加密",
+      "summary": "Tudor Golubenco 演示了让每个租户用自己的密钥加密敏感列的做法。数据密钥存在 AWS KMS 里，应用在查询时取出并作为绑定参数传给 pgp_sym_encrypt 与 pgp_sym_decrypt，数据库本身不持有密钥。组织表用 kms_key_arn 标记是否启用自带密钥。文中点了几个坑：把 log_parameter_max_length 设为 0 以免密钥进慢查询日志、按行而不是按组织记录加密状态、密钥轮换后老行需要迁移。",
+      "url": "https://xata.io/blog/multi-tenant-byok-encryption-in-postgresql-with-pgcrypto",
+      "author": "Tudor Golubenco",
+      "source": "Xata 博客",
+      "source_date": "2026-08-11",
+      "image": "https://xata.io/api/og?title=Multi-tenant+BYOK+encryption+in+PostgreSQL+with+pgcrypto&amp%3Bauthor=Tudor+Golubenco",
+      "domain": "pg",
+      "tags": [
+        "加密",
+        "多租户",
+        "pgcrypto"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Dimitri Fontaine 发布 SQL 格式化工具 sqlfmt",
+      "summary": "sqlfmt 是一个 gofmt 风格的 SQL 格式化工具：只有一种排版风格，没有任何配置开关。它采用的是把子句关键字右对齐到同一列的河流式排版。实现上用 Go 写成，走词法分析而不是抽象语法树，因此能处理粘贴进来的片段、不完整语句甚至不完全合法的语法；测试套件则拿 PostgreSQL 自己的解析器做校验。安装用 go install，作者还编译了一个 WebAssembly 版本放在网页上，不装东西也能直接格式化。",
+      "url": "https://tapoueh.org/blog/2026/08/introducing-sqlfmt-an-sql-gofmt-style-formatter/",
+      "author": "Dimitri Fontaine",
+      "source": "作者博客",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "SQL",
+        "格式化"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "IntervalStyle 会同时改变输出与解析",
+      "summary": "Christophe Pettus 提醒 IntervalStyle 不只管间隔值怎么打印，也管怎么解析输入。同一个间隔在 postgres 下是 1 year 2 mons 3 days 04:05:06，在 sql_standard 下是 +1-2 +3 +4:05:06，在 iso_8601 下是 P1Y2M3DT4H5M6S。风险有三处：sql_standard 会改变负号字面量的含义，iso_8601 对混合符号的间隔输出严格解析器读不了的写法，全局改动会打乱驱动。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-intervalstyle/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-11",
+      "image": "https://thebuild.com/media/media/594be59ca380483985c04b589ecb31b4.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "时间类型",
+        "兼容性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "研究挑战固件 SMM 同步进入的前提",
+      "summary": "研究者公开了针对系统管理模式集合超时假设的代码与验证方法。作者称在一台 Zen 3 的 Ryzen 7 5800H 上，用一条从特定慢速 MMIO 地址发起的向量加载可以持续约一秒，跨过固件的集合超时，使某个核心仍在 SMM 之外运行。项目也说明默认地址与参数并不通用，换机器要重新调校，目前没有已协调披露的通用编号。它的意义不是普通用户能拿到 SMM，而是动摇了一个核心进入 SMM 后其他核心都会停下的同步前提。",
+      "url": "https://github.com/xoreaxeaxeax/smiiiiiiiiiiiiiiii",
+      "author": "xoreaxeaxeax",
+      "source": "研究代码仓库",
+      "source_date": "2026-08-10",
+      "image": "https://opengraph.githubassets.com/1e5e46501eb59660a314c5a4c7a73bd55a8bb9c6c5eb6da7f36dcec7822873e5/xoreaxeaxeax/smiiiiiiiiiiiiiiii",
+      "domain": "infra",
+      "tags": [
+        "固件",
+        "安全",
+        "x86"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PG18.5 的 to_date 在 C locale 下会崩溃",
+      "summary": "to_date 用 TMMON 解析土耳其语月份时，strupper_libc_mb 会以空 locale 句柄调用，18 分支缺少特判，修复已推送。",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB1317436E07D06281AD1A0452F94DD2@OS9PR01MB13174.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "崩溃",
+        "locale"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "io_uring 模式下会泄漏文件描述符",
+      "summary": "backend 崩溃后 ring 的描述符不会清理，累积到 ulimit 上限就会让数据库重新初始化时报 EMFILE，好在描述符带 FD_CLOEXEC。",
+      "url": "https://www.postgresql.org/message-id/CAKZiRmxgPg7DPmTRkgniY=ocH-iG0z5i45AYXhspRxZtdCJaTg@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "IO",
+        "缺陷"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "共享缓冲区哈希表重构收到架构层面的质疑",
+      "summary": "Andres Freund 指出 20 字节键开销、按关系遍历困难与锁竞争，建议改成按关系的数据结构加基数树的两层设计。",
+      "url": "https://www.postgresql.org/message-id/CAE8JnxPb_=gJKibim2RDHBqb2XKNiVYAqFXPVzaCCLWVTmBz_Q@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "性能"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "CREATE INDEX 不该跳过 TOAST 表的统计更新",
+      "summary": "提交 d611f8b158 把 TOAST 关系也纳入跳过范围，但它没有可恢复的统计，副作用是 autovacuum 优先级被抬高，修复拟回移 v18。",
+      "url": "https://www.postgresql.org/message-id/anta7SkBl0iXdqlG@nathan",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "TOAST"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Squeak 6.1 发布",
+      "summary": "这是窗口内少数可核验的正式开源运行时发布，升级风险通常在 image、插件与虚拟机的组合上，而不在单个二进制。",
+      "url": "https://squeak.org/release_notes/6.1/",
+      "author": "",
+      "source": "Squeak",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "运行时",
+        "发布"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Ante 做离线可用的单二进制编码智能体",
+      "summary": "单二进制加离线能降低受限网络里的试用门槛，但无需联网不等于天然安全，风险仍取决于它能读写和执行什么。",
+      "url": "https://github.com/AntigmaLabs/ante",
+      "author": "",
+      "source": "项目仓库",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Agent",
+        "开源"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "缩小 InvalidateBuffer 持锁范围的补丁被否决",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAE8JnxOR9cJtXGG-3Ki33zHyh5oEcuVeRqeToEvu-44T+R-DnA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "事务进行中刷新部分统计信息的补丁收到五点意见",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ansouYli2S2eN5Xr@bdtpg",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 拟保留复制源的 OID",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAFPTHDaDx82rAKxSKrOzjwcfurzi+n+fLa9hRyT3R+zjNYZ48A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "非事务性逻辑解码消息拟继续上报结束位置",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBVQGPwaWZO9YbJ-sac39_nKoern4cS_ZWs-+o1c9Djaw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "按 XID 年龄失效复制槽的补丁进入 v13",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACVceyKVoN7ZuxkNfQ+ZPnQ9NAFfR66vS25-u5e=Jbkx7Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "发布 EXCEPT 的作用范围仍未定论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm1X_QDg-wRTc4i9Vvo1MdVA-r_JNBdugpG4AXyJBujFHw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Typegres 0.3 想把 SQL 直接当作 API",
+      "summary": "",
+      "url": "https://typegres.com/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "LWN 梳理 C 语言尾调用优化的进展",
+      "summary": "",
+      "url": "https://lwn.net/Articles/1034703/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "VectorWare 谈在 GPU 上跑 Rust SIMD",
+      "summary": "",
+      "url": "https://www.vectorware.com/blog/simd-on-gpu/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Kameleo 从 Blink 层观察浏览器指纹调用",
+      "summary": "",
+      "url": "https://kameleo.io/blog/this-is-the-closest-well-ever-get-to-reverse-engineering-anti-bots",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "PrivateRedact 用本地模型做敏感信息脱敏",
+      "summary": "",
+      "url": "https://github.com/monjurulkarim/privateredact",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "提高 OpenBSD 断电韧性的运维实践",
+      "summary": "",
+      "url": "https://www.zlhgo.com/posts/how_to_increase_openbsds_resilience_to_power_outages/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "ArcBox 观察 Apple 虚拟化框架释放内存后的行为",
+      "summary": "",
+      "url": "https://arcbox.dev/blog/macos-vm-memory-ratchet",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}

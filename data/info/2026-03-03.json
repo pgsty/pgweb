@@ -1,0 +1,111 @@
+{
+  "date": "2026-03-03",
+  "origin": "chronicle 2026-03-03：news 2、pgnexus #70",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Autobase 2.6.0 用蓝绿部署做近零停机升级",
+      "summary": "Autobase 是面向自建 PostgreSQL 的开源集群方案，覆盖部署、故障转移、备份与升级。2.6.0 加入蓝绿部署工作流：先按 Patroni 备用集群克隆出一套环境，用物理复制同步数据，在目标集群上完成大版本升级，再转成逻辑副本持续接收生产变更，准备就绪后数秒内切换流量。项目方称回滚同样依赖反向逻辑复制，不会丢数据。这套流程把大版本升级的停机压缩到切换动作本身，代价是要多维护一套克隆环境，切换演练仍需自行安排。",
+      "url": "https://github.com/autobase-tech/autobase/releases/tag/2.6.0",
+      "author": "Autobase 项目组",
+      "source": "Autobase",
+      "source_date": "2026-03-03",
+      "image": "https://opengraph.githubassets.com/d72ba5967cf7dabb8e5dd811031a7c778dcc32f6b2861e7f0f87773e5dacfbef/autobase-tech/autobase/releases/tag/2.6.0",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "升级",
+        "部署"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Pg_QoS 1.0.0 给会话和查询加上资源限额",
+      "summary": "PostgreSQL 没有按角色分配资源的内置手段，同一实例上的多种负载会互相挤占。Pg_QoS 用 ALTER ROLE 或 ALTER DATABASE 设置的 qos.* 参数补上这一层：把后端进程绑定到指定数量的 CPU 核心，并行工作进程同样受限，还能限制并发事务数、语句数和每会话的 work_mem，缓存失效走共享纪元机制、无需重连。扩展要求 PostgreSQL 15 以上，CPU 限制仅在 Linux 可用。",
+      "url": "https://github.com/appstonia/pg_qos",
+      "author": "AppstoniA",
+      "source": "AppstoniA",
+      "source_date": "2026-03-03",
+      "image": "https://opengraph.githubassets.com/9d76007c572f7f6c8dc66d2ea63234421a5a8960267edbdb6226c5c3a6a2eb3b/appstonia/pg_qos",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "资源隔离",
+        "多租户"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "消除 xl_heap_visible 的补丁进入第 35 版",
+      "summary": "Melanie Plageman 的目标是减少 WAL 并让访问时修剪也能设置可见性映射，新版为全可见页面加了快速路径。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Y1MuANdm1p47Ev13Y9EQz8z+pw-vHOh=3DVdahUTjgXg@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "WAL"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "ANALYZE 可选跳过统计未变化的关系",
+      "summary": "补丁拆成两种用法：只补缺失统计的目录驱动模式，和按修改量阈值跳过的瞬态模式，后者另开线程。",
+      "url": "https://www.postgresql.org/message-id/CAE2r8H7hYGYi4QM85Q7bxs4RbT0Vn63c9ONFbwhAjuSGDzah_A@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "统计信息"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 3,
+      "title": "Tom Lane 提议 Solaris 改用未命名 POSIX 信号量",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/470305.1772417108@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 5
+    },
+    {
+      "tier": 3,
+      "title": "psql 补全 ALTER ROLE ... IN DATABASE 已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/202603021705.hurfwmxfd6l4@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 的文档评审提出改名与术语建议",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAKFQuwYu+30BK9-7zwSR1TBdcFBY1BDezgcXtusm2VHWvrOrRA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 7
+    }
+  ]
+}

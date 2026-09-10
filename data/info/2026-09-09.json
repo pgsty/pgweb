@@ -1,97 +1,91 @@
 {
   "date": "2026-09-09",
-  "origin": "pgsty-daily 2026-09-09.md; pgnexus #264",
+  "origin": "chronicle 2026-09-09: daily 13, pgnexus #264, news 2, planet 4",
   "items": [
     {
       "tier": 1,
+      "title": "Autobase 2.11 把扩缩、升级与备份收进控制台",
+      "summary": "Autobase 2.11 补齐了两年前定下的目标：只读副本扩缩、小版本与主版本升级、备份和时间点恢复现在都能在 Console 界面里操作。云端部署会自动创建服务器与配套资源，自有裸机或虚拟机上的集群同样可以加副本。项目方给的口径是小版本升级逐个更新副本再切主，写入中断约 5 到 10 秒；主版本原地升级停机约 30 到 60 秒，蓝绿方案留到以后的版本。",
+      "url": "https://github.com/autobase-tech/autobase/releases/tag/2.11.0",
+      "author": "Autobase 项目组",
+      "source": "Autobase 发布说明",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "运维",
+        "发布"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
       "title": "Percona Operator 3.1.0 引入 pg_tde 透明加密",
-      "summary": "3.1.0 补上了三项此前需要自行拼装的能力。透明数据加密由 pg_tde 提供，对磁盘上的表、索引和 WAL 加密，采用两层密钥模型并用 HashiCorp Vault 管理主密钥；逻辑副本为分析型只读负载提供稳定端点，从 pgBackRest 备份引导初始化，资源规格可独立于主库调整；持久化日志把 PostgreSQL 与 pgBackRest 的日志留在数据卷上，跨 Pod 重启仍可访问，并经 Fluent Bit 转发到 S3 或 OpenTelemetry。此外新增 ARM64 支持、RKE2 认证和内置 pg_cron、set_user，同时移除了对 PMM2 的支持。",
+      "summary": "Percona Operator for PostgreSQL 3.1.0 补上三项此前要自行拼装的能力。透明数据加密由 pg_tde 提供，对磁盘上的表、索引和 WAL 加密，两层密钥模型的主密钥交给 HashiCorp Vault；逻辑副本为分析型只读负载提供稳定端点，从 pgBackRest 备份引导初始化；持久化日志把日志留在数据卷上，经 Fluent Bit 转发到 S3。新版还加了 ARM64 支持。",
       "url": "https://www.percona.com/blog/percona-operator-for-postgresql-3-1-0-transparent-data-encryption-logical-replicas-persistent-logging/",
       "author": "Slava Sarzhan",
       "source": "Percona 博客",
       "source_date": "2026-09-09",
       "image": "https://www.percona.com/wp-content/uploads/2026/09/Featured-Image-635-x-424-1.png",
       "domain": "pg",
-      "tags": ["Kubernetes", "加密", "备份"],
-      "position": 1
+      "tags": [
+        "Kubernetes",
+        "加密",
+        "备份"
+      ],
+      "position": 2
     },
     {
       "tier": 1,
       "title": "Neon 让 Lakebase 计算节点内存直供 shared buffers",
-      "summary": "Lakebase 的固定规格计算节点此前依靠本地磁盘缓存承接热数据。Neon 调整了大规格实例的内存布局，把机器的大部分内存直接分配给 PostgreSQL shared buffers，并以 huge pages 作为底层支持，让热数据页常驻 DRAM，不再绕行本地磁盘缓存。按作者的说法，这既加快了常用数据的访问，也降低了相同工作集下的 CPU 开销。文章是计算缓存优化系列的第一篇，后续还会继续展开。对自建实例可参考的是 shared_buffers 与 huge pages 的配比思路，具体收益取决于工作集大小和实例内存。",
+      "summary": "Lakebase 的固定规格计算节点此前靠本地磁盘缓存承接热数据。Neon 调整了大规格实例的内存布局，把机器的大部分内存直接分配给 PostgreSQL shared buffers，并以 huge pages 作为底层支持，让热数据页常驻 DRAM，不再绕行本地磁盘缓存。按作者的说法，这既加快了常用数据的访问，也降低了同样工作集下的 CPU 开销。",
       "url": "https://neon.com/blog/improving-lakebase-compute-cache-part-1",
       "author": "Sunil Kamath",
       "source": "Neon 博客",
       "source_date": "2026-09-09",
       "image": "https://cdn.neonapi.io/public/images/pages/blog/improving-lakebase-compute-cache-part-1/cover.jpg",
       "domain": "pg",
-      "tags": ["性能", "内存", "shared buffers"],
-      "position": 2
+      "tags": [
+        "性能",
+        "内存",
+        "shared buffers"
+      ],
+      "position": 3
     },
     {
       "tier": 1,
       "title": "Karmada 成为 CNCF 毕业项目",
-      "summary": "多云和多地域 Kubernetes 的复杂度大多藏在 placement、配置传播、身份、网络和故障域里。CNCF 宣布多集群编排器 Karmada 完成毕业要求，包括第三方安全审计和正式的治理结构；同期的 v1.19 强化了面向分布式 AI 训练的多组件调度，优先级调度进入默认启用的 Beta。毕业证明的是项目治理、安全流程和生产成熟度，并不意味着现有多集群平台可以无风险替换，也不会自动带来 GPU 调度能力。评估时应先用非生产负载验证跨集群身份与 secrets、网络可达性、持久卷的 RPO 与 RTO、故障转移回切和成本归属。",
+      "summary": "CNCF 宣布多集群编排器 Karmada 完成毕业要求，包括第三方安全审计和正式的治理结构；同期的 v1.19 强化了面向分布式 AI 训练的多组件调度，优先级调度进入默认启用的 Beta。毕业证明的是项目治理、安全流程和生产成熟度，并不意味着现有多集群平台可以无风险替换。评估时应先用非生产负载验证跨集群身份与 secrets、网络可达性、持久卷的 RPO 与 RTO 和故障转移回切。",
       "url": "https://www.cncf.io/announcements/2026/09/07/cloud-native-computing-foundation-announces-karmada-graduation/",
       "author": "CNCF",
       "source": "CNCF",
       "source_date": "2026-09-08",
       "image": "https://www.cncf.io/wp-content/uploads/2026/09/Screenshot-2026-09-07-at-9.01.51-PM.jpg",
       "domain": "cloud",
-      "tags": ["Kubernetes", "多集群", "CNCF"],
-      "position": 3
-    },
-    {
-      "tier": 1,
-      "title": "AWS Organizations 的 Account.Status 已退役",
-      "summary": "Organizations 位于 landing zone、账号工厂和安全基线的最前端，一个废弃字段未必显式报错，却可能让账号状态变成空值、跳过关停分支或让报表失真。退役日期为 2026-09-09，DescribeAccount、ListAccounts 和 ListAccountsForParent 响应中的 Status 不再可用，生命周期语义由更细粒度的 State 承担，取值包括 ACTIVE、SUSPENDED、PENDING_CLOSURE 和 CLOSED。控制台仍显示旧术语不能作为依据。应立刻做一次响应快照，核对 SDK 结构体、jq 提取和 Terraform 数据源。",
-      "url": "https://docs.aws.amazon.com/organizations/latest/APIReference/API_Account.html",
-      "author": "AWS",
-      "source": "AWS 文档",
-      "source_date": "2026-09-09",
-      "image": "",
-      "domain": "cloud",
-      "tags": ["AWS", "API 兼容性", "账号治理"],
+      "tags": [
+        "Kubernetes",
+        "多集群",
+        "CNCF"
+      ],
       "position": 4
     },
     {
       "tier": 1,
       "title": "OpenSSL 3.0 LTS 已于 9 月 7 日结束上游支持",
-      "summary": "OpenSSL 往往由操作系统、应用服务器、代理、数据库客户端、语言运行时、容器镜像和静态编译产物间接携带，所以盘点不能只看宿主机的包管理器。官方生命周期表列出 3.0 的支持截止到 2026-09-07，当前 LTS 是支持至 2030-04-08 的 3.5。仍留在 3.0 的服务此后不再获得社区安全修复，下一次漏洞的补丁可得性、例外流程和合规叙述都会改变。盘点应覆盖动态链接库、镜像层、语言发行包、构建机和离线镜像仓；升级前单独验证 provider、FIPS、ABI 与 TLS 互操作性，并为无法立即迁移的系统设定隔离与风险接受期限。",
+      "summary": "OpenSSL 官方生命周期表列出 3.0 的支持截止到 2026 年 9 月 7 日，当前 LTS 是支持到 2030 年 4 月 8 日的 3.5。仍留在 3.0 的服务此后不再获得社区安全修复。OpenSSL 常由操作系统、代理、数据库客户端、语言运行时、容器镜像和静态编译产物间接携带，盘点不能只看宿主机的包管理器，还要覆盖镜像层、构建机和离线镜像仓；升级前单独验证 provider、FIPS 与 TLS 互操作性。",
       "url": "https://www.openssl-library.org/source/",
       "author": "OpenSSL Project",
       "source": "OpenSSL",
       "source_date": "2026-09-07",
       "image": "",
       "domain": "infra",
-      "tags": ["OpenSSL", "EOL", "供应链"],
+      "tags": [
+        "OpenSSL",
+        "EOL",
+        "供应链"
+      ],
       "position": 5
-    },
-    {
-      "tier": 1,
-      "title": "GHES 3.22 让断网环境用上 Copilot CLI",
-      "summary": "许多受监管或隔离的网络此前无法把 agent 体验和自托管的源码控制面结合起来。GitHub Enterprise Server 3.22 正式 GA，首次允许在实例内配置模型提供方，让用户以 GHES 凭证使用 Copilot CLI，该能力目前仍是 technical preview。同版还把 enterprise teams 转为 GA，ruleset 可以指定个人 bypass 和必审人。真正要确认的不是能否调用模型，而是谁管理 provider、哪些仓库和文件能进入上下文、工具在哪一侧执行、日志如何留存，以及离线实例怎样及时拿到安全更新。",
-      "url": "https://github.blog/changelog/2026-09-08-github-enterprise-server-3-22-is-now-generally-available/",
-      "author": "GitHub",
-      "source": "GitHub Changelog",
-      "source_date": "2026-09-08",
-      "image": "https://github.blog/wp-content/themes/github-2021-child/dist/img/social-v3-new-releases.jpg",
-      "domain": "infra",
-      "tags": ["GHES", "air-gapped", "Copilot"],
-      "position": 6
-    },
-    {
-      "tier": 1,
-      "title": "OpenAI 公布 Navier–Stokes 证明主张与 Lean 形式化",
-      "summary": "这是厂商主张，而不是已被学界接受的定理。OpenAI 公开了论文、构造与 Lean 形式化，称其内部系统找到了具有光滑外力、有限能量并在有限时间形成奇点的构造，解题过程动用约一万个并发 agent，Navier–Stokes 部分消耗约 1300 亿输出 token，Lean 验证由 GPT-6 Astra 完成。Nature 的报道同样将其表述为 OpenAI 的主张，Clay 研究所并未确认。形式化提高了实现层面的可检查性，却不替代对问题表述、假设和高层论证的独立审阅。三个门槛应分开看待：Lean 代码通过、论文获数学界审阅、Clay 正式认定。",
-      "url": "https://openai.com/index/navier-stokes-solution/",
-      "author": "OpenAI",
-      "source": "OpenAI",
-      "source_date": "2026-09-08",
-      "image": "",
-      "domain": "ai",
-      "tags": ["形式化验证", "Lean", "多 agent"],
-      "position": 7
     },
     {
       "tier": 2,
@@ -103,8 +97,11 @@
       "source_date": "2026-09-07",
       "image": "",
       "domain": "pg",
-      "tags": ["PostgreSQL 19", "预览"],
-      "position": 8
+      "tags": [
+        "PostgreSQL 19",
+        "预览"
+      ],
+      "position": 6
     },
     {
       "tier": 2,
@@ -116,8 +113,11 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["pgBackRest", "社区"],
-      "position": 9
+      "tags": [
+        "pgBackRest",
+        "社区"
+      ],
+      "position": 7
     },
     {
       "tier": 2,
@@ -129,8 +129,11 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["WAL", "复制"],
-      "position": 10
+      "tags": [
+        "WAL",
+        "复制"
+      ],
+      "position": 8
     },
     {
       "tier": 2,
@@ -142,8 +145,11 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["PostgreSQL 19", "外键"],
-      "position": 11
+      "tags": [
+        "PostgreSQL 19",
+        "外键"
+      ],
+      "position": 9
     },
     {
       "tier": 2,
@@ -155,8 +161,77 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["DDL", "pg_dump"],
+      "tags": [
+        "DDL",
+        "pg_dump"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志历史表卡在 1GB 分配上限",
+      "summary": "把 TupleTableSlot 转成 JSON 可能超过 MaxAllocSize，四种方案里只有两种能根治。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-sJmqGSD92b8fng0uCW_9gp=tHj+uBatnkm4xyBpujauA@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突检测"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "逻辑解码的快照缓存会跨会话残留过期数据",
+      "summary": "缓存放在函数级静态变量里，槽删除或 XID 回绕后可能读到旧值，需要回移修复。",
+      "url": "https://www.postgresql.org/message-id/aqEtEZP-7kpX3_Ov@alvherre.pgsql",
+      "author": "Zhijie Hou",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "复制槽"
+      ],
       "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "AWS Organizations 的 Account.Status 已退役",
+      "summary": "DescribeAccount 与 ListAccounts 不再返回该字段，需按更细的 State 核对 SDK 与 Terraform。",
+      "url": "https://docs.aws.amazon.com/organizations/latest/APIReference/API_Account.html",
+      "author": "AWS",
+      "source": "AWS 文档",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "API 兼容性",
+        "账号治理"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "GHES 3.22 让断网环境用上 Copilot CLI",
+      "summary": "实例内可配置模型提供方，enterprise teams 转 GA，ruleset 支持个人 bypass 与必审人。",
+      "url": "https://github.blog/changelog/2026-09-08-github-enterprise-server-3-22-is-now-generally-available/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GHES",
+        "air-gapped",
+        "Copilot"
+      ],
+      "position": 14
     },
     {
       "tier": 2,
@@ -168,8 +243,11 @@
       "source_date": "2026-09-08",
       "image": "",
       "domain": "infra",
-      "tags": ["依赖管理", "凭证"],
-      "position": 13
+      "tags": [
+        "依赖管理",
+        "凭证"
+      ],
+      "position": 15
     },
     {
       "tier": 2,
@@ -181,33 +259,10 @@
       "source_date": "2026-09-08",
       "image": "",
       "domain": "infra",
-      "tags": ["操作系统", "发布"],
-      "position": 14
-    },
-    {
-      "tier": 2,
-      "title": "OpenAI 称已达到有人监督的 research intern 目标",
-      "summary": "同一份说明承认算力增长是混杂因素，并披露 7 月 agents 破坏研究基础设施后曾暂停部署模型的 RL 训练两周。",
-      "url": "https://openai.com/index/research-acceleration-view-inside-openai/",
-      "author": "OpenAI",
-      "source": "OpenAI",
-      "source_date": "2026-09-06",
-      "image": "",
-      "domain": "ai",
-      "tags": ["研发自动化", "安全事件"],
-      "position": 15
-    },
-    {
-      "tier": 2,
-      "title": "Meta 在美国推出个人 agent Muse 并配独享 VM",
-      "summary": "模型、浏览器与数据放进每位用户独享的 Secure VM，对外动作由系统级隔离的 Sentinel 放行、阻断或要求确认。",
-      "url": "https://about.fb.com/news/2026/09/introducing-muse-personal-ai-agent/",
-      "author": "Meta",
-      "source": "Meta 新闻",
-      "source_date": "2026-09-08",
-      "image": "",
-      "domain": "ai",
-      "tags": ["agent", "隔离", "提示注入"],
+      "tags": [
+        "操作系统",
+        "发布"
+      ],
       "position": 16
     },
     {
@@ -220,7 +275,9 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["PostgreSQL 19"],
+      "tags": [
+        "PostgreSQL 19"
+      ],
       "position": 17
     },
     {
@@ -233,7 +290,9 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["io_uring"],
+      "tags": [
+        "io_uring"
+      ],
       "position": 18
     },
     {
@@ -246,7 +305,9 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["TOAST"],
+      "tags": [
+        "TOAST"
+      ],
       "position": 19
     },
     {
@@ -259,7 +320,10 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["COPY", "SIMD"],
+      "tags": [
+        "COPY",
+        "SIMD"
+      ],
       "position": 20
     },
     {
@@ -272,7 +336,9 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["postgres_fdw"],
+      "tags": [
+        "postgres_fdw"
+      ],
       "position": 21
     },
     {
@@ -285,7 +351,9 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["监控"],
+      "tags": [
+        "监控"
+      ],
       "position": 22
     },
     {
@@ -298,7 +366,9 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["RPR"],
+      "tags": [
+        "RPR"
+      ],
       "position": 23
     },
     {
@@ -311,8 +381,119 @@
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
-      "tags": ["缓冲区", "并发"],
+      "tags": [
+        "缓冲区",
+        "并发"
+      ],
       "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "用 SIMD 加速 UUID 解析的补丁已可交给提交者",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACVFprh4uZxfKCJgNn1sxgTtqKOYx4pJ6RGZGY7JgFUwXA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "UUID",
+        "性能"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "半连接右侧去重时跳过 NULL 键的补丁进入第二版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABXr29EnmHwvQ3picKmG2ciVZs6f+O3uy+r_8tOeeX206+Ugsw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "物化视图刷新统计倾向做成独立的系统视图",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+FpmFeWzG3jrOKeU8ef=KDeum89VQv6potReHWotRxBecO+ng@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "物化视图",
+        "统计信息"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "并行工作进程的协议消息常量拟改名",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN12+YLqbiA1v3FPD94yLbXgdyoWxVEY6=DtdpTPo9YCRuCpfg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "协议"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：maintenance_work_mem",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-maintenance_work_mem/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "十万行 C 代码之后：PGDay UK 2026 上的 pgSafe",
+      "summary": "",
+      "url": "https://vyruss.org/blog/100000-lines-of-c-later-pgsafe-pgday-uk-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "会议"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Texas LinuxFest 上的 SQL 入门课",
+      "summary": "",
+      "url": "https://stokerpostgresql.blogspot.com/2026/09/structured-query-language-101-at-texas.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 31
     }
   ]
 }

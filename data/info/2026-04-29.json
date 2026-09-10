@@ -1,0 +1,191 @@
+{
+  "date": "2026-04-29",
+  "origin": "chronicle 2026-04-29: pgnexus #131, planet 6；并入 2026-04-28 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "REPACK 进场，pg_repack 开始进入倒计时",
+      "summary": "PostgreSQL 19 内置的 REPACK 把 VACUUM FULL、CLUSTER 和外部扩展 pg_repack 的活儿收拢到一条命令。Christophe Pettus 说 pg_repack 不会明天过时，但已在倒计时。加 CONCURRENTLY 后靠逻辑解码免去全程排他锁，他测得重建期间插入平均 5.5 毫秒、峰值 63 毫秒。未了的还有并发执行要占复制槽、压缩 TOAST 仍有损坏场景，他建议等 Beta 1。",
+      "url": "https://thebuild.com/blog/repack-moves-in/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-29",
+      "image": "https://thebuild.com/media/media/cfb591220fac47818571533c0fe7666d.png",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "PG19",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "异步读取的三种 io_method 与仍然同步的写入",
+      "summary": "PostgreSQL 18 的 io_workers 是个静态池，默认 3、上限 32，启动时定好就跟不上负载变化。19 把这一个旋钮换成四个可动态调整的参数，池子按队列深度伸缩，空闲进程会退休。io_method 仍是三选一：sync 传统路径、worker 各平台通用、io_uring 在 Linux 上更快但可用性有限。Christophe Pettus 提醒这套只覆盖读取，WAL 与共享缓冲区的写入仍是同步的。",
+      "url": "https://thebuild.com/blog/aio-grows-up/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-29",
+      "image": "https://thebuild.com/media/media/cc53ff9f06214df293a85f992fe2ae24.png",
+      "domain": "pg",
+      "tags": [
+        "异步 I/O",
+        "PG19",
+        "io_method"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "连接统计补丁把基数估计误差压到四分之一",
+      "summary": "Alexandra Wang 提交了连接统计的正式补丁，接续她一月的概念验证，并吸收了多位审阅者的意见。这一版改用基于索引的连接采样，目录结构复用现有 MCV 字段并新增三个可空列，支持完整的 JOIN 语法；能力范围仍限于等值连接、两表连接和 MCV 统计。在 Join Order Benchmark 上，基数估计的几何平均 q-error 从 103.4 倍降到 4.2 倍，执行时间热启动快 1.54 倍、冷启动快 1.37 倍。",
+      "url": "https://www.postgresql.org/message-id/CAK98qZ2ySno00SApwj3X_MgN4iuBzKaXKXOY+U3jaFqTxPS8Tg@mail.gmail.com",
+      "author": "Alexandra Wang",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "统计信息",
+        "连接"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "分清哪些是优化问题，哪些是架构问题",
+      "summary": "Matty Stratton 把数据库性能问题分成两类：优化问题改一次就长期有效，架构问题改完还会随数据增长再冒出来。配置不当、缺索引、写法低效属于前者；行存要读进用不上的列、写入型数据的 MVCC 开销、不断上涨的维护成本属于后者，大容量高写入叠加分析查询时尤其明显。判别方法是看修复的有效期：每次见效的时间越来越短，说明撞的是架构约束。他给出的解法是 TimescaleDB 的行列混合存储、自动时间分区与连续聚合。",
+      "url": "https://www.tigerdata.com/blog/optimization-vs-architecture-knowing-the-difference",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-29",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/thumbnail-blog.png",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "架构",
+        "时序"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "DBeaver 按本机时区显示 timestamptz 的两种改法",
+      "summary": "DBeaver 背后是 PostgreSQL JDBC 驱动，连接时不会自动跟随服务端时区，默认按客户机本地时区解释和显示。服务端跑 UTC 而客户端在别的时区时，timestamptz 的显示就会和服务端对不上，跨地域复制环境尤其容易踩到。Dave Stokes 给了两条改法：在偏好设置的界面时区里选 UTC 后重启，或在连接的驱动属性里加上 serverTimezone 设为 UTC。",
+      "url": "https://stokerpostgresql.blogspot.com/2026/04/postgresql-timezones-and-dbeaver.html",
+      "author": "Dave Stokes",
+      "source": "stokerpostgresql.blogspot.com",
+      "source_date": "2026-04-29",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiV5G6Ra7phSSoOiJK1whboLFHE2VdeIPyY7vPcjUlEzSbZUwCIN0GXW_JODyYGcQkFOk-16BUUM2vBBRNHjAhiNvYqLCfVLtF7aNwO77psmRXZcrhEU6b9sFv9Nx8bNkbrN6Hj6kIoSSzfyCq_R-2g9TslW68lzQp4wV0doV5YJfDDPDs2AM5wd6b5J6v6/w1200-h630-p-k-no-nu/Screenshot%202026-04-28%20102125.png",
+      "domain": "pg",
+      "tags": [
+        "时区",
+        "客户端",
+        "JDBC"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "在线开关校验和的补丁集已接近就绪",
+      "summary": "Daniel Gustafsson 在恢复结束时刷新控制文件里的校验和版本，并简化退出处理器的安装时机。",
+      "url": "https://www.postgresql.org/message-id/F78D7C71-A999-4604-B1B9-FE06D21E63C5@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "PG19"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "DDL 复制另一提案：从目录变更反解析语句",
+      "summary": "Andres Freund 指出带 USING 的 ALTER COLUMN 无法只靠目录重建，转换表达式并不写进 WAL。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-vG4z03ar5PMYT3ehe+yzKH8+nPR4uqhNEhnax0DmOq_g@mail.gmail.com",
+      "author": "Hannu Krosing",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "DDL"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志目标该用位标志还是普通枚举",
+      "summary": "位标志便于检查 ALL 下的多个目标，普通枚举更省内存，取舍看未来的取值是否互斥。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-vsd=wNiEPXPQhZnipAb--+mBUC01M-pcjBjbRockgCUA@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解：archive_timeout",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-archive_timeout/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "PG DATA 2026 最值得期待的演讲（上）",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/04/28/pg-data-2026-the-talks-i-am-most-excited-about-part-1/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "PostgresEDI 四月聚会回顾与五月闪电演讲",
+      "summary": "",
+      "url": "https://vyruss.org/blog/postgresedi-april-2026-meetup-and-may-lightning-talks.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "AWS 上架 OpenAI 模型与新的智能体服务",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/04/28/amazon-is-already-offering-new-openai-products-on-aws/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 12
+    }
+  ]
+}

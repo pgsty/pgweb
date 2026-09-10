@@ -1,0 +1,162 @@
+{
+  "date": "2026-03-09",
+  "origin": "chronicle 2026-03-07：pgnexus #74；2026-03-08：pgnexus #76；2026-03-09：pgnexus #77",
+  "items": [
+    {
+      "tier": 1,
+      "title": "工业物联网负载下 PostgreSQL 的性能边界",
+      "summary": "工业物联网的数据库负载有几个同时成立的要求：持续高速摄入、长期保留，还要既支撑跨传感器的宽查询，也支撑单传感器的深查询。这篇文章把 PostgreSQL 在这类场景下的上限归纳成三条约束：存储成本随时间接近二次增长，最大摄入速率随索引增加而下降，查询性能随数据量增加而下降。可选的出路是加硬件、分片，或用 TimescaleDB 这类工具靠自动分区和混合存储优化时序负载。文章的实际用处是给概念验证阶段的容量估算提供一个框架。",
+      "url": "https://www.tigerdata.com/blog/the-iiot-postgresql-performance-envelope",
+      "author": "Doug Pagnutti",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-03-09",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/The-IIoT-PostgreSQL-Performance-Envelope-1200x627-1.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "性能",
+        "容量"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Claude 两周内在 Firefox 中发现 22 个漏洞",
+      "summary": "Anthropic 与 Mozilla 的一次安全合作中，Claude 在两周测试期内在 Firefox 里找出 22 个独立漏洞，其中 14 个被归为高危。报道没有列出具体的漏洞编号和受影响版本，也没有说明这些问题是否已经修复发布。对安全团队来说，值得关注的是这类工具在大型 C++ 代码库上的实际命中率，以及由此产生的报告如何进入既有的分级和修复流程：模型发现的问题同样需要人工确认和回归验证。",
+      "url": "https://techcrunch.com/2026/03/06/anthropics-claude-found-22-vulnerabilities-in-firefox-over-two-weeks/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-03-06",
+      "image": "https://techcrunch.com/wp-content/uploads/2025/08/Claude-Chrome-Ext_email-hero-hero.png?w=1200",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "AI",
+        "漏洞"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "消除 xl_heap_visible 的补丁给出第 36 版基准",
+      "summary": "每页只有一个元组的最坏情况下性能有下降，但合并 WAL 记录之后 vacuum 明显更快。",
+      "url": "https://www.postgresql.org/message-id/F5CDD1B5-628C-44A1-9F85-3958C626F6A9@gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "vacuum"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "pg_stat_recovery 系统视图进入提交前打磨",
+      "summary": "Michael Paquier 提交后补上备库测试，wal_source 列拟改名为 wal_read_source 以免歧义。",
+      "url": "https://www.postgresql.org/message-id/aapRWdyQYT6kC-k2@paquier.xyz",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "恢复"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "发布 EXCEPT 列表的修改语法定案",
+      "summary": "ALTER PUBLICATION 用 SET ALL TABLES EXCEPT TABLE (t1) 设排除列表，只写 SET ALL TABLES 清空。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm34tpJDVxEr70dmggY6sWyJxvaSuHN+pW2B6skTtjs46A@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "语法"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "通用计划的初始分区修剪补丁到第 7 版",
+      "summary": "新增 ExecutorPrep() 让加锁跟随修剪结果，避免 GetCachedPlan() 提前锁住全部分区。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqELAcgVg_3Gb4VTOpC6wcNhHP0m-8OJFG0MeGRo0M=_4Q@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "规划器"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "libpq 服务端 SNI 支持改写上下文切换方式",
+      "summary": "不再整个交换 SSL_CTX，改为在 clienthello 回调里按主机重新配置同一个主上下文。",
+      "url": "https://www.postgresql.org/message-id/B481FA78-0173-4D0F-84C5-EDFB613B6428@yesql.se",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TLS",
+        "libpq"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "EXPLAIN ANALYZE 的 rdtsc 计时转向自校准",
+      "summary": "虚拟化环境里 CPU 频率不等于 TSC 频率，讨论倾向用几十毫秒的校准循环取代读 MSR。",
+      "url": "https://www.postgresql.org/message-id/opaq3twixq6uubmgclesklstm4cpe2mtmuwgm4pvsgoo33rep7@c3uph7pnlw4p",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "EXPLAIN"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 增加日志文件的提案仍在讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAEqnbaU50vLy031AbvmfXJ3_qv9iS4pVaMdmsnmpF87r=EqW7Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "Anthropic 在 Claude Code 中推出代码审查功能",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/03/09/anthropic-launches-code-review-tool-to-check-flood-of-ai-generated-code/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-09",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 10
+    }
+  ]
+}

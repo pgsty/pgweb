@@ -1,0 +1,567 @@
+{
+  "date": "2026-06-18",
+  "origin": "chronicle 2026-06-18: daily, pgnexus #181, news 1, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgEdge 推出 ColdFront，把冷数据搬到对象存储",
+      "summary": "pgEdge 发布 ColdFront 测试版，给 PostgreSQL 加一层透明的数据分层与分区生命周期管理。老数据按策略自动迁到便宜的对象存储，冷层仍然可写，查询继续用同一个表名和同一段 SQL，应用不必改代码。冷层用 Apache Iceberg 存 Parquet，分析查询靠进程内的 DuckDB 提速，跑在原版 PostgreSQL 16 到 18 上，只需两个扩展，开源部分按 PostgreSQL 许可证发布。",
+      "url": "https://www.pgedge.com/blog/introducing-coldfront-seamlessly-uniting-oltp-analytics-and-ai-workloads-on-postgresql",
+      "author": "Antony Pegg",
+      "source": "pgEdge 博客",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据分层",
+        "Iceberg",
+        "DuckDB"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pgfmt 2.1 支持原地格式化与 pg_dump 风格输出",
+      "summary": "Gavin M. Roy 发布 SQL 格式化工具 pgfmt 2.1。新的 --inplace 把结果直接写回源文件并保留原有权限，可以一次处理多个文件。--style pg_dump 复现 ruleutils.c 反解析器的输出，与 pg_get_viewdef 一致，对真实反解析结果字节级幂等，可以拿迁移脚本直接和目录里的定义做 diff。这一版还修好了会被丢弃的类型化字面量，并支持 Homebrew 安装。",
+      "url": "https://pgsql.cc/about/news/pgfmt-21-pg_dump-3318/",
+      "author": "Gavin M. Roy",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "格式化"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "RDS 为 PostgreSQL 等引擎提供 M9g 实例",
+      "summary": "Amazon RDS 的 PostgreSQL、MySQL 和 MariaDB 引擎开始支持 M9g 实例族，托管数据库继续往 ARM 的性价比曲线上走。公告本身没有展开基准数据，上线之后仍要逐项看可用区域、规格档位、价格、存储与网络上限、支持的 PostgreSQL 大版本以及切换方式。对 PostgreSQL 用户来说，ARM 实例早已不是边缘选项，而是常规的生产候选；自建集群同样可以把云上实例族的代际更替当作硬件选型的参考。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-rds-postgresql-mysql-mariadb-m9g-instances/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RDS",
+        "Graviton",
+        "ARM"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PG20 拟把最低平台抬到 RHEL 9",
+      "summary": "Jacob Champion 发起讨论，为计划 2027 年发布的 PG20 划定最低依赖，重点是停止支持 RHEL 8。推力来自 OpenSSL：上游已发布 4.0，PostgreSQL 还在维护兼容 1.1.1 的代码路径，Daniel Gustafsson 正准备把它与 LibreSSL 的支持解耦。Tom Lane 说策略框架早有共识，只是操作系统停支后再等几年一直没定，但各方都认为 RHEL 9 会是实际底线。",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+nVsoMRFp4u0oQ66-oPT6+NNAfhLvk5htthY5zkUOnbfA@mail.gmail.com",
+      "author": "Jacob Champion",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG20",
+        "OpenSSL",
+        "平台支持"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Docker Content Trust 退休，镜像签名需要迁移",
+      "summary": "Docker 宣布 Content Trust 退休并给出迁移指引。DCT 与 Notary v1 曾是 Docker 镜像签名的主要入口，退休意味着依赖 DOCKER_CONTENT_TRUST、旧签名策略和私有 registry 验证路径的团队必须换路。这会牵动 CI/CD、镜像发布、准入控制和合规文档。维护内部 registry 的团队应先盘点依赖，再评估 cosign、Notation 和 Kubernetes 准入策略。",
+      "url": "https://www.docker.com/blog/docker-content-trust-retirement-and-migration-guidance/",
+      "author": "Docker",
+      "source": "Docker 博客",
+      "source_date": "2026-06-16",
+      "image": "https://www.docker.com/app/uploads/2025/03/image.png",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "镜像签名",
+        "供应链"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "RFC 10008 定义 HTTP QUERY 方法",
+      "summary": "RFC Editor 发布 RFC 10008，为 HTTP 补上 QUERY 方法，用来表达带请求体的查询型请求。此前复杂查询要么塞进 GET 的查询字符串受长度所限，要么用 POST 而失去安全和幂等语义，缓存与代理的行为也随之含糊。协议层的变化落地一向缓慢，门槛在浏览器、代理、CDN、API 网关和客户端库何时跟进。短期不宜在对外 API 上依赖 QUERY，可以先写进内部设计与技术雷达。",
+      "url": "https://www.rfc-editor.org/info/rfc10008/",
+      "author": "RFC Editor",
+      "source": "RFC Editor",
+      "source_date": "2026-06-17",
+      "image": "https://www.rfc-editor.org/api/v1/meta-thumbnail/rfc10008.png",
+      "domain": "infra",
+      "tags": [
+        "HTTP",
+        "协议"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "SPLIT 与 MERGE PARTITIONS 补丁入库后暴露表空间问题",
+      "summary": "合并同一表空间里的约 25 个分区后，新表落在了默认表空间，设置 default_tablespace 也被忽略。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdte=WJQnEnEhf8cKZYE1rT-VfQ2mgh=1dCsCCdSYStSow@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "缺陷"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_buffercache 拟增加按关系的汇总统计",
+      "summary": "现有监控查询实测耗时 13 秒、写出 1.2GB 数据，Robert Haas 认为收益足够，倾向接受补丁。",
+      "url": "https://www.postgresql.org/message-id/CA+Tgmob_ooei61owb21CbLmAz=CTAFRrTSmXkwT1eg1=CDP_UQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "缓冲区"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "内存耗尽之后暴露出三处异常行为",
+      "summary": "typcache 初始化顺序、GetSnapshotData 和备库排他锁获取都会在 OOM 报错后留下坏状态，修复正在推进。",
+      "url": "https://www.postgresql.org/message-id/ajN2DkXPOzzC1GSj@paquier.xyz",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "健壮性",
+        "缺陷"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "CAST 的 FORMAT 子句补丁被 Robert Haas 否决",
+      "summary": "他认为该实现只是包了一层 to_date、to_timestamp，核心外的自定义类型完全无法扩展，主张先做通用基础设施。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoaUzwAxa_qHSp9ybCkAhMjQRDuEAZW2BrSb1DTPiz4ZzA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "类型"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "DDL 反解析该还原用户意图还是物化目录状态",
+      "summary": "Masahiko Sawada 单开线程：CREATE TABLE (a serial) 目前会被拆成三条语句，与 pg_get_table_ddl 高度重叠。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoCwug_gwCfimtoer=JsLCnHv8mjqmD7JDXH8K-08jkx-A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL 复制"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Mathesar 推出托管版 Mathesar Cloud",
+      "summary": "这套开源界面把 PostgreSQL 表当电子表格来编辑，现在有了官方托管服务。",
+      "url": "https://mathesar.org/blog/2026/06/17/announcing-mathesar-cloud",
+      "author": "Mathesar",
+      "source": "Mathesar 博客",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "托管"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Oracle Database@AWS 支持自治数据库无服务器版",
+      "summary": "部分 Oracle 负载不必整体迁移就能靠近云原生应用，PostgreSQL 的论证要回到成本、开放性和可运维性。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/oracle-database-aws-autonomous-database-serverless/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Oracle",
+        "托管数据库"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AWS Glue 数据目录加入业务上下文与语义检索预览",
+      "summary": "数据目录从 schema 和权限往数据含义与口径延伸，预览阶段要重点验证权限隔离与错误召回。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-glue-data-catalog/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据目录",
+        "语义检索"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "多个 JetBrains IDE 插件被发现窃取 AI 密钥",
+      "summary": "Aikido 的报告提醒：交给插件的模型令牌、云凭据和仓库权限都应换成短期凭证并限制出网。",
+      "url": "https://www.aikido.dev/blog/multiple-jetbrains-ide-plugins-caught-stealing-ai-keys",
+      "author": "Aikido",
+      "source": "Aikido",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "密钥"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Tesco 把 4 万个服务器负载迁出 VMware",
+      "summary": "报道称迁移动因是 Broadcom 接手后的商务条款，私有云用户需重新评估虚拟化平台的长期成本。",
+      "url": "https://arstechnica.com/information-technology/2026/06/tesco-moving-40000-server-workloads-off-vmware-amid-broadcoms-abusive-conduct/",
+      "author": "Ars Technica",
+      "source": "Ars Technica",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "虚拟化",
+        "迁移"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐条梳理：事务隔离级别与只读默认值",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-defaulttransactionisolation-and-defaulttransactionreadonly/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pgsql_tweaks 1.0.4 发布",
+      "summary": "",
+      "url": "https://pgsql-tweaks.org/blog/pgsql_tweaks-v1-0-4-released.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "虚拟生成列的 JIT 解构错误已定位并给出补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAApHDvpE1Jx=NrwUCihrfP+Dmkfn6kUkpCZYC10Yo+wkMu3ssQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "JIT"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "GUC 权限与物理 walsender 的缺陷只在 master 修",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/c6fa1e37b7d5a51f72d94ef307a14711f5d48de4.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pytest 迁移卡在 Python 最低版本要求上",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1400908.1781818698@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "auto_explain 拟支持按 queryid 过滤",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAKZiRmxV8A5rMd=hXLqartFtVhkyxkDKah0OQnaypyJUK_HJbg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "auto_explain"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "pg_mkdir_p 在并发创建目录时会失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3ca004de-e49b-4471-b8aa-fd656e70f68c@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "pgbench 的 continue-on-error 文档口径被澄清",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/597C9755-4386-488D-A289-16D50AD81FBF@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgbench"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "xmlserialize 拟新增 CANONICAL 选项",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/8d4b8089-7509-438f-a7a2-4f1e24c2b295@uni-muenster.de",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "XML"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "crosstabview 补上布尔值显示设置的支持",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAKFQuwb-MdD3gjpJ5hMDSMgNJDykOArrA2_orA29VzLTy9=ELw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "TigerData 谈物理 AI 的遥测数据取舍",
+      "summary": "",
+      "url": "https://www.tigerdata.com/blog/great-models-arent-enough-for-physical-ai",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时序"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "用一个 Postgres 数据库给 Claude 做记忆",
+      "summary": "",
+      "url": "https://www.makeuseof.com/fixed-claudes-memory-problem-postgres-database-changed-everything/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AI"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "mcp-sql：给 AI agent 的受限数据库访问",
+      "summary": "",
+      "url": "https://github.com/polymr-platform/mcp-sql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MCP",
+        "权限"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Aurora 与 RDS 的 MySQL 5.7 扩展支持延到 2029 年",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/rds-mysql-es-extension/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "GitHub CLI 可以直接读取远程仓库内容",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-17-read-remote-repository-content-with-github-cli/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CLI"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 发布六月的密钥扫描更新",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-17-secret-scanning-updates-june-2026/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "密钥扫描"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "AWS Secrets Manager 推出面向 agent 的工具包",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/safe-secrets-handling-in-agent-toolkit-for-aws/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "密钥管理"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "AWS Glue 交互式会话支持 Spark Connect",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-glue-interactive-sessions-spark-connect-smus-notebooks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Spark"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 谈从数据驻留走向数字主权的架构模式",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/16/from-data-residency-to-digital-sovereignty-architectural-patterns-for-cloud-native-platforms/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "合规"
+      ],
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "Charity Majors：AI 要求更多而不是更少的工程纪律",
+      "summary": "",
+      "url": "https://charity.wtf/p/ai-demands-more-engineering-discipline",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "工程实践"
+      ],
+      "position": 36
+    }
+  ]
+}

@@ -1,0 +1,355 @@
+{
+  "date": "2026-06-28",
+  "origin": "chronicle 2026-06-28: daily, pgnexus #191, news 1, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "同样的行，SUM 出来的结果每次都不一样",
+      "summary": "用五百万行 double precision 读数做演示：三次完全相同的查询分别得到 2500519211.7874823 和 2500519211.7874575 等不同结果。原因是并行聚合让多个 worker 以不确定的顺序抓取数据块，部分和的合并顺序随之变化，而 IEEE 754 浮点加法不满足结合律，每一步舍入都会改变结果。需要对账的金额类数据应当存成 numeric，它按精确十进制累加，与并行度和聚合顺序无关。",
+      "url": "https://boringsql.com/posts/same-rows-different-sum/",
+      "author": "Radim Marek",
+      "source": "boringSQL",
+      "source_date": "2026-06-28",
+      "image": "https://boringsql.com/og-images/same-rows-different-sum-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "聚合",
+        "浮点",
+        "并行查询"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pgtt v4.5 支持 PostgreSQL 19 与并发建索引",
+      "summary": "pgtt 为 PostgreSQL 提供 DB2 和 Oracle 风格的全局临时表，常用于 Oracle 迁移时不改应用代码的场景。HexaCluster 的 Gilles Darold 发布的 v4.5 是维护版本：新增对 PostgreSQL 19 的支持，支持 CREATE INDEX CONCURRENTLY，把全局变量改为 static 以消除编译警告，并修复了从转储恢复全局临时表目录时出现无效关系 OID 的问题。",
+      "url": "https://github.com/darold/pgtt/blob/v4.5/ChangeLog",
+      "author": "Gilles Darold",
+      "source": "HexaCluster",
+      "source_date": "2026-06-28",
+      "image": "https://opengraph.githubassets.com/c46495560afdf5ca21ba0ec7c6ccb3e497b57d0da13d5ed9f6a3e3fdc616c5a6/darold/pgtt",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "临时表",
+        "Oracle 迁移"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Xata 开源在 Kubernetes 上自建 Postgres 平台",
+      "summary": "Xata.io 把自家的云原生 Postgres 平台开源，采用 Apache 2.0 授权，用于在 Kubernetes 上自托管大量 Postgres 实例。底座是 CloudNativePG，之上加了 SQL 网关、分支 operator 与 serverless 驱动。写时复制让 TB 级数据的分支在几秒内完成，另有缩容到零、自动伸缩、读副本高可用和 PITR 备份。适合做内部 Postgres 服务平台，或开出预览与测试环境。",
+      "url": "https://github.com/xataio/xata",
+      "author": "Xata.io",
+      "source": "GitHub",
+      "source_date": "2026-06-27",
+      "image": "https://opengraph.githubassets.com/fe7e511c039cd30c9cc3c927eaec24d76bf1aedcdb83ae47d9bc4fb7b611769b/xataio/xata",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "平台",
+        "分支"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "VillageSQL 质疑 MySQL 新治理模型缺少实权",
+      "summary": "AWS 称为 MySQL 建立开放治理是社区向前的一步，VillageSQL 的文章则认为这是两步向前、一步向后：委员会是否握有实际决定权，还要看发布节奏、兼容性承诺、商标和贡献流程是否真的改变。MySQL 生态庞大，治理变化会一路传导到云数据库、分支发行版、企业标准和兼容层。同时维护 PostgreSQL 与 MySQL 的团队可以把这条线索留着，观察后续是否出现实质性的规则调整。",
+      "url": "https://villagesql.com/blog/mysql-governance/",
+      "author": "VillageSQL",
+      "source": "VillageSQL",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "开源治理"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "干净的 GitHub 仓库诱导 AI 编码助手运行恶意代码",
+      "summary": "BleepingComputer 报道了一种针对 AI 编码助手的攻击：仓库本身看不出恶意代码，却能诱导助手在安装依赖或执行测试的环节运行恶意指令。AI 编码助手的默认行为正从读代码扩展到运行命令、装依赖、跑测试，原本只在开发者本机的风险被放大到自动化执行链路上。处理不可信仓库时应当默认隔离：禁用持久凭证、限制出网、清空环境变量、源码只读挂载，并在人工看过 install 与 test 脚本之后再执行。",
+      "url": "https://www.bleepingcomputer.com/news/security/clean-github-repo-tricks-ai-coding-agents-into-running-malware/",
+      "author": "BleepingComputer",
+      "source": "BleepingComputer",
+      "source_date": "2026-06-27",
+      "image": "https://www.bleepstatic.com/content/hl-images/2025/10/23/ai-1.jpg",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "AI 助手",
+        "供应链"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别补丁系列推进到 v50",
+      "summary": "Henson Choi 指出 v49 因 master 改了报错信息导致 cfbot 全平台报红，v50-0021 必须合入。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zCd+gzpYSsC04NsKyCJeneChVZCaBP540d0p2=c3abvvw@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "窗口函数"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 20 计划移除 refint contrib 模块",
+      "summary": "Álvaro Herrera 指出补丁措辞有误：refint 是 spi 这个 contrib 模块里的扩展，并非独立的 contrib 模块。",
+      "url": "https://www.postgresql.org/message-id/aj0l1QQ-y0nHK6y3@alvherre.pgsql",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "contrib",
+        "PostgreSQL 20"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_get_table_ddl() 补丁进入第 11 版评审",
+      "summary": "Rui Zhao 发现 schema_qualified=false 时缺少 token 边界检查，会改错跨 schema 的外键引用。",
+      "url": "https://www.postgresql.org/message-id/CAHWVJhHW4jcfS=w20Ungecb3A4uWiHe9OM9OLHHBtokhKaCs=w@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL",
+        "补丁"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制槽拟新增下游字节与事务数统计",
+      "summary": "Amit Kapila 建议把 sent_bytes 改名为 output_bytes，并把 keepalive 等协议消息排除在统计之外。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KVQfQtdYKocfsxB1njEQGx4fhMX4N0bjmozG7Sx_V8Sw@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "监控"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes 讨论 AI 时代的开源维护者负担",
+      "summary": "AI 生成的 PR 与 issue 变多，审查成本落在人数没有变化的维护者身上。",
+      "url": "https://kubernetes.io/blog/2026/06/26/open-source-maintainership-in-the-age-of-ai/",
+      "author": "Kubernetes",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理",
+        "Kubernetes"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "匿名 GitHub 账号批量投放未披露 0-day",
+      "summary": "GitHub 同时是协作平台、PoC 分发渠道和攻击者侦察面，这批漏洞的真实性仍需逐项复核。",
+      "url": "https://github.com/bikini/exploitarium",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "漏洞披露"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：enable_hashjoin",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_hashjoin/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "用 PostGIS 和人口普查数据在纸上规划公交",
+      "summary": "",
+      "url": "https://auchindown.com/blog/2026/armchair-transit-postgis-census-bestagons",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 从本地零停机迁移到 AWS 的实践",
+      "summary": "",
+      "url": "https://github.com/JoeyAlpha5/postgres-on-prem-aws-cloud-migration",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "DuckDB 的 SQLite 扩展",
+      "summary": "",
+      "url": "https://github.com/duckdb/duckdb-sqlite",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "hypequery：面向 ClickHouse 的 TypeScript 语义层",
+      "summary": "",
+      "url": "https://github.com/hypequery/hypequery",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Linux 内核推进 Reserved THP",
+      "summary": "",
+      "url": "https://www.phoronix.com/news/Reserved-THP-Linux",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Linux MD RAID5 的可扩展性最多提升 17%",
+      "summary": "",
+      "url": "https://www.phoronix.com/news/Linux-MD-RAID5-Scalability-Work",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "NVMe-CLI v3.0B.1 加入逐周期 sanitize 校验",
+      "summary": "",
+      "url": "https://github.com/linux-nvme/nvme-cli/releases/tag/v3.0-b.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "论文剖析 AirDrop 与 Quick Share 的零点击漏洞",
+      "summary": "",
+      "url": "https://arxiv.org/abs/2606.26967",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "复盘一次失败的国家级攻击",
+      "summary": "",
+      "url": "https://grack.com/blog/2026/06/25/dissecting-a-failed-nation-state-attack/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "用 LXC 加固 X11 应用的隔离",
+      "summary": "",
+      "url": "https://dobrowolski.dev/article/enhancing-x11-application-security-with-lxc/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Codeberg 短时故障提醒开源托管也是关键依赖",
+      "summary": "",
+      "url": "https://social.anoxinon.de/@codebergstatus/116824443563698727",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "把 LLM 灌醉来寻找 Linux 内核的越界写",
+      "summary": "",
+      "url": "https://heyitsas.im/posts/drinking-llms/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    }
+  ]
+}

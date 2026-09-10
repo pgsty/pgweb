@@ -1,0 +1,541 @@
+{
+  "date": "2026-05-11",
+  "origin": "chronicle 2026-05-11: daily, pgnexus #143, news 4, planet 5；并入 2026-05-10 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgAdmin 4 v9.15 修复八个安全漏洞",
+      "summary": "pgAdmin 团队发布 4 v9.15，19 项改动含八个 CVE 修复：服务器模式下的跨用户数据访问与权限提升、构造对象名触发的存储型 XSS、Maintenance 工具的 SQL 注入、导入导出的命令注入、LLM API 端点的文件包含与 SSRF、可导致远程代码执行的不安全反序列化、文件管理器路径遍历，以及身份验证绕过。新版还允许 Docker 镜像按 PUID、PGID 以非默认用户运行，BigAnimal 集成进入弃用。",
+      "url": "https://www.pgadmin.org/docs/pgadmin4/9.15/release_notes_9_15.html",
+      "author": "pgAdmin Development Team",
+      "source": "pgAdmin",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgAdmin",
+        "安全",
+        "CVE"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_clickhouse 0.3.0 补上 JSON 映射与更多下推",
+      "summary": "David Wheeler 发布 pg_clickhouse 0.3.0，这个扩展让 PostgreSQL 把更多工作推给 ClickHouse。新版把 ClickHouse 的 JSON 类型映射到 JSONB，新增 to_char、soundex 与 levenshtein 的下推，并接入 re2 扩展让两端正则行为一致。内建函数的自动下推被取消，改为显式映射；clickhouse_raw_query() 也收回了公共执行权限。",
+      "url": "https://justatheory.com/2026/05/pg_clickhouse-0.3.0/",
+      "author": "David E. Wheeler",
+      "source": "Just a Theory",
+      "source_date": "2026-05-11",
+      "image": "https://justatheory.com/icon-512x512.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "ClickHouse",
+        "下推"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgFormatter v5.10 支持 MERGE 语句格式化",
+      "summary": "HexaCluster 发布 pgFormatter v5.10。这个 PostgreSQL 的 SQL 与 PL/pgSQL 格式化工具新增了 MERGE 语句支持，并修掉一批排版问题：DO 块里变长类型在右括号前多出空格、CREATE POLICY 的 WHERE 子句与缩进、CTE 中 INSERT 的 RETURNING、SELECT INTO 的缩进。此外增强了 JSONB 数组删除操作符的处理。",
+      "url": "https://pgsql.cc/about/news/pgformatter-v510-3290/",
+      "author": "HexaCluster",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgFormatter",
+        "SQL"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PostgresBench 公开对比五家托管 Postgres",
+      "summary": "ClickHouse 开源了 PostgresBench，用公开可复现的方法评测托管 Postgres 服务，查询、数据集和结果全部公开。测试用 pgbench 跑 TPC-B 类负载，256 个并发客户端、16 个线程，每轮十分钟，数据集分约 100 GB 与 500 GB 两档，记录平均 TPS 与 P95、P99 延迟。对比对象包括 Aurora PostgreSQL、RDS、Neon 和 Crunchy Bridge。",
+      "url": "https://clickhouse.com/blog/postgresbench",
+      "author": "Lionel Palacin",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-05-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "基准测试",
+        "托管服务",
+        "pgbench"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Kubernetes 卷组快照在 v1.36 进入 GA",
+      "summary": "卷组快照让多个 PersistentVolumeClaim 在同一时间点拿到崩溃一致的快照，Kubernetes 用标签选择器把它们归成一组。该特性从 v1.27 的 Alpha 起，两次 Beta 后在 v1.36 转正，只对 CSI 驱动生效，树内存储插件不适用。对在 Kubernetes 上跑 PostgreSQL、Kafka 这类跨多个卷保持写序一致的应用，这是备份恢复的基础能力，上线前要确认 CSI 驱动是否实现了组快照接口。",
+      "url": "https://kubernetes.io/blog/2026/05/08/kubernetes-v1-36-volume-group-snapshot-ga/",
+      "author": "Xing Yang",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "存储",
+        "快照"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "FreeBSD 修复 execve 提权漏洞 CVE-2026-7270",
+      "summary": "FreeBSD 安全公告 FreeBSD-SA-26:13.exec 描述了 execve(2) 中的一个运算符优先级错误：缓冲区溢出让攻击者可控的数据覆盖相邻的参数缓冲区，普通用户借此能拿到超级用户权限。13.5 到 15.0 的受支持版本都受影响，没有缓解办法，只能打补丁：15.0 可用 pkg 升级基础系统包，其余用 freebsd-update 或源码补丁重编内核。多租户 shell 与 CI 跳板机应优先处理。",
+      "url": "https://www.freebsd.org/security/advisories/FreeBSD-SA-26:13.exec.asc",
+      "author": "FreeBSD 安全团队",
+      "source": "FreeBSD 安全公告",
+      "source_date": "2026-05-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "FreeBSD",
+        "本地提权"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PgBouncer 1.25.2 修复多个安全问题",
+      "summary": "官方称这一版修复了若干安全问题，另有少量文档勘误，细节见变更日志。",
+      "url": "https://www.pgbouncer.org/2026/05/pgbouncer-1-25-2",
+      "author": "",
+      "source": "PgBouncer",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 推出面向 Postgres 的查询洞察",
+      "summary": "把 Postgres 的查询行为接进 ClickHouse Cloud 分析，补上长窗口、高基数的诊断。",
+      "url": "https://clickhouse.com/blog/postgres-query-insights-clickhouse-cloud",
+      "author": "",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-05-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可观测性",
+        "查询分析"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pgassistant 用确定性分析找出优化问题",
+      "summary": "作者介绍用固定规则而非采样来发现 PostgreSQL 的配置与查询优化问题。",
+      "url": "https://beh74.github.io/pgassistant-blog/post/global_advisor/",
+      "author": "",
+      "source": "pgassistant 博客",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "调优"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "有限状态转换器替掉 3GB 的 SQLite 库",
+      "summary": "作者用 7MB 的 FST 二进制替代只读词典型 SQLite，说明选型要先看负载。",
+      "url": "https://til.andrew-quinn.me/posts/replacing-a-3-gb-sqlite-database-with-a-7-mb-fst-finite-state-trandsucer-binary/",
+      "author": "",
+      "source": "TIL",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "数据结构"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Grafana Assistant 接入数据库可观测性",
+      "summary": "Grafana 把助手集成进数据库可观测性，用于更快定位性能问题的初筛。",
+      "url": "https://grafana.com/blog/troubleshoot-performance-issues-faster-with-the-new-grafana-assistant-integration-for-database-observability/",
+      "author": "",
+      "source": "Grafana 博客",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Grafana",
+        "可观测性"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Obsidian 插件被滥用投递远控木马",
+      "summary": "报道称攻击者借插件生态分发木马，编辑器与知识库插件同样需要来源与更新审计。",
+      "url": "https://cyber.netsecops.io/articles/obsidian-plugin-abused-in-campaign-to-deploy-phantom-pulse-rat/",
+      "author": "",
+      "source": "NetSecOps",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链安全",
+        "插件"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GrapheneOS 批评硬件证明可能成为垄断工具",
+      "summary": "讨论从 Android 安全扩展到 Web DRM、反作弊与设备所有权，成为当日最热话题。",
+      "url": "https://grapheneos.social/@GrapheneOS/116550899908879585",
+      "author": "",
+      "source": "GrapheneOS",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "硬件证明",
+        "平台安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Ajqvue 3.6 兼容 JRE 25 与 PostgreSQL 18",
+      "summary": "",
+      "url": "https://pgsql.cc/about/news/ajqvue-36-3293/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "客户端工具"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "用生成列让 JSONB 更易查询",
+      "summary": "",
+      "url": "https://richyen.com/postgres/2026/05/11/generated_columns_jsonb.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSONB",
+        "生成列"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "你设置的 wal_level 未必是最终的 wal_level",
+      "summary": "",
+      "url": "https://thebuild.com/blog/the-wallevel-you-set-is-not-the-wallevel-you-get/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "参数"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GUC 参数梳理：autovacuum_work_mem",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuumworkmem/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Stormatics 讲解 PostgreSQL 中的 SSL",
+      "summary": "",
+      "url": "https://stormatics.tech/blogs/ssl-in-postgresql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SSL",
+        "安全"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "视图不是免费的抽象层",
+      "summary": "",
+      "url": "https://boringsql.com/posts/strong-views/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "视图",
+        "建模"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "GUC 参数梳理：autovacuum 的比例与阈值",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuumvacuumscalefactor-and-autovacuumvacuumthreshold/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "hackers 讨论为 REPACK 加上并发选项",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/70574.1778512672@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "逻辑解码"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "FDW 函数扫描下推限制为不可变函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdvz=ahOKEnu4OZ_z3JjQQVddgsNti4FX8SmAKCxmh80BQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "下推"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Supacrawl 把 Supabase 镜像成本地 SQLite",
+      "summary": "",
+      "url": "https://github.com/davemorin/supacrawl",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Supabase"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "有人审计五家 BaaS 后端，每家都有泄漏",
+      "summary": "",
+      "url": "https://github.com/Perufitlife/supabase-security-skill",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "BaaS",
+        "安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "美国政府承包商因销毁数据库被判有罪",
+      "summary": "",
+      "url": "https://www.theregister.com/cyber-crime/2026/05/08/former-us-contractor-convicted-in-federal-database-wipe-case/5237296",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全事件"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "o11ylite 用 DuckDB 与 SQLite 存放观测数据",
+      "summary": "",
+      "url": "https://github.com/o11ylite/o11ylite",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "可观测性"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "DigitalOcean 介绍其面向推理的云架构",
+      "summary": "",
+      "url": "https://www.digitalocean.com/blog/powering-the-inference-era",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DigitalOcean"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "马里兰居民为外州 AI 数据中心分摊电网费用",
+      "summary": "",
+      "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/maryland-citizens-slapped-with-usd2-billion-grid-upgrade-bill-for-out-of-state-ai-data-centers-state-complains-to-federal-energy-regulators-says-additional-cost-breaks-ratepayer-protection-pledge-promises",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据中心",
+        "电力"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Grafana 用自适应日志规则丢掉噪声日志",
+      "summary": "",
+      "url": "https://grafana.com/blog/eliminate-noisy-log-lines-with-adaptive-logs-drop-rules/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "日志"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "PS3 模拟器项目请求停止提交 AI 生成 PR",
+      "summary": "",
+      "url": "https://kotaku.com/playstation-3-emulator-devs-politely-ask-that-people-stop-flooding-it-with-ai-code-pull-requests-2000694656",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源维护"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Claude Code 补上沙箱文档",
+      "summary": "",
+      "url": "https://code.claude.com/docs/en/sandboxing",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "沙箱"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "一份 CVE 事故报告复盘披露流程的沟通成本",
+      "summary": "",
+      "url": "https://nesbitt.io/2026/02/03/incident-report-cve-2024-yikes.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-02-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "漏洞披露"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "SIGOPS 讨论 AI 如何加速系统性能研究",
+      "summary": "",
+      "url": "https://www.sigops.org/2026/let-the-barbarians-in-how-ai-can-accelerate-systems-performance-research/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "性能工程"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "本地 AI 应该成为默认选项",
+      "summary": "",
+      "url": "https://unix.foo/posts/local-ai-needs-to-be-norm/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "本地推理"
+      ],
+      "position": 34
+    }
+  ]
+}

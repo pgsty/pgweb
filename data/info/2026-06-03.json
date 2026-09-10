@@ -1,0 +1,476 @@
+{
+  "date": "2026-06-03",
+  "origin": "chronicle 2026-06-03: pgsty-daily, pgnexus #166, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 Beta 1 的发布公告正在定稿",
+      "summary": "PostgreSQL 19 Beta 1 的发布公告正在邮件列表上打磨，Jonathan Katz 逐条收集功能描述和措辞意见。Florents Tselai 建议补上 GROUP BY ALL，并改写 jsonpath 字符串函数一节，两条都被采纳：公告会说明 GROUP BY ALL 把非聚合、非窗口的输出列自动并入分组。Tom Lane 建议把 parameters 改成输出列，以免和函数参数混淆。",
+      "url": "https://www.postgresql.org/message-id/a9d91900-f0c6-4cf3-86aa-eb43b45d97b1@postgresql.org",
+      "author": "Jonathan Katz",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "发布"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Cybertec 用示例讲 PostgreSQL 19 的 SQL/PGQ",
+      "summary": "PostgreSQL 19 实现了 ISO/IEC 9075-16 的 SQL/PGQ，可以直接查询存在关系表里的图数据。Cybertec 的教程用 person 和 knows 两张表演示：先用 CREATE PROPERTY GRAPH 声明点表、边表和两者的关系，再用 GRAPH_TABLE 写模式匹配，多跳可以查朋友的朋友。既不用复制数据，也不用装扩展，底层由 PostgreSQL 重写成普通的连接操作。",
+      "url": "https://www.cybertec-postgresql.com/en/handling-graphs-with-sql-pgq-in-postgresql/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "Cybertec",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "图查询"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 的托管 Postgres 进入 beta",
+      "summary": "ClickHouse 把自家的托管 Postgres 推进 beta，卖点是本地 NVMe 存储、到 ClickHouse 的原生 CDC 和 pg_clickhouse 扩展，主张用 Postgres 存事务状态、ClickHouse 做实时分析，省掉两边之间的外部管道和胶水代码。这意味着 OLAP 厂商不再只做 Postgres 数据接入，而是直接承接 OLTP 托管。自建方案的差异点仍在控制权、扩展生态和成本透明度。",
+      "url": "https://clickhouse.com/blog/postgres-managed-by-clickhouse-beta",
+      "author": "ClickHouse",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ClickHouse",
+        "托管服务",
+        "CDC"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "微软继续推销面向 AI 时代的 Azure HorizonDB",
+      "summary": "微软在 TechCommunity 上继续推 Azure HorizonDB，定位是面向 AI 时代的企业级 Postgres，路线是存算分离、内置向量与 AI 能力、企业安全默认打开。要留意 Postgres 兼容和 PostgreSQL 扩展生态完全兼容不是一回事：评估这类产品得看扩展支持范围、复制与备份方式、迁移路径、锁定风险，以及真实基准和价格模型。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/azure-horizondb-enterprise-ready-postgres-engineered-for-the-ai-era/4524094",
+      "author": "Microsoft",
+      "source": "Microsoft TechCommunity",
+      "source_date": "2026-06-03",
+      "image": "https://techcommunity.microsoft.com/t5/s/gxcuf89792/images/bS00NTI0MDk0LWJxeFFUTA?revision=5",
+      "domain": "pg",
+      "tags": [
+        "Azure",
+        "云数据库"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "AWS 演示用 Debezium 给 Aurora 做实时 CDC",
+      "summary": "AWS 数据库博客给出一套用 Debezium 做实时变更数据捕获的做法，替代延迟较高的批量 ETL。组件是打开逻辑复制的 Aurora PostgreSQL 或 RDS for PostgreSQL、跑在 MSK Connect 上的 Debezium 连接器，以及做消息流的 Amazon MSK；Debezium 直接读预写日志，把变更推成 Kafka 主题。步骤包括建参数组打开逻辑复制、配 IAM 角色和上传自定义插件。",
+      "url": "https://aws.amazon.com/blogs/database/implementing-real-time-change-data-capture-with-debezium-for-amazon-aurora-postgresql-and-amazon-rds-for-postgresql/",
+      "author": "Kirthi Vishal Dourla",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-06-03",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/06/02/DB4522.png",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "Debezium",
+        "Aurora"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Redis 8.8 新增 Array 数据结构与 INCREX",
+      "summary": "Redis 8.8 不是普通补丁版：新增原生 Array 数据结构和 INCREX 命令，改进了 Streams 待处理消息的释放，Search 与 Query 侧做了性能优化和 profiling，HyperLogLog、MGET、MSET、HGETALL 等高频路径也继续提速。方向上 Redis 8.x 一直在从缓存走向多模型内存数据平台，搜索、向量、时序、限流和流处理这些能力被反复加强。",
+      "url": "https://redis.io/docs/latest/develop/whats-new/8-8/",
+      "author": "Redis",
+      "source": "Redis 文档",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Redis",
+        "内存数据库"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Spanner Graph 的图算法进入预览",
+      "summary": "Google 把图算法以预览形式放进 Spanner Graph。Spanner 本来就有全球一致性和 SQL/GQL，图遍历和图算法进到库内之后，把数据 ETL 到外部图分析系统的必要性下降。这说明图能力正从独立图数据库的专属卖点，变成多模型云数据库和事务数据库的常规配置。选型仍要看数据规模、一致性要求、查询语言、算法库是否够用、ETL 代价和云锁定；PostgreSQL 一侧对应的方向是 SQL/PGQ 与 Apache AGE。",
+      "url": "https://cloud.google.com/blog/products/databases/introducing-spanner-graph-algorithms/",
+      "author": "Google Cloud",
+      "source": "Google Cloud 博客",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Spanner",
+        "图数据库"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "一次点击即可窃取 GitHub token 的验证公布",
+      "summary": "Ammar Askar 公布了一个概念验证：经由 github.dev 与 VS Code webview 相关的链路，用户点一次链接就可能被窃走 GitHub token。利用面把 webview、快捷键与命令面板、扩展安装和 token 暴露串在一起。开发者 token 能读写私有仓库，一键失窃的影响远大于普通 XSS。团队可以限制 github.dev 的使用、清理站点数据并降低 token 权限。",
+      "url": "https://blog.ammaraskar.com/github-token-stealing/",
+      "author": "Ammar Askar",
+      "source": "Ammar Askar 博客",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "供应链",
+        "GitHub"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 将报告是谁挡住了清理",
+      "summary": "日志与 SQL 视图两条路线并行，先合入日志补丁，视图列出后端、预备事务和复制槽的贡献。",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0tF3B-NASWX8kFQ6jbXyRzkpkQh=CuWs6Zmd+Fw3Wu+Fg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "vacuum",
+        "可观测性"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "CHECK 约束的 NOT ENFORCED 继承有缺陷",
+      "summary": "多重继承下子表不跟着父表改状态，v7 补丁递归检查本次操作之外是否还有强制父表。",
+      "url": "https://www.postgresql.org/message-id/185FC597-BF26-4075-9D59-E5905ED74E0F@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "约束",
+        "继承"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "vacuumdb 分阶段 analyze 的分区回归已修复",
+      "summary": "Chao Li 报告问题并给出补丁，Fujii Masao 审阅后推入代码库。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEYwCDZ8q7Y+ODkmwbgDtTFSUjtFF5-nxgkNNd8GAx7rA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "vacuum",
+        "分区"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 并发模式仍留着死锁隐患",
+      "summary": "Mihail Nikalayeu 提醒这个问题可能让大量重整工作白做，压力测试套件还在开发。",
+      "url": "https://www.postgresql.org/message-id/CADzfLwUeNBCso3e5+d+6CxgcxZ5CJoztLhukvKxmh2rKt7zTDg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "并发"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 的 VS Code 扩展支持 Cursor",
+      "summary": "微软把这套 Postgres 工作流带进 Cursor 编辑器，连接、查询和管理都可以留在编辑器里。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/your-postgresql-workflow-just-found-its-new-home-in-cursor/4524081",
+      "author": "",
+      "source": "Microsoft TechCommunity",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "编辑器"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AlloyDB 的托管远程 MCP 服务器正式可用",
+      "summary": "Google Cloud 把 AlloyDB 的 MCP 接入做成全托管服务，结束预览进入正式发布。",
+      "url": "https://cloud.google.com/blog/products/databases/remote-mcp-server-for-alloydb-is-now-generally-available/",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "AlloyDB",
+        "MCP"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "ElastiCache for Valkey 支持持久化",
+      "summary": "托管缓存补上持久性，用它做会话、队列和限流的团队可以重估 RPO、RTO 与责任分界。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/durability-amazon-elasticache/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Valkey",
+        "缓存"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Amazon EKS 跟进 Kubernetes 1.36",
+      "summary": "kubelet API 细粒度授权、DRA 能力稳定化和 Ingress NGINX 退役提醒都要进升级计划。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-eks-distro-kubernetes-version-1-36/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "EKS"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "OpenAI 的 GPT-5.5 与 Codex 在 Bedrock 正式可用",
+      "summary": "可用 OpenAI SDK 或 Responses API 调用，Codex 也能配置成走 amazon-bedrock provider。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-bedrock-openai-models-codex-generally-available/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Bedrock",
+        "模型"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "把所有 GUC 排成一列：createrole_self_grant",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-createroleselfgrant/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_statements 做不到的那些事",
+      "summary": "",
+      "url": "https://boringsql.com/posts/pg-stat-statements-part-2/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "pg_clickhouse 0.3.1 这次加了更多 C 代码",
+      "summary": "",
+      "url": "https://justatheory.com/2026/06/pg_clickhouse-0.3.1/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "冲突日志表 v45 补上升级处理与格式修正",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm0WX0Vqoy2UQZh-2TpWraf4OYn28kWe9aGR=vxKwLA+bw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "synchronized_standby_slots 不去重导致计数偏差",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAE9k0P=GC51G2g_odG_pvp2Tbg9Ks=tNHwvAZQuQpb0na2JmkA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "备库缓冲区 pin 冲突的重复信号补丁待提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACSdjfNicWdgiX9RDSWiAkUKhnpiEEG5__2SauvH5c+a8CEUKA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "新的 BackgroundPsql 框架修好 Windows 上丢报错",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3510c901-b760-4534-9371-8a921d955549@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "预处理语句释放通知遇到异步竞态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFP5HL9Gf_-AnFN+w7MbMCNNnzN=3u-_+rk-G-JUiEzLZA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "TOAST 存储选项选择修复而不是删除",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN-LCVPtuuhUyM4QJ81Ma+yU1kyA9GwgX31pGM6ix9L2zWafqQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "file_fdw 的 HEADER 选项该按存在还是按值拒绝",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/31ac5168.30dc.19e8b7bd6d1.Coremail.suntingchuan1996@163.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "pgorca 把 Greenplum 的 Orca 优化器移植到 PG",
+      "summary": "",
+      "url": "https://github.com/quantumiodb/pgorca",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Streambed 把 Postgres 流式写入 S3 上的 Iceberg",
+      "summary": "",
+      "url": "https://github.com/viggy28/streambed",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Xata 把 PostgreSQL 分支指标搬到 VictoriaMetrics",
+      "summary": "",
+      "url": "https://xata.io/blog/how-we-rebuilt-postgresql-branch-metrics-on-victoriametrics-per-cell",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "YDB 讨论为何害怕可串行化隔离级别",
+      "summary": "",
+      "url": "https://blog.ydb.tech/do-we-fear-the-serializable-isolation-level-more-than-we-fear-subtle-bugs-5a025401b609",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Databricks Lakebase 路线图列出扩缩与分支能力",
+      "summary": "",
+      "url": "https://docs.databricks.com/aws/en/oltp/instances",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-15",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 32
+    }
+  ]
+}

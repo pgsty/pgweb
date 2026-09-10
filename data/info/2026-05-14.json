@@ -1,0 +1,641 @@
+{
+  "date": "2026-05-14",
+  "origin": "chronicle 2026-05-14: daily, pgnexus #146, news 1, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 18.4 等五个小版本修复 11 个 CVE",
+      "summary": "PostgreSQL 官方发布 18.4、17.10、16.14、15.18 和 14.23，修复 11 个安全漏洞和 60 多个 bug，其中三个 CVE 的 CVSS 评分为 8.8，覆盖 14 到 18 全部受支持版本。受影响的不止服务端，libpq 客户端工具链、备份恢复工具链、contrib 里的 refint，以及仍在用 MD5 哈希的用户都被点名。官方同时提醒 PostgreSQL 14 将在 11 月结束支持。",
+      "url": "https://www.postgresql.org/about/news/postgresql-184-1710-1614-1518-and-1423-released-3297/",
+      "author": "PostgreSQL Global Development Group",
+      "source": "PostgreSQL.org",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "版本发布",
+        "CVE"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "refint 扩展漏洞可致栈溢出与 SQL 注入",
+      "summary": "CVE-2026-6637 出在 contrib 的 refint 模块上，官方给出 CVSS 8.8，影响 PostgreSQL 14 到 18，漏洞类型包括栈缓冲区溢出和 SQL 注入。很多组织对服务端二进制的补丁很敏感，却容易漏掉 contrib 扩展。除了升级小版本，还要确认库里是否真的装了并启用了 refint，按 release notes 执行必要的扩展更新，托管平台则应扫描用户库的扩展版本。",
+      "url": "https://www.postgresql.org/support/security/CVE-2026-6637/",
+      "author": "PostgreSQL Global Development Group",
+      "source": "PostgreSQL.org",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "contrib",
+        "扩展"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "libpq 大对象漏洞把风险推到客户端一侧",
+      "summary": "CVE-2026-6477 出在 libpq 的大对象处理上，CVSS 8.8，影响 PostgreSQL 14 到 18，官方点名了 psql 的 \\lo_export 与 pg_dump 的调用路径。常见的安全模型默认客户端连上数据库之后风险主要在服务端，这个漏洞说明连到不可信或已被攻陷的服务器时，客户端工具本身也会成为攻击面。DBA 工作站、CI 里的备份镜像和迁移工具容器都要升级 libpq 与客户端包，只升级服务端不够。",
+      "url": "https://www.postgresql.org/support/security/CVE-2026-6477/",
+      "author": "PostgreSQL Global Development Group",
+      "source": "PostgreSQL.org",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "libpq",
+        "客户端"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "十一个 CVE 挤进一次发布说明了什么",
+      "summary": "Christophe Pettus 把这次的十一个 CVE 和历史节奏做了对比，认为安全发现的模式可能正在变化：成熟的数据库内核仍然可能被系统化地重新审计一遍，于是修复批量出现。他提醒这次升级不需要 pg_upgrade，但 release notes 要仔细读，特别是与系统表和扩展有关的后续 SQL 操作。运维上的结论是把小版本升级从低优先级的例行维护，改造成可以快速执行的安全流程。",
+      "url": "https://thebuild.com/blog/eleven-cves-walk-into-a-release/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-14",
+      "image": "https://thebuild.com/media/media/41037fb0-1c54-45e3-8128-b9663a4e8db3.png",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "运维",
+        "升级"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 重做分区合并与拆分的加锁",
+      "summary": "Christophe Pettus 介绍 PostgreSQL 19 里 MERGE PARTITIONS 与 SPLIT PARTITION 的最新设计，重点是锁比之前更简单也更安全。大表的生命周期管理、冷热数据滚动、租户拆分和时间分区重整都依赖分区维护能力，而锁的粒度直接决定这些操作能不能在高并发的生产环境里做。大量使用范围分区和列表分区的系统可以提前跟踪这条路线，评估将来能否少写离线 DDL 和手工迁移脚本。",
+      "url": "https://thebuild.com/blog/partition-mergesplit-once-more-with-locking/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "锁",
+        "PostgreSQL 19"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 拆解 FDW 下推里的取舍",
+      "summary": "ClickHouse 团队以 pg_clickhouse 为例，拆解了外部数据包装器决定下推什么的过程，结论是下推首先是语义正确性问题，而不是把能推的都推下去。跨引擎的类型、函数和排序语义要逐条验证，工程上需要持续迭代。评估 pg_duckdb、pg_clickhouse 或者湖仓集成时，应该拿真实 SQL 和 explain 输出去测语义，而不是只看最好看的那组跑分。",
+      "url": "https://clickhouse.com/blog/postgres-fdw-pushdown-negotiation",
+      "author": "ClickHouse",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "下推",
+        "ClickHouse"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Shopify 用 MySQL SKIP LOCKED 接管库存预留",
+      "summary": "Shopify 把库存预留系统从 Redis 迁到 MySQL，关键设计点是 SKIP LOCKED，并称在 2025 年黑色星期五的高峰达成了扩展目标。这是缓存与内存系统对上关系数据库的典型取舍案例：正确性、可观测性和运维一致性有时候比单纯的低延迟更值钱。高争用的库存、配额、令牌和预约系统可以重新评估数据库原语是否够用，但必须做真实峰值压测并观察锁等待。",
+      "url": "https://shopify.engineering/scaling-inventory-reservations",
+      "author": "Shopify Engineering",
+      "source": "Shopify 工程博客",
+      "source_date": "2026-05-12",
+      "image": "https://cdn.shopify.com/b/shopify-brochure2-assets/d5a289aad251536cebddff8378b429f0.png",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "并发",
+        "架构"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Kubernetes v1.36 废弃 Service externalIPs",
+      "summary": "Kubernetes v1.36 废弃 Service 的 .spec.externalIPs，理由是它在不可信的多租户集群里长期不安全，并与 CVE-2020-8554 的暴露面相关。官方建议已经不用这个字段的集群启用 DenyServiceExternalIPs 准入控制器，仍在用的迁移到 LoadBalancer、Gateway API 或 MetalLB。这是核心 API 的行为变化，会影响裸金属与边缘集群里的历史 YAML。",
+      "url": "https://kubernetes.io/blog/2026/05/14/kubernetes-v1-36-deprecation-and-removal-of-service-externalips/",
+      "author": "Kubernetes",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "网络",
+        "弃用"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_basebackup 与 pg_rewind 的符号链接漏洞",
+      "summary": "CVE-2026-6475，CVSS 8.8，影响 14 到 18，备份恢复链路的工具也要一并升级。",
+      "url": "https://www.postgresql.org/support/security/CVE-2026-6475/",
+      "author": "",
+      "source": "PostgreSQL.org",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "备份"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "服务端内存分配整数回绕漏洞",
+      "summary": "CVE-2026-6473 是服务端分配时的整数回绕，CVSS 8.8，同样覆盖 14 到 18。",
+      "url": "https://www.postgresql.org/support/security/CVE-2026-6473/",
+      "author": "",
+      "source": "PostgreSQL.org",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "MD5 认证的时序侧信道可恢复凭据",
+      "summary": "CVE-2026-6478 评分 6.5，官方称隐蔽时序通道足以还原凭据，该轮换密码了。",
+      "url": "https://www.postgresql.org/support/security/CVE-2026-6478/",
+      "author": "",
+      "source": "PostgreSQL.org",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证",
+        "安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "RDS for PostgreSQL 同步支持这批小版本",
+      "summary": "AWS 已放出对应的 minor version，并建议尽快升级以修复已知安全漏洞。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-rds-postgresql/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RDS",
+        "安全"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "缓冲管理器误碰其他会话临时表的缺陷已修",
+      "summary": "Alexander Korotkov 定位到 b7b0f3f27241 引入的路径破坏了原有排除逻辑，修复回移植到 17。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdsJM3KRLkkSqijmdJnw+y-ofwCyaAJCSpjxCbThT3oTew@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "缺陷"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "COPY TO 分区表输出全 NULL 的 bug 已推送",
+      "summary": "Chao Li 发现 build_attrmap_by_name_if_req() 的参数顺序写反，Masahiko Sawada 修复。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwFmKpz1G0bXbHRQ4CfwE4GAbDeQkWfqJTqE6fO=B_4=6A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "分区"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "启动阶段的 ProcSignalBarrier 死锁影响 v15 以来各版本",
+      "summary": "竞态出现在写入 pss_barrierGeneration 与 pss_pid 之间，修复计划在小版本之后回移植。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBTfEaw8qfu2YExtQEZ8TNEJ9y2b=v5wan=h5bZ+EDVfQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并发",
+        "缺陷"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "厂商测算：高频追加负载的调优要花多少人力",
+      "summary": "TigerData 称这类负载每年耗 12 到 16 个工程师周，用以对比迁移到 TimescaleDB 的成本。",
+      "url": "https://www.tigerdata.com/blog/the-true-cost-of-database-optimization-engineering-time",
+      "author": "",
+      "source": "TigerData 博客",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "调优",
+        "成本"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Aurora DSQL 补上变更数据捕获预览",
+      "summary": "没有可靠的 CDC，分布式 SQL 很难接进事件驱动、审计、索引和数据湖同步。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-aurora-dsql-change-data-capture-preview/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Aurora DSQL",
+        "CDC"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "OpenData Vector 把向量检索放到对象存储上",
+      "summary": "项目以 MIT 协议开源，主张直接在对象存储之上做向量检索，省掉常驻索引服务。",
+      "url": "https://www.opendata.dev/blog/introducing-vector/",
+      "author": "",
+      "source": "OpenData",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量检索",
+        "对象存储"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "Nginx Rift 线索升温，仍待厂商确认",
+      "summary": "研究页面在社区热度攀升，官方与发行版公告出来之前不宜按已确认漏洞处理。",
+      "url": "https://github.com/DepthFirstDisclosures/Nginx-Rift",
+      "author": "",
+      "source": "DepthFirstDisclosures",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Nginx",
+        "安全"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 2,
+      "title": "研究者发布 Apple M5 上的内核内存破坏利用",
+      "summary": "文章自称是 M5 上首个公开的 macOS 内核内存破坏利用，Mac 开发机群值得跟进补丁。",
+      "url": "https://blog.calif.io/p/first-public-kernel-memory-corruption",
+      "author": "",
+      "source": "Calif.io",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "macOS",
+        "内核安全"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 2,
+      "title": "Amazonbot 开始遵守 robots.txt",
+      "summary": "Xe Iaso 记录到这一变化，但站点仍不能假设所有 AI 爬虫都会照做。",
+      "url": "https://xeiaso.net/notes/2026/amazonbot-respecting-robots-txt/",
+      "author": "",
+      "source": "Xe Iaso",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "爬虫",
+        "robots.txt"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GUC 参数梳理：backtrace_functions",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-backtracefunctions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "调试",
+        "参数"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Prairie Postgres 五月聚会讲神话中的数据仓库",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/05/14/prairie-postgres-may-meetup-the-mythical-data-warehouse/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "活动"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "CloudFront 的 viewer mTLS 支持 OCSP 吊销检查",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-cloudfront-mtls-ocsp/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "CloudFront",
+        "mTLS"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "CloudFormation 支持跨账号跨区域引用栈输出",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-cloudformation-cdk-stack/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "IaC"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "ARC Region Switch 增加 Lambda 事件源阻断",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/region-switch-lambda-esm-execution-block/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容灾"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "EC2 M3 Ultra Mac 实例正式可用",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-ec2-m3-ultra-mac-instances-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "EC2",
+        "CI"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "EC2 X8aedz 高内存实例登陆爱尔兰",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-ec2-x8aedz-europe-ireland/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "EC2",
+        "内存"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "零日利用可绕过 Windows 11 默认的 BitLocker 保护",
+      "summary": "",
+      "url": "https://arstechnica.com/security/2026/05/zero-day-exploit-completely-defeats-default-windows-11-bitlocker-protections/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "BitLocker"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "媒体报道 Fragnesia 漏洞可让攻击者拿到 root",
+      "summary": "",
+      "url": "https://www.bleepingcomputer.com/news/security/new-fragnesia-linux-flaw-lets-attackers-gain-root-privileges/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "提权"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "一篇硬盘固件逆向与攻击面的文章",
+      "summary": "",
+      "url": "https://icode4.coffee/?p=1465",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "固件安全"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Tesla 充电桩固件降级防护被绕过",
+      "summary": "",
+      "url": "https://www.synacktiv.com/en/publications/exploiting-the-tesla-wall-connector-from-its-charge-port-connector-part-2-bypassing",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "IoT",
+        "固件"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "德国主权科技基金向 KDE 投入 130 万欧元",
+      "summary": "",
+      "url": "https://www.theregister.com/oses/2026/05/14/kde-bags-13m-as-europe-realizes-it-might-need-an-os-of-its-own/5240562",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源资金"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 复盘 Issues 导航的性能改造",
+      "summary": "",
+      "url": "https://github.blog/engineering/architecture-optimization/from-latency-to-instant-modernizing-github-issues-navigation-performance/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "前端性能"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 发布四月可用性报告",
+      "summary": "",
+      "url": "https://github.blog/news-insights/company-news/github-availability-report-april-2026/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可用性"
+      ],
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "mimalloc 的高性能分配器介绍再度被翻出",
+      "summary": "",
+      "url": "https://www.microsoft.com/en-us/research/blog/mimalloc-a-high-performance-scalable-memory-allocator-for-the-modern-era/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "内存分配"
+      ],
+      "position": 36
+    },
+    {
+      "tier": 3,
+      "title": "安大略审计发现医疗 AI 记录常出基础事实错误",
+      "summary": "",
+      "url": "https://www.theregister.com/ai-and-ml/2026/05/14/ontario-auditors-find-doctors-ai-note-takers-routinely-blow-basic-facts/5240771",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "AI 可靠性"
+      ],
+      "position": 37
+    },
+    {
+      "tier": 3,
+      "title": "OpenAI 把 Codex 放进 ChatGPT 移动端",
+      "summary": "",
+      "url": "https://openai.com/index/work-with-codex-from-anywhere/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编码助手"
+      ],
+      "position": 38
+    },
+    {
+      "tier": 3,
+      "title": "得州一个县暂停农村地区的数据中心建设",
+      "summary": "",
+      "url": "https://www.texastribune.org/2026/05/12/texas-hill-county-approves-data-center-construction-pause-ai/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据中心"
+      ],
+      "position": 39
+    },
+    {
+      "tier": 3,
+      "title": "AMD EPYC 的服务器营收份额升到 46.2%",
+      "summary": "",
+      "url": "https://www.techpowerup.com/349029/amd-epyc-cpus-reach-record-server-revenue-share-of-46-2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "服务器"
+      ],
+      "position": 40
+    }
+  ]
+}

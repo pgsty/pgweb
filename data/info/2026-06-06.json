@@ -1,0 +1,416 @@
+{
+  "date": "2026-06-06",
+  "origin": "chronicle 2026-06-06: pgsty-daily, pgnexus #169, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 外键快速路径被查出三个严重缺陷",
+      "summary": "Nikolay Samokhvalov 在 PostgreSQL 19 新增的外键检查快速路径里发现三处问题。这条路径把外键检查攒成批处理，但延迟刷批时会执行用户定义的转换函数或操作符，于是给了重入的机会：满批刷新时重入会造成越界写入并可能崩溃；子事务回滚会丢掉父事务缓冲的行，导致外键检查被跳过、孤儿数据得以提交；跨表重入还会让哈希迭代漏掉条目。三者都能由普通用户用带隐式转换的自定义类型复现。Amit Langote 已确认并开始排查。",
+      "url": "https://www.postgresql.org/message-id/CAM527d9exRCdWrhJOnAxk_vACg7sr_yPoaJp_+uCFY0qP8v=aw@mail.gmail.com",
+      "author": "Nikolay Samokhvalov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "外键",
+        "缺陷"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "微软开源 pg_durable，把持久化工作流放进库里",
+      "summary": "持久化执行本来是后端基础设施的一类模式，通常靠 Temporal 这样的独立引擎实现。微软把它做成了 PostgreSQL 扩展 pg_durable：工作流直接用 SQL 定义，每一步都记检查点，崩溃、重启或某步失败之后可以从断点继续。项目支持 PostgreSQL 17 和 18，采用 PostgreSQL 许可证，文档指向 Azure HorizonDB。它短期未必能替掉现有队列引擎，但和事务边界、连接池的配合值得先评估。",
+      "url": "https://github.com/microsoft/pg_durable",
+      "author": "Microsoft",
+      "source": "GitHub",
+      "source_date": "2026-06-05",
+      "image": "https://opengraph.githubassets.com/d5d8a6310a3fe550e08ddcae89fb60221a40122b1e0bf54aae242e52bbec23d2/microsoft/pg_durable",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "工作流"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "序列耗尽仍是 PostgreSQL 的典型生产事故",
+      "summary": "Crunchy Data 写了一篇整数溢出的复盘：用 serial 或 int4 做主键的系统，在增长几年后会突然撞上序列上限，一旦触发就直接阻断写入。这类问题的特点是长期无声、爆发突然，靠事后处理代价很高。可行的做法是把序列余量纳入例行巡检，检查 int4 主键与对应序列的当前值和最大值，提前排期迁移到 bigint；迁移本身要评估锁的持有时间、索引重建、外键约束以及应用侧的类型边界。",
+      "url": "https://www.crunchydata.com/blog/the-integer-at-the-end-of-the-universe-integer-overflow-in-postgres",
+      "author": "Crunchy Data",
+      "source": "Crunchy Data 博客",
+      "source_date": "2026-06-06",
+      "image": "https://imagedelivery.net/lPM0ntuwQfh8VQgJRu0mFg/bdce9ef9-6f51-457a-34e4-483502a7b500/public",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "数据类型"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "IronWorm 恶意软件感染 36 个 npm 包",
+      "summary": "npm 生态又一次出现供应链攻击，被称作 IronWorm 的恶意代码波及 36 个包；同期还出现了针对 .github/setup.js 的供应链告警。前端依赖树庞大，包维护者账号、发布权限、传递依赖、锁文件和 CI 构建都是攻击面。团队应尽快复核锁文件与最近发布的版本，跑一遍依赖审计，收紧 CI 令牌权限，检查包的来源证明与可信发布配置，并为生产项目保留物料清单和可回滚的构建产物。",
+      "url": "https://www.bleepingcomputer.com/news/security/new-ironworm-malware-hits-36-packages-in-npm-supply-chain-attack/",
+      "author": "BleepingComputer",
+      "source": "BleepingComputer",
+      "source_date": "2026-06-05",
+      "image": "https://www.bleepstatic.com/content/hl-images/2026/06/04/npm.jpg",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "供应链",
+        "npm"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "CPython 指导委员会要求 JIT 项目补一份 PEP",
+      "summary": "CPython 的 JIT 已经在主仓库里以实验形式存在了一段时间。指导委员会发公告要求补齐正式决策：走 PEP 流程说明目标、维护承诺和取舍，否则就把它移出主仓库。公告不是否定 JIT，而是把一个影响运行时的大改动重新拉回正式流程。JIT 牵动发行版打包、调试器与性能剖析工具、性能承诺和长期维护成本，依赖 Python 性能路线的团队可以跟进 PEP 进展，同时别把主分支上的 JIT 当作稳定的生产承诺。",
+      "url": "https://discuss.python.org/t/an-announcement-from-the-steering-council-regarding-the-jit-project/107638",
+      "author": "Python Steering Council",
+      "source": "Python Discuss",
+      "source_date": "2026-06-06",
+      "image": "https://us1.discourse-cdn.com/flex002/uploads/python1/original/1X/f93ff97c4f381b5e8add5a0c163b4ded29f20ed7.png",
+      "domain": "infra",
+      "tags": [
+        "Python",
+        "治理"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "Tom Lane 建议回退域默认值的快速路径提交",
+      "summary": "空表加带域默认值的列时 ALTER TABLE 会报错，与 CREATE TABLE 不一致，还会影响 pg_dump 恢复。",
+      "url": "https://www.postgresql.org/message-id/203a49c2-52e4-49ab-b644-ef6044266145@dunslane.net",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "DDL"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 19 加入临时的 grease 模式",
+      "summary": "用于主动制造协议层的合法变化，帮助发现生态里对协议实现过于死板的客户端。",
+      "url": "https://wiki.postgresql.org/wiki/Grease",
+      "author": "",
+      "source": "PostgreSQL Wiki",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "协议",
+        "兼容性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Warner Music 把 TimescaleDB 分块缩到 7 天",
+      "summary": "团队解释了缩短 chunk 区间的原因和取舍，是一份时序库生产调优的实例。",
+      "url": "https://tech.wmg.com/why-we-shrank-our-timescaledb-chunks-from-30-days-to-7-07cab8afefc5",
+      "author": "",
+      "source": "WMG Tech",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "调优"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Momentic 把每天 120 亿次缓存处理迁出 Postgres",
+      "summary": "团队改用 ClickHouse 承接这部分负载，是一则 OLTP 与 OLAP 分工的实践案例。",
+      "url": "https://momentic.ai/blog/postgres-to-clickhouse-migration",
+      "author": "",
+      "source": "Momentic",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "ClickHouse"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "AWS 讲清楚 Aurora 备份是怎么工作的",
+      "summary": "文章对比了 Aurora 与 RDS 备份机制的差异，并列出该盯的 CloudWatch 指标。",
+      "url": "https://aws.amazon.com/blogs/database/understanding-how-backups-work-in-amazon-aurora/",
+      "author": "",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "Aurora"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Ladybird 不再接受公开 PR，AI 贡献推高审查成本",
+      "summary": "写代码的边际成本骤降，评审负担落回人数没有变化的维护者身上。",
+      "url": "https://ladybird.org/posts/changing-how-we-develop-ladybird/",
+      "author": "Ladybird",
+      "source": "Ladybird",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理",
+        "AI 代码"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "VoidZero 团队整体加入 Cloudflare",
+      "summary": "Vite 与 Vitest 的核心团队被云厂商收编，Cloudflare 承诺项目保持开放和可移植。",
+      "url": "https://blog.cloudflare.com/voidzero-joins-cloudflare/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源",
+        "前端工具"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "欧盟发布技术主权与开源战略",
+      "summary": "开源进入公共采购与政策主线，面向欧洲客户的软件要留意数据驻留与供应商国别风险。",
+      "url": "https://digital-strategy.ec.europa.eu/en/library/communication-european-tech-sovereignty-accompanied-eu-open-source-strategy",
+      "author": "",
+      "source": "European Commission",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "政策",
+        "开源"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 的 AI Gateway 支持支出限额",
+      "summary": "把 token 成本和模型路由的控制点放到网关层，便于按团队做预算与成本归因。",
+      "url": "https://blog.cloudflare.com/ai-gateway-spend-limits/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "成本治理"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Bedrock AgentCore 运行时开出交互式终端",
+      "summary": "开发者可以进隔离的 microVM 里调试智能体、看文件和跑命令，权限与审计要同步跟上。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-bedrock-agentcore-runtime/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "智能体",
+        "运行时"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 19 Beta 1 的发布说明已上线",
+      "summary": "",
+      "url": "https://www.postgresql.org/docs/19/release-19.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "把所有 GUC 排成一列：data_directory",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-datadirectory/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "恢复目标参数的赋值钩子不该直接报错",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/0WrsV1VojwurDot6hdS0norm0nK9QFDk0KSLqBcXK4Xz2b_sMuIdE0zyiXP0p1hTRD7Hwz3C8AQouGyV7yZMhf5joz3zUpQee3l_pWPs4dk=@scottray.io",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "autovacuum 报告最老 xmin 来源的补丁提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/GhIqK8CfmeX-u9drRyP0V0gBMYk0SO6dMHYW-woGxASgasMOG6nK_K6tMCYqIc_jkelCvF1RRScvQ7UHkDzSeJgIxKOY2CO1lJBJLulrbzg=@scottray.io",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "SQLite 里用 UUID 做主键的代价",
+      "summary": "",
+      "url": "https://andersmurphy.com/2026/06/05/the-perils-of-uuid-primary-keys-in-sqlite.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Vercel 上的 AWS 数据库覆盖更多区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-databases-vercel-aws-regions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 认证故障波及 API 与聊天订阅",
+      "summary": "",
+      "url": "https://www.githubstatus.com/incidents/2nmfnbknhlnv",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "AWS 的 MCP 服务器支持跨账号跨角色",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-mcp-server/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Azure Linux 4.0 被视作微软的通用 Linux 路线",
+      "summary": "",
+      "url": "https://www.boxofcables.dev/azure-linux-4-0-is-microsofts-first-general-purpose-linux/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Sansec 披露利用 Stripe API 的支付页面劫持",
+      "summary": "",
+      "url": "https://sansec.io/research/stripe-api-skimmer-infrastructure",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Copilot 支持百万上下文与智能体任务 API",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-04-larger-context-windows-and-configurable-reasoning-levels-for-github-copilot/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 的预算与用量管理 API 正式可用",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-04-budget-and-usage-management-apis-now-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "微软讲编码智能体实际怎么用你的技术",
+      "summary": "",
+      "url": "https://developer.microsoft.com/blog/how-ai-coding-agents-actually-use-your-technology/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-06",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 28
+    }
+  ]
+}

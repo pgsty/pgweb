@@ -1,0 +1,346 @@
+{
+  "date": "2026-06-27",
+  "origin": "chronicle 2026-06-27: daily, pgnexus #190, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "别为不会发生的崩溃缩短 checkpoint_timeout",
+      "summary": "把 checkpoint_timeout 调到一到五分钟，通常是为了缩短崩溃恢复时间。Lætitia Avrot 说这条推理站不住：恢复时长取决于要重放的 WAL 量，而不是这个参数本身；间隔越短，越多页面在检查点后首次修改时触发全页写，形成写放大。她建议多数负载放在 15 到 30 分钟，由 max_wal_size 按实际写入量触发检查点，可用性交给副本。调参之前先打开 log_checkpoints 看清现状。",
+      "url": "https://mydbanotebook.org/posts/stop-punishing-your-postgres-for-a-crash-that-wont-happen/",
+      "author": "Lætitia Avrot",
+      "source": "MyDBANotebook",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检查点",
+        "参数调优",
+        "WAL"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "DBOS 用三项改动把 Postgres 队列推到 3 万 TPS",
+      "summary": "DBOS 的 Qian Li 与 Peter Kraft 说明了 Postgres 队列的扩展办法：上千个 worker 轮询同一张队列表会造成锁竞争和索引抖动，未优化时吞吐只有每秒百来个任务。三项改动是：出队用 FOR UPDATE SKIP LOCKED 各取各行，事务从 REPEATABLE READ 降为 READ COMMITTED 消除序列化失败，索引只覆盖 ENQUEUED 状态。厂商称优化后达到每秒 3 万次工作流执行。",
+      "url": "https://www.dbos.dev/blog/making-postgres-queues-scale",
+      "author": "Qian Li、Peter Kraft",
+      "source": "DBOS 博客",
+      "source_date": "2026-06-26",
+      "image": "https://cdn.prod.website-files.com/672411cbf038560468c9e68f/6a1e552a2351abeae742f544_Use-Postgres-for-Queueing-at-Scale.png",
+      "domain": "pg",
+      "tags": [
+        "队列",
+        "并发",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 用 Rust 重写 WAL-G，虚拟内存降七成",
+      "summary": "WAL-G 用 Go 写成，垃圾回收让备份与 WAL 归档的内存占用难以预测。ClickHouse 发布开源的 WAL-RUS，用 Rust 重写同一套能力，沿用 WAL-G 的配置变量，两边归档可以互读，是并行选项而非替代品。厂商测试称虚拟内存从 2.8 GB 降到 1 GB 以内，吞吐与 CPU 占用相当。ClickHouse Cloud 的托管 Postgres 将用它做默认的备份与归档机制。",
+      "url": "https://clickhouse.com/blog/walrus-postgres-backups-in-rust",
+      "author": "Sai Srirampur、Philip Dubé",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "WAL-G",
+        "Rust"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 为什么不能在表中间插入列",
+      "summary": "Tianzhou 指出根源：PostgreSQL 用不可变的 attnum 同时表示列的身份、物理位置和显示顺序，pg_attribute 的编号顺序分配、永不复用，删列留下空洞，重排会牵动引用它的索引与约束。列顺序不只是美观，按对齐宽度排列最多省两成表体积，眼下只能用 CREATE TABLE AS SELECT 重建表。MySQL 的 InnoDB 自 8.0.29 起分开逻辑与物理顺序，社区同类提案至今未落地。",
+      "url": "https://www.bytebase.com/blog/why-its-hard-to-add-a-column-in-the-middle-of-postgres-table/",
+      "author": "Tianzhou",
+      "source": "Bytebase 博客",
+      "source_date": "2026-06-26",
+      "image": "https://www.bytebase.com/images/og/blog/why-its-hard-to-add-a-column-in-the-middle-of-postgres-table.png",
+      "domain": "pg",
+      "tags": [
+        "表结构",
+        "attnum",
+        "存储"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "AWS、Oracle 与 Google 推动 MySQL 开放治理",
+      "summary": "AWS 开源博客称，为 MySQL 建立开放治理是社区向前的一步，AWS、Oracle 和 Google Cloud 将共同参与新的 steering committee。The Register 的报道强调，社区想要的是具体保证而不是意向：路线图决定权、兼容性承诺和认证规则怎么落到文档上，目前都没有答案。治理变化不像版本发布那样显眼，但对兼容性和下游发行版影响更久。维护 MySQL 与 PostgreSQL 双栈的团队值得跟进。",
+      "url": "https://aws.amazon.com/blogs/opensource/open-governance-for-mysql-a-step-forward-for-the-community/",
+      "author": "AWS Open Source",
+      "source": "AWS 开源博客",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "开源治理"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Security Profiles Operator 发布 v1 稳定 API",
+      "summary": "Kubernetes 的工作负载安全策略长期受制于可用性与默认配置，seccomp 与 AppArmor 的 profile 多半靠各家自己拼装。CNCF 宣布 Security Profiles Operator 发布 v1，API 进入稳定阶段，项目做了安全加固，部分设计反馈回上游。稳定的 API 意味着更多生产集群可以把安全 profile 写成可重复的配置对象，而不是一次性手工操作，也便于纳入 CI/CD 验证。",
+      "url": "https://www.cncf.io/blog/2026/06/26/security-profiles-operator-v1-stable-apis-security-hardened-and-shaping-upstream-kubernetes/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-06-26",
+      "image": "https://www.cncf.io/wp-content/uploads/2026/06/Security-Profiles-Operator-v1-Blog.jpg",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "安全",
+        "seccomp"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "可见性映射的 WAL 缓冲区注册缺陷准备回移到 18",
+      "summary": "Andrey Borodin 确认 v3 补丁可干净应用于 REL_18_STABLE，新增测试在修复前失败、修复后通过。",
+      "url": "https://www.postgresql.org/message-id/EF2A8B6A-CAA8-4D31-8E6A-683B35DA189C@yandex-team.ru",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "可见性映射"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志历史表补丁细化元组列设计",
+      "summary": "元组相关列改用 json 保留原始表示，新增 replica_identity_full 布尔列区分全元组与基于索引的复制标识。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-v=-hNgJ4LSHBO9XCGzYe1gBeKEyNM4j2B4XV7HayMrsA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突处理"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "全库 VACUUM 处理并发删表的补丁获得认可",
+      "summary": "ChangAo Chen 的 v5 补丁拿到 LGTM；pg_repack 里同类的未加锁 aclcheck 问题另开线程处理。",
+      "url": "https://www.postgresql.org/message-id/aj8w9b4OOBzyFkhx@paquier.xyz",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "并发"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Miasma 投毒 20 多个 npm 包搜刮开发者密钥",
+      "summary": "The Register 称攻击瞄准开发者本机与 CI 环境里的 token，lockfile、镜像源和最小权限仍是主要防线。",
+      "url": "https://www.theregister.com/security/2026/06/26/miasma-campaign-poisons-20-plus-npm-packages-hunts-for-developer-secrets/5262886",
+      "author": "",
+      "source": "The Register",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "npm"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "CNCF 开源项目 CI/CD 安全系列讲凭证与验证",
+      "summary": "第三部分聚焦 token 权限、OIDC、构建产物来源证明与审批回滚，可用来自查文档与包的发布流水线。",
+      "url": "https://www.cncf.io/blog/2026/06/26/securing-ci-cd-for-an-open-source-project-part-3-credentials-verification-and-whats-next/",
+      "author": "",
+      "source": "CNCF 博客",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI/CD",
+        "供应链"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Canonical 的 LXD 出现关键安全公告",
+      "summary": "容器运行时漏洞往往影响宿主隔离边界，需按官方 advisory 核对版本、暴露接口与权限模型。",
+      "url": "https://github.com/canonical/lxd/security",
+      "author": "",
+      "source": "GitHub Security Advisories",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "安全"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：enable_hashagg",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_hashagg/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "有人提议去掉 pg_repack 取待重组表列表时的加锁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACU8CwKsdnJQ=U5UU-HcU0m+M-EiejfEU_6zycq0717REQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "FOR PORTION OF 的检查提议移出分析阶段",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/b43f8b56-86f7-4236-b2bd-223ff0cc359d@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "DDL 反解析讨论聚焦如何保留用户意图",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBCXrzhzLFoT=R_qRcBVUG-hqp8QyHOfTMynv6srggiCQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "SQLite 官方文档列举损坏数据库文件的各种做法",
+      "summary": "",
+      "url": "https://www.sqlite.org/howtocorrupt.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "有人把向量数据库从 AI agent 技术栈里去掉了",
+      "summary": "",
+      "url": "https://github.com/usemoss/moss",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-27",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "如何为一个数据库设计搜索功能",
+      "summary": "",
+      "url": "https://bonsai.io/blog/how-to-design-search-for-a-database/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "AWS EC2 R8g 实例扩展到更多区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-ec2-r8g-instances-additional-regions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Headlamp 推出 Cluster API 插件",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/06/25/headlamp-cluster-api-plugin/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GuixPkgs 把每个 Guix 包变成 Nix flake",
+      "summary": "",
+      "url": "https://fzakaria.com/2026/06/25/guixpkgs-every-guix-package-as-a-nix-flake",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Micron 锁定未来五年的高位内存价格",
+      "summary": "",
+      "url": "https://www.theregister.com/systems/2026/06/25/micron-locks-in-historically-high-memory-prices-for-five-years/5261854",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 23
+    }
+  ]
+}

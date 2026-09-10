@@ -1,0 +1,565 @@
+{
+  "date": "2026-06-19",
+  "origin": "chronicle 2026-06-19: daily, pgnexus #182, news 1, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgAdmin 4 v9.16 修复七个安全漏洞",
+      "summary": "pgAdmin 团队发布 4 v9.16，共 64 项修复与新特性，最要紧的是七个漏洞 CVE-2026-12044 至 CVE-2026-12050：对话框模板与还原点端点的 SQL 注入、AI Assistant 事务绕过导致的远程代码执行、无需认证即可访问且含 pickle 反序列化的 SQL Editor 端点、泄露服务器凭据的存储型 XSS，以及多因素认证流程里的开放重定向。同时 pgAgent 宣布弃用，预计半年后移除。",
+      "url": "https://pgsql.cc/about/news/pgadmin-4-v916-3319/",
+      "author": "pgAdmin 开发团队",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "CVE",
+        "工具"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "checkpointer 写合并补丁实测 TPS 提升三成",
+      "summary": "Melanie Plageman 发出 checkpointer 写合并补丁的 v15。新增能力是普通后端和 background writer 写盘时，会在共享缓冲区里找目标块前后相邻的脏块，把写 IO 合并到 io_combine_limit 大小。在 IOPS 受限的环境下测试，pgbench scale 500、8 个客户端、上限 7500 IOPS，TPS 提升约三成，p99 延迟下降约七成半。这一版还补了 TAP 测试。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZoKTpnmQ3MmmQXTpG7msHrP3jNWC68sf8R82-8cgb7Kw@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "检查点",
+        "IO"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "分区键选得不好会把写入全挤到一个分区",
+      "summary": "分区键设计不当，写入会全挤在一个分区上，其余分区几乎闲着。文章梳理了随之而来的连锁反应：B-tree 索引频繁更新、页面分裂加剧、WAL 生成量上升，autovacuum 在热点分区上持续满负荷。文中给出基于 pg_stat_user_tables 的诊断查询，用死元组比例和索引大小定位问题分区。两条出路是改成按时间的 RANGE 分区让写入自然分散，或改用 hypertable 并对旧数据启用列存压缩。",
+      "url": "https://www.tigerdata.com/blog/why-postgresql-partition-key-creating-write-bottleneck",
+      "author": "TigerData",
+      "source": "TigerData 博客",
+      "source_date": "2026-06-19",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/06/how-single-column-choice-turns-database-write-bottleneck.jpg",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "写入",
+        "调优"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Actions 收紧 pull_request_target 默认值",
+      "summary": "GitHub 调整了 Actions 里 pull_request_target 触发时检出代码的默认行为。这个触发器带着仓库写权限运行，一旦顺手检出外部 PR 的代码，发布令牌、包仓库凭据和云密钥就可能落到外部贡献者手里，是经典的配置陷阱，平台改默认值比逐个项目打补丁影响面大得多。用到 pull_request_target、workflow_run 或自托管 runner 的仓库仍应自查。",
+      "url": "https://github.blog/changelog/2026-06-18-safer-pull_request_target-defaults-for-github-actions-checkout/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-18",
+      "image": "https://github.blog/wp-content/uploads/2026/06/SaferPullRequestTargetDefaults_NewRelease_Unfurl_TextOnly.jpg",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "供应链",
+        "安全"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 上出现成规模分发恶意软件的仓库群",
+      "summary": "研究者发现 GitHub 上存在成规模分发恶意软件的仓库群。开发者习惯从搜索结果、README、issue 和 gist 里直接取安装脚本，当恶意仓库能批量生产之后，只看 star 数、只凭看起来像个正经开源项目已经不够用了。AI 编码工具如果会自动检索并引入代码，还会把这类风险再放大一层。构建脚本里的管道执行、来路不明的二进制、没有固定版本的依赖和临时建起来的仓库，都值得更严格的审查。",
+      "url": "https://orchidfiles.com/github-repositories-distributing-malware/",
+      "author": "OrchidFiles",
+      "source": "OrchidFiles",
+      "source_date": "2026-06-18",
+      "image": "https://orchidfiles.com/content/images/2026/03/avatar-1.png",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "恶意软件"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "兼容 MySQL 的 INSERT ... SET 语法补丁进入测试",
+      "summary": "Suraj Kharage 重新变基并建了 commitfest 条目，测试覆盖 RETURNING、ON CONFLICT、分区表、触发器和可更新视图。",
+      "url": "https://www.postgresql.org/message-id/CAJrT2Tt32+hTEECzSmMV+fp0Xw8U=cXoQO-yCK27R35kLx6RbQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 语法"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "防回卷警告的百分比措辞被指误导",
+      "summary": "该数字是距回卷限制的剩余空间，而非可用事务 ID 数量，因为分配会更早在停止限制处终止。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHWZTsR6bjdfpa+pOkBPjoXXm2LuJ+5nh+CvdyqEASHcQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "回卷",
+        "监控"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 拟支持查看远端执行计划",
+      "summary": "运行时参数会以占位符发到远端导致 EXPLAIN 失败，方案是强制 generic_plan 并限制远端版本。",
+      "url": "https://www.postgresql.org/message-id/CAP+B4TDngSD2SftX3-O_scuPPBcYQOUaRhraH-XhX4WQ1KeDsA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "EXPLAIN"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "DuckDB 同时发布 1.5.4 与 1.4.5 修复版",
+      "summary": "两条维护线同步出修复版本，均为常规 bugfix，没有破坏性变更。",
+      "url": "https://github.com/duckdb/duckdb/releases/tag/v1.5.4",
+      "author": "DuckDB",
+      "source": "GitHub Release",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Actions 可以控制谁和什么触发工作流",
+      "summary": "触发权本身就是生产权限的一部分，组织模板应把它与环境审批、OIDC 角色和密钥暴露一起定策略。",
+      "url": "https://github.blog/changelog/2026-06-18-control-who-and-what-triggers-github-actions-workflows/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "权限"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Copilot 代码审查开始读取 AGENTS.md",
+      "summary": "仓库内的 agent 指令成了平台功能，风险在于指令漂移、注入，以及不同 agent 对同一文件的理解不一致。",
+      "url": "https://github.blog/changelog/2026-06-18-copilot-code-review-agents-md-support-and-ui-improvements/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码审查",
+        "AGENTS.md"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Moby 29.6.0 与 containerd 五条维护线同日发布",
+      "summary": "没有发现明确的重大 CVE 或破坏性变更，但运行时处在集群底层，值得例行复核 release notes。",
+      "url": "https://github.com/moby/moby/releases/tag/docker-v29.6.0",
+      "author": "Moby",
+      "source": "GitHub Release",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "运行时"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "EKS 控制面出站流量可由客户自行路由",
+      "summary": "托管 Kubernetes 的控制面网络是安全评审重点，出站可控有助于满足私网与出口管控要求。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-eks-customer-routed-control-plane-egress/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "网络"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "MSK Express 推出智能再均衡",
+      "summary": "分区再均衡历来是高风险操作，启用前应在预发环境模拟扩容、热点分区和 broker 替换。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-msk-express-intelligent/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka",
+        "运维"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Ubiquiti 推出基于 ZFS 的企业 NAS",
+      "summary": "若打算用它承载备份或归档，重点看 ECC、热插拔、快照复制、监控与厂商锁定。",
+      "url": "https://blog.ui.com/article/introducing-enterprise-nas",
+      "author": "Ubiquiti",
+      "source": "Ubiquiti 博客",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "存储",
+        "ZFS"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "MCP 补上企业托管的 OAuth 认证",
+      "summary": "提出零接触 OAuth 方案，把 agent 接入的身份、令牌刷新与撤销收归集中治理。",
+      "url": "https://blog.modelcontextprotocol.io/posts/enterprise-managed-auth/",
+      "author": "Model Context Protocol",
+      "source": "MCP 博客",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MCP",
+        "认证",
+        "Agent"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐条梳理：dynamic_library_path",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-dynamiclibrarypath/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展加载"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Lætitia Avrot：这不是魔法，而是方法",
+      "summary": "",
+      "url": "https://mydbanotebook.org/posts/its-not-magic-its-method/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "排障"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "展望 Postgres 19 的逻辑有序特性",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-logically-sequenced",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "把跑在 Postgres 上的 AI 应用做到生产可用",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/your-ai-app-works-on-postgres-now-make-it-production-ready-without-starting-over",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AI 应用"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "ALTER SUBSCRIPTION 换服务器时的边界情况待定",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ff36d1ab77de76fb844b7005b8dc6a9e2b43c293.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "RDS for SQL Server 提高 gp3 卷的上限与预置性能",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/rds-sqlserver-increases-gp3-limits/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "RDS"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Amazon ECS 的服务自动扩缩变快",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-ecs-faster-autoscaling/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容器"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Amazon EC2 G7 实例正式可用",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-ec2-g7-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "GPU"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker 推理端点加入可观测性",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-sagemaker-ai-inference/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "MLOps"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Amazon MQ for RabbitMQ 支持私有网络连接",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-mq-private-network-connectivity/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "消息队列"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "EC2 嵌套虚拟化扩展到更多 Intel 平台",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/nested-virtualization-intel-us-gov-cloud/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "虚拟化"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "AWS Compute Optimizer 增强 EBS 卷建议",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-compute-optimizer-enhances-ebs-recommendations/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "成本"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Issues 加入重复检测与 MCP 字段支持",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-18-duplicate-detection-and-issue-fields-mcp-support-for-github-issues/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Issues"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 生成的 PR 纳入作者搜索",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-18-copilot-authored-pull-requests-now-included-in-author-searches/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "元数据"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Actions 支持基于自定义镜像再构建镜像",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-18-actions-build-custom-images-from-custom-images/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "GitLab 19.1 发布",
+      "summary": "",
+      "url": "https://docs.gitlab.com/releases/19/gitlab-19-1-released/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DevOps"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Drydock 给 macOS 上的编码 agent 做虚拟机沙箱",
+      "summary": "",
+      "url": "https://github.com/sricola/drydock",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "沙箱"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "除了 .gitignore，Git 还有几种忽略文件的办法",
+      "summary": "",
+      "url": "https://nelson.cloud/.gitignore-isnt-the-only-way-to-ignore-files-in-git/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Git"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "康奈尔 CS 6120 高级编译器自学课程再度走红",
+      "summary": "",
+      "url": "https://www.cs.cornell.edu/courses/cs6120/2025fa/self-guided/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编译器"
+      ],
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "上下文压缩替代不了正确的信息架构",
+      "summary": "",
+      "url": "https://mroczek.dev/articles/the-token-compression-illusion-why-im-skeptical-of-rtk/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-18",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "上下文"
+      ],
+      "position": 36
+    }
+  ]
+}

@@ -1,0 +1,294 @@
+{
+  "date": "2026-05-05",
+  "origin": "chronicle 2026-05-05: pgnexus #137, news 1, planet 5",
+  "items": [
+    {
+      "tier": 1,
+      "title": "REPACK CONCURRENTLY 的按库快照可能被回退",
+      "summary": "REPACK CONCURRENTLY 用的按数据库划分快照被发现有根本性正确性问题。Antonin Houska 说明，处理运行事务记录时对按库记录提前返回却没调整 xmin，于是 XID 低于 oldestRunningXid 的事务会被当成仍在运行，根子是 COMMIT 记录不保证按创建顺序跟在运行事务记录之后。压力测试因此报唯一索引重复键和除零错误。他可能放弃该特性，Alvaro Herrera 建议回退相关提交。",
+      "url": "https://www.postgresql.org/message-id/27869.1777985266@localhost",
+      "author": "Antonin Houska",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "逻辑解码",
+        "回退"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "在线开关校验和又查出两个缺陷",
+      "summary": "在线开关校验和的功能又找出两个缺陷。Satyanarayana 发现 pg_enable_data_checksums() 的两个成本限制参数因全局变量没同步而失效，同时对 unlogged 关系做了多余的 WAL 记录。Daniel Gustafsson 确认并备好补丁。Ayush Tiwari 指出 unlogged 关系的 init fork 在恢复期间仍需写 WAL 才能保持备库一致，测试证实这会导致故障转移后校验和验证失败。",
+      "url": "https://www.postgresql.org/message-id/CAHg+QDeevH6aTyWdXYBJW0wOmfoZy66gDi5TfinK_dXeCrHQLg@mail.gmail.com",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据校验和",
+        "缺陷"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "CYBERTEC 盘点自己进入 PostgreSQL 19 的工作",
+      "summary": "CYBERTEC 列出了自己进入 PostgreSQL 19 的贡献。分量最重的是 Antonin Houska 的 REPACK CONCURRENTLY，用新建表加逻辑复制再整体替换的方式做在线重组；同出他手的还有 eager aggregation，让规划器把聚合下推到连接之前。Laurenz Albe 修好了 vacuumdb 对分区表的处理，并把 log_lock_waits 默认改成开启。",
+      "url": "https://www.cybertec-postgresql.com/en/cybertecs-contributions-to-postgresql-19/",
+      "author": "Christoph Berg",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "REPACK",
+        "规划器"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_sorted_heap 0.13.0 带来物理有序堆与向量检索",
+      "summary": "扩展 pg_sorted_heap 发布 0.13.0。它提供按主键让行物理有序的表访问方法 sorted_heap，并用每页 zone map 裁剪堆块；配套的 sorted_hnsw 是与规划器集成的 HNSW 索引访问方法，面向内置向量类型；svec 与 hsvec 提供 float32 与 float16 向量类型；另有一组面向事实的 GraphRAG 辅助函数。作者是 Sergey Kuznetsov。",
+      "url": "https://github.com/skuznetsov/pg_sorted_heap/releases/tag/v0.13.0",
+      "author": "Sergey Kuznetsov",
+      "source": "GitHub",
+      "source_date": "2026-05-05",
+      "image": "https://opengraph.githubassets.com/2cfe823a55220111fb63a7275cb29e3ecb4c979ea22d048f15f88cdd55df05f6/skuznetsov/pg_sorted_heap/releases/tag/v0.13.0",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "向量检索",
+        "发布"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "只追加的表也一直在为 autovacuum 付费",
+      "summary": "Tiger Data 的 Matty Stratton 说明只追加的表为什么也一直被 autovacuum 收费。来源有三处：中止的事务会留下要清理的死元组；首次读取时改写提示位会弄脏页面；插入量大会触发防回绕的冻结。常规调参只是把这些工作挪到别的时间，并没有消掉工作本身。他把这归为 MVCC 存储模型与不需要并发行修改的负载之间的错配，并称 Hypercore 这类专用存储模型可以完全去掉这些条件。",
+      "url": "https://www.tigerdata.com/blog/the-autovacuum-tax",
+      "author": "Matty Stratton",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-05-05",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/05/Autovacuum_-The-Tax-You-re-Always-Paying-V2.png",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "存储",
+        "MVCC"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 的提交者是这样选出来的",
+      "summary": "Tomas Vondra 写清了 PostgreSQL 提交者的产生方式。约三十位提交者都参与：二月到三月在提交者私有邮件列表上提名，随后讨论评估，五月中旬定案并联系候选人，最后在 hackers 列表公布。核心组正式发出提交权限，也保留否决权，但很少推翻提交者的意见。看的是多年持续的实质贡献、是否负责维护某块代码、是否评审并帮助其他贡献者、代码质量是否不需要反复返工。落选者会收到反馈。",
+      "url": "https://vondra.me/posts/how-are-committers-selected/",
+      "author": "Tomas Vondra",
+      "source": "vondra.me",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "治理"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表的概念验证补丁已提交",
+      "summary": "Dilip Kumar 提议改 ACL 检查，让冲突表只允许 DELETE 与 TRUNCATE，挡住手工插入和更新。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+eg9UE5OnPG7vziUvDy0pasHj_8Mc9_bDDT3gwrAh6cw@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突处理"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "发布报错带模式名的改动要不要回迁有分歧",
+      "summary": "Amit Kapila 主张修进 19，Euler Taveira 担心打乱日志分析工具，建议留到 20 再改。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1K=pP6vWR8JJ5vFsCJDbVcVEM_wW2y-puaAz57gdTDoSA@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "报错信息"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "并发删表会让发布表函数报错",
+      "summary": "Bharath Rupireddy 改用 try_table_open()，避免并发 DROP TABLE 时抛出无法按 OID 打开关系。",
+      "url": "https://www.postgresql.org/message-id/B035D6BE-B9EB-46CA-A73C-6AF01B3891D9@gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "竞态"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "ECPG 线程测试仍在构建农场上段错误",
+      "summary": "Alexander Lakhin 把 max_connections 调到 10，就在 FreeBSD 和 Linux 上复现了段错误与挂起。",
+      "url": "https://www.postgresql.org/message-id/75460b3c-255d-47eb-b889-d99de38e6758@gmail.com",
+      "author": "Alexander Lakhin",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ECPG",
+        "缺陷"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别的 DEFINE 报错措辞将改得更准",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260505.090124.365339750969814137.ishii@postgresql.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行模式识别"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "pgindent 改进结构体字面量与可变参数的格式",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/664781.1778004610@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具链"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "libpq 服务端 SNI 的 typedef 改动获准推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/EC4502F6-AC51-4DE3-AD46-F84D325A155C@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "TLS"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "时态表补丁把触发器注释改得更精确",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFMECdY4eJzd207Z0jn5Hq_AtBHzCrvhFNteRYVN0Ru8tg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态表",
+        "触发器"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解系列讲 autovacuum_max_workers",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuummaxworkers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "澳洲三城同期举办 PostgreSQL 聚会",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/sydney-postgresql-meetup",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "会议"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "postgres-contrib 汇总 2026 年第 17 周的贡献",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/81/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "托管 Postgres 评测第二篇看 Amazon Aurora",
+      "summary": "",
+      "url": "https://thebuild.com/blog/managed-postgres-examined-amazon-aurora-postgresql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "托管服务",
+        "Aurora"
+      ],
+      "position": 18
+    }
+  ]
+}

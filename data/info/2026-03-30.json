@@ -1,0 +1,209 @@
+{
+  "date": "2026-03-30",
+  "origin": "chronicle 2026-03-30：pgnexus #98、planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "预备语句执行到第六次会悄悄换成通用计划",
+      "summary": "plan_cache_mode 默认取 auto：预备语句前五次用带参数值的定制计划，第六次才评估一份通用计划，只要通用计划的代价不高于定制计划的平均代价，本会话此后就固定用它。Richard Yen 用 pgbench 构造了 99.9% 取 Y、0.1% 取 N 的倾斜列：查 Y 时定制计划走顺序扫描，通用计划却按 50% 选择率估算而选了索引扫描，第六次之后永久切过去，于是同一条查询在数据没变的情况下突然变慢。数据分布越倾斜，这个坑越深。",
+      "url": "https://richyen.com/postgres/2026/03/30/plan_cache_mode.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "计划缓存",
+        "预备语句",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 2,
+      "title": "STORED 生成列的 UPDATE 会吃掉超过 10GB 内存",
+      "summary": "commit 83ea6c540 之后生成表达式对每一行都要 stringToNode 重新解析，百万行需时约 1.5 分钟。",
+      "url": "https://www.postgresql.org/message-id/ddc34dbd-1efc-4710-824c-e101e7eb63e6@postgrespro.ru",
+      "author": "Alexander Melnikov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "内存"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "读取流的新测试在非断言构建下会失败",
+      "summary": "commit 020c02bd9 加的测试用了只在 cassert 构建里初始化的 nblocks，Melanie Plageman 已定位。",
+      "url": "https://www.postgresql.org/message-id/9ce8f5d8-8ab2-4aa2-b062-c5d74161069c@gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "异步 IO",
+        "测试"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 优先级拟做成一张系统视图",
+      "summary": "pg_stat_autovacuum_priority 需要 pg_read_all_stats 权限，函数每次都做一次完整的 pg_class 扫描。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACX+SRgv2RO9Oo4Me-zzMMjHVg8rf-MqvMRbp9=1ioWbsg@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "监控"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 拟先导入统计再考虑采样",
+      "summary": "Etsuro Fujita 发现开启 fetch_stats 时对外表分析 ctid 列会引发多余的远程访问。",
+      "url": "https://www.postgresql.org/message-id/CAPmGK17C==NbyJ59Z3e3hOSdQnUdCLonxLiWiQ5n_YFWYMEvow@mail.gmail.com",
+      "author": "Etsuro Fujita",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "统计"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 3,
+      "title": "社区投票倾向移除 bits* 类型定义",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZucXL3mLc0f-t_7giiChN9Zad2EAr9SoAqFFc95vFaOg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "重构"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "自定义 OAuth 验证器的 SHOW 行为故意不一致",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFOdfRKjmpsDHWG_3Qgtmkcd41GFBH1uenC9-5yUj=hBzA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "vacuum 统计补丁趋于稳定并纳入隔离测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/af8572ea-7a17-45c8-87c1-937c5b0e840d@yandex.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "监控"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制关停挂起已复现并补上超时检查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/fa4f3713-3e9e-4e6d-8be1-4ca5e2fe8bff@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "关停"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "发布的 EXCEPT 将保留为独立子句",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+PuUnDZ4ki8nCK6SkHOn8iP6N1Vm24jzWtEqRG9a_GMxrw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "xmlserialize 拟增加 CANONICAL 选项",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/d84b1dcf-8c8f-4ef5-9012-cf97691866ae@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "XML"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "单列扩展统计的报错信息将改写得更明确",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/E0E9225B-82B0-485E-8E8B-07330D217383@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "postgres-contrib 发布 2026 年第 12 周贡献汇总",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/76/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 13
+    }
+  ]
+}

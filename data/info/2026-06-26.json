@@ -1,0 +1,562 @@
+{
+  "date": "2026-06-26",
+  "origin": "chronicle 2026-06-26: daily, pgnexus #189, news 5, planet 5",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgEdge 正式发布数据分层扩展 ColdFront",
+      "summary": "pgEdge 发布开源扩展 ColdFront，在 PostgreSQL 热存储与 Apache Iceberg 冷存储之间做透明分层，冷数据以 Parquet 存在 S3 上。和多数分层方案不同，归档行仍可用原有的 SQL 直接 UPDATE 和 DELETE，不用回热也不用改代码。冷数据分析由进程内 DuckDB 承担，官方称比行存快 10 到 100 倍，存储成本最多降九成，支持 PostgreSQL 16 到 18。",
+      "url": "https://pgsql.cc/about/news/pgedge-coldfront-for-postgresql-ai-oltp-3325/",
+      "author": "pgEdge, Inc.",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分层存储",
+        "Iceberg",
+        "扩展"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "IvorySQL 5.4 跟进 PG 18.4 并加入 AI 技能",
+      "summary": "Highgo Software 发布 IvorySQL 5.4，内核升级到 PostgreSQL 18.4 并继承上游全部修复。新增的 IvorySQL Skills 用来把 AI 助手调教成熟悉这套数据库的专家，另有免安装的浏览器试用环境。扩展支持面扩到 pgvector、PostGIS、AGE 等二十余个，发行包覆盖 x86、ARM、MIPS 与 LoongArch，托管的 IvorySQL Cloud 5.4 同步上线。",
+      "url": "https://pgsql.cc/about/news/ivorysql-54-postgresql-184-ai-3326/",
+      "author": "Highgo Software",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "IvorySQL",
+        "发行版",
+        "AI"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的分区可以拆开也可以合起来",
+      "summary": "Shaun Thomas 把 PostgreSQL 19 的分区变化称作分裂人格：ALTER TABLE 新增 SPLIT PARTITION 与 MERGE PARTITIONS，一条语句就能把季度分区拆成三个月度分区，或者把三个月度分区折回一个季度分区。两个命令适用于 RANGE 和 LIST 分区，哈希分区不行。代价是执行期间要在整张父表上加排他锁，只适合维护窗口。他判断并发版本几乎必然会在后续版本出现。",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-split-personality",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "PG19",
+        "DDL"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Percona 建议 PostgreSQL 制定一份 AI 使用政策",
+      "summary": "Percona 的 Jan Wieremjewicz 指出 PostgreSQL 目前没有任何关于 AI 使用的官方政策。他担心 AI 生成内容正在压垮维护者：大量低质量 PR 抬高评审成本，站不住脚的安全报告仍要人去核实，单人维护的项目最先撑不住，curl 就因此停了漏洞赏金。他主张按尊重划线：允许用 AI 起草代码、生成测试、改进文档，前提是人来复核并负责；不接受无人复核的全 AI 生成 PR，也不接受把 AI 列为共同作者。",
+      "url": "https://percona.community/blog/2026/06/26/why-postgresql-needs-an-ai-usage-policy/",
+      "author": "Jan Wieremjewicz",
+      "source": "Percona 社区博客",
+      "source_date": "2026-06-26",
+      "image": "https://percona.community/blog/2026/06/Jan-cover-ai_hu_d2673ff15fd8d17a.jpg",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "AI",
+        "治理"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "coddpiece 把关系代数一步步编译成 SQL",
+      "summary": "Christophe Pettus 写了个教学库 coddpiece，用 Python 方法链写关系代数表达式，再编译成能在任何 DB-API 2.0 数据库上跑的 SQL，内置 SQLite 可直接试。每个表达式都能调 .explain() 自解释，并排给出代数记法、表达式树、编译出的 SQL 和一段白话解释。它默认按集合语义办事会自动加 DISTINCT。项目 MIT 许可，自带 C.J. Date 那套经典的供应商与零件数据集。",
+      "url": "https://thebuild.com/blog/coddpiece-watch-relational-algebra-become-sql/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-26",
+      "image": "https://thebuild.com/media/media/d654ed2a78ed40e3a1499261ff112fc7.png",
+      "domain": "pg",
+      "tags": [
+        "关系代数",
+        "教学",
+        "工具"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "有人用 Claude 给自己做了一份 Postgres 周报",
+      "summary": "Andrei Lepikhov 搭了一套自动周报：让 Claude 去爬数据库方向的技术博客，核验作者是不是真的工程师，挑出新想法、生产经验和调试故事，顺手识别藏着的商业意图；它还会扫非英语来源并翻译摘要，同时跟踪 CommitFest 补丁与邮件列表讨论。成品发布在 GitHub Pages 上并提供 RSS。用了四周之后，他说信噪比比直接读 Planet PostgreSQL 好得多。",
+      "url": "https://danolivo.substack.com/p/a-generative-postgres-digest-from",
+      "author": "Andrei Lepikhov",
+      "source": "Andrei Lepikhov 博客",
+      "source_date": "2026-06-26",
+      "image": "https://substackcdn.com/image/fetch/$s_!TgEJ!,w_1200,h_675,c_fill,f_jpg,q_auto:good,fl_progressive:steep,g_auto/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F9ee7df20-b8a0-4c2a-b37f-db616d617c89_1280x640.jpeg",
+      "domain": "pg",
+      "tags": [
+        "资讯",
+        "自动化",
+        "社区"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_qualstats 2.1.4 修好 joinqual 并支持 PG19",
+      "summary": "PoWA 团队发布，Tatsuro Yamada 报告的 JOIN 统计缺陷由 Julien Rouhaud 修复。",
+      "url": "https://www.postgresql.org/about/news/pg_qualstats-214-is-out-3327/",
+      "author": "PoWA",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "统计"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_stat_kcache 2.3.2 补上 PostgreSQL 19 兼容",
+      "summary": "同时修正了 RHEL、Rocky 与 Alma 上的安装命令，这个扩展统计文件系统读写与 CPU。",
+      "url": "https://www.postgresql.org/about/news/pg_stat_kcache-232-is-out-3328/",
+      "author": "PoWA",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "监控"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PGDay.UK 2026 公布日程并开放报名",
+      "summary": "9 月 8 日在伦敦 Cavendish Conference Centre 举行，七位讲者，早鸟票到 7 月 31 日。",
+      "url": "https://pgsql.cc/about/news/pgdayuk-2026-3327/",
+      "author": "PostgreSQL Europe",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议",
+        "社区"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "pg_stat_statements 的扩展性改造重新推进",
+      "summary": "Sami Imseih 让 PGSS 这类扩展可以绕开主统计哈希表，并在做带限流的 LRU 淘汰。",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0uyiH5Ke-AFqSn9R-g4wAQq7b4TbOBtNWKNZrfz+XqoRw@mail.gmail.com",
+      "author": "Sami Imseih",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_stat_statements",
+        "性能"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 想绕开游标以支持并行计划",
+      "summary": "Robert Haas 担心 fsstate 与 active_fsstate 的连接若不一致，方案就有根本性问题。",
+      "url": "https://www.postgresql.org/message-id/CA+Tgmob_HYowO3E3bshpqDjRCd-t==UE_q_92kvSx=207YKx8w@mail.gmail.com",
+      "author": "Rafia Sabih",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "并行"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Deno 2.9 把工具链摊到了打包与安装",
+      "summary": "新增 Linux 的 deb、rpm 与 Windows msi 输出，另有 desktop、fmt、LSP 与 Node 兼容改进。",
+      "url": "https://deno.com/blog/v2.9",
+      "author": "Deno",
+      "source": "Deno 博客",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "运行时",
+        "工具链"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Actions 允许步骤并行执行",
+      "summary": "CI 的成本与延迟优化下沉到步骤粒度，长流水线可以省下可观的等待时间。",
+      "url": "https://github.blog/changelog/2026-06-25-actions-steps-can-now-be-run-in-parallel/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "Actions"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "npm 给高影响力账号加上预防性保护",
+      "summary": "供应链防线从修漏洞前移到守住维护者身份，发布权限比仓库代码更值得看紧。",
+      "url": "https://github.blog/changelog/2026-06-25-npm-adds-preventive-account-protection-for-high-impact-accounts/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "npm"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare Workflows 补上 saga 式回滚",
+      "summary": "工作流最难的是失败后的补偿与幂等，每一步怎么回滚应当写进接口契约。",
+      "url": "https://blog.cloudflare.com/rollbacks-for-workflows/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "工作流",
+        "可靠性"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Bedrock 在 GovCloud 上放行更多合规模型",
+      "summary": "拿到 FedRAMP 与 IL-5 之后，高监管环境的采购路径才谈得上可用。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/addl-bedrock-model-fedramp-il-5-govcloud/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "合规",
+        "模型"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Linux 基金会成立 Akrites 应对 AI 驱动的漏洞利用",
+      "summary": "开源项目面对的攻击方也在用 AI，防守侧需要有组织的对抗资源与流程。",
+      "url": "https://www.phoronix.com/news/Akrites",
+      "author": "Linux Foundation",
+      "source": "Phoronix",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源",
+        "安全"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "enable_gathermerge 又一个不该随手关的开关",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enablegathermerge/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "恢复目标的 GUC 赋值钩子里不该调 ereport(ERROR)",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260626.161553.236415645647775260.horikyota.ntt@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "GUC"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "讨论清空虚拟内存为何不必在 WAL 里注册缓冲区",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoY5iW3D6e6ELuZkyORWUm+C6yvJSPG+HzJhVs3j+KPZvw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pgrust 用 Rust 重写 Postgres 的实验还在继续",
+      "summary": "",
+      "url": "https://github.com/malisper/pgrust",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Rust",
+        "实验"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "备份工具 Databasus 改用 PG17 的原生物理备份",
+      "summary": "",
+      "url": "https://github.com/databasus/databasus",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "又一篇“你只需要 PostgreSQL”的架构主张",
+      "summary": "",
+      "url": "https://ebellani.github.io/blog/2026/all-you-need-is-postgresql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "架构"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "redissnoop 用 eBPF 给 Redis 做了个 top",
+      "summary": "",
+      "url": "https://github.com/yeet-src/redissnoop",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Redis",
+        "可观测性"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Zilliz 放出向量数据库基准的成本排行榜",
+      "summary": "",
+      "url": "https://zilliz.com/vdbbench-leaderboard-v2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量数据库",
+        "基准"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "IBM 宣布做出所谓首个亚 1 纳米芯片技术",
+      "summary": "",
+      "url": "https://newsroom.ibm.com/2026-06-25-ibm-debuts-worlds-first-sub-1-nanometer-chip-technology",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "半导体"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "报道称俄罗斯黑客制造了捷豹路虎的巨额损失",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/06/26/russian-hackers-were-behind-2-5-billion-hack-of-jaguar-land-rover-report/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "研究者在 curl 里挖出六个新 CVE",
+      "summary": "",
+      "url": "https://aisle.com/blog/aisle-discovers-6-new-cves-in-curl-including-the-oldest-issue-ever-reported",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CVE",
+        "curl"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "LastPass 再次向用户发出数据泄露通知",
+      "summary": "",
+      "url": "https://9to5mac.com/2026/06/23/lastpass-notifies-users-of-yet-another-data-breach/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "新的 macOS 恶意软件用假报错干扰 AI 分析工具",
+      "summary": "",
+      "url": "https://www.bleepingcomputer.com/news/security/new-macos-malware-embeds-fake-errors-to-confuse-ai-analysis-tools/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "恶意软件"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Bluekit 钓鱼套件改用浏览器中间人窃取登录",
+      "summary": "",
+      "url": "https://www.bleepingcomputer.com/news/security/bluekit-phishing-kit-adopts-browser-in-the-middle-for-login-theft/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "钓鱼"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "用封闭式构建遏制 Shai-Hulud 式供应链攻击",
+      "summary": "",
+      "url": "https://flox.dev/blog/mitigating-shai-hulud-attacks-with-hermetic-builds/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "SemiAnalysis 盘点 2026 年数据中心 CPU 格局",
+      "summary": "",
+      "url": "https://newsletter.semianalysis.com/p/cpus-are-back-the-datacenter-cpu",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CPU",
+        "数据中心"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "内存短缺推动 Micron 营收翻了四倍",
+      "summary": "",
+      "url": "https://www.cnbc.com/2026/06/24/micron-mu-earnings-report-q3-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "内存",
+        "行业"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "Neo4j 主张 AI 智能体需要三种记忆",
+      "summary": "",
+      "url": "https://neo4j.com/blog/agentic-ai/context-graph-ai-agent-memory/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-25",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "记忆",
+        "图数据库"
+      ],
+      "position": 35
+    }
+  ]
+}

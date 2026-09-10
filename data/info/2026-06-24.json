@@ -1,0 +1,594 @@
+{
+  "date": "2026-06-24",
+  "origin": "chronicle 2026-06-24: daily, pgnexus #187, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "大表按时间排序的查询要靠预聚合而不是索引",
+      "summary": "表长到一定规模后，按时间戳排序的查询会突然变慢：同一条语句一千万行时约 180 毫秒，五亿行时要 4 秒，因为索引超出 shared_buffers 后退化成磁盘上的外部归并排序。TigerData 的办法是别再对原始行排序，仪表盘查询改用 time_bucket() 先聚合再排序，4312 毫秒能压到 9 毫秒，高频查询用连续聚合在写入时预计算。",
+      "url": "https://www.tigerdata.com/blog/postgres-sorting-at-scale-order-by",
+      "author": "TigerData",
+      "source": "TigerData 博客",
+      "source_date": "2026-06-24",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/06/postgres-sorting-at-scale-order-by.jpg",
+      "domain": "pg",
+      "tags": [
+        "排序",
+        "性能",
+        "聚合"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "给检查点耗时设一个十五分钟的告警阈值",
+      "summary": "Jeremy Schneider 建议为检查点的总耗时单独设告警：在 checkpoint_timeout 保持默认 5 分钟的前提下，他倾向把阈值定在 15 分钟。更稳妥的做法是监控距离上一条检查点消息过去了多久，这样连停摆到不输出消息的情况也能发现，同时对“检查点过于频繁”告警，那通常意味着要调大 max_wal_size。他特别提醒，检查点停滞时千万不要重启数据库，重启可能让实例陷入恢复循环，把几小时的故障拖成几天。",
+      "url": "https://ardentperf.com/2026/06/24/happiness-hint-alarm-on-checkpoint-time/",
+      "author": "Jeremy Schneider",
+      "source": "ardentperf.com",
+      "source_date": "2026-06-24",
+      "image": "https://ardentperf.com/wp-content/uploads/2026/06/image-2.png",
+      "domain": "pg",
+      "tags": [
+        "检查点",
+        "监控",
+        "告警"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 用 ColdFront 走向无底存储的 Postgres",
+      "summary": "没人再查的数据和天天被查的数据占着一样贵的存储，bottomless Postgres 就是把冷数据挪到对象存储又让查询照常跨层。Shaun Thomas 回顾了几条路线：Neon 换掉整个存储引擎，pg_mooncake 把表镜像成 Iceberg，pg_lake 靠独立的 DuckDB 进程。ColdFront 则把 pg_duckdb 内嵌，归档分区后以 Iceberg 为唯一副本，用解析钩子改写 SQL 路由冷热数据。",
+      "url": "https://www.pgedge.com/blog/the-long-road-to-bottomless-postgres",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "对象存储",
+        "Iceberg",
+        "分层"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "cygnet 是一个只服务 PostgreSQL 的异步 Python ORM",
+      "summary": "Christophe Pettus 写了 cygnet，一个面向异步 Python 的 PostgreSQL 专用 ORM，要求 Python 3.12 与 PostgreSQL 14 以上。它的取向是透明而非省事：SQL 关键字写成大写方法，模型就是普通 dataclass，不需要继承或元类。UPDATE 和 DELETE 必须显式写 .WHERE() 才肯执行，避免全表误伤。JSONB、全文检索和 LATERAL 都是一等操作。",
+      "url": "https://thebuild.com/blog/cygnet-a-small-but-fierce-orm/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-24",
+      "image": "https://thebuild.com/media/media/cygnet-orm.png",
+      "domain": "pg",
+      "tags": [
+        "ORM",
+        "Python",
+        "工具"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "用 postgres-mcp 给数据库做自动体检",
+      "summary": "Stormatics 的 Warda Bibi 讲了怎么用 MCP 在 AI 智能体和 PostgreSQL 之间放一层受控接口，能力在代码里固定而不是靠提示词约束。文中用开源的 postgres-mcp，生产上应开受限模式，把语句包进只读事务并用 pglast 拦下 DROP TABLE。体检项包括膨胀索引、缓存命中率、空闲事务、事务 ID 年龄和复制延迟，索引建议靠 pg_stat_statements 加 hypopg 试算。",
+      "url": "https://stormatics.tech/blogs/mcp-for-postgresql-automated-health-checks-performance-analysis",
+      "author": "Warda Bibi",
+      "source": "Stormatics",
+      "source_date": "2026-06-24",
+      "image": "https://stormatics.tech/wp-content/uploads/2026/06/MCP-for-PostgreSQL.webp",
+      "domain": "pg",
+      "tags": [
+        "MCP",
+        "巡检",
+        "索引"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "研究型文件格式 F3 想把解码器和数据绑在一起",
+      "summary": "F3 是一个研究性质的列式数据文件格式，README 直说它只是验证论文想法的原型，不建议用于生产。它值得看的是设计方向：面向现代硬件和负载重构列式布局，并把解码器与数据本身绑定，让格式层能携带自描述元数据和可移植的解码逻辑。数据文件格式是湖仓、OLAP、数据交换和长期归档的底层协议，一旦这层能力变了，查询引擎、存储系统和兼容策略都要跟着调整。短期不必引入，中长期可以跟踪它的论文与基准测试。",
+      "url": "https://github.com/future-file-format/f3",
+      "author": "future-file-format 项目",
+      "source": "GitHub",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "文件格式",
+        "湖仓",
+        "研究"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 复盘后量子迁移的 2030 期限",
+      "summary": "后量子迁移不是升级一个库那么简单，它牵涉证书、TLS 终端、设备、客户端、供应商、合规，以及今天被抓走的数据在若干年后仍需保密这件事。Cloudflare 从大规模边缘网络的视角复盘了行政令给出的 2030 期限，讨论迁移步骤与目前的缺口。对基础设施团队来说，现在应该做的是盘点 TLS 终端、证书生命周期、依赖库、无法升级的老客户端，以及长期敏感数据的存放位置，而不是等到 2029 年再动手。",
+      "url": "https://blog.cloudflare.com/post-quantum-eo-2026/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-06-23",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW9WMXG5DXF6N2C9MAW04CHD.png",
+      "domain": "infra",
+      "tags": [
+        "后量子",
+        "TLS",
+        "合规"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "TimescaleDB 2.28.1 修掉压缩表相关缺陷",
+      "summary": "发布说明建议在下一个可用窗口升级，重度使用 hypertable 压缩的环境要先读变更列表。",
+      "url": "https://github.com/timescale/timescaledb/releases/tag/2.28.1",
+      "author": "Timescale",
+      "source": "GitHub Releases",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "压缩"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "DocumentDB 0.113-0 继续补 Mongo 语义与性能",
+      "summary": "排序、collation、TTL 和聚合累加器才是这类兼容层的关键路径，不能只测 CRUD。",
+      "url": "https://github.com/documentdb/documentdb/releases/tag/v0.113-0",
+      "author": "DocumentDB",
+      "source": "GitHub Releases",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DocumentDB",
+        "兼容"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "NUMA 感知补丁修了 mbind 但基准测试并不好看",
+      "summary": "Tomas Vondra 修正了 nodemask 大小与指针对齐，分区绑定与时钟扫描的收益仍不明显。",
+      "url": "https://www.postgresql.org/message-id/c3954e28-0c38-4df8-b76e-ec09f6c04021@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "NUMA",
+        "内存"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "中断与信号重构补丁修掉一处崩溃",
+      "summary": "WaitEventSetWait() 的子函数退出前没清 PI_FLAG_SLEEPING，Heikki Linnakangas 已修。",
+      "url": "https://www.postgresql.org/message-id/0aac2b1a-ec0f-4bb6-a786-760e6cea4d1d@iki.fi",
+      "author": "Heikki Linnakangas",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "中断",
+        "重构"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "uuidv7() 将拒绝 1970 年之前的时间戳",
+      "summary": "Baji Shaik 的三个补丁分别挡下 epoch 之前、无穷大 interval 和超过 48 位毫秒的取值。",
+      "url": "https://www.postgresql.org/message-id/CA+fm-RN23-9h4iHFMVUPyy9N2x05ct2mW3KQ9ZabQPcru9RibQ@mail.gmail.com",
+      "author": "Baji Shaik",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "UUID",
+        "校验"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "uuid 类型拟支持 MIN 与 MAX 聚合",
+      "summary": "Tristan Partin 说动机是 UUIDv7 字典序与时间一致，取最早最新记录会方便很多。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACU7L1nVQdDeHXjQY5GGzKUDFk6Lj-0-HfUN=-jua0Easw@mail.gmail.com",
+      "author": "Tristan Partin",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "UUID",
+        "聚合"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "整库 VACUUM 撞上并发删表将改为告警",
+      "summary": "争论点是 get_all_vacuum_rels() 里的提前权限检查该不该去掉，反正后面还会再验一次。",
+      "url": "https://www.postgresql.org/message-id/ajsTKldYusgjIzKI@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "并发"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "PG19 里 FOR PORTION OF 撞上视图触发器会崩溃",
+      "summary": "Peter Eisentraut 要求收窄讨论范围，先用一版补丁修掉这处空指针解引用。",
+      "url": "https://www.postgresql.org/message-id/84f20d0d-3bc8-4843-bd7e-21bce20f8582@eisentraut.org",
+      "author": "Peter Eisentraut",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "PG19"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Perl TAP 换成 pytest 之争摆出了回移成本",
+      "summary": "自 REL_14 以来涉及 TAP 文件的提交约 172 个，两套框架并存意味着每次都要写两遍。",
+      "url": "https://www.postgresql.org/message-id/a361c7b8-548f-49e8-8a21-4e706a8d3ac4@eisentraut.org",
+      "author": "Peter Eisentraut",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "工程"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Linux 基金会要为 AI agent 建身份服务",
+      "summary": "Agent Name Service 打算给智能体一套可信身份基础设施，把身份问题标准化。",
+      "url": "https://www.linuxfoundation.org/press/linux-foundation-announces-intent-to-launch-agent-name-service-to-establish-trusted-identity-infrastructure-for-ai-agents",
+      "author": "Linux Foundation",
+      "source": "Linux Foundation",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "身份",
+        "Agent"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "两个扫描开关只该用来做诊断",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enableindexscan-and-enablebitmapscan/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "扩展控制路径是否该支持通配符引发讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/8A2554D6-578C-4D33-B918-8A99CACFE1D8@justatheory.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "utf8_to_unicode() 收到一个提升安全性的小补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/fb7979177b7ab44d9abc2d423391de4ad9faea46.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "编码"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_*_ddl 系列函数考虑合并整合",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAGECzQSunZ36K4roP0gQ8YbE8uHH=vup6zgM86Kkywy=b=i=zA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "DDL 反解析补丁继续推进",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACVB4QbMDZmth6TwM+CHwZzEgToPVNvrdC0ON3Q9ZS2tig@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL",
+        "逻辑复制"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "pg_publication_tables 拟显示副本身份信息",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACUr9PSzoXzL+6r=9BQyGwJYKoe5FicPTk+PruRKOuM1Ow@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "为每个后端进程添加锁统计信息的补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ajtx2_k6qTsf-noM@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "锁"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "虚拟生成列能否进索引表达式与谓词",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/tencent_54EF3ECB626AD14621788C36625A8109A207@qq.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "索引"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "COPY 格式可扩展补丁转入命名细节打磨",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBLbmxT6xMHkDjfvBZEJUo1VbCd-vWhwX9WXbpMgaGW_A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_sequence_data() 的文档说法将被修正",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHuuffj_js4n2g2M07vpkbun8Aj_4+o4ALK=rQpBfwk7w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "序列",
+        "文档"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "psql 为订阅的 wal_receiver_timeout 补上制表符补全",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/BBC5628A-63C0-4436-B8F3-90AF59BBEB73@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Jaeger 的 ClickHouse 后端把千万条 span 压到八分之一",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/23/building-jaegers-clickhouse-backend-8-6x-compression-on-10-million-spans/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "链路追踪",
+        "压缩"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "BBC 称 Oracle 一年内在全球裁减约两万个岗位",
+      "summary": "",
+      "url": "https://www.bbc.com/news/articles/c4gy0x0j5deo",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Oracle",
+        "行业"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "OpenTelemetry Collector 0.155.0 移除稳定开关",
+      "summary": "",
+      "url": "https://github.com/open-telemetry/opentelemetry-collector/releases/tag/v0.155.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Node.js 24.18.0 LTS 带来 crypto 与 http 变更",
+      "summary": "",
+      "url": "https://github.com/nodejs/node/releases/tag/v24.18.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Node.js"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Amazon OpenSearch 加入 AI 辅助迁移能力",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-opensearch-service-ai-migrations/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "搜索",
+        "迁移"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "LastPass 确认 Klue 供应链攻击导致数据泄露",
+      "summary": "",
+      "url": "https://www.bleepingcomputer.com/news/security/lastpass-confirms-data-breach-in-klue-supply-chain-attack/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "安全"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "有人测了 2026 年各家 WebAssembly 运行时的性能",
+      "summary": "",
+      "url": "https://00f.net/2026/06/23/webassembly-runtimes-2026/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "WebAssembly"
+      ],
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Copilot CLI 正式可用并支持自带密钥",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-23-copilot-cli-new-terminal-interface-is-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Copilot"
+      ],
+      "position": 36
+    },
+    {
+      "tier": 3,
+      "title": "LiteLLM 把网关实现迁到 Rust",
+      "summary": "",
+      "url": "https://docs.litellm.ai/blog/litellm-rust-launch",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "网关",
+        "Rust"
+      ],
+      "position": 37
+    }
+  ]
+}

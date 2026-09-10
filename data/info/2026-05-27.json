@@ -1,0 +1,310 @@
+{
+  "date": "2026-05-27",
+  "origin": "chronicle 2026-05-27: pgnexus #159, planet 4；补 2026-05-25 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "REPACK CONCURRENTLY 把 pg_squeeze 收进内核",
+      "summary": "PostgreSQL 19 的 REPACK CONCURRENTLY 重写表回收空间，不必长时间持有排他锁。实现出自 Álvaro Herrera，源头是 Antonin Houska 的 pg_squeeze。它不用触发器记录复制期间的改动，而是复用 CREATE SUBSCRIPTION 初始化表的机制：在与 VACUUM 同级的锁下取快照并建逻辑复制槽，解码增量回放到新副本，最后短暂升级为排他锁完成切换。每个集群同时只能跑一个。",
+      "url": "https://thebuild.com/blog/repack-concurrently-pgsqueeze-gets-a-promotion/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-27",
+      "image": "https://thebuild.com/media/media/379307e93c2f4269a2c28dba1d3bc99e.png",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "膨胀",
+        "PostgreSQL 19"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "索引预取补丁重启，目标 PostgreSQL 20",
+      "summary": "Peter Geoghegan 在停顿一段时间后重新推进索引预取。v25 相比 v24 没有实质改动，主要是跟上 master 并满足 commitfest 测试要求。这组补丁里他优先处理第一个：让索引扫描改用更高层的、基于 slot 的接口来调用表访问方法。他认为这一部分比后续补丁简单得多，计划在四到八周内提交。这项工作原本针对更早的版本，现已重新定位到 PostgreSQL 20。",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wz=V0V5WGuo85D-OF+TM_CxU3q=MMkY-ebY0K8xc-9Xykw@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取",
+        "PostgreSQL 20"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "单个 Postgres 实例同时跑遥测、事务与 RAG",
+      "summary": "建筑智能平台 ApexAnalytica 从原生 PostgreSQL 迁到 TimescaleDB：此前扫描数百万条半小时计量读数的仪表盘查询要六秒以上，改用超表加 time_bucket 物化视图后，同样的 12 个月小时级热力图查询降到一秒以内。平台从 38 栋建筑摄取楼宇自控遥测，速率在每秒一千到一万个数据点之间，事务数据和用于检索增强生成的 pgvector 向量都放在同一个实例里，省掉了另建时序数据库的基础设施。",
+      "url": "https://www.tigerdata.com/blog/how-apexanalytica-runs-building-telemetry-transactional-data-rag-on-single-postgres-instance",
+      "author": "Andrew Stebbins",
+      "source": "TigerData 博客",
+      "source_date": "2026-05-27",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/05/ApexInnovationHeader.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "时序",
+        "RAG"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "迁到 Percona 算子的另外两条路径",
+      "summary": "Slava Sarzhan 补上从 Crunchy Data 算子迁到 Percona PostgreSQL Operator v3.0.0 的另外两种做法。备份恢复法先从源集群做一次 pgBackRest 备份，再用它引导新的 Percona 集群，需要一小段停机但速度最快；持久卷复用法直接把现有主节点的数据目录挂给新集群，省掉拷贝但存储资源要处理得更小心。两种方法都在 PostgreSQL 18 上验证过。",
+      "url": "https://www.percona.com/blog/migrate-from-crunchy-data-to-percona-postgresql-operator-backup-restore-pv-reuse/",
+      "author": "Slava Sarzhan",
+      "source": "Percona 博客",
+      "source_date": "2026-05-27",
+      "image": "https://www.percona.com/wp-content/uploads/2026/05/Migrate-from-Crunchy-Backup-Restore-and-PV-Reuse.png",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "迁移",
+        "Operator"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "用 Apache AGE 在 Postgres 里跑 Cypher 查询",
+      "summary": "Apache AGE 给 PostgreSQL 加上 openCypher 支持，让关系数据和图遍历在同一个库里完成，不必另起一套图数据库。文中的做法是从 Iceberg 表出发，用 PL/pgSQL 循环执行 Cypher 命令建出节点和边，只把节点与边的属性复制到本地，其余列留在对象存储。查询可以把 Cypher 包进 CTE 再与 Iceberg 表连接，示例用变长路径匹配找转诊链路，比递归 CTE 简洁得多。",
+      "url": "https://www.snowflake.com/en/blog/engineering/graph-queries-postgres-apache-age/",
+      "author": "Elizabeth Garrett Christensen",
+      "source": "Snowflake 工程博客",
+      "source_date": "2026-05-27",
+      "image": "https://www.snowflake.com/content/dam/snowflake-site/engineering-blog/featured-images/sf-eng-blog-ML-1.png",
+      "domain": "pg",
+      "tags": [
+        "图数据库",
+        "Apache AGE",
+        "Cypher"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "通用计划与初始分区裁剪的实现被推倒重来",
+      "summary": "Amit Langote 把执行期加锁移出 GetCachedPlan() 交给调用者，四个补丁换来更少的锁和更好的性能。",
+      "url": "https://www.postgresql.org/message-id/CAA-aLv5+dSSQ7KKZPgnysnFOTEXkFKYbeqSWk5Qu61_3Vd8aJw@mail.gmail.com",
+      "author": "Amit Langote",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区裁剪",
+        "缓存计划"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 之后 effective_wal_level 不回落已修复",
+      "summary": "补丁已提交，随后因测试依赖复制槽状态导致构建农场失败，调整测试顺序后解决。",
+      "url": "https://www.postgresql.org/message-id/ahc0eor_-OApK4pd@alvherre.pgsql",
+      "author": "Álvaro Herrera",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "REPACK"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "复制槽函数出错时未释放槽位的修复",
+      "summary": "七个 SQL 函数用 PG_TRY/PG_CATCH 包起来，但在已持锁时释放槽仍有死锁风险待议。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uBo-OuzyZZ=LY8L48Udt8=1Mffh2rrpXaTbKK_F9sJx7A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "缺陷"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志历史表补丁发现订阅创建顺序缺陷",
+      "summary": "Amit Kapila 指出冲突日志表建在订阅之前，会让 CREATE SUBSCRIPTION 报依赖被并发删除。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uD_c9QivbxQ2HRYt+79Wt48hCj4jhyfUP2DbN55QM1GBg@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突日志"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "连接统计信息改用表达式数组表示",
+      "summary": "按 Tom Lane 的建议去掉 stxkeys[]，全部用 Var 节点表示，避免排序不一致与升级问题。",
+      "url": "https://www.postgresql.org/message-id/CAK98qZ0_4Kodyemk0Tdmew=YG8jeHQ=wzOydQws4s99A1X2h5g@mail.gmail.com",
+      "author": "Alexandra Wang",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "目录"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "新系列讲那些看起来像 Postgres 故障的事故",
+      "summary": "Payal Singh 开的血泪史第一篇，收的都是根因并不在 PostgreSQL 自身的线上故障。",
+      "url": "https://payalsingh.me/blog/2026/05/27/postgres-war-stories-1-the-bugs-that-arent-postgres/",
+      "author": "Payal Singh",
+      "source": "payalsingh.me",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "故障复盘"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "cluster_name 给进程和日志标上集群身份",
+      "summary": "Christophe Pettus 的 GUC 系列新篇，一台机器上跑多个实例时尤其值得设。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-clustername/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "运维"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Neon 讲 Lakebase 如何扛住云基础设施故障",
+      "summary": "agent 带来的控制面调用量和按需开实例的压力，正在把云侧故障变成常态。",
+      "url": "https://neon.com/blog/resilience-to-failures-in-agentic-era",
+      "author": "Jasraj Dange",
+      "source": "Neon 博客",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "可靠性"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 年化收入增至 2.5 亿美元并谋划 IPO",
+      "summary": "实时分析需求推动收入翻三倍，管理层称正在规划上市时间表。",
+      "url": "https://techcrunch.com/2026/05/27/clickhouse-triples-annualized-revenue-to-250m-charting-a-path-toward-an-ipo/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "商业"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Snowflake 与 AWS 签下 60 亿美元芯片协议",
+      "summary": "五年期合同采购 AI 负载所需的 CPU 芯片，超大规模厂商的自研路线继续加码。",
+      "url": "https://techcrunch.com/2026/05/27/in-more-good-news-for-amazon-snowflake-signs-6b-deal-with-aws-for-ai-cpu-chips/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-05-27",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Snowflake",
+        "芯片"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Bytery 提出一种更小更快的二进制 JSON 协议",
+      "summary": "",
+      "url": "https://github.com/jacksonsolid/Bytery",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据格式"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "一份深入 Kubernetes 内部原理的教程",
+      "summary": "",
+      "url": "https://semicolony.dev/codex/kubernetes",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Musts 给 coding agent 提供开源的校验回路",
+      "summary": "",
+      "url": "https://github.com/bitomule/musts",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Coding Agent"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "AutoMaxFix 号称不会吃掉数据库迁移脚本",
+      "summary": "",
+      "url": "https://github.com/Noumenon-ai/AutoMaxFix",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Coding Agent"
+      ],
+      "position": 19
+    }
+  ]
+}

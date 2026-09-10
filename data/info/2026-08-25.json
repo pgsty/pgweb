@@ -1,28 +1,11 @@
 {
   "date": "2026-08-25",
-  "origin": "pgsty-daily 2026-08-25.md; pgnexus #249",
+  "origin": "chronicle 2026-08-25: pgsty-daily, pgnexus #249, news 1, planet 8",
   "items": [
     {
       "tier": 1,
-      "title": "PostgreSQL 备库复制延迟源于 EC2 单流带宽上限",
-      "summary": "一套跑在 EC2 上、通过 NFS 挂载 Amazon FSx 的 PostgreSQL 备库长期存在复制延迟，而 FSx 的吞吐和 IOPS 用量都不到配额的一半。真正的天花板是 EC2 单条 TCP 流约 5 Gbps 的限制：NFS 挂载没有设置 nconnect，所有流量挤在一个连接上，既够不到实例的聚合带宽，也用不满 FSx 的配置容量。定位手段是 vmstat 的 b 列和 wa 值显示持续 I/O 阻塞，再用吞吐分布图确认 5 Gbps 硬顶。把 nconnect 调到 16 之后，复制延迟立刻缓解。",
-      "url": "https://www.percona.com/blog/replication-lag-on-aws-fsx-the-hidden-ec2-single-flow-bandwidth-limit/",
-      "author": "Pablo Svampa",
-      "source": "Percona 博客",
-      "source_date": "2026-08-25",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "复制延迟",
-        "AWS",
-        "NFS"
-      ],
-      "position": 1
-    },
-    {
-      "tier": 1,
       "title": "Robert Haas 列出 PostgreSQL 19 六个高风险特性",
-      "summary": "Robert Haas 借助 Claude 统计了 PostgreSQL 19 在 feature freeze 之后修复次数最多的补丁，把六项列为高风险：RI 快速路径外键批处理约 16 处修复且含安全问题，REPACK CONCURRENTLY 有 28 处并涉及数据丢失和 ACL，在线数据校验和约 25 处且状态机有洞，UPDATE/DELETE FOR PORTION OF 有 17 处修复且 3 处涉及安全，SQL/PGQ 属性图 17 处，postgres_fdw 统计导入 7 处但密度高。焦点是要不要回退前三项，Tom Lane 对属性图随 v19 发布表达强烈担忧。",
+      "summary": "Robert Haas 统计 PostgreSQL 19 冻结后修复最多的补丁，列出六项高风险特性：RI 快速路径外键批处理约 16 处且含安全问题，REPACK CONCURRENTLY 有 28 处并涉及数据丢失，在线数据校验和约 25 处，UPDATE/DELETE FOR PORTION OF 有 17 处其中 3 处涉及安全，另有 SQL/PGQ 属性图与 postgres_fdw 统计导入。焦点是要不要回退前三项。",
       "url": "https://www.postgresql.org/message-id/CA+Tgmob9NY6m0YNFTQ4nFH2d0iC9SQRruDYxfndGKKzh8OC80w@mail.gmail.com",
       "author": "Robert Haas",
       "source": "pgsql-hackers",
@@ -34,91 +17,75 @@
         "质量",
         "回退"
       ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 新增 WAIT FOR 命令等待 WAL 到位",
+      "summary": "异步流复制下主库刚提交的事务不会立刻在备库可见，应用下单后马上去只读副本查询，常常查不到那一行。PostgreSQL 19 新增 SQL 命令 WAIT FOR，让会话阻塞到 WAL 到达指定 LSN 再继续，从而在异步副本上拿到读到自己写入的一致性，不必承担同步复制的代价。命令提供四种等待模式和 TIMEOUT、NO_THROW 选项。作者提醒 19 仍在 beta，细节以最终发布说明为准。",
+      "url": "https://clickhouse.com/blog/postgresql-19-wait-for-read-your-writes",
+      "author": "Gülçin Yıldırım Jelínek",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "复制",
+        "一致性"
+      ],
       "position": 2
     },
     {
       "tier": 1,
-      "title": "Shipyard 9 月 30 日停止 IPFS 工程与基础设施",
-      "summary": "Protocol Labs 不再续约资金后，Shipyard 宣布 2026 年 9 月 30 日结束全部 IPFS 工程、维护与基础设施运营。失去专职维护的项目包括 Kubo、Helia、Boxo、Rainbow、IPFS Desktop 与 Companion；公司还将停止运营 ipfs.io、dweb.link、delegated-ipfs.dev 以及 bootstrap 节点，对 go-libp2p、js-libp2p 的上游贡献和规范协调同样停止。依赖方需要立刻盘点 gateway、DNSLink、二进制来源和 CI 下载路径，并确认接手主体。",
-      "url": "https://ipshipyard.com/blog/2026-the-end-of-ipfs-at-shipyard/",
-      "author": "Shipyard",
-      "source": "Shipyard",
-      "source_date": "2026-08-24",
-      "image": "https://ipshipyard.com/images/blog/2026-ipfs-blackhole.png",
-      "domain": "infra",
+      "title": "PostgreSQL 备库复制延迟源于 EC2 单流带宽上限",
+      "summary": "一套跑在 EC2 上、通过 NFS 挂载 Amazon FSx 的 PostgreSQL 备库长期存在复制延迟，而 FSx 的吞吐和 IOPS 用量都不到配额的一半。真正的天花板是 EC2 单条 TCP 流约 5 Gbps 的限制：NFS 挂载没有设置 nconnect，所有流量挤在一个连接上，既够不到实例的聚合带宽，也用不满 FSx 的配置容量。定位靠 vmstat 看出持续 I/O 阻塞，把 nconnect 调到 16 之后延迟立刻缓解。",
+      "url": "https://www.percona.com/blog/replication-lag-on-aws-fsx-the-hidden-ec2-single-flow-bandwidth-limit/",
+      "author": "Pablo Svampa",
+      "source": "Percona 博客",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
       "tags": [
-        "IPFS",
-        "维护",
-        "治理"
+        "复制延迟",
+        "AWS",
+        "NFS"
       ],
       "position": 3
     },
     {
       "tier": 1,
-      "title": "Meta 开源 MetaRoCE：面向大规模 GPU 的以太网 RDMA",
-      "summary": "传统 RoCE 依赖有序、近乎无损的 fabric 和 PFC 配置，规模一大运维成本就会放大。Meta 把 MetaRoCE 的协议规范、参考实现和一致性测试套件通过 Open Compute Project 公开：每个包自带目的信息以支持原生乱序投递并直接写入最终内存位置；传输层按包在多条路径上喷洒，每条路径各自维护 RTT、ECN、利用率和拥塞窗口；256 位选择性确认把空洞判定为丢包并精确重传；拥塞控制结合发送侧 ECN AIMD 与接收侧公平份额提示。fabric 只需要 ECN 和 ECMP，Meta 称 AMD Pensando 已完成验证。",
-      "url": "https://engineering.fb.com/2026/08/24/networking-traffic/metaroce-rdma-transport-ai-ethernet/",
-      "author": "Meta",
-      "source": "Meta 工程博客",
-      "source_date": "2026-08-24",
-      "image": "https://engineering.fb.com/wp-content/uploads/2026/08/MetaRoCE-HERO-final.png",
-      "domain": "infra",
+      "title": "pg_statviz 1.2 支持 PostgreSQL 19 并新增锁阻塞分析",
+      "summary": "pg_statviz 是一组轻量扩展与工具，用来采集和可视化 PostgreSQL 内部统计的时序数据。1.2 版赶在 PostgreSQL 19 beta 期间发布，开始采集 pg_stat_wal 新增的 wal_fpi_bytes 计数器，并把 PG18/19 的 I/O worker 与 autovacuum 评分设置写进快照配置。新增的阻塞锁分析模块基于 pg_blocking_pids()，每次快照记录被阻塞与正在阻塞的会话数。",
+      "url": "https://github.com/vyruss/pg_statviz/releases/tag/v1.2",
+      "author": "pg_statviz 项目组",
+      "source": "GitHub",
+      "source_date": "2026-08-25",
+      "image": "https://opengraph.githubassets.com/647c20841340be739702795b986d24830d6e48aa8d0a0e4b49df2e60bbbcfa30/vyruss/pg_statviz/releases/tag/v1.2",
+      "domain": "pg",
       "tags": [
-        "RDMA",
-        "以太网",
-        "OCP"
+        "扩展",
+        "监控",
+        "PG19"
       ],
       "position": 4
     },
     {
       "tier": 1,
-      "title": "EKS 每个集群可关联最多 10 个外部 OIDC 提供方",
-      "summary": "真实组织通常同时存在员工、承包商、合作伙伴和 CI 四类身份源，为了迁就单一 IdP 而拼装 broker 或手工同步身份，往往让撤销、claim 变换和审计更脆弱。AWS 现在允许每个 EKS 集群关联最多 10 个外部 OIDC provider，各自独立配置管理，并与既有的 IAM 认证并存，配置路径仍是控制台或 AssociateIdentityProviderConfig。落地前应先统一 issuer、audience、group 与 subject 映射、RBAC 最小权限、短 token、审计和离职撤销，并把每个 IdP 当作独立的可用性边界。",
-      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-eks-multiple-oidc-providers",
-      "author": "AWS",
-      "source": "AWS 公告",
-      "source_date": "2026-08-24",
-      "image": "",
-      "domain": "cloud",
-      "tags": [
-        "EKS",
-        "OIDC",
-        "身份"
-      ],
-      "position": 5
-    },
-    {
-      "tier": 1,
-      "title": "seL4 在 AArch64 上完成机密性证明",
-      "summary": "在 functional correctness 与 integrity 之外，confidentiality 是高保证隔离缺不得的一环。Proofcraft 宣布已为 AArch64 版 seL4 完成机密性证明，在公告列明的假设下给出数学结论：非关键应用无法未经授权读取关键应用的信息。补齐这一项之后，AArch64 的安全证明栈可以支撑更完整的隔离论证。需要注意证明的边界只到 kernel enforcement，启动链、硬件、DMA、设备驱动、用户态组件和运维流程的保证仍要逐层补齐。",
-      "url": "https://proofcraft.systems/news-2026/#2026-08-21",
-      "author": "Proofcraft",
-      "source": "Proofcraft",
-      "source_date": "2026-08-21",
-      "image": "https://proofcraft.systems/proofcraft.png",
-      "domain": "infra",
-      "tags": [
-        "形式化验证",
-        "seL4",
-        "隔离"
-      ],
-      "position": 6
-    },
-    {
-      "tier": 2,
-      "title": "pg_statviz 1.2 支持 PG19 并新增锁阻塞分析",
-      "summary": "兼容 13 到 19，新增 wal_fpi_bytes 采集与基于 pg_blocking_pids() 的锁阻塞统计。",
-      "url": "https://www.postgresql.org/about/news/pg_statviz-12-released-with-postgresql-19-support-and-new-features-3369/",
-      "author": "",
-      "source": "PostgreSQL 新闻",
+      "title": "depesz 实测正则扩展 pg_tre 与 pg_re2",
+      "summary": "Hubert Lubaczewski 用 explain.depesz.com 的 162 万行、合计 33 GB 计划文本实测两个正则扩展。基线并行顺序扫描约 41 秒，pg_trgm 索引把同一查询压到 1.6 秒。pg_tre 建索引花了 7 小时 15 分，索引本身占 21 GB；pg_re2 用 @~ 操作符查同一模式只要 0.96 秒，明显快过 trigram，换成复杂正则也只用约一半时间，代价是 re2 库砍掉了后行断言这类写法。",
+      "url": "https://www.depesz.com/2026/08/25/new-things-for-regular-expressions-in-postgresql-pg_tre-and-pg_re2/",
+      "author": "Hubert Lubaczewski",
+      "source": "select * from depesz",
       "source_date": "2026-08-25",
       "image": "",
       "domain": "pg",
       "tags": [
-        "监控",
+        "正则",
+        "索引",
         "扩展"
       ],
-      "position": 7
+      "position": 5
     },
     {
       "tier": 2,
@@ -134,7 +101,7 @@
         "Aurora",
         "版本"
       ],
-      "position": 8
+      "position": 6
     },
     {
       "tier": 2,
@@ -150,7 +117,7 @@
         "CLI",
         "自动化"
       ],
-      "position": 9
+      "position": 7
     },
     {
       "tier": 2,
@@ -166,23 +133,7 @@
         "隔离级别",
         "v19"
       ],
-      "position": 10
-    },
-    {
-      "tier": 2,
-      "title": "逻辑复制可能选中 CIC 失败残留的无效索引",
-      "summary": "遍历索引时未检查 indisvalid，并发建索引失败留下的残留会让更新或删除静默丢失。",
-      "url": "https://www.postgresql.org/message-id/vbtpH4G9Wp-_dTwkiibz4rlNcZmxAeac7GZo252tKVGSOlYKcgbBw0bKUu_6F06C-iIxqA2WaVPjg8ogd_v6od9dIbzvLZ82VnLrJAPBngQ=@proton.me",
-      "author": "",
-      "source": "pgsql-hackers",
-      "source_date": "2026-08-25",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "逻辑复制",
-        "索引"
-      ],
-      "position": 11
+      "position": 8
     },
     {
       "tier": 2,
@@ -198,7 +149,7 @@
         "VACUUM",
         "冻结"
       ],
-      "position": 12
+      "position": 9
     },
     {
       "tier": 2,
@@ -214,7 +165,123 @@
         "VACUUM",
         "监控"
       ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "逻辑解码可能把已提交事务的元组误判为无效",
+      "summary": "WAL 里已记录提交的事务可能还没更新 CLOG，补丁保证返回快照前提交判定结果正确，并加了进程本地缓存。",
+      "url": "https://www.postgresql.org/message-id/36316.1787678717@localhost",
+      "author": "Álvaro Herrera",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "快照"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "right() 传入 INT32_MIN 时返回整个字符串",
+      "summary": "-fwrapv 下对 PG_INT32_MIN 取反仍为负，修复改成截断到 PG_INT32_MAX，计划回移到所有受支持版本。",
+      "url": "https://www.postgresql.org/message-id/CAON2xHNnBz-AcPJgDmd5_39+8qR5AUKEZk4X3ZM-0zdsATn8kQ@mail.gmail.com",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "函数",
+        "溢出"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "按 XID 年龄让复制槽失效的补丁进入第 14 轮",
+      "summary": "Bertrand Drouvot 指出该机制可能连 pg_conflict_detection 保留槽一起失效，也会波及所有超龄的非活跃槽。",
+      "url": "https://www.postgresql.org/message-id/ao1LFb96ELYtONpC@bdtpg",
+      "author": "Bertrand Drouvot",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "VACUUM"
+      ],
       "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Shipyard 9 月 30 日停止 IPFS 工程与基础设施",
+      "summary": "Kubo、Helia、Boxo 与 ipfs.io、dweb.link、bootstrap 节点将失去专职维护，依赖方需确认接手主体。",
+      "url": "https://ipshipyard.com/blog/2026-the-end-of-ipfs-at-shipyard/",
+      "author": "Shipyard",
+      "source": "Shipyard",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "IPFS",
+        "维护",
+        "治理"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Meta 开源 MetaRoCE：面向大规模 GPU 的以太网 RDMA",
+      "summary": "协议规范、参考实现与一致性测试套件经 OCP 公开，fabric 侧只需要 ECN 和 ECMP。",
+      "url": "https://engineering.fb.com/2026/08/24/networking-traffic/metaroce-rdma-transport-ai-ethernet/",
+      "author": "Meta",
+      "source": "Meta 工程博客",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "RDMA",
+        "以太网",
+        "OCP"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "EKS 每个集群可关联最多 10 个外部 OIDC 提供方",
+      "summary": "各 provider 独立配置并与 IAM 认证并存，落地前要统一 issuer、audience 与 RBAC 映射。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-eks-multiple-oidc-providers/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-08-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "EKS",
+        "OIDC",
+        "身份"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "seL4 在 AArch64 上完成机密性证明",
+      "summary": "证明边界只到内核强制，启动链、硬件、DMA 与用户态组件仍要逐层补齐。",
+      "url": "https://proofcraft.systems/news-2026/#2026-08-21",
+      "author": "Proofcraft",
+      "source": "Proofcraft",
+      "source_date": "2026-08-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "形式化验证",
+        "seL4",
+        "隔离"
+      ],
+      "position": 17
     },
     {
       "tier": 2,
@@ -230,13 +297,13 @@
         "加速器",
         "互连"
       ],
-      "position": 14
+      "position": 18
     },
     {
       "tier": 2,
       "title": "SageMaker HyperPod 把 Ray 的训练与推理控制面托管起来",
       "summary": "含节点自愈、挂起作业检测、分层 checkpoint、配额抢占与 Ray Serve 的分层 KV cache。",
-      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-sagemaker-hyperpod-ray",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-sagemaker-hyperpod-ray/",
       "author": "",
       "source": "AWS 公告",
       "source_date": "2026-08-24",
@@ -246,13 +313,13 @@
         "Ray",
         "训练"
       ],
-      "position": 15
+      "position": 19
     },
     {
       "tier": 2,
       "title": "ECS 新增 AGENT_CONNECTIVITY 健康事件",
       "summary": "托管实例与 Fargate 会自动排空任务并替换容量，ECS on EC2 则由事件驱动用户自己的流程。",
-      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-ecs-agent-connectivity-health",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/amazon-ecs-agent-connectivity-health/",
       "author": "",
       "source": "AWS 公告",
       "source_date": "2026-08-24",
@@ -262,7 +329,7 @@
         "ECS",
         "健康检查"
       ],
-      "position": 16
+      "position": 20
     },
     {
       "tier": 2,
@@ -278,7 +345,7 @@
         "agent",
         "评测"
       ],
-      "position": 17
+      "position": 21
     },
     {
       "tier": 3,
@@ -293,7 +360,68 @@
       "tags": [
         "企业"
       ],
-      "position": 18
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：三个该开的日志参数",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-logcheckpoints-logautovacuumminduration-and-logtempfiles/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置",
+        "日志"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Cybertec 谈 Kubernetes 上 PostgreSQL 的运维",
+      "summary": "",
+      "url": "https://www.cybertec-postgresql.com/en/day-to-day-postgresql-on-kubernetes-resize-scale-and-upgrade/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "什么都改不了的时候还能怎么优化查询",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/08/25/how-to-optimize-when-you-cant-do-anything/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 第 33 周贡献汇总发布",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/93/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 26
     },
     {
       "tier": 3,
@@ -308,7 +436,7 @@
       "tags": [
         "共享内存"
       ],
-      "position": 19
+      "position": 27
     },
     {
       "tier": 3,
@@ -323,7 +451,7 @@
       "tags": [
         "TLS"
       ],
-      "position": 20
+      "position": 28
     },
     {
       "tier": 3,
@@ -338,7 +466,7 @@
       "tags": [
         "复制"
       ],
-      "position": 21
+      "position": 29
     },
     {
       "tier": 3,
@@ -353,7 +481,7 @@
       "tags": [
         "分区"
       ],
-      "position": 22
+      "position": 30
     },
     {
       "tier": 3,
@@ -368,13 +496,52 @@
       "tags": [
         "共享内存"
       ],
-      "position": 23
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "并发 DROP TABLE 触发订阅关系断言，改用 elog 报错",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+tVHCBzxnjwqyD1YsebT5FBPbYqcmc83cu=SQQVrVvbA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "有人提议给 PostgreSQL 源码树加上 Nix flake",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/7ee22a5d-3776-49d5-8309-98097ffb88b1@app.fastmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁改用 elog 而非 Assert 防错",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxF8JPw_7uNN8Eb9p-E-BivAk_ZLXReRWM7arVqrhPT=nQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 34
     },
     {
       "tier": 3,
       "title": "SageMaker MLflow 支持客户自管 KMS 密钥",
       "summary": "",
-      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/sagemaker-mlflow-custom-keys",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/08/sagemaker-mlflow-custom-keys/",
       "author": "",
       "source": "",
       "source_date": "2026-08-24",
@@ -383,7 +550,7 @@
       "tags": [
         "加密"
       ],
-      "position": 24
+      "position": 35
     },
     {
       "tier": 3,
@@ -398,7 +565,7 @@
       "tags": [
         "Bedrock"
       ],
-      "position": 25
+      "position": 36
     },
     {
       "tier": 3,
@@ -413,7 +580,7 @@
       "tags": [
         "容器"
       ],
-      "position": 26
+      "position": 37
     },
     {
       "tier": 3,
@@ -428,7 +595,7 @@
       "tags": [
         "消息队列"
       ],
-      "position": 27
+      "position": 38
     }
   ]
 }

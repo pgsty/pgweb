@@ -1,0 +1,565 @@
+{
+  "date": "2026-05-07",
+  "origin": "chronicle 2026-05-07: pgsty-daily, pgnexus #139, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Neon 关掉全页写入让写入最多快五倍",
+      "summary": "Neon 关掉了 PostgreSQL 的全页写入，写入密集的负载最多快五倍。全页写入是检查点之后把整页写进 WAL 的持久化手段，用来防住页面撕裂；Neon 自研的存储引擎已经从别处保证了这一点，这道保险就成了冗余，可以安全关掉。直接效果是 WAL 量明显下降、写入吞吐上升，数据完整性不受影响。前提只对自带存储层的服务成立，自建实例不能照搬。",
+      "url": "https://neon.com/blog/turning-off-fpw-for-faster-writes",
+      "author": "David Wein",
+      "source": "Neon 博客",
+      "source_date": "2026-05-07",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/faster-writes-by-removing-full-page-writes/Disabling%20FPW%20on%20Neon.jpg",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "全页写入",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "64 位事务 ID 难在 8 字节之外的地方",
+      "summary": "把事务 ID 从 32 位加宽到 64 位的请求几乎每月都有，Christophe Pettus 解释为什么还没做。障碍有四条：xmin 与 xmax 各加 8 字节，窄行的堆元组膨胀约四分之一；磁盘格式变化让 pg_upgrade 无法硬链接，大集群的分钟级停机会变成数天；云服务的一键升级正是靠 pg_upgrade 的速度；改动还波及快照、SLRU、扩展 ABI 与复制协议。当前的提案走 epoch 路线，页上仍存 32 位。",
+      "url": "https://thebuild.com/blog/eight-bytes-is-the-easy-part/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-07",
+      "image": "https://thebuild.com/media/media/e82f3acacdce4738927a99e96c816d02.png",
+      "domain": "pg",
+      "tags": [
+        "事务 ID",
+        "回卷",
+        "升级"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 兼容 OpenSSL 4.0.0 的补丁在评审",
+      "summary": "Daniel Gustafsson 写了让 PostgreSQL 兼容 OpenSSL 4.0.0 的补丁，消掉 libpq 与 sslinfo 的编译告警，覆盖 1.1.1 到 4.0.0 与 LibreSSL。Cary Huang 测试确认无告警，起初 SSL 测试失败，因为新版把证书吊销的报错从 ssl alert 改成了 tls alert。回迁范围仍有分歧：Tom Lane 主张放到下次发布之后，Michael Paquier 担心逼稳定分支升级。",
+      "url": "https://www.postgresql.org/message-id/65C5DC15-DE27-4D36-8AEE-A854C23B3834@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "OpenSSL",
+        "兼容性",
+        "回迁"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "跨会话访问临时表的缺陷定位到具体提交",
+      "summary": "跨会话访问临时表的缺陷定位到提交 b7b0f3f27241：某些代码路径绕过了原有的保护检查。Alexander Korotkov 备好两个补丁，0001 是完整测试，0002 是修复。缓冲区管理器本来就无法安全处理别的会话的临时表，只有 DROP TABLE 是显式例外。Jim Jones 指出 14 到 16 的行为并不一致，空临时表可以无报错访问。Tom Lane 要求推迟到本轮发布之后。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdsS49OTo2Af2GeoKJD-1Dy-hOzbje_AWOa_bw5Q9kEi7w@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "缺陷"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Patroni 只解决了高可用的一半",
+      "summary": "Umair Shahid 说 Patroni 是选主引擎，外面还得配四层才算高可用。最常见的漏洞在路由：应用通过主机名、IP、连接池和驱动访问数据库，Patroni 提升新主库时这些都不会自己更新。另外三处是旧主库回归要靠 use_pg_rewind 之类的自动化、复制槽不监控会让备库漂移并撑爆主库磁盘、连接池缓存和重试逻辑感知不到拓扑变化。他建议在生产负载下做不打招呼的故障演练。",
+      "url": "https://stormatics.tech/blogs/patroni-leader-election-and-postgresql-high-availability",
+      "author": "Umair Shahid",
+      "source": "Stormatics 博客",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "Patroni",
+        "故障演练"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 控制平面把周边服务纳入声明式管理",
+      "summary": "pgEdge 的控制平面新增 Supporting Services，把数据库和周边服务当成一个声明式单元来管。首批三种服务进入 beta：接 AI agent 的 Postgres MCP Server；把数据库当知识库的 RAG Server；以及从模式自动生成 REST 接口的 PostgREST。凭据由控制平面自动下发并限定范围。同时预览 systemd 支持，裸机部署不再必须用 Docker Swarm，先支持 RHEL。",
+      "url": "https://www.pgedge.com/blog/pgedge-control-plane-adds-supporting-services-and-a-preview-of-systemd-support",
+      "author": "Antony Pegg",
+      "source": "pgEdge 博客",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "控制平面",
+        "MCP",
+        "systemd"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "SQLite 被美国国会图书馆列为推荐存储格式",
+      "summary": "SQLite 被美国国会图书馆列入推荐的存储格式清单，HN 上的讨论集中在跨平台、格式稳定和长期归档价值。SQLite 早就不只是嵌入式数据库，它同时是大量应用的事实文件格式；被推荐为保存格式，等于给直接交付 SQLite 文件这种做法背书。做数据导出、分析包、离线产品或长期存档的团队可以把它放到 CSV、JSON 和 parquet 旁边一起评估。",
+      "url": "https://sqlite.org/locrsf.html",
+      "author": "SQLite",
+      "source": "sqlite.org",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "归档",
+        "格式"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 用负信任锚绕开 .de 的 DNSSEC 故障",
+      "summary": "接着 .de 顶级域的事故，Cloudflare 补上了解析器一侧的处置细节：观察到 .de 的 DNSSEC 签名有问题后，为 1.1.1.1 对 .de 临时挂上负信任锚，让用户在 DENIC 修复期间仍能解析部分域名。一个顶级域的签名错误就能让大量正常站点在做验证的解析器前不可达。依赖 DNSSEC 的团队不该只盯权威 DNS，还要从多个验证解析器的角度监测 SERVFAIL。",
+      "url": "https://blog.cloudflare.com/de-tld-outage-dnssec/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-05-06",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW494NSGDYKPNQADF6D8KVZ8.png",
+      "domain": "infra",
+      "tags": [
+        "DNSSEC",
+        "故障",
+        "解析器"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 1,
+      "title": "Kubernetes v1.36 把 list 与 watch 做成服务端分片",
+      "summary": "Kubernetes v1.36 引入服务端分片的 list 和 watch，把大列表与 watch 流量拆开处理，缓解单次请求或单个 watcher 造成的压力。控制面的扩展瓶颈常来自大量 controller 与客户端对同一批资源做 list 和 watch，服务端分片会改变大集群启动、重连和 informer 同步时的压力模型。升级前要重点测自研 controller 与 informer 的行为。",
+      "url": "https://kubernetes.io/blog/2026/05/06/kubernetes-v1-36-server-side-sharded-list-and-watch/",
+      "author": "Kubernetes",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "控制面",
+        "扩展性"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "procsignal 启动死锁的修复要等小版本发布之后",
+      "summary": "Alexander Lakhin 在删库和表空间操作等场景复现，并发现一年多前的构建农场失败与之同源。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoA6EVJ6eNq6xSgHffu9R-kHFhas2BO3jt9JjpTYLi3+Jg@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "死锁",
+        "回迁"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "发布报错带模式名的改动拆成两个补丁",
+      "summary": "新增的 EXCEPT 子句报错进 19，旧有报错留到 20，函数也改名为更通用的形式。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm18+5U6m+w4ms4E7ndFxVF032d=c1dT3mRPtdUd55mScQ@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "报错信息"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表补丁修好编译问题与所有权转移",
+      "summary": "v31 修了未初始化变量和断言失败，订阅换主时冲突表自动转移，模式硬编码仍待处理。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-tnXOEnfZULsuVPUb1Hg_a9kL_LJXzEaXEYAWNPjrDRqg@mail.gmail.com",
+      "author": "Vignesh C",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突处理"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别再追加十个增量补丁",
+      "summary": "DEFINE 遍历器统一为拒绝 volatile 函数、接受 stable 与 immutable，并补了空匹配的 EXPLAIN 测试。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zAf-vCJvnTuiFF_85BHozgBC5aGLoNOUSuSonoXZhkEnA@mail.gmail.com",
+      "author": "Henson Choi",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行模式识别"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "32 位 x86 的原子操作代码可能被整体移除",
+      "summary": "Andres Freund 主张与其修拼写错误不如删掉，改动只进 19 及以后，不回迁旧分支。",
+      "url": "https://www.postgresql.org/message-id/A9C99FA5-0D41-4530-B11A-0F12CFA5B3C0@yesql.se",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers 邮件列表",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "原子操作",
+        "移植性"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "五个信号说明问题出在架构而不是调优",
+      "summary": "包括优化收效周期性重来、低更新表仍频繁自动清理、查询随数据量线性变慢、存储成本超过数据价值。",
+      "url": "https://www.tigerdata.com/blog/five-warning-signs-your-database-needs-different-architecture",
+      "author": "Matty Stratton",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "架构",
+        "性能"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Fujitsu 讲自己二十多年的 PostgreSQL 贡献",
+      "summary": "工程师长期做代码开发与评审，近年集中在逻辑复制、冲突解决和零停机运维方向。",
+      "url": "https://www.postgresql.fastware.com/blog/how-fujitsu-helps-drive-postgresql-forward-with-code-level-contributions-and-features",
+      "author": "Marcelo Hauschild",
+      "source": "Fujitsu Fastware 博客",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "贡献"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "AWS 把托管的 MCP Server 做到正式可用",
+      "summary": "MCP 从本机工具协议变成托管控制面，接入 IAM 与审计后才谈得上让 agent 动云资源。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-mcp-server/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "MCP",
+        "AI agent",
+        "权限"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "Agent Toolkit for AWS 把操作流程打包成技能",
+      "summary": "首批四十多个技能覆盖 IaC、存储、分析、无服务器与容器，后续扩到数据库、网络与 IAM。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/agent-toolkit/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AI agent",
+        "运维"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes 声明式验证进入 GA",
+      "summary": "内置 API 验证改为声明式，减少手写校验带来的行为差异，自研 API 的团队可以跟进。",
+      "url": "https://kubernetes.io/blog/2026/05/05/kubernetes-v1-36-declarative-validation-ga/",
+      "author": "Kubernetes",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "API"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 2,
+      "title": "CNCF 接纳 Microcks 为孵化项目",
+      "summary": "它做 API mock、测试与服务虚拟化，覆盖 REST、GraphQL、gRPC 与 AsyncAPI。",
+      "url": "https://www.cncf.io/blog/2026/05/07/microcks-becomes-a-cncf-incubating-project/",
+      "author": "CNCF",
+      "source": "CNCF",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "API",
+        "测试"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 2,
+      "title": "Proton Mail 开放抗量子加密密钥",
+      "summary": "该能力面向所有套餐开放，但历史邮件不会因此自动获得同等保护。",
+      "url": "https://proton.me/blog/introducing-post-quantum-encryption",
+      "author": "Proton",
+      "source": "Proton 博客",
+      "source_date": "2026-05-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "后量子",
+        "加密"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "属性图报错的拼写错误已修正",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/459ea164-aa38-43dd-8c93-dbb1063d20b5@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "属性图"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "s_lock.h 清掉过时注释与死代码",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/afz5FHWr6rOB7bsL@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "自旋锁"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解系列讲 autovacuum 的频率与成本参数",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuumnaptime-autovacuumvacuumcostdelay-autovacuumvacuumcostlimit/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "PG DATA 2026 最期待的演讲清单收尾",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/05/06/pg-data-2026-the-talks-i-am-most-excited-about-part-4-the-last-one/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 说维护者并不是所有者",
+      "summary": "",
+      "url": "https://thebuild.com/blog/the-maintainer-is-not-the-owner/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开源"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "SereneUI 做了个 VS Code 风格的 Postgres 界面",
+      "summary": "",
+      "url": "https://github.com/serenedb/serenedb/tree/main/serene-ui",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "YugabyteDB 推出面向多智能体的数据底座 Meko",
+      "summary": "",
+      "url": "https://www.yugabyte.com/blog/meko-data-infrastructure-for-agents-that-work-and-learn-together/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Yugabyte",
+        "AI agent"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Vibeguard 用静态分析检查 AI 生成的 SQL",
+      "summary": "",
+      "url": "https://github.com/MuddySheep/vibeguard-local",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "AI"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Valkey 用 8.0.9 顶替被撤回的 8.0.8",
+      "summary": "",
+      "url": "https://github.com/valkey-io/valkey/releases/tag/8.0.9",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Valkey"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Amazon Neptune 支持从 CloudShell 一键连接",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-neptune-cloudshell/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Neptune"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "EC2 P6-B300 实例进入弗吉尼亚北部区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-ec2-p6-b300-us-east/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "GPU",
+        "AWS"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "AWS Marketplace 采购流程可以编程调用",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-marketplace-agreements-api/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "采购",
+        "治理"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "Bedrock AgentCore 的长期记忆支持元数据过滤",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/agentcore-longterm-memory-metadata/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AI agent",
+        "记忆"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "全职做开源的商业化讨论继续发酵",
+      "summary": "",
+      "url": "https://jdx.dev/posts/2026-04-17-going-full-time-on-open-source/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源"
+      ],
+      "position": 35
+    }
+  ]
+}

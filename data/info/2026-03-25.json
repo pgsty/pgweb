@@ -1,0 +1,241 @@
+{
+  "date": "2026-03-25",
+  "origin": "chronicle 2026-03-25：pgnexus #93、planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "海事 AIS 平台从 MongoDB 迁到 TimescaleDB",
+      "summary": "VesselAPI 的海事 AIS 追踪平台每小时要吞下 70 万条船舶位置报告，MongoDB 在时序数据与空间查询上撑不住，团队把它迁到了 TimescaleDB。hypertable 按 1 小时自动切分 chunk，数据保留策略与压缩由此落地；空间一侧引入 H3 六边形索引，先给 PostGIS 查询做预过滤，候选行数从数百万降到数千。迁移过程中还顺带清理掉历史模型里积攒的 240 个废弃标签。",
+      "url": "https://www.tigerdata.com/blog/hexagons-hypertables-240-dead-tags-migrating-maritime-data-platform-timescaledb",
+      "author": "VesselAPI",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-25",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/vesselapi-tiger-date.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "时序",
+        "PostGIS"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "从触发器到训练：配电网设计的三层自动化",
+      "summary": "Rhys Stewart 记录了 Auchindown 把配电网设计逐层自动化的过程。第 0 层用 PostgreSQL 触发器和视图生成电杆、变压器、跨接等单个构件，把复杂表结构挡在工程师视线之外，并用 st_lineinterpolatepoint 按规范间距自动布杆。第 1 层是一个约 200 行的函数，从一个多边形出发生成整条支线，含电杆、线路、变压器与接户设施。第 2 层用既有电网数据训练模型，处理跨越数百个建筑轮廓的复杂布局。",
+      "url": "https://auchindown.com/blog/2026/from-triggers-to-training",
+      "author": "Rhys Stewart",
+      "source": "Auchindown 博客",
+      "source_date": "2026-03-25",
+      "image": "https://auchindown.com/blog/images/triggers-to-training-top.webp",
+      "domain": "pg",
+      "tags": [
+        "PostGIS",
+        "自动化",
+        "机器学习"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "PGDG RPM 仓库新增 openSUSE Leap 16.0 支持",
+      "summary": "Devrim Gündüz 说明这次连 extras 仓库在内的全部软件包都已就位，问题反馈走 pgdg-rpms 的 issue。",
+      "url": "https://people.planetpostgresql.org/devrim/index.php?%2Farchives%2F124-Announcing-openSUSE-Leap-16.0-Support-in-the-PostgreSQL-RPM-Repository.html=",
+      "author": "Devrim Gündüz",
+      "source": "Planet PostgreSQL",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "打包",
+        "RPM"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "缓冲区锁定的提示位与校验和改造持续推进",
+      "summary": "Andres Freund 已推送其中数个补丁，Melanie Plageman 指出注释写错和残留变量等问题。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Z=xrBWhAB5wRG8x-gnjNa7ZnW-sSsEbBfR1C8gwuTD8g@mail.gmail.com",
+      "author": "Andres Freund",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "异步 IO"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "timestamptz_date 的软错误检查一直返回 false",
+      "summary": "参数误传成 fcinfo->args，溢出时会给出错误日期而不是 NULL，Peter Eisentraut 已提交单行修复。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqFcyVFtUes6MbCW9Ek8=Fi5Mr-1b5v37a8fary=UfA4kA@mail.gmail.com",
+      "author": "Peter Eisentraut",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "类型",
+        "缺陷"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "pg_buffercache 拟按关系提供汇总统计",
+      "summary": "Lukas Fittl 的新函数按 relfilenode 与 fork 聚合，比查完整视图快约 7 倍，便于回答某表缓存了多少。",
+      "url": "https://www.postgresql.org/message-id/CAExHW5uqQuPNEjj2ondemCYdtFHExm=jvw-4naPn7gdMmkhrgw@mail.gmail.com",
+      "author": "Lukas Fittl",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "缓冲区"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "wal_sender_shutdown_timeout 失效致主库关不掉",
+      "summary": "Fujii Masao 在带槽同步的复杂配置中复现，即使超时设为 1 主库仍卡住，Vitaly Davydov 已找到根因。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHZnhodg7+xQZQOoRhX+emPUoPPgKZm7fOYOH3DpxxC8g@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "关停"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "Prairie PUG 放出 3 月 17 日聚会录像",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/03/25/prairie-pug-march-17-recording/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "读取流不再同步等待已在进行的 IO",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/rk56uxuqxi3udzu5oqc7qft5u7nncau5d2avlbui6obd7ybols@wlu2euvawj7t",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "异步 IO"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "REPACK CONCURRENTLY 在事务块内的报错待改",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/23099.1774429249@localhost",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "锁统计的隔离测试在 Windows 上被临时移除",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/acNTR1lLHwQJ0o+P@ip-10-97-1-34.eu-west-3.compute.internal",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "table_beginscan 增加 flags 参数引发讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/2be31f17-5405-4de9-8d73-90ebc322f7d8@vondra.me",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "表访问方法"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "pg_waldump 修掉描述符泄漏与哈希条目移动",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/374225.1774459521@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "通用计划的初始分区裁剪补丁进入第 8 版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqFx0kmGqSDcLrE37KkHS2T9O1NoBitZT4mA4yJBBt_QjA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "计划缓存"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "rdtsc 计时系列的第一个补丁已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANWCAZaPDVfO-f_Ejk_fJmSWU64ob8bK5uo9bUz_9pAuzgSVRg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN"
+      ],
+      "position": 15
+    }
+  ]
+}

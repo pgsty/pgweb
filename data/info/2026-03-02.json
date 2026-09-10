@@ -1,0 +1,126 @@
+{
+  "date": "2026-03-02",
+  "origin": "chronicle 2026-03-01：news 2、pgnexus #68；chronicle 2026-03-02：pgnexus #69",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgdsat 2.0 新增 13 项 PostgreSQL 17 安全检查",
+      "summary": "pgdsat 是 HexaCluster 维护的 PostgreSQL 安全评估工具，一次运行对集群执行约 90 项检查，覆盖 CIS 合规基准的全部建议。2.0 版跟进了 CIS 基准针对 PostgreSQL 17 的最新变化，新增 13 项检查，并修复了若干问题。检查以自动化方式进行，输出的报告可以用来核对企业内部制定的安全策略，示例报告与完整变更列表都放在项目仓库。已经建立基线的团队升级后值得重跑一次，把新增检查项补进结果。",
+      "url": "https://github.com/hexacluster/pgdsat/blob/main/ChangeLog",
+      "author": "HexaCluster",
+      "source": "HexaCluster",
+      "source_date": "2026-03-01",
+      "image": "https://opengraph.githubassets.com/ed50e0e4f86c6b0f2da2fd6a7ef661626c29d6190e394693916b509f067baa53/HexaCluster/pgdsat",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "工具",
+        "CIS"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "印度封锁令中断 Supabase 平台访问",
+      "summary": "Supabase 是基于 PostgreSQL 的后端服务平台，提供数据库托管、身份认证与实时订阅，印度是它最大的市场之一。印度政府发布封锁令后，当地用户访问该平台出现问题，依赖其后端即服务产品的开发者和企业受到影响。报道没有说明封锁的具体依据和恢复时间，平台方也未给出区域性的迁移方案。把托管数据库放在单一境外服务上的团队可以借此检查一遍数据导出通道和自建回退路径，监管准入和可用性设计是两类不同的风险。",
+      "url": "https://techcrunch.com/2026/02/27/india-disrupts-access-to-popular-developer-platform-supabase-with-blocking-order/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-02-27",
+      "image": "https://techcrunch.com/wp-content/uploads/2026/02/supabase.jpg?resize=1200%2C800",
+      "domain": "pg",
+      "tags": [
+        "Supabase",
+        "合规",
+        "云服务"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "索引预取补丁的基准测试整体向好",
+      "summary": "Tomas Vondra 的单客户端与多客户端测试普遍改善，只有 io_method=worker 且距离限制为 1 的极端配置出现四例回归。",
+      "url": "https://www.postgresql.org/message-id/c96ba898-02fb-4756-a1c7-0ddb08159804@vondra.me",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "元组变形加速补丁改用 size_t 消除溢出隐患",
+      "summary": "David Rowley 修掉了数组越界写入，属性编号从整型改为 size_t 之后 gcc 生成的代码明显更快。",
+      "url": "https://www.postgresql.org/message-id/CAApHDvpdBG-yzEbpy6qxVOcS3FtCt62Z+87G=tww5Fg+Ae0jBQ@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "POSETTE 2026 公布 44 场演讲的完整日程",
+      "summary": "第五届免费线上活动 6 月 16 至 18 日举行，50 位演讲者的 44 场演讲分成四个直播场次。",
+      "url": "https://posetteconf.com/2026/schedule/",
+      "author": "",
+      "source": "Microsoft Azure",
+      "source_date": "2026-03-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 3,
+      "title": "EXCEPT TABLE 发布过滤补丁进入第 53 版评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm32g7c323M4mgZ5Wn8sbYp_=uQ6G_u0f9qfBCzuHP8jgQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "pytest 测试框架提案的两个补丁改为概念验证",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DGRSKGSV9XXA.X9YK4O5DDO8W@jeltef.nl",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "ANALYZE 扩展统计的部分释放写法引发讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aaTGSLZEbwhM_mmA@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 8
+    }
+  ]
+}

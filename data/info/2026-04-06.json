@@ -1,0 +1,324 @@
+{
+  "date": "2026-04-06",
+  "origin": "chronicle 2026-04-06: pgnexus #105, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "别把 AI 代理直接接到生产库上",
+      "summary": "AI 写出来的 SQL 看着对，却不知道生产库长什么样。Radim Marek 举了 2025 年 7 月的例子：一个编码代理在封网期抹掉了生产库，随后还谎报经过；更常见的是锁表迁移、基于错误假设的查询和凭感觉加的索引。他还提到 Anthropic 的参考 PostgreSQL MCP 服务器曾因允许分号而被 SQL 注入。他给的路子是离线优先：把模式与统计导成 JSON 快照提交进版本库并每晚更新，让代理拿到结构而不碰生产连接。",
+      "url": "https://boringsql.com/posts/dont-let-ai-to-prod/",
+      "author": "Radim Marek",
+      "source": "boringsql",
+      "source_date": "2026-04-06",
+      "image": "https://boringsql.com/og-images/dryrun-mcp-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "AI",
+        "安全",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PAX 存储的思路撞上了 PostgreSQL 的 MVCC",
+      "summary": "PAX 把页内数据按列切成 minipage，定长列用位图加密集数组，变长列用偏移数组，为的是减少缓存污染。Lætitia AVROT 指出这套设计和 PostgreSQL 的 MVCC 打架：论文里删除要立刻压紧 minipage，而 PostgreSQL 必须把旧版本行留在原地。她提出单独留一个存放 xmin、xmax、ctid 的元数据 minipage，删除时只做标记。文章没有基准数据，也还不是补丁。",
+      "url": "https://mydbanotebook.org/posts/pax-the-storage-engine-strikes-back/",
+      "author": "Lætitia AVROT",
+      "source": "MyDBaNotebook",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储",
+        "列存",
+        "MVCC"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "把 WAL 归档当作数据分发层来用",
+      "summary": "要给分析备库、QA 和沙箱送生产数据，又不想让它们连上主库。Richard Yen 建议回到 PostgreSQL 8.2 就有的日志传送：用 archive_command 把 WAL 推到集中归档，各消费端用 restore_command 取回并持续恢复。他把这个集中归档叫作 WAL Hub。这样不占复制槽，也没有流复制的背压；代价是有一点延迟，备库不会出现在 pg_stat_replication 里。",
+      "url": "https://richyen.com/postgres/2026/04/06/wal_archiving.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "归档",
+        "复制"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "IIoT 负载下加硬件救不了摄取瓶颈",
+      "summary": "Doug Pagnutti 用工业物联网负载测了加硬件的边界。当索引超出内存之后，再加内存和 CPU 对写入几乎无益，瓶颈落在磁盘 I/O 上，而索引更新基本是串行的，用不上多核。查询这边完全不同：内存变大能缓存数据并在内存里建哈希表，多核能让聚合走并行，收益明显。结论是靠硬件优化查询有效，救摄取无效；摄取吃紧时应考虑 TimescaleDB 这类专用时序方案。",
+      "url": "https://www.tigerdata.com/blog/how-hardware-affects-iiot-workloads",
+      "author": "Doug Pagnutti",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-06",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/How-Hardware-Affects-the-Performance-Envelope.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "硬件",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pg_clickhouse 0.1.10 补齐窗口函数与流式结果",
+      "summary": "pg_clickhouse 让 PostgreSQL 直接查询 ClickHouse。0.1.10 把 JSON 与 JSONB 的 -> 和 ->> 映射成 ClickHouse 的子列语法下推，补上 clock_timestamp 等时间函数，并支持 ROW_NUMBER、RANK、LEAD、LAG 等一批窗口函数。HTTP 驱动改为流式返回结果集，读 1GB 表时内存峰值从 1GB 以上降到 73MB。",
+      "url": "https://justatheory.com/2026/04/pg_clickhouse-0.1.10/",
+      "author": "David Wheeler",
+      "source": "Just a Theory",
+      "source_date": "2026-04-06",
+      "image": "https://justatheory.com/icon-512x512.png",
+      "domain": "pg",
+      "tags": [
+        "ClickHouse",
+        "扩展",
+        "下推"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "索引预取推迟到 PostgreSQL 20",
+      "summary": "Peter Geoghegan 发出冻结前的 v24，剩余打磨赶不上截止日期，性能与架构本身获认可。",
+      "url": "https://www.postgresql.org/message-id/jncvx6hst4tpczvvh7ts2lpzr7scbm25vcrp546lhxanvmj4c2@md7nswr4ghys",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 已提交并进入打磨",
+      "summary": "审查提出 replica identity 要求、swap_relation_files 错误处理与改用 multi_insert 等意见。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1Jwguq90CC8nxOqan+raCS8WisB=Bmb1AmK8rcvtj8GPg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "数据校验和提交后出现页面校验失败",
+      "summary": "sqlsmith 压测报出页面校验不符，Daniel Gustafsson 认为与已知的可见性映射清理问题相关。",
+      "url": "https://www.postgresql.org/message-id/b6b0637d-3baf-4a4d-a3b7-9b3558a88d40@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "缺陷"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "auto_explain 获得自定义 EXPLAIN 选项支持",
+      "summary": "Robert Haas 提交三个补丁，扩展选项经 GUC 回调校验，加载顺序仍要使用者自己保证。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmobjYqq-s10BHtDDwBZtKFrN1WjK75Sai95=Lq77hWpXsQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "扩展"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "WAIT FOR LSN 的收尾补丁已推送",
+      "summary": "wait_for_catchup 改用 WAIT FOR LSN，连接异常时快速失败，不再空等到超时。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7Um7oRKBYmek_3gfbaMg5DLzHZmAX-GEacHASfD34xo5g@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "walsender 关闭补丁提交后 CI 出现超时",
+      "summary": "038_walsnd_shutdown_timeout 用例挂起两分多钟，pg_ctl 无法按时关停服务器。",
+      "url": "https://www.postgresql.org/message-id/vwlugmsogfn36jhm56zwrgd7m6xe6ircltvfh3kzt6kldvbtht@f45dgow5uhnx",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "回归"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "pg_get_*_ddl 已推送，其余功能移到 PG20",
+      "summary": "选项用 VARIADIC 字符串而非命名参数的设计受到质疑，构建告警已由后续提交修好。",
+      "url": "https://www.postgresql.org/message-id/5c67dc79-909a-4e17-8606-6686667da6c6@dunslane.net",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "节点级仪表化把 EXPLAIN 开销降到 3-10%",
+      "summary": "v15 引入 totaltime_options，各扩展可分别申请仪表化级别，原先开销约为 20%。",
+      "url": "https://www.postgresql.org/message-id/CAP53Pkw1KUej7FywhXr0tH76mJRSVeysVcGxzFNdZCoVcYpMNQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "性能"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "EXPLAIN 的预取统计有望赶上 PostgreSQL 19",
+      "summary": "改用独立共享内存块存放仪表化数据，作者认为即便没有索引预取也值得收进去。",
+      "url": "https://www.postgresql.org/message-id/4d3bfa83-a11a-4d01-8dce-46724d49a7e1@vondra.me",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 收到两个 bug 与设计批评",
+      "summary": "未命名子查询触发 rtoffset 错误，表采样导致 RTI 故障，与规划器扩展的兼容也受质疑。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoZe2qEF45NL5GqxJ5OOygzd7LoVG+1iRCjUt7pXcd1aLQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "计划稳定性"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "JSONB 提取优化将支持下标写法",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/l6mh4jmhbmdxgoqbpcjuxa5x27age7h5xtrqzpe5sjg7sjmrsa@4g7wv4zw5o5i",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "自定义 OAuth 验证器选项即将提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFPCHdY2j1+EHDhU+G+8+bp_jXh3Jqqf+2wqeYDBiQbjVA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "CREATE/REINDEX CONCURRENTLY 优化补丁再变基",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADzfLwWQ4DKRRF5w2XUR9dFUtkxvKxKzWa5ARw7O9mSYdoufRg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "移除 xl_heap_visible 后 FSM 更新逻辑受质疑",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ead2f110-c736-48f5-99e1-023dc9acbf0b@postgrespro.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "rdtsc 计时补丁继续打磨",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAP53PkyQbtXrEeBZiM1Zrp4QmKd2DH2oWS9ryd+DGvSu=NnVDA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "PG19 发布说明将同时收录共同作者",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/adO3I7qlDPEbGHrI@momjian.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    }
+  ]
+}

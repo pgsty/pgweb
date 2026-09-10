@@ -1,0 +1,346 @@
+{
+  "date": "2026-05-26",
+  "origin": "chronicle 2026-05-26: pgnexus #158, planet 12",
+  "items": [
+    {
+      "tier": 1,
+      "title": "提议在 PostgreSQL 20 中废弃 PQfn()",
+      "summary": "Nathan Bossart 提议废弃 PQfn()。这个函数 2003 年就被标为过时，2026 年又标为不安全，除 libpq 内部的大对象接口外没发现第三方直接使用。方案是让它无条件返回错误但保留符号。Debian 代码搜索显示多个语言绑定仍引用它，维护者同意废弃。难点是替换大对象操作依赖的内部实现：预备语句会遇到名称冲突和 DISCARD 中断，PQexecParams() 则测出约 41% 的性能下降。",
+      "url": "https://www.postgresql.org/message-id/ahXE28klgxIJXBLq@nathan",
+      "author": "Nathan Bossart",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "废弃",
+        "大对象"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "补丁修复 REPACK CONCURRENTLY 期间的 WAL 堆积",
+      "summary": "Zhijie Hou 在 PGConf.dev 听完 REPACK 的演讲后提交补丁，修复并发 repack 期间 WAL 文件不必要堆积的问题，演讲澄清了这种堆积属于非预期行为。Álvaro Herrera 承认这是一处疏漏，打算尽快审查并提交这个按 Chao Li 意见调整过注释的重构补丁。讨论中还提到要不要加 TAP 测试来验证操作期间 WAL 文件被正确清理，Herrera 认为略显多余，但对验证来说可能值得。",
+      "url": "https://www.postgresql.org/message-id/ahW7vUWvDDJdE4zU@alvherre.pgsql",
+      "author": "Zhijie Hou",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "WAL",
+        "补丁"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "数据校验和状态切换补丁暴露并发问题",
+      "summary": "Tomas Vondra 继续审查数据校验和状态变更补丁，发现几处并发问题。备库提升过程中状态从 inprogress-on 退回 off 时，已有后端没有通过 EmitProcSignalBarrier() 收到通知，新旧连接看到的状态因此不一致。测试 012 的不确定行为则来自校验和启动器与检查点进程之间的竞态，两者交错顺序不同，最终状态就不同。他做了个用 LWLock 防竞态的原型，但不确定是否正确。",
+      "url": "https://www.postgresql.org/message-id/f1281cf3-89a3-4936-9bc5-2a5a6291229f@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "并发",
+        "补丁"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "五种最容易踩坑的 PostgreSQL 锁行为",
+      "summary": "Shinya Kato 列了五种容易踩坑的锁行为。ALTER TABLE 申请 ACCESS EXCLUSIVE 时排在现有锁后面，后续 SELECT 又排在它后面，建议设 lock_timeout 并盯住空闲事务。INSERT 会对被引用的父行取 FOR KEY SHARE，两个会话反序加锁就死锁。防回卷的 autovacuum 不接受取消，VACUUM 末尾的截断阶段也会短暂拿 ACCESS EXCLUSIVE。",
+      "url": "https://dev.to/shinyakato_/5-postgresql-locking-behaviors-that-trip-people-up-4k7n",
+      "author": "Shinya Kato",
+      "source": "dev.to",
+      "source_date": "2026-05-26",
+      "image": "https://media2.dev.to/dynamic/image/width=1200,height=627,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Ffmm6pvzwxwh3vyg3lesw.png",
+      "domain": "pg",
+      "tags": [
+        "锁",
+        "死锁",
+        "VACUUM"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "向量索引怎么选取决于负载而不是算法",
+      "summary": "Hien Phan 把 PostgreSQL 的向量索引选择归结到四个约束：内存、召回率要求、写入频率和过滤条件的选择性，最优索引取决于负载而非算法优劣。文章从精确搜索讲到近似最近邻：内存够时用 HNSW，写入密集偏向 IVFFlat，数据集超出内存则考虑 DiskANN 一类做法；工具上覆盖 pgvector、pgvectorscale，以及把向量相似度与 BM25 关键词匹配结合的混合检索。作者强调真实查询往往带过滤和连接。",
+      "url": "https://www.tigerdata.com/blog/the-postgres-developers-guide-to-vector-index-tradeoffs",
+      "author": "Hien Phan",
+      "source": "TigerData 博客",
+      "source_date": "2026-05-26",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/05/thumbnail-blog-thumbnail-1280x720--5-.png",
+      "domain": "pg",
+      "tags": [
+        "向量",
+        "索引",
+        "pgvector"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "用 PL/pgSQL 给 EXPLAIN 输出做后处理",
+      "summary": "Andrei Lepikhov 写了一组 PL/pgSQL 函数给 EXPLAIN 的输出做后处理。出发点是原始输出塞了太多与平台和版本相关的细节：代价、内存分配和 worker 数量都会随硬件浮动，既让回归测试不稳定也让文档难读。pretty_explain_analyze() 直接执行查询并处理结果，内存值统一成 NN、worker 数变成 N，是否显示代价、宽度和循环次数由开关控制，默认全关。",
+      "url": "https://www.pgedge.com/blog/explain-prettier-or-post-processing-query-plans-in-postgres",
+      "author": "Andrei Lepikhov",
+      "source": "pgEdge 博客",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "执行计划",
+        "工具"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Christophe Pettus 评测 Google AlloyDB",
+      "summary": "AlloyDB 是 PostgreSQL 派生的查询引擎加自研分布式存储层，架构接近 Aurora，把 WAL 处理和持续清理放到存储层。特色是列式引擎，合适的分析查询能快 10 到 100 倍，但要显式物化表；索引顾问会分析查询并推荐普通与向量索引；读池提供单端点的只读扩展。默认版本是 PostgreSQL 16，扩展走白名单，托管形态不支持自定义 C 扩展。AlloyDB Omni 可以在 Google Cloud 之外跑同一引擎。",
+      "url": "https://thebuild.com/blog/managed-postgres-examined-google-alloydb-for-postgresql/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-26",
+      "image": "https://thebuild.com/media/media/4b46edf5fe1540d58c10d7edd0174cb7.png",
+      "domain": "pg",
+      "tags": [
+        "AlloyDB",
+        "托管服务",
+        "列存"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "CloudNativePG 副本集群的切换与回切实操",
+      "summary": "EnterpriseDB 的运维手册第二部分讲在 Kubernetes 上对两套由 CloudNativePG 管理的 EDB Postgres Advanced 18 集群做受控切换与回切。第一部分用 Barman Cloud Plugin 部署了副本集群，这一篇接着给出把主库职责从一个集群转移到另一个集群、再切回来的完整步骤。适用场景是地理或逻辑上分离的两套 PostgreSQL 集群之间的高可用演练和计划内切换。",
+      "url": "https://www.enterprisedb.com/blog/switchover-and-switchback-cloudnativepg-replica-clusters-distributed-topology-k8s-part-2",
+      "author": "EnterpriseDB",
+      "source": "EDB 博客",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CloudNativePG",
+        "高可用",
+        "Kubernetes"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "CHECK 约束强制性递归缺陷的修法有了共识",
+      "summary": "父约束强制而子约束不强制会放进非法数据，结论是直接拒绝这类 ALTER TABLE，而不是递归下去。",
+      "url": "https://www.postgresql.org/message-id/E74C57FA-1DD0-4C8E-8FB1-538034752592@gmail.com",
+      "author": "Chao Li",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "约束",
+        "继承"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别补丁 v47 收到详细审查",
+      "summary": "审查集中在 NFA 实现的提前退出优化、术语文档和状态路由逻辑，作者将合并进 v48。",
+      "url": "https://www.postgresql.org/message-id/CACJufxH-DZePhbdJM=8nNYceQiSbbXXLTw54iLhxiynQ+4hbBA@mail.gmail.com",
+      "author": "Jian He",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "补丁"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 统计信息导入补丁已提交",
+      "summary": "回退到采样之前先用导入的统计信息，规划更准也省掉了昂贵的远端采样。",
+      "url": "https://www.postgresql.org/message-id/CADkLM=eD13q2PCj4jBLEkXjFnRcweEX5QNSu8un2dTbMX9UQdg@mail.gmail.com",
+      "author": "Etsuro Fujita",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "统计信息"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "syslogger 在 EXEC_BACKEND 下的空指针解引用",
+      "summary": "进程类型提前设为 B_LOGGER 破坏了日志文件已打开的假设，修法是另加标志位跟踪就绪状态。",
+      "url": "https://www.postgresql.org/message-id/ahTV4rCj93_CqlDt@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "日志",
+        "缺陷"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志历史表补丁修到 v40",
+      "summary": "审阅者要求统一术语、补文档，并在删除订阅依赖时加完整性检查。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm29f3NYNw-a5od32D_WdamQk7A8MHFCxY5-b_5Ti0n21w@mail.gmail.com",
+      "author": "Peter Smith",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突日志"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL DBA 该盯住的关键 PMM 告警",
+      "summary": "从连接数、复制延迟到膨胀与长事务，给出一份可直接落地的告警清单。",
+      "url": "https://stormatics.tech/blogs/critical-pmm-alerts-every-postgresql-dba-must-track",
+      "author": "Shridhar Khanal",
+      "source": "Stormatics 博客",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "PMM"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "client_min_messages 决定客户端看到多少日志",
+      "summary": "Christophe Pettus 的 GUC 系列新篇，讲这个参数与 log_min_messages 的分工。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-clientminmessages/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "日志"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "用 PostgreSQL 承载 AI 驱动的营销流程",
+      "summary": "Cybertec 用 JSONB 存元数据、枚举记流程状态、pgvector 做语义检索，把数据留在自己手里。",
+      "url": "https://www.cybertec-postgresql.com/en/scaling-ai-driven-marketing-processes-with-postgresql/",
+      "author": "Christine Fritz",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AI",
+        "pgvector"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "荷兰以公共利益风险为由叫停一起美企收购",
+      "summary": "被收购方托管该国数字身份服务，欧洲对关键数字基础设施的外资控制愈发谨慎。",
+      "url": "https://techcrunch.com/2026/05/26/dutch-government-blocks-us-company-from-acquisition-citing-risk-to-public-interest/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据主权",
+        "并购"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Jeremy Schneider 记录 PGConf.dev 2026 行程",
+      "summary": "",
+      "url": "https://ardentperf.com/2026/05/26/pgconf-dev-2026-trip-summary/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 2026 年第 20 周贡献汇总发布",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/84/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "济南将举办 PostgreSQL 大会 HOW2026",
+      "summary": "",
+      "url": "https://www.credativ.de/en/blog/events-en/the-postgresql-conference-how2026-in-jinan-china/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "一篇文章主张没有语义层的 AI 只是昂贵的猜测",
+      "summary": "",
+      "url": "https://vibhorkumar.wordpress.com/2026/05/26/ai-without-semantics-is-just-expensive-guessing/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-26",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "语义层"
+      ],
+      "position": 21
+    }
+  ]
+}

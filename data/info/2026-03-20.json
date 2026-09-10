@@ -1,0 +1,274 @@
+{
+  "date": "2026-03-20",
+  "origin": "chronicle 2026-03-20: pgnexus #88, planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 拟把 JIT 默认关掉",
+      "summary": "把 jit 的默认值从 on 改成 off，在邮件列表上获得了一致支持。理由有两条：JIT 刚引入时分区表还不普遍，如今分区用得多了，被误伤的查询也多了；LLVM 自身的编译性能这些年在退步，默认开启的收益越来越薄。Jelte Fennema-Nio 已把提案标记为可供提交者处理，Tomas Vondra 表示若无人反对就在几天内提交，Tom Lane 也表态支持。时机上大家倾向于现在就动手而不是等到测试版中期，好让负面反馈尽早暴露。",
+      "url": "https://www.postgresql.org/message-id/5b5d04c3-e34e-4ae9-8b39-12b52e63154a@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "PostgreSQL 19",
+        "默认值"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "postgres_fdw 的释放后使用缺陷会导致崩溃",
+      "summary": "问题出在事务状态检查上：SELECT 期间 pgfdw_reject_incomplete_xact_state_change() 会销毁连接并把缓存条目置空，但扫描状态里那份指针仍指向已释放的内存，随后执行 close c1 之类的命令就会访问野指针而崩溃。Etsuro Fujita 的补丁把 PGconn 的释放推迟到事务回滚清理时进行，复测确认崩溃消失。该缺陷影响 14 及以后版本，需要回迁到各稳定分支。",
+      "url": "https://www.postgresql.org/message-id/f5872bee-ad3e-4d04-8976-6d4962b233fa@gmail.com",
+      "author": "Etsuro Fujita",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "缺陷",
+        "回迁"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "只追加负载在为用不上的 MVCC 付费",
+      "summary": "Matty Stratton 算了一笔账：MVCC 让读写互不阻塞，代价是每行都带 23 字节的事务可见性头部，算上对齐填充是 28 到 30 字节。IoT 管道、金融流水、可观测性这类只追加的负载并不修改已写入的行，却照样承担全部成本：高频写入下写放大到 3 至 5 倍，autovacuum 为设置提示位和冻结事务号持续运转，WAL 也随之膨胀。解法是让存储形态匹配负载，例如用列式存储把行批量打包，摊薄 MVCC 的固定开销。",
+      "url": "https://www.tigerdata.com/blog/mvcc-feature-youre-paying-for-but-not-using",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-20",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/V1.png",
+      "domain": "pg",
+      "tags": [
+        "MVCC",
+        "存储",
+        "时序"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Patroni 集群系列第三篇接上 HAProxy 分流",
+      "summary": "Shaun Thomas 的 Patroni 高可用系列走到第三篇，前两篇搭起 etcd 与 Patroni 本体，这篇补上入口。HAProxy 以裸 TCP 转发连接，用 HTTP 检查打 Patroni 的 REST 接口判断角色：6543 端口只连主库，根路径返回 200 者为主；6544 端口连只读副本，用 /replica?lag=1MB 排除延迟过大的节点。三节点同在一个后端池，默认三次检查失败即摘除，并断开其上会话防脑裂。",
+      "url": "https://www.pgedge.com/blog/using-patroni-to-build-a-highly-available-postgres-clusterpart-3-haproxy",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "Patroni",
+        "HAProxy"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pg_clickhouse 0.1.5 修掉渗透测试发现的问题",
+      "summary": "pg_clickhouse 是把 PostgreSQL 接到 ClickHouse 的扩展，由 ClickHouse 赞助开发。David E. Wheeler 发布的 0.1.5 是一次维护更新，修掉了渗透测试和一份社区安全报告中发现的崩溃与漏洞，文章没有展开具体的技术细节。安装渠道有三条：PGXN 包仓库、GitHub 的发行页和 Docker 镜像。作者说明自己近期主要精力在公司内部项目上，这个版本是针对已报告问题的响应。",
+      "url": "https://justatheory.com/2026/03/pg_clickhouse-0.1.5/",
+      "author": "David E. Wheeler",
+      "source": "Just a Theory 博客",
+      "source_date": "2026-03-20",
+      "image": "https://justatheory.com/icon-512x512.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "ClickHouse",
+        "安全"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "发布排除表的 ALTER 支持已推送",
+      "summary": "v67 修好文档措辞与失效处理后由 Amit Kapila 提交，历时数周的语法之争暂告段落。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm3jpYs7ALcU6m5=Li=udidjZoW5dMpyCFs8QHGaf0S8+A@mail.gmail.com",
+      "author": "Vignesh C",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_waldump 支持直接解码 tar 包里的 WAL",
+      "summary": "Andrew Dunstan 已提交，修掉位置参数会让 --path 失效的问题，临时目录改为按需创建。",
+      "url": "https://www.postgresql.org/message-id/CAAJ_b95Oj6Kb6YGsV42Gqy=N7GuOX+FMmEtUbS7NC6BvARN2mQ@mail.gmail.com",
+      "author": "Amul Sul",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "工具"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "同步槽行为拟与法定人数同步复制对齐",
+      "summary": "部分备库槽不可用时逻辑复制仍可推进，按 FIRST N 或 ALL 语义判断，源于客户的实际诉求。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uCZ3OsextxRhBk8aWTua3v==Vc9QRP7fwO6qd=MTXMyPg@mail.gmail.com",
+      "author": "Ashutosh Sharma",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "同步"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "GoAway 协议消息拟用于优雅快速关停",
+      "summary": "Tomas Vondra 追问是否该扩展到单个后端做负载均衡，以及消息是否携带断连截止时间。",
+      "url": "https://www.postgresql.org/message-id/f97528e4-5766-415e-b998-678da925ce05@vondra.me",
+      "author": "Dave Cramer",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "协议",
+        "高可用"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别一次提交 16 个修补",
+      "summary": "含量词边界、栈深度保护与中断检查，并试验单槽 PREV/NEXT 以消除改写计划缓存的隐患。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zBbrnx2fjK2s+Jgx6TSOdnKAPawXbHeX49WqmX9ji+Hdg@mail.gmail.com",
+      "author": "Henson Choi",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "三个 pg_get_*_ddl 函数拟整合进同一文件",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/5b21d39b-47fe-4a27-86bd-0cc6b924c8f0@app.fastmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "自定义 OAuth 验证器选项改用注册接口",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+nTXGcroZD_Mnkc8LYWYFbfDYNR4ML_yQ5sF9+DY2amcg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "autovacuum 调度权重上限提到 10.0",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0s7k6yve1Bq1OY+aXU3ifc_fvOiYkpE2VxwrUcHr2AtTg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "读取流异步等待接口的参数语义被指含混",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_YiaJgbmHGTFHRJEP9+AtVCt+gHTd1rmXm05agT_1Mx2A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "IO"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "OAuth 日志补丁的 SASL 耦合问题继续讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+mw0ss04usMi-ShJPdAi9tmF=aO6SyM8qrtd8WfZsS7ag@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 日志拟同时写文件与终端",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABdArM54_cVUMfE2DGSnJfDBZO1hmaVb82Z4b+1t0fp+xqXaMQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "REPACK 并发版 v43 收到逐条代码评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/202603200752.zigubezzfcql@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 17
+    }
+  ]
+}

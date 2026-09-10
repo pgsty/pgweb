@@ -1,0 +1,499 @@
+{
+  "date": "2026-06-11",
+  "origin": "chronicle 2026-06-11: daily, pgnexus #174, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PgDog 完成 550 万美元融资并公布生产数据",
+      "summary": "PostgreSQL 代理 PgDog 宣布完成 550 万美元融资，同时公布了一组生产数据：部署规模超过每秒 200 万次查询，已知分片数据量超过 20 TB，Docker 镜像拉取超过 140 万次，并计划推出便于在 AWS 上运行、带 SLA 支持的企业版。PostgreSQL 的扩展瓶颈常常不在单机内核，而在连接管理、路由、分片和故障切换。要真正放进生产，仍需实测预备语句、会话状态、COPY 和逻辑复制的行为。",
+      "url": "https://pgdog.dev/blog/our-funding-announcement",
+      "author": "PgDog",
+      "source": "PgDog 博客",
+      "source_date": "2026-06-10",
+      "image": "https://pgdog.dev/assets/images/logo_social.png?v=b2c435b048",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "分片",
+        "融资"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL Buildfarm 推出查询 API 取代抓网页",
+      "summary": "PostgreSQL Buildfarm 数据库上线了查询 API。此前想批量拿到构建结果只能抓网页，现在可以直接用接口做程序化访问，文档已放在 GitHub 上，示例演示了怎么查询某个 buildfarm 成员的最新状态。对扩展维护者和打包者来说，这意味着某个平台、某个分支的构建状态可以接进自己的看板或告警，不必再解析 HTML。作者表示正在征集反馈，想知道这套接口该往哪些方向扩展才更贴合社区的实际用法。",
+      "url": "https://www.enterprisedb.com/blog/buildfarm-query-api",
+      "author": "EnterpriseDB",
+      "source": "EnterpriseDB 博客",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建",
+        "社区",
+        "工具"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Oracle 漏洞遭利用，逾百家机构被入侵",
+      "summary": "Oracle 发布严重安全警告，称有攻击者利用一个漏洞发起大规模攻击，受影响的机构超过一百家。此前有网络犯罪团伙宣称借此入侵了企业系统，Oracle 随后确认了该缺陷；Google 的安全团队也参与应急响应，已通知一百多家运行着可能存在漏洞的 Oracle 服务器的组织。企业软件和数据库一旦补丁滞后，被武器化的速度往往比预期快得多。运维方值得借这次事件复核补丁窗口、外部暴露面和入侵检测的覆盖范围。",
+      "url": "https://techcrunch.com/2026/06/11/oracle-warns-of-security-bug-that-hackers-abused-to-breach-100-companies/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-06-11",
+      "image": "https://techcrunch.com/wp-content/uploads/2026/06/oracle-logo-nyse.jpg?resize=1200%2C800",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "Oracle",
+        "漏洞利用"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "AWS 发布 Graviton5 的 M9g 与 M9gd 实例",
+      "summary": "AWS 宣布基于 Graviton5 的 EC2 M9g 与 M9gd 实例正式可用，M9gd 带本地 NVMe SSD。两者使用第六代 Nitro 系统，并首次引入以形式化验证强化隔离的 Nitro Isolation Engine。官方口径下数据库负载最高可获得 30% 的性能提升，数据库和缓存通常也是迁到 Arm 收益最明显的部分。选型不能只比 vCPU 单价，PostgreSQL 的测试应覆盖 WAL、检查点和连接池行为。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/ec2-m9g-m9gd-instances-graviton5-processors-available/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Graviton",
+        "实例选型",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "银行 AI 助手被交易备注里的提示注入攻破",
+      "summary": "安全公司 Blue41 公开了一份针对欧洲银行 bunq 的 AI 助手评估：攻击载荷可以伪装成普通交易描述，等到检索、上下文拼接、模型行为和输出渠道组合起来才显形，因此它不是传统的 XSS 或 SQL 注入，而是不可信业务数据被当成模型上下文的新边界问题。Blue41 称 bunq 已有防护，但风险仍在。交易备注、工单、邮件和上传文档都可能成为载体，检索增强与 agent 系统应最小化上下文、区分数据与指令、限制外链和动作。",
+      "url": "https://blue41.com/blog/securing-a-european-banks-financial-ai-assistant/",
+      "author": "Blue41",
+      "source": "Blue41",
+      "source_date": "2026-06-10",
+      "image": "https://blue41.com/opengraph.jpg",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "提示注入",
+        "agent"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 把公网应用安全栈接到私有源站前",
+      "summary": "企业内部 API、agent 后端、MCP 服务和运维系统通常没有公网入口，却同样需要 WAF、bot 管理、限流、缓存和可观测性。Cloudflare 的 Private Origins 支持 use_private_routing 语义，RFC1918、CGNAT 和 ULA 等私有地址可以自动启用，公有和私有应用因此共用一套安全模型。统一入口之前需要核查回程路由、源站 mTLS 和故障回退路径。",
+      "url": "https://blog.cloudflare.com/private-origins-dns-routing/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-06-10",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW48E99AD19CGA9N96ET118J.png",
+      "domain": "cloud",
+      "tags": [
+        "私有网络",
+        "零信任",
+        "WAF"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Key joins 补丁被指过大且拖慢规划",
+      "summary": "Tomas Vondra 指出 parse_key_join.c 有 150 KB、规划阶段慢 30% 到 40%，建议拆分并考虑改到规划器里实现。",
+      "url": "https://www.postgresql.org/message-id/7f1c1970-a3d3-4a3b-b6f2-f281c6f7fb7d@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "SQL 标准"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "amcheck 修复 allequalimage 校验的漏检",
+      "summary": "Fujii Masao 通过了 Chao Li 的第三版补丁，属于定向修复，确认只回补到 PostgreSQL 18。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwEAyhNV9brMczoYP4c3FOJP5kLEXrMDLXkcNSW7wp2fcw@mail.gmail.com",
+      "author": "Chao Li",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "amcheck",
+        "数据损坏"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别补丁修复 DEFINE 求值的释放后使用",
+      "summary": "Henson Choi 提议给 DEFINE 单独建 ExprContext 并按行重置，导航函数改在解析阶段拦截。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zA4tuFvW70sTqdUchpa6bzGr3fptQ8orpc=4axvx=eYOg@mail.gmail.com",
+      "author": "Henson Choi",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "窗口函数",
+        "内存"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GitHub API 认证故障波及自动化链路",
+      "summary": "状态页信息有限、暂无根因说明；CI、发布、Dependabot 和 GitHub App 都可能出现排队或误判失败。",
+      "url": "https://www.githubstatus.com/incidents/fcj3088jg1wx",
+      "author": "GitHub",
+      "source": "GitHub Status",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "故障",
+        "自动化"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Node.js 预告 6 月安全版本",
+      "summary": "细节要等 6 月 17 日的正式公告，持续集成矩阵、基础镜像和回滚方案值得提前排期。",
+      "url": "https://nodejs.org/en/blog/vulnerability/june-2026-security-releases",
+      "author": "Node.js",
+      "source": "Node.js",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "运行时"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "AWS ECS 托管守护任务支持 PID 与 IPC 共享",
+      "summary": "每台托管实例上会先于业务任务启动一个守护任务，形态接近 DaemonSet，权限与镜像来源需要更严的审计。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/ecs-managed-daemons-pid-ipc-modes/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容器",
+        "可观测性"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Microsoft 用 ASSERT 把书面规范变成可执行评测",
+      "summary": "代码已开源，示例覆盖 LangGraph 行程助手，产物包含分类体系、测试集、轨迹、评分与指标。",
+      "url": "https://commandline.microsoft.com/assert-written-intent-executable-evals/",
+      "author": "Microsoft",
+      "source": "Microsoft Command Line",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "评测",
+        "agent"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Copilot CLI 新增 /security-review 命令",
+      "summary": "GitHub 称它不依赖代码扫描、Dependabot 或密钥扫描，是按需的轻量补充，不能替代 CI 里的安全扫描。",
+      "url": "https://github.blog/changelog/2026-06-10-dedicated-security-review-command-now-available-in-copilot-cli/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "安全",
+        "开发流程"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "临时复制槽的释放路径存在竞态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1LqFBKCkX2eoX3iQPxJJnzWTaCpdh9zNotxuoG8BgjdtA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "sent_bytes 是否该计入协议消息仍有分歧",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAE9k0PnH0akGzSTrdQA0OgZ+JfpLb2mUxqM9bM_wf0yB0pAOWg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "统计"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "FOR PORTION OF 的检查移出分析阶段",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+renyXyUz4nei=tTsX6Ohy1069FQnSFR063kV8LnOF1oUuKLQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态表"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "SPI_prepare 的 argtypes 参数改为 const",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/86b5162f-c472-40fa-997b-0450dece1dec@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SPI"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "代码覆盖率报告生成失败有了绕行办法",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+=Q5vc9opdg6PGM8RVgchu7SaDNPoN9D3XUF++Bmbyy_w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "逐个梳理 GUC：debug_* 参数家族",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-the-debug-family/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Xata 演示 1 美元开出一千个 Postgres 分支",
+      "summary": "",
+      "url": "https://xata.io/blog/a-thousand-postgres-branches-for-1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分支",
+        "成本"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "HelixDB 把图与向量放进同一个数据库",
+      "summary": "",
+      "url": "https://github.com/HelixDB/helix-db/tree/main",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图数据库",
+        "向量"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub CLI 支持讨论、子议题与依赖关系",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-10-manage-sub-issues-types-and-dependencies-from-github-cli/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "自动化"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "LWN 讨论 AI agent 在 Fedora 闯祸",
+      "summary": "",
+      "url": "https://lwn.net/Articles/1077035/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源社区",
+        "agent"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "FSx for OpenZFS 智能分层扩展到八个区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-fsx-openzfs/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 讲多账号 Kubernetes 的密钥散落",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/06/09/solving-secret-sprawl-in-multi-account-kubernetes-with-external-secrets-operator/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "密钥"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "AWS 成本与用量报告 2.0 支持更新表配置",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-cost-usage-report/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "成本治理"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "捐给公园的土地被市政府卖作数据中心",
+      "summary": "",
+      "url": "https://www.tomshardware.com/tech-industry/farmer-donates-land-for-a-park-city-sells-it-for-data-center-development-usd10-gift-became-usd10m-for-city-government-with-usd30m-tax-expected-over-next-decade",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据中心"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Copilot Chat 能看到 agent 会话记录",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-10-copilot-chat-now-sees-your-agent-sessions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "agent",
+        "可观测性"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Apache Burr 主打可回放可测试的 agent 框架",
+      "summary": "",
+      "url": "https://burr.apache.org/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "框架",
+        "状态机"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Claude Desktop 的 Hyper-V 资源占用引发争议",
+      "summary": "",
+      "url": "https://github.com/anthropics/claude-code/issues/29045",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "虚拟化",
+        "资源占用"
+      ],
+      "position": 31
+    }
+  ]
+}

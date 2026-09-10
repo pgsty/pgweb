@@ -1,0 +1,575 @@
+{
+  "date": "2026-06-23",
+  "origin": "chronicle 2026-06-23: daily, pgnexus #186, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Tomas Vondra 认为 random_page_cost 的默认值该改了",
+      "summary": "random_page_cost 的默认值 4.0 来自机械硬盘年代，假定随机读比顺序读贵四倍。Tomas Vondra 在 POSETTE 演讲之后接着写道，SSD 与 NVMe 普及后随机 I/O 与顺序 I/O 的差距已经大幅缩小，这个默认值未必还合适。默认值偏高会让规划器系统性地低估索引扫描，做出更差的计划，他认为社区有必要重新评估并调整它。",
+      "url": "https://vondra.me/posts/some-more-thoughts-on-random-page-cost/",
+      "author": "Tomas Vondra",
+      "source": "vondra.me",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "优化器",
+        "存储"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "CYBERTEC 发布备份恢复工具 pg_hardstorage",
+      "summary": "CYBERTEC 发布 pg_hardstorage，一个 Apache 2.0 许可的 PostgreSQL 备份恢复工具。Hans-Jürgen Schönig 说它不打算取代 pgBackRest、Barman 或 WAL-G，而是面向 Kubernetes、托管云和混合基础设施这些新部署形态的社区驱动选项。设计上参考了复制协议，重新审视了传统增量备份链的固有问题。项目主页是 pghardstorage.org。",
+      "url": "https://www.cybertec-postgresql.com/en/introducing-pg_hardstorage-a-new-community-driven-approach-to-postgresql-backup-and-recovery/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "CYBERTEC",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复",
+        "开源"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_clickhouse 0.3.2 已支持 PostgreSQL 19",
+      "summary": "pg_clickhouse 让 PostgreSQL 直接查询 ClickHouse。David Wheeler 发布的 0.3.2 加上对 PostgreSQL 19 Beta1 的支持，同时保持对旧版本的兼容。CREATE SERVER 新增 secure 与 min_tls_version，可强制 TLS 并指定最低版本；修正了正则标志下推的映射，解决了无缓冲 HTTP 查询与参数化外部扫描的内存问题。升级不需要重启。",
+      "url": "https://clickhouse.com/blog/pg_clickhouse-whats-new-june-2026",
+      "author": "David Wheeler",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ClickHouse",
+        "FDW",
+        "发布"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "跨分片查询慢，多半不怪 enable_async_append",
+      "summary": "enable_async_append 默认打开，决定规划器是否考虑异步 Append，对应计划里的 Async Foreign Scan 节点。它是 PostgreSQL 14 为 FDW 分片加的：跨多个远端服务器的分区表或 UNION ALL 查询可并发发请求，总耗时从各分片延迟之和变成最慢分片的延迟。但它还要外部服务器上的 async_capable 为真，而后者默认关闭。Christophe Pettus 建议生产上保持打开。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enableasyncappend/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-23",
+      "image": "https://thebuild.com/media/media/2fd5bcba0b6c4cf0a43f646cee2c275f.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "FDW",
+        "分片"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "EDB Postgres AI 的 Q2 版本一次给出十项能力",
+      "summary": "EDB 发布 EDB Postgres AI 的 2026 年 Q2 版本，一次给出十项新增或增强能力，主线是把 AI 智能体从实验推到生产。其中包括会自行加索引、扩容和打补丁的 Agentic Database，基于 Apache Iceberg 的零 ETL 融合分析，正式可用的 EDB PG AI for ClickHouse，以及用原生角色和行级安全在数据库层管住智能体访问的治理预览。",
+      "url": "https://www.enterprisedb.com/blog/edb-postgres-ai-q2-2026-release",
+      "author": "EDB",
+      "source": "EDB 博客",
+      "source_date": "2026-06-23",
+      "image": "https://enterprisedb.com/sites/default/files/2026-06/agentic_database_-_ui_image_-_horizontal_process_-_approve_process.png",
+      "domain": "pg",
+      "tags": [
+        "EDB",
+        "AI",
+        "发布"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "AWS 推出提供虚拟机级隔离的 Lambda MicroVMs",
+      "summary": "AWS 推出 Lambda MicroVMs，基于 Firecracker，官方称它是一种提供虚拟机级隔离、近乎瞬时的启动与恢复、并能保留状态的无服务器计算原语。每个 MicroVM 有自己的 HTTPS 地址，可以挂起再恢复，最长八小时，支持 HTTP/2、gRPC 和 WebSocket，适合给每个用户或每个任务单独一个执行环境的多租户场景。镜像从 Dockerfile 构建，先在五个区域可用，按基线算力计费，超出部分另算。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-lambda-microvms/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Serverless",
+        "隔离",
+        "多租户"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "流水线恢复补丁让 WAL 解码与重放并行",
+      "summary": "startup 进程里 WAL 应用的 CPU 占比从约 47% 升到 89%，纯内存 pgbench 负载快约三成。",
+      "url": "https://www.postgresql.org/message-id/CA+UBfamzeXcdEbmhdOdjWn5X_YVt9n8xUpH5ZwmA7S8VWvaoXw@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "WAL",
+        "性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "get_actual_variable_range 拟增设索引页上限",
+      "summary": "Peter Geoghegan 改为新增 INDEX_PAGES_LIMIT，只数返回空结果的叶页，对备库没有影响。",
+      "url": "https://www.postgresql.org/message-id/CAH2-WzmugSOCGw-+mjocGRXBbwSevjMJ41dLaF0ukJzUGEKF=Q@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "索引"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_get_xxx_ddl 的可变参数类型写错已修复",
+      "summary": "opr_sanity 用 != 比较让 NULL 掩盖了问题，改成 IS DISTINCT FROM 后暴露出四处不匹配。",
+      "url": "https://www.postgresql.org/message-id/D41A334E-ED9E-42EE-830D-28D4D36E9317@gmail.com",
+      "author": "Chao Li",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "目录",
+        "测试"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "checksum worker 用唯一 ID 区分新旧结果",
+      "summary": "Heikki Linnakangas 顺手修掉一个理论竞态：旧 worker 的结果可能被当成新一轮的。",
+      "url": "https://www.postgresql.org/message-id/b283fbb9-298e-4953-9120-eefaf24fae20@iki.fi",
+      "author": "Heikki Linnakangas",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "竞态"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "GSoC 的 B-tree 页面合并方案被指违反核心不变式",
+      "summary": "VACUUM 必须清掉处理过页面上的全部死亡 TID，跳过幽灵页会导致 TID 回收出错。",
+      "url": "https://www.postgresql.org/message-id/CACLU5mRfdcNLruKbb+sqmripVLE=tQ8_OJRhNGbZZJyRXY=-QA@mail.gmail.com",
+      "author": "Salma El-Sayed",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "B-tree",
+        "GSoC"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "HBA 用 password 时 MD5 弃用警告不会发出",
+      "summary": "Fujii Masao 提交补丁补全，争论点是要不要把逻辑放进通用的 plain_crypt_verify()。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwGkWfn5rtHzvdRbVk+PCefQU3gun3hc7QnaMXHFa5Bu3w@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证",
+        "MD5"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "DROP PROPERTY GRAPH 的报错已修复并提交",
+      "summary": "Peter Eisentraut 完成提交，此前 Michael Paquier 已放话无人回应就自己动手。",
+      "url": "https://www.postgresql.org/message-id/3820a7f0-c4b9-40fe-9006-fee9122e1e39@eisentraut.org",
+      "author": "Peter Eisentraut",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "属性图",
+        "缺陷"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Fujitsu 发布 2026 年 PostgreSQL 企业安全实践指南",
+      "summary": "Timothy Steward 面向迁移中的医疗与金融行业，讲怎么在性能与合规之间搭安全框架。",
+      "url": "https://www.postgresql.fastware.com/blog/postgresql-security-best-practices-for-enterprise-databases-in-2026",
+      "author": "Timothy Steward",
+      "source": "Fujitsu Enterprise Postgres",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "合规"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Manticore Search 27.1.5 带来认证、分片与向量搜索改动",
+      "summary": "小版本号下藏着实质能力变化，升级前要读发布说明确认破坏性改动与兼容性。",
+      "url": "https://manticoresearch.com/blog/manticore-search-27-1-5/",
+      "author": "Manticore",
+      "source": "Manticore Search",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "搜索",
+        "向量"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 复盘 Rust hyper 库的一个 HTTP 缺陷",
+      "summary": "hyper 是 Rust HTTP 生态的核心组件，代理、网关、服务网格和边缘平台都建在它上面。",
+      "url": "https://blog.cloudflare.com/hyper-bug/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust",
+        "HTTP"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "AWS 给 MSK 加上面向运维的 AI Agent Skills",
+      "summary": "托管服务开始内置运维助手，能访问哪些指标、能否直接改配置仍要看具体文档。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-msk-ai-agent-skills/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka",
+        "AI 运维"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "AWS Network Firewall 调整默认丢弃动作",
+      "summary": "默认动作变化会影响长连接与连接池，经过它的数据库链路要观察重置和超时。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-network-firewall-updates-default-drop-action/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络",
+        "防火墙"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_publication_tables 修复并发删表竞态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACU6JY3cfUYZ3G1ZUwKUx-X64hbzQaLAQvuKk54oyP_=Pw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "io_min_workers 超过上限时将发出警告",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+fm-RO3iQfdrvVA6C=0Oe126cbWNwePuwx2WL0XfPHB1BMj5g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "异步 IO"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Key joins 补丁变基，核心解析逻辑约 4700 行",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/2866da91-c3bc-4d50-a325-2b85ebb02da4@malkut.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "psql 修复 CREATE SCHEMA 里嵌套例程体的扫描",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/7338DCF5-E04B-4E2A-A6D6-475FA4994A48@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "为外部表统计信息导入设计 C 层 API 的讨论",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxEoNOAOqomVzo7KukvxqLoknvh47-3=bmcj_hEvgyC8iA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "统计信息"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "jsonpath 拟新增 translate、split 与 join 方法",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADkLM=dkwpfxQZUmXFn=HRjYbTkKM-=gZiJHY9U0wwJoYgg+sw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "大型 IN 列表的哈希 MCV 匹配补丁完成变基",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/a306fccf-b9e5-4f12-8942-5197879a73bd@tantorlabs.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "River 用 Postgres 给 Go 做后台任务队列",
+      "summary": "",
+      "url": "https://github.com/riverqueue/river",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "队列",
+        "Go"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "ClickHouse 发布两个维护版本",
+      "summary": "",
+      "url": "https://github.com/ClickHouse/ClickHouse/releases/tag/v26.5.3.52-stable",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Deno Desktop 让 TypeScript 运行时打包桌面应用",
+      "summary": "",
+      "url": "https://docs.deno.com/runtime/desktop/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Deno"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "AWS Batch 支持按客户指定的顺序分配资源",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/batch-ordered-allocation-strategies/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "批处理"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "AWS Outposts 支持自助式生命周期管理",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-outposts-self-service-lifecycle-management/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Outposts"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Chevron 与 Microsoft 签下二十年数据中心供电协议",
+      "summary": "",
+      "url": "https://www.chevron.com/newsroom/2026/q2/chevron-signs-20-year-power-agreement-with-microsoft-for-west-texas-data-center",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据中心",
+        "能源"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Zig 基金会获得 Mitchell Hashimoto 追加资助",
+      "summary": "",
+      "url": "https://mitchellh.com/writing/zig-donation-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Zig",
+        "开源"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Linux Secure Boot 证书过期的旧文重新被讨论",
+      "summary": "",
+      "url": "https://lwn.net/Articles/1029767/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Secure Boot"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "Go 的 UUID 库在浏览器里生成的 v7 总是 7000",
+      "summary": "",
+      "url": "https://github.com/golang/go/issues/80084",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "UUID"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "内存涨价蔓延到复古电脑用的老式内存",
+      "summary": "",
+      "url": "https://www.theregister.com/personal-tech/2026/06/22/the-memory-crisis-is-getting-so-bad-that-even-retro-ram-prices-are-going-to-the-moon/5259627",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "硬件"
+      ],
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "Cloak 让 AI agent 用得上密钥又看不到密钥",
+      "summary": "",
+      "url": "https://github.com/cloakward/cloak",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "密钥管理"
+      ],
+      "position": 36
+    }
+  ]
+}

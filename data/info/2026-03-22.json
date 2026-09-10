@@ -1,0 +1,197 @@
+{
+  "date": "2026-03-22",
+  "origin": "chronicle 2026-03-21 与 2026-03-22 合并：pgnexus #89 与 #90、news 1、planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 收入 pg_plan_advice 模块",
+      "summary": "Robert Haas 在 3 月 12 日提交了 contrib 模块 pg_plan_advice，它把连接顺序、连接方式、扫描方式和并行策略等规划器决策写成一段文本建议，用来固定已经验证过的执行计划。用法是 SET pg_plan_advice.advice 指定建议，再用 EXPLAIN (plan_advice) 查看规划器给出的建议文本。depesz 提醒这是把双刃剑：建议一旦写死就长期生效，数据分布变了很容易把查询锁死在糟糕的计划上。",
+      "url": "https://www.depesz.com/2026/03/22/waiting-for-postgresql-19-add-pg_plan_advice-contrib-module/",
+      "author": "Hubert 'depesz' Lubaczewski",
+      "source": "depesz.com",
+      "source_date": "2026-03-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划",
+        "PG19",
+        "扩展"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_regresql 让规划器改用目录里的统计",
+      "summary": "PostgreSQL 规划器不看 pg_class.relpages，而是量磁盘文件大小再缩放行数估计，所以把生产统计灌进小测试库仍复现不出生产计划。Radim Marek 的 pg_regresql 挂在 get_relation_info_hook 上，等规划器读完物理指标，再把已 ANALYZE 表的页数与行数换回目录中的值，未分析的表保持原样。扩展不需要配置、后台进程或共享内存，LOAD 一次即生效，支持 13 到 18。",
+      "url": "https://boringsql.com/posts/regresql-extension/",
+      "author": "Radim Marek",
+      "source": "boringsql",
+      "source_date": "2026-03-21",
+      "image": "https://boringsql.com/og-images/pg-regresql-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "查询规划",
+        "统计"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "重置序列时 START WITH 并不会改动计数器",
+      "summary": "Deepak Mahto 在 Oracle 迁移中发现，ora2pg 用 ALTER SEQUENCE … START WITH 重置序列并不生效，直到对账出现差额才暴露。序列的计数器在 last_value 上，START WITH 只改 start_value。真正的重置要用 RESTART WITH n 或 setval(seq, n, false)，两者都让下次取值等于 n。迁移流水线更适合后者，它能被逻辑复制传播。",
+      "url": "https://databaserookies.wordpress.com/2026/03/21/postgresql-sequence-reset-start-with-vs-restart-with-vs-setval-explained/",
+      "author": "Deepak Mahto",
+      "source": "Database Rookies",
+      "source_date": "2026-03-21",
+      "image": "https://i0.wp.com/databaserookies.wordpress.com/wp-content/uploads/2026/03/blue-modern-simple-animated-tutorial-online-course-youtube-thumbnail12.png?fit=1200%2C675#038;ssl=1",
+      "domain": "pg",
+      "tags": [
+        "序列",
+        "迁移",
+        "ora2pg"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 释放后使用崩溃将回移到 14 以上",
+      "summary": "连接销毁后 PgFdwScanState->conn 仍指向已释放内存，Etsuro Fujita 改为推迟到事务中止清理阶段再释放 PGconn。",
+      "url": "https://www.postgresql.org/message-id/CAPmGK16-L3UhkrMGUhL1DO3tFRrFaZ_8QSHE62ToJWQU_Gu0UQ@mail.gmail.com",
+      "author": "Etsuro Fujita",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "崩溃"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "索引预取补丁进入第 16 版并收到详细审阅",
+      "summary": "Andres Freund 建议把 indexscan API 改动与批处理接口拆成独立补丁，并把预取决策上移到规划器。",
+      "url": "https://www.postgresql.org/message-id/t6mtqbv2mbfhjni4bvwdgoecppjmxvbyfwl6utovzv76xc2672@k3o5ryevaeqv",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "削减 WAL 的 xl_heap_visible 改造推进到 v42",
+      "summary": "Melanie Plageman 已推送前两个补丁，其余十个不变；空页清理不再单独走 log_newpage_buffer()。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Zj8G4T=HN3QSY7iQvkKSQk-k1fq+eJkjCBNqoSg63z+Q@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "可见性映射"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_waldump 的 tar 解码功能压垮 buildfarm",
+      "summary": "zstd 压缩下解压管道没有收尾导致找不到 WAL，POSIX 的填充规则又让测试失败，Tom Lane 连出两轮补丁。",
+      "url": "https://www.postgresql.org/message-id/CAD5tBcLVWKnph3iB-VPuPKR0dCckOJRFZW2-4H7HTTmhw8-vOg@mail.gmail.com",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "工具"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Hyderabad Postgres Days 2026 定于 8 月举办",
+      "summary": "会议 8 月 20 至 21 日举行，含培训与英文技术演讲，征稿 4 月 12 日截止，注册四月中旬开放。",
+      "url": "https://2026.pghyd.in/",
+      "author": "Hyderabad PostgreSQL 用户组",
+      "source": "Hyderabad PostgreSQL 用户组",
+      "source_date": "2026-03-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁撤下窗口标记管理改动",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zDmjV-R6M0xeMDzZN+eRVUhsrt6NA=xjvj9BQMog9tqTQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "Álvaro Herrera 提交 15 个补丁清理头文件包含",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/202603221856.iwlhitt6dxxx@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "重构"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "rdtsc 计时补丁进入 v12 并补上频率校准",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAP53PkxS0SWUVw44nBoMRe0F-F-88CjR=O5ZRR0+v=yZ8YsYLA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "Blue Origin 公布太空数据中心计划 Project Sunrise",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/03/20/jeff-bezos-blue-origin-enters-the-space-data-center-game/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据中心"
+      ],
+      "position": 12
+    }
+  ]
+}

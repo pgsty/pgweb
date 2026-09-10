@@ -1,0 +1,333 @@
+{
+  "date": "2026-08-15",
+  "origin": "chronicle 2026-08-15: pgnexus #239, daily, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "GIN VACUUM 可能把内部页当叶子页，造成索引损坏",
+      "summary": "Peter Geoghegan 报告了一个影响所有稳定分支的 GIN 索引损坏：ginVacuumPostingTreeLeaves() 把共享锁升级为排他锁后没有重新检查页面是否仍是叶子页，VACUUM 可能把内部页当叶子页处理，漏掉该清除的死 TID。Andrey Borodin 确认这是真实的数据损坏，追溯到 fd83c83d0。另一个缺陷是 ginInsertCleanup 只在 ginbulkdelete 的第一遍被调用。",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wz=RBpJTQgvOxr6C=J04dExmFSt1E3F-r+cRTQ56hEotkg@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GIN",
+        "VACUUM",
+        "数据损坏"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "并发分离分区未完成会引发崩溃，补丁将回移",
+      "summary": "DETACH PARTITION ... CONCURRENTLY 的等待阶段一旦被中断，分区的 in-detach 标记只有 FINALIZE 能清除，于是 relispartition 仍为真，而 get_partition_ancestors() 返回空列表。Mihail Nikalayeu 压测时发现三处代码都假设祖先列表非空，会触发断言失败或空指针解引用。Álvaro Herrera 计划下周推入并回移。",
+      "url": "https://www.postgresql.org/message-id/CADzfLwWoFPT+a73=A=bsNWRMZQ98NpBEMgE=t1FS4O4_=QVLfA@mail.gmail.com",
+      "author": "Mihail Nikalayeu",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "崩溃"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "实测 AlloyDB：协议之下是另一个数据库",
+      "summary": "Radim Marek 实测后认为 AlloyDB 的兼容只到线协议这一层：日志即数据库，数据页由 WAL 异步派生；所谓自适应 autovacuum 只换了调度器，清理仍在计算节点上做。列存引擎把 TPC-H Q6 从 2681 毫秒降到 69 毫秒，但 SF100 下写争用从 16% 升到 29%，列存还可能因缺少查询历史而静默为空。扩展支持也割裂：plv8 只在 Omni，PostGIS 只在托管版。",
+      "url": "https://boringsql.com/posts/google-alloydb/",
+      "author": "Radim Marek",
+      "source": "boringsql.com",
+      "source_date": "2026-08-15",
+      "image": "https://boringsql.com/og-images/alloydb-deep-dive-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "AlloyDB",
+        "云数据库",
+        "列存"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "jit 写在配置里只是意图，未必真的在编译",
+      "summary": "jit 默认开启，代价超过阈值时用 LLVM 把表达式求值和元组解构编译成机器码，长时间的分析型查询受益，短查询只白付编译开销。真正的坑是 llvmjit 常被单独打包，容器镜像用 --no-install-recommends 时装不上，此时 PostgreSQL 静默地不做 JIT，既不报错也不写日志。Christophe Pettus 建议每台机器都跑一次 pg_jit_available() 确认。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-jit-and-jit_provider/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-15",
+      "image": "https://thebuild.com/media/media/4e8ddd1b49f2418faa7933c3535288ed.png",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "参数"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "执行器批处理设计倾向复用 slot 而非新增回调",
+      "summary": "Denis Smirnov 主张不新增 table AM 回调，把 tts_batch 同时用于堆表和列存：堆表保留 Datum 数组，列存保留 Arrow 数组或压缩列，只有普通节点索要行数据时才转换。新增 TupleBatchRequest 描述属性集，TupleTableSlotBatch 带 selection 位图；支持批处理的节点在 ExecProcNode() 返回后检查 tts_batch 决定走哪条路径。",
+      "url": "https://www.postgresql.org/message-id/85371DE4-6957-4408-9FAA-A4871B501AB6@gmail.com",
+      "author": "Denis Smirnov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "列存"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制单表重同步补丁修掉继承表数据丢失",
+      "summary": "Cagri Biroglu 的按表重新同步补丁更新到 v4，为逻辑复制提供 ALTER SUBSCRIPTION ... REFRESH TABLE。这一版把 ExecuteTruncate() 换成基于已解析 OID 的 ExecuteTruncateGuts()，修掉继承子表被静默 TRUNCATE 导致数据丢失的缺陷，并拒绝对被其他订阅追踪的关系执行 truncate。文档和 psql 补全一并补上。",
+      "url": "https://www.postgresql.org/message-id/CAA36mspLrtfJuN1wrXesadSzZedrTZ_p3wBmZ4iC8=UcwxsLQA@mail.gmail.com",
+      "author": "Cagri Biroglu",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "数据丢失"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "basebackup 不再校验启用校验和之前写入的页面",
+      "summary": "v2 改用记录最近一次校验和切换的 LSN，修掉 on→off→on 时静态变量误判导致重新启用验证的问题。",
+      "url": "https://www.postgresql.org/message-id/an/bvN2B7Rn6UTTr@bdtpg",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "校验和"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PG18 的 pg_strlower 接口问题正在集中修复",
+      "summary": "Jeff Davis 补上缺失文档、把循环变量改为 size_t、修正 -1 返回值行为，并新增一个 C 测试模块。",
+      "url": "https://www.postgresql.org/message-id/6c479549b51b738da3065fd979af8bd1ea80b654.camel@j-davis.com",
+      "author": "Jeff Davis",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG18",
+        "排序规则"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "备机等待 WAL LSN 回放的补丁系列准备合入",
+      "summary": "六个补丁修掉辅助进程退出时的清理缺失，以及 writtenUpto 回退后 waiter 永久阻塞的竞态。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfds18giMX5Lc0TDZjP+JPMoCU_wHCOJ3=zmQrxpXi4D0KA@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "WAL"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GRAPH_TABLE 禁用外层聚合的补丁牵出更深的缺陷",
+      "summary": "Tom Lane 查出 replace_property_refs_mutator 处理 Aggref 时没有递增 varlevelsup，v4 已可提交。",
+      "url": "https://www.postgresql.org/message-id/207328.1786821718@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别视图的反解析缺陷会导致恢复失败",
+      "summary": "子查询绕开 DEFINE 中的歧义列引用时，反解析器输出范围变量而非合法列引用，dump/restore 报错。",
+      "url": "https://www.postgresql.org/message-id/20260815.081054.1707950877428677644.ishii@postgresql.org",
+      "author": "Tatsuo Ishii",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RPR",
+        "pg_dump"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "FDW 函数扫描下推补丁修正 NULL 记录处理",
+      "summary": "作者称这是必要的正确性修复而非可选优化，同时重写了远端执行函数的代价估算。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdv99rqDdZOmo6onNaFkvW_ETj0yVW90yRpNxVtM1iFgWg@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "pg_dump 并行导出到管道的补丁受阻于 Windows",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAH5HC96vrSWqTkiyN-ZU55mt90Tp4iUWz8bm8MYLcXEr-h8p-A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_dump"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "pg_stat_ch 把 PostgreSQL 指标导出到 ClickHouse",
+      "summary": "",
+      "url": "https://github.com/ClickHouse/pg_stat_ch",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "智能体不是系统，Postgres 才是",
+      "summary": "",
+      "url": "https://payalsingh.me/blog/2026/08/15/the-agent-is-not-the-system/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AI"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Bluesky Jetstream v2 支持历史回放再接实时流",
+      "summary": "",
+      "url": "https://atproto.com/blog/introducing-bluesky-protocol-services",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据流"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Google 开源 HEIR 把同态加密推理变成编译流程",
+      "summary": "",
+      "url": "https://blog.google/security/how-google-is-making-private-ai-practical-with-homomorphic-encryption/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "加密"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Oxide 复盘客户需求如何塑造其 Kubernetes 集成",
+      "summary": "",
+      "url": "https://oxide.computer/blog/kubernetes-on-oxide",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "systemd/journald 磁盘写放大问题再度升温",
+      "summary": "",
+      "url": "https://github.com/systemd/systemd/issues/40262",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "systemd"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Ruby 4.0 反序列化 gadget chain 研究引发讨论",
+      "summary": "",
+      "url": "https://www.elttam.com/blog/ruby-4-0-universal-rce-deserialization-gadget-chain",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "DeepSeek 开源 MIT 许可的 agent 运行时 Harness",
+      "summary": "",
+      "url": "https://deepseek.com/harness/en/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-15",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "agent"
+      ],
+      "position": 21
+    }
+  ]
+}

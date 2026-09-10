@@ -1,0 +1,203 @@
+{
+  "date": "2026-06-01",
+  "origin": "chronicle 2026-06-01: pgnexus #164, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 用 GRAPH_TABLE 支持 SQL/PGQ",
+      "summary": "SQL/PGQ 是 2023 年进入 SQL 标准的图查询语法。Christophe Pettus 介绍了 PostgreSQL 19 落地的 GRAPH_TABLE：先用 CREATE PROPERTY GRAPH 把已有表声明成点表和边表，再用 MATCH 写模式，实现上重写成关系连接交给现有优化器，而不是新做一套图存储。当前不支持变长遍历，深度遍历也追不上 Neo4j 的免索引邻接，作者认为浅层图查询可以留在库里做。",
+      "url": "https://thebuild.com/blog/sqlpgq-in-postgresql-19-graph-queries-without-the-graph-database/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-06-01",
+      "image": "https://thebuild.com/media/media/38d05657106745939380b9151dbb8e88.png",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "图查询",
+        "SQL 标准"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Neon 付费计划的数据传输额度提高到 500 GB",
+      "summary": "出口流量费是无服务器数据库上数据密集型应用绕不开的成本项。Neon 宣布自 2026 年 6 月 1 日起，所有付费计划的每月数据传输额度从 100 GB 提到 500 GB，涨到五倍，官方口径是让大多数工作负载不必再为出口流量单独付费。新额度对已有账户自动生效，体现在 6 月账单里，用户不需要改配置或换计划。跨区域读副本、逻辑复制和备份导出这些吃流量的路径，以及超出额度之后的计价，仍要按自己的用量核算。",
+      "url": "https://neon.com/blog/more-data-transfer-on-paid-plans",
+      "author": "Brad Van Vugt",
+      "source": "Neon 博客",
+      "source_date": "2026-06-01",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/more-data-transfer-on-paid-plans/neon-5x-data-transfer.jpg",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "成本",
+        "无服务器"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PG19 逻辑解码的权限问题被归为非缺陷",
+      "summary": "PostgreSQL 19 支持在 wal_level = replica 下不重启启用逻辑解码，随之留下一个开放问题：有 REPLICATION 权限的用户建逻辑槽要不要额外设限。Masahiko Sawada 梳理 Andres Freund 与 Amit Kapila 的论证后提议归入 Non-bugs：这类用户本来就能靠物理流复制读到全部数据，再给逻辑槽不构成新的安全边界。逻辑槽带来的 WAL 膨胀应当靠改进监控来解决。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoAY1RBA0rVNQ74TtBPeq6uYFwcdrW4qYbytCEUwx_2Szw@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "权限",
+        "PostgreSQL 19"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Robert Haas 提出来源追踪，隔离不受信任代码",
+      "summary": "Robert Haas 提出一套来源追踪机制，用 Provenances 对象记录每次操作的最终发起方和监管链条，为不受信任代码的隔离执行打底。Jacob Champion 认为这有助于识别信任边界，能与他在做的内部能力模型互补，讨论随后落到操作符类与操作符族怎么处理，以及完全可信基础设施该如何界定。两人都同意纯数学函数不该受来源限制，否则机制会严到难用。Tom Lane 以 SELinux 的历史提醒，策略打磨到可用需要好几年。",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+nqsNcAC9=ZocQ+i_zTe55+-xWLD2-Nuu2E7=HDPWdruA@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "内核",
+        "沙盒"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制冲突日志表补丁推进到第 43 版",
+      "summary": "为逻辑复制记录冲突历史的提案已迭代到第 43 版补丁。评审集中在几处：冲突日志表的权限，非超级用户可以 DELETE 和 TRUNCATE，但 INSERT、UPDATE 应给出专门报错而不是通用权限错误；字段和函数命名要不要保留 log 一词；CREATE SUBSCRIPTION 因建表时序报出订阅被并发删除的缺陷；以及 pg_subscription 新增列的访问控制。最新补丁补上 TOAST 表支持，并调整了建表时序。",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-uTeLwoDh5doVJyBxARv84=eq+oXbh1Eg06EWGiBPkQUw@mail.gmail.com",
+      "author": "PostgreSQL 开发者邮件列表",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突处理"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "Row Pattern Recognition 补丁进入 v48 收尾",
+      "summary": "RPRContext 整合与 R010 集成推迟到 v48 之后，当前争论 varId 上限该留多少控制位。",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zBO7wU6JEuQJ246PzS=B63ufcYUQjovEfwsQvCZdaM7tg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "补丁"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "发布集的 EXCEPT 子句补丁收到详细评审",
+      "summary": "Peter Smith 指出 v8 系列的空白字符、psql 多模式补全不全和测试写法问题，还需打磨。",
+      "url": "https://www.postgresql.org/message-id/CAHut+PtkCS3TuVusC1yf0ZCcAci0NwAj3EwzNXXtnubeTn1+aQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "补丁"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "AWS 讲 Aurora PostgreSQL 在 AI 编程时代的定位",
+      "summary": "主张数据库要做不拖慢开发的透明底座，举了 serverless 扩缩、Blue/Green 升级和多区域部署。",
+      "url": "https://aws.amazon.com/blogs/database/accelerating-developer-productivity-in-the-agentic-ai-era-with-amazon-aurora-postgresql/",
+      "author": "Manbeen Kohli",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Aurora",
+        "云数据库"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "把所有 GUC 排成一列：constraint_exclusion",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-constraintexclusion/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "walsender 关闭超时测试在认证阶段暴露竞态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB1214984918640A7AC5BEE2A0AF5152@OS9PR01MB12149.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "RISC-V popcount 补丁绕开 Clang 向量化缺陷",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/d15fe767-e6d1-488e-915a-42794be2cb12@app.fastmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "postgres-contrib 汇总 2026 年第 21 周社区贡献",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/85/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "Wim Bertels 写了 PGConf.be 2026",
+      "summary": "",
+      "url": "https://bertelsw.im/posts/pgconf.be.2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    }
+  ]
+}

@@ -1,0 +1,454 @@
+{
+  "date": "2026-05-25",
+  "origin": "chronicle 2026-05-25: daily 76, pgnexus #157, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "外键内连接消除遇到触发器造成的间隙",
+      "summary": "Richard Guo 在 hackers 上指出基于外键的内连接消除存在正确性问题。这项优化假定外键约束始终成立从而重写连接，但父行删除与级联删除并非原子：在语句执行到 AFTER ROW 触发器触发之间，快照可能看到约束被违反，结果就错了。他列出六种处理方向，从放弃优化、加锁谓词到接受一个有文档记录的边缘情况。当前实现的加锁方案过于保守，会在整个事务里禁用优化；补丁将拆成优化机制与间隙处理两部分分别评审。",
+      "url": "https://www.postgresql.org/message-id/CAMbWs4_UJd5QxYq7KaqO=TOWmS=2opUrhC1Oc=Dbwkcn2mXk6g@mail.gmail.com",
+      "author": "Richard Guo",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "外键",
+        "正确性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "跨关系连接统计信息补丁的设计分歧",
+      "summary": "连接统计信息补丁进入 v7 评审。Chengpeng Yan 提了几个设计问题：索引到底是统计定义的持久组成部分还是只在创建时需要，存在等价索引时要不要阻止 DROP INDEX；对被探测关系执行 ANALYZE 不会刷新连接统计，规划器可能同时拿到新鲜的基表统计和过时的跨关系信息。Tomas Vondra 与 Tom Lane 同意第一版只做两表连接，但目录结构要为扩展留余地；表属于不同属主时的权限问题尚未解决。",
+      "url": "https://www.postgresql.org/message-id/33CC910C-8F46-444E-BE61-C9A3D157A96D@outlook.com",
+      "author": "Chengpeng Yan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "连接",
+        "补丁"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "给跑长查询的集群打开客户端断连检测",
+      "summary": "Christophe Pettus 建议启用 client_connection_check_interval。该参数让后端在执行查询期间轮询客户端套接字，一旦内核报告连接已断就终止查询，不再为已经消失的客户端白耗资源。默认值 0 即关闭，它依赖 POLLRDHUP，在 Linux、macOS 和 BSD 上可用而 Windows 不支持，开销只是一次系统调用。他给的经验值是 OLTP 用 10 秒，分析型长查询可以到 5 秒。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-clientconnectioncheckinterval/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-25",
+      "image": "https://thebuild.com/media/media/27d02d87b0ab4f16bda52bda5791fe8d.png",
+      "domain": "pg",
+      "tags": [
+        "连接",
+        "参数",
+        "运维"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "外部表加物化视图做跨库分析",
+      "summary": "Richard Yen 给出一种把外部数据用于分析的组合：外部表只当接入点，在它上面建物化视图把数据缓存到本地，再给物化视图加索引。他的判断是外部数据包装器优化的是开发体验而不是查询性能，远端延迟和不可靠的下推让性能难以预测。刷新用 REFRESH MATERIALIZED VIEW CONCURRENTLY，前提是有唯一键，代价是接受一段可控的数据陈旧。这样既避开远端系统的索引缺失与 OLTP 争用，也不必另搭一套 ETL。",
+      "url": "https://richyen.com/postgres/2026/05/25/fdw_mv_analytics.html",
+      "author": "Richard Yen",
+      "source": "richyen.com",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "物化视图",
+        "分析"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Postgres Pro 发布分片扩展 Shardman 18",
+      "summary": "Postgres Pro 发布 Shardman 18，这是一个把数据水平分布到多个节点的 PostgreSQL 分片扩展。新版本改进了分布式查询的规划与执行，增强监控，并跟进 PostgreSQL 18 的特性。扩展在分片之间自动分布数据，同时保持 ACID 语义和跨分布式表的复杂连接能力。厂商列出的主要改进包括跨分片查询性能优化、集群管理简化和故障转移机制增强，目标是在保留标准 SQL 接口和一致性保证的前提下提供横向扩展。",
+      "url": "https://postgrespro.com/blog/company/5973145",
+      "author": "Postgres Pro",
+      "source": "Postgres Pro 博客",
+      "source_date": "2026-05-25",
+      "image": "https://postgrespro.com//media/2026/05/25/shardman_en.jpg",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "扩展",
+        "发布"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "用备库方案从 Crunchy 算子迁到 Percona 算子",
+      "summary": "Slava Sarzhan 给出从 Crunchy Data 算子迁到 Percona 算子的备库方案。Percona 的算子是 Crunchy 的硬分叉，底层仍是 Patroni、pgBackRest 和 PgBouncer，迁移因此相对直接：把 Percona 集群作为现有 Crunchy 主库的备库拉起来，经备份和流复制同步，最后一步才降级旧主、提升新集群，停机很短。文中还给出以 SeaweedFS 作共享存储的配置和回滚流程。",
+      "url": "https://www.percona.com/blog/migrate-from-crunchy-data-to-percona-postgresql-operator-standby-cluster/",
+      "author": "Slava Sarzhan",
+      "source": "Percona 博客",
+      "source_date": "2026-05-25",
+      "image": "https://www.percona.com/wp-content/uploads/2026/05/Migrate-from-Crunchy-Standby-Cluster-Method.png",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "迁移",
+        "Operator"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Redis Open Source 8.8 正式发布",
+      "summary": "Redis Open Source 8.8 正式发布，是一次功能级更新而不是补丁。新增 Array 数据结构、INCREX、XNACK 和哈希字段级通知，JSON、TimeSeries 与 Search 能力同步扩展，并带来多项性能改进。INCREX 和 XNACK 分别对应应用侧限流与流消费者的重投递恢复。生产用户升级前应验证模块与客户端兼容性、streams 待处理消息语义、限流逻辑以及 Search 和 JSON 的查询行为变化。",
+      "url": "https://github.com/redis/redis/releases/tag/8.8.0",
+      "author": "Redis",
+      "source": "GitHub Releases",
+      "source_date": "2026-05-25",
+      "image": "https://opengraph.githubassets.com/c08728f07261353cece430a41875a8ca302c178e1083d6dbe2c7760a04eede03/redis/redis/releases/tag/8.8.0",
+      "domain": "db",
+      "tags": [
+        "Redis",
+        "发布",
+        "数据结构"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "约 900 个公开 S3 桶里躺着 Terraform state",
+      "summary": "一份调查称发现约 900 个可公开读取的 S3 存储桶里存着 Terraform state 文件，其中 41 个含有仍然有效的 AWS 凭证。state 文件通常包含 provider 配置、资源属性、生成的凭证和内部拓扑，公开的 state 桶等于公开一张攻击路线图。这不是新型漏洞，却是云上最常见也最容易避免的问题之一。建议逐一检查各家对象存储后端的公共访问设置、桶策略、KMS 加密与访问日志。",
+      "url": "https://vechron.com/2026/05/i-found-900-s3-buckets-exposing-terraform-state-files-41-had-live-aws-credentials/",
+      "author": "vechron",
+      "source": "vechron.com",
+      "source_date": "2026-05-25",
+      "image": "https://vechron.com/wp-content/uploads/2026/05/Untitled-design-4-1-1.png",
+      "domain": "cloud",
+      "tags": [
+        "Terraform",
+        "凭证",
+        "S3"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "简化 WAL LSN 等待的补丁准备提交",
+      "summary": "去掉多余的包装函数直接调用 wait_for_catchup()，代价是恢复该特性之前的轮询开销。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdvu4g2GFOCs9efDv4DV1Of17A2UWQL2S7CQe6rR3m-7_A@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "WAL"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志补丁修完评审意见进入 v39",
+      "summary": "审阅者发现回归测试构造表名有误、二进制升级期间转储组件可能被覆盖等问题。",
+      "url": "https://www.postgresql.org/message-id/CAHut+Pu6mMEKqmz37KxJASjTQUPwMLfhnWzf9dq5evmBOdOvZg@mail.gmail.com",
+      "author": "Peter Smith",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突日志"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "FOR PORTION OF 与生成列的权限问题有了解法",
+      "summary": "把应用时间列的属性号加进 updatedCols，同时解决生成列依赖与 UPDATE OF 触发器。",
+      "url": "https://www.postgresql.org/message-id/CA+renyXyLfvtvVv--hGWGTgzFP=-+dPLy4RWvEmioAPyJMM+uw@mail.gmail.com",
+      "author": "Paul A Jungwirth",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态表",
+        "权限"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "年份版本号提案被提出者撤回",
+      "summary": "改提两个轻量替代：文档首页标注发布年份与 EOL，宣传材料写成 PostgreSQL 19 (2026)。",
+      "url": "https://www.postgresql.org/message-id/CAM527d_bY2Rcadq9sUckuVxAysU=kA2GeyG1XfRan1J2VYvDKw@mail.gmail.com",
+      "author": "Nikolay Samokhvalov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "版本号",
+        "社区"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Valkey 9.1.0 修复三个 CVE 并改善 rehash 尾延迟",
+      "summary": "发布时间早于本窗口，延迟敏感的缓存与队列场景值得单独验证 rehash 行为。",
+      "url": "https://github.com/valkey-io/valkey/releases/tag/9.1.0",
+      "author": "Valkey",
+      "source": "GitHub Releases",
+      "source_date": "2026-05-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Valkey",
+        "CVE"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Apache Iceberg 1.11.0 发布",
+      "summary": "涉及 REST catalog、Spark 与 Flink 集成、规范更新和 manifest 加密等大量变更。",
+      "url": "https://github.com/apache/iceberg/releases/tag/apache-iceberg-1.11.0",
+      "author": "Apache Iceberg",
+      "source": "GitHub Releases",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Iceberg",
+        "湖仓"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "OpenTelemetry Collector v0.153.0 带来破坏性变更",
+      "summary": "多个 feature gate 稳定化会切换默认行为，另修复 Snappy 路径的内存破坏，升级前先读变更日志。",
+      "url": "https://github.com/open-telemetry/opentelemetry-collector/releases/tag/v0.153.0",
+      "author": "OpenTelemetry",
+      "source": "GitHub Releases",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "OpenTelemetry"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "一名开发者复盘疑似针对开发机的定向恶意软件",
+      "summary": "开发机上的 SSH 密钥、云令牌和仓库令牌是高价值目标，值得收紧本地凭证隔离。",
+      "url": "https://blog.denv.it/posts/i-was-likely-targeted-by-dprk-in-a-sophisticated-developer-malware-campaign/",
+      "author": "denv.it",
+      "source": "blog.denv.it",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "开发机"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "荷兰查封 800 台协助网络攻击的服务器",
+      "summary": "攻击成本也由托管、域名、支付和滥用处理链路决定，托管方的响应流程同样关键。",
+      "url": "https://krebsonsecurity.com/2026/05/netherlands-seizes-800-servers-arrests-2-for-aiding-cyberattacks/",
+      "author": "Brian Krebs",
+      "source": "KrebsOnSecurity",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "执法",
+        "滥用治理"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "CNCF 认为 Kubernetes 的策略执行发生得太晚",
+      "summary": "把 policy-as-code 从准入控制器前移到 PR、CI、镜像构建和模板渲染阶段。",
+      "url": "https://www.cncf.io/blog/2026/05/25/why-kubernetes-policy-enforcement-happens-too-late-and-what-to-do-about-it/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "策略"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "从 ingress-nginx 零停机迁到 Envoy Gateway 的实践",
+      "summary": "迁移前要做路由清点、影子流量、灰度、指标对齐和回滚方案，注解与自定义片段是难点。",
+      "url": "https://www.cncf.io/blog/2026/05/25/zero-downtime-migration-from-ingress-nginx-to-envoy-gateway/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Envoy",
+        "迁移"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "IA-SQL 用 PostgreSQL 和大模型把文档编成 wiki",
+      "summary": "",
+      "url": "https://github.com/feers77/iasql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "项目"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "DuckDB 1.5.3 修补版发布",
+      "summary": "",
+      "url": "https://github.com/duckdb/duckdb/releases/tag/v1.5.3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "JetBrains 发布 Kotlin 的 VS Code 官方支持 Alpha",
+      "summary": "",
+      "url": "https://blog.jetbrains.com/kotlin/2026/05/official-kotlin-support-for-visual-studio-code-is-now-available-in-alpha/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kotlin"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Linus 表示将对无价值的 pull request 更强硬",
+      "summary": "",
+      "url": "https://www.theregister.com/oses/2026/05/25/linus-torvalds-to-start-being-more-hardnosed-about-pointless-pull-requests-some-of-which-come-from-ais/5245549",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "一篇 Jujutsu 工作流文章重新点燃 Git 替代讨论",
+      "summary": "",
+      "url": "https://ikesau.co/blog/defeating-git-rigour-fatigue-with-jujutsu/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "版本控制"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "corrode 发布 Go 到 Rust 的迁移指南",
+      "summary": "",
+      "url": "https://corrode.dev/learn/migration-guides/go-to-rust/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "六个 C 扩展提醒可移植性不是默认得到的",
+      "summary": "",
+      "url": "https://lemon.rip/w/6-c-extensions-compilers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "C",
+        "可移植性"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Cardamon 找出没人查询的 Prometheus 指标",
+      "summary": "",
+      "url": "https://github.com/dominikhei/cardamon",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Prometheus"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "用 AVX-512 极速解析 IPv6 地址",
+      "summary": "",
+      "url": "https://lemire.me/blog/2026/05/23/parsing-ipv6-addresses-crazily-fast-with-avx-512/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "性能"
+      ],
+      "position": 28
+    }
+  ]
+}

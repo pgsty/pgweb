@@ -1,0 +1,259 @@
+{
+  "date": "2026-03-24",
+  "origin": "chronicle 2026-03-24：pgnexus #92、planet 2",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG18 升级可保留统计，PG14 起同样适用",
+      "summary": "大版本升级后统计信息清零、查询变慢甚至超时，是长期存在的性能悬崖。PostgreSQL 18 支持在升级中保留规划器统计，Nikolay Samokhvalov 验证它对更早的版本同样可用：用 PG18 自带的 pg_dump 加 --statistics-only，从 PG14 到 PG17 的旧集群取出统计，再用新的恢复函数导入新集群。测试确认 PG18 的 pg_dump 能顺利从 PG16 服务端提取。跨版本升级因此不必等 ANALYZE 跑完再放流量。",
+      "url": "https://postgres.ai/blog/20260324-pg18-stats-upgrade-across-versions",
+      "author": "Nikolay Samokhvalov",
+      "source": "postgres.ai",
+      "source_date": "2026-03-24",
+      "image": "https://postgres.ai/img/og-image.png",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "统计",
+        "pg_dump"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 18 的 OAuth 2.0 认证怎么配",
+      "summary": "PostgreSQL 18 支持用 Google、Auth0 等身份提供方签发的令牌代替密码登录。Rafia Sabih 梳理了整条链路：服务端编译时要带 --with-libcurl，客户端需要 psql 18 或更高版本；pg_hba.conf 中的 oauth 方法要写明签发者 URL 与 scope，验证器和用户名映射按需配置。连接时既可以走基于浏览器的交互式认证提示，也可以直接携带已经拿到的令牌。这条路径把口令管理挪到了身份提供方一侧。",
+      "url": "https://www.cybertec-postgresql.com/en/oauth-2-0-in-postgresql-18/",
+      "author": "Rafia Sabih",
+      "source": "CYBERTEC",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证",
+        "OAuth",
+        "PG18"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "OCI 上的切换为何测试全过却在生产翻车",
+      "summary": "OCI 的虚拟 IP 是绑在实例 VNIC 上的第二私有 IP，不像 AWS 和 Azure 那样能在实例间漂移。Umair Shahid 指出，切换时数据库层面已经完成提升，VIP 却仍注册在原实例的 VNIC 上，流量继续送往停摆或只读的节点，集群状态看上去还一切正常。解法有两条：用 HAProxy 探测 Patroni 的接口，彻底不依赖 VIP；或在提升后的钩子里调 OCI CLI 重挂第二私有 IP，代价是多出 5 到 15 秒。",
+      "url": "https://stormatics.tech/blogs/postgresql-high-availability-on-oci-why-your-failover-passes-every-test-but-breaks-in-production",
+      "author": "Umair Shahid",
+      "source": "Stormatics",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "Patroni",
+        "OCI"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "数据平台真正的变化是接缝变少",
+      "summary": "Vibhor Kumar 认为企业数据平台的深层变化不是 AI 改造数据库，而是系统之间的接缝被迫减少。事务、分析、流式和机器学习各立门户的架构长期被容忍，代价是重复副本、来回搬运和分散的访问路径。他把 PostgreSQL 放在事务系统的锚点位置，用逻辑复制与 CDC 控制数据流动，用 pgvector 做向量检索，用外部数据包装器查远端，用行级安全与 pgAudit 管治理。给技术负责人的建议是按运维负担而不是纯性能评估平台。",
+      "url": "https://vibhorkumar.wordpress.com/2026/03/24/the-real-shift-in-data-platforms-is-not-just-ai-it-is-fewer-seams/",
+      "author": "Vibhor Kumar",
+      "source": "Vibhor Kumar 博客",
+      "source_date": "2026-03-24",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/03/image-3.png",
+      "domain": "pg",
+      "tags": [
+        "架构",
+        "数据平台"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "VACUUM FULL 与 REPACK 会被别人的临时表挡住",
+      "summary": "Jim Jones 发现 PostgreSQL 18 的 VACUUM FULL 和 CLUSTER 同样中招，补丁按命名空间判断并跳过其他会话的临时表。",
+      "url": "https://www.postgresql.org/message-id/13637.1774342137@localhost",
+      "author": "Jim Jones",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "临时表"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "锁等待统计的主补丁已经进入主干",
+      "summary": "Michael Paquier 拆出重构部分后应用了主补丁，按 pgstat_io.c 的模式记录各 locktag 的等待时间与次数。",
+      "url": "https://www.postgresql.org/message-id/acIBuaf0SXRkbPfx@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "锁"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "CREATE SUBSCRIPTION SERVER 的内存问题已修",
+      "summary": "Jeff Davis 改为给每个订阅单独的内存上下文，初始挂在事务上下文之下，再按需重挂父级。",
+      "url": "https://www.postgresql.org/message-id/393aa261399a436e28f7ea10cdb6912c093dcaf9.camel@j-davis.com",
+      "author": "Jeff Davis",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Databricks 收购两家初创补强 AI 安全产品",
+      "summary": "标的是 Antimatter 与 SiftD.ai，这家公司在拿到 50 亿美元融资后仍在物色更多收购对象。",
+      "url": "https://techcrunch.com/2026/03/24/databricks-buys-two-startups-lakewatch-antimatter-siftd-ai-security/",
+      "author": "TechCrunch",
+      "source": "TechCrunch",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "收购",
+        "数据平台"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "JIT 关闭之争给出分区表实测：慢 54 倍",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DHB33P41EIY3.MMPHLKV4OAHP@jeltef.nl",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "autovacuum 评分视图应同时给出分项与总分",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/acLGoktU2lp4SIlU@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "Portal 游标选项拟并入协议扩展位图",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0uESzrmA5zwHC=Uye2aH9_jHfHX7qAJPgUh8s_JLLn7PA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "协议",
+        "游标"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制初始 COPY 拟避免全量扫描发布表",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACUswwdgrp8U=_EBRCv9qUJD+YUEHwbSziB2TE99Hc4SvA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "性能"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "CREATE TABLE LIKE 拟支持复制表级注释",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAL-Pge4eWCAu7VcjXhXxFKPwT0jYqG2xG7vRAyZJXcr75voJCA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "索引预取的第一个补丁即将提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/jx7xsohhk3utl2tdvme4knj4ar6u5ujcgzrermfpqx3aahb2wr@hex6tuakcwyl",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "SQL/PGQ 属性图查询修复断言与词法问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zCg4xpB7Giu_KjLaa39LKF=cVm58tBveezLxpLLVC8=rw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "图查询"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Anthropic 给 Claude Code 增加自动模式",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/03/24/anthropic-hands-claude-code-more-control-but-keeps-it-on-a-leash/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-24",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 16
+    }
+  ]
+}

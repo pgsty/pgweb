@@ -14,13 +14,29 @@ from .search import vector
 # Fields copied verbatim from the batch file into the row.
 CONTENT_FIELDS = ('date', 'tier', 'position', 'title', 'summary', 'url', 'author',
                   'source', 'source_date', 'image', 'domain', 'tags', 'origin')
-SUMMARY_MIN, SUMMARY_MAX = 80, 300
+SUMMARY_MIN, SUMMARY_MAX = 120, 240   # a 大新闻 paragraph: about four lines beside the picture
 TITLE_MAX, BRIEF_MAX = 40, 80
+LEAD_MIN, LEAD_MAX = 5, 12            # 大新闻 per day
+DAY_MIN, DAY_MAX = 20, 45             # items per day
 DATE_NAME = re.compile(r'^(\d{4}-\d{2}-\d{2})$')
+IMG_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'data', 'info', 'img')
 
 
 class BatchError(Exception):
     """A batch file that must be fixed before it can be imported."""
+
+
+def thumb_path(key):
+    return os.path.join(IMG_DIR, key + '.webp')
+
+
+def read_thumb(key):
+    """Bytes of data/info/img/<key>.webp, or None when the picture is not made yet."""
+    try:
+        with open(thumb_path(key), 'rb') as stream:
+            return stream.read()
+    except FileNotFoundError:
+        return None
 
 
 def item_key(day, url, title):
@@ -65,7 +81,26 @@ def load(path):
     for index, raw in enumerate(items, start=1):
         rows.append(row(raw, index, day, origin, name, seen, last_tier))
         last_tier = rows[-1]['tier']
+    leads = sum(1 for r in rows if r['tier'] == 1)
+    if leads > LEAD_MAX:
+        raise BatchError('{}：一档最多 {} 条，实际 {} 条'.format(name, LEAD_MAX, leads))
+    if len(rows) > DAY_MAX:
+        raise BatchError('{}：每天最多 {} 条，实际 {} 条'.format(name, DAY_MAX, len(rows)))
     return day, origin, rows
+
+
+def warnings(name, rows):
+    """Soft rules: reported, never blocking (thin days and pictures still to be made)."""
+    notes = []
+    leads = [r for r in rows if r['tier'] == 1]
+    if len(leads) < LEAD_MIN:
+        notes.append('一档只有 {} 条，目标 {}–{} 条'.format(len(leads), LEAD_MIN, LEAD_MAX))
+    if len(rows) < DAY_MIN:
+        notes.append('全日只有 {} 条，目标 {}–{} 条'.format(len(rows), DAY_MIN, DAY_MAX))
+    missing = [r['position'] for r in leads if not os.path.exists(thumb_path(r['key']))]
+    if missing:
+        notes.append('{} 条一档没有本地缩略图（位置 {}）'.format(len(missing), ', '.join(map(str, missing))))
+    return notes
 
 
 def row(raw, index, day, origin, name, seen, last_tier):
@@ -135,19 +170,22 @@ def upsert(rows, day, hide_missing=False):
     with transaction.atomic():
         for values in rows:
             item = existing.get(values['key'])
+            thumb = read_thumb(values['key'])
             if item is None:
-                item = InfoItem(**values)
+                item = InfoItem(thumb=thumb, **values)
                 item.save()
                 report['new'] += 1
             else:
                 changed = (any(getattr(item, f) != values[f] for f in CONTENT_FIELDS) or
-                           item.status != 'published')
+                           item.status != 'published' or
+                           (bytes(item.thumb) if item.thumb else None) != thumb)
                 if not changed:
                     report['unchanged'] += 1
                     continue
                 for field, value in values.items():
                     setattr(item, field, value)
                 item.status = 'published'
+                item.thumb = thumb
                 item.save()
                 report['updated'] += 1
             InfoItem.objects.filter(pk=item.pk).update(search_vector=vector(item))
@@ -165,7 +203,8 @@ def preview(rows):
         item = existing.get(values['key'])
         if item is None:
             report['new'] += 1
-        elif any(getattr(item, f) != values[f] for f in CONTENT_FIELDS) or item.status != 'published':
+        elif (any(getattr(item, f) != values[f] for f in CONTENT_FIELDS) or item.status != 'published' or
+              (bytes(item.thumb) if item.thumb else None) != read_thumb(values['key'])):
             report['updated'] += 1
         else:
             report['unchanged'] += 1

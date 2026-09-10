@@ -1,0 +1,211 @@
+{
+  "date": "2026-03-13",
+  "origin": "chronicle 2026-03-13: pgnexus #81；03-12 无候选；借 2026-03-09/03-10 hackers 5 条",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 第三次 CommitFest 特性综述",
+      "summary": "Pavel Luzanov 梳理了 2025 年 11 月 CommitFest 进入 PostgreSQL 19 的改动。规划器方面有急切聚合、COUNT 优化和并行 TID Range Scan，分区表 COPY 也更快。新特性包括 error_on_null、符合 SQL 标准写法的临时对象函数，以及让副本等待主库位点的 WAIT FOR。监控侧新增复制槽内存计数器、缓冲区分布统计和单表统计重置时间。",
+      "url": "https://postgrespro.com/blog/pgsql/5972812",
+      "author": "Pavel Luzanov",
+      "source": "Postgres Professional 博客",
+      "source_date": "2026-03-13",
+      "image": "https://postgrespro.com/img/logo2.png",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "CommitFest"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "持续摄入让 PostgreSQL 的维护假设失效",
+      "summary": "PostgreSQL 的维护设计假设负载存在安静期，批量 ETL 之间会留出清理窗口。IoT 传感器、交易流和指标采集这类不间断写入抹平了窗口，于是三件事同时发生：autovacuum 一直在跑并与写入争抢 I/O，检查点在 WAL 里制造连续的整页写突发，ANALYZE 的统计更新也与摄入互相干扰。WAL 因此成为吞吐上限，按作者测算每次插入连同索引会产生 2.5–3.5KB 的 I/O。加 worker 或换更快的存储只能推迟问题。",
+      "url": "https://www.tigerdata.com/blog/when-continuous-ingestion-breaks-traditional-postgres",
+      "author": "Matty Stratton",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-13",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/When-Continuous-Ingestion-Breaks-Traditional-Postgres-1280x720.png",
+      "domain": "pg",
+      "tags": [
+        "写入",
+        "autovacuum",
+        "WAL"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "COPY FROM 的 SIMD 解析补丁定稿到 v17",
+      "summary": "宽 CSV 数据在 ARM 上快 42–61%、x86 上快 49–61%，已在 RISC-V、SPARC、ARM 上验证可用。",
+      "url": "https://www.postgresql.org/message-id/CAKWEB6pMbdMDvhfaX1Z0eSULVQFYhEhssaRHdOxAX_5OYubxKw@mail.gmail.com",
+      "author": "Nathan Bossart",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "自动序列复制补丁拆成三块推进到 v12",
+      "summary": "含基础复制、同步 worker 的序列缓存与 REFRESH SEQUENCES 直接同步，LSN 更新逻辑仍有疑点。",
+      "url": "https://www.postgresql.org/message-id/TY4PR01MB16907AB8416E53B843A506E659445A@TY4PR01MB16907.jpnprd01.prod.outlook.com",
+      "author": "Zhijie Hou",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "序列"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "gistGetFakeLSN 可能返回未刷新的 LSN 致崩溃",
+      "summary": "症状是 xlog flush request is not satisfied，修复方案是新增 GetXLogInsertEndRecPtr()。",
+      "url": "https://www.postgresql.org/message-id/0d2e13f5-45eb-4ab1-9bce-cffb9e5754ac@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GiST",
+        "缺陷"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "哈希索引 DELETE 触发缓冲区锁定断言失败",
+      "summary": "Alexander Lakhin 定位到提交 82467f627 引入的缺陷，Andres Freund 已认领修复。",
+      "url": "https://www.postgresql.org/message-id/52d064b8-63bd-45df-a405-b6017d49b300@gmail.com",
+      "author": "Alexander Lakhin",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "内核"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "唯一 GiST 索引补丁被发现冲突检测不完整",
+      "summary": "冲突条目可能因惩罚变化和页面分裂落在别的叶页，作者已把状态改回 Waiting on Author。",
+      "url": "https://www.postgresql.org/message-id/CA+renyWWNOBzmfFEEaJL3zw8RRjib3MNDxuhvjf+0b4Dp9eT4g@mail.gmail.com",
+      "author": "Paul A Jungwirth",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GiST",
+        "索引"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "vacuum 统计补丁首块标记为 Ready for Committer",
+      "summary": "只保留 0001，用于监控 VM 变动、发现 DML 倾斜和评估 IndexOnlyScan；0002、0003 大概率不进 PG19。",
+      "url": "https://www.postgresql.org/message-id/1885f257-46cc-4b90-8d90-41833eb62ea9@gmail.com",
+      "author": "Andrei Lepikhov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "vacuum",
+        "监控"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "make 与 ninja 拟加 format 目标统一代码格式化",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/DH1IHNI06K3E.35YUXK4EVN8D6@jeltef.nl",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "发布 EXCEPT 子句用 TABLE 还是 TABLES 仍在争",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+PssG+sHeV+Xo0g=S7xBb9FgDPjHYDR4iSuOdYXDq-Psng@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "TID 访问器函数获得共识，文档细节仍在打磨",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/8a2e78c3-2f63-455f-80a9-cbd9eebaa245@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "补丁"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "file_fdw 的 ON_ERROR set_null 拟补回归测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwFTRgYXS0V7=e3AYox5PVbMU034BQoxZkX7kMyp5beLMw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "测试"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "walsender 关停超时被报设 1 毫秒仍延迟 26 秒",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHRFw6G=ib+z8aueoJ6a3EsO5hkEXEh5KeTakcgoPoa5g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制"
+      ],
+      "position": 13
+    }
+  ]
+}

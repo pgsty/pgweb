@@ -1,0 +1,291 @@
+{
+  "date": "2026-08-08",
+  "origin": "chronicle 2026-08-08: pgsty-daily 2026-08-08.md, pgnexus #232, planet 1；补 2026-08-07 未用候选 2 条",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgrust 0.2 用批处理与 SIMD 重写查询引擎",
+      "summary": "malisper 记录了用 Rust 重写的 pgrust 0.2 如何给查询引擎提速。一次处理 1024 行的批式执行把五亿行求和从 1.3 秒降到 480 毫秒，把顺序扫描与聚合融合成一个算子再降到 358 毫秒，用 SIMD 降到 135 毫秒。作者称 ClickBench 条件下最高领先 PostgreSQL 约 300 倍，同时说明算子融合是针对已知查询硬编码，没有 JIT 无法推广，对照也未计入锁与元组解析开销。",
+      "url": "https://malisper.me/how-we-made-postgres-hundreds-of-times-faster-the-query-engine/",
+      "author": "malisper",
+      "source": "作者博客",
+      "source_date": "2026-08-03",
+      "image": "https://malisper.me/wp-content/uploads/2026/08/image.png",
+      "domain": "pg",
+      "tags": [
+        "查询引擎",
+        "SIMD",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "ignore_system_indexes 是急救车不是配置项",
+      "summary": "Christophe Pettus 讲到 ignore_system_indexes：打开后服务器改用顺序扫描读系统目录，规划器也不再考虑目录索引。它默认关闭，属于罕见的 backend 级参数，只能写在配置文件或连接时用 PGOPTIONS 指定，会话建立后无法 SET。它存在的理由是系统目录索引损坏后 REINDEX 本身也走不通，此时用单用户模式加 -P 执行 REINDEX SYSTEM。它只保护读，DDL 仍会写索引。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-ignore_system_indexes/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-08",
+      "image": "https://thebuild.com/media/media/d52814e375ef4b16ae2fe8607abe7ad0.png",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "系统目录",
+        "恢复"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 把恶意包告警扩展到八个生态",
+      "summary": "GitHub 说明其 Advisory Database 已开始摄入 OpenSSF 的 malicious-packages 仓库，Dependabot 的恶意包告警从只覆盖 npm 扩展到八个包管理生态，含 PyPI、Maven、RubyGems、NuGet、Go 与 crates.io。该数据源以 OSV 格式收集了一万五千多份报告，涵盖仿冒包名、依赖混淆与账户接管。恶意依赖常在安装时窃取凭据，处置方式与普通 CVE 不同。",
+      "url": "https://github.blog/security/supply-chain-security/how-we-took-malware-advisories-beyond-npm/",
+      "author": "GitHub",
+      "source": "GitHub 博客",
+      "source_date": "2026-08-06",
+      "image": "https://github.blog/wp-content/uploads/2026/01/generic-security-logo-github-blocks.png",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "安全",
+        "依赖"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "MCP 新规范把核心交互改为无状态",
+      "summary": "Cloudflare 解读了 2026-07-28 版 MCP 规范：核心交互改为完全无状态，TypeScript、Python、Go 与 C# 的 SDK 都已跟进。Streamable HTTP 把工具动作提升到 Mcp-Method 与 Mcp-Name 请求头，网关和 WAF 不必解析任意 JSON 就能按工具粒度做策略；规范还加入列表缓存提示并调整了授权流程。MCP 已经连着内部数据库与 CI，升级前应在真实入口下跑兼容矩阵。",
+      "url": "https://blog.cloudflare.com/mcp-v2/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-07-28",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KZA53A9E3R79TDV6T6RCNDKG.png",
+      "domain": "infra",
+      "tags": [
+        "MCP",
+        "协议",
+        "网关"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "AWS 为 AgentCore 增加长驻计算实例",
+      "summary": "AWS 在 Bedrock AgentCore Runtime 之外推出 Runtime instances，作为面向长任务的托管计算选项。用户可以把多个带各自依赖的 agent 部署到同一个 AWS 托管运行时，在共享会话中协作最长 14 天，可以使用 GPU，也能停止与重启会话控制空闲成本。需要跨会话保留的知识仍要放进 AgentCore Memory 或外部存储。",
+      "url": "https://aws.amazon.com/blogs/aws/runtime-instances-persistent-compute-for-production-ai-agents-on-amazon-bedrock-agentcore/",
+      "author": "AWS",
+      "source": "AWS 博客",
+      "source_date": "2026-08-06",
+      "image": "https://d2908q01vomqb2.cloudfront.net/da4b9237bacccdf19c0760cab7aec4a8359010b0/2025/07/07/AgentCore-icon3.png",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "Agent",
+        "计算"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "面向 JOIN 与外键的扩展统计信息进入审查末段",
+      "summary": "Tomas Vondra 认为 v9 补丁集的三个部分接近可提交，但连接 MCV 统计仍有崩溃、分区表采样段错误和视图信息泄露等问题。",
+      "url": "https://www.postgresql.org/message-id/0ea50aa1-c028-4863-8ab9-a2a2dbd003d2@vondra.me",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "统计信息"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_dump 拟支持并行导出到管道",
+      "summary": "新增的 --pipe 选项让并行导出不必先落地到转储目录，并行作业里漏写 %f 占位符会告警，避免多个进程写同一个文件。",
+      "url": "https://www.postgresql.org/message-id/CAH5HC94uWqwGwWzCYHB_h4-jt1dT_M1=th+3mJaxnAdZ5XBAMg@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_dump",
+        "备份"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 拟报告阻塞清理的最旧 xmin 来源",
+      "summary": "Scott Ray 指出快照持有者平局时报告的 PID 不稳定，建议改用类似死锁报告的多行日志列出主要阻塞者。",
+      "url": "https://www.postgresql.org/message-id/o8gz3Yoq3LmnoO9oeF_3pPSlndgQmosyYKAFkiVZ60HyiA_g8cDQVs8AMkSJBRrz0-nclaPVJ2c0ilGyi3TIuAqNqjjOYzLIaJa5V65tZDg=@scottray.io",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "vacuum",
+        "可观测性"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Databricks 谈大规模编码 agent 的成本治理",
+      "summary": "文章给出四类控制杆：低成本模型与灵活外壳、按请求和任务动态路由、面向开发者的预算与熔断、压缩 token 开销。",
+      "url": "https://www.databricks.com/blog/managing-ai-coding-costs-scale",
+      "author": "",
+      "source": "Databricks 博客",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "成本",
+        "Agent"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 统一 Workers AI 与 AI Gateway",
+      "summary": "绑定与 REST API 已走同一路径，日志和计费统一；按模型而非按供应商路由、负载均衡与故障切换仍是路线图。",
+      "url": "https://blog.cloudflare.com/workers-ai-gateway-unification/",
+      "author": "",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AI",
+        "网关"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare AI Search 自动拼装检索链路",
+      "summary": "由平台自动编排 Workers AI、AI Gateway、Vectorize、R2 与 Browser Run，官方称使用默认嵌入与重排模型时这部分免费。",
+      "url": "https://blog.cloudflare.com/ai-search-easier/",
+      "author": "",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "RAG",
+        "检索"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "并发建索引优化补丁改用多页降低锁竞争",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CADzfLwX=2L2kLeyBjziAbA05Y+XeMSDzBMxGJk=eo4K9m8CKKw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 写 WAL 的架构分歧仍未收敛",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANWCAZa1rq5qRvjrgNhzpyP=KmAHPWPW_O+WhYs37tbH-F1Nbw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "wal_compression 选 zstd 获得更多支持",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/0ABD11F6-A25B-42CC-97B6-85C9C6E97FF2@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "冲突日志表该不该记录中止类冲突仍有分歧",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoAvUKu8L2y7ctH-u8zghbzQAp6waY85Yu7E5g8qYFgT+g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "复制槽释放补丁改用断言表达不变量",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACU-mVxrak_Q0EP1sZg8h=7pg1d09Gj6Ody5jH6zxiZQLA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 推出自然语言查询的 Radar Researcher",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/introducing-radar-researcher/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "OpenJDK 发布 JDK 28 抢先体验版 Build 10",
+      "summary": "",
+      "url": "https://jdk.java.net/28/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Herdr 加入 YC，运行时保持 Apache-2.0",
+      "summary": "",
+      "url": "https://herdr.dev/blog/herdr-is-joining-y-combinator/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 19
+    }
+  ]
+}

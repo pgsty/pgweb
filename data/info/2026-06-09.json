@@ -1,0 +1,538 @@
+{
+  "date": "2026-06-09",
+  "origin": "chronicle 2026-06-09: daily, pgnexus #172, news 2, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL Anonymizer 3.1 引入本地差分隐私",
+      "summary": "Dalibo 发布 PostgreSQL Anonymizer 3.1。这个扩展用动态、静态、副本、备份等六种策略隐藏数据库里的个人信息与商业敏感数据，3.1 在此之上加入本地差分隐私：用广义随机响应机制处理调查数据和分类值，观察者即使掌握辅助信息也无法高置信度还原原值，聚合统计仍然可用。该版本还修复了一个可导致权限提升的严重漏洞，PostgreSQL 14 上的实例风险最高，官方建议立即升级或先应用临时缓解措施。",
+      "url": "https://pgsql.cc/about/news/postgresql-anonymizer-31-3311/",
+      "author": "Dalibo",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "安全",
+        "脱敏"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "TimescaleDB 2.27 用布隆过滤器加速更新与删除",
+      "summary": "TimescaleDB 2.27 的重点是减少分析操作中不必要的解压工作。压缩数据上的 UPDATE 和 DELETE 现在也用布隆过滤器在解压前做批次剪枝，厂商称最高提速 160 倍；UPSERT 借助复合布隆过滤器提高冲突检测效率，Hypercore 向量化执行引擎能内联处理更多过滤表达式，连续聚合刷新提速 30% 到 2 倍。此外新增连续聚合的合并刷新。该版本同时宣布弃用 PostgreSQL 15，支持将在 2.28 结束。",
+      "url": "https://www.tigerdata.com/blog/timescaledb-2-27",
+      "author": "Brandon Purcell",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-06-09",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/06/timescaledb-2.27.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "压缩",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Amazon RDS 预览环境支持 PostgreSQL 19 Beta 1",
+      "summary": "PostgreSQL 19 Beta 1 发布之后，AWS 把它放进了 Amazon RDS 的 Database Preview Environment，托管用户不必自建整套测试栈就能验证应用与扩展的兼容性。这是预览而不是 GA：预览环境的实例最长保留 60 天，快照也只能在预览环境内部使用。计划升级到 19 的团队可以借此提前跑一遍逻辑复制、序列同步、SQL/PGQ 和常用扩展组合，把云上行为与自建环境的差异记录下来。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/postgresql-19-beta-1-amazon-rds-database-preview-environment/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "Amazon RDS",
+        "托管数据库"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PGConf.dev 2026 温哥华：规划器提示与 TDE 成焦点",
+      "summary": "Cybertec 的 Christoph Berg 记录了温哥华的 PGConf.dev 2026。会议既有社区讨论，也有周五由与会者投票定题的非正式环节。重点包括与 Bruce Momjian、Tom Lane 等早期贡献者的圆桌回顾，Robert Haas 介绍 PostgreSQL 19 的规划器提示，以及把透明数据加密并入内核的进展讨论。其他议题还有索引预取、时态查询，以及正在提交给 SQL 标准委员会的 key joins。",
+      "url": "https://www.cybertec-postgresql.com/en/pgconf-dev-2026-in-vancouver/",
+      "author": "Christoph Berg",
+      "source": "Cybertec 博客",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议",
+        "内核",
+        "PG19"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Microsoft 分析攻击者如何拿 AI 品牌做钓鱼诱饵",
+      "summary": "Microsoft 安全团队分析了一批以 AI 品牌为诱饵的社会工程活动：攻击者利用开发者急于试用新工具的心理，用仿冒的 AI 工具页面窃取凭据。官方强调这是品牌滥用，相关 AI 服务本身并未被攻破；TechCrunch 的报道把讨论延伸到被篡改的 Microsoft 开源工具与 AI 开发者密码泄露。建议在安装 AI 命令行工具、编辑器扩展和 MCP 服务器前先核对发布者、签名与发布产物，并收敛共享 API key 的暴露面。",
+      "url": "https://www.microsoft.com/en-us/security/blog/2026/06/08/ai-brands-as-bait-how-threat-actors-are-using-the-ai-hype-in-social-engineering/",
+      "author": "Microsoft Security",
+      "source": "Microsoft 安全博客",
+      "source_date": "2026-06-08",
+      "image": "https://www.microsoft.com/en-us/security/blog/wp-content/uploads/2026/06/AI-as-bait-featured.png",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "凭据窃取",
+        "供应链"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 把威胁情报做成 WAF 实时规则字段",
+      "summary": "安全团队常见的困境是知道有威胁却难以快速把它变成边缘规则。Cloudflare 把威胁情报做成 WAF 可以直接引用的实时字段，按行业、地区和威胁团伙等维度匹配请求，官方称检测在边缘节点本地执行以控制延迟，同时保留 Security Analytics 的可见性。这样一来情报就成了 API 和 Terraform 能够编排的对象，规则可以随情报更新自动生效。落地前建议先在日志和分析里观察一段时间，确认误杀率可以接受再切换到拦截模式。",
+      "url": "https://blog.cloudflare.com/realtime-threat-intel-waf-rules/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-06-08",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KW45QSHA8WCJ20F0PVXB980S.png",
+      "domain": "cloud",
+      "tags": [
+        "WAF",
+        "威胁情报",
+        "边缘"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 对闲置仓库开启定期代码扫描",
+      "summary": "很多组织的真实风险不在活跃仓库，而在没人维护却仍被部署、被引用或仍存有密钥和旧依赖的仓库里。GitHub 新增的定期代码扫描针对的正是这些闲置仓库：它是组织级的 Advanced Security 全局设置，作用于 code scanning 的默认配置，不需要为每个仓库单独打开。管理员可以借此把归档仓库和遗留部署对应的仓库一并纳入安全覆盖，并重新核对哪些闲置仓库仍然出现在生产依赖链里。",
+      "url": "https://github.blog/changelog/2026-06-09-periodic-code-scanning-of-inactive-repositories/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-09",
+      "image": "https://github.blog/wp-content/uploads/2026/06/periodicscan.jpg",
+      "domain": "infra",
+      "tags": [
+        "代码扫描",
+        "供应链"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Pgpool-II 五个分支同步发布小版本",
+      "summary": "涵盖 4.7.2、4.6.7、4.5.12、4.4.17 和 4.3.20，均为错误修复和小幅改进，源码与 RPM 包已可下载。",
+      "url": "https://pgsql.cc/about/news/pgpool-ii-47246745124417-4320-3314/",
+      "author": "Pgpool Global Development Group",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "高可用"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "补丁把规划器内存占用从 2.6 GB 压到约 500 MB",
+      "summary": "Tomas Vondra 的实验补丁在连接路径创建时释放临时子列表，大连接场景下反而更快，memoize 与 material 路径仍是热点。",
+      "url": "https://www.postgresql.org/message-id/02a3a398-a697-4709-8e36-4d3fe4b57a18@gmail.com",
+      "author": "Tomas Vondra",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "内存"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "psql 描述查询缺少 pg_catalog 限定可被污染",
+      "summary": "Chao Li 演示了在 search_path 里放假的 pg_foreign_server 就能让 \\dRs+ 显示错误结果，四处引用待修，两处适合回补。",
+      "url": "https://www.postgresql.org/message-id/e6bdd41a-4390-4711-9646-aa9de10f6c5e@163.com",
+      "author": "Chao Li",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql",
+        "安全"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pg_dump 提议新增 --pipe 直接输出到管道",
+      "summary": "可以把转储流式送进压缩或上传命令，但并行转储时多个工作进程写同一目标会损坏输出，缺少 %f 时现在会告警。",
+      "url": "https://www.postgresql.org/message-id/CAH5HC94-gFS63cnQbSXZ+hDvSUNV51U+KeRU-XiY-ngu_KtJ5A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_dump",
+        "备份"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志表确定用户操作边界",
+      "summary": "社区决定禁止对冲突日志表做 DROP、ALTER 和增删改，但不拦截显式加锁与继承，并会写明 DROP SUBSCRIPTION 的级联删除。",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uDanE7J9hLOy0jnWJqXtUaERhiYkP5Ba9HJSkypK0Sn4A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Amazon DocumentDB 引入 5.0.1 小版本与 LTS 通道",
+      "summary": "小版本机制让用户对升级节奏有更多控制，但 LTS 与非 LTS 的选择无法回退，升级前需确认应用兼容与回滚方案。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-documentdb-engine-minor-version-5-0-1/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DocumentDB",
+        "托管数据库"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "CloudWatch Logs Insights 新增 23 个命令与函数",
+      "summary": "查询语言进一步向分析型语言靠拢；同期 MSK Express Brokers 也支持 Kafka Streams 自动创建 topic。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-cloudwatch-logs-insights-new/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性",
+        "日志"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "AWS Compute Optimizer 闲置建议覆盖数据库与缓存",
+      "summary": "按连接数、缓存命中和 CPU 等指标判定闲置，新增六类资源；下线之前仍要确认业务周期性与容灾用途。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-compute-optimizer-six-new-idle/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "成本优化"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 企业用户命名空间纳入 IP 允许列表",
+      "summary": "企业托管账号的仓库常落在用户命名空间，只覆盖组织的网络策略会留下治理缺口，该能力现已正式可用。",
+      "url": "https://github.blog/changelog/2026-06-08-ip-allow-list-coverage-for-emu-namespaces-in-general-availability/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "访问控制"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Docker 梳理软件供应链安全实践清单",
+      "summary": "重点从扫描漏洞转向证明构建来源：digest 固定、SBOM、制品签名与 CI 策略门禁，文章绑定 Hardened Images 叙事。",
+      "url": "https://www.docker.com/blog/software-supply-chain-security-best-practices/",
+      "author": "Docker",
+      "source": "Docker 博客",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "SBOM"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "libpq 在服务端正常终止时仍报连接异常关闭",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/ifw6jojzfvhr6rcmofmpnj5w5jdq4uy5dmfacrd2i4uq54wfyc@yrmcv6fzjmzi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_get_publication_ddl 函数补丁进入代码审查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/8733yw55id.fsf@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 20 计划移除 refint contrib 模块",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWWm+67r=yf2bCY9bbriYKaK3q79sWJpgqbHQ3endHe9gA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "contrib"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 保留复制源 OID 的补丁仍在打磨",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uC+OfSSX1denhfi-S-CNChof_au0ACNnLj+kqAvTHNwVQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "订阅选项 max_retention_duration 将拒绝负值",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/9232401A-DEEE-49E1-9D11-D14A776DB82B@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "虚拟列 SET EXPRESSION 漏掉整行约束依赖",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/71242FEA-15A3-4073-9FA1-561CA744ACBD@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "虚拟列"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "新补丁集尝试真正修好 TOAST 存储选项",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aihb_hMloqVDpbtw@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "VACUUM"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制并行 Apply 补丁进入第 19 版评审",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+Pt=C9Z5PSkELKaTOh3AfjoUVf__FU2sQCFs8L60Qvfxhw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "备机逻辑解码测试因时间线竞态偶发失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/TYRPR01MB12156677791D04E4E858F3FCCF51D2@TYRPR01MB12156.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "SQL/PGQ 标签缓存查询失败的补丁已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAExHW5vW4ZPgEO2=R4ATgpw-8E==JNhG0jBW-mN6GkmMh=Q8ew@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "GRAPH_TABLE 上使用 FOR UPDATE 会报未知 RTE 类型",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWX8J2cUTCnVRwks0gJw4wiMCv_qVSxshFC9f8oh7Ch6JA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Christophe Pettus 逐个梳理 GUC：DateStyle",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-datestyle/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 2026 年第 22 周贡献简报发布",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/86/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "KDB-X 解释时序数据库为何能做到低延迟",
+      "summary": "",
+      "url": "https://medium.com/kx-systems/what-makes-time-series-database-kdb-x-so-fast-80d254e936aa",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "时序"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "AWS Lambda 托管实例扩展到更多商业区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-lambda-managed-instances-region-expansion/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Serverless"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "AWS 储蓄计划采购分析器支持目标覆盖率分析",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-savings-plans-coverage/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "成本优化"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "中国首个风电驱动水下数据中心开始运行",
+      "summary": "",
+      "url": "https://www.theguardian.com/world/2026/jun/09/worlds-first-wind-powered-underwater-datacentre-starts-operating-in-china",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据中心"
+      ],
+      "position": 34
+    }
+  ]
+}

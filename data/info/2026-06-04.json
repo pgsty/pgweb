@@ -1,0 +1,427 @@
+{
+  "date": "2026-06-04",
+  "origin": "chronicle 2026-06-04: pgsty-daily, pgnexus #167, news 2, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 Beta 1 发布，正式版预计秋季",
+      "summary": "PostgreSQL 全球开发组发布 19 的第一个 Beta，正式版预计在 2026 年 9 月到 10 月之间。性能侧有异步 I/O 增强、并行 autovacuum 和 worker 自动伸缩，存在外键时插入速度最多提升到两倍。新功能包括 SQL/PGQ 属性图查询、GROUP BY ALL 和增强的时态查询，安全侧加了 SNI 与密码过期警告，监控多了两个统计视图。逻辑复制支持序列复制，数据校验和可在线打开，JIT 默认关闭。",
+      "url": "https://www.postgresql.org/about/news/postgresql-19-beta-1-released-3313/",
+      "author": "PostgreSQL Global Development Group",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "Beta",
+        "发布"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "实测 pgBackRest 可以备份 pg_tde 加密库",
+      "summary": "Stefan Fercot 用 pgBackRest 2.58.0 配 Percona Server for PostgreSQL 18 和 pg_tde 做了一轮实测，数据是约 1.5 GB 的加密 pgbench 表，仓库放在 S3 兼容对象存储上，WAL 也开了加密。结论是全量与增量备份、同步和异步归档、恢复到命名还原点都正常，用 OpenBao 管密钥的过程对备份透明。代价是压缩、块级增量、WAL 头校验和页校验都得关掉。",
+      "url": "https://pgstef.github.io/2026/06/04/pgbackrest_and_pg_tde.html",
+      "author": "Stefan Fercot",
+      "source": "pgstef 博客",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgBackRest",
+        "加密",
+        "备份"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "文件描述符耗尽是压垮 PostgreSQL 的系统上限",
+      "summary": "PostgreSQL 一个连接一个后端进程，每个后端空闲时占十几个文件描述符，写入时可能到几百个，max_connections 设得过大又不做池化，很容易撞上 fs.file-max 或进程的 RLIMIT_NOFILE。征兆是日志里先出现 out of file descriptors，随后后端被信号 6 终止并触发崩溃恢复。作者的建议是用 PgBouncer 把连接收敛到几百个后端。",
+      "url": "https://stormatics.tech/blogs/file-descriptors-the-os-limit-that-takes-down-postgresql",
+      "author": "Warda Bibi",
+      "source": "Stormatics",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "连接池",
+        "内核参数"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "AWS 连载讲 PostgreSQL 扩展索引类型",
+      "summary": "AWS 数据库博客连着发了两篇，梳理 Aurora PostgreSQL 和 RDS for PostgreSQL 上由扩展提供的索引类型：一篇讲 bloom、pg_trgm 和 pg_bigm，覆盖多列等值过滤、模糊匹配与日文等亚洲语言的检索；另一篇讲 SP-GiST、btree_gin 和 btree_gist，落点在操作符类和可扩展索引框架。这些能力在生产里常见却容易被忽略，适合拿来做索引设计评审。",
+      "url": "https://aws.amazon.com/blogs/database/index-types-supported-in-amazon-aurora-postgresql-and-amazon-rds-for-postgresql-using-extensions-bloom-pg_trgm-and-pg_bigm/",
+      "author": "AWS",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-06-03",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/06/02/DB3548p4.png",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "扩展"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "AWS 把 Aurora 与 Neptune 纳入区域切换编排",
+      "summary": "跨区域容灾最难的部分往往不是复制本身，而是切换时的容量、顺序、依赖服务、入口和回退。AWS 的应用恢复控制器给 Region switch 增加了 Amazon Aurora 的扩容和 Amazon Neptune 全球数据库的故障转移，让数据库恢复并进统一的应用恢复计划，跨区域恢复从手写 runbook 往托管控制面走。用这套方案前仍要实测演练：读写角色切换、容量预热、依赖顺序、RTO 与 RPO，以及失败后的回滚路径。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/region-switch-aurora-scaling-neptune-failover/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容灾",
+        "Aurora"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Let's Encrypt 公布后量子 Web PKI 路线",
+      "summary": "Web PKI 是互联网安全的公共底座，后量子迁移不是换一张证书那么简单，会牵动浏览器、CA、TLS 握手、证书链长度和运维自动化。Let's Encrypt 公布了自己的后量子路线，把 Merkle Tree Certificates 列为可能方向，目标是在量子威胁到来之前给出可部署、可扩展且不明显牺牲 TLS 性能的方案。平台团队可以开始跟踪 ACME 客户端、证书链大小和内部 CA 会受哪些影响。",
+      "url": "https://letsencrypt.org/2026/06/03/pq-certs",
+      "author": "Let's Encrypt",
+      "source": "Let's Encrypt",
+      "source_date": "2026-06-03",
+      "image": "https://letsencrypt.org/images/LetsEncrypt-SocialShare.png",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "TLS",
+        "后量子"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "SQL/PGQ 的标签缓存查找失败已有补丁",
+      "summary": "Ashutosh Bapat 一并修了空标签表达式在视图里的依赖跟踪，以及点表边表共享标签的问题。",
+      "url": "https://www.postgresql.org/message-id/CAON2xHMWgBhiBjKz2tGk0b1nQq03Fn4ESL73VUfUtVD+fuWYDQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ",
+        "缺陷"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "FOR PORTION OF 不重算生成列的缺陷已修复",
+      "summary": "补丁把应用时间列加进 RTEPermissionInfo 的 updatedCols，Peter Eisentraut 改完措辞后推入。",
+      "url": "https://www.postgresql.org/message-id/1397d468-9d00-40b3-9f92-da73d4ae50ad@eisentraut.org",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态表",
+        "生成列"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PGConf.PL 2026 开始征集演讲",
+      "summary": "首届波兰 PostgreSQL 大会定于 2026 年 11 月 24 日在格但斯克举行，优先英文演讲。",
+      "url": "https://pgsql.cc/about/news/pgconfpl-2026-cfp-3312/",
+      "author": "",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "会议"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Tridgell 谈 rsync 的 AI 代码争议",
+      "summary": "争论落点是 AI 生成的贡献要不要披露，以及维护者的审查责任该怎么界定。",
+      "url": "https://medium.com/@tridge60/rsync-and-outrage-d9849599e5a0",
+      "author": "Andrew Tridgell",
+      "source": "Medium",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理",
+        "AI 代码"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Keyspaces 的变更流支持指定迭代器位置",
+      "summary": "变更流有了明确的位置语义，恢复、重放、幂等和滞后监控都更好做。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/keyspaces-cdc-iterator-position/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "CDC"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Elixir 1.20 把渐进类型作为版本主题",
+      "summary": "多年的类型系统工作被摆到台面，对大型并发与分布式系统的可维护性有实际影响。",
+      "url": "https://elixir-lang.org/blog/2026/06/03/elixir-v1-20-0-released/",
+      "author": "",
+      "source": "Elixir",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "语言",
+        "类型系统"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 启用 BGP 首个 AS 校验",
+      "summary": "RPKI 覆盖不到的伪造路径场景多一层防线，适合顺带复核自家路由过滤策略。",
+      "url": "https://blog.cloudflare.com/enforce-first-as-bgp/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "路由安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Anthropic 讲产品里怎么给 Claude 划边界",
+      "summary": "文章把沙箱、网络出口、密钥处理、文件权限和审计日志摆成智能体上线前的检查项。",
+      "url": "https://www.anthropic.com/engineering/how-we-contain-claude",
+      "author": "",
+      "source": "Anthropic Engineering",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "智能体",
+        "安全"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "synchronized_standby_slots 补丁改为自动去重",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uBT8JbEGE0xvm-Wxh1g_VVgC=whKqChZo-uB+VOa_YCTw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Tom Lane 反对按表达式改写索引自动命名",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3533987.1780612284@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "OAuth 验证器文档里 error_detail 的说法要改",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/0281836A-F5FF-41A5-9EE1-656C1FAAC6B2@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "升级后分阶段分析分区表建议用 ANALYZE ONLY",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aiGyesxrkkzG84Ty@pryzbyj2023",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别确认继续拒绝空模式",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260604.132108.405136284364833955.ishii@postgresql.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "把所有 GUC 排成一列：cursor_tuple_fraction",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-cursortuplefraction/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "EDB 复盘自办的 AI 安全黑客松",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/just-clear-day-what-we-learned-running-ai-security-hackathon",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "AWS 给出 Oracle 迁移到 Aurora DSQL 的做法",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/migrating-data-from-oracle-to-amazon-aurora-dsql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Amazon Cognito 支持多区域复制",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/aws/improve-your-application-resilience-with-amazon-cognito-multi-region-replication/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Step Functions 增加 AgentCore 推理步骤",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-step-functions-agentcore/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "ECS 托管实例支持 Trainium 与 Inferentia",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-ecs-managed-instances-neuron/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Kubernetes 说明从 Dashboard 迁到 Headlamp 的原因",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/06/01/dashboard-to-headlamp/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "etcd 3.7.0-rc.0 发布，接近正式版",
+      "summary": "",
+      "url": "https://github.com/etcd-io/etcd/releases/tag/v3.7.0-rc.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Cilium 1.20.0-pre.3 进入预发布",
+      "summary": "",
+      "url": "https://github.com/cilium/cilium/releases/tag/v1.20.0-pre.3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker AI 支持多轮强化学习",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/multi-turn-reinforcement-learning-on-sagemaker-ai/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-03",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 29
+    }
+  ]
+}

@@ -1,0 +1,231 @@
+{
+  "date": "2026-04-21",
+  "origin": "chronicle 2026-04-21: pgnexus #121, planet 5",
+  "items": [
+    {
+      "tier": 1,
+      "title": "depesz 实测 REPACK CONCURRENTLY 的锁开销与耗时",
+      "summary": "PostgreSQL 19 给 REPACK 加了 CONCURRENTLY 选项：大部分时间只持较弱的共享更新排他锁，靠复制槽做逻辑解码追上并发改动，只在最后交换文件节点时短暂升为排他锁。depesz 在一张删掉 80% 行、19GB、两亿行的表上实测，66 秒压到 4.1GB，其间插入延迟从 1.5 毫秒升到平均 5.5 毫秒，峰值约 63 毫秒。已知限制是复制槽稀缺、全库同时只能跑一个 REPACK，末尾升锁还可能死锁。",
+      "url": "https://www.depesz.com/2026/04/21/waiting-for-postgresql-19-add-concurrently-option-to-repack/",
+      "author": "Hubert 'depesz' Lubaczewski",
+      "source": "depesz.com",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "PG19",
+        "实测"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Ring 用 pgvector 撑起十亿级语义视频搜索",
+      "summary": "Ring 把跨四大洲、1000 到 2000 亿条嵌入向量的语义视频搜索建在 RDS for PostgreSQL 和 pgvector 上，每天新增约 20 亿条，查询延迟压在 2 秒以内。按用户分区避免单张巨表；刻意不建向量索引，用暴力并行扫描换取 100% 召回；再用 16 个工作进程把 EBS 带宽吃满。Alexander Onbysh 说明选 PostgreSQL 而非专用向量库，考虑的是这个规模下的成本与运维经验。",
+      "url": "https://aws.amazon.com/blogs/database/rings-billion-scale-semantic-video-search-with-amazon-rds-for-postgresql-and-pgvector/",
+      "author": "Alexander Onbysh",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-04-21",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/04/20/DB5367.png",
+      "domain": "pg",
+      "tags": [
+        "pgvector",
+        "向量检索",
+        "RDS"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Percona 分辨慢查询与长耗时查询的差别",
+      "summary": "PostgreSQL 调优里最容易混为一谈的，是慢查询与长耗时查询。Sonia Valeja 指出，慢查询因为缺索引、计划不佳或模式设计问题而超出预期地耗时，白白占用资源；长耗时查询处理的是大数据集或复杂运算，本身效率正常，只是活儿多。两者的处置方式不同：前者要加索引、更新统计信息，后者更多是调度和负载规划的问题。判断依据来自业务上下文，跑得久未必需要优化，先分清查询是效率低还是工作量大。",
+      "url": "https://www.percona.com/blog/postgresql-performance-is-your-query-slow-or-just-long-running/",
+      "author": "Sonia Valeja",
+      "source": "Percona 博客",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "诊断"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Hints 系列（三）：pg_plan_advice 给建议而非命令",
+      "summary": "Christophe Pettus 把 pg_plan_advice 与 Oracle 式提示、pg_hint_plan 区分开：它提供的是机制而非策略，规划器仍握有最终决定权，建议只作为代价计算之外的参考，开发者可以只指定连接方法这类局部信息，其余交给规划器优化。补丁分成核心机制、采集示例和应用示例三个模块，第三方扩展可以自建存储与匹配策略。典型用法是找出慢查询，采集期望计划，再按 query id 存下建议，不必改应用 SQL。",
+      "url": "https://thebuild.com/blog/hints-part-3-advice-not-orders/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询提示",
+        "规划器"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 控制平面：五分钟拉起三节点多主集群",
+      "summary": "pgEdge 把 PostgreSQL 的全生命周期收进一个轻量编排器，配置、网络、复制和高可用都通过声明式 REST API 管理，创建、故障切换、备份恢复与扩缩写在同一套规格里。Antony Pegg 演示的路径是先起 Docker Swarm，再启动控制平面容器，POST 一份定义三个节点及端口的 JSON，轮询到状态变为 available，约五分钟完成。节点间自动建立 Spock 复制，高可用交给 Patroni。",
+      "url": "https://www.pgedge.com/blog/how-to-use-the-pgedge-control-plane-from-zero-to-multi-master-and-beyond",
+      "author": "Antony Pegg",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "多主复制",
+        "高可用",
+        "编排"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "Stormatics 拆解 PostgreSQL 性能问题的六项代价",
+      "summary": "查询低效、膨胀、连接开销与内存配置之外，还有反复排查的运维负担和被扩容掩盖的浪费。",
+      "url": "https://stormatics.tech/blogs/cost-of-postgresql-performance-issues",
+      "author": "Annie Ghazali",
+      "source": "Stormatics",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "成本"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "规划器路径共享的悬垂指针进入 hackers 讨论",
+      "summary": "David Rowley 建议引入 copy_path() 并在 add_path() 加断言，校验路径的父关系归属。",
+      "url": "https://www.postgresql.org/message-id/20be3d9d-4147-492a-b69c-d69a87a014a9@gmail.com",
+      "author": "Andrei Lepikhov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "内存安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "并发 REPACK 期间复制槽阻止 restart_lsn 推进",
+      "summary": "Zhijie Hou 的补丁让 repack 解码进程写完变更后推进 restart_lsn，避免 WAL 堆积数天。",
+      "url": "https://www.postgresql.org/message-id/704E4371-FDA5-488F-B5E9-6B6F86A06669@gmail.com",
+      "author": "Zhijie Hou",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "WAL"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制 walsender 关闭阻塞导致 CI 超时",
+      "summary": "Fujii Masao 建议改用 pq_flush_if_writable()，只在内核发送缓冲区写满时改变行为。",
+      "url": "https://www.postgresql.org/message-id/161718d7-aa3d-4d87-b2c0-3225e8d03713@tantorlabs.com",
+      "author": "Fujii Masao",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "FreeBSD"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "xl_heap_visible 削减的三个测试修复已提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Y9N44j7SFyEkymTjosfCGZVetraVciAOq0wSRswvxQZg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "WAIT FOR LSN 的测试补丁按可观察状态重写",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABPTF7WJ35p7uidJJZs7fzxBtbVL_0xSFUdZ2Fe8pXh00e=Mxw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "跨会话临时表修复保留原错误信息并将回补",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAMtXxw8J7L0r8aXt9NBFfqqSnaNyU=-_Uq4tW4aO3PHyVeXLAQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "TSearch 的波兰语配置",
+      "summary": "",
+      "url": "https://www.depesz.com/2026/04/21/polish-configuration-for-tsearch/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Fujitsu 在 FOSSASIA PGDay Bangkok 登台分享",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/postgresql-in-focus-with-fujitsu-on-stage-at-fossasia-pgday-bangkok-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "CYBERTEC 用太阳能与储能做到七个月能源自给",
+      "summary": "",
+      "url": "https://www.cybertec-postgresql.com/en/independence-is-not-just-a-database-feature/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    }
+  ]
+}

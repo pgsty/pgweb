@@ -1,0 +1,243 @@
+{
+  "date": "2026-07-24",
+  "origin": "chronicle 2026-07-24: pgnexus #217, planet 2；补入 2026-07-21、07-22 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 给 autovacuum 加了打分与并行",
+      "summary": "Shaun Thomas 梳理 PostgreSQL 19 的 autovacuum 变化：表按事务号年龄、multixact 年龄、死元组、插入元组和统计变化五项打分，取最高项决定优先级，五个权重参数默认都是 1.0；另加 autovacuum_max_parallel_workers，让单个 worker 并行处理索引。新视图 pg_stat_autovacuum_scores 暴露每张表的得分。他建议多数集群先保持默认权重。",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-autovacuum-tweaks",
+      "author": "Shaun Thomas",
+      "source": "pgEdge 博客",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "PG19",
+        "调优"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "约束在高写入量下的隐性成本",
+      "summary": "这篇文章把每秒五万行插入下外键和唯一约束的开销摊开讲：外键在每次插入时对父表做逐行索引查找并取 FOR KEY SHARE 锁，高并发下会引起 MultiXact SLRU 争用；唯一约束则在每次插入前先扫一遍索引。这类开销在概念验证阶段几乎看不出来。作者给出四种缓解办法：把外键检查推迟到事务提交、改用只覆盖近期时间窗口的部分索引、在应用层先校验引用完整性，以及在数据质量已由应用保证时直接去掉外键。",
+      "url": "https://www.tigerdata.com/blog/hidden-cost-postgres-constraints-scale",
+      "author": "TigerData",
+      "source": "TigerData 博客",
+      "source_date": "2026-07-24",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/07/hidden-cost-postgres-constraints-scale.jpg",
+      "domain": "pg",
+      "tags": [
+        "约束",
+        "写入性能",
+        "索引"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "不重启改 shared_buffers 的补丁进入新一轮",
+      "summary": "Ashutosh Bapat 发布共享缓冲池在线调整大小的新版补丁：改用 PG19 新引入的共享内存基础设施，0007 在 buf_resize.c 里实现真正的调整逻辑，同时补了文档和 TAP 测试。来自 Databricks 的 Haoyu Huang 提出另一套实现，用单个 mmap 匿名段加 madvise 管理物理页。尚未定的设计包括双水位线的命名与同步、避免调整被检查点长时间阻塞，以及中断后如何恢复。",
+      "url": "https://www.postgresql.org/message-id/CAExHW5tYUYY13b4S1fv-zdxNsEEJzTy1EW6mRUj+FFEpA4Q0=g@mail.gmail.com",
+      "author": "Ashutosh Bapat",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "shared_buffers",
+        "内存"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "修 glibc 排序隐患时把 autovacuum 优先级搞反了",
+      "summary": "Rustam Khamidullin 报告 PostgreSQL 17 引入的一处缺陷：autovacuum.c 里的 db_comparator 本应按 adl_score 降序排列数据库，但在修复 glibc qsort 隐患的补丁里改用了 pg_cmp_s32，结果变成升序，把清理优先级整个反了过来。他提交了恢复降序的补丁，Nathan Bossart 确认问题属实，计划下周提交修复。多库实例受影响最明显。",
+      "url": "https://www.postgresql.org/message-id/5c5a7984-b149-b505-7ad9-2a7766c65b55@postgrespro.ru",
+      "author": "Rustam Khamidullin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "缺陷修复"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "流水线恢复的加速幅度在复测中缩水",
+      "summary": "Jakub Wartak 审查了流水线恢复的新版补丁。这套改动把 WAL 解码交给专用后台进程，解码结果经共享内存队列回到 startup 进程，让后者专心 apply。Imran Zaheer 这一版修掉了停止时漏调 WakeupRecovery 等缺陷。Wartak 的疑问集中在性能：提速从约 42% 降到 14% 到 31%，原因不明，FlushBuffer 开销偏大说明 bgwriter 不够积极，基准本身也可能有问题。",
+      "url": "https://www.postgresql.org/message-id/CAKZiRmxYqUiU-k4nQ_hzizgUfn72ha01BMebQJdW=USLKknoCA@mail.gmail.com",
+      "author": "Jakub Wartak",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "性能"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "预读耗尽本地缓冲区的修复确定回合 PG18",
+      "summary": "是否回合 PG17 仍在评估，PG20 计划改用按 temp_buffers 计算的公式取代硬上限。",
+      "url": "https://www.postgresql.org/message-id/CABPTF7Wy_dqPMkP+Dt5zUkET4K6u61K1n5094TeCiMRjFe6VKQ@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "预读",
+        "回合"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "autovacuum 因锁跳过的表拟可追踪",
+      "summary": "v12 把字段改名为 lock_skipped_ 系列，并说明跳过原因是拿不到锁，隔离测试已接入构建。",
+      "url": "https://www.postgresql.org/message-id/20260725014832.b25dcd5b1a8c44f2e8720f8d@sraoss.co.jp",
+      "author": "Yugo Nagata",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "统计"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "事件触发器漏收 ALTER PUBLICATION 命令",
+      "summary": "删除成员映射和 SET ALL TABLES 都不产生记录，0002 计划回合 v19，0001 因改变行为仍有争议。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwH-wWO=0406dbSiPvxNMhc-6TQK7ORZ_+9SyaR5fDsvyg@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事件触发器",
+        "发布"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "后台工作进程终止流程存在指针竞态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/78E81763-EA1D-4788-9741-4092BCB997A5@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并发",
+        "缺陷"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "EXISTS 转 ANY 的子计划拟改名以便识别",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260725021256.6d3b94ce3b3f9ea50a2a6155@sraoss.co.jp",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "注入点拟支持任意条件字符串",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/amNhfOZYqlY94IEF@bdtpg",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：fsync",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-fsync/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "EDB 在印度举办合作伙伴峰会",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/empowering-future-postgres-highlights-edb-india-partner-leadership-summit",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生态"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Bento 把整份演示文稿打包成单个 HTML",
+      "summary": "",
+      "url": "https://bento.page/slides/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Firefox 153 预览内建的多账户容器",
+      "summary": "",
+      "url": "https://blog.mozilla.org/en/firefox/firefox-containers-preview/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "浏览器",
+        "隔离"
+      ],
+      "position": 15
+    }
+  ]
+}

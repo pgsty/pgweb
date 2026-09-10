@@ -1,0 +1,236 @@
+{
+  "date": "2026-04-23",
+  "origin": "chronicle 2026-04-23: pgnexus #123, news 2, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的异步 I/O 学会自己伸缩",
+      "summary": "Christophe Pettus 回看异步 I/O 落地一年后的变化。PostgreSQL 19 新增四个参数，为 I/O 工作进程池设定上下限、空闲超时和启动间隔，让它像自动伸缩器：查询真的等 I/O 时扩容，闲下来就收缩。预读窗口随扫描规模放大，宽表扫描和索引范围扫描受益最明显；EXPLAIN ANALYZE 新增 IO 选项，可按节点查看异步 I/O 活动。他建议按 19 的默认值重新压测，把 18 上手调的进程数换成上下限。",
+      "url": "https://thebuild.com/blog/async-io-in-postgresql-19-the-year-after/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "异步 I/O",
+        "PG19",
+        "调优"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PREEMPT_NONE 退场，开了大页的 Postgres 不受影响",
+      "summary": "Linux 7.0 在多个架构上删掉了 PREEMPT_NONE 抢占模式，默认改为 PREEMPT_FULL 或 PREEMPT_LAZY。AWS 的压测显示特定条件下 PostgreSQL 吞吐掉到 6.x 的 0.51 倍。Christophe Pettus 指出触发条件很窄：巨大的共享内存以小页映射、高并行度、工作集不断拉入新页面。打开 huge_pages 后次要缺页从约 3100 万降到约 120 次，可以照常升级内核。",
+      "url": "https://thebuild.com/blog/preempt_none-is-dead-your-postgres-probably-doesnt-care/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-23",
+      "image": "https://thebuild.com/media/media/82fcd3d014a346f9bf86ed674d8b2371.png",
+      "domain": "pg",
+      "tags": [
+        "Linux",
+        "大页",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "storage_engine 1.0.7 提供列式与行压缩表访问方法",
+      "summary": "storage_engine 是提供两种表访问方法的 PostgreSQL 扩展：colcompress 走列式压缩存储，支持向量化执行、chunk 级 min/max 裁剪、并行扫描和 MergeTree 式排序；rowcompress 走行式批量压缩，用删除位图实现 DELETE 与 UPDATE。作者给出的百万行串行测试里，聚合最高快 10 倍，数据体积缩小 3 到 5 倍。当前版本兼容 PostgreSQL 16 到 18。",
+      "url": "https://github.com/saulojb/storage_engine",
+      "author": "Informa Tecnologias",
+      "source": "GitHub",
+      "source_date": "2026-04-23",
+      "image": "https://opengraph.githubassets.com/24659b4139a37c4e03ff20620c91e2ee8363001ee1fb37457e76e93b9c1ef851/saulojb/storage_engine",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "列式存储",
+        "压缩"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "SQL Management Studio 2.0 支持深色主题与 ARM",
+      "summary": "EMS 发布数据库管理工具 SQL Management Studio for PostgreSQL 2.0。界面侧加入深色主题，并改进高 DPI 与大字号显示，在高分辨率屏幕上保持正确缩放；平台侧原生支持 Windows 11 ARM。安全方面，出站邮件通知支持 SSL/TLS 与 STARTTLS。日常运维新增任务导入导出，迁移或备份时可保存与恢复任务和调度配置，日志文件名也能按自定义日期时间格式生成。",
+      "url": "https://pgsql.cc/about/news/sql-management-studio-for-postgresql-20-3280/",
+      "author": "EMS Software Development",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "GUI",
+        "商业软件"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "碳排放观测站把归因查询从 6 秒压到 100 毫秒内",
+      "summary": "Embodied Carbon Observatory 要分清工厂是真的减排，还是沾了电网变干净的光。Andrew Stebbins 把 4 万份环境产品声明和 EPA 二十多年的电网数据对齐，追踪全美 1.5 万个制造设施的碳强度轨迹，难点是两套更新频率完全不同的时序数据：EPD 不定期更新，电网数据按年发布。原本归因查询要 6 到 8 秒，撑不起交互式地图；改用 TimescaleDB 的超表与连续聚合后降到 100 毫秒以内。",
+      "url": "https://www.tigerdata.com/blog/how-embodied-carbon-observatory-separates-grid-improvement-real-decarbonization-tiger-data",
+      "author": "Andrew Stebbins",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-23",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/td-dexdogs-spotlight-hero-og-v1.png",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "时序",
+        "案例"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志历史表补丁进入 v27",
+      "summary": "Nisha Moond 的审查补上了 replica_identity 列与文档措辞，Vignesh 又做了一次变基。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm20PDtmG2E3qaTC+YuL5twv+c9k573wL3sb=OwgmZphxQ@mail.gmail.com",
+      "author": "Dilip Kumar",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "walsender 退出前改用非阻塞方式排空待发消息",
+      "summary": "Fujii Masao 新增 EndCommandExtended()，让关闭流程边刷输出边处理回复并遵守超时设置。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHwTM5bfM9H35zdxzG+800LR=o4mTvZi08vJ843+29GDg@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "walsender"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "OAuth 认证代码存在有符号整数溢出",
+      "summary": "Andres Freund 用 -ftrapv 编译时发现 slow_down 重试间隔累加溢出，改用带溢出检查的加法。",
+      "url": "https://www.postgresql.org/message-id/qtclihmrkq67ach3xjxyi4qcksstin5qxwsnkqefkmotxwh4g6@ae2bj6jvcmry",
+      "author": "Andres Freund",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "OAuth",
+        "安全"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "并发 REPACK 的死锁处理方案仍在权衡",
+      "summary": "Mihail Nikalayeu 反对唤醒其他后端强制取消，主张检测到锁循环时由 REPACK 直接取消对方。",
+      "url": "https://www.postgresql.org/message-id/aen7_q6kDzJZjMVX@alvherre.pgsql",
+      "author": "Mihail Nikalayeu",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "死锁"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "并行 Apply 的内部消息类型面临三选一",
+      "summary": "PARALLEL_APPLY 与 LOGICAL_REP 两种内部消息共用字节 i，路由逻辑因此变得难读。",
+      "url": "https://www.postgresql.org/message-id/CAHut+Pu79i_h3fcOxGoGhKs5u63mzqG-tssHSNyZpbVU1HeJ4Q@mail.gmail.com",
+      "author": "Peter Smith",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "并行"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "EXCEPT 排除表转 UNLOGGED 的清理提案作罢",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALDaNm2-m31TLX25Y2y_PvANQMRij=fkK-JS5dFzKSVVtu1MCw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "v19 开放项目 wiki 页面的收录标准澄清",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/65FF114F-A7AF-4A19-BC29-CEB16EC0025E@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解：allow_system_table_mods",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-allow_system_table_mods/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "Neon 为会读文档的 AI 代理重整信息架构",
+      "summary": "",
+      "url": "https://neon.com/blog/agents-grew-up-so-did-our-docs",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Postgres Conference 2026 参会记",
+      "summary": "",
+      "url": "https://stokerpostgresql.blogspot.com/2026/04/postgres-conference-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    }
+  ]
+}

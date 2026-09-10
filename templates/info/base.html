@@ -20,6 +20,7 @@ own side card instead of the site's quick links.
             <input class="form-control" id="info-q" type="search" name="q" maxlength="255" value="{{ sidecard_query }}" placeholder="搜索博览" autocomplete="off" data-pg-slash-target>
             <kbd aria-hidden="true">/</kbd>
           </form>
+          <p class="pg-sidecard__lead"><a href="/info/"{% if request.path == "/info/" %} aria-current="page"{% endif %}>新闻博览</a></p>
           {% if sidecard_days %}
           <h2>每日更新</h2>
           <ul class="pg-sidecard__days">

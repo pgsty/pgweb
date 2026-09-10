@@ -1,0 +1,515 @@
+{
+  "date": "2026-06-12",
+  "origin": "chronicle 2026-06-12: daily, pgnexus #175, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Aurora PostgreSQL 18.3 正式可用",
+      "summary": "AWS 宣布 Aurora PostgreSQL 支持 18.3，覆盖所有商用区域和 GovCloud，可以通过蓝绿部署、原地升级或快照恢复三条路径升级。云上托管的 PostgreSQL 由此进入 18.x 的迁移周期。对生产环境来说，升级时保留统计信息和逻辑复制方面的改进，比单个 SQL 特性更值得关注，它们直接影响升级后的查询稳定性、复制延迟和可用的迁移窗口。迁移测试应重点看执行计划稳定性、跳跃扫描的命中情况和扩展可用性。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-aurora-postgresql-major-version-18/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Aurora",
+        "PG18",
+        "升级"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Neon 用纯 TypeScript 重写了 psql 客户端",
+      "summary": "在没装 psql 的机器上执行 neonctl psql 会直接报找不到命令，而大多数 macOS 笔记本、精简的 Linux 容器、Windows、CI 运行器和沙箱环境都属于这一类。Neon 因此用纯 TypeScript 重新实现了 psql 客户端，并把它直接嵌进 neonctl。为了确认这份实现与原版行为一致，团队搭了一套逐字节比对的一致性测试框架，直接用 PostgreSQL 自己的回归测试套件来验证输出是否完全对得上。",
+      "url": "https://neon.com/blog/shipping-psql-without-psql",
+      "author": "Vadim Kharitonov",
+      "source": "Neon 博客",
+      "source_date": "2026-06-12",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/shipping-psql-without-psql/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "psql",
+        "客户端",
+        "测试"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 不适合的那一成负载长什么样",
+      "summary": "Tiger Data 的这篇文章讨论 PostgreSQL 会失手的场景。作者的判断是它能覆盖九成负载，剩下一成集中在高频只追加写入、持续写入压力和分析型查询：当数百万行只写一次、从不更新时，MVCC 的开销就变成了负担。文章把加索引、分区和升级硬件称作优化跑步机，能缓解一时却解决不了架构错配。识别的办法是用诊断查询看表的更新占比和自动清理频率，这类负载改用 hypertable 与列式存储可能比继续调优更合适。",
+      "url": "https://www.tigerdata.com/blog/when-postgresql-isnt-the-right-fit",
+      "author": "NanoHertz Communications",
+      "source": "Tiger Data 博客",
+      "source_date": "2026-06-12",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/06/when-postgresql-isnt-the-right-fit.png",
+      "domain": "pg",
+      "tags": [
+        "选型",
+        "MVCC",
+        "时序"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Homebrew 6.0.0 把 tap 信任变成显式动作",
+      "summary": "开发者机器是供应链攻击最现实的入口之一，而 Homebrew 的 tap 本质上可以执行 Ruby 代码，此前这条信任边界是隐式的。6.0.0 把它变成需要显式确认的动作，同时修复了一批安全问题：下载策略中 HTTPS 到 HTTP 的重定向保护被绕过、macOS pkg 安装后脚本以 root 执行代码、用户可控的 /var/tmp plist 属主。团队应检查内部 Brewfile、私有 tap 和 CI 里的安装行为。",
+      "url": "https://brew.sh/2026/06/11/homebrew-6.0.0/",
+      "author": "Homebrew",
+      "source": "Homebrew 博客",
+      "source_date": "2026-06-11",
+      "image": "https://brew.sh/assets/img/homebrew-social-card.png",
+      "domain": "infra",
+      "tags": [
+        "包管理",
+        "供应链",
+        "安全"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "LiteLLM 漏洞链可从提权走到远程代码执行",
+      "summary": "Obsidian Security 披露了 LiteLLM 的一条漏洞链，从权限提升一路走到远程代码执行，并演示了被控制的网关如何向下游 agent 注入任意工具调用，把执行路径扩大到 agent 运行时。研究者建议升级到 v1.83.14-stable 或更高版本，并审计 proxy_admin、guardrails、callbacks、供应商密钥和 MCP 令牌。这类网关能看到提示词、响应、工具定义和凭据，应按高敏感基础设施治理。",
+      "url": "https://www.obsidiansecurity.com/blog/litellm-privilege-escalation-rce",
+      "author": "Obsidian Security",
+      "source": "Obsidian Security",
+      "source_date": "2026-06-11",
+      "image": "https://cdn.prod.website-files.com/67b3bf2003f9c3d795e75e7b/6a29f62d157ecff2362a8d0a_Blog%20Image%20-%20BreakingLite%20LLM.avif",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "网关",
+        "agent"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "Databricks 提出免重启调整 shared_buffers",
+      "summary": "补丁用匿名 mmap 配合 madvise，新增 pg_resize_shared_buffers() 与 AccessNBuffersLock 协调。",
+      "url": "https://www.postgresql.org/message-id/555608f6-63bb-4dda-b1e4-f378f0febd38@iki.fi",
+      "author": "Haoyu Huang",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "共享内存",
+        "在线变更"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG19 外键快速路径的修复已经推送",
+      "summary": "Amit Langote 推送了越界写入与漏检的两个补丁，回归测试全部通过，并修正了关于 SubXactCallback 的注释。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqFwUwakVfcmC2-AQEjO2kgqfy8n0qqxcMkvDBsLGdMgjA@mail.gmail.com",
+      "author": "Amit Langote",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "外键"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "子事务溢出会让 PITR 的暂停被静默忽略",
+      "summary": "首条 XLOG_RUNNING_XACTS 带溢出标志时热备无法激活；替代补丁被指在关闭校验和的情况下可能损坏数据。",
+      "url": "https://www.postgresql.org/message-id/FA11936A-AC9D-4840-840F-99335EED16E8@gmx.de",
+      "author": "Jan Nidzwetzki",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "PITR"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "ALTER DOMAIN VALIDATE CONSTRAINT 锁级别回退",
+      "summary": "改用 ShareUpdateExclusiveLock 被判定为错误，恢复成 ShareLock，PostgreSQL 19 发布说明里的对应条目要删掉。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwFPO2DE3y1vL6XOOaKEu=TGVNS5+VbJN+PpRDMLxh8Z-g@mail.gmail.com",
+      "author": "Chao Li",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL",
+        "锁"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "GSoC 提案用页面合并治理 B-tree 索引膨胀",
+      "summary": "源页面标记 BTP_MERGED_AWAY 供反向扫描使用，评审者担心 VACUUM 清不掉死元组会让仅索引扫描读到过期 TID。",
+      "url": "https://www.postgresql.org/message-id/CACLU5mQp-bzxT6BMR3Dk8RM16bg-KGRAbm7nuHgiqA+rbqxF6Q@mail.gmail.com",
+      "author": "Kirk Wolak",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "B-tree",
+        "膨胀"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Agentic Workflows 进入公开预览",
+      "summary": "跑在 Actions 原生工作流里，默认只读权限、沙箱容器与 Agent Workflow Firewall。",
+      "url": "https://github.blog/changelog/2026-06-11-github-agentic-workflows-is-now-in-public-preview/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "agent",
+        "CI/CD",
+        "平台治理"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Managed Prometheus 支持原生直方图与乱序样本",
+      "summary": "乱序摄入默认窗口一分钟，并提供 OutOfOrderIngestionRate 等指标；仪表盘与告警阈值需要重新验证。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-managed-service-prometheus-native-histograms/",
+      "author": "AWS",
+      "source": "AWS 公告",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性",
+        "指标"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Dapr 1.18 引入可验证执行",
+      "summary": "结合 SPIFFE 工作负载身份，不只验证请求者是谁，还验证执行路径与参与系统，面向需要保管链的流程。",
+      "url": "https://www.cncf.io/blog/2026/06/11/introducing-verifiable-execution-in-dapr-1-18/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "工作流",
+        "证明"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AMD 自动更新器被披露可远程执行代码",
+      "summary": "研究者称 AMD 最终移除了 Ryzen Master 安装器里的自动更新组件，旧更新器还因重定向失效留下修复悖论。",
+      "url": "https://mrbruh.com/amd2/",
+      "author": "MrBruh",
+      "source": "MrBruh",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "更新器"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Arch AUR 多个用户贡献包被投毒",
+      "summary": "目前以媒体报道为准，尚待官方细节；AUR 安装过程会执行代码，工作站应审查 PKGBUILD 并隔离构建环境。",
+      "url": "https://linuxiac.com/arch-linux-aur-malware-campaign-hits-multiple-user-contributed-packages/",
+      "author": "Linuxiac",
+      "source": "Linuxiac",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "Linux"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "psql 折行扩展输出下分页器失灵",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/A44110E7-6A03-4C67-95AD-527192A6C768@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "psql 描述命令重复列出已在模式里的表",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aiv8J3cBuVUQYEvv@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Windows 上 psql 吞掉错误信息将换新框架",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/455b56c8-436d-45fe-b70b-314e11ca65fc@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "Windows"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "备机逻辑解码的时间线修复回补到 v16",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABPTF7WSpNOYu84fjGH2t56BctRzVD7t8WqhgvML2DRh8Vtfog@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "pg_dump 的 --pipe 补丁通过端到端测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAF0whucxFZp2sDMJL4UtwPZrDUXKCJk9+5FPzXNXn7yRZ4hdzQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_dump"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "amcheck 漏检修复已推送并回补到 v18",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/4C22BDB1-D1FA-44DE-B0E5-1F7C09EE4360@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "amcheck"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "md5_password_warnings 的设置修复已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwGxKKDmv=AJDqQQvzVkekjgYuZpMuyt6=nB7c2jNG347A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "逐个梳理 GUC：default_statistics_target",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-defaultstatisticstarget/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "统计信息"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "展望 PostgreSQL 19：该谈谈时间了",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/looking-forward-to-postgres-19-its-about-time",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "时态"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "当 Patroni 悄悄删掉你的复制槽",
+      "summary": "",
+      "url": "https://stormatics.tech/blogs/when-patroni-silently-deletes-your-replication-slots",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Patroni",
+        "复制槽"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "DuckDB 成为 MariaDB 的存储引擎",
+      "summary": "",
+      "url": "https://mariadb.org/duckdb-storage-engine-for-mariadb-when-the-sea-lion-learns-to-quack/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "分析"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Redis 主主复制修好计数器却弄坏了别的",
+      "summary": "",
+      "url": "https://useautumn.com/blog/active-active-redis-cache",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Redis",
+        "一致性"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "AWS 推出统一的工作负载凭据提供程序",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-workload-credentials-provider/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "证书",
+        "密钥"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Enterprise Server 3.21 正式发布",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-11-github-enterprise-server-3-21-is-now-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "企业版"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Agentic Workflows 不再需要个人访问令牌",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-11-agentic-workflows-no-longer-need-a-personal-access-token/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "凭据"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 预览 Ubuntu 26.04 与 arm64 运行器",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-06-11-new-runner-images-in-public-preview/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "CISA 要求政府机构三天内修复在野漏洞",
+      "summary": "",
+      "url": "https://www.bleepingcomputer.com/news/security/cisa-tells-govt-agencies-to-patch-critical-exploited-flaws-in-3-days/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "合规"
+      ],
+      "position": 32
+    }
+  ]
+}

@@ -1,43 +1,28 @@
 {
   "date": "2026-08-30",
-  "origin": "pgsty-daily 2026-08-30.md; pgnexus #254",
+  "origin": "chronicle 2026-08-30: pgsty-daily, pgnexus #254, planet 1；补入 2026-08-25 至 08-28 未用候选 4 条",
   "items": [
     {
       "tier": 1,
-      "title": "OpenAI 计划 11 月 12 日停止向 Cursor 供给模型",
-      "summary": "OpenAI 称已通知 SpaceX，计划终止向 Cursor 提供 OpenAI 模型的合同，拟定的停止日期是 2026 年 11 月 12 日，理由是 Cursor 控制权变更后无法确信 SpaceX 会遵守条款，同时表示会在合同允许的最大通知期内维持访问。日期和理由都出自 OpenAI，Cursor 与 SpaceX 的实施细节仍待各自说明。依赖 Cursor 内 OpenAI 模型选择器、agent 工具调用、组织 SSO 或审计日志的团队，现在就该为关键仓库准备多模型回归集和备用的 IDE 与 API 路径，迁移验收不能只测能否回答问题。",
-      "url": "https://openai.com/index/our-decision-on-cursor-following-its-acquisition-by-spacex/",
-      "author": "OpenAI",
-      "source": "OpenAI",
-      "source_date": "2026-08-28",
+      "title": "一次自以为安全的 MySQL 升级把自增 ID 弄乱了",
+      "summary": "作者收到数据库 EOL 通知，先升级绿色副本再切换，一小时后收到怪异报错：某张表的自增 ID 顺序变了，原来的 1 变成 26，引用它的六张表里五张跟着更新，剩下一张仍指向旧 ID。根因是此前一次迁移用 ALTER TABLE 加了 AUTO_INCREMENT 主键，MySQL 文档写明这种操作在源库与副本上行序可能不同；而源库的 binlog_format 是 MIXED，五张表的 UPDATE 走语句复制在副本本地重新求值，另一张走行复制把源库的 ID 直接搬了过来。",
+      "url": "https://blog.elis.cc/articles/a-safe-mysql-upgrade-that-wasnt-so-safe/",
+      "author": "Elis",
+      "source": "Elis's Blog",
+      "source_date": "2026-08-30",
       "image": "",
-      "domain": "ai",
+      "domain": "db",
       "tags": [
-        "模型供给",
-        "供应商风险"
+        "MySQL",
+        "复制",
+        "事故复盘"
       ],
       "position": 1
     },
     {
       "tier": 1,
-      "title": "腾讯发布并开源 Hy4 preview，上下文超过 100 万",
-      "summary": "腾讯称已发布并开源 Hy4 preview，规模为 770B 总参数、49B 激活参数，上下文超过 100 万。公告给出编码、办公和科研方向的内部评测，并称模型参与了算子融合与通信优化，使端到端吞吐比基线提升 31.8%。这些数字都是厂商自测，公告正文没有替代一份可审计的权重许可、评测脚本或可复现部署基线。采购或上线前应先拿到精确的权重 revision、许可证文本与硬件矩阵，再用真实 SQL、中文文档和长上下文任务做离线评测，并把远程工具、数据库写权限与出站网络设成单独的审批点。",
-      "url": "https://www.tencent.com/tencent-releases-and-open-sources-tencent-hy4-preview/",
-      "author": "腾讯",
-      "source": "腾讯",
-      "source_date": "2026-08-28",
-      "image": "https://www.tencent.com/wp-content/uploads/2026/08/hy4-preview-cover.jpg",
-      "domain": "ai",
-      "tags": [
-        "开放权重",
-        "长上下文"
-      ],
-      "position": 2
-    },
-    {
-      "tier": 1,
       "title": "vLLM 0.28.0 引入分层 KV 缓存并移除两个参数",
-      "summary": "vLLM 0.28.0 是 584 次提交、270 位贡献者的大型更新，不是常规补丁。它带来磁盘 KV offload、可在树外加载的二级层管理器和 tiering 指标，以及 Model Runner V2 的 E/P/D 解耦与权重 offload，同时把 max_num_batched_tokens 默认值提高到 16384。兼容性上 bitsandbytes 移为外置插件，Transformers 升到 5.15.0，两个已弃用的运行时参数被删除。升级前应对首字延迟、吞吐、磁盘 I/O 和失败恢复做 A/B 对比。",
+      "summary": "vLLM 0.28.0 是 584 次提交、270 位贡献者的大型更新，不是常规补丁。它带来磁盘 KV offload、可在树外加载的二级层管理器和 tiering 指标，以及 Model Runner V2 的 E/P/D 解耦与权重 offload，同时把 max_num_batched_tokens 默认值提高到 16384。兼容性上 bitsandbytes 移为外置插件，两个已弃用的运行时参数被删除。升级前应对首字延迟、吞吐与失败恢复做 A/B 对比。",
       "url": "https://github.com/vllm-project/vllm/releases/tag/v0.28.0",
       "author": "vLLM",
       "source": "GitHub",
@@ -48,7 +33,7 @@
         "推理服务",
         "KV 缓存"
       ],
-      "position": 3
+      "position": 2
     },
     {
       "tier": 1,
@@ -58,13 +43,13 @@
       "author": "GrapheneOS",
       "source": "GrapheneOS",
       "source_date": "2026-08-29",
-      "image": "https://cdn.bsky.app/img/avatar_thumbnail/plain/did:plc:kym5w7pcv4v7xbz7lvbj24na/bafkreickcnmrwdtb3mwqzz7v7s2xgmczwzrdwp3ucvadpeuorzbsgvunjm",
+      "image": "",
       "domain": "infra",
       "tags": [
         "移动安全",
         "MTE"
       ],
-      "position": 4
+      "position": 3
     },
     {
       "tier": 2,
@@ -80,7 +65,7 @@
         "WAIT FOR",
         "pg_stat_statements"
       ],
-      "position": 5
+      "position": 4
     },
     {
       "tier": 2,
@@ -96,7 +81,7 @@
         "GIN",
         "pageinspect"
       ],
-      "position": 6
+      "position": 5
     },
     {
       "tier": 2,
@@ -112,7 +97,7 @@
         "并发",
         "原子操作"
       ],
-      "position": 7
+      "position": 6
     },
     {
       "tier": 2,
@@ -128,38 +113,23 @@
         "行模式识别",
         "SQL 标准"
       ],
-      "position": 8
+      "position": 7
     },
     {
       "tier": 2,
-      "title": "Debian 生成式 AI 总决议投票结束进入定案",
-      "summary": "官方页面已把议题归入 Decided，但当时尚未展示计票，胜出选项仍需等正式结果页复核。",
-      "url": "https://www.debian.org/vote/2026/vote_002",
-      "author": "Debian 项目",
-      "source": "Debian",
-      "source_date": "2026-08-29",
-      "image": "",
-      "domain": "infra",
-      "tags": [
-        "开源治理"
-      ],
-      "position": 9
-    },
-    {
-      "tier": 2,
-      "title": "一篇复盘记录了自认为安全的 MySQL 升级如何出事",
-      "summary": "它是事故复盘文章而不是官方安全公告，可以当作升级演练案例来读。",
-      "url": "https://blog.elis.cc/articles/a-safe-mysql-upgrade-that-wasnt-so-safe/",
+      "title": "Robert Haas 盘点 v19 冻结后频出 bug 的六个特性",
+      "summary": "外键快速路径、REPACK CONCURRENTLY、在线校验和等六项被点名，RMT 将在 RC1 前定夺是否回退。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoYezjKo5owN2ngY+tZ_g_f+tiY=zfwo4jA+7mh+J5CiXA@mail.gmail.com",
       "author": "",
-      "source": "",
-      "source_date": "2026-08-30",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-26",
       "image": "",
-      "domain": "db",
+      "domain": "pg",
       "tags": [
-        "MySQL",
-        "升级"
+        "PostgreSQL 19",
+        "补丁评审"
       ],
-      "position": 10
+      "position": 8
     },
     {
       "tier": 2,
@@ -175,7 +145,110 @@
         "校验",
         "性能"
       ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：log_line_prefix 与 log_timezone",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-log_line_prefix-and-log_timezone/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置",
+        "日志"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "AI 交叉检查特性交互，又报出 22 个可复现问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABPTF7V+iM-yGGYWLPjL1P_4_QR-z=NNEF1e6chEm+0w3ga5XQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
       "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "启用校验和时无效与已删数据库的处理不再列为待决",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/6C5BFC06-94D9-438D-9E4E-FE1CAAA17C23@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "数据校验和测试补上等待参数后 50 次迭代通过",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/6D2C5247-8857-4A04-A3E9-D52142149845@yesql.se",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "测试"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "ltree 脆弱代码的修复补丁已无待决问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3c56359d-d552-4b5e-90ba-826dc3b32e04@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ltree"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "DataZen 自称本地优先的跨数据库工作流客户端",
+      "summary": "",
+      "url": "https://flyxl.github.io/datazen/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "客户端"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Snowtask 用终端界面查看 Snowflake 任务",
+      "summary": "",
+      "url": "https://github.com/ben-nour/snowtask",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-26",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 16
     },
     {
       "tier": 3,
@@ -190,7 +263,7 @@
       "tags": [
         "事故"
       ],
-      "position": 12
+      "position": 17
     },
     {
       "tier": 3,
@@ -205,7 +278,7 @@
       "tags": [
         "事故"
       ],
-      "position": 13
+      "position": 18
     },
     {
       "tier": 3,
@@ -221,7 +294,7 @@
         "Git",
         "对象存储"
       ],
-      "position": 14
+      "position": 19
     },
     {
       "tier": 3,
@@ -236,38 +309,7 @@
       "tags": [
         "MCP"
       ],
-      "position": 15
-    },
-    {
-      "tier": 3,
-      "title": "DataZen 自称本地优先的跨数据库工作流客户端",
-      "summary": "",
-      "url": "https://flyxl.github.io/datazen/",
-      "author": "",
-      "source": "",
-      "source_date": "2026-08-30",
-      "image": "",
-      "domain": "db",
-      "tags": [
-        "客户端"
-      ],
-      "position": 16
-    },
-    {
-      "tier": 3,
-      "title": "Sony Music 与 Warner 起诉 Anthropic 侵犯知识产权",
-      "summary": "",
-      "url": "https://techcrunch.com/2026/08/29/sony-music-warner-sue-anthropic-alleging-a-brazen-campaign-of-intellectual-property-theft",
-      "author": "",
-      "source": "",
-      "source_date": "2026-08-29",
-      "image": "",
-      "domain": "ai",
-      "tags": [
-        "版权",
-        "诉讼"
-      ],
-      "position": 17
+      "position": 20
     }
   ]
 }

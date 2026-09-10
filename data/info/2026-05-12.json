@@ -1,0 +1,339 @@
+{
+  "date": "2026-05-12",
+  "origin": "chronicle 2026-05-12: pgnexus #144, planet 5；枯水期并入 2026-05-10 未用候选",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Google Cloud SQL 评测：高可用备库不可读",
+      "summary": "Christophe Pettus 评测了 Google Cloud SQL。Enterprise 版就是 Google 托管虚拟机里的一个 PostgreSQL 进程；Enterprise Plus 加了一层读缓存，热数据超过 shared_buffers 时能明显降延迟。优点还有 IAM 认证和带执行计划的 Query Insights。限制是高可用备库不可读，扩展走白名单，没有 RDS Proxy 式的托管连接池，磁盘只增不减。",
+      "url": "https://thebuild.com/blog/managed-postgres-examined-google-cloud-sql-for-postgresql/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-12",
+      "image": "https://thebuild.com/media/media/26b5298aafd9419a82236c1d2d7c57b3.png",
+      "domain": "pg",
+      "tags": [
+        "托管服务",
+        "Cloud SQL",
+        "评测"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Snowflake、Lakebase、HorizonDB 各自的锁定",
+      "summary": "Christophe Pettus 认为选这三家的第一个问题不是引擎强弱，而是团队已经站在哪个数据平台上。Snowflake Postgres 最像原版 PostgreSQL，用开源的 pg_lake 接湖仓。Lakebase 建在 Neon 引擎上，即时分支适合 CI 与时间点恢复。Azure HorizonDB 自研存储只兼容协议，号称三倍吞吐、支持 3072 vCore 与 128 TB。三者都要牺牲扩展与升级节奏。",
+      "url": "https://thebuild.com/blog/snowflake-postgres-lakebase-horizondb-picking-the-lock-in-you-want/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-12",
+      "image": "https://thebuild.com/media/media/79875ce29f9f49efab713b13dc31f0a2_f2kg0IJ.png",
+      "domain": "pg",
+      "tags": [
+        "湖仓",
+        "厂商锁定",
+        "HorizonDB"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "AWS 用种子 LSN 把 RDS 逻辑复制迁到 Aurora",
+      "summary": "从 RDS for PostgreSQL 迁到 Aurora 时，两者存储架构不同，快照恢复后 LSN 会被转换，标准逻辑复制因此建立不起来。AWS 给的办法是先用同一份快照恢复出一个临时 RDS 实例，从中取出正确的种子 LSN，再用它启动复制，原生的发布订阅和 DMS 的 CDC 专用任务两条路都适用。这样可以在多读节点的 Aurora 集群上做真实压测，并在一个维护窗口里同时完成迁移和大版本升级。",
+      "url": "https://aws.amazon.com/blogs/database/migrating-amazon-rds-for-postgresql-to-amazon-aurora-using-seeded-logical-replication/",
+      "author": "Russell Swanson",
+      "source": "AWS Database Blog",
+      "source_date": "2026-05-12",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/05/08/DB5376.png",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "逻辑复制",
+        "Aurora"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "hackorum 与 pginbox 合并做邮件列表界面",
+      "summary": "pgsql-hackers 的邮件量对新人并不友好，hackorum 和 pginbox 两个团队各自做出了几乎一样的网页界面：论坛式的只读视图，带 commitfest 集成、贡献者档案、已读追踪和团队共享笔记。两边决定合并而不是互相竞争，由 Percona 的 Kai Wagner 和联合创始人 Zsolt 牵头，Jack Bonatakis 加入。目标是让这条高流量列表更好导航。",
+      "url": "https://percona.community/blog/2026/05/13/two-projects-one-mission-hackorum-and-pginbox-join-forces/",
+      "author": "Kai Wagner",
+      "source": "Percona Community",
+      "source_date": "2026-05-12",
+      "image": "https://percona.community/blog/2026/05/hackorum-pginbox_hu_5aa5427ff550a2ca.jpg",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "邮件列表"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "ParadeDB 上架 Render，一键部署社区版",
+      "summary": "ParadeDB 把 BM25 全文检索、向量检索和混合检索做进 PostgreSQL。Ming Ying 宣布它登陆 Render：一份 Render Blueprint 会创建带 10 GB 持久磁盘的私有服务，自动生成数据库凭据并配好环境变量，从零到实例可用不到一分钟。文中用带相关度打分和评分阈值的查询演示了 BM25 检索。这次上架部署的是 ParadeDB 社区版，文章没有给出计费细节。",
+      "url": "https://www.paradedb.com/blog/render",
+      "author": "Ming Ying",
+      "source": "ParadeDB 博客",
+      "source_date": "2026-05-12",
+      "image": "https://www.paradedb.com/blog/render/images/opengraph-image.png",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "ParadeDB",
+        "托管"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "CYBERTEC 与 SUSE 结成开源数据平台联盟",
+      "summary": "CYBERTEC 与 SUSE 宣布战略合作，把 SUSE 的企业级 Linux 与 Kubernetes 管理能力和 CYBERTEC 的 PostgreSQL 技术拼在一起。CYBERTEC 的 Migrator、Scalefield 与企业版 PGEE 已通过 SUSE Ready 认证，并完成 SUSE Rancher Prime 兼容性验证。双方口径是为金融、医疗、零售行业提供端到端的开源数据平台。",
+      "url": "https://www.cybertec-postgresql.com/en/the-path-to-data-sovereignty-cybertec-and-suse-unite-for-open-source/",
+      "author": "Bilal Ibrar",
+      "source": "CYBERTEC 博客",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生态",
+        "SUSE",
+        "Kubernetes"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "REPACK CONCURRENTLY 暴露逻辑解码丢事务",
+      "summary": "Antonin Houska 给出丢失 INSERT 的用例，Amit Kapila 认为现有修法不够优雅。",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB12149A37B0647D5D3116600C9F5392@OS9PR01MB12149.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "REPACK"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "FOR PORTION OF 碰上生成列会出问题",
+      "summary": "Nathan Bossart 复现了虚拟生成列触发的段错误，存储生成列也不会被重新计算。",
+      "url": "https://www.postgresql.org/message-id/CA+renyX4UaO7T=sC2UcpKUwS2yd7zt3XxOm1MgXv5W82ucbk0w@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "缺陷"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制冲突日志表拟加 conflict_id 列",
+      "summary": "现在删单条冲突要写复杂 WHERE，社区倾向再加一个 conflict_logged_at 时间戳。",
+      "url": "https://www.postgresql.org/message-id/CALDaNm2UB5p7LCnw27YRe5+59gk_-X7jJ9yPM-BTW1cQaHkkog@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突处理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "libpq 试遍主机所有 IP 的补丁引发争议",
+      "summary": "Jacob Champion 反对把主机重定义成 IP 集合，建议改用 SRV 或 SVCB 记录做服务发现。",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+mc482kD9bOyE9FGghj9acwo_AVQAXRV=PX0XNboqY_Eg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "连接"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 拟支持用 DNS SRV 记录连接",
+      "summary": "争议在 URI 方案，Go 1.26 更严的解析器影响 postgres+srv://，备选是 pgsrv://。",
+      "url": "https://www.postgresql.org/message-id/0682441F-1AB2-434C-B785-741EEC614FF0@yandex-team.ru",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DNS",
+        "连接"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "子查询上拉补丁通过 sqlsmith 与回归测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/3c077371-bdcb-4537-aabe-eb944d8e1d07@yandex.ru",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 准备再跑一次 pgindent",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/94060.1778621630@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "代码风格"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GUC 参数梳理：autovacuum_worker_slots",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuumworkerslots/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Fujitsu 谈代码之外的 PostgreSQL 社区投入",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/fujitsus-engagement-with-the-postgresql-community-goes-beyond-the-code",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "报道称 Google 与 SpaceX 在谈轨道数据中心",
+      "summary": "",
+      "url": "https://techcrunch.com/2026/05/12/report-google-and-spacex-in-talks-to-put-data-centers-into-orbit/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据中心"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Chrome 的端侧 AI 可能占用 4GB 存储",
+      "summary": "",
+      "url": "https://www.theverge.com/tech/924933/google-chrome-4gb-gemini-nano-ai-features",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "浏览器",
+        "端侧 AI"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "一份对 AI 用电量的数据梳理",
+      "summary": "",
+      "url": "https://hannahritchie.substack.com/p/ai-electricity-2025",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "电力"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "如今的笔记本大多自带安全令牌",
+      "summary": "",
+      "url": "https://ahelwer.ca/post/2026-05-08-builtin-u2f/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "U2F",
+        "TPM"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "在 M4 24GB 机器上跑本地模型的实践",
+      "summary": "",
+      "url": "https://jola.dev/posts/running-local-models-on-m4",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "本地推理"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Snyk 与 Claude Code 联动实时扫描生成代码",
+      "summary": "",
+      "url": "https://codebrainery.com/articles/snyk-claude-code-real-time-security-scanning-for-ai-code",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码安全"
+      ],
+      "position": 21
+    }
+  ]
+}

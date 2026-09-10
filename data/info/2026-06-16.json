@@ -1,0 +1,614 @@
+{
+  "date": "2026-06-16",
+  "origin": "chronicle 2026-06-16: daily, pgnexus #179, news 2, planet 8",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_kpart 1.0 直接拒绝扫遍所有分区的查询",
+      "summary": "分区表上漏写分区键的查询会扫遍所有分区，在几亿行的表上足以打满 I/O、拖垮整台实例。HexaCluster 发布的 pg_kpart 1.0 干脆拒绝这类查询：一条针对受保护分区表的查询若裁剪不掉任何分区，就报错并返回专用 SQLSTATE，方便应用层捕获。扩展提供审计模式便于灰度上线，并用黑白名单精确指定受保护的表。项目由 Gilles Darold 维护，按 PostgreSQL 许可证发布。",
+      "url": "https://pgsql.cc/about/news/pg_kpart-10-3316/",
+      "author": "HexaCluster",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "分区",
+        "查询治理"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Aura Frames 把 Postgres 拆成 8 个主库扛住峰值",
+      "summary": "2024 年圣诞，Aura Frames 的 API 因存储写满宕了三小时：RDS PostgreSQL 14.1 默认改用复制槽，专用日志卷上的 WAL 无节制增长。Andrew Atkinson 复盘此后一年的改造，按整表分片把写入最重的十张表拆到 7 个新主库，连同原库共 8 个，PgBouncer 扩到 230 个实例，并升级到 PostgreSQL 17.6。2025 年圣诞全库峰值 22.6 万 TPS，十余小时零故障。",
+      "url": "https://andyatkinson.com/postgresql-rds-scaling-aws-christmas-day-peak",
+      "author": "Andrew Atkinson",
+      "source": "andyatkinson.com",
+      "source_date": "2026-06-16",
+      "image": "https://andyatkinson.com/assets/images/andyatkinson-com-social-share.jpg",
+      "domain": "pg",
+      "tags": [
+        "扩容",
+        "分片",
+        "RDS"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Cybertec 谈 PostgreSQL 加密里的密钥管理",
+      "summary": "透明数据加密解决了静态数据的问题，却把风险转移到密钥上：密钥很容易出现在配置文件、命令行参数和日志里，甚至对 DBA 直接可见，整个加密模型也就形同虚设。Petar Lejic 介绍 PGEE Key Manager 的做法，由它安全获取并把密钥传给数据库进程，全程不暴露，支持集群自动重启与故障切换，还能对接 Vault、HSM 或云上密钥服务，让基础设施团队和安全团队各管一段。",
+      "url": "https://www.cybertec-postgresql.com/en/on-the-role-of-key-management-in-postgresql/",
+      "author": "Petar Lejic",
+      "source": "Cybertec",
+      "source_date": "2026-06-16",
+      "image": "https://www.cybertec-postgresql.com/wp-content/uploads/2026/06/Social_Template-On_the_Role_of_-Petar_Lejic-Project_Manager-BLOG_POST-7.png",
+      "domain": "pg",
+      "tags": [
+        "加密",
+        "密钥管理",
+        "安全"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 测试框架转向 pytest 的路线渐趋清晰",
+      "summary": "测试基础设施要不要从 Perl TAP 迁到 Python 与 pytest？Andrew Dunstan 提出整体迁移，Heikki Linnakangas 等人表示支持；Tom Lane 的顾虑很实际：master 用 Python 而稳定分支留在 Perl，测试回移会非常痛苦，而 v17 分支里约一成提交都动过测试文件。折中共识是分阶段推进，先在 master 上只用 Python 写新测试把框架稳住，再按模块分批替换。",
+      "url": "https://www.postgresql.org/message-id/72023f0f-fb4c-4b13-b3e3-6a517ec1e7d3@iki.fi",
+      "author": "Andrew Dunstan",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "pytest"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Kubernetes SIG Storage 把重心移向数据保护",
+      "summary": "Kubernetes SIG Storage 发布年度综述，路线正从基本的 PV、PVC 和 CSI 转向数据保护与数据移动。数据库和 AI 流水线在 Kubernetes 上跑起来之后，问题早就不是能不能挂盘，而是崩溃一致的快照、增量备份、对象存储接口和恢复自动化。把 PostgreSQL 放上 Kubernetes 的团队值得重点关注 VolumeGroupSnapshot、CBT、Volume Health 和 COSI 这几项。",
+      "url": "https://kubernetes.io/blog/2026/06/15/sig-storage-spotlight-2026/",
+      "author": "Kubernetes SIG Storage",
+      "source": "Kubernetes 博客",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "存储",
+        "备份"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "AWS 管理控制台支持完全私有网络访问",
+      "summary": "AWS 管理控制台现在可以完全走私有网络访问，覆盖所有商业区域，费用按底层 PrivateLink 端点和数据处理计费。此前强监管环境虽然能用私有 API 和私有网络访问资源，控制台却往往仍需要一条互联网路径，这块控制面暴露一直是缺口。金融、政务、医疗和企业内网环境可以评估用它替代跳板机或公网白名单，并检查 IAM、SCP 与 VPC 端点策略是否一致。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-management-console-private/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "PrivateLink",
+        "合规"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "LinkedIn 假面试题成为开发者机器的攻击入口",
+      "summary": "攻击者不必攻破企业边界，只要让开发者在自己机器上跑一个面试项目就够了。作者记录了一次经 LinkedIn 招聘投递的后门样本，以试题仓库为载体，目标是本机的 SSH 密钥、云凭据、GitHub 会话和包仓库令牌，而这些往往直通生产。样本细节仍需独立复核，但风险模型足够现实。面试题、外包代码和陌生仓库应默认放进一次性虚拟机或容器里跑，不挂载宿主机密钥。",
+      "url": "https://roman.pt/posts/linkedin-backdoor/",
+      "author": "roman.pt",
+      "source": "roman.pt",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "社工",
+        "开发者安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "powa-archivist 5.1.2 发布",
+      "summary": "PoWA 的核心扩展新增按模块设置数据保留策略，由 Marc Cousin 贡献，兼容所有仍受支持的 PostgreSQL 版本。",
+      "url": "https://pgsql.cc/about/news/powa-archivist-512-3317/",
+      "author": "PoWA",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "扩展"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pgstream v1.1.0 朝服务化迈出几步",
+      "summary": "Xata 的 PostgreSQL 变更数据流工具本次更新围绕把自身做成可长期运行的服务。",
+      "url": "https://xata.io/blog/pgstream-v110-steps-towards-turning-it-into-a-service",
+      "author": "Noémi Ványi",
+      "source": "Xata 博客",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CDC"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "vacuum 统计信息拟改为内置系统视图",
+      "summary": "Alena Rybakina 把 contrib 实现换成 pg_stat_vacuum_tables 等三个内置视图，用新 GUC 控制开关。",
+      "url": "https://www.postgresql.org/message-id/a611e91e-073d-49fe-aeb1-45d1a505b78f@yandex.ru",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "监控"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "REPLICA IDENTITY FULL 下的索引选择获得优化",
+      "summary": "补丁优先挑唯一索引，1000 次点更新从 53 秒降到 1 秒以内，主要受益的是 Debezium 一类下游消费者。",
+      "url": "https://www.postgresql.org/message-id/CAA9pdKe076mY_ThwYWkFZa_PceLVmDhdeuKiJnQ38uJCjG2wgg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "pg_restore 会错还原同名表的统计信息",
+      "summary": "--statistics-only 配 --index 时会顺带还原别的 schema 里同名表的统计，改用依赖匹配后已提交到 HEAD 与 v18。",
+      "url": "https://www.postgresql.org/message-id/ajDBwpxs-otl585H@paquier.xyz",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_restore",
+        "缺陷"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "jsonb_plperl 与 jsonb_plpython 存在崩溃缺陷",
+      "summary": "深层嵌套 JSONB 会栈溢出导致段错误，Perl 侧的循环引用还会让 SV_to_JsonbValue() 陷入死循环。",
+      "url": "https://www.postgresql.org/message-id/CAJ7c6TPbjkzUk4qJ5dHvDNEz0hBuFue3A-XWz_=897z+BC+z8A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSONB",
+        "缺陷"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "一篇长文拆解 TimescaleDB 的压缩实现",
+      "summary": "文章讲清 Hypercore 的压缩与存储路径，可与原生分区、ClickHouse 等方案一并比较时序负载。",
+      "url": "https://roszigit.com/en/blog/timescaledb-compression-hypercore/",
+      "author": "",
+      "source": "roszigit.com",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "压缩"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "DuckDB 1.5.0 发布",
+      "summary": "本次发布集中在存储、profiling、PostgreSQL 兼容性和扩展相关的大量修复。",
+      "url": "https://github.com/duckdb/duckdb/releases/tag/v1.5.0",
+      "author": "DuckDB",
+      "source": "GitHub",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "发布"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "微软研究院探讨分析数据库标量函数的 GPU 加速",
+      "summary": "论文讨论把标量函数编译到 GPU 的方法、基准测试与优化空间。",
+      "url": "https://www.microsoft.com/en-us/research/publication/scalable-gpu-acceleration-of-scalar-functions-in-analytical-databases-compilation-benchmarking-and-optimization/",
+      "author": "Microsoft Research",
+      "source": "Microsoft Research",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "GPU",
+        "分析型"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "CloudWatch 指标跨账号集中化正式可用",
+      "summary": "指标可跨账号跨区域复制到中央账号，多账号运维需要重新划分它与自建 Prometheus 的边界。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-cross-account-metrics-centralization/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "FSx for OpenZFS 支持跨 opt-in 区域按需复制",
+      "summary": "复制功能本身不额外收费，跨区域与跨账号的数据传输仍按标准资费计价。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/on-demand-cross-region-replication/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储",
+        "容灾"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐条梳理：default_toast_compression",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-defaulttoastcompression/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "如何在生产 PostgreSQL 集群上运行逻辑复制",
+      "summary": "",
+      "url": "https://stormatics.tech/blogs/how-to-run-logical-replication-on-a-production-postgresql-cluster",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "不列颠哥伦比亚省废除夏令时给 Postgres 带来的时区变化",
+      "summary": "",
+      "url": "https://www.crunchydata.com/blog/british-columbia-and-time-zone-changes",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时区"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Postgres 战争故事之二：multixact 回卷与静默损坏",
+      "summary": "",
+      "url": "https://payalsingh.me/blog/2026/06/16/postgres-war-stories-2-silent-corruption/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据损坏"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "用 Claude 排查一次 Postgres multixact 告警",
+      "summary": "",
+      "url": "https://www.arthur.ai/blog/ai-sre-debugs-postgres-io-spike",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "排障"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GRAPH_TABLE 的 COLUMNS 里用聚合函数会让后端崩溃",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAON2xHOYAmYLkB2jGi6g77d6Fqv8YgOrfV-riQVf0K_7AdxD3w@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别补丁暴露窗口函数互相干扰的问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zCQaV_im5WNbU1D1HAQDUk3yYK3nSduZZ8Qu_aK-aRA9A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "窗口函数"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "vacuumdb --missing-stats-only 对表达式索引误报",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+fm-RPE1tEc6CUUPDyRbYTz9tF5Kw47nnk-Zq=yYvanbsxyCQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 导入统计信息拟去掉 SPI 调用",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPmGK161TJ4G01eptv3sBqgxa4SNHDE9VRqoC6jy5Y6G3D8yDw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "临时复制槽释放时的竞态条件已修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABPTF7VdFwiROsch4T7VbOCqQYpRbh==gAZPM6tJeff5Ou80Qw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "表达式索引的自动命名将带上操作数名",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoY2WSX-XwAU6y0ScvWuzYijWJ3k7RXJvGep7FX7M+RoFA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "libpgfeutils 变更后前端程序将自动重新链接",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAGGTb67i8j==pVXnE-wwc--JxtM3-w-NK0yA2z=zi5fbQvtSqQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Tom Lane 提交集中式 CPU 架构识别补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/846383.1781632654@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可移植性"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Postgres Professional 的 DBA2 课程推出英文版",
+      "summary": "",
+      "url": "https://postgrespro.com/blog/pgsql/5973260",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "培训"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "LLM 正在改变会议议程的组织方式",
+      "summary": "",
+      "url": "https://di.nmfay.com/llms-conference-programs",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "RDS for MariaDB 在预览环境提供 12.3 长期支持版",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-rds-maria-db-innovation-release-12-3-rds-database-preview-environment/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "RDS"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch Query Studio 正式可用",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-cloudwatch-query-studio-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 35
+    },
+    {
+      "tier": 3,
+      "title": "AWS WAF 开始把 AI 爬虫流量做成可计费资源",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/aws-waf-ai-traffic-monetization/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "WAF"
+      ],
+      "position": 36
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 DNS 防火墙集成 Palo Alto 威胁情报（预览）",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-route-53-resolver-dns/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DNS",
+        "安全"
+      ],
+      "position": 37
+    },
+    {
+      "tier": 3,
+      "title": "FreeBSD 15.1-RELEASE 发布",
+      "summary": "",
+      "url": "https://lists.freebsd.org/archives/freebsd-announce/2026-June/000274.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "操作系统"
+      ],
+      "position": 38
+    },
+    {
+      "tier": 3,
+      "title": "NATS 2.12.11 修复 JetStream 主题状态过期回归",
+      "summary": "",
+      "url": "https://github.com/nats-io/nats-server/releases/tag/v2.12.11",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "消息队列"
+      ],
+      "position": 39
+    }
+  ]
+}

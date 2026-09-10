@@ -1,0 +1,339 @@
+{
+  "date": "2026-09-04",
+  "origin": "chronicle 2026-09-04: pgnexus #259, planet 2；补 2026-09-02 至 09-03 未用候选 6 条",
+  "items": [
+    {
+      "tier": 1,
+      "title": "副本模式并不会关掉 CHECK、唯一约束和行级安全",
+      "summary": "Seedfast 的 Mikhail Shytsko 在 PostgreSQL 18.6 与 19beta3 上逐项验证 session_replication_role = replica：外键、ON DELETE CASCADE、规则和事件触发器确实静默，标记 ENABLE REPLICA 的触发器反而开始触发，而 CHECK、NOT NULL、唯一约束和行级安全照常拦截。恢复时只有 NOT ENFORCED 切回会扫表。",
+      "url": "https://seedfa.st/blog/session-replication-role",
+      "author": "Mikhail Shytsko",
+      "source": "Seedfast 博客",
+      "source_date": "2026-09-04",
+      "image": "https://seedfa.st/blog/session-replication-role-1.svg",
+      "domain": "pg",
+      "tags": [
+        "约束",
+        "逻辑复制",
+        "触发器"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的外键快速路径会漏掉外键检查",
+      "summary": "PostgreSQL 19 新的外键快速路径批处理层被查出两个缺陷：在 AFTER 触发器里执行 ALTER TABLE ... ADD FOREIGN KEY 时，验证检查被错误并入外层批次，外键检查因此被跳过，孤立行会当作合法数据提交；SET CONSTRAINTS ... IMMEDIATE 启动嵌套触发周期时则触发断言崩溃并漏检。两个补丁已就绪，要等批处理层是否从 19 回退有结论才推送。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqGeBaJ5eXnkYHHQUBqZAZyihc=TqseB-VQTY5_sEvd_Zg@mail.gmail.com",
+      "author": "PostgreSQL hackers",
+      "source": "PostgreSQL 邮件列表",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG19",
+        "外键",
+        "数据正确性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "postgres_fdw 对分区外表批量更新会造成数据损坏",
+      "summary": "Ajit Awekar 的补丁修复了 2018 年就已知的缺陷：通过 postgres_fdw 对分区外表批量 DELETE/UPDATE 会造成数据逻辑损坏。Jakub Wartak 审查后指出代价不小：补丁用 ROW() 和列名各传一次数据，所有 postgres_fdw 外表的 CPU 开销约翻倍；逐行发出的语句无法按 tableoid 做分区裁剪，性能随行数与分区数之积恶化。部分问题还没有明确方案。",
+      "url": "https://www.postgresql.org/message-id/CAKZiRmw1ZeHp2=jg8psZ8gm+ehLx2KoN4Hxj0XhJ_5HaugFvsA@mail.gmail.com",
+      "author": "Ajit Awekar",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "分区",
+        "数据正确性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "REPACK 在 beta 末期集中修补三处限制",
+      "summary": "PostgreSQL 19 的 REPACK 在 beta 末期集中修补三处限制：对不支持逻辑解码的非 heap 访问方法执行 REPACK (CONCURRENTLY) 可能静默丢数据，Bharath Rupireddy 的补丁补上访问方法检查；标记 user_catalog_table 的表将被禁止并发重整，以免内容对输出插件不可见；表所有者缺少 CONNECT 权限时的失败也已修好。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBqLtyw7CG82ci69=NC6wBrF0roouJRsV2ii5TGhSY3+g@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "PG19"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "分区索引重建丢失副本标识的修复拆成三部分",
+      "summary": "Sami Imseih 把修复分区索引重建丢失 replica identity 的补丁拆成 v18 三部分：非后代分区的 DEPENDS ON EXTENSION 保留、SET EXPRESSION 的覆盖，以及后代分区索引属性的保留。Zsolt Parragi 测试时发现新的名称冲突：把某个分区索引改名成另一个分区的默认索引名之后，再用 ALTER TABLE 改列类型会报 relation already exists。",
+      "url": "https://www.postgresql.org/message-id/CAN12+YKf952x9F0OzGBSk_OGswjZC1-c2MYv0gLX=4P_br6P+Q@mail.gmail.com",
+      "author": "Sami Imseih",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "逻辑复制",
+        "索引"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "按 XID 年龄失效备机同步复制槽的补丁遇阻",
+      "summary": "启用 sync_replication_slots 时失效无法持久：同步 worker 会用更新的 catalog_xmin 把槽重建回来。",
+      "url": "https://www.postgresql.org/message-id/CABdArM7M5=aa8DCxeGNR8-BuR8u8V7sFEdBmBgRbaZvvfcdN-g@mail.gmail.com",
+      "author": "Surya Poondla",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "备机"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "varatt_external 将改名为 8 字节 TOAST 让路",
+      "summary": "Michael Paquier 为 v20 的 8 字节 TOAST 值预留命名，扩展开发者可能要跟着改。",
+      "url": "https://www.postgresql.org/message-id/apoD1Ulet2PtDrRV@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "扩展兼容"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_stat_vfdcache 视图将暴露虚拟文件描述符缓存",
+      "summary": "v6 补丁补上命中与未命中的活动测试，视图还给出 cache_bytes、max_open_fds 与命中率。",
+      "url": "https://www.postgresql.org/message-id/CADu+CpQeaXJBCwnAZWgsLKt=ew3GwZ8XDXApesAS6dp01WR3oQ@mail.gmail.com",
+      "author": "Ayoub Kazar",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "文件描述符"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "sslinfo 拟新增 TLS 支持与协商曲线组的函数",
+      "summary": "RSA 密钥交换时没有协商组，函数拆成保留 NULL 的底层实现和过滤 NULL 的外层。",
+      "url": "https://www.postgresql.org/message-id/aprTMCAqd16B__py@ddolgov-thinkpadt14sgen1.rmtde.csb",
+      "author": "Dmitry Dolgov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "sslinfo",
+        "TLS"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "新函数按拓扑序遍历继承树",
+      "summary": "find_all_inheritors_ordered() 用 Kahn 排序保证祖先先于后代，简化了 CHECK 约束的既有修复。",
+      "url": "https://www.postgresql.org/message-id/CAF0whue-TdKNruMrgFYhL5+rJVQoXHLHjUe_RRpzBY_B0PjhEg@mail.gmail.com",
+      "author": "Jian He",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "继承",
+        "约束"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "整数聚合的中间态拟从数组改为 INTERNAL",
+      "summary": "Tom Lane 提醒 INTERNAL 状态要自备 serialize/deserialize 函数，并非无条件更优。",
+      "url": "https://www.postgresql.org/message-id/762e811a-6584-4b03-a6ca-52600adcd6e9@gmail.com",
+      "author": "Andrei Lepikhov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "聚合",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "外部表 ANALYZE 会报出虚假的继承关系警告",
+      "summary": "relhassubclass 在继承解除后仍为真，postgres_fdw 只看这个字段，误报将写进文档。",
+      "url": "https://www.postgresql.org/message-id/CAPmGK16UFisHLSEsiEpj4b4cjrqgsTjif_X+ApWv-MSTvgraTg@mail.gmail.com",
+      "author": "Etsuro Fujita",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "统计信息"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Neon 让 42 个模型跑同一批工单比成本与可用率",
+      "summary": "最省的 GPT-5 Nano 约 3 分钟跑完，最快的 Llama 3.1 8B 只有 34 条通过准确性检验。",
+      "url": "https://neon.com/blog/comparing-token-economics-across-42-ai-models",
+      "author": "Carlota Soto",
+      "source": "Neon 博客",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "模型成本",
+        "评测"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：log_lock_waits 与锁失败日志",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-log_lock_waits-and-log_lock_failures/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "日志"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别里新增的 double-free 检查被指多余",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zAHbPO_jxVzZ5b=iyussKqi_wzJp1C-ubWA1LT7n++BZg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行模式识别"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare Tunnel 路由界面支持批量创建与重试",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-02-tunnel-mesh-bulk-route-creation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Cloudflare"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare Images 绑定新增文本栅格化与签名 URL",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-02-images-binding-updates/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Cloudflare"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Simon Willison 发现 Codex 包里捆绑 LibreOffice",
+      "summary": "",
+      "url": "https://simonwillison.net/2026/Sep/1/codex-libreoffice/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 企业托管设置可指定任意默认模型",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-02-enterprise-managed-settings-support-any-default-model/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Copilot"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Claude Fable 5.1 在 GitHub Copilot 正式可用",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-01-claude-fable-5-1-generally-available-in-github-copilot/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Copilot"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "FrontierHarness 称同一模型跨 harness 成本差 17 倍",
+      "summary": "",
+      "url": "https://frontierharness.org/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "评测"
+      ],
+      "position": 21
+    }
+  ]
+}

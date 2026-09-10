@@ -1,0 +1,206 @@
+{
+  "date": "2026-04-02",
+  "origin": "chronicle 2026-04-02: pgnexus #101, news 2, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 加入 FOR PORTION OF 时段更新",
+      "summary": "范围类型能存有效期，但要改其中一段时间的数据，一直得自己拆行再补行。Peter Eisentraut 在 4 月 1 日提交了 Paul A. Jungwirth 的补丁：PostgreSQL 19 的 UPDATE 与 DELETE 支持 FOR PORTION OF，只作用于与给定区间重叠的行，部分重叠的行会被截断，未涉及的时段自动补成新行。边界只能是常量表达式，NOW() 可用，列引用和子查询不行。",
+      "url": "https://www.depesz.com/2026/04/02/waiting-for-postgresql-19-add-update-delete-for-portion-of/",
+      "author": "Hubert depesz Lubaczewski",
+      "source": "depesz.com",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "时态",
+        "SQL"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "CloudNativePG 1.29.0 引入扩展镜像目录",
+      "summary": "在 Kubernetes 上加装扩展，此前多半要自己烤镜像。CloudNativePG 1.29.0 用 Image Catalogs 建起扩展镜像生态，让引擎与扩展版本保持对齐。新增的 podSelectorRefs 让 pg_hba.conf 按标签动态解析客户端 Pod 的临时 IP，只放行命名空间内获授权的负载。同期发布维护版 1.28.2 与 1.27.4，1.28.x 的 EOL 定在 2026-06-30。",
+      "url": "https://pgsql.cc/about/news/cloudnativepg-1290-3260/",
+      "author": "CloudNativePG Contributors",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "扩展",
+        "发布"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgAdmin 4 v9.14 支持自定义 LLM 服务地址",
+      "summary": "pgAdmin 开发团队发布 4 v9.14，共 23 项修复与新功能。最显眼的是为 OpenAI 与 Anthropic 增加自定义 Provider URL，LM Studio、LiteLLM 这类 OpenAI 兼容服务可以直接接入；LLM_ENABLED 设为 False 时界面仍显示 AI 入口的问题也一并修好。其余修复涉及 OAuth2 认证失败与索引 fillfactor 默认值错误。",
+      "url": "https://www.pgadmin.org/docs/pgadmin4/9.14/release_notes_9_14.html",
+      "author": "pgAdmin 开发团队",
+      "source": "pgAdmin",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "发布"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge Postgres MCP Server 发布 1.0 正式版",
+      "summary": "pgEdge 把自家的 Postgres MCP Server 推到 1.0，开源版本与 pgEdge Cloud 托管服务同时提供。它让代理读取模式、执行查询和生成代码，能识别主键、外键、索引、约束以及分区表层级，默认折叠子表以免撑爆上下文。支持 PostgreSQL 14 以上，客户端覆盖 Claude Code、Cursor 等。安全上默认只读，会拒绝改写 transaction_read_only 的绕过尝试。",
+      "url": "https://www.pgedge.com/blog/pgedge-mcp-server-for-postgres-is-now-ga-here-s-why-that-matters",
+      "author": "Antony Pegg",
+      "source": "pgEdge 博客",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MCP",
+        "发布"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Cactos 从 RDS 迁到 TimescaleDB 后成本降 55%",
+      "summary": "电池储能厂商 Cactos 把 15TB 时序数据从 Amazon RDS 搬到 TigerData 托管的 TimescaleDB，月度数据库开销从 9000 美元降到 4000 美元。原生压缩把存储压掉 92%，历史数据自动分层到 S3。迁移用实时同步的 RDS 连接器覆盖 35 张分区表，接近零停机。厂商称压缩分层上的历史查询比原先 RDS 热存储还快。Cactos 选择留在 PostgreSQL 生态，没有拆成两套架构。",
+      "url": "https://www.tigerdata.com/blog/how-cactos-migrated-from-amazon-rds-and-cut-costs-by-55",
+      "author": "Nicole Bahr",
+      "source": "TigerData 博客",
+      "source_date": "2026-04-02",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/04/Cactos-Tiger-Dtaa-Case-Study.png",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "迁移",
+        "成本"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 19 把 jit 默认值改为 off",
+      "summary": "Tomas Vondra 已推送提交，构建农场可在 extra_config 里单独打开 jit 以保留测试覆盖。",
+      "url": "https://www.postgresql.org/message-id/dcdbe6bb-c867-4191-a589-56314dac5fb9@vondra.me",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "默认值"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "jsonpath 新增 lower、upper、trim 等字符串方法",
+      "summary": "Andrew Dunstan 提交补丁，trim 系列已进 key_name 规则，其余方法作对象键时仍有问题。",
+      "url": "https://www.postgresql.org/message-id/88a392fd-d732-45a7-bcfc-291258849fbe@dunslane.net",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "jsonpath"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Fujitsu Enterprise Postgres 18 SP1 发布",
+      "summary": "基于 PostgreSQL 18，官方口径是加强了 AI 数据处理与企业高可用场景下的连接管理。",
+      "url": "https://www.postgresql.fastware.com/blog/fujitsu-enterprise-postgres-18sp1",
+      "author": "Gary Evans",
+      "source": "Fastware 博客",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "商业发行版"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_clickhouse 0.1.6 增强查询取消与下推",
+      "summary": "新增 to_timestamp(float8)、LIKE、ILIKE 与正则运算符的下推，可从 PGXN 或 Docker 获取。",
+      "url": "https://justatheory.com/2026/04/pg_clickhouse-0.1.6/",
+      "author": "David Wheeler",
+      "source": "Just a Theory",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ClickHouse",
+        "扩展"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "并行 autovacuum 发现共享参数未重置的隐患",
+      "summary": "出错路径上 pv_shared_cost_params 未重置，后续非并行 vacuum 可能因此触发 SEGV。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoAm806fQhMH49T_Ft9z1HSAdTi=gRcoxS9DW+nVQ9iCMQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "并行"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "pg_waldump 的 tar 解析在各发行版上不一致",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+hUKGJv2hpjMDwG31JSR7TfFUxNPPtQKMm6mHVVRMAT0XppBQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "自定义 OAuth 验证器选项补丁提交第 4 版",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+k4fuYKJBW0GuCZFWOz3w+0t=X9zeHFx2avr3=kdpopQw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "ALTER/DROP DATABASE 的 5 秒超时将可配置",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/OS9PR01MB12149DEAB9D2FAF32C1E8079DF551A@OS9PR01MB12149.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    }
+  ]
+}

@@ -1,0 +1,309 @@
+{
+  "date": "2026-07-05",
+  "origin": "chronicle 2026-07-05: pgnexus #198, news 4, planet 3, daily",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG19 外键快速路径的批处理修复被指不彻底",
+      "summary": "PostgreSQL 19 为外键检查加了快速路径，批量操作下暴露出越界写入和漏掉约束检查的问题，提交 4113873 的做法是把批处理限制在顶层事务。Noah Misch 反对这个修法：用到 SAVEPOINT 时会带来约 1.6 倍的性能回退，也偏离了按子事务跟踪资源的惯例，代码并未变简单。他主张改成按子事务跟踪批处理来源，并指出 AfterTriggerEndSubXact() 没有重置 firing_depth，捕获触发器错误后外键校验可能被错误路由。",
+      "url": "https://www.postgresql.org/message-id/20260705222115.be.noahmisch@microsoft.com",
+      "author": "Noah Misch",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "子事务",
+        "缺陷"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "页面级清理：VACUUM 之前先发生的那一步",
+      "summary": "Radim Marek 拆解了堆页内部的清理过程。页面剪枝只在单个堆页里回收死元组占的字节并推进 pd_upper 做碎片整理，普通 SELECT 碰到 HOT 链时就会顺手做，VACUUM 的第一阶段也对每个页做一遍。有索引时行指针走 LP_NORMAL 到 LP_DEAD 再到 LP_UNUSED，无索引时一步到位；LP_DEAD 表示空间已回收但 TID 仍被索引引用。HOT 链的头指针会转成 LP_REDIRECT，索引顺着它找到当前版本，从而完全省掉索引更新。",
+      "url": "https://boringsql.com/posts/vacuum-at-the-page-level/",
+      "author": "Radim Marek",
+      "source": "boringsql.com",
+      "source_date": "2026-07-05",
+      "image": "https://boringsql.com/og-images/vacuum-at-the-page-level-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "存储",
+        "HOT"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostGIS 3.7.0alpha1 发布，弃用 PG12 与 13",
+      "summary": "PostGIS 团队发布 3.7.0alpha1，要求 PostgreSQL 14 到 19beta1、GEOS 3.10 以上、Proj 6.1 以上。这一版丢掉了对 PostgreSQL 12 与 13 的支持，把 address_standardizer 和 tiger_geocoder 移出主仓库；拓扑函数把容差 0 当作字面零，按精度取容差要改写 -1。新增 ST_CoverageEdges、ST_MinimumSpanningTree 等函数。",
+      "url": "https://postgis.net/2026/07/PostGIS-3.7.0alpha1/",
+      "author": "PostGIS 团队",
+      "source": "PostGIS",
+      "source_date": "2026-07-05",
+      "image": "https://postgis.net/postgis-logo-horizontal.png",
+      "domain": "pg",
+      "tags": [
+        "PostGIS",
+        "扩展",
+        "发布"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "credcheck 5.0 让密码历史支持复制感知",
+      "summary": "credcheck 在创建用户、改密码和改名时执行统一的凭据规则，涵盖复杂度、历史复用、最短有效期、认证失败次数与首次登录强制改密。HexaCluster 发布的 5.0 是大版本更新，新增 PostgreSQL 19 兼容性，并让密码历史机制具备复制感知能力；打开 credcheck.superuser_nocheck 后超级用户的建角色与改角色会跳过检查。升级后需要重启 PostgreSQL 才能重新加载该库。",
+      "url": "https://github.com/HexaCluster/credcheck/blob/v5.0/ChangeLog",
+      "author": "HexaCluster",
+      "source": "HexaCluster",
+      "source_date": "2026-07-05",
+      "image": "https://opengraph.githubassets.com/fd4f84f5aa0f63f4d372493d11dd0061aab517f5c671f62652a8673fc59052e7/HexaCluster/credcheck",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "扩展",
+        "口令"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pg-cdc 把 WAL 直接写成 S3 上的 Iceberg 表",
+      "summary": "burnside project 开源的 pg-cdc 读取 PostgreSQL 的 WAL，把变更以 Apache Iceberg 表的形式写入 AWS S3，并自动在 Glue Catalog 注册表，用 Lake Formation 的标签控制读取，消费方走 IAM 认证，不需要数据库账号密码。工具只有一个二进制，不依赖 JVM；数据流严格单向，架构上不存在回写生产库的路径。每次刷新生成一个 Iceberg 快照，可以对 CDC 历史做时间旅行查询。",
+      "url": "https://github.com/burnside-project/pg-cdc",
+      "author": "burnside project",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-07-05",
+      "image": "https://opengraph.githubassets.com/5c79ef2715f111f5e8ff3d5171e8e592e4186b8940b1800becd71ee95050d4b7/burnside-project/pg-cdc",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "Iceberg",
+        "S3"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "sqlite-utils 4.0rc2 记录了一次真实的模型协作",
+      "summary": "Simon Willison 发布 sqlite-utils 4.0rc2，其中大量工作由 Claude Fable 辅助完成，他估算未计补贴的成本约 149.25 美元，又让 GPT-5.5 做交叉审查，找出两个与事务和 RETURNING 相关的问题。这是一份高水平开发者用强模型做真实开源发布的完整账目：产出确实有，但审查成本同样真实。对数据库工具而言可借鉴的是，价值不在于让模型一口气写完，而在于让不同模型、测试与人工复核专门盯住事务、副作用和文档承诺。",
+      "url": "https://simonwillison.net/2026/Jul/5/sqlite-utils-fable/",
+      "author": "Simon Willison",
+      "source": "Simon Willison 博客",
+      "source_date": "2026-07-05",
+      "image": "https://static.simonwillison.net/static/2026/fable-plan-usage.webp",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "AI",
+        "代码审查"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_dbms_lock 2.0 已兼容 PostgreSQL 19",
+      "summary": "用 advisory lock 模拟 Oracle DBMS_LOCK 的扩展，该版本不再兼容 2.0 之前的 pg_background。",
+      "url": "https://github.com/HexaCluster/pg_dbms_lock/blob/v2.0/ChangeLog",
+      "author": "HexaCluster",
+      "source": "HexaCluster",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "锁"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_dbms_errlog 2.4 补上 PG18 与 19 兼容",
+      "summary": "让 DML 出错后不回滚而是把错误记进日志表的扩展，本次为维护版本并修掉两个重要缺陷。",
+      "url": "https://github.com/HexaCluster/pg_dbms_errlog/blob/v2.4/ChangeLog",
+      "author": "HexaCluster",
+      "source": "HexaCluster",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "错误处理"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "psql 折行扩展输出的分页器选择错误已修复",
+      "summary": "Tom Lane 认定是提交 27da1a796 漏掉的场景，Chao Li 的 v2 补丁已回合到 PostgreSQL 19。",
+      "url": "https://www.postgresql.org/message-id/899662.1783289616@sss.pgh.pa.us",
+      "author": "Chao Li",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "虚拟生成列建索引的补丁改为展开表达式存元数据",
+      "summary": "基本的索引扫描已能跑通，但带虚拟生成列谓词的部分索引还走不了 Index Only Scan。",
+      "url": "https://www.postgresql.org/message-id/tencent_DAA3363C495B3FADD6C4CB778EA51AF55D06@qq.com",
+      "author": "ZizhuanLiu",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "生成列",
+        "索引"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "十二年前的 ORM 反思重新登上 HN 首页",
+      "summary": "讨论集中在显式 SQL 加轻量映射是否比全功能 ORM 更可控，以及 Ecto、Dapper 这类中间形态。",
+      "url": "https://wozniak.ca/blog/2014/08/03/1/index.html",
+      "author": "",
+      "source": "wozniak.ca",
+      "source_date": "2014-08-03",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQL",
+        "ORM"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Oracle AI Database@AWS 扩到北加州区域",
+      "summary": "7 月 2 日新增 US West（北加州）的两个物理可用区，多云托管数据库继续铺开。",
+      "url": "https://docs.oracle.com/en-us/iaas/Content/database-at-aws/oaaws-whats-new.htm",
+      "author": "Oracle",
+      "source": "Oracle 文档",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Oracle",
+        "多云"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "模型变强反而把工具调用糊弄过去",
+      "summary": "Armin Ronacher 的实验里，嵌套 edits 结构常出现多余键与别名，严格工具调用能消除这类失败。",
+      "url": "https://lucumr.pocoo.org/2026/7/4/better-models-worse-tools/",
+      "author": "Armin Ronacher",
+      "source": "lucumr.pocoo.org",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "工具调用"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "enable_parallel_hash 决定哈希表由谁来建",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_parallel_hash/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare Workers AI 开始承载更大的模型",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/workers-ai-large-models/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "浏览器里的加密为什么难以当作强客户端",
+      "summary": "",
+      "url": "https://www.devever.net/~hl/webcrypto",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "htop 和 top 里每个数字的含义详解重新高热",
+      "summary": "",
+      "url": "https://peteris.rocks/blog/htop/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Pandoc 的 Lua 过滤器文档重新登上 HN",
+      "summary": "",
+      "url": "https://pandoc.org/lua-filters.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "有人报告 Claude Code 串入了无关任务的上下文",
+      "summary": "",
+      "url": "https://github.com/anthropics/claude-code/issues/74066",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "论文主张用只追加事件日志充当 agent 的真相源",
+      "summary": "",
+      "url": "https://arxiv.org/abs/2605.21997",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-21",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 20
+    }
+  ]
+}

@@ -1,0 +1,451 @@
+{
+  "date": "2026-05-09",
+  "origin": "chronicle 2026-05-09: daily, pgnexus #141, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 18 给大表自动清理加上死元组上限",
+      "summary": "PostgreSQL 18 新增的 autovacuum_vacuum_max_threshold 给自动清理的触发条件加了一个硬上限。旧公式按比例计算，十亿行的表要积累两亿死元组才触发清理；新参数默认一亿元组，实际阈值取它与旧公式结果中较小的那个，五亿行是分界点。Christophe Pettus 建议在 18 上保持默认值，只对更新极频繁的大表按表设更紧的上限，设成 -1 则关掉上限。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-autovacuumvacuummaxthreshold/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-05-09",
+      "image": "https://thebuild.com/media/media/c59dd88c094b4270969d9abc8c47056e.png",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "参数",
+        "PostgreSQL 18"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "AWS 演示从 Aurora 快照迁移到 Aurora DSQL",
+      "summary": "Aurora DSQL 无法直接还原 Aurora PostgreSQL 的快照。AWS Database Blog 给出的路径分五步：做快照、导出到 S3 成 Parquet、用 Glue 爬虫编目、跑 PySpark 作业转换，再写入 Aurora DSQL。更值得先看的是限制：DSQL 每个集群只有一个数据库，多库要分次迁移；时间戳列要从字节数组转回；单事务三千行的上限要求调小批量；主键换成 UUID 后外键关系需要重建。",
+      "url": "https://aws.amazon.com/blogs/database/migrating-data-from-an-amazon-aurora-snapshot-into-amazon-aurora-dsql/",
+      "author": "Dan Blaner",
+      "source": "AWS Database Blog",
+      "source_date": "2026-05-07",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/04/23/DB4683.png",
+      "domain": "pg",
+      "tags": [
+        "Aurora DSQL",
+        "迁移",
+        "AWS Glue"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "ElastiCache 支持 Valkey 9.0，加入全文与向量搜索",
+      "summary": "AWS 宣布 Amazon ElastiCache 支持 Valkey 9.0。这一版把检索能力搬进缓存层，支持全文搜索、语义检索，以及把文本相关度与向量相似度结合的混合查询，可用于商品目录检索、文档发现和检索增强生成。引擎层的命令解析和批量请求处理也做了优化，AWS 称流水线负载吞吐最高提升四成。此外哈希字段可以单独设置过期时间，集群模式支持编号数据库作为轻量命名空间，地理查询新增任意多边形范围。该版本在所有区域提供，不额外收费。",
+      "url": "https://aws.amazon.com/blogs/database/announcing-valkey-9-0-for-amazon-elasticache/",
+      "author": "Mas Kubo",
+      "source": "AWS Database Blog",
+      "source_date": "2026-05-07",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/05/05/DB5599.png",
+      "domain": "db",
+      "tags": [
+        "Valkey",
+        "ElastiCache",
+        "搜索"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Discord 把 ScyllaDB 集群运维交给 Rust 控制面",
+      "summary": "Discord 的持久化基础设施团队只有七个人，要维护数十个 ScyllaDB 集群、数百个节点，上面存着消息、频道、服务器和大部分用户数据。他们用 Rust 写了编排框架 Scylla Control Plane，把建集群、加节点、滚动升级、重启、drain 和修复做成统一流程：任务声明前置条件并保证幂等，工作流用 YAML 描述，状态存进 SQLite，失败可重试可续跑。作者称过去要三十六小时以上的操作现在两小时内完成。",
+      "url": "https://discord.com/blog/how-discord-automates-scylladb-clusters-at-scale",
+      "author": "Peter French",
+      "source": "Discord 工程博客",
+      "source_date": "2026-05-08",
+      "image": "https://cdn.prod.website-files.com/5f9072399b2640f14d6a2bf4/69fb97b51217ebb66107035c_2024_10_DiscordBlog_DevandEngineers-5.png",
+      "domain": "db",
+      "tags": [
+        "ScyllaDB",
+        "自动化",
+        "Rust"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Ubuntu 发布 Dirty Frag 缓解指南，两个提权公开",
+      "summary": "Canonical 称 2026-05-07 公开的两个 Dirty Frag 漏洞影响 Linux 内核模块，其中一个是 CVE-2026-43284，另一个待定，Ubuntu 14.04 到 26.04 LTS 均受影响。官方的临时办法是阻止 esp4、esp6、rxrpc 模块加载并卸载已加载的模块。共享主机、CI runner 和容器宿主机风险最高；不用 IPsec 或 AFS 的机器可尽快禁用模块，其余等发行版补丁。",
+      "url": "https://ubuntu.com/blog/dirty-frag-linux-vulnerability-fixes-available",
+      "author": "Canonical",
+      "source": "Ubuntu 博客",
+      "source_date": "2026-05-07",
+      "image": "https://ubuntu.com/wp-content/uploads/25ca/Dirty-Frag-vulnerability-fixes.jpg",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "内核安全",
+        "本地提权"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "AWS us-east-1 故障波及 FanDuel、Coinbase",
+      "summary": "CNBC 称 AWS 北弗吉尼亚 us-east-1 数据中心事件影响了 FanDuel、Coinbase 等业务，讨论集中在故障透明度、可用区命名和状态页的可信度。us-east-1 仍是许多控制面和业务面的事实中心，单个可用区或机房的事件一旦碰上状态服务、队列、数据库或第三方 API，就会外溢到理论上跨可用区的系统。复核依赖时，RDS、ElastiCache、EKS、队列、DNS、KMS 和 CI/CD 都要确认是否真的跨故障域。",
+      "url": "https://www.cnbc.com/2026/05/08/aws-outage-data-center-fanduel-coinbase.html",
+      "author": "CNBC",
+      "source": "CNBC",
+      "source_date": "2026-05-08",
+      "image": "https://image.cnbcfm.com/api/v1/image/108234845-1764632113000-gettyimages-2248079963-20251126SOPAMASL005.jpeg?v=1778252007&amp%3Bw=1920&amp%3Bh=1080",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "可用性",
+        "灾备"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Vercel 发布 Next.js 五月安全更新",
+      "summary": "Vercel 发布了 2026 年 5 月的 Next.js 安全更新，Cloudflare 前一天也给出边缘 WAF 与框架适配层的缓解说明，并指出若干高危问题无法只靠托管规则集拦截。Next.js 的安全问题不只停在前端依赖上，App Router、middleware、边缘适配器和缓存行为都可能落在服务端攻击面里。团队应升到官方安全版本，检查 OpenNext 或 Workers 适配器，并补上 SSRF 与缓存投毒的集成测试。",
+      "url": "https://vercel.com/changelog/next-js-may-2026-security-release",
+      "author": "Vercel",
+      "source": "Vercel Changelog",
+      "source_date": "2026-05-08",
+      "image": "https://assets.vercel.com/image/upload/contentful/image/e5382hct74si/xcOcmUoYf2hpjoNPrNkDh/ff7363f483ddc0af63916a4abf526b1f/image__3_.png",
+      "domain": "infra",
+      "tags": [
+        "Next.js",
+        "Web 安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Amazon ElastiCache 增强搜索能力",
+      "summary": "AWS Database Blog 同期发布增强搜索，托管缓存层继续向实时索引和轻量查询扩展。",
+      "url": "https://aws.amazon.com/blogs/database/enhanced-search-for-amazon-elasticache/",
+      "author": "",
+      "source": "AWS Database Blog",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ElastiCache",
+        "搜索"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "EC2 X8i 实例进入爱尔兰与孟买区域",
+      "summary": "AWS 称其内存带宽高于 X2i，列出的收益包括 PostgreSQL 与 Memcached 的性能提升。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/02/amazon-ec2-x8i-instances-BOM-DUB-region/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "EC2",
+        "内存"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "IAM Policy Autopilot 支持 Java 与 Terraform",
+      "summary": "这个开源工具交叉引用 Terraform 资源定义与 SDK 调用，生成更接近最小权限的策略。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/iam-policy-autopilot/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "IAM",
+        "IaC"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "io_uring ZCRX freelist 缺陷可用于本地提权",
+      "summary": "分析文章给出了完整提权路径，容器平台与 CI 需要重新评估 io_uring 的暴露面。",
+      "url": "https://ze3tar.github.io/post-zcrx.html",
+      "author": "",
+      "source": "技术分析",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "io_uring"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Flox 讨论 CVE 修复为何依赖可复现构建",
+      "summary": "非确定性构建让补丁验证变脆弱，SBOM、锁文件、构建重放和环境快照同样是必需项。",
+      "url": "https://flox.dev/blog/achieving-rapid-cve-remediation-in-an-era-of-escalating-vulnerabilities/",
+      "author": "",
+      "source": "Flox",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链安全",
+        "CVE"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "CNCF 测评：agent 修 bug 的瓶颈在范围识别",
+      "summary": "以 Kubernetes 真实 PR 为基准，RAG 最快但漏改多文件，issue 质量比检索方式更关键。",
+      "url": "https://www.cncf.io/blog/2026/05/08/benchmarking-ai-agent-retrieval-strategies-on-kubernetes-bug-fixes/",
+      "author": "",
+      "source": "CNCF",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "AI agent"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Mojo 1.0 Beta 发布，计划开源编译器",
+      "summary": "官网显示稳定版本为 1.0.0b1，主打 Python 互操作、GPU 编程与编译期元编程。",
+      "url": "https://mojolang.org/",
+      "author": "",
+      "source": "Mojo",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编程语言",
+        "GPU"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "test_decoding 补丁讨论跳过虚拟生成列",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHg+QDdsEysz63ZDUaHrxKbQQ5Z-WJs-55rVJHA5s6FHzbAQNA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Amazon ElastiCache 支持聚合查询",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/announcing-aggregations-on-amazon-elasticache/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ElastiCache"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "AWS 回顾 Valkey 两周年的生态进展",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/valkey-turns-two/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Valkey"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Jetro 用 Rust 实现 jq 风格的 JSON 查询引擎",
+      "summary": "",
+      "url": "https://github.com/mitghi/jetro",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "JSON",
+        "Rust"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 Global Resolver 支持动态增删区域",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-route-global-resolver-aws/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DNS"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 Resolver 增加 DNS64 与 IPv6 转发",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/amazon-route-53-resolver-ipv6/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DNS",
+        "IPv6"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "AWS Service Catalog 落地新西兰与卡尔加里",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-service-catalog-calgary-new-zealand-regions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "AWS Client VPN 支持 Ubuntu 26.04 桌面客户端",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/05/aws-client-vpn-ubuntu-26/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "AWS",
+        "VPN"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "AI 正在冲击漏洞披露与开源维护两种文化",
+      "summary": "",
+      "url": "https://www.jefftk.com/p/ai-is-breaking-two-vulnerability-cultures",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "漏洞披露"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "RFC 9882 把 ML-DSA 签名算法纳入 CMS",
+      "summary": "",
+      "url": "https://datatracker.ietf.org/doc/rfc9882/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "后量子密码"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 警告年龄认证法案可能误伤开源",
+      "summary": "",
+      "url": "https://github.blog/news-insights/policy-news-and-insights/why-age-assurance-laws-matter-for-developers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源政策"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "生产硬盘损坏复盘：硬件故障仍会穿透抽象",
+      "summary": "",
+      "url": "https://blog.pavementlink.ch/2026/05/07/my-first-corrupted-hard-drive-problem/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "存储",
+        "事故复盘"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "SIGOPS 讨论 LLM 能否为真实系统写 TLA+ 规约",
+      "summary": "",
+      "url": "https://www.sigops.org/2026/can-llms-model-real-world-systems-in-tla/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "形式化验证"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Gemini API 用 Webhooks 取代长任务轮询",
+      "summary": "",
+      "url": "https://blog.google/innovation-and-ai/technology/developers-tools/event-driven-webhooks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-05-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "API"
+      ],
+      "position": 28
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+{
+  "date": "2026-03-19",
+  "origin": "chronicle 2026-03-19: pgnexus #87, news 1, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 引入 REPACK 命令",
+      "summary": "Álvaro Herrera 在 3 月 10 日提交了 Antonin Houska 的补丁：PostgreSQL 19 新增 REPACK 命令，把 VACUUM FULL 与 CLUSTER 合并成一套接口。不带索引就是去膨胀，带 USING INDEX 则按索引重排并标记为聚簇索引。进度可从 pg_stat_progress_repack 视图看，原有两条命令保留但不再主推。并发版本没有进来，作者称这只是第一步。",
+      "url": "https://www.depesz.com/2026/03/19/waiting-for-postgresql-19-introduce-the-repack-command/",
+      "author": "Hubert 'depesz' Lubaczewski",
+      "source": "depesz 博客",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "REPACK",
+        "维护"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PGConf.dev 2026 公布日程并加设社区专题",
+      "summary": "PGConf.dev 2026 将于 5 月 19 至 22 日在加拿大温哥华举行，由 Slonik Events Canada 承办，面向用户、开发者与社区组织者，主题是 PostgreSQL 的开发与社区建设。主办方宣布日程已经发布：今年在周二新增了由社区主导的专题环节，并围绕 PostgreSQL 项目三十周年安排了一系列特别活动与演讲。会上可以见到贡献者本人，也能了解正在开发中的新特性，各日程页面已在官网开放查阅。",
+      "url": "https://2026.pgconf.dev/",
+      "author": "Slonik Events Canada",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-03-19",
+      "image": "https://2026.pgconf.dev/og.png",
+      "domain": "pg",
+      "tags": [
+        "会议",
+        "社区"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 17 升 18 的方法与坑位盘点",
+      "summary": "Ilya Kosmodemiansky 把大版本升级的三条路摆在一起比：pg_dump 加 pg_restore 停机以小时计、要两倍空间，只适合小库；pg_upgrade 的 link 模式停机以分钟计、几乎不占额外空间，是多数生产场景的选择；逻辑复制只在切换瞬间停机，代价是完整复制一份集群。他建议提前几天用 --check 试跑，并用 PgBouncer 排空连接。坑位包括复制槽失效需重建、扩展版本要核对、配置文件不会自动搬过去。",
+      "url": "https://dataegret.com/2026/03/postgresql-major-upgrades-ultimate-guide-in-2026/",
+      "author": "Ilya Kosmodemiansky",
+      "source": "Data Egret 博客",
+      "source_date": "2026-03-19",
+      "image": "https://dataegret.com/wp-content/uploads/2026/03/upgrade-1024x576.png",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "运维",
+        "pg_upgrade"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "efm_extension 让故障切换不再依赖 SSH",
+      "summary": "零信任环境里 SSH 往往被收紧，可故障切换偏偏要在操作系统层面执行。Vibhor Kumar 把 efm_extension 开源出来，用 SQL 函数暴露 EDB Failover Manager 的操作，涵盖集群状态查询、计划内切换、故障转移和节点启停，DBA 在连接里就能完成。实现上靠一份收得很紧的 sudoers 配置，只允许 PostgreSQL 服务账号执行特定的 EFM 命令。代码按 PostgreSQL 许可证发布。",
+      "url": "https://github.com/vibhorkum/efm_extension",
+      "author": "Vibhor Kumar",
+      "source": "Vibhor Kumar 博客",
+      "source_date": "2026-03-19",
+      "image": "https://opengraph.githubassets.com/458f8b5c6d193558d4c5529bffa2859f8bdb7553daafed33326a7c5b193f8f38/vibhorkum/efm_extension",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "扩展",
+        "零信任"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "传感器数据当成普通事务行来存迟早出事",
+      "summary": "Jake Hertz 指出开发者常把传感器读数当作普通业务数据：规范化建模、关系式组织，设备一多、采样一密、历史一长就撑不住。问题出在认知上，传感器数据长得像行，实际行为却是按时间排好的流，价值随时间衰减。面向行的做法很难同时应付持续的写入尖峰、按时间范围的查询和乱序到达的数据。他给出的方向是把这类数据当作只追加的日志来对待：写入路径按日志优化，按时间分区组织，按生命周期分层存储，并让不同负载各用各的角色。",
+      "url": "https://www.tigerdata.com/blog/what-developers-get-wrong-about-storing-sensor-data",
+      "author": "Jake Hertz",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-19",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/what-developers--get-wrong-about-storing--sensor-data.png",
+      "domain": "db",
+      "tags": [
+        "时序",
+        "建模"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 的测试跑两遍回归引发争议",
+      "summary": "Tom Lane 称在慢机器上让构建农场多跑 10% 太浪费，Robert Haas 以两天内查出三个缺陷为据坚持。",
+      "url": "https://www.postgresql.org/message-id/1299934.1773938807@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "扩展"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "行模式识别补丁的量词处理崩溃已修复",
+      "summary": "child->max 未随 min 递增导致服务器崩溃，改为溢出到无穷大时跳过合并以保语义正确。",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFOw4X27zgYdUgbVMmT3x_22a9kdGnTe6U+2TV1jJv-1ow@mail.gmail.com",
+      "author": "Zsolt Parragi",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缺陷",
+        "SQL 标准"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 并发版改用表 AM 与槽传递元组",
+      "summary": "v43 避免反复组装与拆解 HeapTuple，并合入此前崩溃的修复；并发能力仍未进 19 版。",
+      "url": "https://www.postgresql.org/message-id/202603191855.fzsgsnyzfvpt@alvherre.pgsql",
+      "author": "Álvaro Herrera",
+      "source": "pgsql-hackers",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "只读模式讨论转向会话级与集群级之分",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/7f6e0ff9-05e9-4664-9c71-d9dd744362b9@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "只读"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "读取流的异步等待改在 StartBufferIO 内收敛",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/42rdu4q44kvsq53fz5qgzuawqpaytvnemsnquynlfch5mqhc2m@6ytnlgivtzro",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "IO"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "索引预取 v16 用专门化换取缓存负载性能",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAH2-Wz=HJc+QV2AZ9mUY43aKL+n+a1JQ-7OGE=MOkqSAtoKJug@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "autovacuum 评分被指压不住回卷风险",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAApHDvpnR5zKb7LSB0idj4RPsV+=Dhtk+c5H0cZ4evN2hFDwCQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "通用计划拟在取锁前先跑一段执行器准备",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqHBxDL=3qQa1f-sBOBZqB88EiVAiagXF3X8Kagpr6Yhpw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器",
+        "分区"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "COPY TO 的 JSON null 歧义决定只写进文档",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxGAQk5cr3zcqX-PfN-9S+qnJgLL+OmNGhKeG_iG5mvddw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "JSON"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "共享内存新接口收到基于命名区域的反提案",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/8a6799be-bd42-49fb-8914-856c97bb1977@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "共享内存"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 19 特性冻结时间改到 12:00 UTC",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAGECzQSPzprMNguV6pA671kbSznNmufgqCQGNmpUm4VgdfLW-A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区流程"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_restore 测试里的错别字已修正提交",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAKYtNArpHU6d7XQr=od5JuUJjOGsLZNsGgmymGg3h73vnp4qYg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Prairie Postgres 举办三月聚会",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/03/19/prairie-postgres-march-meetup/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 18
+    }
+  ]
+}

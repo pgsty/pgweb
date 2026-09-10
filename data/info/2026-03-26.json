@@ -1,0 +1,274 @@
+{
+  "date": "2026-03-26",
+  "origin": "chronicle 2026-03-26：pgnexus #94、planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Neon 接入 Stripe Projects 让代理自助开库",
+      "summary": "AI 编程代理能写代码、能生成迁移文件，却做不了开库和发凭据这类运维动作，交付链条到部署这一步就断了。Neon 与 Stripe Projects 完成对接之后，代理可以通过程序化接口创建 Neon 的 PostgreSQL 实例并配好环境，中间不需要人介入。Brad Van Vugt 说这一步补上了代码生成与部署之间的空白，让 AI 辅助开发的流程可以完整跑通。",
+      "url": "https://neon.com/blog/neon-works-with-stripe-projects-for-agentic-provisioning",
+      "author": "Brad Van Vugt",
+      "source": "Neon 博客",
+      "source_date": "2026-03-26",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/neon-works-with-stripe-projects-for-agentic-provisioning/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "AI",
+        "自动化"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "高并发下 SELECT * 会让性能掉九成以上",
+      "summary": "在数亿行、高并发的 PostgreSQL 上，Jake Hertz 实测 SELECT * 这类通配符查询会把性能拉低九成以上。开销来自三处：不必要的 I/O、缓冲区缓存被污染，以及多余列的序列化传输。执行时整页 8KB 会被读入内存，所有列都要过一遍 MVCC 可见性判断，再序列化送上网络；宽行让每页装下的记录更少，读放大随之加剧。结论很朴素：只取真正用到的列。",
+      "url": "https://www.tigerdata.com/blog/hidden-performance-cost-wildcard-queries",
+      "author": "Jake Hertz",
+      "source": "TigerData 博客",
+      "source_date": "2026-03-26",
+      "image": "https://blog-cms.tigerdata.com/blog/content/images/2026/03/hidden-performance-cost-wildcard--queries.png",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "查询"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PG19 的 ALTER PUBLICATION 支持 EXCEPT TABLE",
+      "summary": "vignesh C 的补丁在 3 月 20 日由 Amit Kapila 提交，ALTER PUBLICATION 从此可以改动排除清单，写法是 ALTER PUBLICATION p1 SET ALL TABLES EXCEPT TABLE (s1.t1, s2.t2)。给出 EXCEPT 子句会整体替换原有的排除清单，不给则清空；SET 只写一类对象时，其余未提及的标志也会被重置。排除清单里只能放根分区表或普通表，写分区子表会报错。",
+      "url": "https://www.depesz.com/2026/03/26/waiting-for-postgresql-19-add-support-for-except-table-in-alter-publication/",
+      "author": "Hubert 'depesz' Lubaczewski",
+      "source": "depesz.com",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "PG19"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Oracle 与 SQL Server 迁移工具的四个坑",
+      "summary": "Deepak Mahto 列出迁移工具不会提醒的四处麻烦。不带精度的 Oracle NUMBER 被 Ora2pg、AWS SCT 等工具直接映射成 NUMERIC 或 DOUBLE PRECISION，隐式转换会拖慢过程式代码与索引；Oracle 默默完成的类型转换到 PostgreSQL 会直接报运算符错误；SCT 会把无法转换的逻辑编译成空壳过程，元数据校验看不出来；aws_oracle_ext 这类专有 schema 带来云厂商锁定，应换成原生功能或 orafce。",
+      "url": "https://databaserookies.wordpress.com/2026/03/27/oracle-sql-server-to-postgresql-migration-tooling-gotchas-no-one-warns-you-about/",
+      "author": "Deepak Mahto",
+      "source": "Database Rookies",
+      "source_date": "2026-03-26",
+      "image": "https://i0.wp.com/databaserookies.wordpress.com/wp-content/uploads/2026/03/blue-modern-simple-animated-tutorial-online-course-youtube-thumbnail13.png?fit=1200%2C675#038;ssl=1",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "Oracle",
+        "ora2pg"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "60 多个开源项目怎么做 schema 迁移",
+      "summary": "Jeremy Schneider 梳理了 60 多个多人协作的开源项目如何管理数据库 schema 迁移，覆盖 PostgreSQL、MySQL 这类关系库，也包括 MongoDB、图数据库以及 Kubernetes、Dgraph 等系统。最常见的做法是直接用所在编程语言框架自带的迁移机制，其次是项目自己写的专用代码；触发迁移的方式以应用进程本身最普遍，其次是 Kubernetes Job。他说明结论借助 AI 工具整理并附了源码链接。",
+      "url": "https://ardentperf.com/2026/03/25/database-schema-migrations-in-2026-survey/",
+      "author": "Jeremy Schneider",
+      "source": "ardentperf.com",
+      "source_date": "2026-03-25",
+      "image": "https://ardentperf.com/wp-content/uploads/2026/03/image.png",
+      "domain": "db",
+      "tags": [
+        "schema 迁移",
+        "开源"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 提交后触发 buildfarm 报错",
+      "summary": "Robert Haas 的 v22 修掉 SubPlan 中 disabled_nodes 的错误，并补上处理替代子计划所需的基础设施。",
+      "url": "https://www.postgresql.org/message-id/CAP53Pkz3DSFaaowYvbO5LULf3NhydD_UhHkighfWf6_pwxiqUw@mail.gmail.com",
+      "author": "Robert Haas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "新加的 uuid_to_base32hex 排序不随环境稳定",
+      "summary": "cs_CZ 环境里字母排在数字之前，buildfarm 因此报错，Tom Lane 一度考虑把整个补丁回退。",
+      "url": "https://www.postgresql.org/message-id/682417.1774482047@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "UUID",
+        "排序规则"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "COPY TO 的文本与 CSV 解析拟用 SIMD 提速",
+      "summary": "补丁作者给出的基准是 TEXT 快 24%、CSV 快 35%，但含反斜杠或引号时会回退 4 到 6%。",
+      "url": "https://www.postgresql.org/message-id/acWgg0cG7MALI2hB@nathan",
+      "author": "KAZAR Ayoub",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "SIMD"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "REPACK 的并发标志需要纳入清理掩码",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/202603262307.gfa5jbpesfro@alvherre.pgsql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "xl_heap_visible 削减 WAL 的补丁进入 v46",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_ZrDadxmGepBwPZ03yAKnMxwsHYn8SK9Gg7VqigLLVUWg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "autovacuum 跳过的表该记进哪张视图",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/acRvIt2idOKeD7wv@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "监控"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "NamedLWLockTranche 相关代码启动清理",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/47aaf57e-1b7b-4e12-bda2-0316081ff50e@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "轻量锁"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "CREATE TABLE 文档拆开存储与压缩两个子句",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1046100.1774561625@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "文档"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "索引预取讨论云盘需要多深的队列",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/62qc7j3mvsyz6ucd7xh7pv7w3u7rhztevsmrzsig7fyzv6yvol@uoyjq4eelcnz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "IO"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "虚拟生成列拟支持 CREATE STATISTICS",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260327000931.d2303c198c7c9445e90aeab7@sraoss.co.jp",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计",
+        "生成列"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "通用计划裁剪遇上多语句重写的正确性问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqGq=xQvE0oCeOX_oXWq2iyNs5q9UwopyQ2uXF2kJPXTDg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "计划缓存"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_bsd_indent 的拼写修复要不要先走上游",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/acW5ChyyHq8zprRp@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具链"
+      ],
+      "position": 17
+    }
+  ]
+}

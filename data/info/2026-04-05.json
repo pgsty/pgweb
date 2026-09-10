@@ -1,0 +1,169 @@
+{
+  "date": "2026-04-05",
+  "origin": "chronicle 2026-04-05: pgnexus #104（周日，仅 hackers 线程）",
+  "items": [
+    {
+      "tier": 1,
+      "title": "tid_blockno() 与 tid_offset() 函数已推送",
+      "summary": "从 ctid 里取块号，此前只能写成 (ctid::text::point)[0] 这种绕路的写法。Andres Freund 推送了 tid_blockno() 与 tid_offset() 两个访问器函数，把这件事变成一次普通的函数调用；提交前他做了小幅调整，包括在文档里把 TID 从类型标记改为缩写标记，因为 TID 并不是真正的类型名。他自己在做性能验证、需要从索引扫描里取块号时又撞上这个限制，才把补丁推完。",
+      "url": "https://www.postgresql.org/message-id/e7i24ywpdlac6cutvcfq5wg2jgwkmy3i42hxr2djbms4c64bps@el7zd7fgzqrh",
+      "author": "Andres Freund",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TID",
+        "函数",
+        "PostgreSQL 19"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 2,
+      "title": "节点级 WAL 与缓冲统计改用栈式追踪",
+      "summary": "前两个补丁已提交，原先靠全局计数器求差的做法最多会带来 10% 的开销。",
+      "url": "https://www.postgresql.org/message-id/CAP53PkxDupm5U6TV0LF_YWHQ2wfcSiLsgnDBcO6b5AchLJhp=A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 基础补丁到 v55，已接近可提交",
+      "summary": "解码是否需要共享目录改用 OutputPluginOptions 标志，另有 reform_tuple 的性能改进。",
+      "url": "https://www.postgresql.org/message-id/202604042326.nwa4o5sezj77@alvherre.pgsql",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "共享内存重构加入基于 madvise 的可变尺寸",
+      "summary": "Ashutosh Bapat 的实现只限于用 mmap 共享内存的 Linux，v12 补丁的设计已趋稳定。",
+      "url": "https://www.postgresql.org/message-id/CAEze2WjgCROMMXY0+j8FFdm3iFcr7By-+6Mwiz=PgGSEydiW3A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "共享内存"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "pg_get_*_ddl 整合补丁提交后再修构建农场",
+      "summary": "硬编码 template0 的原因已补上注释，命名告警与 pgindent 问题由后续提交修好。",
+      "url": "https://www.postgresql.org/message-id/a1c4dd3e-6694-4b7b-8432-f3b584735ff3@dunslane.net",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "WAIT FOR LSN 的三个小补丁将在冻结前推送",
+      "summary": "wait_for_catchup 改用 WAIT FOR LSN，文档补充恢复冲突的成因与规避说明。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfds7oSCbZqob7ytT_Lso8fv-NW8LnedUTE4Krde+3rkJeA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "WAL"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG19 发布说明的共同作者署名之争升温",
+      "summary": "Bruce Momjian 改 wiki 排除 Co-authored-by，遭 Álvaro、Andres 与 Tom Lane 反对。",
+      "url": "https://www.postgresql.org/message-id/adGeZg1VP6UudpDd@momjian.us",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "EXPLAIN 预取统计拟改用带偏移的节点编号",
+      "summary": "Melanie Plageman 的方案能去掉条件判断，但对索引扫描会破坏 ABI 兼容性。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Z4rM416JcKRx+rBz8JS9C-6FaLQnN25SeT6ui-VMntVA@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "并行位图堆扫描的仪表化拟改为总是分配",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_a_c8HAtJ8Ynz-dU=Jb2PzheW0zWME6A1BB9jQ62DMZBg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "位图堆扫描的 EXPLAIN 未汇总工作进程统计",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAP53PkxRrRKLXECGNFTVOtUusBoWLutZiPfnbejX40ocLuFMQA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "temp 表回归源自本地缓冲固定上限不足",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_b=X-P26hB96i2vG40PhJB_5L=ARuNHV4SJngMPap8H3A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    }
+  ]
+}

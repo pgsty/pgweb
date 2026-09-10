@@ -1,0 +1,411 @@
+{
+  "date": "2026-08-19",
+  "origin": "chronicle 2026-08-19: pgnexus #243, news 1, daily, planet 4",
+  "items": [
+    {
+      "tier": 1,
+      "title": "apt.postgresql.org 新增龙芯 loong64 架构",
+      "summary": "Christoph Berg 宣布 apt.postgresql.org 增加龙芯 loong64 架构，构建主机跑在社区提供的龙芯 3B6000 主板上。软件包的引导构建已于 8 月初完成，现在可以直接从官方源安装。只有 GIS 相关的一组包例外，postgis、pgrouting、mobilitydb 和 pgsql-ogr-fdw 仍要等下一个 postgis 版本。国产平台用官方源部署 PostgreSQL 的路径由此打通。",
+      "url": "https://pgsql.cc/about/news/aptpostgresqlorg-loongson-loong64-3351/",
+      "author": "Christoph Berg",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "打包",
+        "龙芯",
+        "apt"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Linear 把权限筛选搬出 PostgreSQL，写入仍留在库里",
+      "summary": "Linear 的同步动作已超过 20TB，旧读路径要在越来越大的 ID 区间上做权限和订阅数组的重叠筛选，尾延迟持续上升。新路径通过 PostgreSQL 的发布把已提交动作的紧凑元数据复制到 Turbopuffer 的倒排表，只用它返回候选 ID，完整负载最后仍回 PostgreSQL 取。官方称索引复制 p50 约 1 秒、p95 数秒，并用不可用回退和影子模式对账来兜住延迟与错误。",
+      "url": "https://linear.app/now/rebuilding-delta-sync-read-path",
+      "author": "Linear",
+      "source": "Linear 工程博客",
+      "source_date": "2026-08-19",
+      "image": "https://webassets.linear.app/images/ornj730p/production/b3f5bf88f064749187e16d7052cd49cf35cf1973-2400x1350.png?q=95&amp%3Bauto=format&amp%3Bdpr=2",
+      "domain": "pg",
+      "tags": [
+        "架构",
+        "索引",
+        "同步"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "检查点写合并补丁放弃 ring-sweep 方案",
+      "summary": "Melanie Plageman 发出检查点写合并补丁系列的 v16。最大的变化是放弃针对 COPY FROM 的 ring-sweep 方案，改为完全依赖基于邻居的积极刷写，因为实验表明没有异步 I/O 时 ring-sweep 没有可测量的收益，只用于调试的 GUC 也一并移除。Andrey Borodin 指出的中间提交冗余和模块边界模糊都已处理。Haibo Yan 追问接口是否适配 AIO，Plageman 承认后续仍需重构。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Z+GEgkHqQPajsy0ApDWYTvfmR5G6AjnE7mVcy1_00kxQ@mail.gmail.com",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检查点",
+        "I/O"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "智能体可以用 PostgreSQL，但不该各自掌握事实源",
+      "summary": "Vibhor Kumar 把智能体产生的数据分成三类：可丢弃的临时工作状态、需要明确同步规则的持久状态，以及必须受治理的权威企业数据。他指出 PostgreSQL 正在同时扮演两种角色，PGlite 跑在智能体沙箱里，中心实例提供共享状态与控制面。他的警告是：本地自治不等于企业权威，不加控制地同步多个实例，只会把不完整或错误的数据扩散出去，同时削弱治理。",
+      "url": "https://vibhorkumar.wordpress.com/2026/08/19/every-ai-agent-may-need-postgresql-not-every-agent-should-own-the-truth/",
+      "author": "Vibhor Kumar",
+      "source": "个人博客",
+      "source_date": "2026-08-19",
+      "image": "https://vibhorkumar.wordpress.com/wp-content/uploads/2026/08/image-16.png",
+      "domain": "pg",
+      "tags": [
+        "AI",
+        "架构",
+        "PGlite"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "join_collapse_limit 该留在 8，改它多半是统计信息不足",
+      "summary": "join_collapse_limit 决定显式 JOIN 是否被摊平成可由规划器自由调序的表列表，自底向上摊平，一旦超过这个数就停手。默认 8，与 from_collapse_limit 刻意一致；geqo_threshold 默认 12，调过 12 就会切到遗传算法，用随机采样换掉穷举。Christophe Pettus 建议配置文件里别动，只在确知比统计信息更懂时用 SET LOCAL 设成 1。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-joincollapselimit/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-19",
+      "image": "https://thebuild.com/media/media/66004b5aeae4481184ae81c6870ebcf4.png",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "参数"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Python 测试框架方案重提，先求框架本身进主线",
+      "summary": "Jelte Fennema-Nio 提交了新版 Python/pytest 测试框架方案。他此前借助大模型把约一半 Perl 测试转成 Python，据此发现的不足在这一版得到修订。补丁集共 12 个，涵盖 meson 与 CI 集成、约 55 个方法的服务器管理框架、类型注解、后台 SQL 支持，以及与 Perl 框架共存的端口锁定机制。Andres Freund 反对增加 CI 日志量，要求转换前先做覆盖率对比。",
+      "url": "https://www.postgresql.org/message-id/DKSSP47Y857Z.1FUU91WMDZWPZ@jeltef.nl",
+      "author": "Jelte Fennema-Nio",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "Python"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "stringToNode() 与 pg_strtok() 改造为线程安全",
+      "summary": "补丁把静态全局变量换成沿调用栈传递的上下文结构体，v3 又简化了内部实现并补齐注释。",
+      "url": "https://www.postgresql.org/message-id/67e173d6-8be7-4aea-9615-745acb4877da@eisentraut.org",
+      "author": "Matthias van de Meent",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "线程安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "哈希连接的 Bloom 过滤器调研看向其他引擎",
+      "summary": "DuckDB、ClickHouse、Spark、Trino 等大多支持三类运行时过滤器：Bloom、精确 IN 列表和最小最大范围。",
+      "url": "https://www.postgresql.org/message-id/aoXGVX-5o0Y4z46a@momjian.us",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接",
+        "优化器"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_control 新增校验和版本字段引出语义争议",
+      "summary": "Fujii Masao 质疑存初始值的必要性，Daniel Gustafsson 不愿在 beta3 到 RC1 之间删字段。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwHb4oRznFO0wigUhOusWjy5+Cu-cNAEEy-Gi3nJoCTy=w@mail.gmail.com",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "PG19"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "发布 EXCEPT 子句补丁已达 2541 行，简化呼声升高",
+      "summary": "Peter Smith 主张改用细粒度 TABLE 子句优先于 SCHEMA 子句的简单规则，取代逐个冲突报错。",
+      "url": "https://www.postgresql.org/message-id/CABdArM7TFGTKj8nEjUwcY83HwS+8mtQcXvGc4Jo-BFSQm2YdOQ@mail.gmail.com",
+      "author": "Peter Smith",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "分区合并拆分的四个修复被视为保住该特性的前提",
+      "summary": "Alexander Korotkov 认为这是让特性留在 pg19 的正确路径，现在引入新设计已经太晚。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdtMm4OR0Tp8envJYJv3W6_RWCvn9KfHo273gR2Xk-hwKA@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "PG19"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cursor 用对象存储上的 WAL 做 Git 托管的事实源",
+      "summary": "推送先落成 S3 兼容的 WAL 条目，本地仓库退化为可丢弃缓存；官方自报 S3 Express 上超过 300 次推送每秒。",
+      "url": "https://cursor.com/blog/git-at-any-scale",
+      "author": "Cursor",
+      "source": "Cursor 工程博客",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "存储",
+        "Git"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Mojo 编译器与工具链完整开源",
+      "summary": "Modular 把编译器、工具链与完整构建源码置于 Apache-2.0 加 LLVM 例外之下；编译器暂不接受外部贡献。",
+      "url": "https://www.modular.com/blog/mojo-open-source",
+      "author": "Modular",
+      "source": "Modular 博客",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源",
+        "语言"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "PG19 外键快速路径补丁重组为三个修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqGL3zZeamjhSfmttAEvy8RmcXEOiT95ZwFx5bjtyojatQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "并行 vacuum 进度倾向改为每个 worker 一行",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CALj2ACX6gyBmQfaqbCsycDmaSPbq1=iPJw1OqUT+aLqaKjW8dQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "同步槽将与其他失效类型一致纳入 XID 年龄检查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1+tVuyqpcaU2GU2SUoXtjUC6S3N5EHYDZ4pf92NDdRK=A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 保留复制源 OID 的补丁更新到 v16",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAFPTHDYhw-p7WpMBK1_sDwrZp+EWm+Ae7sncn5gwTtJFYjZUwA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别代码收到一批可读性与健壮性重构",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CACJufxEFwed7MwSVgPG-tYjo2WN_QF=kd3QnqAJePaScx+otVw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RPR"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "TOAST reloptions 补丁系列走到 v13",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aoVYWGzEUwpJxi5u@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "事务内刷新统计的计数器比较方案仍有三种主张",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aoUamI1Ul4sz9zYo@bdtpg",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgstat"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "PL/Perl 中 SvOK 与 SvROK 的冗余检查被简化",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/2034677.1787172042@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PL/Perl"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "PL/Perl 绑定对象的清理补丁已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1966285.1787162990@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PL/Perl"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "FDW 函数下推引入的未初始化变量警告已修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAO6_XqrGH2NRe0oFx_00nLXra1UZezd3jbS9pgoRhZtgzHD9gg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "pg_disorder 故意打乱无 ORDER BY 查询的返回顺序",
+      "summary": "",
+      "url": "https://github.com/viralpraxis/pg_disorder",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "扩展"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "用事务性发件箱与 QStash 做可靠的外部系统同步",
+      "summary": "",
+      "url": "https://devfieldnotes.dev/guides/reliable-hubspot-sync-transactional-outbox-qstash",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "发件箱"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "旧版 GHES 将无法再从命令行上传支持包",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-22-upcoming-ghes-change-impacting-uploading-support-bundles/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub"
+      ],
+      "position": 26
+    }
+  ]
+}

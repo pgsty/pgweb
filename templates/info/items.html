@@ -8,7 +8,7 @@ Every element carries the item key as its id so /info/<date>/#<key> works.
     <h3 class="info-lead__title"><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}{% include "base/icon.html" with name="external" %}</a></h3>
     <p class="info-meta">{% if item.source_date %}<time datetime="{{ item.source_date|date:"Y-m-d" }}">{{ item.source_date|date:"Y-m-d" }}</time>{% endif %}{% if item.author %}<span>{{ item.author }}</span>{% endif %}{% if item.source %}<span>{{ item.source }}</span>{% endif %}</p>
     <div class="info-lead__row">
-      {% if item.image %}<a class="info-lead__thumb" href="{{ item.url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="{{ item.image }}" alt="" loading="lazy" decoding="async"></a>{% endif %}
+      {% if item.picture_url %}<a class="info-lead__thumb" href="{{ item.url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="{{ item.picture_url }}" alt="" loading="lazy" decoding="async"{% if item.thumb %} width="500" height="300"{% endif %}></a>{% else %}<span class="info-lead__thumb info-lead__thumb--pending" aria-hidden="true"></span>{% endif %}
       {% if item.summary %}<p class="info-lead__summary">{{ item.summary }}</p>{% endif %}
     </div>
   </article>

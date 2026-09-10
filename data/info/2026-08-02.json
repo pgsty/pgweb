@@ -1,0 +1,330 @@
+{
+  "date": "2026-08-02",
+  "origin": "chronicle 2026-08-02: pgnexus #226, daily 29, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "用模板库克隆给每个测试单独开一个数据库",
+      "summary": "数据库测试慢，多半慢在每个用例都重放一遍迁移。Brandur Leach 介绍 pgtestdb 的做法：先把迁移跑进一个模板数据库，之后每个测试用 CREATE DATABASE ... TEMPLATE 直接克隆一份，跑完即销毁，把 schema 初始化从应用层循环挪进服务端的复制路径。收益随库大小、连接池和并发变化，未必线性。要注意的是模板库不能有残留连接，也不该被普通客户端写入，扩展、角色、权限和大对象的行为都要单独验证。",
+      "url": "https://brandur.org/fragments/pgtestdb",
+      "author": "Brandur Leach",
+      "source": "brandur.org",
+      "source_date": "2026-08-01",
+      "image": "https://brandur.org/assets/images/favicon/favicon-256.jpg",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "模板库",
+        "CI"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "GiST 的多范围索引扫描可能漏掉匹配行",
+      "summary": "索引扫描漏行是最难察觉的一类缺陷，因为查询照常返回结果。Peter Geoghegan 报告 GiST 在 multirange 上的索引扫描会漏返匹配行，并附上回归测试。Andrey Borodin 确认根因是 multirange_gist_consistent() 检查过严，处理并集范围时产生假阴性，建议改走内部多范围的一致性函数。Alexander Korotkov 又把内部判断精确成并集包含并集。",
+      "url": "https://www.postgresql.org/message-id/7C160A14-448B-40A2-8C2E-6017B293DA56@yandex-team.ru",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GiST",
+        "多范围",
+        "缺陷"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Rails Active Storage 的任意文件读取漏洞需要先轮换密钥",
+      "summary": "上传加图片变体是很多 SaaS 默认开放的入口。CVE-2026-66066 让默认使用 libvips 的 Active Storage 应用被未认证攻击者借构造上传读取进程可访问的任意文件，进而拿到环境里的密钥，可升级为会话伪造乃至远程代码执行。修复版本是 activestorage 7.2.3.2、8.0.5.1 和 8.1.3.1，libvips 至少 8.13。仅升级不够，可被进程读到的密钥和凭据都应轮换。",
+      "url": "https://github.com/rails/rails/security/advisories/GHSA-xr9x-r78c-5hrm",
+      "author": "Rails 安全团队",
+      "source": "Rails 安全公告",
+      "source_date": "2026-07-29",
+      "image": "https://opengraph.githubassets.com/a2433707b8613c0d87400d2961603901a5485b3f7db016faeb798c2611071fc5/rails/rails/security/advisories/GHSA-xr9x-r78c-5hrm",
+      "domain": "infra",
+      "tags": [
+        "Rails",
+        "CVE",
+        "凭据轮换"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "NetBSD 11.0 发布，稳定版首次支持 64 位 RISC-V",
+      "summary": "这是操作系统的大版本，不是例行补丁。NetBSD 11.0 在稳定版里首次支持 64 位 RISC-V，新增面向极速启动的 x86 MICROVM 内核、Linux 兼容系统调用和 Snapdragon X Elite 的初步支持，会直接改动平台支持矩阵和交叉构建。项目还罕见地公开列出三个仍待回补的安全问题及其默认配置和规避条件，计划在 11.1 收口。启用了 PF 或 IPFilter、暴露音频设备节点的部署应先按公告采取规避。",
+      "url": "https://blog.netbsd.org/tnf/entry/netbsd_11_0_released",
+      "author": "NetBSD Foundation",
+      "source": "NetBSD 官方博客",
+      "source_date": "2026-08-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "NetBSD",
+        "RISC-V",
+        "发布"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Lean 内核出现可构造 False 的健全性缺陷并已修复",
+      "summary": "依赖形式化证明的系统把「内核拒绝非法项」当作信任根。Lean 官方复盘称，一份 AI 辅助生成、没有 sorry 的反 Collatz 证明利用了嵌套归纳类型参数缺检查的实现缺陷，因而能构造出 False。问题在报告后约一小时修复并发布补丁，只能经元编程直接向内核提交构造来触发。值得注意的是旧版独立检查器 nanoda 另有缺陷，说明多一个检查器并不等于可以不升级，关键证明应在两端重新校验。",
+      "url": "https://leodemoura.github.io/blog/2026-8-1-postmortem-for-kernel-soundness-bug-14576/",
+      "author": "Lean FRO",
+      "source": "Leonardo de Moura 博客",
+      "source_date": "2026-08-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Lean",
+        "形式化验证",
+        "可信根"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "一条 ALTER TABLE 同时改类型与表达式会报缓存查找失败",
+      "summary": "清理函数被调用两次却没清空待删列表，第二次重复删除同一批 OID，补丁改为收尾时重置。",
+      "url": "https://www.postgresql.org/message-id/CACJufxFD-LGP1Ccj58d4WgGAoq-+N1fwQkA=b5u5PQf_65Vo9A@mail.gmail.com",
+      "author": "",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ALTER TABLE",
+        "缺陷"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "ArcadeDB 26.7.2 修复五个安全问题",
+      "summary": "涉及 JavaScript 触发器与函数定义的授权、集群令牌脱敏和跨库授权，同时有两项破坏性变更。",
+      "url": "https://github.com/ArcadeData/arcadedb/releases/tag/26.7.2",
+      "author": "ArcadeDB",
+      "source": "GitHub Release",
+      "source_date": "2026-07-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ArcadeDB",
+        "安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 安全公告库 8 月 1 日集中新增多个项目的记录",
+      "summary": "涉及 Traefik、GitPython、axios、ArcadeDB、FreeRDP，部分条目缺版本范围，录入时间不等于上游修复时间。",
+      "url": "https://github.com/advisories/GHSA-7qf5-7ppr-87v8",
+      "author": "GitHub",
+      "source": "GitHub Advisory Database",
+      "source_date": "2026-08-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "漏洞情报",
+        "SBOM"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "ripgrep 的 musl 预编译二进制在超大目录树下偶发崩溃",
+      "summary": "高并发扫描时在 opendir 路径触发 musl 内存分配器断言后段错误，issue 仍未关闭。",
+      "url": "https://github.com/BurntSushi/ripgrep/issues/3494",
+      "author": "",
+      "source": "GitHub Issue",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "ripgrep",
+        "musl"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "RFC 10015 弃用 TLS 1.2 的一批密钥交换方法",
+      "summary": "标准弃用不会立刻断连，但库和平台收紧默认后，没盘点的对端会把安全变更变成生产中断。",
+      "url": "https://www.rfc-editor.org/rfc/rfc10015.html",
+      "author": "IETF",
+      "source": "RFC Editor",
+      "source_date": "2026-08-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TLS",
+        "IETF"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "FreeRDP 3.29.0 是一次安全与缺陷修复发布",
+      "summary": "项目方称外部严密审查带来大量公告，强烈建议更新，应以项目发布说明核对实际依赖版本。",
+      "url": "https://github.com/FreeRDP/FreeRDP/releases/tag/3.29.0",
+      "author": "FreeRDP",
+      "source": "GitHub Release",
+      "source_date": "2026-07-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "FreeRDP",
+        "安全发布"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：ident_file 的作用与边界",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-identfile/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "认证"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "walsummarizer 修复后新增的时间线测试出现间歇失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/294c42ea-2608-4bae-93de-6c1ba5f72107@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL 摘要",
+        "测试"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GitPython 3.1.52 修复克隆 URL 泄露环境变量",
+      "summary": "",
+      "url": "https://github.com/gitpython-developers/GitPython/releases/tag/3.1.52",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Python",
+        "Git"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "axios 1.18.0 收紧跨源重定向时的敏感请求头处理",
+      "summary": "",
+      "url": "https://github.com/axios/axios/releases/tag/v1.18.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "JavaScript",
+        "HTTP"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Guzzle 7.15.1 修复 cookie 作用域与重定向信息泄露",
+      "summary": "",
+      "url": "https://github.com/guzzle/guzzle/releases/tag/7.15.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "PHP",
+        "HTTP"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "RFC 9987 把 SSH agent 协议写成正式标准",
+      "summary": "",
+      "url": "https://www.rfc-editor.org/rfc/rfc9987.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "SSH",
+        "IETF"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Censys 解读针对水务 PLC 的定向扫描",
+      "summary": "",
+      "url": "https://censys.com/blog/cisa-alert-water-tower-plc-targeting/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "工业控制"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Visual Studio 的 Copilot 七月更新加入预览版 agent",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-30-github-copilot-in-visual-studio-july-update/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Visual Studio",
+        "Copilot"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "一个可在 8GB 显存上跑通的后训练最小实现",
+      "summary": "",
+      "url": "https://github.com/pochenai/nano-llm-posttraining",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-01",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "训练",
+        "开源"
+      ],
+      "position": 20
+    }
+  ]
+}

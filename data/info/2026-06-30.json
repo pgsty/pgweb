@@ -1,0 +1,467 @@
+{
+  "date": "2026-06-30",
+  "origin": "chronicle 2026-06-30: daily, pgnexus #193, planet 7",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 补上升级流程里的序列同步缺口",
+      "summary": "用 pg_createsubscriber 做在线升级时，表数据靠逻辑复制同步，序列取值却还是旧的，切换后很容易撞上重复键错误。PostgreSQL 19 把序列同步做进核心：序列可随表一起发布，由专门的同步 worker 把发布端状态复制到订阅端。发布时写 FOR ALL SEQUENCES, ALL TABLES，切换前再对订阅执行 REFRESH SEQUENCES。目前仍要显式加入发布并手动刷新。",
+      "url": "https://www.postgresql.fastware.com/blog/closing-a-critical-gap-in-postgresql-upgrade-workflows-with-sequence-synchronization",
+      "author": "Vigneshwaran C",
+      "source": "Fujitsu Enterprise Postgres",
+      "source_date": "2026-06-30",
+      "image": "https://www.postgresql.fastware.com/hubfs/Images/Featured/Blog/img-featured-blog-closing-a-critical-gap-in-postgresql.jpg",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "序列",
+        "升级"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "SQL 标准新接受 QUALIFY 等四项提案",
+      "summary": "Peter Eisentraut 报告了 6 月的斯德哥尔摩 SQL 与 GQL 标准会议。工作草案新接受四项提案：QUALIFY 在窗口函数之后过滤，INSERT BY NAME 按列名匹配，SELECT 列表的 EXCLUDE 去掉指定列，JOIN TO ONE 在运行时校验连接基数。PostgreSQL 这边 QUALIFY 在 19 周期暂停，预计 20 继续，EXCLUDE 已有部分实现。新标准计划 2027 年年中发布。",
+      "url": "https://peter.eisentraut.org/blog/2026/06/30/waiting-for-sql-202y-stockholm-meeting-report",
+      "author": "Peter Eisentraut",
+      "source": "peter.eisentraut.org",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "QUALIFY"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "表太多会把内存和升级都拖垮",
+      "summary": "Laurenz Albe 说明了表太多的代价：一个后端访问过两万张表之后，relcache 与 catcache 从 4.1 MB 涨到 221 MB，pg_attribute 里堆了 94 万行。连带问题包括 autovacuum worker 起不来、pg_upgrade 从几分钟变成几天。这些缓存只增不减，他建议从设计上减少表数量，用规模适中的连接池，并在 v14 以上用 idle_session_timeout 清掉空闲会话。",
+      "url": "https://www.cybertec-postgresql.com/en/too-many-tables-are-bad/",
+      "author": "Laurenz Albe",
+      "source": "Cybertec 博客",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存",
+        "系统表",
+        "升级"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "用原生特性把 PostgreSQL 当时态数据库使",
+      "summary": "Gulçin Yildirim 演示了用原生特性表达时态语义。PostgreSQL 18 起可以用 WITHOUT OVERLAPS 写出核心规则：同一业务键的有效期不能重叠，形如 PRIMARY KEY (id, valid_at WITHOUT OVERLAPS)，重叠的会被直接拒绝。配合范围类型、带 PERIOD 的时态外键和 btree_gist，应用时间这一侧已经相当完整。系统时间的自动版本化和时间旅行查询还得靠触发器或扩展。",
+      "url": "https://xata.io/blog/postgres-as-a-temporal-db",
+      "author": "Gulçin Yildirim",
+      "source": "Xata 博客",
+      "source_date": "2026-06-30",
+      "image": "https://xata.io/api/og?title=PostgreSQL+as+a+temporal+database&amp%3Bauthor=G%C3%BCl%C3%A7in+Y%C4%B1ld%C4%B1r%C4%B1m+Jel%C3%ADnek",
+      "domain": "pg",
+      "tags": [
+        "时态数据",
+        "约束",
+        "范围类型"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Percona Operator 支持用 PGDG 官方包自建镜像",
+      "summary": "Percona Operator for PostgreSQL 引入 Community PostgreSQL Images：允许直接用 PGDG 官方软件包构建容器镜像，绕开厂商控制的镜像仓库，用户可用官方 Dockerfile 自行构建托管。它在 3.0.0 是技术预览，3.1.0 起正式支持，镜像内置 pgvector、pgaudit、pg_cron 等扩展。Percona 发行版的专有能力如透明加密 TDE 不在其中。",
+      "url": "https://www.percona.com/blog/postgresql-community-images-operator/",
+      "author": "Slava Sarzhan",
+      "source": "Percona 博客",
+      "source_date": "2026-06-30",
+      "image": "https://www.percona.com/wp-content/uploads/2026/06/MDES-1088-Blog-image-Percona-Operator-for-PostgreSQL-V3.0.0-featured-1.jpg",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "镜像",
+        "供应链"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 讲漏洞量创纪录时公告库怎么撑住",
+      "summary": "GitHub Security Lab 介绍了 Advisory Database 在漏洞数量创纪录时的内部处理方式和压力所在。对企业来说，真正决定修补效率的不是某一条 CVE，而是漏洞信息是否可信、及时、能被工具直接消费。维护开源包或内部发行流程的团队，除了确认扫描器有没有打开，更该关注公告的接入质量、误报的处理办法和依赖更新的节奏。",
+      "url": "https://github.blog/security/supply-chain-security/inside-the-advisory-database-and-what-happens-when-vulnerability-volume-breaks-records/",
+      "author": "GitHub Security Lab",
+      "source": "GitHub 博客",
+      "source_date": "2026-06-29",
+      "image": "https://github.blog/wp-content/uploads/2026/01/generic-github-security-invertocat.png",
+      "domain": "infra",
+      "tags": [
+        "漏洞管理",
+        "供应链"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "时态 UPDATE 与 DELETE 漏掉残余行的 RLS 检查",
+      "summary": "Chao Li 指出重写阶段只加载 UPDATE/DELETE 策略，于是可以靠更新子范围绕过 INSERT 策略。",
+      "url": "https://www.postgresql.org/message-id/6C34A987-AC50-4477-BD71-2D4AFEE1A589@gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "行级安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "GROUP BY ALL 如何处理窗口函数已由标准定案",
+      "summary": "标准明确展开时跳过窗口函数，与 PostgreSQL 现有行为一致，补丁同步更新了注释与文档。",
+      "url": "https://www.postgresql.org/message-id/58f201ad-f2c8-4a25-b40f-213dbf7e75b7@eisentraut.org",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准",
+        "聚合"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "有人提议把 wal_compression=on 的默认改成 lz4",
+      "summary": "与 TOAST 压缩的近期变更保持一致，多人赞成并建议放进 PG19，避免分两个版本切换默认值。",
+      "url": "https://www.postgresql.org/message-id/CAGjGUAL1b=Mwd1SCvLbo+fivEr9KDpFcu4jmqKCZXwT=6CiiGQ@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "psql 与 pg_dump 等工具的最低支持版本拟提到 v10",
+      "summary": "Fujii Masao 的评审指出文档遗漏、pg_upgrade 比较值写错，以及若干 pre-v10 的残留代码路径。",
+      "url": "https://www.postgresql.org/message-id/CAHGQGwE3-CDsyx1tcMQsDaJMvLhecuiuk4A_RTPtPmhE33iH+g@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "兼容性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "修复 pg_get_publication_tables 的并发删表竞态",
+      "summary": "v8 补丁统一改用 try_table_open，评审建议把回归测试从 TAP 改成隔离测试。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoDLZ2O9T2g-=WC6P_OyC-Zi2e421tt8jqUTME2jA7rW4A@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "并发"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "GiST 仅索引扫描的可见性缺陷补丁进入测试",
+      "summary": "v02 补丁系列 245 个回归测试全过，竞态对时序高度敏感，测试者未能复现原始问题。",
+      "url": "https://www.postgresql.org/message-id/CAF0whuce3Y8ubVcS5z+d+HrOH4VkxSxrAAOsaqq_==6O5+MpYw@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GiST",
+        "索引"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "跨会话访问临时表的缺陷已提交修复",
+      "summary": "回移到 18 和 17 需要微调测试；RangeVar 不该带 relpersistence 的重构问题仍待处理。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdunb6vmJ-pV5BKs38QTdnqSnBskPgwiZFpEqsyUgQ9QPw@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "临时表",
+        "缺陷修复"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 允许把 issue 创建限制给协作者",
+      "summary": "高噪声仓库可以启用，但要配套 discussion、安全公告或模板化渠道，别切断有效的缺陷报告。",
+      "url": "https://github.blog/changelog/2026-06-29-restrict-issue-creation-to-collaborators-only/",
+      "author": "",
+      "source": "GitHub Changelog",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：enable_indexonlyscan",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_indexonlyscan/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "pgsql_tweaks 1.0.5 发布",
+      "summary": "",
+      "url": "https://pgsql-tweaks.org/blog/pgsql_tweaks-v1-0-5-released.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "读懂 PostgreSQL 内部实现的在线书",
+      "summary": "",
+      "url": "https://www.interdb.jp/pg/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "GSoC 2026 讨论 B-tree 索引膨胀的优化方案",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANBEAPFnx4eTOjNWnmtzoEYkZimSYC-7A2ouk76VcpzcfTrtNA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "新增 pg_stat_kind_info 系统视图的补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/akNlYDysXTp-57uj@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 的外部连接建议不能安全往返",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAKYtNAofuAJBz6++SeikpCb=Y=MO1QgEuZNJ+KZOP2johF1r4Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "补丁完善 wal_compression=on 的文档说明",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/akM9so0EhM24ntiI@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "发布拟支持在 SCHEMA 中排除指定表",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uCBkS2MyRzz0WSxg6Ch6Vi9-vNLCWLmEtcu_WwHWP7oiw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "提议让 pg_backup_stop() 返回 pg_control",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/86436ff9-eb98-4c8a-825e-3bcae022107b@pgbackrest.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Float 用三人团队和 Tiger Data 运营 AI 能源公司",
+      "summary": "",
+      "url": "https://www.tigerdata.com/blog/how-float-runs-ai-energy-company-3-person-team-tiger-data",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "ClickHouse 谈基准测试的透明度红线",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/databricks-reyden-benchmark-transparency-clickhouse",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-29",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "ClickHouse v26.5.4.21 稳定版发布",
+      "summary": "",
+      "url": "https://github.com/ClickHouse/ClickHouse/releases/tag/v26.5.4.21-stable",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Dribble：面向数据库的 AI IDE",
+      "summary": "",
+      "url": "https://github.com/azhakhan/dribble",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "S3 访问日志可写入 CloudWatch Logs 与 S3 Tables",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-s3-cloudwatch-logs-tables/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "AWS MWAA Serverless 支持共享 VPC",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/06/amazon-mwaa-serverless-vpc/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "JumpServer：开源的特权访问管理",
+      "summary": "",
+      "url": "https://github.com/jumpserver/jumpserver",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "别把报错直接粘进 Claude Code",
+      "summary": "",
+      "url": "https://home.robusta.dev/blog/you-really-shouldnt-copy-paste-errors-into-claude-code",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "vLLM v0.24.0 发布",
+      "summary": "",
+      "url": "https://github.com/vllm-project/vllm/releases/tag/v0.24.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-06-30",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 32
+    }
+  ]
+}

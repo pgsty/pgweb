@@ -1,0 +1,556 @@
+{
+  "date": "2026-07-28",
+  "origin": "chronicle 2026-07-28: pgnexus #221, daily 41, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 用 SQL/PGQ 在库内追踪数据血缘",
+      "summary": "数据血缘过去多靠外键加递归 CTE 拼凑，链路一长就难读懂。Cybertec 的 Hans-Jürgen Schönig 给出另一条路：在 PostgreSQL 19 里建一张 edge 表记录行级转换关系，用 CREATE PROPERTY GRAPH 声明属性图，再以 GRAPH_TABLE 用标准 SQL 查到报表。边标签自带语义，审计时比裸外键好解释；当前尚不支持可变长度路径，深层链路仍要用 WITH RECURSIVE。",
+      "url": "https://www.cybertec-postgresql.com/en/data-lineage-in-postgresql-19-finally-an-answer-when-the-cfo-asks-where-did-this-number-come-from/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "Cybertec 博客",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "SQL/PGQ",
+        "数据血缘"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Fujitsu 公布 PostgreSQL 19 周期内的贡献清单",
+      "summary": "PostgreSQL 19 的逻辑复制改动有相当一部分出自同一支团队。Fujitsu 盘点了本轮成果：发布端排除指定表、序列的逻辑复制（经 ALTER SUBSCRIPTION … REFRESH SEQUENCES 同步）、update_deleted 冲突检测、按逻辑槽动态调整 wal_level，以及槽同步的跳过统计与失败重试。团队称本轮提交 83 个、审阅 81 个补丁。",
+      "url": "https://www.postgresql.fastware.com/blog/highlights-of-fujitsu-contribution-in-postgresql-19",
+      "author": "Hayato Kuroda",
+      "source": "Fujitsu Enterprise Postgres 博客",
+      "source_date": "2026-07-28",
+      "image": "https://www.postgresql.fastware.com/hubfs/Images/Featured/Blog/img-featured-blog-highlights-of-fujitsu-contribution-in-postgresql-19.png",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "逻辑复制",
+        "Fujitsu"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PGSimCity 把 PostgreSQL 内部机制做成可探索 3D 模型",
+      "summary": "讲清 shared buffers、WAL、checkpointer 和 autovacuum 之间的关系，一直是培训里最难的部分。PGSimCity 把这些部件做成一座可以走进去的 3D 城市，缓冲命中、刷盘与垃圾回收以流量呈现。作者 Nikolay Samokhvalov 把版本定在 0.x，明确它不运行 PostgreSQL 源码，数值经过缩放。它适合建立排障的心智模型，不能用来验证某个版本的行为或性能。",
+      "url": "https://github.com/NikolayS/PGSimCity",
+      "author": "Nikolay Samokhvalov",
+      "source": "GitHub",
+      "source_date": "2026-07-27",
+      "image": "https://opengraph.githubassets.com/afde20fbdae90f4519d94165555db3dd3b71ed669badbc57f59e4a496b2da0c8/NikolayS/PGSimCity",
+      "domain": "pg",
+      "tags": [
+        "教学",
+        "内部机制",
+        "可视化"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "一份 PostgreSQL 11 到 18 的 SQL 改进精选",
+      "summary": "PostgreSQL 的发布说明里，性能与运维条目常盖过 SQL 层的变化。Dimitri Fontaine 按版本挑出各大版本的语法增强：11 的窗口帧 GROUPS 模式，12 的 CTE 物化提示与生成列，14 的多范围类型与 JSONB 下标，15 的 MERGE，17 的 JSON_TABLE()，18 的虚拟生成列与 uuidv7()。他的结论是这些改动多在补规范缺口，能省掉应用层的绕行写法。",
+      "url": "https://tapoueh.org/blog/2026/07/sql-improvements-in-postgresql-1118-a-personal-selection/",
+      "author": "Dimitri Fontaine",
+      "source": "tapoueh.org",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "版本特性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Antithesis 称测过的每个 Raft 实现都出现过安全性违背",
+      "summary": "共识库的正确性通常靠协议规范和多年生产年限背书。故障注入测试厂商 Antithesis 说，它测过的每一个 Raft 实现都出现过违反 state-machine safety 的情况，涉及 HashiCorp Raft、Aeron Cluster、OpenRaft 等，问题均已上报上游。文章强调发现的是实现层缺陷而非否定 Raft，影响范围仍要等维护方公告。可照做的是清点依赖的共识库版本，在预发环境跑分区、崩溃重启与成员变更。",
+      "url": "https://antithesis.com/blog/2026/finding-bugs-in-raft-implementations/",
+      "author": "Antithesis",
+      "source": "Antithesis 博客",
+      "source_date": "2026-07-27",
+      "image": "https://antithesis.com/_astro/cover.C2TWoGrq_Z1dNdEc.jpg",
+      "domain": "infra",
+      "tags": [
+        "Raft",
+        "共识",
+        "故障注入"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Linkerd 联邦让多集群副本在整集群故障时接管流量",
+      "summary": "多区域部署了副本，不等于故障时能无缝切换。CNCF 的一篇实践文章用三套 GKE 集群演示 Linkerd 同时启用 gateway、flat 与 federated 三种跨集群连接，并验证 federated frontend 在一套集群下线后由其余副本继续承接请求。文中明确 flat 与 federated 要求 pod 间可直接路由。照搬前要先验证跨集群 DNS、mTLS trust domain、出口费用与写入一致性。",
+      "url": "https://www.cncf.io/blog/2026/07/27/federating-clusters-for-zero-downtime-kubernetes/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-07-27",
+      "image": "https://www.cncf.io/wp-content/uploads/2026/07/Dragonfly-v2.5.0-is-released-7.png",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "Linkerd",
+        "灾备"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_get_publication_tables 的并发竞态已修复",
+      "summary": "Masahiko Sawada 推送该修复，覆盖 v16 及以上全部受支持分支。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoDJorhTw+3qBvv2c9YTQ0HvEj+aFv=NT7o5BqeOj43fMA@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "缺陷修复"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Bloom filter 下推补丁 v8 修正 TPC-H Q9 的基数低估",
+      "summary": "Tomas Vondra 把外键约束纳入过滤器选择性估算，并按选择性排序以稳定执行计划。",
+      "url": "https://www.postgresql.org/message-id/95e6edc6-5bff-4cd4-91d3-0f673cdca05c@vondra.me",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "Bloom filter"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "FOR PORTION OF 的 RETURNING 副作用修复已提交并回补",
+      "summary": "Dean Rasheed 推送修复，剩余行改用 NOTICE 提示，Paul A Jungwirth 审阅通过。",
+      "url": "https://www.postgresql.org/message-id/CAEZATCX_NzZ5vuQ73=n2xCE2n28ArP4c=FnrA0nnzTSbuLA5kw@mail.gmail.com",
+      "author": "Dean Rasheed",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态表",
+        "缺陷修复"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "新内核上 PostgreSQL 的 AIO 测试随机失败，根因是内存锁定上限",
+      "summary": "Debian 与 Fedora 默认只有 8192 KB，而 Linux 6.14 起每个 io_uring 实例占用更多锁定内存。",
+      "url": "https://www.postgresql.org/message-id/amgS8Ix_iLY9vdZ6@paquier.xyz",
+      "author": "Alexander Lakhin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AIO",
+        "io_uring",
+        "测试"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Otlet 尝试在 PostgreSQL 进程内做本地 LLM 推理",
+      "summary": "项目仍处早期，公开讨论极少，宜当作雷达条目，不要与生产可用扩展混同。",
+      "url": "https://github.com/joshmeek/otlet",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "LLM"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 把 Copilot App 与云端 agent 纳入企业托管设置",
+      "summary": "可集中限制插件来源、marketplace 白名单、审批绕过与默认模型，App 策略默认开启。",
+      "url": "https://github.blog/changelog/2026-07-27-enterprise-managed-settings-now-apply-to-the-github-copilot-app/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Copilot",
+        "企业治理"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Google 提出 Beyond Zero，把授权收缩到资源与动作粒度",
+      "summary": "高风险情境下动态加压验证并自动隔离，目前只有内部早期部署，不是可采购的标准。",
+      "url": "https://blog.google/security/going-beyond-zero-a-new-paradigm-for-enterprise-security/",
+      "author": "Google",
+      "source": "Google 安全博客",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "零信任",
+        "授权"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "scriptc 把 TypeScript 编译为本机二进制",
+      "summary": "用真实 type checker 静态化，无法静态化的依赖可经 --dynamic 嵌入 QuickJS 或被拒绝。",
+      "url": "https://github.com/vercel-labs/scriptc",
+      "author": "Vercel Labs",
+      "source": "GitHub",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TypeScript",
+        "编译器"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "有人用 LLM 辅助在 Lean 里写 Zstandard 解压器与证明",
+      "summary": "个人实验，没有给出可推广的成功率，产出仍需 proof checker、测试与人工审阅把关。",
+      "url": "https://www.imperialviolet.org/2026/07/26/zstd-lean.html",
+      "author": "",
+      "source": "ImperialViolet",
+      "source_date": "2026-07-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "形式化验证",
+        "Lean"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "有人复盘 Bun 的 Rust 重写，质疑此前的时间与成本口径",
+      "summary": "第三方观察指出 CI、后续 PR 与人工投入未计入，合并的代码量不等于可发布性。",
+      "url": "https://lockwood.dev/ai/2026/07/27/how-is-the-bun-rewrite-in-rust-going.html",
+      "author": "",
+      "source": "lockwood.dev",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "AI 编程",
+        "开源维护"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "ALTER SUBSCRIPTION 可绕过外部服务器权限检查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANhcyEU9VsaLwo908ws_1MxNB79f+cr-JVfig=Zoaf4+KQe+GQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 处理非超级用户订阅的外部服务器时可能失败",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CANhcyEVUkaOCagPzAySjMSYOx9kZDaow-oxKU6-MQwxoc_hQsQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_upgrade"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "CREATE SUBSCRIPTION 的服务器子句与 pg_dump 冲突",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/e96efe16fb47fcca4ae0cd0157fb6bc662470712.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_dump"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "分区表改列类型会丢失副本标识与 CLUSTER 状态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA5RZ0tq2Oj6Vkjt06phsDWpywsS=VkBSV7n6LC++pR5LLNU-A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区表"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "提案新增 pg_stat_kind_info 视图暴露统计元数据",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/amga2BBCz1YrV1av@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "autovacuum 因锁不可用跳过的表将进入统计视图",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOzEurQMeZ7qEyo+pMq658Mkfi2TkE37Bau9Yi1SqUzHK60TqQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "autovacuum"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "补丁让 pg_backup_stop() 直接返回 pg_control",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+aWR10d__mdN1pVbrCmmsSHG=0mur=fw9PBcL7k9bdoJ1qmKQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "psql 的 \\db+ 拟新增 Free 列显示表空间可用空间",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAF0whue1Vn-BiMRD3Kw0B5QQRgZXukXdCvkm8TmVycx5bj0WVA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "表空间"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "事务回卷警告拟增加剩余空间百分比的 DETAIL",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/20260728184313.cd07b02accc7e37a4d83f624@sraoss.co.jp",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务 ID"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "WAL LSN 回放等待机制的清理与竞态修复补丁",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABPTF7WEK9-h0bEQeJfN-ixq-OAdhRJeYk=MSBv22sc8dYT5_g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "复制"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "恢复冲突处理未识别导入快照的后端进程",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1K09ZZWF-5xxVRL=XMwg=COGCRM8X2bFJJaoYkucXB8PA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备库"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 绕过游标以支持并行执行计划",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoYrkH1OT-QzvJ=jLqfEr0S1OxeWsXimLkardpWMw12=Ww@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "TABLES IN SCHEMA 发布拟支持 EXCEPT 子句",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAJpy0uDBGo+q6_+4Q1DokcdkfvC4Hi7W48EFLjzxu-wS__E9WA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "NOT 与 BooleanTest 下的 SAOP 空值性分析待修",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/4171084.1785258195@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "权限检查测试将跳过 macOS 自动生成的 .DS_Store",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/fd55caa3-0a29-4724-afcb-2e7fd4231514@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "ViewKit 主张在浏览器本地查看数据集，无需上传",
+      "summary": "",
+      "url": "https://viewkit.app/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据工具"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Apple 同日发布 iOS 与 macOS 等系列安全更新",
+      "summary": "",
+      "url": "https://support.apple.com/en-us/128066",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Apple",
+        "安全更新"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "一篇复盘强调 Tokio 保证的是 progress 而非 ordering",
+      "summary": "",
+      "url": "https://pranitha.dev/posts/tokio-gives-progress-not-ordering/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust",
+        "Tokio"
+      ],
+      "position": 34
+    },
+    {
+      "tier": 3,
+      "title": "SlopCodeBench 用多阶段 checkpoint 评测编码 agent",
+      "summary": "",
+      "url": "https://github.com/humanlayer/advanced-context-engineering-for-coding-agents/blob/main/benchmarking-opus-5-on-slop-code-bench.md",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-27",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Agent 评测"
+      ],
+      "position": 35
+    }
+  ]
+}

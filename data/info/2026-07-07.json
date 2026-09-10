@@ -1,0 +1,461 @@
+{
+  "date": "2026-07-07",
+  "origin": "chronicle 2026-07-07: pgnexus #200, planet 2, daily",
+  "items": [
+    {
+      "tier": 1,
+      "title": "存储层删错文件的缺陷已修进主干",
+      "summary": "Heikki Linnakangas 已把一处存储层的错删修复推进 master。mdunlinkfiletag 本该按传入的 fork 与段号删文件，实际删掉的却是主 fork 的第 0 段。Thomas Munro 建议反过来做：不去泛化 register_unlink_segment()，而是拿掉它的 fork 与段参数，因为外部代码没有理由往 md.c 的队列里塞删除请求。Matthias van de Meent 确认那条分支只在主 fork 上才走到。",
+      "url": "https://www.postgresql.org/message-id/c5b85d9c-5a95-45a7-83c7-5dca0d22fddf@iki.fi",
+      "author": "Heikki Linnakangas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储",
+        "缺陷修复"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "导入畸形范围直方图会算出负选择率甚至崩溃",
+      "summary": "Ewan Young 报告 pg_restore_attribute_stats() 接收范围边界直方图时不做校验。compute_range_stats() 维持着两条不变式：直方图里不能有空 range，上下界都要升序排列。range 与 multirange 的选择率估算器依赖这两条，一旦被违反，轻则算出错误甚至为负的选择率，重则在带断言的构建里直接让进程崩溃。补丁改为导入时校验直方图，对不合法输入以 WARNING 拒绝，与其他统计信息的处理方式一致。",
+      "url": "https://www.postgresql.org/message-id/CAON2xHNM809WLR_g0ymKgU-tWxtbyH1Xvh4fqzRqy9YP2A59pg@mail.gmail.com",
+      "author": "Ewan Young",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "缺陷"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "索引预取补丁 V29 让点查询少调一次接口",
+      "summary": "Peter Geoghegan 发出索引预取补丁的 V29，因为 V28 已经打不干净。这一版有两项微优化：索引访问方法可以在 amgetbatch 返回时直接设置 knownEndBackward 与 knownEndForward，让简单点查询只调一次 amgetbatch；索引元组计数改成每批计一次而不是每元组一次，语义与位图索引扫描一致。V29 还带了一个 EXPLAIN (ANALYZE, IO) 补丁，索引扫描做 IO 预取时可以看到读流的诊断信息。",
+      "url": "https://www.postgresql.org/message-id/CAH2-WzmsebafEMoBp-sWq+Dp75SKV6j+RWerKSJNfJkWV592tg@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "有人提议把共享缓冲区的查找表换掉 dynahash",
+      "summary": "来自 Databricks 的 Dhruv Aron 提议把共享缓冲区的查找表从 dynahash 换成专用哈希表：目录、段、桶链、空闲列表那几层结构，对这个固定大小的场景太重了。基准显示插入、查找和删除都明显变快。Heikki Linnakangas 确认目录这层间接对所有共享内存哈希表都多余，因为它们都不支持动态扩容，新表内存占用也小得多。他同时担心 InvalidateBuffer() 持自旋锁的时间变长，要求补上大量哈希冲突下的最坏情况基准。",
+      "url": "https://www.postgresql.org/message-id/dbbd1998-19ff-4ac2-b4b1-a39f4ec1b0f5@iki.fi",
+      "author": "Dhruv Aron",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 18 的四项逻辑复制改进落到 RDS",
+      "summary": "AWS 的 Ramdas Gutlapalli 梳理了 PostgreSQL 18 在逻辑复制上的四项改动。新的发布参数 publish_generated_columns 让 STORED 生成列可以进入复制流；pg_stat_subscription_stats 增加七个冲突计数器，把笼统的错误数拆成按冲突类型统计；新订阅的 streaming 默认值改为 parallel；新增 idle_replication_slot_timeout，自动废弃长期闲置的复制槽。",
+      "url": "https://aws.amazon.com/blogs/database/logical-replication-improvements-in-amazon-rds-for-postgresql-18/",
+      "author": "Ramdas Gutlapalli",
+      "source": "AWS Database 博客",
+      "source_date": "2026-07-07",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/07/01/DB5533.png",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "PG18",
+        "RDS"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "用 CloudNativePG 分布式拓扑做跨区域容灾",
+      "summary": "Cybertec 的 Wellingtone Luvonga 演示了怎么用 CloudNativePG 的分布式拓扑在多个 Kubernetes 集群之间做跨区域容灾。方案拿 MinIO 当兼容 S3 的对象存储，主集群用 barman-cloud 插件持续归档 WAL，副本集群轮询同一份对象存储完成初始化并保持同步。两点要注意：复制延迟取决于对象存储吞吐而非直连流复制，主副集群还必须跑完全相同的 PostgreSQL 与 operator 版本。",
+      "url": "https://www.cybertec-postgresql.com/en/going-multi-region-how-to-set-up-cloudnativepgcnpg-distributed-topology/",
+      "author": "Wellingtone Luvonga",
+      "source": "Cybertec 博客",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "容灾",
+        "备份"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "KVM 影子 MMU 逃逸漏洞公开 PoC",
+      "summary": "Januscape 公开了一个 x86 KVM 影子 MMU 的 guest 到 host 逃逸问题，编号 CVE-2026-53359，影响范围从 2010 年 8 月的提交一直到 2026 年 6 月 16 日的修复提交。已公开的 PoC 足以让 guest 触发宿主内核 panic，作者称完整可控的逃逸利用存在但未发布。接收不可信 guest、又开了嵌套虚拟化的环境风险最高。跑 KVM 的团队应确认宿主内核是否包含提交 81ccda30b4e8，必要时先关掉嵌套虚拟化。",
+      "url": "https://github.com/V4bel/Januscape",
+      "author": "V4bel",
+      "source": "Januscape",
+      "source_date": "2026-07-06",
+      "image": "https://opengraph.githubassets.com/e4c064e60395367419e67ad49e2b24f9295d4f93447c6b9165d73a87bb57059f/V4bel/Januscape",
+      "domain": "infra",
+      "tags": [
+        "虚拟化",
+        "漏洞",
+        "CVE"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "GiST 只读索引扫描的微清理缺陷已提交",
+      "summary": "根页面上 so->curBlkno 没被设置，导致 gistkillitems() 在根页面的行为不安全。",
+      "url": "https://www.postgresql.org/message-id/d3c37744-c3b6-4c70-a8de-02aa23b486f9@iki.fi",
+      "author": "Heikki Linnakangas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GiST"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "libpq 异步接口的大 SSL 记录处理已回合各分支",
+      "summary": "测试覆盖了反复运行的异步测试与 SSL 下的大批量 COPY TO STDOUT，未见挂起或回归。",
+      "url": "https://www.postgresql.org/message-id/be2f229a-25e8-4d19-a307-e4ce3312f212@iki.fi",
+      "author": "Heikki Linnakangas",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "libpq",
+        "SSL"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "wal_compression 默认改用 LZ4 的提案被重新提起",
+      "summary": "Michael Paquier 与 Christoph Berg 认为该换，且 on 并非默认值，只影响显式设过的人。",
+      "url": "https://www.postgresql.org/message-id/ak19GnnQE46n6myy@paquier.xyz",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "压缩"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志表的作者回应了回退呼吁",
+      "summary": "Amit Kapila 称那是 apply 循环最外层的 catch，插入失败时复制源点位不推进，不会发散。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1LY2KOw9qxxBNkow9RygY+7u_dOzyzGCfzw2pWdbC7Jcw@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "有人提议把 pg_hba 换成 TOML 之类的标准格式",
+      "summary": "概念验证内嵌 tomlc17 演示 pg_hosts；Tom Lane 质疑迁移动力不足，Andrew Dunstan 担心维护负担。",
+      "url": "https://www.postgresql.org/message-id/CAN4CZFNXdKL4eb_GwT_h-vUuUV+CbPCk_8-+S3kV8iFmNmUw7A@mail.gmail.com",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置",
+        "认证"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "按事务号年龄失效复制槽的补丁调整了分工",
+      "summary": "vacuum 只立即失效无人持有的槽，仍被持有的交给 checkpointer 常规扫描处理。",
+      "url": "https://www.postgresql.org/message-id/CALj2ACWmrz0+9YUv6gfxim4f+WbuR-K820e8OWY4G=4Mt7wr3g@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "VACUUM"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "把 pgAudit 审计日志自动送进 S3 再用 Athena 查",
+      "summary": "订阅过滤器触发 Lambda 把日志转成 CSV 按日期分区，90 天转低频，一年后归档。",
+      "url": "https://aws.amazon.com/blogs/database/automate-postgresql-audit-log-extraction-and-analysis-with-amazon-s3/",
+      "author": "Bhavini Bhatia",
+      "source": "AWS Database 博客",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "审计",
+        "日志"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "一份面向 DBA 的五类性能瓶颈清单",
+      "summary": "统计过期、缺连接池、autovacuum 不足、内存参数失调与锁竞争，逐条给出排查方向。",
+      "url": "https://www.postgresql.fastware.com/blog/5-postgresql-performance-bottlenecks",
+      "author": "Rajni Baliyan",
+      "source": "Fujitsu Enterprise Postgres",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "调优"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "OpenSSH 10.4 收紧了几处可降级的旧路径",
+      "summary": "sshd -G 输出大小写有变，seccomp 或 no_new_privs 失败改为致命错误，重协商也更严格。",
+      "url": "https://www.openssh.org/txt/release-10.4",
+      "author": "OpenSSH",
+      "source": "OpenSSH",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "SSH",
+        "安全"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "AWS Certificate Manager 开始支持 ACME",
+      "summary": "公共证书可以走标准协议签发，自建的 ACME 胶水代码有机会减掉一部分。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/07/aws-certificate-manager-acme/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "证书",
+        "TLS"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "enable_partitionwise_aggregate 让聚合下沉到分区",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enable_partitionwise_aggregate/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "旧服务器不可用时改订阅连接的行为不对",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/131c80088565c68e64c02572a800316c6bbb379f.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "enable_groupagg 的文档措辞之争以拒绝收场",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAMbWs49RCumHErWYOLm4jDcvLSGqhSm1Asnwsv9Tdn2Yjn0r2A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "自动清理清不掉元组时将报出最旧 xmin 的来源",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOzEurQSYUD64pGnbwgxHb_xUhHsO486Y1ZdV=dJugu922q+hA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "给分配函数加 malloc 属性会引来大量误报",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/2248c1c4-68f7-46dc-9e58-9ba9057da74e@eisentraut.org",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "推测插入收尾时多取一次元组的代码已清理",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/4ae3a6dd-a4ae-43f9-9625-4dbf2084f790@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "nbtree 取真根时改为复用已有的读元页函数",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/752d1c03-43eb-4f41-b2e6-8fbadb03113f@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "libpq 异步解析 DNS 的概念验证补丁出炉",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+mBW0h9F5ZKkaUPuK=6T080Qs49+XCsv6Cee=g_zmitbw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Interdict 想拦住 agent 对生产库的破坏性操作",
+      "summary": "",
+      "url": "https://github.com/prisharai/Interdict",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Kani 把模型检查带进 Rust 工程实践",
+      "summary": "",
+      "url": "https://arxiv.org/abs/2607.01504",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare Workers 可以在自己前面挂一层缓存",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/workers-cache/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker HyperPod 支持预填充与解码分离",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/7/amazon-sagemaker-hyperpod-dpd/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "X509-limbo 提供证书路径校验的测试向量",
+      "summary": "",
+      "url": "https://x509-limbo.com/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "把 RAG 上下文裁到答案真正需要的部分",
+      "summary": "",
+      "url": "https://www.kapa.ai/blog/how-we-prune-rag-context",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-06",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 31
+    }
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "date": "2026-04-28",
+  "origin": "chronicle 2026-04-28: pgnexus #130, planet 10",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgBackRest 仓库归档，Percona 承诺继续支持",
+      "summary": "David Steele 在 4 月 27 日宣布 pgBackRest 不再维护，仓库转入归档。项目长期依赖单一维护者加 Crunchy Data 的赞助，这套结构在赞助方易主后没能撑住。Jan Wieremjewicz 指出软件本身仍能用，真正的风险是方向不明和各自拉分支造成碎片化。Percona 表态继续把它作为自家发行版推荐的备份方案，同时提出三条长期出路：基金会托管、多厂商共同治理，或并入 PostgreSQL 生态。",
+      "url": "https://percona.community/blog/2026/04/28/pgbackrest-is-archived-what-now/",
+      "author": "Jan Wieremjewicz",
+      "source": "Percona Community",
+      "source_date": "2026-04-28",
+      "image": "https://percona.community/blog/2026/04/Jan-pgb-cover_hu_6e839393eca6d4f.jpg",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "pgBackRest",
+        "开源治理"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Bartolini 谈开源可持续：总得有人付钱",
+      "summary": "pgBackRest 的结局让 Gabriele Bartolini 把话讲明白：维护关键基础设施需要全职投入，也就需要收入，开源不是免费的，总得有人付钱。他回顾 pgBackRest 与 Barman 用不同架构解决同一问题，认为这种竞争让两边都变好了。他提出的良性循环是：企业出钱养工程师，软件在生产中创造价值，用户购买商业支持，收入再投回工程。CloudNativePG 进入 CNCF Sandbox 则带来了厂商中立的治理。",
+      "url": "https://www.gabrielebartolini.it/articles/2026/04/why-the-cycle-of-open-source-sustainability-needs-to-be-virtuous/",
+      "author": "Gabriele Bartolini",
+      "source": "gabrielebartolini.it",
+      "source_date": "2026-04-28",
+      "image": "https://www.gabrielebartolini.it/articles/2026/04/why-the-cycle-of-open-source-sustainability-needs-to-be-virtuous/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "开源可持续",
+        "治理",
+        "备份"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "并行 Autovacuum 的瓶颈通常不在 CPU",
+      "summary": "PostgreSQL 19 新增并行 autovacuum，用一个全局上限参数和一个按表参数控制，默认关闭。Christophe Pettus 提醒并行只作用于索引清理，堆扫描和截断仍是单线程，只有多索引的表才吃得到收益；而 VACUUM 压倒性地受 I/O 限制，存储已经打满时加进程只是排更长的队。这些进程还与查询并行共用 max_parallel_workers 池，可能抢走普通查询的槽位。他建议整体保持关闭，只对重索引表按表打开。",
+      "url": "https://thebuild.com/blog/parallel-autovacuum/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-28",
+      "image": "https://thebuild.com/media/media/f432154d2365437c9b38da3e94ed7788.png",
+      "domain": "pg",
+      "tags": [
+        "autovacuum",
+        "PG19",
+        "并行"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "HOT 更新省掉索引写入的两个前提",
+      "summary": "更新一行就要改所有索引，是 PostgreSQL 写放大的主要来源，HOT 更新是它的逃生口。Radim Marek 梳理触发条件：新元组要放得进同一页面，且被修改的列都没有索引，缺一不可。写多的表可以把 fillfactor 从默认的 100 降到 80 到 90，给 HOT 链留空间，代价是多占存储。效果看 pg_stat_user_tables 里 HOT 更新数与总更新数的比值，比例下滑就该查。长事务会阻止页面裁剪。",
+      "url": "https://boringsql.com/posts/hot-updates/",
+      "author": "Radim Marek",
+      "source": "boringsql.com",
+      "source_date": "2026-04-28",
+      "image": "https://boringsql.com/og-images/postgresql-hot-updates-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "HOT 更新",
+        "写放大",
+        "调优"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Pettus 评 Amazon RDS for PostgreSQL 的长短处",
+      "summary": "Christophe Pettus 开了个托管 Postgres 评测系列，第一篇给 Amazon RDS。长处是它十多年来一直能用，与 AWS 生态整合广，蓝绿部署让大版本升级不再吓人。短处集中在自主权：扩展版本滞后，plpython3u 一类根本没有；没有真正的超级用户；存储只能加不能减；单备机的 Multi-AZ 走块复制，备机不可读。他的结论是已在 AWS、负载中等、没有专职 DBA 的团队最合适。",
+      "url": "https://thebuild.com/blog/managed-postgres-examined-amazon-rds-for-postgresql/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-04-28",
+      "image": "https://thebuild.com/media/media/caadff50832d419a93be5824ee2e3add.png",
+      "domain": "pg",
+      "tags": [
+        "RDS",
+        "托管服务",
+        "评测"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "在线开关数据校验和暴露多处竞态",
+      "summary": "Daniel Gustafsson 移除在线检查点里的校验和更新，并把控制文件更新排到信号屏障之前。",
+      "url": "https://www.postgresql.org/message-id/CAHg+QDfS0Ckw2HT-TWkdvB1pq9rrFzm1Pk_AUwuFL+Er23ZOFA@mail.gmail.com",
+      "author": "Daniel Gustafsson",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "PG19"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "DDL 逻辑复制拟改走 WAL 记录而非事件触发器",
+      "summary": "Masahiko Sawada 为 PG20 重启这项工作，新增 DDLCommand 类型，直接写 WAL 供所有插件使用。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1KMDya3brZdgDwKCoLCKM11t=sqP4QNCEbLai_NRKQF=A@mail.gmail.com",
+      "author": "Masahiko Sawada",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "DDL"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "冲突日志新增 conflict_log_destination 参数",
+      "summary": "取值 log、table 或 all，选表时在 pg_conflict 模式下按订阅 ID 自动建表，命名仍在争论。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1LhOHa_TEznw+gFoq+w0vMvvsDG2g9Xq8Mwa8xZMY73og@mail.gmail.com",
+      "author": "Amit Kapila",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "冲突"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "序列同步遇权限不足的空数据会崩溃",
+      "summary": "Ayush Tiwari 的补丁修掉提前返回时未清理的关系指针，并补上能复现崩溃的 TAP 测试。",
+      "url": "https://www.postgresql.org/message-id/CAJTYsWWOuw-yfmzotV4jCJ6LLxEsb=STLcGtDYXOxRcU9Te3Pw@mail.gmail.com",
+      "author": "Ayush Tiwari",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "序列"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "WAIT FOR LSN 的测试补丁通过审查待提交",
+      "summary": "Alexander Korotkov 认可 Xuneng Zhou 的改写，并为新函数补注释，建议推送整个补丁集。",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdufWG032J=fyv1eWoveeyPwqJ57PGU2edA5OsOmexGDTw@mail.gmail.com",
+      "author": "Alexander Korotkov",
+      "source": "pgsql-hackers",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "补丁"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 生态系统的问题",
+      "summary": "",
+      "url": "https://proopensource.it/blog/postgresql-ecosystem-problems-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "用来监控 autovacuum 的一组查询",
+      "summary": "",
+      "url": "https://www.cybertec-postgresql.com/en/monitor-autovacuum-my-queries/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "自愿宽松，意外永久",
+      "summary": "",
+      "url": "https://thebuild.com/blog/permissive-by-choice-permanent-by-accident/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GUC 全解：archive_mode",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-archive_mode/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "2026 年第 16 周 PostgreSQL 贡献汇总",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/80/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PGConf India 2026 上的扩展开发经验",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/postgresql-extension-development-insights-from-the-pgconf-india-2026-stage",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "EDB 将在 Red Hat Summit 2026 讲自建 AI 数据层",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/edb-red-hat-summit-2026-building-ai-ground-you-own",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    }
+  ]
+}

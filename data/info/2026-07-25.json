@@ -1,0 +1,276 @@
+{
+  "date": "2026-07-25",
+  "origin": "chronicle 2026-07-25: pgnexus #218, daily, planet 1",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Tom Lane 重写连接消除，净减九百多行",
+      "summary": "Tom Lane 提议让 analyzejoins.c 直接基于 jointree 做连接消除，不再依赖规划器的派生数据，消除成功后回到 query_planner() 重跑后续步骤。Richard Guo 做了原型，Tom Lane 借助 Claude 完成较完整的补丁，净减九百多行代码。Thom Brown 测出两个问题：开断言的构建会崩溃；自连接消除的规划耗时回退实际是二到三倍，而非此前报的一成。",
+      "url": "https://www.postgresql.org/message-id/2727652.1784997994@sss.pgh.pa.us",
+      "author": "Tom Lane",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "连接消除"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "LISTEN/NOTIFY 的瓶颈在提交路径",
+      "summary": "DBOS 复盘自家流式写入卡在每秒约 2900 条的原因：NOTIFY 为保证提交顺序，会在事务提交阶段拿全局锁，于是写入被串行化，CPU 和 IOPS 看着都没满。他们把通知改成内存缓冲、后台批量发出，读端再回表取真实数据，写入提到每秒 6 万条、延迟在毫秒级。这条经验适合把 NOTIFY 当作失效通知或唤醒信号，而不是可靠的消息本体；要求逐条可靠投递或严格排序的场景，仍应评估逻辑解码、队列表或专门的消息系统。",
+      "url": "https://www.dbos.dev/blog/postgres-listen-notify-scalability",
+      "author": "DBOS",
+      "source": "DBOS 博客",
+      "source_date": "2026-07-24",
+      "image": "https://cdn.prod.website-files.com/672411cbf038560468c9e68f/6a62e3a5eb32f7dd71332477_Scaling-Postgres-Listen-Notify.jpg",
+      "domain": "pg",
+      "tags": [
+        "LISTEN/NOTIFY",
+        "队列",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "DuckPGQ 把标准图模式查询带进 DuckDB",
+      "summary": "DuckPGQ 以社区扩展的形式给 DuckDB 加上 SQL/PGQ：支持 CREATE PROPERTY GRAPH 定义属性图、用 GRAPH_TABLE 写图模式匹配，并带一批图算法，安装方式是 INSTALL duckpgq FROM community。这类社区扩展由集中端点分发、经 CI 签名，但维护者在项目之外，可用 SET allow_community_extensions = false 关掉。",
+      "url": "https://duckdb.org/community_extensions/extensions/duckpgq",
+      "author": "DuckDB",
+      "source": "DuckDB 文档",
+      "source_date": "2026-07-24",
+      "image": "https://duckdb.org/images/community_extensions/social_preview/preview_community_extension_duckpgq.png",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "图查询",
+        "SQL/PGQ"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "摄像机固件里打包了组织级 GitHub 令牌",
+      "summary": "一位研究者逆向 Hanwha 摄像机固件后称，前端构建产物里的 Vite 变量对象含有 GitHub token，同一个 token 被复制进大约 30 个文件，对该组织数百个仓库拥有管理员权限；在约 500 份可解包的固件样本里有三份带着它，厂商在 12 小时内撤销。这提醒 CI 机密不只从流水线日志泄露：任何写进浏览器产物、固件或安装包的构建期环境变量都可能成为长期公开的凭据。发版前应对前端包、镜像和固件做一次机密扫描。",
+      "url": "https://hhh.hn/hanwha-github-token/",
+      "author": "hhh.hn",
+      "source": "独立研究",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "凭据泄露",
+        "供应链",
+        "固件"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "调度与网络策略打架，六成 GPU 在空转",
+      "summary": "这篇 CNCF 案例复现了一种难查的浪费：Kubeflow 把协调进程调度到被 Cilium 网络策略隔离的区域，worker 在另一个区域，Pod 全是 Running、GPU 也已分配，分布式训练却几乎不在计算。作者用亲和性、拓扑分布约束和容忍度把训练组共置后，实验环境 GPU 利用率从约 40% 提到约 85%。值得把区域、网络策略、集合通信延迟和跨区流量放进同一张看板。",
+      "url": "https://www.cncf.io/blog/2026/07/23/when-kubeflow-meets-cilium-debugging-60-idle-gpus-in-kubernetes/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-07-23",
+      "image": "https://www.cncf.io/wp-content/uploads/2026/07/When-Kubeflow-meets-Cilium.png",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "GPU",
+        "网络策略"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 2,
+      "title": "批量时钟扫描补丁撤回移除 ring 的部分",
+      "summary": "Greg Burd 承认误解了 BAS_BULKWRITE 的反压作用，也承认基准有误，只保留时钟扫描与冷却淘汰。",
+      "url": "https://www.postgresql.org/message-id/aeefac5f-5c80-4af6-b68c-78687bfebd54@app.fastmail.com",
+      "author": "Greg Burd",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-07-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓冲区",
+        "性能"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "OpenTelemetry 毕业之后转向治理与新负载",
+      "summary": "官方路线把重点放在智能体负载语义、浏览器与移动端、schema 治理和免代码埋点。",
+      "url": "https://opentelemetry.io/blog/2026/otel-grad-now-what/",
+      "author": "OpenTelemetry",
+      "source": "OpenTelemetry 博客",
+      "source_date": "2026-07-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "语义约定"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "GitHub MCP 服务 7 月 28 日起走无状态内核",
+      "summary": "长会话、并发、重试和令牌续期的行为可能变化，改期前要用真实客户端复测。",
+      "url": "https://github.blog/changelog/month/07-2026/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "MCP",
+        "协议"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "OneCLI 想让凭据不进入代理上下文",
+      "summary": "这个开源凭据网关让代理经受控调用取能力，仍需自查越权外泄、令牌时效与审计是否可篡改。",
+      "url": "https://github.com/onecli/onecli",
+      "author": "OneCLI",
+      "source": "GitHub",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "凭据",
+        "AI 代理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "syslogger 变量漏标 PGDLLIMPORT 已修",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/amQzWzZTFop7AktH@paquier.xyz",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "构建",
+        "Windows"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：full_page_writes",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-full_page_writes/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "WAL"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 3,
+      "title": "Trifle 主张分析系统只存答案不存事件",
+      "summary": "",
+      "url": "https://trifle.io/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分析"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 3,
+      "title": "Fil-C 用 LLVM 通道给任意中间码加内存安全",
+      "summary": "",
+      "url": "https://fil-c.org/gimso",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "内存安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "OpenTelemetry 用十周训练营培养新维护者",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/07/23/sustaining-opentelemetry-what-a-10-week-contributor-cohort-actually-looks-like/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开源治理"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 日本分会成立 AI 基础设施 SIG",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/07/23/launch-of-the-ai-infra-sig-under-the-cncf-japan-chapter-first-meetup-and-call-for-speakers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "社区"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Remux 把 tmux 工作区搬到 iPhone",
+      "summary": "",
+      "url": "https://github.com/h3nock/remux",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "终端"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "claude-thermos 用保活会话换响应速度",
+      "summary": "",
+      "url": "https://github.com/izeigerman/claude-thermos",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-24",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 17
+    }
+  ]
+}

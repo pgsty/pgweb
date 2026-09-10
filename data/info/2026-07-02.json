@@ -1,0 +1,495 @@
+{
+  "date": "2026-07-02",
+  "origin": "chronicle 2026-07-02: daily, pgnexus #195, planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "一组 PgBouncer 进程把连接池吞吐提到 4 倍",
+      "summary": "PgBouncer 是单进程单线程的，机器再大也只吃得下一个 CPU 核。Kaushik Iska 给出实测：16 vCPU 机器上单个进程约 8.7 万 TPS 到顶，单核占用 97%，整机利用率不到 10%。他们改成按核数起一组 PgBouncer 进程，用 so_reuseport 让内核做负载均衡，再在进程间做 peering 处理跨实例的查询取消。256 个并发客户端下这组进程跑到约 33.6 万 TPS，用满 8 个核。",
+      "url": "https://clickhouse.com/blog/pgbouncer-clickhouse-managed-postgres",
+      "author": "Kaushik Iska",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "PgBouncer",
+        "性能"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Neon 推出向量与 BM25 混合检索扩展",
+      "summary": "Neon 推出 Lakebase Search，由 lakebase_vector 与 lakebase_text 两个扩展提供向量和全文的混合检索。向量侧用 IVF 分区加 RaBitQ 量化，把向量压缩约 32 倍，索引可直接放在数据湖上，同时兼容 pgvector。文本侧不再依赖 GIN，改用原生 BM25 索引保存全库统计量，支持真正的相关性打分和 top-K 下推。两个索引面向对象存储而非常驻内存，现已开放。",
+      "url": "https://neon.com/blog/lakebase-search-on-neon",
+      "author": "Savannah Longoria、Pranav Aurora",
+      "source": "Neon 博客",
+      "source_date": "2026-07-02",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/lakebase-search-on-neon/cover.png",
+      "domain": "pg",
+      "tags": [
+        "向量检索",
+        "全文检索",
+        "扩展"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pglayers 把扩展做成可叠加的镜像层",
+      "summary": "pglayers 把 PostgreSQL 扩展做成预编译的 Docker 层：每个扩展发布成一个 FROM scratch 的镜像，在官方 postgres 镜像上用 COPY --from 一行叠一个。PostgreSQL 18 以上采用隔离布局，每个扩展放进各自的子目录，靠 extension_control_path 参数避免文件冲突。项目按 MIT 授权，目前支持 80 多个扩展，17 与 18 稳定，19 还是实验性的。",
+      "url": "https://github.com/pglayers/pglayers",
+      "author": "pglayers",
+      "source": "GitHub",
+      "source_date": "2026-07-02",
+      "image": "https://opengraph.githubassets.com/f491b501e3700194ab6a7dd5a189f1fc41a83dd10107e4c832c91daac7fe6ff9/pglayers/pglayers",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "容器",
+        "分发"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "跟着一次备份看 pg_hardstorage 的内部设计",
+      "summary": "Cybertec 的 Hans-Jürgen Schönig 沿着一次备份的生命周期讲 pg_hardstorage：数据怎么被抓取、怎么进入仓库、怎么组织，最后又怎么在恢复时被拼回来。文章展开的是内容寻址存储、分块与去重、清单结构、元数据管理、完整性校验、损坏处理和垃圾回收这些机制，而不是操作手册。作者想说的是，备份跑成功只算一半，知道数据在系统里怎么流动同样重要。",
+      "url": "https://www.cybertec-postgresql.com/en/following-a-backup-from-postgresql-to-recovery-using-pg_hardstorage/",
+      "author": "Hans-Jürgen Schönig",
+      "source": "Cybertec 博客",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复",
+        "存储"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Databricks 提出在存储层统一事务与分析",
+      "summary": "Databricks 的 Reynold Xin 提出 LTAP：在存储层而不是引擎层统一两类负载，让它们读同一份数据。Lakebase 把预写日志交给 SafeKeeper、数据文件交给 PageServer，从单体 PostgreSQL 里拆成独立的云服务，计算层因此无状态。PageServer 把页面落到对象存储时顺便转成列式 Parquet，并保留类型系统与多版本语义。厂商称写吞吐提高 5 倍、读延迟降低一半。",
+      "url": "https://www.databricks.com/blog/lakebase-ltap-rethinking-database-storage",
+      "author": "Reynold Xin",
+      "source": "Databricks 博客",
+      "source_date": "2026-06-30",
+      "image": "https://www.databricks.com/sites/default/files/2026-06/Frame-1-1.png",
+      "domain": "pg",
+      "tags": [
+        "存算分离",
+        "Parquet",
+        "分析"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 26.6 带来假设性跳数索引与连续查询",
+      "summary": "ClickHouse 26.6 的发布说明里列出了 hypothetical skip indexes、可级联刷新的物化视图，以及仍处于实验阶段的 continuous queries。方向是把分析数据库往自助优化、增量刷新和流式分析上推。对采用 PostgreSQL 加 OLAP 组合架构的团队来说，值得看的是物化视图刷新和连续查询能不能替掉一部分外部流处理组件。",
+      "url": "https://clickhouse.com/blog/clickhouse-release-26-06",
+      "author": "ClickHouse",
+      "source": "ClickHouse 博客",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "物化视图",
+        "流处理"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 要在边缘层给机器流量计费",
+      "summary": "Cloudflare 开放 Monetization Gateway 的等待列表，允许对放在 Cloudflare 后面的网页、数据集、API 或 MCP 工具收费，用 x402 协议结算。AI 智能体会大量读取网页、API、数据集和工具，传统的广告与订阅模型未必适配机器流量，把计费放到边缘层会改变内容和 API 的商业模式讨论。如果自家文档、API 或工具将来要面向智能体访问，机器流量的授权、限流和计费策略得提前想清楚。",
+      "url": "https://blog.cloudflare.com/monetization-gateway/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-07-01",
+      "image": "https://blog.cloudflare.com/_emdash/api/media/file/01KWW2Q3Q9KN49NJGFWRJF35PR.png",
+      "domain": "infra",
+      "tags": [
+        "边缘",
+        "计费",
+        "智能体"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Kubernetes 的动态资源分配在 v1.35 达到 GA",
+      "summary": "CNCF 的文章介绍 Kubernetes 的动态资源分配 DRA，称它已在 Kubernetes v1.35 达到 GA，NVIDIA 的 GPU DRA 驱动也进了 Kubernetes SIGs。AI 负载让设备调度变得复杂，DRA 之后 GPU 不再只是一个可数的资源，而可以有更细粒度的声明和分配方式。运行 GPU 或 AI 集群的团队值得跟一下 DRA、驱动和调度器生态的进展，别被旧的 device plugin 模型限住。",
+      "url": "https://www.cncf.io/blog/2026/07/01/understanding-dynamic-resource-allocation-in-kubernetes/",
+      "author": "CNCF",
+      "source": "CNCF 博客",
+      "source_date": "2026-07-01",
+      "image": "https://www.cncf.io/wp-content/uploads/2026/06/Otel-2.png",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "GPU",
+        "调度"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "DROP INVALID INDEXES 提案改走函数接口",
+      "summary": "Álvaro Herrera 反对新增 DDL 语法，Andrey Borodin 建议改成 pg_drop_invalid_indexes() 函数。",
+      "url": "https://www.postgresql.org/message-id/akTOTKF8PxZPK0qj@alvherre.pgsql",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "DDL"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "时态 UPDATE 是否该禁止触发器改有效期",
+      "summary": "MariaDB 允许但结果可能不一致，DB2 在定义阶段就禁止；作者给出运行时检查和只补测试两案。",
+      "url": "https://www.postgresql.org/message-id/CA+renyV3Cr9BvWsPeb1t8b=Pk24apuzyGbubAEs_YsgLUTfXpg@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时态数据",
+        "触发器"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "临时复制槽释放时的竞态已修复并推入 PG20",
+      "summary": "选定待删槽位到锁定数据库之间的窗口里，用户新建的槽可能复用同一槽位而被误删。",
+      "url": "https://www.postgresql.org/message-id/CAA4eK1LJLJzmuo=-fh+7UNvsQoT3gOa=5JXsB7DujYRLuiz_=w@mail.gmail.com",
+      "author": "",
+      "source": "pgsql-hackers",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "并发"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "RDS 与 Aurora 的数据库洞察支持跨账号跨区域",
+      "summary": "用 CloudWatch Database Insights 建一个中心监控账号，把跨环境的看板与告警路由统一起来。",
+      "url": "https://aws.amazon.com/blogs/database/cross-account-and-cross-region-monitoring-for-amazon-rds-and-aurora-with-database-insights/",
+      "author": "",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "监控",
+        "RDS"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "EKS 支持 Kubernetes 版本回滚",
+      "summary": "同批更新还有 ECS 部署熔断设置、Service Connect 区域感知路由和 CloudWatch 日志查询告警。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-eks-version-rollback/",
+      "author": "",
+      "source": "AWS What's New",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "升级"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项看：enable_mergejoin",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-enablemergejoin/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "从 psql 制表符补全里移除 VersionedQuery",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/akazLuA2V2_auKiN@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "satisfies_hash_partition 函数的崩溃问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHewXNmYE-SGnppr=vDAhDUNCg3SF-NosjYqHrh9npAh8MuacA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "AlterSubscription 在加锁后重新读取订阅状态",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAFiTN-ugOn-owrZVr5XsvYKfzMkpVokRYqnmEM7bnXkSfbjT0A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "防止调用未注册统计类型时 pgstat 崩溃",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/akXalpb3zjPX3ZEl@bdtpg",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "受管制行业 2026 年应优先关注的十项数据库能力",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/10-enterprise-database-features-that-regulated-industries-should-prioritize-in-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "驯服生产环境的数据库迁移",
+      "summary": "",
+      "url": "https://www.lirbank.com/taming-production-database-migrations",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "chDB-WASM：在浏览器里跑 ClickHouse",
+      "summary": "",
+      "url": "https://wasm.chdb.io/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Artemis Security 的检测查询提速 69 倍",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/artemis-security-real-time-threat-detection",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "SQLite 里的 assert 与同类宏",
+      "summary": "",
+      "url": "https://www.sqlite.org/assert.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "把数据库五十年的想法搬给 AI 智能体",
+      "summary": "",
+      "url": "https://onewill.ai/blog/2026/stealing-50-years-of-database-ideas-for-ai-agents/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "开源向量数据库横向对比",
+      "summary": "",
+      "url": "https://redis.io/blog/best-open-source-vector-databases-comparison/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "QueryDrift：查询在 PR 里变多就让 CI 失败",
+      "summary": "",
+      "url": "https://github.com/AALXX/QueryDrift",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "用 Redis 为 AI 智能体做长短期记忆",
+      "summary": "",
+      "url": "https://redis.io/blog/build-smarter-ai-agents-manage-short-term-and-long-term-memory-with-redis/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "用 Kiro 和 MCP 做 RDS 日志的自然语言分析",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/amazon-rds-log-analysis-natural-language-queries-with-kiro-and-mcp/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch 支持基于日志查询的告警",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/07/amazon-cloudwatch-log-alarms/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Front Gate 的未认证 SQL 注入",
+      "summary": "",
+      "url": "https://ian.sh/frontgate",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 密钥扫描新增三家服务的校验器",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-07-01-secret-scanning-adds-validators-for-asana-ibm-and-messagebird/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Safari 推出面向 Web 开发者的 MCP 服务器",
+      "summary": "",
+      "url": "https://webkit.org/blog/18136/introducing-the-safari-mcp-server-for-web-developers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 让站点区分搜索、智能体与训练流量",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/content-independence-day-ai-options/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "Grafana Cloud 的全栈可观测性",
+      "summary": "",
+      "url": "https://grafana.com/blog/full-stack-observability-in-grafana-cloud-how-to-investigate-issues-across-services-and-infrastructure/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-07-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 34
+    }
+  ]
+}

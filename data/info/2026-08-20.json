@@ -1,0 +1,384 @@
+{
+  "date": "2026-08-20",
+  "origin": "chronicle 2026-08-20: pgnexus #244, news 1, planet 6",
+  "items": [
+    {
+      "tier": 1,
+      "title": "异常处理里调用槽函数出错会漏掉复制槽释放",
+      "summary": "PL/pgSQL、PL/Perl 等语言的异常块捕获错误时，SQL 可调用的复制槽函数不会释放已获取的槽，因为异常处理跑在内部子事务里，绕过了顶层错误处理路径。修法是新增 AtEOSubXact_ReplicationSlot()，在子事务结束时释放。Bharath Rupireddy 在 v13 里处理了大部分审查意见，并提议回移到 PG14：这个缺陷用简单 SQL 就能复现，可能导致崩溃、槽泄漏和 vacuum 受阻。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoCWDcSoqvz-imQsPXrfkA2hhb=QmrPKfreeWKbWqFdH4A@mail.gmail.com",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "崩溃"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "在线调整 shared_buffers 补丁被审出一串底层问题",
+      "summary": "shared_buffers 在线调整补丁集被审出不少问题。Palak Chaturvedi 发现 TAP 测试有约五分之一概率因 SIGHUP 投递时序而失败。Yuhang Qiu 的问题更深：持有全部分区锁期间不检查中断、madvise(MADV_REMOVE) 的范围盖住了 PROT_NONE 区域引发 EACCES 崩溃、EvictExtraBuffers() 用错缓冲区标志，而且大页对齐让测试其实没触发到 madvise。",
+      "url": "https://www.postgresql.org/message-id/CALfch19eG7JX3j0jvXLw7TdH+HOp1ZMacBwMMu07AiPPeNtHhw@mail.gmail.com",
+      "author": "Palak Chaturvedi",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "shared_buffers",
+        "缓冲区"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "LibreDB Studio 把 SQL IDE 部署到数据库旁边",
+      "summary": "LibreDB Studio 是 MIT 许可的自托管 PostgreSQL SQL IDE，在浏览器里使用，以容器、Helm Chart 或 npm 包部署在它所管理的数据库旁，而不是装在每个开发者机器上。连接走连接池，用显式的 BEGIN/COMMIT/ROLLBACK 配合自动回滚超时，靠记录的后端 PID 取消查询。模式内省为上百张表的库做了分轮加载，监控读 pg_stat_* 视图，权限不足时降级显示而不是直接失败。",
+      "url": "https://github.com/libredb/libredb-studio",
+      "author": "LibreDB",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-08-20",
+      "image": "https://opengraph.githubassets.com/93830276eb73a0f3c2a8dfcdddc2d3cd9dfc21b472a571ec91dc05e5abcbcc44/libredb/libredb-studio",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "IDE"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "把 SQL Server 的多语言全文检索迁到 PostgreSQL",
+      "summary": "Ken Zhang 梳理了多语言全文检索从 SQL Server 迁到 Aurora PostgreSQL 或 RDS 时的结果差异。SQL Server 用列语言、停用词表和重音敏感设置统一管理排序规则与检索，PostgreSQL 则把排序规则和文本搜索配置分开。文章覆盖八种语言的分词，用 unaccent 与 ICU 做不区分重音的检索，用 pg_bigm 给中日韩文本建二元组索引。托管环境装不了自定义词典是主要限制。",
+      "url": "https://aws.amazon.com/blogs/database/migrate-multilingual-full-text-search-from-sql-server-to-postgresql/",
+      "author": "Ken Zhang",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-08-20",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/08/14/DBBLOG-4838-featured-image.png",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "迁移"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pg_shmemviz 把共享内存快照画进浏览器",
+      "summary": "Bertrand Drouvot 发布调试工具 pg_shmemviz：它不附着到运行中的服务器，而是对共享内存做一次顺序无锁复制存成离线快照，再用浏览器交互查看。四个视图分别是分配布局图、借 DWARF 信息展开结构体字段与填充的检查器、按字段分类的原始字节面板，以及可选的 pg_buffercache 摘要，还能比对两次快照。需要带调试符号的构建，作者明确不要在生产实例上跑。",
+      "url": "https://bdrouvot.github.io/2026/08/20/welcome-to-pg-shmemviz-postgresql-shared-memory-visualizer/",
+      "author": "Bertrand Drouvot",
+      "source": "个人博客",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "共享内存",
+        "调试",
+        "工具"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "共享哈希表做并行聚合，倾斜一来就全盘皆输",
+      "summary": "PostgreSQL 目前的并行聚合走部分聚合加最终聚合，数据压不下去时，重新分组的最终阶段会吃掉大部分执行时间。Andrei Lepikhov 试了让所有 worker 直接更新一张共享哈希表：48 核机器上八个 worker，分布均匀时快 4.82 倍，2% 倾斜时 4.49 倍，但 80-20 分布已经打平，热点占到 95% 时只剩 0.04 倍。他的结论是进程模型为共享可变状态付出的代价远高于线程模型，不如按分组哈希做分区。",
+      "url": "https://www.pgedge.com/blog/do-global-hash-tables-strike-back-in-postgresql",
+      "author": "Andrei Lepikhov",
+      "source": "pgEdge 博客",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并行",
+        "聚合",
+        "基准"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "pg_statviz 1.2 支持 PostgreSQL 19 并新增锁阻塞模块",
+      "summary": "Jimmy Angelakos 发布 pg_statviz 1.2。这个扩展与命令行工具的组合做内部统计的时序分析与可视化，全部在库内完成，不需要外部代理或常驻连接。新版支持 PostgreSQL 19 的新 WAL 指标与配置项，覆盖 13 到 19 beta3；新增阻塞锁分析模块，用 pg_blocking_pids() 按锁类型追踪阻塞方；AI 集成新增 OpenAI 及兼容服务。",
+      "url": "https://vyruss.org/blog/pg_statviz-1.2-released-postgresql-19-support.html",
+      "author": "Jimmy Angelakos",
+      "source": "个人博客",
+      "source_date": "2026-08-20",
+      "image": "https://vyruss.org/blog/images/pg_statviz_1.2_card.png",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "扩展",
+        "PG19"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "行过滤丢 TOAST 列改由记录完整旧键元组解决",
+      "summary": "新补丁把 extractReplicaIdentity 改名 BuildOldKeyTuple，副本标识变化时一并记录未修改的 TOAST 列。",
+      "url": "https://www.postgresql.org/message-id/CAD21AoBE2kS=L=V7zoWF7Qs39aRSKm+zbLoETVRt6mofWZOBzA@mail.gmail.com",
+      "author": "Zhijie Hou",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "TOAST"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "右半连接与右反连接的哈希代价估算被少算",
+      "summary": "hashjointuples 原先按过滤后的行数算，v3 改为内侧行数乘以外侧匹配比例，与半连接和反连接一致。",
+      "url": "https://www.postgresql.org/message-id/CAMbWs48Yhk2R7kHmnJ+CN3_i3i=UhDF-hGgHErs6npnmT11ddQ@mail.gmail.com",
+      "author": "Richard Guo",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "连接"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "聚合函数将可以挂 prosupport 支持函数",
+      "summary": "Tom Lane 把入口从 ALTER FUNCTION 改到 CREATE AGGREGATE 的 SUPPORT 选项，以便与 pg_dump 自然集成。",
+      "url": "https://www.postgresql.org/message-id/3f63c035-e0a6-4dc6-a34e-743df8c19d50@gmail.com",
+      "author": "Andrei Lepikhov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "聚合",
+        "优化器"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "异步 I/O 静默丢弃调用方传入的等待事件",
+      "summary": "字段从 PgAioOpData 挪到 PgAioHandle 后结构体从 144 字节涨到 152 字节，是否有更好位置仍在讨论。",
+      "url": "https://www.postgresql.org/message-id/CAN55FZ0Vo4JD2Ya52Q_Za+T9eSvcBpFDRV9ezi6b9B6N_robJQ@mail.gmail.com",
+      "author": "Nazir Bilal Yavuz",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AIO",
+        "等待事件"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Kerberos 的 keytab 是凭据，不该共用系统那份",
+      "summary": "krb_caseins_users 默认关闭，只在 AD 这类大小写不敏感的 KDC 下才该打开，否则会把不同主体并成一个。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-krb_caseins_users-and-krb_server_keyfile/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证",
+        "Kerberos"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "EDB 称 WarehousePG 灾备把恢复速度提升约 180 倍",
+      "summary": "厂商口径：某银行客户全量逻辑备份近两天，恢复时间超出两小时目标近 48 倍，换方案后大幅缩短。",
+      "url": "https://www.enterprisedb.com/blog/180x-faster-recovery-warehousepg-disaster-recovery",
+      "author": "EnterpriseDB",
+      "source": "EDB 博客",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "灾备",
+        "数据仓库"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "walsummarizer 测试竞态的根因已经查清",
+      "summary": "node1_final_lsn 在等待 node2 追上之后才记录，期间产生的 WAL 会把参考 LSN 推过分叉点。",
+      "url": "https://www.postgresql.org/message-id/55A6AB0E-D4A8-43CD-B79B-2CD5D5828C45@yandex-team.ru",
+      "author": "Andrey Borodin",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "测试"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG18 回归测试崩溃的修复已提交并将回移",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/fe35594a54923c94142390dabb365b737c581f2a.camel@j-davis.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PG18"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "EUC-KR 例程移除从未存在的 SS2/SS3 处理分支",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zAD0a==rtYZopWZ5WMFjaEzKwaGUmXXGMdFx8KhxBb=dQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "编码"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "外键快速路径的两个线上缺陷修复已推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqFUt_gyMLLBkfu4aFBEAxyneL4PiaaosVq4==kxTy4SzA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "统计下游实际发送字节数的补丁被指可能多算帧头",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/802ced07-1530-4cb3-9bf3-215fe61308ee@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "冲突日志表补丁把远端事务信息收进统一结构体",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/TY4PR01MB177186ED4D38C5356294CC51C94A42@TY4PR01MB17718.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "跨 schema 继承让发布 EXCEPT 的语义仍然含糊",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAHut+PudBmudJAGw-2Abtcw3c0=zy6H_CrFbs+Gez+JfG91z9A@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "v14 的 tidscan 测试会被自动清理搅乱计划选择",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAApHDvq_4uurbrP30Yc1VJ297+XUT6RAPx9meM8R8g67h5tJdQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 社区第 31 至 32 周贡献汇总",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/92/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Percona 的 Hackorum 自二月以来的更新",
+      "summary": "",
+      "url": "https://percona.community/blog/2026/08/20/hackorum-update-whats-new-since-february/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Neon AI Gateway 把开源权重模型路由到 Databricks",
+      "summary": "",
+      "url": "https://neon.com/blog/open-weight-models-are-fast-on-neon-ai-gateway",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "AI"
+      ],
+      "position": 24
+    }
+  ]
+}

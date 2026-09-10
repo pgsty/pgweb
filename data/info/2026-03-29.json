@@ -1,0 +1,162 @@
+{
+  "date": "2026-03-29",
+  "origin": "chronicle 2026-03-29：pgnexus #97、planet 3",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的 COPY TO 支持 JSON 格式",
+      "summary": "Andrew Dunstan 在 3 月 20 日提交了 Joe Conway 与 Jian He 的补丁，COPY TO 从此能把查询结果或表数据导成一行一个 JSON 对象的流，写法是 COPY 表名 TO stdout WITH (format json)，加 force_array 则包成一个数组。这条路只支持导出，且与 HEADER、NULL、DELIMITER 等文本选项互斥。相比过去用 to_json() 拼装，原生实现不会在嵌套引号上产出非法 JSON。",
+      "url": "https://www.depesz.com/2026/03/29/waiting-for-postgresql-19-json-format-for-copy-to/",
+      "author": "Hubert 'depesz' Lubaczewski",
+      "source": "depesz.com",
+      "source_date": "2026-03-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "JSON",
+        "PG19"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "好的 CTE 与坏的 CTE 差在统计信息上",
+      "summary": "PostgreSQL 12 之前 CTE 是硬性的优化栅栏，之后规划器会按写法决定内联还是物化。Radim Marek 归纳：只被引用一次的纯 SELECT 会被内联，谓词得以合并，可读性不再有代价；被多次引用的昂贵聚合物化一次更划算。坏处出在物化上，结果落进临时元组存储，没有 pg_statistic 条目，规划器只能退回默认选择率，连接计划因此走偏甚至溢出内存。结果集很大又要多次引用时，带索引和统计的临时表更稳。",
+      "url": "https://boringsql.com/posts/good-cte-bad-cte/",
+      "author": "Radim Marek",
+      "source": "boringsql",
+      "source_date": "2026-03-29",
+      "image": "https://boringsql.com/og-images/good-cte-bad-cte-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "CTE",
+        "查询规划"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 2,
+      "title": "索引预取补丁发布第 18 版并重整代码",
+      "summary": "Peter Geoghegan 新建 heapam_indexscan.c，加入基于槽的索引扫描接口，并把 VM 查找下沉到 heapam。",
+      "url": "https://www.postgresql.org/message-id/CAHg+QDdsOe_7wyN_fdeKQmGkCTGkhnkSUCSNGOFWQZZTO0CdUQ@mail.gmail.com",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "预取"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 2,
+      "title": "按 XID 年龄失效复制槽的补丁进入第 5 版",
+      "summary": "审阅认为总体可用，但发现活跃槽被 SIGTERM 终止后，walreceiver 会陷入无限重试。",
+      "url": "https://www.postgresql.org/message-id/CAFC+b6pO44=zGqwijzrcyGGTYCM51Y7zS5uQX0_nWjsxW9i3QQ@mail.gmail.com",
+      "author": "Srinath Reddy Sadipiralla",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽",
+        "膨胀"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 的 CONCURRENTLY 选项独立成文件",
+      "summary": "Álvaro Herrera 说 0001 状态良好但要等 0003 一起提交，并发代码收进 commands/repack_worker.c。",
+      "url": "https://www.postgresql.org/message-id/202603292157.tnqxaozfjlkh@alvherre.pgsql",
+      "author": "Álvaro Herrera",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-03-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 3,
+      "title": "xl_heap_visible 第 48 版清理后准备推送",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_atv6zA274m8Ysgbfn49c0NbdvHT7nXvd9kroZKnFq8Dg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 3,
+      "title": "行模式识别重做 PREV/NEXT 导航的实现",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAAe_zBCF3dwSjStmG0kJqw_y1z8QD73Rf1G58QTKEvd9tScwA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL 标准"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制关停卡死疑因缺少超时检查",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPpHfdvzwRo8chZax1_qscfuQJer5r8oQpYDqOURbP9uHTZrsQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "关停"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 3,
+      "title": "pg_waldump 测试改为探测 tar 是否支持稀疏开关",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/D9BBAD84-A69C-48BD-9C79-341EA04D8E13@dunslane.net",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 3,
+      "title": "Prairie Postgres 将办第二届开发者峰会",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/03/29/prairie-postgres-second-developers-summit-and-why-you-should-participate/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-03-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 10
+    }
+  ]
+}
