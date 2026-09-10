@@ -17,7 +17,8 @@ own side card instead of the site's quick links.
         <div class="pg-sidecard">
           <form class="pg-sidecard__search" action="/info/search/" method="get" role="search">
             <label class="sr-only" for="info-q">搜索博览</label>
-            <input class="form-control" id="info-q" type="search" name="q" maxlength="255" value="{{ sidecard_query }}" placeholder="搜索博览" autocomplete="off">
+            <input class="form-control" id="info-q" type="search" name="q" maxlength="255" value="{{ sidecard_query }}" placeholder="搜索博览" autocomplete="off" data-pg-slash-target>
+            <kbd aria-hidden="true">/</kbd>
           </form>
           {% if sidecard_days %}
           <h2>每日更新</h2>

@@ -5,12 +5,12 @@ Every element carries the item key as its id so /info/<date>/#<key> works.
 <div class="info-leads">
   {% for item in lead %}
   <article class="info-lead" id="{{ item.key }}">
-    <div class="info-lead__body">
-      <h3 class="info-lead__title"><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}{% include "base/icon.html" with name="external" %}</a></h3>
+    <h3 class="info-lead__title"><a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}{% include "base/icon.html" with name="external" %}</a></h3>
+    <p class="info-meta">{% if item.source_date %}<time datetime="{{ item.source_date|date:"Y-m-d" }}">{{ item.source_date|date:"Y-m-d" }}</time>{% endif %}{% if item.author %}<span>{{ item.author }}</span>{% endif %}{% if item.source %}<span>{{ item.source }}</span>{% endif %}</p>
+    <div class="info-lead__row">
+      {% if item.image %}<a class="info-lead__thumb" href="{{ item.url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="{{ item.image }}" alt="" loading="lazy" decoding="async"></a>{% endif %}
       {% if item.summary %}<p class="info-lead__summary">{{ item.summary }}</p>{% endif %}
-      <p class="info-meta">{% if item.author %}<span>{{ item.author }}</span>{% endif %}{% if item.source %}<span>{{ item.source }}</span>{% endif %}{% if item.source_date %}<time datetime="{{ item.source_date|date:"Y-m-d" }}">{{ item.source_date|date:"Y-m-d" }}</time>{% endif %}</p>
     </div>
-    {% if item.image %}<a class="info-lead__thumb" href="{{ item.url }}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true"><img src="{{ item.image }}" alt="" loading="lazy" decoding="async"></a>{% endif %}
   </article>
   {% endfor %}
 </div>
@@ -19,7 +19,8 @@ Every element carries the item key as its id so /info/<date>/#<key> works.
 <ul class="info-briefs">
   {% for item in brief %}
   <li class="info-brief" id="{{ item.key }}">
-    <a class="info-brief__title" href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}{% include "base/icon.html" with name="external" %}</a>{% if item.summary %}<span class="info-brief__note">{{ item.summary }}</span>{% endif %}
+    <a class="info-brief__title" href="{{ item.url }}" target="_blank" rel="noopener">{{ item.title }}{% include "base/icon.html" with name="external" %}</a>
+    {% if item.summary %}<p class="info-brief__note">{{ item.summary }}</p>{% endif %}
   </li>
   {% endfor %}
 </ul>

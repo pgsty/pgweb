@@ -250,6 +250,12 @@ if (dialog && typeof dialog.showModal === 'function') {
       open(node.dataset.pgPaletteQuery || '', node.dataset.pgPaletteScope || contextScope());
     });
   });
+  // A section with its own search (博览) declares the box "/" should focus
+  // instead of the document palette; ⌘K still opens the palette everywhere.
+  const slashTarget = document.querySelector('[data-pg-slash-target="primary"]') || document.querySelector('[data-pg-slash-target]');
+  if (slashTarget) {
+    document.querySelectorAll('.pg-nav__search kbd').forEach((hint) => { hint.hidden = true; });
+  }
   if (!onSearchPage) {
     document.addEventListener('keydown', (event) => {
       if (dialog.open) return;
@@ -259,7 +265,12 @@ if (dialog && typeof dialog.showModal === 'function') {
         open('', contextScope());
       } else if (event.key === '/' && !event.metaKey && !event.ctrlKey && !event.altKey && !typing) {
         event.preventDefault();
-        open('', contextScope());
+        if (slashTarget) {
+          slashTarget.focus();
+          slashTarget.select();
+        } else {
+          open('', contextScope());
+        }
       }
     });
   }

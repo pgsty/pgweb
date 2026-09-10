@@ -74,10 +74,11 @@
   margin: 0 0 1.5rem;
 }
 
+/* Title, then the meta line, then the picture in a fixed slot on the left
+   with the paragraph beside it; without a picture the paragraph takes the
+   whole width. */
+
 .info-lead {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
   padding: 16px 0 18px;
   border-bottom: 1px solid var(--pg-line);
 }
@@ -86,21 +87,24 @@
   padding-top: 4px;
 }
 
-.info-lead__body {
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
 .info-lead__title {
-  margin: 0 0 6px;
+  margin: 0 0 4px;
   font-size: 17px;
   font-weight: 700;
   line-height: 1.6;
 }
 
+.info-lead__row {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-top: 10px;
+}
 
 .info-lead__summary {
-  margin: 0 0 6px;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin: 0;
   color: var(--pg-ink-2);
   font-size: 14.5px;
   line-height: 1.85;
@@ -108,7 +112,7 @@
 
 .info-lead__thumb {
   flex: 0 0 auto;
-  width: 160px;
+  width: 200px;
   overflow: hidden;
   border: 1px solid var(--pg-line);
   border-radius: var(--pg-radius-sm);
@@ -129,11 +133,6 @@
   list-style: none;
 }
 
-.info-brief__title {
-  margin-right: 8px;
-  font-weight: 600;
-}
-
 .info-brief {
   padding: 9px 0;
   border-bottom: 1px solid var(--pg-line);
@@ -141,10 +140,15 @@
   line-height: 1.7;
 }
 
-
+.info-brief__title {
+  display: inline-block;
+  font-weight: 600;
+}
 
 .info-brief__note {
+  margin: 2px 0 0;
   color: var(--pg-muted);
+  font-size: 14px;
 }
 
 /* -------------------------------------------------------- tier 3: 迷你 */
@@ -405,13 +409,37 @@
 }
 
 .pg-sidecard__search {
+  position: relative;
   margin: 0 0 1rem;
 }
 
 .pg-sidecard__search input {
   width: 100%;
   height: 34px;
+  padding-right: 32px;
   font-size: 13px;
+}
+
+.pg-sidecard__search kbd {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  min-width: 18px;
+  padding: 0 5px;
+  border: 1px solid var(--pg-line);
+  border-radius: 5px;
+  background: var(--pg-canvas);
+  color: var(--pg-muted);
+  font-family: var(--pg-font-mono);
+  font-size: 11px;
+  line-height: 17px;
+  text-align: center;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.pg-sidecard__search input:focus + kbd {
+  display: none;
 }
 
 .pg-sidecard__days {
@@ -539,14 +567,14 @@
   }
 
   /* One narrow column reads better than a text column beside a thumbnail. */
-  .info-lead {
-    flex-direction: column-reverse;
-    align-items: flex-start;
+  .info-lead__row {
+    flex-direction: column;
     gap: 10px;
   }
 
   .info-lead__thumb {
-    width: 140px;
+    width: 100%;
+    max-width: 280px;
   }
 
   .info-minis {

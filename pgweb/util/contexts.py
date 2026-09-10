@@ -63,7 +63,7 @@ sitenav = {
         {'title': '最新收录', 'link': '/info/'},
         {'title': '每日更新', 'link': '/info/daily/'},
         {'title': '归档', 'link': '/info/archive/'},
-        {'title': '搜索博览', 'link': '/info/search/'},
+        {'title': '搜索', 'link': '/info/search/'},
     ],
     'about': [
         {'title': '关于', 'link': '/about/'},
