@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-labelledby="title desc">
+  <title id="title">扩展目录 / Extension catalog</title>
+  <desc id="desc">四个模块组成的目录 / A catalog of four modules</desc>
+  <rect width="40" height="40" rx="10" fill="#edf4fa"/>
+  <g fill="none" stroke="#336791" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="9" y="9" width="8" height="8" rx="2"/>
+    <rect x="9" y="23" width="8" height="8" rx="2"/>
+    <rect x="23" y="23" width="8" height="8" rx="2"/>
+    <path d="M27 9v8m-4-4h8"/>
+  </g>
+</svg>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40" role="img" aria-labelledby="title desc">
+  <title id="title">中文手册 / Chinese manuals</title>
+  <desc id="desc">一本展开的参考手册 / An open reference manual</desc>
+  <rect width="40" height="40" rx="10" fill="#edf4fa"/>
+  <g fill="none" stroke="#336791" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20 12c-4-3-8-3-12-2v18c4-1 8-1 12 2 4-3 8-3 12-2V10c-4-1-8-1-12 2v18"/>
+    <path d="m12 15 4 1m-4 4 4 1m8-5 4-1m-4 6 4-1"/>
+  </g>
+</svg>
