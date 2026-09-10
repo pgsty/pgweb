@@ -381,11 +381,15 @@ input.form-control:focus, textarea.form-control:focus, .custom-select:focus {
 
 .pg-wordmark {
   display: inline-block;
+  /* The gradient is clipped to the line box, so give descenders and the
+     tail of the Q room instead of a 1.0 line height. */
+  padding: 0.06em 0;
   font-family: var(--pg-font-brand);
-  font-size: 1.05rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  line-height: 1;
+  line-height: 1.2;
   letter-spacing: 0.1em;
+  text-transform: uppercase;
   background: linear-gradient(115deg, var(--pg-brand-from) 6%, var(--pg-brand-to) 94%);
   -webkit-background-clip: text;
   background-clip: text;
@@ -444,6 +448,20 @@ input.form-control:focus, textarea.form-control:focus, .custom-select:focus {
   display: block;
   width: 30px;
   height: 30px;
+}
+
+/* The site's own name beside the elephant: this is pgsql.cc, not the
+   upstream site. */
+.pg-nav__wordmark {
+  margin-left: 9px;
+  color: var(--pg-heading);
+  font-family: var(--pg-font-brand);
+  font-size: 19px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .pg-nav__menu {
@@ -542,6 +560,42 @@ input.form-control:focus, textarea.form-control:focus, .custom-select:focus {
   visibility: visible;
   transform: none;
   transition-delay: 0s;
+}
+
+/* Active manual versions on the first row of the 文档 menu */
+.pg-nav__panel-versions {
+  display: flex;
+  gap: 4px;
+  margin: 0 0 6px;
+  padding: 0 0 7px;
+  border-bottom: 1px solid var(--pg-line);
+}
+
+.pg-nav__panel-version {
+  flex: 1 1 0;
+  padding: 5px 0;
+  border-radius: 6px;
+  background: var(--pg-wash);
+  color: var(--pg-heading);
+  font-family: var(--pg-font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  transition: background-color var(--pg-dur) var(--pg-ease),
+              color var(--pg-dur) var(--pg-ease);
+}
+
+.pg-nav__panel-version:hover,
+.pg-nav__panel-version:focus-visible {
+  background: var(--pg-wash-strong);
+  color: var(--pg-hover);
+  text-decoration: none;
+}
+
+.pg-drawer__version {
+  font-family: var(--pg-font-mono);
+  font-weight: 600;
 }
 
 .pg-nav__panel-link {
@@ -1041,7 +1095,7 @@ html[data-shout="off"] .pg-shout {
 }
 
 .pg-footer__logo .pg-wordmark {
-  font-size: 1.6rem;
+  font-size: 1.85rem;
   letter-spacing: 0.08em;
 }
 
@@ -1101,7 +1155,7 @@ html[data-shout="off"] .pg-shout {
 
 .pg-footer__grid {
   display: grid;
-  grid-template-columns: repeat(var(--pg-footer-cols, 5), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--pg-footer-cols, 4), minmax(0, 1fr));
   gap: 2rem 1.25rem;
 }
 
@@ -1474,7 +1528,7 @@ html[data-shout="off"] .pg-shout {
 
 .pg-hero__title {
   max-width: 1040px;
-  margin: 0 0 32px;
+  margin: 0 0 12px;
   color: #fff;
   font-size: clamp(1.7rem, 3.6vw, 2.75rem);
   font-weight: 800;
@@ -1482,6 +1536,161 @@ html[data-shout="off"] .pg-shout {
   letter-spacing: -0.01em;
   text-shadow: 0 2px 28px rgba(13, 26, 38, 0.5);
   text-wrap: balance;
+}
+
+/* One quiet line under the headline saying what this site holds, then the
+   search box: the header box at hero scale, white on the photograph. */
+.pg-hero__sub {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 4px 10px;
+  max-width: 100%;
+  margin: 0 0 26px;
+  color: rgba(230, 240, 248, 0.86);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  text-shadow: 0 1px 12px rgba(13, 26, 38, 0.5);
+}
+
+/* Every loaded manual as a link: supported majors bright, retired ones
+   dimmed, betas and the development snapshot marked with a superscript. */
+.pg-hero__versions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 2px 3px;
+}
+
+/* A group (supported / retired / pre-release) wraps as one unit */
+.pg-hero__ver-group {
+  display: inline-flex;
+  gap: 2px 3px;
+  white-space: nowrap;
+}
+
+.pg-hero__ver {
+  padding: 1px 5px;
+  border-radius: 6px;
+  color: #fff;
+  font-family: var(--pg-font-mono);
+  font-size: 15.5px;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-decoration: none;
+  transition: background-color var(--pg-dur) var(--pg-ease),
+              color var(--pg-dur) var(--pg-ease);
+}
+
+.pg-hero__ver:hover,
+.pg-hero__ver:focus-visible {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  text-decoration: none;
+}
+
+.pg-hero__ver--old {
+  color: rgba(230, 240, 248, 0.5);
+  font-weight: 500;
+}
+
+.pg-hero__ver--old:hover,
+.pg-hero__ver--old:focus-visible {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.pg-hero__ver sup {
+  top: -0.55em;
+  margin-left: 1px;
+  color: rgba(230, 240, 248, 0.75);
+  font-family: var(--pg-font);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.pg-hero__ver-sep {
+  margin: 0 4px;
+  color: rgba(230, 240, 248, 0.45);
+}
+
+/* The search box and the button row share one column, so the box is
+   exactly as wide as the buttons beneath it at every width. */
+.pg-hero__cta {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 100%;
+}
+
+.pg-hero__search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 50px;
+  margin: 0 0 24px;
+  padding: 0 12px 0 16px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  color: #6f8397;
+  box-shadow: 0 12px 32px rgba(13, 26, 38, 0.35);
+  cursor: text;
+  transition: border-color var(--pg-dur) var(--pg-ease),
+              box-shadow var(--pg-dur) var(--pg-ease);
+}
+
+.pg-hero__search:hover {
+  border-color: #fff;
+}
+
+.pg-hero__search:focus-within {
+  border-color: #fff;
+  box-shadow: 0 0 0 4px rgba(91, 155, 209, 0.4), 0 12px 32px rgba(13, 26, 38, 0.35);
+}
+
+.pg-hero__search .pg-icon {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  color: #6f8397;
+}
+
+.pg-hero__search input {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: none;
+  box-shadow: none;
+  background: transparent;
+  color: #1c2b3a;
+  font-family: var(--pg-font);
+  font-size: 15.5px;
+}
+
+.pg-hero__search input::placeholder {
+  color: #6f8397;
+}
+
+.pg-hero__search kbd {
+  flex: none;
+  min-width: 20px;
+  padding: 0 6px;
+  border: 1px solid #dce3e9;
+  border-radius: 6px;
+  background: #f3f6f9;
+  color: #6f8397;
+  font-family: var(--pg-font-mono);
+  font-size: 11.5px;
+  line-height: 19px;
+  text-align: center;
 }
 
 .pg-hero__actions {
@@ -1649,7 +1858,7 @@ html[data-shout="off"] .pg-shout {
 
 .pg-ledger li {
   display: grid;
-  grid-template-columns: 68px 1fr auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
   gap: 12px;
   padding: 8px 6px;
@@ -1660,6 +1869,27 @@ html[data-shout="off"] .pg-shout {
 
 .pg-ledger li:hover {
   background: var(--pg-wash);
+}
+
+/* The version and its date open that major's manual */
+.pg-ledger__go {
+  display: grid;
+  grid-template-columns: 68px 1fr;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+}
+
+.pg-ledger__go:hover {
+  text-decoration: none;
+}
+
+.pg-ledger__go:hover .pg-ledger__ver {
+  color: var(--pg-hover);
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 .pg-ledger__ver {
@@ -2195,7 +2425,33 @@ html[data-shout="off"] .pg-shout {
   }
 
   .pg-hero__title {
+    margin-bottom: 8px;
     font-size: clamp(1.45rem, 6.2vw, 2rem);
+  }
+
+  .pg-hero__sub {
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .pg-hero__ver {
+    padding: 0 4px;
+    font-size: 14px;
+  }
+
+  .pg-hero__cta {
+    display: flex;
+    width: 100%;
+  }
+
+  .pg-hero__search {
+    height: 46px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+  }
+
+  .pg-hero__search kbd {
+    display: none;
   }
 
   .pg-hero__actions .pg-btn {
@@ -2208,7 +2464,11 @@ html[data-shout="off"] .pg-shout {
   }
 
   .pg-ledger li {
-    grid-template-columns: 60px 1fr auto;
+    gap: 8px;
+  }
+
+  .pg-ledger__go {
+    grid-template-columns: 60px 1fr;
     gap: 8px;
   }
 
@@ -3158,6 +3418,65 @@ button.pg-script-copy-btn.pg-code__btn {
     width: auto !important;
     font-size: 12.5px;
   }
+}
+
+/* Reading-state notices: development snapshot, beta, end of life */
+.pg-docnote {
+  --note: var(--pg-link);
+  --note-bg: var(--pg-wash);
+  margin: 0.75rem 0 1.25rem;
+  padding: 0.7rem 1rem 0.7rem 1.1rem;
+  border: 1px solid var(--pg-line);
+  border-left: 3px solid var(--note);
+  border-radius: var(--pg-radius-sm);
+  background: var(--note-bg);
+  color: var(--pg-ink);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.pg-docnote strong {
+  margin-right: 0.6em;
+  color: var(--note);
+  font-weight: 700;
+}
+
+.pg-docnote--beta { --note: #4f3d9e; --note-bg: #efecfa; }
+.pg-docnote--eol { --note: #8a5a10; --note-bg: #fbf3df; }
+
+[data-theme="dark"] .pg-docnote--beta { --note: #c4b5f5; --note-bg: #282440; }
+[data-theme="dark"] .pg-docnote--eol { --note: #e8c97e; --note-bg: #3a2f16; }
+
+/* Feedback footnote under the manual text: quiet on purpose, so it reads
+   as site furniture rather than a section of the manual. */
+.pg-docfeedback {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--pg-line);
+}
+
+#pgContentWrap .pg-docfeedback h2 {
+  display: block;
+  margin: 0 0 0.4rem;
+  color: var(--pg-muted);
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+#pgContentWrap .pg-docfeedback h2::after {
+  content: none;
+}
+
+.pg-docfeedback p {
+  margin: 0;
+  color: var(--pg-muted);
+  font-size: 13.5px;
+  line-height: 1.7;
+}
+
+.pg-docfeedback p a {
+  font-weight: 500;
 }
 
 /* Build stamp of the development docs, beside the breadcrumb */

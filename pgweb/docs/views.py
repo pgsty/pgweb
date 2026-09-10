@@ -6,6 +6,7 @@ from django.db.models import Q
 from django.conf import settings
 
 from decimal import Decimal, ROUND_DOWN
+from urllib.parse import urlencode
 from html.parser import HTMLParser
 import os
 import re
@@ -514,6 +515,31 @@ def docpage(request, version, filename):
     page_title = _doc_page_title(page)
     from pgweb.search.extract import reading_html
     page.content = reading_html(page.content)
+    # Three reading states: a supported release needs no notice; a beta or
+    # the development snapshot is not released yet; anything else is past
+    # its community support window but kept for readers of old systems.
+    if page.version.tree == 0:
+        version_state = 'devel'
+    elif page.version.testing:
+        version_state = 'beta'
+    elif page.version.supported:
+        version_state = 'supported'
+    else:
+        version_state = 'eol'
+    upstream_path = _doc_path(page.display_version(), page.file)
+    version_label = ('PostgreSQL {} 开发快照'.format(DEVEL_MAJOR_VERSION) if version_state == 'devel'
+                     else 'PostgreSQL ' + page.version.versionstring_spaced if version_state == 'beta'
+                     else 'PostgreSQL {}'.format(page.version.numtree))
+    build = ''
+    if page.version.docsloaded:
+        build = '构建 {}'.format(page.version.docsloaded.strftime('%Y-%m-%d'))
+        if page.version.docsgit:
+            build += '，commit ' + page.version.docsgit[:10]
+    issue_url = 'https://github.com/pgsty/pgdoc/issues/new?' + urlencode({
+        'title': '[译文] {} · {}'.format(version_label, page.title),
+        'body': '页面：{}{}\n原文：https://www.postgresql.org{}\n版本：{}{}\n章节：\n\n问题描述：\n'.format(
+            settings.SITE_ROOT, canonical_path, upstream_path, version_label, '（' + build + '）' if build else ''),
+    })
     r = render(request, 'docs/docspage.html', {
         'page': page,
         'supported_versions': [v for v in versions if v.version.supported],
@@ -525,6 +551,12 @@ def docpage(request, version, filename):
         'doc_index_filename': indexname,
         'loaddate': loaddate,
         'loadgit': loadgit,
+        'version_state': version_state,
+        'version_label': version_label,
+        'upstream_url': 'https://www.postgresql.org' + upstream_path,
+        'upstream_form_url': 'https://www.postgresql.org/account/comments/new/{}/{}/'.format(
+            'devel' if page.version.tree == 0 else page.version.numtree, page.file),
+        'issue_url': issue_url,
         'og': {
             'url': canonical_path,
             'modified_time': page.version.docsloaded,

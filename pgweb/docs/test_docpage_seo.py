@@ -36,10 +36,13 @@ class DocPageSeoTests(SimpleTestCase):
     def test_docpage_uses_same_ecpg_title_for_html_and_og(self, objects, render):
         loaded_at = datetime(2026, 9, 8, 12, 34, 56)
         version = SimpleNamespace(
+            tree=18,
+            numtree=18,
             current=False,
             supported=True,
             testing=0,
             docsloaded=loaded_at,
+            docsgit='',
         )
         page = SimpleNamespace(
             file='ecpg-sql-prepare.html',

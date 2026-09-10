@@ -242,6 +242,19 @@ def _get_topbar_news():
 # Topbar news is lazy so requests that do not render the global header avoid
 # the query. pgsql.cc does not use ESI, so keep a short application cache as
 # well instead of querying PinnedNewsArticle for every page.
+DOC_MAJORS_CACHE_KEY = 'pgweb:doc-majors'
+
+
+def _get_doc_majors():
+    # Supported major versions, newest first, for the "文档" menu.
+    majors = cache.get(DOC_MAJORS_CACHE_KEY)
+    if majors is None:
+        from pgweb.core.models import Version
+        majors = [int(v.tree) for v in Version.objects.filter(supported=True, tree__gt=0).order_by('-tree')]
+        cache.set(DOC_MAJORS_CACHE_KEY, majors, 600)
+    return majors
+
+
 def PGWebContextProcessor(request):
     gitrev = SimpleLazyObject(_get_gitrev)
     return {
@@ -250,6 +263,7 @@ def PGWebContextProcessor(request):
         'gitrev': gitrev,
         'topbarnews': SimpleLazyObject(_get_topbar_news),
         'sitenav': sitenav,
+        'doc_majors': SimpleLazyObject(_get_doc_majors),
         'site_search': bool(getattr(settings, 'SEARCH_DSN', '')),
         'seo': page_metadata(request.path),
         'source_url': 'https://www.postgresql.org' + request.path,

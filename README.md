@@ -4,7 +4,7 @@
   <img src="media/img/misc/Postgresql_elephant.svg" alt="PostgreSQL 大象标识" width="104" height="108">
 </a>
 
-# PostgreSQL 中文社区
+# PostgreSQL 中文网
 
 **pgsql.cc · 用中文探索 PostgreSQL**
 
@@ -22,7 +22,7 @@
 
 **[pgsql.cc](https://pgsql.cc/) 是 PostgreSQL 的中文社区网站。** 本项目基于 [postgres/pgweb](https://github.com/postgres/pgweb)，将 [postgresql.org](https://www.postgresql.org/) 的网站内容与 PostgreSQL 手册带给中文读者，并提供适合中文使用习惯的文档检索、扩展目录和阅读界面。
 
-项目由[冯若航](https://vonng.com/)与 [Pigsty](https://pigsty.cc/) 团队发起并维护，作为独立社区项目运行，与 PostgreSQL 全球开发组（PGDG）无隶属关系。内容来源、翻译与署名说明见[关于 pgsql.cc](https://pgsql.cc/about/pgsql/)。
+项目由[冯若航](https://vonng.com/)与 [Pigsty](https://pigsty.cc/) 项目组发起并维护，作为独立社区项目运行。内容来源、翻译与署名说明见[关于 pgsql.cc](https://pgsql.cc/about/pgsql/)。
 
 ## 在这里找到什么
 

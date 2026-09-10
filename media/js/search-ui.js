@@ -36,8 +36,12 @@ export function kindBadge(group) {
   return badge;
 }
 
-/* The version being read on a manual page, as a scope key ("pg17"), else "pg". */
+/* The version being read on a manual page, as a scope key ("pg17"), else
+   "pg". Manual pages carry the major on #docContent (the development
+   snapshot lives at /docs/devel/, so the URL alone is not enough). */
 export function contextScope() {
+  const node = document.querySelector('[data-pg-doc-version]');
+  if (node && /^\d+$/.test(node.dataset.pgDocVersion)) return 'pg' + node.dataset.pgDocVersion;
   const match = location.pathname.match(/^\/docs\/(\d+)\//);
   return match ? 'pg' + match[1] : 'pg';
 }

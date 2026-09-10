@@ -8,7 +8,7 @@
       <div class="row">
         <div id="pgContentWrap" class="col-11">
           <div class="row">
-            <div class="col-md-7 mb-2">
+            <div class="col-12 mb-2">
               <div class="row">
                 <div class="col">
                   <div>
@@ -36,7 +36,7 @@
               {% if devel_versions %}
                 <div class="row">
                   <div class="col">
-                    开发版本：
+                    测试与开发版本：
                     {% for ver in devel_versions %}
                       {% if not forloop.first %} / {% endif %}
                       <a href="/docs/{{ver.display_version}}/{{ver.file}}" title="PostgreSQL {{ver.display_version}} - {{page.title}}" {% if ver.version == page.version %}class="docs-version-selected"{% endif %}>{{ver.display_version}}</a>
@@ -56,35 +56,30 @@
                 </div>
               {% endif %}
             </div>
-            <div class="col-md-5 col-lg-4 offset-lg-1">
-              <form id="docSearchForm" role="search" method="get" action="/search/" data-pg-palette-form data-pg-palette-scope="pg{{page.search_version}}">
-                <input type="hidden" name="u" value="/docs/{{page.display_version}}/" />
-                <div class="input-group">
-                  <input type="text" id="doc-query-inline" name="q" class="form-control" placeholder="检索 PG{{page.search_version}} 文档…" aria-label="检索当前版本文档" maxlength="255"/>
-                  <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit"><i class="fas fa-search"></i></button>
-                  </span>
-                </div><!-- /input-group -->
-              </form>
-            </div>
           </div>
-{%if not page.version.supported%}
-	  <div class="text-center alert-warning">
-	    当前 PostgreSQL 版本不在支持生命周期内。<br/>
-	    您可以参阅<a href="{{current_page_url}}" title="PostgreSQL 当前版本 - {{page.title}}">{{current_page_label}}</a>的对应页面，或其他在上面列出的活跃大版本。
-	  </div>
-{%endif%}
-          <div id="docContent">
+{% if version_state == 'devel' %}
+          <div class="pg-docnote pg-docnote--devel" role="note">
+            <strong>开发快照</strong>{{version_label}}尚未正式发布，内容与行为随时可能变化{% if loaddate %}；构建于 {{loaddate|date:"Y-m-d"}}{% if loadgit %}（<a href="https://git.postgresql.org/gitweb/?p=postgresql.git;a=commit;h={{loadgit}}" title="{{loadgit}}">{{loadgit|slice:":10"}}</a>）{% endif %}{% endif %}。正式内容请看<a href="{{current_page_url}}" title="PostgreSQL 当前版本 - {{page.title}}">{{current_page_label}}</a>。
+          </div>
+{% elif version_state == 'beta' %}
+          <div class="pg-docnote pg-docnote--beta" role="note">
+            <strong>测试版</strong>{{version_label}} 尚未正式发布，内容与行为在正式发布前可能变化。正式内容请看<a href="{{current_page_url}}" title="PostgreSQL 当前版本 - {{page.title}}">{{current_page_label}}</a>。
+          </div>
+{% elif version_state == 'eol' %}
+          <div class="pg-docnote pg-docnote--eol" role="note">
+            <strong>历史版本</strong>PostgreSQL {{page.version.numtree}} 已于 {{page.version.eoldate|date:"Y 年 n 月"}}结束社区维护，本页译文保留供仍在使用旧版本的读者参考。新系统请看<a href="{{current_page_url}}" title="PostgreSQL 当前版本 - {{page.title}}">{{current_page_label}}</a>。
+          </div>
+{% endif %}
+          <div id="docContent" data-pg-doc-version="{{page.search_version}}">
             {{page.content|docs_ui_zh}}
           </div>
-          {% if page.version.supported %}
-            <div id="docComments">
-              <h2>提交更正</h2>
-              <p>
-              如果您发现文档中有不正确的内容、与您使用特定功能的经验不符或需要进一步说明，请使用<a href="/account/comments/new/{{page.version.numtree|default:"devel"}}/{{page.file}}/" rel="nofollow">此表单</a>来报告文档问题。
-              </p>
-            </div>
-          {% endif %}
+          <div id="docComments" class="pg-docfeedback">
+            <h2>提交更正</h2>
+            <p>
+              译文有误、术语不当或页面显示问题，请到译文仓库 <a href="{{issue_url}}" target="_blank" rel="noopener" data-pg-issue>pgsty/pgdoc 报告译文问题</a>。
+              {% if version_state == 'supported' %}英文原文本身的问题请通过<a href="{{upstream_form_url}}" target="_blank" rel="noopener">上游文档表单</a>反馈给 PostgreSQL 文档维护者。{% else %}英文原文本身的问题，请在<a href="{{current_page_url}}">当前版本的对应页面</a>向上游反馈；{% if version_state == 'eol' %}上游不再修订已结束维护的版本{% else %}上游会在正式发布前持续修订{% endif %}。{% endif %}
+            </p>
+          </div>
         </div> <!-- pgContentWrap -->
       </div>
     </div>

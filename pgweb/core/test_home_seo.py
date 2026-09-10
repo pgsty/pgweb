@@ -47,6 +47,12 @@ class HomeSEOTests(SimpleTestCase):
         topbar = patch('pgweb.util.contexts._get_topbar_news', return_value=None)
         topbar.start()
         self.addCleanup(topbar.stop)
+        manuals = patch('pgweb.docs.versions.manual_groups', return_value={
+            'supported': [18, 17, 16, 15, 14], 'historical': [13, 12, 11, 10],
+            'testing': [{'major': 19, 'label': 'beta'}], 'devel': 20,
+        })
+        manuals.start()
+        self.addCleanup(manuals.stop)
 
     def test_homepage_has_one_consistent_description_and_title(self):
         response = self.client.get('/')
@@ -86,7 +92,7 @@ class HomeSEOTests(SimpleTestCase):
                 data = json.loads(html.split('<script type="application/ld+json">')[1].split('</script>')[0])
                 self.assertEqual(data['@context'], 'https://schema.org')
                 self.assertEqual(data['@type'], 'WebSite')
-                self.assertEqual(data['name'], 'PostgreSQL 中文社区')
+                self.assertEqual(data['name'], 'pgsql.cc')
                 self.assertEqual(data['alternateName'], 'pgsql.cc')
                 self.assertEqual(data['url'], 'https://pgsql.cc/')
                 self.assertEqual(data['inLanguage'], 'zh-CN')
@@ -99,8 +105,13 @@ class HomeSEOTests(SimpleTestCase):
         self.assertContains(response, '<h1 class="pg-hero__title">PostgreSQL 世界上最先进的开源关系型数据库</h1>', count=1)
         self.assertContains(response, 'data-pg-shout-close')
         self.assertContains(response, 'class="pg-hero__chip"')
+        self.assertContains(response, 'href="/docs/18/index.html"')
+        self.assertContains(response, 'href="/docs/10/index.html"')
+        self.assertContains(response, 'href="/docs/devel/index.html"')
+        self.assertContains(response, '19<sup>beta</sup>')
         self.assertContains(response, 'href="/about/news/release-3365/"')
-        self.assertContains(response, '无隶属关系')
+        self.assertContains(response, '由 <a href="https://pigsty.cc/" target="_blank" rel="noopener">Pigsty</a> 团队维护')
+        self.assertNotContains(response, '无隶属关系')
         self.assertContains(response, 'href="/about/pgsql/"')
         self.assertNotContains(response, 'pg.center')
 

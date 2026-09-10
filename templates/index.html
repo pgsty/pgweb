@@ -25,14 +25,6 @@
   }
   </script>
 {%endblock%}
-{%block shout%}
-<div class="pg-shout">
-  <div class="pg-container pg-shout__inner">
-    <button class="pg-shout__close" type="button" title="关闭提示" aria-label="关闭提示" data-pg-shout-close>{% include "base/icon.html" with name="close" %}</button>
-    <p class="pg-shout__note"><a href="https://pgsql.cc/">pgsql.cc</a> 提供对 <a href="https://www.postgresql.org/" target="_blank" rel="noopener">postgresql.org</a> 官网内容的中文翻译，由 <a href="https://pigsty.cc/" target="_blank" rel="noopener">Pigsty</a> 团队维护，与 <a href="/about/governance/">PGDG</a> 无隶属关系。</p>
-  </div>
-</div>
-{%endblock%}
 {%block layoutblock%}
 <main class="pg-home">
 
@@ -50,6 +42,15 @@
     </a>
     {% endif %}
     <h1 class="pg-hero__title">PostgreSQL 世界上最先进的开源关系型数据库</h1>
+    <p class="pg-hero__sub">官方手册中文版 · 覆盖 PostgreSQL{% if manuals.supported or manuals.historical or manuals.testing or manuals.devel %}
+      <span class="pg-hero__versions">{% if manuals.supported %}<span class="pg-hero__ver-group">{% for v in manuals.supported %}<a class="pg-hero__ver" href="/docs/{{ v }}/index.html" title="PostgreSQL {{ v }} 文档">{{ v }}</a>{% endfor %}</span>{% endif %}{% if manuals.historical %}<span class="pg-hero__ver-group"><span class="pg-hero__ver-sep" aria-hidden="true">·</span>{% for v in manuals.historical %}<a class="pg-hero__ver pg-hero__ver--old" href="/docs/{{ v }}/index.html" title="PostgreSQL {{ v }} 文档（已结束维护）">{{ v }}</a>{% endfor %}</span>{% endif %}{% if manuals.testing or manuals.devel %}<span class="pg-hero__ver-group"><span class="pg-hero__ver-sep" aria-hidden="true">·</span>{% for t in manuals.testing %}<a class="pg-hero__ver pg-hero__ver--pre" href="/docs/{{ t.major }}/index.html" title="PostgreSQL {{ t.major }} {{ t.label }} 文档">{{ t.major }}<sup>{{ t.label }}</sup></a>{% endfor %}{% if manuals.devel %}<a class="pg-hero__ver pg-hero__ver--pre" href="/docs/devel/index.html" title="PostgreSQL {{ manuals.devel }} 开发快照文档">{{ manuals.devel }}<sup>dev</sup></a>{% endif %}</span>{% endif %}</span>{% endif %}
+    </p>
+    <div class="pg-hero__cta">
+    <form class="pg-hero__search" role="search" method="get" action="/search/" data-pg-palette-form>
+      {% include "base/icon.html" with name="search" %}
+      <input name="q" type="text" maxlength="255" placeholder="搜索参数、函数、命令、错误码…" aria-label="搜索文档" autocomplete="off" autocapitalize="none" spellcheck="false">
+      <kbd aria-hidden="true">/</kbd>
+    </form>
     {% with v=versions.0 %}
     <div class="pg-hero__actions">
       <a class="pg-btn pg-btn--light" role="button" href="/download/">下载 <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
@@ -57,6 +58,7 @@
       <a class="pg-btn pg-btn--outline-light" role="button" href="/about/">初识 PostgreSQL？</a>
     </div>
     {% endwith %}
+    </div>
   </div>
 </section>
 <!-- END Hero -->
@@ -122,8 +124,10 @@
           <ul class="pg-ledger">
             {% for v in versions %}
               <li>
-                <span class="pg-ledger__ver">{{ v.numtree }}.{{ v.latestminor }}</span>
-                <span class="pg-ledger__date">{{ v.reldate|date:"Y-m-d" }}</span>
+                <a class="pg-ledger__go" href="/docs/{{ v.numtree }}/index.html" title="PostgreSQL {{ v.numtree }} 文档">
+                  <span class="pg-ledger__ver">{{ v.numtree }}.{{ v.latestminor }}</span>
+                  <span class="pg-ledger__date">{{ v.reldate|date:"Y-m-d" }}</span>
+                </a>
                 <a class="pg-ledger__link" href="/docs/{{ v.numtree }}/{{ v.relnotes }}">说明 <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
               </li>
             {% endfor %}

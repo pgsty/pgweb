@@ -85,6 +85,7 @@ def home(request):
     planet = ImportedRSSItem.objects.filter(feed__internalname="planet").order_by("-posttime", "-id")[:9]
 
     release = CurrentRelease.get()
+    from pgweb.docs.versions import manual_groups
 
     title = 'PostgreSQL 中文社区｜文档、下载与技术资讯'
     return render(request, 'index.html', {
@@ -92,6 +93,7 @@ def home(request):
         'news': news,
         'events': events,
         'versions': versions,
+        'manuals': manual_groups(),
         'planet': planet,
         'release': release,
         'og': {
@@ -99,7 +101,7 @@ def home(request):
             'type': 'website',
             'title': title,
             'description': 'pgsql.cc 是由 Pigsty 团队维护的 PostgreSQL 官方网站中文翻译站，提供中文文档、技术资讯、软件目录与知识库。',
-            'sitename': 'PostgreSQL 中文社区',
+            'sitename': 'pgsql.cc',
         },
     })
 

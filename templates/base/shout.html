@@ -1,0 +1,9 @@
+{% comment %}
+Site notice bar, shown at the top of every page. The close control hides
+it for the current page view only (main.js).
+{% endcomment %}<div class="pg-shout">
+  <div class="pg-container pg-shout__inner">
+    <button class="pg-shout__close" type="button" title="关闭提示" aria-label="关闭提示" data-pg-shout-close>{% include "base/icon.html" with name="close" %}</button>
+    <p class="pg-shout__note"><a href="https://pgsql.cc/">pgsql.cc</a> 提供对 <a href="https://www.postgresql.org/" target="_blank" rel="noopener">postgresql.org</a> 官网内容的中文翻译，由 <a href="https://pigsty.cc/" target="_blank" rel="noopener">Pigsty</a> 团队维护。</p>
+  </div>
+</div>

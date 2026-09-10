@@ -49,7 +49,7 @@ class ManualVersionTests(TestCase):
         legacy = self.client.get('/search/api/', {'q': 'work_mem', 'u': '/docs/devel/'}).json()
         self.assertEqual(legacy['version'], DEVEL_MAJOR_VERSION)
         page = self.client.get('/docs/devel/runtime-config-resource.html')
-        self.assertContains(page, f'data-pg-palette-scope="pg{DEVEL_MAJOR_VERSION}"')
+        self.assertContains(page, f'data-pg-doc-version="{DEVEL_MAJOR_VERSION}"')
         alias = self.client.get(f'/docs/{DEVEL_MAJOR_VERSION}/runtime-config-resource.html')
         self.assertEqual(alias.status_code, 301)
         self.assertEqual(alias['Location'], '/docs/devel/runtime-config-resource.html')

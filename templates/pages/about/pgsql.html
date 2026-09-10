@@ -38,7 +38,7 @@ pgsql.cc 是 <a href="https://www.postgresql.org/" target="_blank" rel="noopener
 
 <h2>商标</h2>
 <p>
-PostgreSQL 名称与大象标志是 <a href="https://www.postgresql.org/about/policies/trademarks/" target="_blank" rel="noopener">PostgreSQL Community Association</a> 的商标。本站按照其商标政策，仅在指称 PostgreSQL 项目与软件时使用这些商标，并在显著位置说明本站并非官方站点。本站不以任何形式暗示获得了上述组织的背书。
+PostgreSQL 名称与大象标志是 <a href="https://www.postgresql.org/about/policies/trademarks/" target="_blank" rel="noopener">PostgreSQL Community Association</a> 的商标。本站按照其商标政策，仅在指称 PostgreSQL 项目与软件时使用这些商标，并在本页说明本站并非官方站点。本站不以任何形式暗示获得了上述组织的背书。
 </p>
 <p>
 Pigsty 是 Pigsty 项目的商标。页面中出现的其他产品名称与标志归各自所有者所有。
@@ -49,9 +49,21 @@ Pigsty 是 Pigsty 项目的商标。页面中出现的其他产品名称与标�
 本站的代码基于 PostgreSQL 官方网站的开源项目 <a href="https://github.com/postgres/pgweb" target="_blank" rel="noopener">pgweb</a>，中文站的修改公开在 <a href="https://github.com/pgsty/pgweb" target="_blank" rel="noopener">pgsty/pgweb</a> 仓库中，同样依 PostgreSQL 许可证发布。
 </p>
 <p>
-发现译文错误、页面问题或有改进建议，欢迎通过仓库提交 issue 或 pull request。手册页面底部的“提交更正”表单会把关于英文原文的问题转交给上游文档维护者；关于译文本身的问题，请直接在仓库中反馈。
+手册译文在 <a href="https://github.com/pgsty/pgdoc" target="_blank" rel="noopener">pgsty/pgdoc</a> 仓库中维护，译文错误请在该仓库提交 issue，手册页底部的“报告译文问题”会自动带上页面与版本信息；站点页面问题或功能建议请提交到 pgsty/pgweb。英文原文的问题请通过手册页底部的上游文档表单反馈给 PostgreSQL 文档维护者。
 </p>
 <p>
 其他事宜请见<a href="/about/contact/">联系我们</a>。
+</p>
+
+<h2>隐私与数据</h2>
+<p>
+浏览本站无需注册，本站不向任何第三方出售或共享访问者数据。运行中只产生两类数据：
+</p>
+<ul>
+  <li><strong>服务器访问日志。</strong>Nginx 记录每次请求的 IP 地址、时间、请求地址（包括其中的检索词）、来源页面与浏览器标识，仅用于排查故障、统计负载与防范滥用；日志按日轮转，保留 52 天后自动删除。</li>
+  <li><strong>Google Analytics。</strong>用于统计访问量与页面热度。它通过 Cookie 收集访问行为数据，由 Google 依其<a href="https://policies.google.com/privacy" target="_blank" rel="noopener">隐私政策</a>处理。浏览器开启“请勿跟踪”（Do Not Track）时本站不会加载它；你也可以使用广告拦截扩展或 <a href="https://tools.google.com/dlpage/gaoptout" target="_blank" rel="noopener">Google 的退出插件</a>将其禁用。</li>
+</ul>
+<p>
+深浅色主题等偏好只保存在你浏览器的本地存储中，不会上传。除上述内容外，本站不使用其他 Cookie 或跟踪技术。关于数据的问题，请通过<a href="/about/contact/">联系我们</a>页面提出。
 </p>
 {%endblock%}

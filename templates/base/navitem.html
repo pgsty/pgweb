@@ -12,6 +12,11 @@ its submenu is lifted to the top level of the panel instead.
   <a class="pg-nav__link{% if active %} active{% endif %}" href="{{ link }}"{% if active %} aria-current="page"{% endif %}>{{ title }}</a>
   {% if items %}
   <div class="pg-nav__panel" role="group" aria-label="{{ title }}">
+    {% if key == "docs" and doc_majors %}
+    <div class="pg-nav__panel-versions" role="group" aria-label="手册版本">
+      {% for v in doc_majors %}<a class="pg-nav__panel-version" href="/docs/{{ v }}/index.html" title="PostgreSQL {{ v }} 文档">{{ v }}</a>{% endfor %}
+    </div>
+    {% endif %}
     {% for m in items %}
       {% if m.link == link %}
         {% for sm in m.submenu %}<a class="pg-nav__panel-link" href="{{ sm.link }}">{{ sm.title }}</a>{% endfor %}
@@ -31,6 +36,7 @@ its submenu is lifted to the top level of the panel instead.
 <a class="pg-drawer__link{% if active %} active{% endif %}" href="{{ link }}">{{ title }}</a>
 {% if items %}
 <div class="pg-drawer__children">
+  {% if key == "docs" and doc_majors %}{% for v in doc_majors %}<a class="pg-drawer__sublink pg-drawer__version" href="/docs/{{ v }}/index.html">PG {{ v }}</a>{% endfor %}{% endif %}
   {% for m in items %}
     {% if m.link == link %}
       {% for sm in m.submenu %}<a class="pg-drawer__sublink" href="{{ sm.link }}">{{ sm.title }}</a>{% endfor %}

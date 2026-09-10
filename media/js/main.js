@@ -45,6 +45,20 @@
     });
   });
 
+  // "报告译文问题" on manual pages: add the section anchor being read to the
+  // prefilled issue body at click time.
+  document.querySelectorAll('a[data-pg-issue]').forEach((link) => {
+    link.addEventListener('click', () => {
+      if (!location.hash) return;
+      try {
+        const url = new URL(link.href);
+        const body = url.searchParams.get('body') || '';
+        url.searchParams.set('body', body.replace(/章节：\n/, '章节：' + location.hash + '\n'));
+        link.href = url.toString();
+      } catch (e) {}
+    });
+  });
+
   // Shadow under the sticky header once the page has scrolled.
   if (header) {
     const onScroll = () => header.classList.toggle('pg-scrolled', window.scrollY > 4);

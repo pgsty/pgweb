@@ -22,7 +22,7 @@
   <meta property="og:title" content="{{page_meta.title}}" />
 {%if page_meta.description%}  <meta property="og:description" content="{{page_meta.description|truncatechars:'220'}}" />
   <meta name="twitter:description" content="{{page_meta.description|truncatechars:'180'}}" />{%endif%}
-  <meta property="og:site_name" content="{{og.sitename|default:"PostgreSQL 中文社区"}}" />{%endif%}
+  <meta property="og:site_name" content="{{og.sitename|default:"pgsql.cc"}}" />{%endif%}
   <link href="/media/css/fontawesome.css?{{gitrev}}" rel="stylesheet">
   <link rel="stylesheet" href="/media/css/bootstrap-4.4.1.min.css">
   <link rel="icon" type="image/x-icon" href="/media/favicon.ico?{{gitrev}}" />
@@ -46,7 +46,7 @@
     {% include "search/icons.html" %}
     {% include "base/header.html" %}
     {% include "search/palette.html" %}
-    {% block shout %}{% endblock %}
+    {% block shout %}{% include "base/shout.html" %}{% endblock %}
     {%block layoutblock%}{%endblock%}
     {% include "base/footer.html" %}
     <script src="/media/js/main.js?{{gitrev}}"></script>
