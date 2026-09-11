@@ -351,7 +351,7 @@ export function renderPreview(container, data, options = {}) {
   const kind = el('span', 'ds-preview-kind');
   kind.append(kindBadge(data.group), el('span', '', data.kind_label || data.label));
   bar.append(kind);
-  const open = el('a', 'ds-preview-open', data.source === 'ext' ? '打开扩展页' : '打开文档');
+  const open = el('a', 'ds-preview-open', data.source === 'ext' ? '打开扩展页' : data.source === 'errcode' ? '打开词条' : '打开文档');
   open.href = data.url;
   open.append(icon('arrow-up-right'));
   bar.append(open);

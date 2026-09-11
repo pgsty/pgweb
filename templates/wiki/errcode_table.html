@@ -1,0 +1,44 @@
+{% comment %}The error-code table: class header rows and two rows per code. Expects groups; optional table_id, top_link (index) and current (a highlighted SQLSTATE).{% endcomment %}
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table{% if table_id %} id="{{ table_id }}"{% endif %} class="wiki-errcodes">
+  <thead><tr>
+    <th scope="col">错误代码</th>
+    <th scope="col">条件名</th>
+    <th scope="col">宏名称</th>
+    <th scope="col">严重等级</th>
+    <th scope="col">版本</th>
+  </tr></thead>
+  {% for group in groups %}
+  <tbody class="wiki-classgroup" data-class="{{ group.code }}">
+    <tr class="wiki-classrow" id="{{ group.anchor }}">
+      <th colspan="5" scope="colgroup">
+        <div class="wiki-classrow__inner">
+          <span class="wiki-classrow__code">Class {{ group.code }}</span>
+          <span class="wiki-classrow__label">{{ group.label }}</span>
+          {% if group.name_zh %}<span class="wiki-classrow__en">{{ group.name }}</span>{% endif %}
+          <span class="wiki-classrow__count">{{ group.count }} 个</span>
+          {% if top_link %}<a class="wiki-classrow__top" href="{{ top_link }}" title="回到顶部" aria-label="回到顶部">↑</a>{% else %}<a class="wiki-classrow__top" href="/docs/errcode/#{{ group.anchor }}" title="在索引中查看本类">↗</a>{% endif %}
+        </div>
+      </th>
+    </tr>
+    {% for row in group.rows %}
+    <tr class="wiki-coderow{% if row.sqlstate == current %} is-current{% endif %}" data-href="{{ row.url }}" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
+        data-depth="{{ row.depth }}"
+        data-text="{{ row.sqlstate }} {{ row.condition_name }} {{ row.macro }} {{ row.name }} {{ row.summary }}">
+      <td class="wiki-coderow__code"><a href="{{ row.url }}">{{ row.sqlstate }}</a></td>
+      <td class="wiki-coderow__cond"><a href="{{ row.url }}">{{ row.condition_name }}</a></td>
+      <td class="wiki-coderow__macro"><code>{{ row.macro }}</code></td>
+      <td class="wiki-coderow__sev"><span class="wiki-sev wiki-sev--{{ row.severity }}">{{ row.severity_label }}</span></td>
+      <td class="wiki-coderow__ver">{{ row.since }}</td>
+    </tr>
+    <tr class="wiki-coderow wiki-coderow--more{% if row.sqlstate == current %} is-current{% endif %}" data-href="{{ row.url }}" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
+        data-depth="{{ row.depth }}"
+        data-text="{{ row.sqlstate }} {{ row.condition_name }} {{ row.macro }} {{ row.name }} {{ row.summary }}">
+      <td colspan="4" class="wiki-coderow__desc">{{ row.summary }}</td>
+      <td class="wiki-coderow__status{% if row.removed %} wiki-coderow__status--removed{% endif %}">{{ row.status_text }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  {% endfor %}
+</table>
+</div></div>

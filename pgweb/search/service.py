@@ -76,9 +76,9 @@ def parse_query(raw, scope='pg', kind='', available=(), current=None):
     if scope in EXTENSION_SCOPES:
         scope, sources, version = 'ex', ('ext',), current
     elif scope == 'pg':
-        sources, version = ('pg', 'ext'), current
+        sources, version = ('pg', 'ext', 'errcode'), current
     elif re.fullmatch(r'pg\d+', scope):
-        sources, version = ('pg', 'ext'), int(scope[2:])
+        sources, version = ('pg', 'ext', 'errcode'), int(scope[2:])
     else:
         raise ValueError('未知的文档作用域。请使用 pg:、pg17: 或 ex:。')
     if 'pg' in sources and version not in available:
@@ -115,7 +115,7 @@ def entry_data(entry, term='', tier=3, variants=1):
         url = '/docs/{}/{}'.format(page.display_version(), page.file) + ('#' + quote(entry.anchor, safe='-._~') if entry.anchor else '')
         source_label = 'PG' + str(version)
     else:
-        version, url, source_label = None, entry.url, '扩展目录'
+        version, url, source_label = None, entry.url, ('本站词条' if entry.source == 'errcode' else '扩展目录')
     return {
         'id': entry.id, 'name': entry.name, 'kind': entry.kind, 'kind_label': KIND_LABEL.get(entry.kind, entry.kind),
         'subtype': entry.subtype, 'group': group, 'label': GROUP_META[group]['label'],
@@ -157,7 +157,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
         'filtered': bool(kinds), 'kinds': kinds, 'offset': offset, 'limit': limit,
         'popular': [normalize_name(n) for n in POPULAR],
     }
-    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source = 'ext')"
+    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode'))"
               if 'pg' in state['sources'] else "e.source = 'ext'")
     if not name:
         where = 'true'
@@ -188,7 +188,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
             FROM search_searchentry e CROSS JOIN q
             WHERE {source} AND {where}
         ), grouped AS (
-            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source = 'ext'), relevance DESC, id) AS choice,
+            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source <> 'errcode'), (source = 'ext'), relevance DESC, id) AS choice,
                    count(*) OVER (PARTITION BY entity_key) AS variants FROM matched
         ), chosen AS (SELECT * FROM grouped WHERE choice = 1),
         facet AS (SELECT kind, count(*) AS n FROM chosen GROUP BY kind),
@@ -244,8 +244,9 @@ def preview(entry):
               .defer('vector', 'preview', 'document__page__content').order_by('-version', 'id'))
     versions, variants, catalogue = {}, [], None
     for other in others:
-        if other.source == 'ext':
-            if other.id != entry.id and catalogue is None:
+        if other.source != 'pg':
+            # Catalogue and 百科 entries have no version line of their own.
+            if other.source == 'ext' and other.id != entry.id and catalogue is None:
                 catalogue = entry_data(other)
             continue
         if entry.source == 'pg' and other.version == entry.version:

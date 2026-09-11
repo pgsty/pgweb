@@ -2,6 +2,15 @@
 (function () {
   'use strict';
 
+  // 整行可点：点在链接上走链接，点在别处也跳到该错误代码。索引页和详情页的表都适用。
+  document.querySelectorAll('table.wiki-errcodes').forEach(function (node) {
+    node.addEventListener('click', function (event) {
+      if (event.target.closest('a')) { return; }
+      var row = event.target.closest('tr[data-href]');
+      if (row) { window.location.href = row.getAttribute('data-href'); }
+    });
+  });
+
   var form = document.getElementById('errcode-search');
   var table = document.getElementById('errcode-table');
   if (!form || !table) { return; }
@@ -68,13 +77,6 @@
       if (value) { select.value = value; }
     });
   }
-
-  // 整行可点：点在链接上走链接，点在别处也跳到该错误代码。
-  table.addEventListener('click', function (event) {
-    if (event.target.closest('a')) { return; }
-    var row = event.target.closest('tr[data-href]');
-    if (row) { window.location.href = row.getAttribute('data-href'); }
-  });
 
   form.addEventListener('submit', function (event) { event.preventDefault(); apply(); });
   query.addEventListener('input', apply);

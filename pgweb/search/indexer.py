@@ -148,3 +148,63 @@ def rebuild_extensions(dry_run=False):
         SearchEntry.objects.bulk_create(objects, batch_size=200)
     service.forget_catalog()
     return {'extensions': len(objects)}
+
+
+# ---------------------------------------------------------------- 错误代码
+
+def errcode_entry(code, text, card):
+    """One SQLSTATE as a search entry, sharing the manual rows' entity so the
+    result list shows the 百科 entry once and the preview still lists the
+    manual versions."""
+    name_key = normalize_name(code.sqlstate)
+    aliases = {name_key, normalize_name(code.condition_name)}
+    for macro in code.macros:
+        aliases.add(normalize_name(macro))
+    if '_' in code.condition_name:
+        aliases.add(normalize_name(code.condition_name).replace('_', ''))
+    zh_name = text.name if text else ''
+    summary = (text.summary if text else '') or ''
+    klass = '{} {}'.format(code.klass.code, code.klass.label)
+    facts = [('条件名', code.condition_name), ('宏名称', card['macro']), ('类别', klass),
+             ('严重等级', code.severity_label), ('启用版本', card['since']), ('状态', card['status_text'])]
+    parts = []
+    if summary:
+        parts.append('<p class="ds-ext-desc">' + escape(summary) + '</p>')
+    parts.append('<dl class="ds-ext-facts">' + ''.join(
+        '<div><dt>{}</dt><dd>{}</dd></div>'.format(escape(label), escape(str(value)))
+        for label, value in facts if value) + '</dl>')
+    glance = next((sec.get('html', '') for sec in (text.sections if text else []) if sec.get('anchor') == 'at-a-glance'), '')
+    if glance:
+        parts.append('<h3>速览</h3>' + glance)
+    body = '\n'.join(v for v in (summary, zh_name, text.description if text else '', klass, code.severity_label) if v)
+    return {
+        'key': digest('errcode\0' + code.sqlstate), 'entity_key': 'error:' + name_key, 'kind': 'error',
+        'subtype': code.klass.code, 'name': code.sqlstate, 'name_key': name_key,
+        'aliases': sorted(aliases), 'anchor': '', 'heading': 'Class ' + klass + ' · 错误代码',
+        'signature': code.condition_name + ('（' + zh_name + '）' if zh_name else ''),
+        'body': body, 'preview': ''.join(parts), 'url': code.url, 'weight': 0.5,
+    }
+
+
+def rebuild_errcodes(dry_run=False):
+    """Replace the search entries of the 错误代码 column (source 'errcode')."""
+    from pgweb.wiki import errcode as errcode_payload
+    from pgweb.wiki.models import ErrorCode, ErrorCodeText
+    texts = {t.errcode_id: t for t in ErrorCodeText.objects.filter(lang='zh')}
+    codes = list(ErrorCode.objects.select_related('klass').all())
+    entries = [errcode_entry(code, texts.get(code.sqlstate), errcode_payload.card(code)) for code in codes]
+    if dry_run:
+        return {'errcodes': len(entries)}
+    objects = []
+    for entry in entries:
+        title = index_text(' '.join([entry['name'], *entry['aliases']]))
+        vector = (SearchVector(Value(title), config='simple', weight='A') +
+                  SearchVector(Value(index_text(entry['body'])), config='simple', weight='B'))
+        objects.append(SearchEntry(source='errcode', document=None, version=None, vector=vector, **entry))
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
+        SearchEntry.objects.filter(source='errcode').delete()
+        SearchEntry.objects.bulk_create(objects, batch_size=200)
+    service.forget_catalog()
+    return {'errcodes': len(objects)}

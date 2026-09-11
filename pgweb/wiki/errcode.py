@@ -166,6 +166,17 @@ def index(request=None):
     return payload
 
 
+def class_nav(current=''):
+    """The 44 classes as the sub-navigation under 错误代码 in the side card."""
+    return [{'title': '{} {}'.format(g['code'], g['label']), 'link': '/docs/errcode/#' + g['anchor'],
+             'active': g['code'] == current} for g in index()['groups']]
+
+
+def sibling_groups(class_code):
+    """The index table restricted to one class, for the bottom of a detail page."""
+    return [g for g in index()['groups'] if g['code'] == class_code]
+
+
 def forget():
     cache.delete(CACHE_KEY)
 
@@ -412,6 +423,7 @@ def detail_payload(sqlstate, wanted_version=''):
         'cases': list(code.cases.all()),
         'runtimes': list(code.runtimes.all()),
         'siblings': siblings,
+        'sibling_groups': sibling_groups(code.klass_id),
         'gaps': gaps,
         'removed_without_evidence': code.status == 'removed' and not code.removed,
     }

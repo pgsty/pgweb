@@ -33,49 +33,7 @@
 </form>
 <p class="wiki-count" id="errcode-count" aria-live="polite" hidden></p>
 
-<div class="wiki-table"><div class="wiki-table__scroll">
-<table id="errcode-table" class="wiki-errcodes">
-  <thead><tr>
-    <th scope="col">错误代码</th>
-    <th scope="col">条件名</th>
-    <th scope="col">宏名称</th>
-    <th scope="col">严重等级</th>
-    <th scope="col">版本</th>
-  </tr></thead>
-  {% for group in groups %}
-  <tbody class="wiki-classgroup" data-class="{{ group.code }}">
-    <tr class="wiki-classrow" id="{{ group.anchor }}">
-      <th colspan="5" scope="colgroup">
-        <div class="wiki-classrow__inner">
-          <span class="wiki-classrow__code">Class {{ group.code }}</span>
-          <span class="wiki-classrow__label">{{ group.label }}</span>
-          {% if group.name_zh %}<span class="wiki-classrow__en">{{ group.name }}</span>{% endif %}
-          <span class="wiki-classrow__count">{{ group.count }} 个</span>
-          <a class="wiki-classrow__top" href="#index" title="回到顶部" aria-label="回到顶部">↑</a>
-        </div>
-      </th>
-    </tr>
-    {% for row in group.rows %}
-    <tr class="wiki-coderow" data-href="{{ row.url }}" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
-        data-depth="{{ row.depth }}"
-        data-text="{{ row.sqlstate }} {{ row.condition_name }} {{ row.macro }} {{ row.name }} {{ row.summary }}">
-      <td class="wiki-coderow__code"><a href="{{ row.url }}">{{ row.sqlstate }}</a></td>
-      <td class="wiki-coderow__cond"><a href="{{ row.url }}">{{ row.condition_name }}</a></td>
-      <td class="wiki-coderow__macro"><code>{{ row.macro }}</code></td>
-      <td class="wiki-coderow__sev"><span class="wiki-sev wiki-sev--{{ row.severity }}">{{ row.severity_label }}</span></td>
-      <td class="wiki-coderow__ver">{{ row.since }}</td>
-    </tr>
-    <tr class="wiki-coderow wiki-coderow--more" data-href="{{ row.url }}" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
-        data-depth="{{ row.depth }}"
-        data-text="{{ row.sqlstate }} {{ row.condition_name }} {{ row.macro }} {{ row.name }} {{ row.summary }}">
-      <td colspan="4" class="wiki-coderow__desc">{{ row.summary }}</td>
-      <td class="wiki-coderow__status{% if row.removed %} wiki-coderow__status--removed{% endif %}">{{ row.status_text }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-  {% endfor %}
-</table>
-</div></div>
+{% include "wiki/errcode_table.html" with groups=groups table_id="errcode-table" top_link="#index" %}
 
 <p class="wiki-empty" id="errcode-empty" hidden>没有匹配的错误代码。<a href="/docs/errcode/">清除筛选</a></p>
 

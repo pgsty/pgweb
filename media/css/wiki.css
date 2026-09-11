@@ -175,6 +175,9 @@
 .wiki-coderow--more td { padding-top: 0; padding-bottom: 10px; border-top: 0; }
 .wiki-coderow:not(.wiki-coderow--more) td { padding-bottom: 4px; }
 .wiki-coderow[data-href] { cursor: pointer; }
+.wiki-coderow.is-current, .wiki-coderow.is-current + .wiki-coderow--more { background: rgba(36, 86, 184, .07); }
+[data-theme="dark"] .wiki-coderow.is-current, [data-theme="dark"] .wiki-coderow.is-current + .wiki-coderow--more { background: rgba(107, 143, 224, .12); }
+.wiki-panel .wiki-table { margin: 0; }
 .wiki-coderow:hover,
 .wiki-coderow:hover + .wiki-coderow--more,
 .wiki-coderow:has(+ .wiki-coderow--more:hover) { background: var(--pg-wash); }

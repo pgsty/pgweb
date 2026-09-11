@@ -14,9 +14,15 @@ from .models import ErrorCode
 SQLSTATE = re.compile(r'^[0-9A-Za-z]{5}$')
 
 
-def shell(ctx, title, description, canonical):
-    """The shared page context: the 文档 side navigation and SEO fields."""
-    ctx['navmenu'] = get_nav_menu('docs')
+def shell(ctx, title, description, canonical, class_code=''):
+    """The shared page context: the 文档 side navigation with the error-code
+    classes as sub-items, and SEO fields."""
+    menu = get_nav_menu('docs')
+    for item in menu:
+        if item.get('link') == '/docs/errcode/':
+            item['active'] = True
+            item['submenu'] = errcode.class_nav(class_code)
+    ctx['navmenu'] = menu
     ctx['title'] = title
     ctx['seo'] = {'title': title if title.startswith('PostgreSQL ') else title + ' · PostgreSQL',
                   'description': description, 'canonical': canonical, 'lang': 'zh'}
@@ -55,4 +61,4 @@ def errcode_detail(request, sqlstate):
     description = (text.summary or text.description) if text else heading
     return render(request, 'wiki/errcode_detail.html', shell(dict(
         payload, column=BY_SLUG['errcode'], heading=heading,
-    ), title, description, code.url))
+    ), title, description, code.url, class_code=code.klass_id))

@@ -41,9 +41,11 @@
 | 表 | 用途 |
 | --- | --- |
 | `search_indexedpage` | 手册页面外键、内容及提取器版本的摘要、索引时间 |
-| `search_searchentry` | `source`（`pg` 手册 / `ext` 扩展目录）、版本、实体身份、种类、名称、别名、签名、正文片段、锚点、清洗后的预览 HTML、`url`、热度 `weight` 和 `tsvector` |
+| `search_searchentry` | `source`（`pg` 手册 / `ext` 扩展目录 / `errcode` 错误代码）、版本、实体身份、种类、名称、别名、签名、正文片段、锚点、清洗后的预览 HTML、`url`、热度 `weight` 和 `tsvector` |
 
 手册条目按结构提取：GUC 定义列表、函数与运算符表、类型表、错误码表、SQL reference、文档化的系统关系与章节标题；正文中偶然出现的函数名不会成为定义。长章节按结构拆分并保留标题路径。已有锚点优先，缺少锚点的定义用内容摘要生成 `SEARCH-*` 标识，阅读页使用同一生成函数，不改写 `docs.content`。
+
+错误代码条目来自百科的 `wiki_errcode` 表（`source = 'errcode'`），与手册附录 A 的同一 SQLSTATE 共享实体：结果列表里只出现百科条目（链接到 `/docs/errcode/<代码>/`），预览是一句话说明、事实卡与「速览」，版本行仍列出各版手册的附录行。
 
 扩展条目直接来自 `pgext.universe` 当前快照：名称与包名为别名，中英文简介、标签、分类和包名进入正文，预览是一张事实卡（版本、分类、语言、许可证、PG 版本范围、来源、`CREATE EXTENSION`），链接到本站扩展页。同名的手册模块与目录条目共享实体身份：结果列表里折叠为一条，手册定义优先，预览底部给出目录卡片。`weight` 取 `log1p(stars)` 归一化到 0–1，只在有搜索词时参与排序。
 
@@ -66,6 +68,7 @@
 .venv/bin/python manage.py index_docs --versions 18         # 某个大版本，增量：未变化的页面跳过
 .venv/bin/python manage.py index_docs --versions 18 --force # 提取规则变化后重建
 .venv/bin/python manage.py index_docs --extensions          # 只重建扩展目录条目
+.venv/bin/python manage.py index_docs --errcodes            # 只重建错误代码条目（tools/wiki/sync_errcode.py 之后）
 .venv/bin/python manage.py index_docs --dry-run             # 只提取统计，不写入
 ```
 

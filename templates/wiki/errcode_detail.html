@@ -167,15 +167,10 @@
 {% endfor %}
 </div>
 
-{% if siblings %}
+{% if sibling_groups %}
 <section class="wiki-panel" id="siblings">
   <h2>同类错误代码</h2>
-  <p class="wiki-panel__lead">Class {{ klass.code }} {{ klass.label }} 下的其他成员。</p>
-  <ul class="wiki-siblings">
-    {% for s in siblings %}
-    <li><a href="{{ s.url }}"><code>{{ s.sqlstate }}</code> <span>{{ s.condition_name }}</span></a></li>
-    {% endfor %}
-  </ul>
+  {% include "wiki/errcode_table.html" with groups=sibling_groups current=code.sqlstate %}
 </section>
 {% endif %}
 
@@ -186,3 +181,4 @@
 
 </article>
 {% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}
