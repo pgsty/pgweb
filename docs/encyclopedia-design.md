@@ -172,7 +172,7 @@ schema 里声明过的 `status: preview` 与 `pre9_status: source_unavailable` �
 
 | 形态 | 条数 | 处理 |
 | --- | --- | --- |
-| `../25p02/` 站内码链接 | 1400 | → `/wiki/errcode/25P02/`，slug 在源里是小写，站内统一大写 |
+| `../25p02/` 站内码链接 | 1400 | → `/docs/errcode/25P02/`，slug 在源里是小写，站内统一大写 |
 | `github.com/postgres/postgres/blob/<40位commit>/…` | 1462（其中 1084 带 `#L` 行号） | 原样保留，这正是要的效果 |
 | `postgresql.org/docs/…` | 147 | → 本站中文译文 `/docs/<版本>/…`（页面存在时），原文降为次要入口 |
 | `../data/evidence/<CODE>.json` | 263 | → 页内"来源与证据"区块，不再是外部 JSON 文件 |
@@ -185,15 +185,15 @@ URL 大小写要定死一个方向：错误码里有字母（`0100C`、`HV00J`�
 ### 4.1 地址
 
 ```
-/wiki/                          百科首页，四个栏目卡片
-/wiki/errcode/                  错误码大全索引
-/wiki/errcode/23505/            详情页
-/wiki/errcode/class/23/         Class 23 及其全部成员
-/wiki/errcode/version/18/       PG 18 的全部错误码，含与 17 的增删对比
-/wiki/errcode/message/          报文反查
+（2026-09-11 起没有独立首页：四个栏目挂在「文档」菜单末尾，未上线的三个直接指向原站。）
+/docs/errcode/                  错误码大全索引
+/docs/errcode/23505/            详情页
+/docs/errcode/class/23/         Class 23 及其全部成员
+/docs/errcode/version/18/       PG 18 的全部错误码，含与 17 的增删对比
+/docs/errcode/message/          报文反查
 ```
 
-后续三个栏目同构：`/wiki/guc/`、`/wiki/waitevent/`、`/wiki/catalog/`，
+后续三个栏目同构：`/docs/guc/`、`/docs/waitevent/`、`/docs/catalog/`，
 分别对应 guc.pg.center、wait.pg.center、cat.pg.center。
 
 导航改两处即可，桌面与移动共用一份：`pgweb/util/contexts.py` 的 `sitenav` 加 `'wiki'` 键，
@@ -251,7 +251,7 @@ H1      23505 · unique_violation · 唯一性冲突
 
 ### 4.4 版本页
 
-`/wiki/errcode/version/18/` 列出该版本全部错误码，并给出与上一版本的增删对比。
+`/docs/errcode/version/18/` 列出该版本全部错误码，并给出与上一版本的增删对比。
 这是别处没有的东西——`presence` 表让它成为一条 SQL。同时如实标注来源缺口（18.4 与 18.6 之间没有 18.5 正式 tag）。
 
 ### 4.5 与手册双向互链
@@ -260,7 +260,7 @@ H1      23505 · unique_violation · 唯一性冲突
 
 - 百科 → 手册：详情页链到 `/docs/<版本>/errcodes-appendix.html`，随版本选择器切换。
 - 手册 → 百科：给附录页加一个只在该页加载的外部 JS，把表格里的 `<code class="literal">23505</code>`
-  变成指向 `/wiki/errcode/23505/` 的链接。不改手册正文 HTML，可随时撤下。
+  变成指向 `/docs/errcode/23505/` 的链接。不改手册正文 HTML，可随时撤下。
 
 ## 5. 检索集成
 
@@ -336,9 +336,9 @@ sitemap 照抄 `pgweb/ext/struct.py` 写一个 `pgweb/wiki/struct.py`，百科�
 ### 地址
 
 ```
-/wiki/errcode/            索引：导航索引 + 按类分组的大表格 + 即时筛选
-/wiki/errcode/23505/      详情，小写地址 301 到大写
-/wiki/errcode/23505/?v=16 切换本站手册链接的版本
+/docs/errcode/            索引：导航索引 + 按类分组的大表格 + 即时筛选
+/docs/errcode/23505/      详情，小写地址 301 到大写
+/docs/errcode/23505/?v=16 切换本站手册链接的版本
 ```
 
 索引页照手册附录 A 的读法：44 个类别的跳转索引在前，下面一张大表按类分组，
@@ -370,7 +370,7 @@ sitemap 照抄 `pgweb/ext/struct.py` 写一个 `pgweb/wiki/struct.py`，百科�
 - **证据层没有中文**。正文翻译了，但 `evidence/<CODE>.json` 里的断言、核实方式、适用范围只有英文原文。
   页面照原样呈现并写明「未经翻译」，没有机翻。想要中文得另起一轮翻译。
 - **上游链接对本站独有栏目会 404**。`source_url` 把任何路径前缀成 `postgresql.org/<path>`，
-  而 `/wiki/`、`/info/`、`/ext/`、`/e/` 上游都没有对应页。已在 `pgweb/util/contexts.py` 里按前缀抑制该链接。
+  而 `/docs/errcode/`、`/info/`、`/ext/`、`/e/` 上游都没有对应页。已在 `pgweb/util/contexts.py` 里按前缀抑制该链接。
 
 ## 9. 实施顺序
 

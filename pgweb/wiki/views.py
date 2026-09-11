@@ -7,30 +7,20 @@ from django.views.decorators.http import require_safe
 from pgweb.util.contexts import get_nav_menu
 
 from . import errcode
-from .columns import BY_SLUG, listing
+from .columns import BY_SLUG
 from .models import ErrorCode
 
-
-TITLE = 'PostgreSQL 百科'
-DESCRIPTION = 'PostgreSQL 参考资料：错误代码、配置参数、等待事件与系统目录，逐条注明适用版本与源码出处。'
 
 SQLSTATE = re.compile(r'^[0-9A-Za-z]{5}$')
 
 
 def shell(ctx, title, description, canonical):
-    """The shared 百科 page context: side navigation and SEO fields."""
-    ctx['navmenu'] = get_nav_menu('wiki')
+    """The shared page context: the 文档 side navigation and SEO fields."""
+    ctx['navmenu'] = get_nav_menu('docs')
     ctx['title'] = title
     ctx['seo'] = {'title': title if title.startswith('PostgreSQL ') else title + ' · PostgreSQL',
                   'description': description, 'canonical': canonical, 'lang': 'zh'}
     return ctx
-
-
-@require_safe
-def home(request):
-    return render(request, 'wiki/home.html', shell({
-        'columns': listing(),
-    }, TITLE, DESCRIPTION, '/wiki/'))
 
 
 @require_safe
@@ -42,7 +32,7 @@ def errcode_index(request):
                       payload['total'], payload['class_count'])
     return render(request, 'wiki/errcode_index.html', shell(dict(
         payload, column=column,
-    ), 'PostgreSQL 错误代码', description, '/wiki/errcode/'))
+    ), 'PostgreSQL 错误代码', description, '/docs/errcode/'))
 
 
 @require_safe
@@ -51,7 +41,7 @@ def errcode_detail(request, sqlstate):
         raise Http404()
     # 站内规范形式是大写：PostgreSQL 报错里输出的就是大写。
     if sqlstate != sqlstate.upper():
-        return HttpResponsePermanentRedirect('/wiki/errcode/{}/'.format(sqlstate.upper()))
+        return HttpResponsePermanentRedirect('/docs/errcode/{}/'.format(sqlstate.upper()))
     try:
         payload = errcode.detail_payload(sqlstate, request.GET.get('v', ''))
     except ErrorCode.DoesNotExist:

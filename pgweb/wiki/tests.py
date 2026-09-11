@@ -15,7 +15,7 @@ class ColumnTests(SimpleTestCase):
         """Navigation must never point at a route that does not exist yet."""
         for column in COLUMNS:
             if column['live']:
-                self.assertEqual(url(column), '/wiki/{}/'.format(column['slug']))
+                self.assertEqual(url(column), '/docs/{}/'.format(column['slug']))
             else:
                 self.assertEqual(url(column), column['origin'])
 
@@ -24,10 +24,10 @@ class ColumnTests(SimpleTestCase):
         for column in listing():
             self.assertTrue(column['tone_class'].startswith('wiki-tone-'))
 
-    def test_nav_starts_at_the_hub(self):
+    def test_nav_lists_the_four_columns(self):
         items = nav_items()
-        self.assertEqual(items[0], {'title': '百科', 'link': '/wiki/'})
-        self.assertEqual(len(items), len(COLUMNS) + 1)
+        self.assertEqual(items[0], {'title': '错误代码', 'link': '/docs/errcode/'})
+        self.assertEqual(len(items), len(COLUMNS))
 
 
 class MarkupTests(SimpleTestCase):
@@ -68,9 +68,9 @@ class LinkRewriteTests(SimpleTestCase):
 
     def test_code_links_become_uppercase_site_links(self):
         self.assertEqual(self.rewrite('见 [25P02](../25p02/)。'),
-                         '见 [25P02](/wiki/errcode/25P02/)。')
+                         '见 [25P02](/docs/errcode/25P02/)。')
         self.assertEqual(self.rewrite('见 [HV00J](../../hv00j/)。'),
-                         '见 [HV00J](/wiki/errcode/HV00J/)。')
+                         '见 [HV00J](/docs/errcode/HV00J/)。')
 
     def test_evidence_and_case_links_point_at_page_anchors(self):
         self.assertEqual(self.rewrite('[证据](../data/evidence/23505.json)'), '[证据](#sources)')
@@ -188,7 +188,7 @@ class ErrorCodePageTests(TestCase):
         self.assertEqual(report['updated'], 0)
 
     def test_index_groups_by_class(self):
-        response = self.client.get('/wiki/errcode/')
+        response = self.client.get('/docs/errcode/')
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
         self.assertIn('导航索引', html)
@@ -197,7 +197,7 @@ class ErrorCodePageTests(TestCase):
         self.assertIn('唯一性冲突', html)
 
     def test_detail_renders_prose_and_panels(self):
-        html = self.client.get('/wiki/errcode/23505/').content.decode()
+        html = self.client.get('/docs/errcode/23505/').content.decode()
         self.assertIn('unique_violation', html)
         self.assertIn('报文模板', html)
         self.assertIn('duplicate key value', html)
@@ -206,24 +206,24 @@ class ErrorCodePageTests(TestCase):
         self.assertIn('unique_violation condition', html)
 
     def test_a_code_without_evidence_still_renders(self):
-        response = self.client.get('/wiki/errcode/23000/')
+        response = self.client.get('/docs/errcode/23000/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn('报文模板', response.content.decode())
 
     def test_lowercase_redirects_to_the_canonical_uppercase(self):
-        response = self.client.get('/wiki/errcode/23505/'.replace('23505', '23p01'.upper().lower()))
+        response = self.client.get('/docs/errcode/23505/'.replace('23505', '23p01'.upper().lower()))
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/wiki/errcode/23P01/')
+        self.assertEqual(response['Location'], '/docs/errcode/23P01/')
 
     def test_unknown_code_is_404(self):
-        self.assertEqual(self.client.get('/wiki/errcode/ZZZZZ/').status_code, 404)
-        self.assertEqual(self.client.get('/wiki/errcode/toolong/').status_code, 404)
+        self.assertEqual(self.client.get('/docs/errcode/ZZZZZ/').status_code, 404)
+        self.assertEqual(self.client.get('/docs/errcode/toolong/').status_code, 404)
 
     def test_sitemap_lists_every_code(self):
         from .struct import get_struct
         pages = [page for page, _ in get_struct()]
-        self.assertIn('wiki/errcode/', pages)
-        self.assertIn('wiki/errcode/23505/', pages)
+        self.assertIn('docs/errcode/', pages)
+        self.assertIn('docs/errcode/23505/', pages)
 
     def test_panels_fall_back_when_the_matching_section_is_missing(self):
         """正文没有 messages 一节时，报文面板挂到含义那一节后面。"""

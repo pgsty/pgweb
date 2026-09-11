@@ -106,7 +106,7 @@ def rewrite_links(body, local_doc):
 
     源码链接锁在固定 commit 上，原样保留——那正是要的效果。
     """
-    body = REL_CODE.sub(lambda m: '](/wiki/errcode/{}/)'.format(m.group(1).upper()), body)
+    body = REL_CODE.sub(lambda m: '](/docs/errcode/{}/)'.format(m.group(1).upper()), body)
     body = REL_EVIDENCE.sub('](#sources)', body)
     body = REL_CASES.sub('](#cases)', body)
     # 驱动指南没有搬进本站，留文字去链接，不留死链。

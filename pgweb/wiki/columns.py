@@ -1,7 +1,7 @@
 """百科的四个栏目。
 
-这里是栏目本身的唯一定义：名称、地址、规模、上线状态、上游来源。侧栏、首页卡片和
-sitemap 都从这份列表生成，栏目上线时只改这里的 `live`。
+这里是栏目本身的唯一定义：名称、地址、规模、上线状态、上游来源。文档导航末尾的
+四个入口和 sitemap 都从这份列表生成，栏目上线时只改这里的 `live`。
 
 `origin` 是这批数据的上游双语站点，`repo` 是它的仓库；两者都由 Pigsty 维护，
 本站的百科是它们的中文渲染。
@@ -67,7 +67,7 @@ BY_SLUG = {column['slug']: column for column in COLUMNS}
 def url(column):
     """A live column links to its own index; one not yet rendered here links
     straight to its origin site, so every entry leads to real content."""
-    return '/wiki/{}/'.format(column['slug']) if column['live'] else column['origin']
+    return '/docs/{}/'.format(column['slug']) if column['live'] else column['origin']
 
 
 def present(column):
@@ -84,7 +84,5 @@ def live_columns():
 
 
 def nav_items():
-    """The 百科 side navigation, also used as the top-nav dropdown."""
-    return [{'title': '百科', 'link': '/wiki/'}] + [
-        {'title': column['name'], 'link': url(column)} for column in COLUMNS
-    ]
+    """The four columns as entries at the end of the 文档 navigation."""
+    return [{'title': column['name'], 'link': url(column)} for column in COLUMNS]
