@@ -44,7 +44,7 @@ def display_status(row):
 
 
 def component_stats():
-    """[{name, total, approved, pending, flagged, rejected}] sorted by message count."""
+    """[{name, total, approved, pending, flagged, rejected}] in name order, so the page opens on a small component."""
     rows = Message.objects.values('component', 'status').annotate(n=Count('id'))
     stats = {}
     for row in rows:
@@ -52,7 +52,7 @@ def component_stats():
                                                     'pending': 0, 'flagged': 0, 'rejected': 0})
         entry[row['status']] += row['n']
         entry['total'] += row['n']
-    return sorted(stats.values(), key=lambda c: (-c['total'], c['name']))
+    return sorted(stats.values(), key=lambda c: c['name'])
 
 
 def bootstrap(user):

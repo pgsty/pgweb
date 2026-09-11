@@ -16,9 +16,13 @@ from .validate import ValidationError
 TITLE = 'PostgreSQL 消息翻译'
 
 
+ROBOTS = 'noindex, nofollow'   # the table pulls megabytes per component; crawlers stay out (robots.txt too)
+
+
 def json_response(payload, status=200):
     response = JsonResponse(payload, status=status, json_dumps_params={'ensure_ascii': False})
     response['Cache-Control'] = 'no-store'
+    response['X-Robots-Tag'] = ROBOTS
     return response
 
 
@@ -66,6 +70,7 @@ def index(request):
         'seo': {'title': TITLE + ' · pgsql.cc', 'description': 'PostgreSQL 19 简体中文消息翻译校准：逐条对照英文原文、既有译法与校准译文。'},
     })
     response['Cache-Control'] = 'no-store'
+    response['X-Robots-Tag'] = ROBOTS
     return response
 
 

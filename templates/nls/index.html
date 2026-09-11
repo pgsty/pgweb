@@ -7,7 +7,7 @@ The CSRF token travels as a data attribute because the cookie is HttpOnly.
 {% block title %}消息翻译{% endblock %}
 {% block extrahead %}
 <link rel="stylesheet" href="/media/css/nls.css?{{gitrev}}">
-<meta name="robots" content="noindex,follow">
+<meta name="robots" content="noindex,nofollow">
 {% endblock %}
 {% block layoutblock %}
 <div class="container-fluid margin pg-page nls-page">
@@ -26,7 +26,7 @@ The CSRF token travels as a data attribute because the cookie is HttpOnly.
       <div class="nls-side-heading">组件 <span id="nls-component-count"></span></div>
       <input id="nls-component-search" type="search" aria-label="查找组件" placeholder="查找组件…" autocomplete="off">
       <nav id="nls-components" aria-label="组件列表"></nav>
-      <div class="nls-side-note">已校对数 / 消息总数<br>按消息数从多到少排列。</div>
+      <div class="nls-side-note">已校对数 / 消息总数<br>按组件名排序。</div>
     </aside>
     <main class="nls-main">
       <div class="nls-toolbar">

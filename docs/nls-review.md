@@ -4,7 +4,7 @@
 
 ## 1. 定义与权限
 
-- 地址 `/nls/`，入口在“开发者”下拉菜单最后一项“消息翻译”。界面（列名、按钮、状态、提示，以及后端返回的错误文案）全部中文；pgnls 里的独立版工具仍是英文界面。
+- 地址 `/nls/`，入口在“开发者”下拉菜单最后一项“消息翻译”。界面（列名、按钮、状态、提示，以及后端返回的错误文案）全部中文；pgnls 里的独立版工具仍是英文界面。左侧组件按名称排序，首次打开落在体积不大的 `ecpg`，之后记住上次的组件。
 - 所有人可浏览、搜索、展开详情、用键盘移动；**保存**需要登录且持有权限 `nls.review`（admin 里显示为 *nls | message | 可以校对消息翻译*），超级用户天然拥有。未登录 POST 返回 401 并附登录地址，已登录无权限返回 403；页面本身按 `data-can-edit` 切成只读模式（勾选框禁用、译文不可编辑、工具栏隐藏、顶部提示登录）。
 - 授权：admin 用户页勾选权限，或 `manage.py nls_grant <username>`（`--revoke` 收回）。
 - 写请求带 `X-CSRFToken`（模板把 `{{ csrf_token }}` 放在 `#nls[data-csrf]`，因为 Cookie 是 HttpOnly）。审校人身份取 `request.user`，不再手填署名。
@@ -62,7 +62,9 @@ cd ~/pgsty/pgnls && review-app/.venv/bin/python review-app/manage.py import /tmp
 
 表格右上角的全屏按钮让 `#nls` 铺满视口（隐藏站点页头页脚和组件侧栏，组件改为工具栏里的下拉选择），表格获得整页宽度；`Esc` 或再点一次退出。三列文本表头右缘可拖动调整列宽（相邻两列互换宽度，双击恢复默认），列宽以占比存于浏览器 `localStorage`（`pgnls-col-fractions`、`pgnls-status-width`），窗口大小或全屏切换时按比例重算。
 
-样式全部在 `media/css/nls.css` 且限定在 `#nls` 之下，表面、文字、线条用站内 `--pg-*` 令牌，diff 与背景色在亮暗两套主题各有定义；脚本 `media/js/nls.js` 为 ES module，无内联样式与脚本（CSP）。页面 `noindex`。
+样式全部在 `media/css/nls.css` 且限定在 `#nls` 之下，表面、文字、线条用站内 `--pg-*` 令牌，diff 与背景色在亮暗两套主题各有定义；脚本 `media/js/nls.js` 为 ES module，无内联样式与脚本（CSP）。
+
+爬虫排除：`robots.txt` 有 `Disallow: /nls/`；页面 `<meta name="robots" content="noindex,nofollow">`，页面与全部 `/nls/api/*` 响应带 `X-Robots-Tag: noindex, nofollow`；sitemap 不含 `/nls/`，站内搜索爬虫按 sitemap 抓取因此也不会进来。
 
 ## 6. 验证
 

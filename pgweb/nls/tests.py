@@ -102,7 +102,7 @@ class NlsTests(TestCase):
         self.assertContains(page, '消息翻译')
         boot = self.client.get('/nls/api/bootstrap/').json()
         self.assertEqual(boot['total'], 5)
-        self.assertEqual([c['name'] for c in boot['components']], ['pltcl', 'psql'])
+        self.assertEqual([c['name'] for c in boot['components']], ['pltcl', 'psql'])  # alphabetical, not by size
         self.assertEqual(boot['user'], {'authenticated': False, 'name': '', 'can_edit': False, 'login_url': '/account/login/?next=/nls/'})
         table = self.client.get('/nls/api/component/?name=pltcl').json()
         self.assertEqual([r['id'] for r in table['records']], ['m_a1', 'm_a2', 'm_a3'])
@@ -211,6 +211,19 @@ class NlsTests(TestCase):
         self.assertTrue(User.objects.get(pk=self.bob.pk).has_perm('nls.review'))
         call_command('nls_grant', 'bob', '--revoke')
         self.assertFalse(User.objects.get(pk=self.bob.pk).has_perm('nls.review'))
+
+    def test_components_are_listed_by_name(self):
+        load(write_bundle([message('m_z9', 'zzz', 'a', {'': '甲'}), message('m_a9', 'aaa', 'b', {'': '乙'})], gz=False))
+        self.assertEqual([c['name'] for c in service.component_stats()], ['aaa', 'pltcl', 'psql', 'zzz'])
+
+    def test_crawlers_are_kept_out(self):
+        page = self.client.get('/nls/')
+        self.assertEqual(page['X-Robots-Tag'], 'noindex, nofollow')
+        self.assertContains(page, '<meta name="robots" content="noindex,nofollow">')
+        self.assertEqual(self.client.get('/nls/api/bootstrap/')['X-Robots-Tag'], 'noindex, nofollow')
+        self.assertEqual(self.client.get('/nls/api/component/?name=pltcl')['X-Robots-Tag'], 'noindex, nofollow')
+        robots = self.client.get('/robots.txt').content.decode()
+        self.assertIn('Disallow: /nls/', robots)
 
     def test_developer_menu_ends_with_the_tool(self):
         from pgweb.util.contexts import sitenav, LOCAL_ONLY_SECTIONS

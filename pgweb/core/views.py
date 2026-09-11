@@ -220,6 +220,7 @@ Disallow: /message-id/raw/
 Disallow: /message-id/flat/
 Disallow: /message-id/resend/
 Disallow: /message-id/mbox/
+Disallow: /nls/
 
 Sitemap: {}/sitemap.xml
 """.format(site_root), content_type='text/plain')
