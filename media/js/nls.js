@@ -43,7 +43,8 @@ function matchesFilter(r,filter='all'){
 }
 function visibleRecords(records,{query='',filter='all'}={}){
  const q=query.toLowerCase().trim();
- return records.filter(r=>(!q||[r.component,r.english,r.english_plural,...Object.values(r.original_forms),...Object.values(r.forms),...Object.values(r.suggested_forms||{})].join('\n').toLowerCase().includes(q))&&matchesFilter(r,filter));
+ // 搜索只看英文原文与校准译文：现有翻译与二次推荐只是对照，不参与匹配。
+ return records.filter(r=>(!q||[r.english,r.english_plural,...Object.values(r.forms)].join('\n').toLowerCase().includes(q))&&matchesFilter(r,filter));
 }
 function hasSeparateRecommendation(r){
  return r.version>0&&r.suggested_forms&&Object.keys(r.suggested_forms).some(k=>r.forms[k]!==r.suggested_forms[k]);
@@ -132,6 +133,7 @@ async function start(root){
  const $=id=>document.getElementById('nls-'+id);
  const state={components:[],records:[],visible:[],rendered:0,byId:new Map(),component:'',query:'',filter:'all',busy:false,undo:[],lastSaved:null,activeId:null,user:{authenticated:false,can_edit:false,login_url:root.dataset.login}};
  const canEdit=()=>state.user.can_edit;
+ const span=()=>state.component===ALL?6:5;   // 全部组件模式下多一列「组件名称」
  let toastTimer,searchTimer;
  const local={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}},del:k=>{try{localStorage.removeItem(k)}catch{}}};
  const n=v=>Number(v).toLocaleString('zh-CN');
@@ -219,12 +221,12 @@ async function start(root){
  }
  function rowHTML(r,index){
   const diffs=rowDiffs(r);
-  return '<tr class="message-row'+(r.id===state.activeId?' active':'')+'" id="nls-row-'+r.id+'" data-id="'+r.id+'"><td class="check-cell"><input type="checkbox" data-check aria-label="第 '+(index+1)+' 行已校对"'+(r.status==='approved'?' checked':'')+(canEdit()?'':' class="ro" aria-disabled="true" title="登录审校账号后才能勾选"')+'></td><td class="english"><span class="row-num">'+(index+1)+'</span>'+(state.component===ALL?'<span class="component-tag" title="所属组件">'+h(r.component)+'</span>':'')+text(r.english)+(r.english_plural?'<div class="form-separator"><span class="form-label">复数原文</span>'+text(r.english_plural)+'</div>':'')+'</td><td class="old '+oldCellKind(r)+'" lang="zh-CN">'+oldCellHTML(r,diffs)+'</td><td class="candidate'+(r._error?' failed':'')+'" lang="zh-CN">'+candidateCellHTML(r,index,diffs)+'</td><td class="status-cell"><div class="status">'+statusHTML(r)+'</div></td></tr>';
+  return '<tr class="message-row'+(r.id===state.activeId?' active':'')+'" id="nls-row-'+r.id+'" data-id="'+r.id+'"><td class="check-cell"><input type="checkbox" data-check aria-label="第 '+(index+1)+' 行已校对"'+(r.status==='approved'?' checked':'')+(canEdit()?'':' class="ro" aria-disabled="true" title="登录审校账号后才能勾选"')+'></td>'+(state.component===ALL?'<td class="component-cell" title="所属组件">'+h(r.component)+'</td>':'')+'<td class="english"><span class="row-num">'+(index+1)+'</span>'+text(r.english)+(r.english_plural?'<div class="form-separator"><span class="form-label">复数原文</span>'+text(r.english_plural)+'</div>':'')+'</td><td class="old '+oldCellKind(r)+'" lang="zh-CN">'+oldCellHTML(r,diffs)+'</td><td class="candidate'+(r._error?' failed':'')+'" lang="zh-CN">'+candidateCellHTML(r,index,diffs)+'</td><td class="status-cell"><div class="status">'+statusHTML(r)+'</div></td></tr>';
  }
  // 分批渲染：先画 CHUNK 行，滚到表尾、按「继续显示」或用键盘走到最后一行时再续。全部组件有一万多条，一次画完太慢。
  function renderTable(){
   state.visible=visibleRecords(state.records,state);state.rendered=0;
-  $('rows').innerHTML=state.visible.length?'':'<tr><td colspan="5" class="empty">没有匹配的记录</td></tr>';
+  $('rows').innerHTML=state.visible.length?'':'<tr><td colspan="'+span()+'" class="empty">没有匹配的记录</td></tr>';
   appendChunk();progress();
  }
  function appendChunk(){
@@ -257,10 +259,17 @@ async function start(root){
  let fractions=(()=>{try{const v=JSON.parse(local.get('pgnls-col-fractions')||'null');return Array.isArray(v)&&v.length===3&&Math.abs(v.reduce((a,b)=>a+b,0)-1)<0.01?v:DEFAULT_FRACTIONS.slice()}catch{return DEFAULT_FRACTIONS.slice()}})();
  let statusWidth=Math.min(MAX_STATUS,Math.max(MIN_STATUS,+local.get('pgnls-status-width')||DEFAULT_STATUS));
  const headerCells=()=>[...table.querySelectorAll('thead th')];
+ // 全部组件模式下勾选框后多一列「组件名称」：三列文本列与状态列的下标都往后挪一位，它本身算固定宽度。
+ const off=()=>state.component===ALL?1:0,textHeads=()=>headerCells().slice(1+off(),4+off()),statusHead=()=>headerCells()[4+off()];
+ function setAllMode(on){
+  const col=table.querySelector('col.component-col'),th=table.querySelector('th.component-th');
+  if(on&&!col){table.querySelector('col.check-col').insertAdjacentHTML('afterend','<col class="component-col">');table.querySelector('th.check-th').insertAdjacentHTML('afterend','<th class="component-th">组件名称</th>')}
+  else if(!on&&col){col.remove();th.remove()}
+ }
  function applyWidths(){
   if(window.innerWidth<768){for(const c of [...cols.text,cols.status])c.style.width='';return}
-  const checkW=headerCells()[0].getBoundingClientRect().width||36;
-  const avail=table.parentElement.clientWidth-checkW-statusWidth;
+  const fixed=headerCells().slice(0,1+off()).reduce((a,th)=>a+th.getBoundingClientRect().width,0)||36;
+  const avail=table.parentElement.clientWidth-fixed-statusWidth;
   if(avail<3*MIN_TEXT)return;
   const px=fractions.map(f=>Math.max(MIN_TEXT,Math.round(avail*f)));
   px[2]=Math.max(MIN_TEXT,avail-px[0]-px[1]);
@@ -271,7 +280,7 @@ async function start(root){
   grip.addEventListener('pointerdown',e=>{
    if(e.button!==0)return;
    e.preventDefault();const i=+grip.dataset.grip;
-   const widths=headerCells().slice(1,4).map(th=>th.getBoundingClientRect().width),startX=e.clientX,startStatus=statusWidth;
+   const widths=textHeads().map(th=>th.getBoundingClientRect().width),startX=e.clientX,startStatus=statusWidth;
    grip.classList.add('dragging');root.classList.add('resizing');try{grip.setPointerCapture(e.pointerId)}catch{}
    const move=ev=>{
     const delta=ev.clientX-startX;
@@ -281,8 +290,8 @@ async function start(root){
    const up=()=>{
     window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up);window.removeEventListener('pointercancel',up);
     grip.classList.remove('dragging');root.classList.remove('resizing');
-    const cells=headerCells(),now=cells.slice(1,4).map(th=>th.getBoundingClientRect().width),sum=now.reduce((a,b)=>a+b,0);
-    fractions=now.map(w=>w/sum);statusWidth=Math.min(MAX_STATUS,Math.max(MIN_STATUS,Math.round(cells[4].getBoundingClientRect().width)));saveWidths();applyWidths();
+    const now=textHeads().map(th=>th.getBoundingClientRect().width),sum=now.reduce((a,b)=>a+b,0);
+    fractions=now.map(w=>w/sum);statusWidth=Math.min(MAX_STATUS,Math.max(MIN_STATUS,Math.round(statusHead().getBoundingClientRect().width)));saveWidths();applyWidths();
    };
    window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);window.addEventListener('pointercancel',up);
   });
@@ -366,7 +375,7 @@ async function start(root){
  }
  async function loadComponent(name){
   const data=await api('component/?name='+encodeURIComponent(name));
-  state.component=name;state.activeId=null;
+  state.component=name;state.activeId=null;setAllMode(name===ALL);
   state.records=data.records.map((r,index)=>({...r,forms:{...r.forms},_index:index,_dirty:false,_serial:0,_saving:null,_error:'',_saved:{status:r.stored_status,forms:{...r.forms},note:r.note}}));
   state.byId=new Map(state.records.map(r=>[r.id,r]));state.query='';state.filter='all';
   $('search').value='';$('filter').value='all';$('component-title').textContent=name===ALL?ALL_LABEL:name;
@@ -423,13 +432,13 @@ async function start(root){
   if(details&&!force){details.remove();button.setAttribute('aria-expanded','false');button.classList.remove('open');return}
   if(!details){details=document.createElement('tr');details.id='nls-details-'+r.id;details.className='details-row';details.dataset.id=r.id;row.after(details)}
   button.setAttribute('aria-expanded','true');button.classList.add('open');
-  details.innerHTML='<td colspan="5"><div class="row-details nls-muted">正在查询相近消息…</div></td>';
+  details.innerHTML='<td colspan="'+span()+'"><div class="row-details nls-muted">正在查询相近消息…</div></td>';
   try{
    const data=await api('references/?id='+encodeURIComponent(r.id));
    if(!details.isConnected)return;
-   details.innerHTML='<td colspan="5">'+detailsHTML(r,data)+'</td>';
+   details.innerHTML='<td colspan="'+span()+'">'+detailsHTML(r,data)+'</td>';
    details.querySelector('[data-note]').value=r.note;
-  }catch(e){details.innerHTML='<td colspan="5"><div class="nls-error">'+h(e.message)+'</div></td>'}
+  }catch(e){details.innerHTML='<td colspan="'+span()+'"><div class="nls-error">'+h(e.message)+'</div></td>'}
  }
  async function saveComponent(submit=false){
   for(const r of state.records)clearTimeout(r._timer);
@@ -514,5 +523,5 @@ async function start(root){
  $('submit-confirm').onclick=()=>void run(async()=>{await saveComponent(true);$('submit-dialog').close()});
  $('undo').onclick=()=>void run(undo);
  window.addEventListener('beforeunload',e=>{if(state.records.some(r=>r._dirty||r._saving)){e.preventDefault();e.returnValue=''}});
- await run(async()=>{await bootstrap();if(!state.components.length){$('rows').innerHTML='<tr><td colspan="5" class="empty">尚未导入任何消息。</td></tr>';$('component-title').textContent='—';return}const previous=local.get('pgnls-table-component');await loadComponent(previous===ALL||state.components.some(c=>c.name===previous)?previous:state.components[0].name)});
+ await run(async()=>{await bootstrap();if(!state.components.length){$('rows').innerHTML='<tr><td colspan="'+span()+'" class="empty">尚未导入任何消息。</td></tr>';$('component-title').textContent='—';return}const previous=local.get('pgnls-table-component');await loadComponent(previous===ALL||state.components.some(c=>c.name===previous)?previous:state.components[0].name)});
 }

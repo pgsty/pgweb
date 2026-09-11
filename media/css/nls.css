@@ -101,8 +101,11 @@
 /* 「全部组件」钉在列表顶上，与真实组件用一条线隔开。 */
 #nls .component-button.all { margin-bottom: 6px; padding-bottom: 8px; border-bottom: 1px solid var(--nls-line); border-radius: 5px 5px 0 0; font-family: inherit; font-weight: 600; }
 #nls .component-button.all.active { border-bottom-color: transparent; }
-/* 全部组件模式下每行英文前标出所属组件。 */
-#nls .component-tag { display: inline-block; margin-right: 6px; padding: 0 5px; border: 1px solid var(--nls-line-soft); border-radius: 3px; background: var(--nls-surface-2); font: 11px/1.6 var(--nls-mono); color: var(--nls-ink-2); vertical-align: 1px; white-space: nowrap; }
+/* 全部组件模式下勾选框后多一列「组件名称」（脚本按模式增删 col 与 th）。 */
+#nls .component-col { width: 148px; }
+#nls th.component-th, #nls td.component-cell { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#nls td.component-cell { font: 12px/1.6 var(--nls-mono); color: var(--nls-ink-2); }
+@media (max-width: 767px) { #nls .component-col { width: 76px; } #nls td.component-cell { font-size: 11px; } }
 #nls .nls-table-end .nls-btn { margin-left: 8px; font-size: 12px; }
 
 /* ---- toolbar & tools ---- */
