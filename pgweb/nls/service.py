@@ -13,6 +13,8 @@ from .models import HISTORY_LIMIT, Message, STATUSES
 from .validate import MAX_NOTE, ValidationError, check_approval, check_forms
 
 STATUS_KEYS = tuple(key for key, _label in STATUSES)
+# The pseudo component: every message at once, for cross-component search and consistent wording.
+ALL = '*'
 PERMISSION = 'nls.review'
 LOGIN_URL = '/account/login/?next=/nls/'
 TABLE_FIELDS = ('id', 'number', 'component', 'msgid', 'msgid_plural', 'original_forms', 'suggested_forms',
@@ -82,7 +84,8 @@ def record(row):
 
 
 def component_table(name):
-    rows = list(Message.objects.filter(component=name).order_by('number').values(*TABLE_FIELDS))
+    query = Message.objects.all() if name == ALL else Message.objects.filter(component=name)
+    rows = list(query.order_by('component', 'number').values(*TABLE_FIELDS))
     if not rows:
         raise ValidationError('未知组件。')
     return {'component': name, 'records': [record(r) for r in rows], 'total': len(rows)}
@@ -208,9 +211,14 @@ def decide_many(component, decisions, user, submit=False):
     ids = [d.get('id') for d in decisions if isinstance(d, dict)]
     if len(ids) != len(decisions) or len(set(ids)) != len(ids):
         raise ValidationError('包含重复或无效的记录。')
-    messages = {m.id: m for m in Message.objects.select_for_update().filter(component=component, id__in=ids)}
+    if component == ALL:
+        if submit:
+            raise ValidationError('提交组件必须选择具体组件，「全部组件」下只能保存。')
+        messages = {m.id: m for m in Message.objects.select_for_update().filter(id__in=ids)}
+    else:
+        messages = {m.id: m for m in Message.objects.select_for_update().filter(component=component, id__in=ids)}
     if set(messages) != set(ids):
-        raise ValidationError('包含不属于该组件的消息。')
+        raise ValidationError('包含未知或不属于该组件的消息。')
     if submit and Message.objects.filter(component=component).exclude(id__in=ids).exists():
         raise ValidationError('提交组件必须包含该组件的全部消息。')
     prepared, errors = [], []

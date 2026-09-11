@@ -98,6 +98,12 @@
 #nls .component-button .count { flex: none; min-width: 58px; text-align: right; font-size: 11px; color: var(--nls-muted); font-variant-numeric: tabular-nums; }
 #nls .component-button .count i { font-style: normal; opacity: .5; margin: 0 1px; }
 #nls .nls-side-note { padding: 14px 9px; font-size: 11px; line-height: 1.8; color: var(--nls-muted); }
+/* 「全部组件」钉在列表顶上，与真实组件用一条线隔开。 */
+#nls .component-button.all { margin-bottom: 6px; padding-bottom: 8px; border-bottom: 1px solid var(--nls-line); border-radius: 5px 5px 0 0; font-family: inherit; font-weight: 600; }
+#nls .component-button.all.active { border-bottom-color: transparent; }
+/* 全部组件模式下每行英文前标出所属组件。 */
+#nls .component-tag { display: inline-block; margin-right: 6px; padding: 0 5px; border: 1px solid var(--nls-line-soft); border-radius: 3px; background: var(--nls-surface-2); font: 11px/1.6 var(--nls-mono); color: var(--nls-ink-2); vertical-align: 1px; white-space: nowrap; }
+#nls .nls-table-end .nls-btn { margin-left: 8px; font-size: 12px; }
 
 /* ---- toolbar & tools ---- */
 #nls .nls-toolbar { display: flex; align-items: center; gap: 12px; height: 52px; position: sticky; top: var(--nls-top); z-index: 7; background: var(--pg-canvas); border-bottom: 1px solid var(--nls-line); }

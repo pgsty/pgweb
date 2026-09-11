@@ -3,6 +3,8 @@
 const escapeHTML=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const h=escapeHTML;
 const labels={pending:'待审',approved:'已校对',flagged:'标疑',rejected:'否定',stale:'需重审'};
+// 「全部组件」是一个伪组件：一次载入全部消息，跨组件搜索相近措辞、统一译法。表格分批渲染，每批 CHUNK 行。
+const ALL='*',ALL_LABEL='全部组件',CHUNK=400;
 const kindLabels={retained:'保留措辞',format:'调整格式',revised:'修订语义',new:'补充新译'};
 const kindTitles={retained:'保留措辞：推荐沿用现有译法',format:'调整格式：只改标点、空格或占位符写法',revised:'修订语义：含义或措辞有变化',new:'补充新译：原本没有译文'};
 const refKinds={approved:'人工通过',human:'人工稿',candidate:'当前候选'};
@@ -41,7 +43,7 @@ function matchesFilter(r,filter='all'){
 }
 function visibleRecords(records,{query='',filter='all'}={}){
  const q=query.toLowerCase().trim();
- return records.filter(r=>(!q||[r.english,r.english_plural,...Object.values(r.original_forms),...Object.values(r.forms),...Object.values(r.suggested_forms||{})].join('\n').toLowerCase().includes(q))&&matchesFilter(r,filter));
+ return records.filter(r=>(!q||[r.component,r.english,r.english_plural,...Object.values(r.original_forms),...Object.values(r.forms),...Object.values(r.suggested_forms||{})].join('\n').toLowerCase().includes(q))&&matchesFilter(r,filter));
 }
 function hasSeparateRecommendation(r){
  return r.version>0&&r.suggested_forms&&Object.keys(r.suggested_forms).some(k=>r.forms[k]!==r.suggested_forms[k]);
@@ -128,7 +130,7 @@ const root=document.getElementById('nls');
 if(root)void start(root);
 async function start(root){
  const $=id=>document.getElementById('nls-'+id);
- const state={components:[],records:[],byId:new Map(),component:'',query:'',filter:'all',busy:false,undo:[],lastSaved:null,activeId:null,user:{authenticated:false,can_edit:false,login_url:root.dataset.login}};
+ const state={components:[],records:[],visible:[],rendered:0,byId:new Map(),component:'',query:'',filter:'all',busy:false,undo:[],lastSaved:null,activeId:null,user:{authenticated:false,can_edit:false,login_url:root.dataset.login}};
  const canEdit=()=>state.user.can_edit;
  let toastTimer,searchTimer;
  const local={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}},del:k=>{try{localStorage.removeItem(k)}catch{}}};
@@ -160,7 +162,8 @@ async function start(root){
   $('save-state').textContent=!canEdit()?'':saving?'正在保存…':dirty?dirty+' 行尚未保存':state.lastSaved?'已保存 '+state.lastSaved.slice(11,19):'';
   $('save-state').classList.toggle('dirty',dirty>0);
   $('save-component').disabled=state.busy||!dirty;
-  $('submit-component').disabled=state.busy||!state.records.length;
+  $('submit-component').disabled=state.busy||!state.records.length||state.component===ALL;
+  $('submit-component').hidden=!canEdit()||state.component===ALL;
   $('undo').disabled=state.busy||!state.undo.length;
  }
  function renderUser(){
@@ -173,12 +176,24 @@ async function start(root){
  }
  function renderSidebar(){
   const query=$('component-search').value.toLowerCase();
-  $('components').innerHTML=state.components.filter(c=>c.name.includes(query)).map(c=>'<button type="button" class="component-button'+(c.name===state.component?' active':'')+'" data-component="'+h(c.name)+'" title="已校对 '+c.approved+' / '+c.total+'"><span class="name">'+h(c.name)+'</span><span class="count">'+c.approved+'<i>/</i>'+c.total+'</span></button>').join('');
-  $('component-select').innerHTML=state.components.map(c=>'<option value="'+h(c.name)+'"'+(c.name===state.component?' selected':'')+'>'+h(c.name)+'  '+c.approved+'/'+c.total+'</option>').join('');
+  const sum=state.components.reduce((a,c)=>({approved:a.approved+c.approved,total:a.total+c.total}),{approved:0,total:0});
+  const all={name:ALL,label:ALL_LABEL,all:true,...sum};
+  const button=c=>'<button type="button" class="component-button'+(c.all?' all':'')+(c.name===state.component?' active':'')+'" data-component="'+h(c.name)+'" title="已校对 '+c.approved+' / '+c.total+(c.all?' · 跨组件浏览与搜索，统一译法':'')+'"><span class="name">'+h(c.label||c.name)+'</span><span class="count">'+c.approved+'<i>/</i>'+c.total+'</span></button>';
+  $('components').innerHTML=button(all)+state.components.filter(c=>c.name.includes(query)).map(button).join('');
+  $('component-select').innerHTML=[all,...state.components].map(c=>'<option value="'+h(c.name)+'"'+(c.name===state.component?' selected':'')+'>'+h(c.label||c.name)+'  '+c.approved+'/'+c.total+'</option>').join('');
  }
  function progress(){
-  const c=state.components.find(c=>c.name===state.component);
-  if(c){c.approved=state.records.filter(r=>r.status==='approved').length;$('component-summary').textContent=n(state.records.length)+' 条 · 已校对 '+n(c.approved)+' 条'}
+  if(state.component===ALL){
+   // 全部组件：各组件的已校对数从当前记录重新数一遍，侧栏与摘要都跟着变。
+   const approved=new Map();
+   for(const r of state.records)if(r.status==='approved')approved.set(r.component,(approved.get(r.component)||0)+1);
+   for(const c of state.components)c.approved=approved.get(c.name)||0;
+   const done=[...approved.values()].reduce((a,b)=>a+b,0);
+   $('component-summary').textContent=n(state.records.length)+' 条 · '+state.components.length+' 个组件 · 已校对 '+n(done)+' 条';
+  }else{
+   const c=state.components.find(c=>c.name===state.component);
+   if(c){c.approved=state.records.filter(r=>r.status==='approved').length;$('component-summary').textContent=n(state.records.length)+' 条 · 已校对 '+n(c.approved)+' 条'}
+  }
   renderSidebar();refreshStatus();
  }
  // ---- 行渲染 ----
@@ -204,14 +219,23 @@ async function start(root){
  }
  function rowHTML(r,index){
   const diffs=rowDiffs(r);
-  return '<tr class="message-row'+(r.id===state.activeId?' active':'')+'" id="nls-row-'+r.id+'" data-id="'+r.id+'"><td class="check-cell"><input type="checkbox" data-check aria-label="第 '+(index+1)+' 行已校对"'+(r.status==='approved'?' checked':'')+(canEdit()?'':' class="ro" aria-disabled="true" title="登录审校账号后才能勾选"')+'></td><td class="english"><span class="row-num">'+(index+1)+'</span>'+text(r.english)+(r.english_plural?'<div class="form-separator"><span class="form-label">复数原文</span>'+text(r.english_plural)+'</div>':'')+'</td><td class="old '+oldCellKind(r)+'" lang="zh-CN">'+oldCellHTML(r,diffs)+'</td><td class="candidate'+(r._error?' failed':'')+'" lang="zh-CN">'+candidateCellHTML(r,index,diffs)+'</td><td class="status-cell"><div class="status">'+statusHTML(r)+'</div></td></tr>';
+  return '<tr class="message-row'+(r.id===state.activeId?' active':'')+'" id="nls-row-'+r.id+'" data-id="'+r.id+'"><td class="check-cell"><input type="checkbox" data-check aria-label="第 '+(index+1)+' 行已校对"'+(r.status==='approved'?' checked':'')+(canEdit()?'':' class="ro" aria-disabled="true" title="登录审校账号后才能勾选"')+'></td><td class="english"><span class="row-num">'+(index+1)+'</span>'+(state.component===ALL?'<span class="component-tag" title="所属组件">'+h(r.component)+'</span>':'')+text(r.english)+(r.english_plural?'<div class="form-separator"><span class="form-label">复数原文</span>'+text(r.english_plural)+'</div>':'')+'</td><td class="old '+oldCellKind(r)+'" lang="zh-CN">'+oldCellHTML(r,diffs)+'</td><td class="candidate'+(r._error?' failed':'')+'" lang="zh-CN">'+candidateCellHTML(r,index,diffs)+'</td><td class="status-cell"><div class="status">'+statusHTML(r)+'</div></td></tr>';
  }
+ // 分批渲染：先画 CHUNK 行，滚到表尾、按「继续显示」或用键盘走到最后一行时再续。全部组件有一万多条，一次画完太慢。
  function renderTable(){
-  const records=visibleRecords(state.records,state);
-  $('rows').innerHTML=records.length?records.map(r=>rowHTML(r,r._index)).join(''):'<tr><td colspan="5" class="empty">没有匹配的记录</td></tr>';
-  $('table-end').textContent='显示 '+n(records.length)+' / '+n(state.records.length)+' 条消息';
-  progress();
+  state.visible=visibleRecords(state.records,state);state.rendered=0;
+  $('rows').innerHTML=state.visible.length?'':'<tr><td colspan="5" class="empty">没有匹配的记录</td></tr>';
+  appendChunk();progress();
  }
+ function appendChunk(){
+  const next=state.visible.slice(state.rendered,state.rendered+CHUNK);
+  if(next.length){$('rows').insertAdjacentHTML('beforeend',next.map(r=>rowHTML(r,r._index)).join(''));state.rendered+=next.length}
+  const more=state.visible.length-state.rendered,filtered=state.visible.length!==state.records.length;
+  $('table-end').innerHTML='显示 '+n(state.rendered)+' / '+n(state.visible.length)+(filtered?' 条匹配（共 '+n(state.records.length)+' 条）':' 条消息')+(more>0?' <button type="button" class="nls-btn nls-quiet" data-more>继续显示 '+n(Math.min(more,CHUNK))+' 条</button>':'');
+  return next.length;
+ }
+ const sentinel=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)&&state.rendered<state.visible.length)appendChunk()},{rootMargin:'600px 0px'});
+ sentinel.observe($('table-end'));
  const rowEl=id=>$('row-'+id);
  function paintOld(row,r,diffs){const old=row.querySelector('.old');old.className='old '+oldCellKind(r);old.innerHTML=oldCellHTML(r,diffs)}
  function refreshRow(r){
@@ -291,7 +315,11 @@ async function start(root){
   const cb=rowCheckbox(id);if(!cb)return;
   setActive(id);cb.focus({preventScroll:true});if(scroll)ensureVisible(cb.closest('tr'));
  }
- function siblingRow(row,dir){let el=row;do el=dir>0?el.nextElementSibling:el.previousElementSibling;while(el&&!el.classList.contains('message-row'));return el}
+ function siblingRow(row,dir){
+  let el=row;do el=dir>0?el.nextElementSibling:el.previousElementSibling;while(el&&!el.classList.contains('message-row'));
+  if(!el&&dir>0&&state.rendered<state.visible.length){appendChunk();return siblingRow(row,dir)}
+  return el;
+ }
  // ---- 保存（撤销栈在浏览器端：撤销 = 把上一状态再保存一次） ----
  function rowError(r,e){r._error=e.message||String(e);refreshRow(r);error(e);if(e.status!==401)toast(r._error,true)}
  function markDirty(r){
@@ -341,7 +369,7 @@ async function start(root){
   state.component=name;state.activeId=null;
   state.records=data.records.map((r,index)=>({...r,forms:{...r.forms},_index:index,_dirty:false,_serial:0,_saving:null,_error:'',_saved:{status:r.stored_status,forms:{...r.forms},note:r.note}}));
   state.byId=new Map(state.records.map(r=>[r.id,r]));state.query='';state.filter='all';
-  $('search').value='';$('filter').value='all';$('component-title').textContent=name;
+  $('search').value='';$('filter').value='all';$('component-title').textContent=name===ALL?ALL_LABEL:name;
   renderTable();applyWidths();local.set('pgnls-table-component',name);scroller().scrollTo(0,0);
  }
  function editCell(el,r){
@@ -421,6 +449,7 @@ async function start(root){
  const readOnlyHint=()=>{if(Date.now()-roToast>2500){roToast=Date.now();toast('',true,'只读模式 — <a href="'+h(state.user.login_url)+'">登录</a>审校账号后才能校对或编辑')}};
  root.addEventListener('click',e=>{
   if(!canEdit()&&e.target.matches('[data-check]')){e.preventDefault();readOnlyHint();return}
+  if(e.target.closest('[data-more]')){appendChunk();return}
   const component=e.target.closest('[data-component]');if(component){void run(async()=>{await flush();await loadComponent(component.dataset.component)});return}
   const row=e.target.closest('tr[data-id]'),r=row&&state.byId.get(row.dataset.id);
   if(r&&row.classList.contains('message-row'))setActive(r.id);
@@ -485,5 +514,5 @@ async function start(root){
  $('submit-confirm').onclick=()=>void run(async()=>{await saveComponent(true);$('submit-dialog').close()});
  $('undo').onclick=()=>void run(undo);
  window.addEventListener('beforeunload',e=>{if(state.records.some(r=>r._dirty||r._saving)){e.preventDefault();e.returnValue=''}});
- await run(async()=>{await bootstrap();if(!state.components.length){$('rows').innerHTML='<tr><td colspan="5" class="empty">尚未导入任何消息。</td></tr>';$('component-title').textContent='—';return}const previous=local.get('pgnls-table-component');await loadComponent(state.components.some(c=>c.name===previous)?previous:state.components[0].name)});
+ await run(async()=>{await bootstrap();if(!state.components.length){$('rows').innerHTML='<tr><td colspan="5" class="empty">尚未导入任何消息。</td></tr>';$('component-title').textContent='—';return}const previous=local.get('pgnls-table-component');await loadComponent(previous===ALL||state.components.some(c=>c.name===previous)?previous:state.components[0].name)});
 }
