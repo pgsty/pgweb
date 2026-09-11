@@ -1,15 +1,32 @@
 {
   "date": "2026-09-10",
-  "origin": "chronicle 2026-09-10: daily 14（无 pgnexus 与 Planet）；补 2026-09-07 至 09-09 未用候选 11 条",
+  "origin": "pgsql.cc 值班编辑 2026-09-11；主刊 2026-09-10；截稿 2026-09-11T08:53:30+08:00；保留旧刊有效内容并订正；PostgreSQL Git、官方公告、项目原文、PGNexus #265、主动检索；原始证据 20260911T005330Z",
   "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 开发分支将 OID 计数器扩至 8 字节",
+      "summary": "PostgreSQL 开发分支已把 OID 计数器扩为 8 字节，并新增 GetNewObjectId8()。检查点、WAL 与 pg_upgrade 等工具同步调整，避免计数值在恢复或升级时被截断；原有 32 位接口继续保留兼容行为。这是支持更大 TOAST 对象标识的基础工作，8 字节 TOAST 指针本身仍在讨论中。提交同时提升系统目录、控制文件和 WAL 格式版本，运行开发快照的团队需要留意数据目录兼容性；该变更尚未正式发布。",
+      "url": "https://github.com/postgres/postgres/commit/cb298616463d6e4f2c360e8d07b83b526fad375f",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "OID",
+        "TOAST"
+      ],
+      "position": 1
+    },
     {
       "tier": 1,
       "title": "PostgreSQL Anonymizer 3.2 修复三个高危漏洞",
       "summary": "Dalibo 的脱敏扩展 3.2 修复了自定义类型与运算符提权（CVE-2026-19633）、规则导入 SQL 注入（CVE-2026-19634）和并行静态脱敏提权（CVE-2026-83534），并默认禁止 superuser 执行 masking；anon.pseudo_* 被官方称快约 40 倍的 anon.seeded_* 取代。公告提示 PostgreSQL 14 及更早版本升级来的实例风险最高。",
-      "url": "https://pgsql.cc/about/news/postgresql-anonymizer-32-3373/",
+      "url": "https://gitlab.com/dalibo/postgresql_anonymizer/-/releases/3.2.0",
       "author": "Dalibo",
-      "source": "PostgreSQL 新闻",
-      "source_date": "2026-09-09",
+      "source": "Dalibo GitLab",
+      "source_date": "2026-09-05",
       "image": "",
       "domain": "pg",
       "tags": [
@@ -17,7 +34,24 @@
         "扩展",
         "数据脱敏"
       ],
-      "position": 1
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_vault_tde 升级前须先导出旧版 TOAST 数据",
+      "summary": "pg_vault_tde 为 PostgreSQL 17 和 18 提供表级透明加密，借助外部密钥服务保护落盘数据。1.7.1 修正了行外 TOAST 数据的附加认证数据计算，旧版写入的这类数据因此无法在新版通过认证。项目要求先在旧二进制下导出受影响表，再安装新版并恢复；直接替换软件包可能导致大字段无法读取。升级前应核对加密表的 TOAST 使用情况，并依照版本文档安排导出、恢复和应用验证。",
+      "url": "https://github.com/labmiriade/pg_vault_tde/releases/tag/v1.7.1",
+      "author": "Miriade",
+      "source": "pg_vault_tde",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "加密",
+        "TOAST",
+        "升级"
+      ],
+      "position": 3
     },
     {
       "tier": 1,
@@ -34,12 +68,12 @@
         "私有化部署",
         "AlloyDB"
       ],
-      "position": 2
+      "position": 4
     },
     {
       "tier": 1,
       "title": "CodeQL 2.27.0 把 libpq 查询接口纳入 SQL 注入建模",
-      "summary": "CodeQL 2.27.0 同时推进两件事：一是提供 Linux arm64 的原生 release assets，让更多构建和扫描环境不必依赖 x86 仿真；二是把 libpq 的 PQexec、PQexecParams、PQprepare 等接口建模为 C/C++ 的 SQL 注入 sink。用到这些接口的 PostgreSQL 客户端仓库会出现新增告警，既可能是真实的拼接 SQL，也可能是模型没读懂的参数化包装器。",
+      "summary": "CodeQL 2.27.0 新增 Linux arm64 原生发布包，并扩展了 C/C++ 分析中的 PostgreSQL 客户端接口模型。PQexec、PQexecParams、PQprepare 等 libpq 查询接口现在被建模为 SQL 注入的数据流终点，使用这些接口的项目可以获得更完整的查询追踪。对维护数据库驱动或原生应用的团队，这次更新同时改变扫描工具的部署选择与检查范围；升级后适合复核新结果，并确认查询构造与参数绑定方式。",
       "url": "https://github.blog/changelog/2026-09-09-codeql-2-27-0-adds-support-for-linux-arm64/",
       "author": "GitHub",
       "source": "GitHub Changelog",
@@ -51,12 +85,29 @@
         "libpq",
         "SQL 注入"
       ],
-      "position": 3
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "PlanetScale 开放 Neki 分片 PostgreSQL 预览",
+      "summary": "PlanetScale 推出 Neki 平台预览，把原生 PostgreSQL 分布到多台机器，应用通过标准协议连接路由器，由分布式规划器分派查询并汇总结果。每个分片保留一主至少两副本，跨三个可用区部署；用户用 JSON 定义分片键和表的分组，并通过内置工作流执行在线改表、升级与重新分片。系统也允许先以单分片运行，再逐步扩展。当前预览仍可能出现破坏性变更，官方要求暂不承载生产负载。",
+      "url": "https://planetscale.com/blog/introducing-neki",
+      "author": "Nick Van Wiggeren",
+      "source": "PlanetScale",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "分布式",
+        "Neki"
+      ],
+      "position": 6
     },
     {
       "tier": 1,
       "title": "Spanner 取消同一事务内多条 DML 的累计 mutation 上限",
-      "summary": "为绕开单个事务约 80,000 mutation 的累计限制，应用过去常把一次业务事务拆成多次提交，代价是额外的幂等与补偿逻辑。Google Cloud 说明现在每条 DML 语句单独评估修改量，多条语句不再共同计入同一上限。这不意味着可以无限量写入：锁冲突、提交延迟、二级索引写放大和重试成本仍由应用承担。重新合并此前拆开的事务前，应连同延迟、锁等待和非幂等副作用一起复测。",
+      "summary": "为绕开单个事务约 80,000 次修改的累计限制，应用过去常把一次业务操作拆成多次提交，增加幂等与补偿逻辑。Google Cloud 现将 DML 的修改量改为按语句单独计算，多条语句不再共用这一额度，使更多批量写入可以保留在同一事务中。通过 Mutation API 提交的修改仍受原有累计限制，事务大小限制也继续适用。调整批处理策略时，需要区分所用写入接口，再验证事务大小、锁竞争与重试行为。",
       "url": "https://cloud.google.com/blog/products/databases/spanner-removes-dml-mutation-limits",
       "author": "Google Cloud",
       "source": "Google Cloud 博客",
@@ -68,7 +119,7 @@
         "事务",
         "分布式 SQL"
       ],
-      "position": 4
+      "position": 7
     },
     {
       "tier": 1,
@@ -85,80 +136,96 @@
         "供应链",
         "GHAS"
       ],
-      "position": 5
-    },
-    {
-      "tier": 2,
-      "title": "REPACK CONCURRENTLY 统一 catalog 表的报错措辞",
-      "summary": "补丁把 hint 换成 detail 并统一措辞，Sawada 审阅后合入，线程结项。",
-      "url": "https://www.postgresql.org/message-id/CALj2ACXn-MQWAd7vp-rXjVAayU-8_QmhtkSAvdTRNbPMae5dgg@mail.gmail.com",
-      "author": "",
-      "source": "PostgreSQL hackers",
-      "source_date": "2026-09-09",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "REPACK",
-        "错误消息"
-      ],
-      "position": 6
-    },
-    {
-      "tier": 2,
-      "title": "行过滤丢 TOAST 列的修复另开线程跟进",
-      "summary": "Vignesh C 按与 Amit Kapila 的约定拆出独立线程，分析与补丁在新线程展开。",
-      "url": "https://www.postgresql.org/message-id/CALDaNm24+gk7vv_McmX9cw8P+5kCfQdMNERTC0up_Zn53Vs6_Q@mail.gmail.com",
-      "author": "",
-      "source": "PostgreSQL hackers",
-      "source_date": "2026-09-07",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "逻辑复制",
-        "TOAST"
-      ],
-      "position": 7
-    },
-    {
-      "tier": 2,
-      "title": "SUM(int2) 与 SUM(int4) 的 int8 累加器缺少溢出检测",
-      "summary": "Andrei Lepikhov 依 Tom Lane 意见去掉多余的 count 检查与回归测试，重发 v3 补丁。",
-      "url": "https://www.postgresql.org/message-id/CAApHDvoc36xXLHhyMfFwh0ODWsvQA=aaVZkF3Gnu8HCWcuSjTw@mail.gmail.com",
-      "author": "",
-      "source": "PostgreSQL hackers",
-      "source_date": "2026-09-07",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "聚合函数",
-        "溢出"
-      ],
       "position": 8
     },
     {
       "tier": 2,
-      "title": "SQL 槽函数出错时的复制槽释放定为发 WARNING",
-      "summary": "PG20 以后子事务提交移交槽时发 WARNING，回归分支保持 no-op，v16 补丁覆盖全部分支。",
-      "url": "https://www.postgresql.org/message-id/CALj2ACV2YRvkF8wKNBKSrv8qAZ7tyrb_-ZR2so+NANrpRUDSQQ@mail.gmail.com",
+      "title": "外键快速检查修复锁等待后的快照误判",
+      "summary": "已合入并注明回补至 19；先获取被引用表的锁再取快照，修复已存在行被误报违反外键及 STABLE 函数可见性问题。",
+      "url": "https://github.com/postgres/postgres/commit/3f660d86ba65d9747d5e2da418e24bd023271241",
       "author": "",
-      "source": "PostgreSQL hackers",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "并发"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 修复函数联接的远端估算崩溃",
+      "summary": "开发分支已补齐函数侧的用户映射，避免 use_remote_estimate 开启时，外部表与函数联接在规划阶段崩溃。",
+      "url": "https://github.com/postgres/postgres/commit/3430fba3b0f0655e203a4b03dd531d7bcad86ff3",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "查询规划"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "优化器修复重复条件导致的行数低估",
+      "summary": "两项已提交修复消除参数化路径及等价类派生条件的重复执行，避免选择率被重复计算；提交注明回补至 19。",
+      "url": "https://github.com/postgres/postgres/commit/895c1b5fe1ecaf3d0c5cb1ce5a85ab95e4c27dfb",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "DROP TABLESPACE 修复并发删除后的悬空依赖",
+      "summary": "已提交的修复先锁定表空间再检查依赖，并补齐重命名与所有权维护的锁顺序；提交注明回补至 PostgreSQL 14。",
+      "url": "https://github.com/postgres/postgres/commit/a12600b762c36d91450ce085fa25ef75250bc1c2",
+      "author": "",
+      "source": "PostgreSQL Git",
       "source_date": "2026-09-09",
       "image": "",
       "domain": "pg",
       "tags": [
-        "复制槽",
-        "子事务"
+        "表空间",
+        "并发"
       ],
-      "position": 9
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "PGSQL.CC 发布覆盖 11 个主版本的中文手册",
+      "summary": "涵盖 PostgreSQL 10 至 19 Beta 及 20 开发快照，并提供手册与扩展条目检索、三方文档入口。",
+      "url": "https://vonng.com/pg/pgsql-cc-online/",
+      "author": "冯若航",
+      "source": "VONNG",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "中文文档",
+        "PGSQL.CC"
+      ],
+      "position": 13
     },
     {
       "tier": 2,
       "title": "Read the Docs 复盘一次专门绕过 CDN 缓存的 DDoS",
       "summary": "流量挑选可绕过缓存的 URL 制造数百万变体请求，着力点是 cache miss 与计费路径。",
       "url": "https://about.readthedocs.com/blog/2026/09/2026-ddos-attack/",
-      "author": "Read the Docs",
+      "author": "David Fischer",
       "source": "Read the Docs 博客",
-      "source_date": "2026-09-09",
+      "source_date": "2026-09-08",
       "image": "",
       "domain": "infra",
       "tags": [
@@ -166,7 +233,24 @@
         "CDN",
         "文档站"
       ],
-      "position": 10
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "npm 将恢复码登录后的发布冻结扩展到所有账户",
+      "summary": "成功使用恢复码登录后，发布包及创建令牌等敏感写操作暂停 72 小时，安装包仍可继续。",
+      "url": "https://github.blog/changelog/2026-09-09-npm-extends-recovery-code-security-holds-to-all-accounts/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "npm",
+        "供应链",
+        "账户安全"
+      ],
+      "position": 15
     },
     {
       "tier": 2,
@@ -177,13 +261,13 @@
       "source": "GitHub Changelog",
       "source_date": "2026-09-09",
       "image": "",
-      "domain": "infra",
+      "domain": "ai",
       "tags": [
         "agent",
         "权限",
         "企业策略"
       ],
-      "position": 11
+      "position": 16
     },
     {
       "tier": 2,
@@ -194,136 +278,45 @@
       "source": "GitHub Changelog",
       "source_date": "2026-09-09",
       "image": "",
-      "domain": "infra",
+      "domain": "ai",
       "tags": [
         "代码质量",
         "agent"
       ],
-      "position": 12
+      "position": 17
     },
     {
-      "tier": 3,
-      "title": "pg_stat_progress_vacuum 报告索引进度的方案仍在拉锯",
-      "summary": "",
-      "url": "https://www.postgresql.org/message-id/CAD21AoDs4QDSEs7kCqi3tDcyKKXYFbcn+bH3qigQUK+NGZrVTw@mail.gmail.com",
-      "author": "",
-      "source": "",
-      "source_date": "2026-09-09",
+      "tier": 2,
+      "title": "Neon 支持代理先建数据库、用户随后认领",
+      "summary": "未认领项目限存活 72 小时、存储 100 MB；认领时撤销原访问令牌并轮换数据库凭据。",
+      "url": "https://neon.com/blog/an-agent-provisions-a-neon-backend-a-human-claims-it-later",
+      "author": "Andre Landgraf、Zachary Proser",
+      "source": "Neon",
+      "source_date": "2026-09-10",
       "image": "",
-      "domain": "pg",
+      "domain": "ai",
       "tags": [
-        "VACUUM",
-        "监控"
+        "PostgreSQL",
+        "代理",
+        "权限"
       ],
-      "position": 13
+      "position": 18
     },
     {
       "tier": 3,
-      "title": "REPACK 的进度视图不再一律上报 CLUSTER",
+      "title": "REPACK 修复按索引排序时的进度命令标识",
       "summary": "",
-      "url": "https://www.postgresql.org/message-id/CAHGQGwEdyNCVrHsaEmu66DxunW8PiCj-Z3O3QRNudC3-uyRTzQ@mail.gmail.com",
+      "url": "https://github.com/postgres/postgres/commit/4dd037286e06116f6f4af70a291e215c0a111c24",
       "author": "",
       "source": "",
-      "source_date": "2026-09-09",
+      "source_date": "2026-09-10",
       "image": "",
       "domain": "pg",
       "tags": [
         "REPACK",
         "监控"
       ],
-      "position": 14
-    },
-    {
-      "tier": 3,
-      "title": "pgstat 拟在事务进行中刷新部分统计信息",
-      "summary": "",
-      "url": "https://www.postgresql.org/message-id/aqDXnzW7R2Ky9zUC@paquier.xyz",
-      "author": "",
-      "source": "",
-      "source_date": "2026-09-08",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "统计信息"
-      ],
-      "position": 15
-    },
-    {
-      "tier": 3,
-      "title": "离线开关校验和后备库状态不一致的文档待改",
-      "summary": "",
-      "url": "https://www.postgresql.org/message-id/166AD46C-25A4-4AF3-B65F-095E3746A96E@yesql.se",
-      "author": "",
-      "source": "",
-      "source_date": "2026-09-09",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "校验和",
-        "文档"
-      ],
-      "position": 16
-    },
-    {
-      "tier": 3,
-      "title": "逻辑复制错误消息将统一使用限定的关系名",
-      "summary": "",
-      "url": "https://www.postgresql.org/message-id/CALDaNm0SUaiLQ9KBEZ08oGXd2788S-9bFMy_Aa2dQFuJbJdoqg@mail.gmail.com",
-      "author": "",
-      "source": "",
-      "source_date": "2026-09-09",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "逻辑复制"
-      ],
-      "position": 17
-    },
-    {
-      "tier": 3,
-      "title": "test_extensible 等测试模块可被无权限输入打崩",
-      "summary": "",
-      "url": "https://www.postgresql.org/message-id/ap-1zAMb6Z4o5Ijo@paquier.xyz",
-      "author": "",
-      "source": "",
-      "source_date": "2026-09-08",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "测试模块"
-      ],
-      "position": 18
-    },
-    {
-      "tier": 3,
-      "title": "GRAPH_TABLE 聚合限制补丁因已修复而撤回",
-      "summary": "",
-      "url": "https://www.postgresql.org/message-id/CAA5RZ0uXPooo8-gtL-WmMoE+rphMhPxcQLXV=7-z9050+cBpQA@mail.gmail.com",
-      "author": "",
-      "source": "",
-      "source_date": "2026-09-08",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "GRAPH_TABLE"
-      ],
       "position": 19
-    },
-    {
-      "tier": 3,
-      "title": "分区外部表多行更新删除的两个 CF 条目已合并",
-      "summary": "",
-      "url": "https://www.postgresql.org/message-id/CAGRkXqQ57VGjTWFYPsj7HUqHZTJD7ecAx-m0P4st4Ae1HbqcfA@mail.gmail.com",
-      "author": "",
-      "source": "",
-      "source_date": "2026-09-07",
-      "image": "",
-      "domain": "pg",
-      "tags": [
-        "postgres_fdw",
-        "分区表"
-      ],
-      "position": 20
     }
   ]
 }
