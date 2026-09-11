@@ -12,7 +12,8 @@
   var selects = Array.prototype.slice.call(form.querySelectorAll('[data-errcode-filter]'));
   var groups = Array.prototype.slice.call(table.querySelectorAll('.wiki-classgroup'));
   var rows = Array.prototype.slice.call(table.querySelectorAll('.wiki-coderow'));
-  var total = rows.length;
+  // 每个错误码占两行（第二行是说明），计数只算第一行。
+  var total = rows.filter(function (row) { return !row.classList.contains('wiki-coderow--more'); }).length;
 
   function state() {
     var picked = {};
@@ -36,7 +37,7 @@
     rows.forEach(function (row) {
       var ok = matches(row, current);
       row.hidden = !ok;
-      if (ok) { shown += 1; }
+      if (ok && !row.classList.contains('wiki-coderow--more')) { shown += 1; }
     });
     // 整类都被过滤掉时，连它的标题行一起收起来。
     groups.forEach(function (group) {

@@ -16,10 +16,6 @@
   </p>
 </header>
 
-{% if removed_without_evidence %}
-<p class="wiki-note wiki-note--warn">这个代码在目录中标为已移除，但移除发生在哪个版本没有取到证据，所以这里不给版本。</p>
-{% endif %}
-
 <section class="wiki-facts">
   <dl class="wiki-facts__grid">
     {% for fact in facts %}

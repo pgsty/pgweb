@@ -2,8 +2,8 @@
 {% block wiki_content %}
 <p class="wiki-crumb"><a href="/wiki/">百科</a> / 错误码大全</p>
 <h1>PostgreSQL 错误码大全</h1>
-<p class="wiki-lead">PostgreSQL 服务器发出的每条消息都带一个五字符 SQLSTATE。前两位是类别，后三位是该类别里的具体条件。要判断出了什么错，应当读这个代码，而不是去匹配可能已被本地化的消息文本。</p>
-<p class="wiki-lead">本栏收录 {{ total }} 个错误码，分属 {{ class_count }} 个类别，覆盖 PostgreSQL 9.0 至 19 预发行。每条都注明证据强度：{% for tier in stats.tiers %}{% if not forloop.first %}、{% endif %}<strong>{{ tier.label }}</strong> {{ tier.count }} 个{% endfor %}。</p>
+<p class="wiki-lead">SQLSTATE 是 PostgreSQL 服务器为每条消息附带的五字符状态码：前两位是类别，后三位是类别内的具体条件。应用程序应依据 SQLSTATE 而不是消息文本判断错误。</p>
+<p class="wiki-lead">本目录收录 {{ total }} 个错误码，分属 {{ class_count }} 个类别，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}。每条给出条件名、宏名称、严重等级、启用版本与弃用版本，并附一句说明；点击错误码或条件名进入详情页。</p>
 
 <h2 id="index">导航索引</h2>
 <nav class="wiki-classnav" aria-label="错误码类别索引">
@@ -35,14 +35,14 @@
 <p class="wiki-count" id="errcode-count" aria-live="polite" hidden></p>
 
 <div class="wiki-table"><div class="wiki-table__scroll">
-<table id="errcode-table">
+<table id="errcode-table" class="wiki-errcodes">
   <thead><tr>
     <th scope="col">错误码</th>
     <th scope="col">条件名</th>
-    <th scope="col">说明</th>
-    <th scope="col">严重级</th>
-    <th scope="col">证据</th>
-    <th scope="col">版本</th>
+    <th scope="col">宏名称</th>
+    <th scope="col">严重等级</th>
+    <th scope="col">启用版本</th>
+    <th scope="col">弃用版本</th>
   </tr></thead>
   {% for group in groups %}
   <tbody class="wiki-classgroup" data-class="{{ group.code }}">
@@ -59,14 +59,19 @@
     </tr>
     {% for row in group.rows %}
     <tr class="wiki-coderow" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
-        data-tier="{{ row.tier }}" data-depth="{{ row.depth }}"
-        data-text="{{ row.sqlstate }} {{ row.condition_name }} {{ row.name }} {{ row.summary }}">
+        data-depth="{{ row.depth }}"
+        data-text="{{ row.sqlstate }} {{ row.condition_name }} {{ row.macro }} {{ row.name }} {{ row.summary }}">
       <td class="wiki-coderow__code"><a href="{{ row.url }}">{{ row.sqlstate }}</a></td>
       <td class="wiki-coderow__cond"><a href="{{ row.url }}">{{ row.condition_name }}</a></td>
-      <td class="wiki-coderow__desc">{% if row.name %}<b>{{ row.name }}</b> {% endif %}{{ row.summary }}</td>
-      <td><span class="wiki-sev wiki-sev--{{ row.severity }}">{{ row.severity_label }}</span></td>
-      <td><span class="wiki-tier wiki-tier--{{ row.tier }}">{{ row.tier_label }}</span></td>
-      <td class="wiki-coderow__ver">{{ row.version_range }}{% if row.removed %} <span class="wiki-badge wiki-badge--removed">已移除</span>{% endif %}</td>
+      <td class="wiki-coderow__macro"><code>{{ row.macro }}</code></td>
+      <td class="wiki-coderow__sev"><span class="wiki-sev wiki-sev--{{ row.severity }}">{{ row.severity_label }}</span></td>
+      <td class="wiki-coderow__ver">{{ row.since }}</td>
+      <td class="wiki-coderow__ver">{% if row.removed %}<span class="wiki-coderow__removed">{{ row.until }}</span>{% else %}{{ row.until }}{% endif %}</td>
+    </tr>
+    <tr class="wiki-coderow wiki-coderow--more" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
+        data-depth="{{ row.depth }}"
+        data-text="{{ row.sqlstate }} {{ row.condition_name }} {{ row.macro }} {{ row.name }} {{ row.summary }}">
+      <td colspan="6" class="wiki-coderow__desc">{% if row.name %}<b>{{ row.name }}</b> {% endif %}{{ row.summary }}{% if row.removed %} <span class="wiki-badge wiki-badge--removed">已移除</span>{% endif %}</td>
     </tr>
     {% endfor %}
   </tbody>
@@ -76,8 +81,8 @@
 
 <p class="wiki-empty" id="errcode-empty" hidden>没有匹配的错误码。<a href="/wiki/errcode/">清除筛选</a></p>
 
-<h2>关于这份目录</h2>
-<p>目录全集是 PostgreSQL 9.0 起各正式发布标签所定义的 SQLSTATE 并集，已移除的代码保留条目。每个代码的事实都锁定到具体的发布标签、提交与文件行号。</p>
-<p>历史追溯到 7.4 为止能锁定定义文件，7.0 至 7.3 只探测到候选路径全部缺失，所以 {{ total }} 个代码的早期下界一律标为「已知存在于」而不是「引入于」——那是扫描能力的下界，不是真实引入版本。18.4 与 18.6 之间没有 18.5 的正式标签，这是来源断层，不表示任何代码在该版本被移除。</p>
+<h2>说明</h2>
+<p>启用版本是该错误码在 PostgreSQL 源码 <code>errcodes.txt</code> 定义中出现的最早版本，追溯下限为 7.4。弃用版本是该错误码最后存在的版本：已移除的错误码给出移除它的版本，现行错误码以当前开发版 {{ latest_major }} 计。</p>
+<p>数据来自 <a href="https://err.pg.center" target="_blank" rel="noopener">err.pg.center</a>，每个错误码的详情页给出报文模板、可复现案例以及锁定到发布标签与提交的源码出处。中文手册对应章节见 <a href="/docs/current/errcodes-appendix.html">附录 A 错误代码</a>。</p>
 {% endblock %}
 {% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

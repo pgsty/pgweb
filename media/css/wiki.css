@@ -16,7 +16,7 @@
 .wiki-tone-wait { --seg: var(--c-wait); }
 .wiki-tone-cat { --seg: var(--c-cat); }
 
-.wiki-lead { max-width: 62ch; color: var(--pg-ink-2); }
+.wiki-lead { color: var(--pg-ink-2); }
 
 /* ------------------------------------------------------------- cards */
 
@@ -138,6 +138,9 @@
 
 @media (max-width: 720px) {
   .wiki-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* 窄屏让表格整体横向滚动，宏名称不再折行，说明行也不撑高。 */
+  .wiki-coderow__macro code { white-space: nowrap; }
+  .wiki-coderow__desc { white-space: normal; min-width: 0; }
 }
 
 /* ------------------------------------------------------- 大表格 */
@@ -167,14 +170,22 @@
 .wiki-classrow__count { margin-left: 8px; font-weight: 400; font-size: 12px; color: var(--pg-muted); }
 .wiki-classrow__top { margin-left: auto; font-size: 12px; font-weight: 400; white-space: nowrap; }
 
-.wiki-coderow:hover { background: var(--pg-wash); }
+/* 每个错误码两行：第一行是码、条件名、宏名称、严重等级与启停版本，第二行是
+   横跨整表的说明。条件名与宏名称都不折行；表格在窄屏里整体横向滚动。 */
+.wiki-coderow td { border-top: 1px solid var(--pg-line); }
+.wiki-coderow--more td { padding-top: 0; padding-bottom: 10px; border-top: 0; }
+.wiki-coderow:not(.wiki-coderow--more) td { padding-bottom: 4px; }
 .wiki-coderow__code a { font-family: var(--pg-font-mono); font-weight: 600; white-space: nowrap; }
-.wiki-coderow__cond { min-width: 9em; max-width: 24em; }
-/* 最长的条件名有 48 个字符，不许折行就会把整张表顶出容器。 */
-.wiki-coderow__cond a { font-family: var(--pg-font-mono); color: var(--pg-ink-2); overflow-wrap: anywhere; }
+.wiki-coderow__cond a { font-family: var(--pg-font-mono); color: var(--pg-ink-2); white-space: nowrap; }
 .wiki-coderow__cond a:hover { color: var(--pg-link-hover); }
-.wiki-coderow__desc { color: var(--pg-ink-2); min-width: 17em; }
-.wiki-coderow__ver { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--pg-muted); }
+/* 条件名不折行；宏名称可以在下划线处折行，免得最长的一对把表撑出容器。 */
+.wiki-coderow__macro code { font-family: var(--pg-font-mono); font-size: 12px; color: var(--pg-ink-2); background: none; padding: 0; overflow-wrap: anywhere; }
+.wiki-coderow__sev { white-space: nowrap; }
+.wiki-coderow__ver { white-space: nowrap; font-family: var(--pg-font-mono); font-variant-numeric: tabular-nums; color: var(--pg-ink-2); }
+.wiki-coderow__removed { color: #a61e2b; font-weight: 600; }
+[data-theme="dark"] .wiki-coderow__removed { color: #ff9aa6; }
+.wiki-coderow__desc { color: var(--pg-ink-2); font-size: 13px; line-height: 1.6; }
+.wiki-coderow__desc b { color: var(--pg-ink); font-weight: 600; }
 
 /* ------------------------------------------------------- 徽章 */
 

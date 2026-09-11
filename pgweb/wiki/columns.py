@@ -65,9 +65,9 @@ BY_SLUG = {column['slug']: column for column in COLUMNS}
 
 
 def url(column):
-    """A live column links to its own index; one still in preparation links to
-    its card on the hub page, so the navigation never points at a 404."""
-    return '/wiki/{}/'.format(column['slug']) if column['live'] else '/wiki/#' + column['slug']
+    """A live column links to its own index; one not yet rendered here links
+    straight to its origin site, so every entry leads to real content."""
+    return '/wiki/{}/'.format(column['slug']) if column['live'] else column['origin']
 
 
 def present(column):

@@ -11,13 +11,13 @@ class ColumnTests(SimpleTestCase):
         self.assertEqual([c['slug'] for c in COLUMNS], ['errcode', 'guc', 'waitevent', 'catalog'])
         self.assertEqual(set(BY_SLUG), {'errcode', 'guc', 'waitevent', 'catalog'})
 
-    def test_a_column_in_preparation_links_to_its_card(self):
+    def test_a_column_in_preparation_links_to_its_origin_site(self):
         """Navigation must never point at a route that does not exist yet."""
         for column in COLUMNS:
             if column['live']:
                 self.assertEqual(url(column), '/wiki/{}/'.format(column['slug']))
             else:
-                self.assertEqual(url(column), '/wiki/#' + column['slug'])
+                self.assertEqual(url(column), column['origin'])
 
     def test_tone_travels_as_a_class(self):
         """The site CSP forbids inline styles, so colour must be a class."""

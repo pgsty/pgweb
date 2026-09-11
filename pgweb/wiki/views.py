@@ -38,7 +38,7 @@ def errcode_index(request):
     column = BY_SLUG['errcode']
     payload = errcode.index()
     description = 'PostgreSQL 全部 {} 个 SQLSTATE 错误码的中文索引，按 {} 个类别分组，' \
-                  '每条给出条件名、严重级、证据强度与版本覆盖。'.format(
+                  '每条给出条件名、宏名称、严重等级与启用、弃用版本。'.format(
                       payload['total'], payload['class_count'])
     return render(request, 'wiki/errcode_index.html', shell(dict(
         payload, column=column,

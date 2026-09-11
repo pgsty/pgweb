@@ -25,6 +25,13 @@ class HomeMarkup(HTMLParser):
 
 @override_settings(SITE_ROOT='https://pgsql.cc', ALLOWED_HOSTS=['testserver', 'preview.example'])
 class HomeSEOTests(SimpleTestCase):
+    def assertNoOldBrand(self, response):
+        """The old pg.center brand must be gone; the *.pg.center data sites the
+        百科 column links to (err/guc/wait/cat) are different sites and allowed."""
+        import re
+        body = re.sub(r'\b(err|guc|wait|cat)\.pg\.center', '', response.content.decode())
+        self.assertNotIn('pg.center', body)
+
     def setUp(self):
         # Exercise the real view and inherited templates without a database.
         queryset = MagicMock()
@@ -117,12 +124,12 @@ class HomeSEOTests(SimpleTestCase):
         self.assertContains(response, '由 <a href="https://pigsty.cc/" target="_blank" rel="noopener">Pigsty</a> 团队维护')
         self.assertNotContains(response, '无隶属关系')
         self.assertContains(response, 'href="/about/pgsql/"')
-        self.assertNotContains(response, 'pg.center')
+        self.assertNoOldBrand(response)
 
     def test_about_page_uses_new_brand_and_old_url_redirects(self):
         response = self.client.get('/about/pgsql/')
         self.assertContains(response, '关于 pgsql.cc')
-        self.assertNotContains(response, 'pg.center')
+        self.assertNoOldBrand(response)
         head = HomeMarkup(response.content.decode().split('</head>', 1)[0])
         self.assertEqual(head.values('link', 'href', rel='canonical'), ['https://pgsql.cc/about/pgsql/'])
         old = self.client.get('/about/pgcenter/')

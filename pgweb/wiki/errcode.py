@@ -9,9 +9,41 @@ from .models import (DEPTHS, ErrorCode, ErrorCodeRelease, ErrorCodeText,
 CACHE_KEY = 'pgweb:wiki:errcode-index'
 CACHE_SECONDS = 300
 
-# 手册附录只给码和条件名。这里多给的四列都是能帮人做判断的：
-# 一句话说明、严重级、证据强度、版本区间。
-COLUMNS = ('错误码', '条件名', '说明', '严重级', '证据', '版本')
+# 手册附录只给码和条件名；这里再给宏名称、严重等级与启停版本，说明另起一行。
+COLUMNS = ('错误码', '条件名', '宏名称', '严重等级', '启用版本', '弃用版本')
+
+# 现行错误码的「弃用版本」列显示当前开发版：2026-09-11 与 master 的
+# src/backend/utils/errcodes.txt 核对，262 个现行码全部在列，没有新增。
+LATEST_MAJOR = '20'
+
+
+def major_of(version):
+    """'9.1.0' → '9.1'，'12.0' → '12'，'7.4' → '7.4'。"""
+    parts = str(version or '').split('.')
+    if not parts or not parts[0]:
+        return ''
+    return '.'.join(parts[:2]) if int(parts[0]) < 10 else parts[0]
+
+
+def since_of(code):
+    """启用版本：源码定义可追溯到的最早版本（追溯下限 7.4）。"""
+    if code.introduced and (code.introduced or {}).get('release'):
+        return major_of(code.introduced['release'])
+    return major_of(code.known_present_by) or (code.present_in[0] if code.present_in else '')
+
+
+def until_of(code, majors):
+    """弃用版本：已移除的码给出移除版本；现行码给出当前开发版。"""
+    if code.status != 'removed':
+        return LATEST_MAJOR
+    if code.removed and (code.removed or {}).get('release'):
+        return major_of(code.removed['release'])
+    present = code.formal_present_in
+    if present and present[-1] in majors:
+        index = majors.index(present[-1])
+        if index + 1 < len(majors):
+            return majors[index + 1]
+    return ''
 
 
 def summaries():
@@ -22,11 +54,12 @@ def summaries():
     return rows
 
 
-def row_of(code, text):
+def row_of(code, text, majors=()):
     return {
         'sqlstate': code.sqlstate,
         'url': code.url,
         'condition_name': code.condition_name,
+        'macro': code.primary_macro or (code.macros[0] if code.macros else ''),
         'name': text.get('name', ''),
         'summary': text.get('summary', ''),
         'severity': code.severity,
@@ -35,6 +68,8 @@ def row_of(code, text):
         'tier_label': code.tier_label,
         'depth': code.depth,
         'status': code.status,
+        'since': since_of(code),
+        'until': until_of(code, majors),
         'version_range': code.version_range,
         'versions': code.formal_present_in,
         'class_code': code.klass_id,
@@ -45,6 +80,8 @@ def row_of(code, text):
 def index_payload():
     """导航索引 + 按类分组的大表格。"""
     text_of = summaries()
+    releases = list(ErrorCodeRelease.objects.all())
+    majors = [r.major for r in releases if not r.is_preview] + [LATEST_MAJOR]
     groups, current = [], None
     for code in ErrorCode.objects.select_related('klass').all():
         if current is None or current['code'] != code.klass_id:
@@ -58,16 +95,18 @@ def index_payload():
                 'rows': [],
             }
             groups.append(current)
-        current['rows'].append(row_of(code, text_of.get(code.sqlstate, {})))
+        current['rows'].append(row_of(code, text_of.get(code.sqlstate, {}), majors))
     for group in groups:
         group['count'] = len(group['rows'])
 
-    releases = list(ErrorCodeRelease.objects.all())
     return {
         'groups': groups,
         'columns': COLUMNS,
         'total': sum(group['count'] for group in groups),
         'class_count': len(groups),
+        'latest_major': LATEST_MAJOR,
+        'earliest_major': min((row['since'] for g in groups for row in g['rows'] if row['since']),
+                              key=lambda v: [int(p) for p in v.split('.')], default=''),
         'releases': releases,
         'formal_releases': [r for r in releases if not r.is_preview],
         'filters': filters(groups),
@@ -90,8 +129,7 @@ def filters(groups):
         {'param': 'class', 'label': '类别',
          'options': [{'value': g['code'], 'label': '{} {}'.format(g['code'], g['label']),
                       'count': g['count']} for g in groups]},
-        {'param': 'severity', 'label': '严重级', 'options': options('severity', SEVERITY_LABEL)},
-        {'param': 'tier', 'label': '证据', 'options': options('tier', dict(EVIDENCE_TIERS))},
+        {'param': 'severity', 'label': '严重等级', 'options': options('severity', SEVERITY_LABEL)},
         {'param': 'depth', 'label': '深度', 'options': options('depth', dict(DEPTHS))},
     ]
 
@@ -163,21 +201,18 @@ def pick_version(code, wanted):
 
 def fact_rows(code):
     """事实卡。留空的字段照实留空，不要编一个值出来。"""
+    majors = [r.major for r in ErrorCodeRelease.objects.all() if not r.is_preview] + [LATEST_MAJOR]
     rows = [
         ('条件名', code.condition_name, ''),
-        ('宏', '、'.join(code.macros), ''),
+        ('宏名称', '、'.join(code.macros), ''),
         ('类别', '{} {}'.format(code.klass.code, code.klass.label), code.klass.url),
-        ('严重级', code.severity_label, ''),
+        ('严重等级', code.severity_label, ''),
         ('状态', code.status_label, ''),
     ]
     if code.aliases:
         rows.append(('别名宏', '、'.join(code.aliases), ''))
-    if code.known_present_by:
-        rows.append(('已知存在于', code.known_present_by + ' 起', ''))
-    if code.introduced:
-        release = (code.introduced or {}).get('release')
-        if release:
-            rows.append(('引入版本', release, ''))
+    rows.append(('启用版本', since_of(code), ''))
+    rows.append(('弃用版本', until_of(code, majors), ''))
     rows.append(('版本覆盖', code.version_range, ''))
     return [{'label': label, 'value': value, 'url': url} for label, value, url in rows if value]
 
