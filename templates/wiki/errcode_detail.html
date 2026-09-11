@@ -63,6 +63,27 @@
     {{ block.section.html|safe }}
   </section>
 
+{% elif block.type == 'sources_section' %}
+  <section class="wiki-section" id="sources">
+    <h2>{{ block.section.heading|default:"来源" }}</h2>
+    <ul class="wiki-srclist">
+      {% for s in source_rows %}
+      <li class="wiki-src{% if not s.upstream %} wiki-src--local{% endif %}">
+        <span class="wiki-src__kind">{% if s.upstream %}上游源码{% else %}核验材料{% endif %}</span>
+        <span class="wiki-src__main">
+          {% if s.url %}<a class="wiki-src__path" href="{{ s.url }}" target="_blank" rel="noopener">{{ s.path }}</a>{% else %}<span class="wiki-src__path">{{ s.path }}</span>{% endif %}
+          {% if s.lines %}<span class="wiki-src__lines">第 {{ s.lines }} 行</span>{% endif %}
+        </span>
+        <span class="wiki-src__meta">
+          {% if s.tag %}<span class="wiki-src__tag">{{ s.tag }}</span>{% endif %}
+          {% if s.commit %}<code class="wiki-src__commit" title="提交 {{ s.commit }}">{{ s.commit }}</code>{% endif %}
+          {% if s.sha %}<code class="wiki-src__sha" title="SHA-256 {{ s.sha }}">{{ s.sha_short }}</code>{% endif %}
+        </span>
+      </li>
+      {% endfor %}
+    </ul>
+  </section>
+
 {% elif block.type == 'templates' %}
   <section class="wiki-panel" id="templates">
     <h2>报文模板</h2>
@@ -141,25 +162,6 @@
     </div></div>
     {% endif %}
 
-    {% if sources %}
-    <h3 id="sources">源码与文档</h3>
-    <p class="wiki-panel__lead">链接锚在核验时那个提交上，不指向会移动的分支，所以行号任何时候点开都还对得上。</p>
-    <div class="wiki-table"><div class="wiki-table__scroll">
-    <table class="wiki-sources">
-      <thead><tr><th>文件</th><th>位置</th><th>版本</th><th>提交</th></tr></thead>
-      <tbody>
-      {% for s in sources %}
-      <tr>
-        <td class="wiki-sources__path">{% if s.url %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.path }}</a>{% else %}{{ s.path }}{% endif %}</td>
-        <td>{{ s.location }}</td>
-        <td>{{ s.tag }}</td>
-        <td class="wiki-sources__commit">{% if s.commit %}<code>{{ s.commit|slice:":9" }}</code>{% endif %}</td>
-      </tr>
-      {% endfor %}
-      </tbody>
-    </table>
-    </div></div>
-    {% endif %}
   </section>
 {% endif %}
 {% endfor %}

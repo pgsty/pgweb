@@ -284,7 +284,7 @@
 .wiki-toc li:before { counter-increment: toc; content: counter(toc) ". "; color: var(--pg-muted); }
 
 /* 正文 */
-.wiki-body { max-width: 46rem; }
+.wiki-body { max-width: none; }
 .wiki-section { margin: 0 0 28px; scroll-margin-top: 80px; }
 .wiki-body h2 { margin-top: 32px; }
 .wiki-body p { line-height: 1.75; }
@@ -350,6 +350,26 @@
   display: inline-block; min-width: 5.5em; margin-right: 8px;
   color: var(--pg-ink-2); font-size: 11px;
 }
+/* 来源：一行一个出处 —— 类别 · 文件与行号 · 标签 / 提交 / 校验和 */
+.wiki-srclist { margin: 0; padding: 0; list-style: none; border: 1px solid var(--pg-line); border-radius: var(--pg-radius); overflow: hidden; }
+.wiki-src { display: grid; grid-template-columns: max-content minmax(0, 1fr) max-content; align-items: baseline; gap: 0 14px; padding: 9px 14px; border-top: 1px solid var(--pg-line); font-size: 13px; }
+.wiki-src:first-child { border-top: 0; }
+.wiki-src:nth-child(even) { background: var(--pg-wash); }
+.wiki-src__kind { font-size: 11px; color: var(--pg-muted); white-space: nowrap; }
+.wiki-src--local .wiki-src__kind { color: var(--pg-muted); }
+.wiki-src__main { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#pgContentWrap .wiki-src__path { font-family: var(--pg-font-mono); font-size: 12.5px; }
+.wiki-src__lines { margin-left: 8px; font-size: 12px; color: var(--pg-muted); }
+.wiki-src__meta { display: flex; gap: 6px; align-items: baseline; white-space: nowrap; }
+.wiki-src__tag { padding: 1px 7px; border-radius: 999px; background: rgba(36, 86, 184, .10); color: var(--pg-blue); font-family: var(--pg-font-mono); font-size: 11px; }
+[data-theme="dark"] .wiki-src__tag { background: rgba(107, 143, 224, .18); color: #9db8ee; }
+#pgContentWrap .wiki-src__commit, #pgContentWrap .wiki-src__sha { font-family: var(--pg-font-mono); font-size: 11px !important; color: var(--pg-muted); background: none; border: 0; padding: 0; }
+#pgContentWrap .wiki-src__sha { color: var(--pg-line-strong); }
+@media (max-width: 720px) {
+  .wiki-src { grid-template-columns: minmax(0, 1fr); gap: 2px 0; }
+  .wiki-src__main { white-space: normal; }
+}
+
 .wiki-sources__path { font-family: var(--pg-font-mono); font-size: 12px; word-break: break-all; }
 .wiki-sources__commit code { font-size: 11px; color: var(--pg-muted); }
 .wiki-runtimes td, .wiki-sources td { font-size: 12.5px; }

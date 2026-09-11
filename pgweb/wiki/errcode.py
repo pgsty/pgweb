@@ -285,6 +285,36 @@ def source_index(code):
     return {source.source_id: source for source in code.sources.all()}
 
 
+REPO_BLOB = 'https://github.com/pgsty/err.pg.center/blob/main/'
+LINES_RE = re.compile(r'#L(\d+)(?:-L(\d+))?$')
+
+
+def source_rows(code):
+    """「来源」一节的结构化渲染：上游源码在前，本仓库的核验材料在后。"""
+    rows = []
+    for source in code.sources.all():
+        upstream = source.kind == 'upstream_source'
+        match = LINES_RE.search(source.url or '')
+        lines = ''
+        if match:
+            lines = match.group(1) if not match.group(2) or match.group(2) == match.group(1) \
+                else '{}–{}'.format(match.group(1), match.group(2))
+        rows.append({
+            'id': source.source_id,
+            'upstream': upstream,
+            'path': source.path,
+            'url': source.url or (REPO_BLOB + source.path if source.path else ''),
+            'lines': lines,
+            'tag': source.tag,
+            'commit': source.commit[:9],
+            'sha': source.sha256,
+            'sha_short': source.sha256[:8],
+            'docs_url': source.docs_url,
+        })
+    rows.sort(key=lambda r: (not r['upstream'], r['id']))
+    return rows
+
+
 # 结构化面板挂在哪一节之后。正文里没有那一节时，用退路锚点。
 PANEL_AFTER = (
     ('templates', 'messages', 'meaning'),
@@ -314,7 +344,9 @@ def blocks(sections, messages, cases, claims, sources, runtimes):
 
     out = []
     for section in sections:
-        out.append({'type': 'section', 'section': section})
+        # 「来源」一节由结构化的源码出处渲染，不用正文里的哈希清单。
+        out.append({'type': 'sources_section' if section.get('anchor') == 'sources' and sources else 'section',
+                    'section': section})
         for panel in placement.get(section.get('anchor'), ()):
             out.append({'type': panel})
     for panel in placement.get(None, ()):
@@ -376,6 +408,7 @@ def detail_payload(sqlstate, wanted_version=''):
         'messages': messages,
         'claims': claims,
         'sources': list(code.sources.all()),
+        'source_rows': source_rows(code),
         'cases': list(code.cases.all()),
         'runtimes': list(code.runtimes.all()),
         'siblings': siblings,
