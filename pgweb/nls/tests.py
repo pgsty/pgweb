@@ -230,3 +230,20 @@ class NlsTests(TestCase):
         self.assertEqual(sitenav['developer'][-1], {'title': '消息翻译', 'link': '/nls/'})
         self.assertIn('/nls/', LOCAL_ONLY_SECTIONS)
         self.assertContains(self.client.get('/nls/'), 'nls-row-', count=0)  # rows are rendered client-side
+
+    # ---- all components ----
+    def test_all_components_table_and_cross_component_save(self):
+        table = self.client.get('/nls/api/component/?name=*').json()
+        self.assertEqual((table['component'], table['total']), ('*', 5))
+        self.assertEqual([r['component'] for r in table['records']], ['pltcl', 'pltcl', 'pltcl', 'psql', 'psql'])
+        self.client.force_login(self.alice)
+        saved = self.post('/nls/api/save/', {'component': '*', 'decisions': [self.decision('m_a1', note='跨组件'),
+                                                                            self.decision('m_b2', note='跨组件')]})
+        self.assertEqual(saved.status_code, 200, saved.content)
+        self.assertEqual({r['id'] for r in saved.json()['results']}, {'m_a1', 'm_b2'})
+        self.assertEqual(Message.objects.get(pk='m_b2').note, '跨组件')
+        denied = self.post('/nls/api/save/', {'component': '*', 'submit': True, 'decisions': [self.decision('m_a1')]})
+        self.assertEqual(denied.status_code, 409)
+        self.assertIn('具体组件', denied.json()['error'])
+        unknown = self.post('/nls/api/save/', {'component': '*', 'decisions': [{'id': 'm_zz', 'expected_version': 0}]})
+        self.assertEqual(unknown.status_code, 409)

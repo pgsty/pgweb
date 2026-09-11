@@ -48,15 +48,17 @@ cd ~/pgsty/pgnls && review-app/.venv/bin/python review-app/manage.py import /tmp
 | --- | --- | --- |
 | GET `/nls/` | 页面 | 公开 |
 | GET `/nls/api/bootstrap/` | 组件统计、总数、当前用户与权限 | 公开 |
-| GET `/nls/api/component/?name=` | 组件全部消息（gzip，`postgres` 6,850 条约 1.5 MB） | 公开 |
+| GET `/nls/api/component/?name=` | 组件全部消息（gzip，`postgres` 6,850 条约 1.5 MB）；`name=*` 返回全部组件的消息（约 12,700 条），按组件名、编号排序 | 公开 |
 | GET `/nls/api/references/?id=` | 相近消息（pg_trgm）、语境、与上一轮推荐的差异 | 公开 |
 | POST `/nls/api/decide/` | 保存一条：`{id, expected_version, status, forms, note}` | nls.review |
-| POST `/nls/api/save/` | 组件批量保存 / 提交（`submit: true` 需含组件全部消息；未改动的行只传 `id` + `expected_version`）；任一条失败整批不写 | nls.review |
+| POST `/nls/api/save/` | 组件批量保存 / 提交（`submit: true` 需含组件全部消息；未改动的行只传 `id` + `expected_version`）；任一条失败整批不写。`component: '*'` 可跨组件批量保存，但不能 `submit` | nls.review |
 | GET `/nls/api/export/` | pgnls-human-review-v1 JSON | nls.review |
 
 校验：每次保存检查形式完整、长度、NUL；状态改为“已校对”时再检查首尾空白与换行/制表数与英文一致，并用 GNU `msgfmt --check --check-format` 编译隔离 PO 片段（服务器需安装 gettext；缺失时退化为占位符多重集比较）。任何校验失败返回 409，页面在状态列显示“保存失败”并回退勾选框。`ValidationError` 与版本冲突都是 409；查询参数受 `@queryparams` 白名单约束。
 
 ## 5. 界面
+
+组件列表顶上钉着「全部组件」：一次载入全部消息，跨组件搜索相近措辞、统一译法（搜索框也匹配组件名，每行英文前标出所属组件）；「提交组件」在这个模式下隐藏，保存照常。表格分批渲染（每批 400 行，滚到表尾、点「继续显示」或用键盘走到最后一行时续显），单个组件与全部组件都走这条路。
 
 与 pgnls 独立版一致（见其 README）：☑ 已校对勾选框；英文原文 / 现有翻译 / 校准译文 / 状态 四列；既有译法整格背景绿 = 与校准译文一致、黄 = 有差异、红 = 占位符与英文不匹配；两列之间逐字 diff（红删、绿增、蓝改）；状态列一行内放状态徽标、校准类别图标、二次更新与审校人图标、展开箭头；键盘 `↑↓` 移动、`空格` 勾选、`⏎` 编辑、`→/←` 展开收起、`⌘S` 保存本组件。译文停笔 650 ms 自动保存为待审；编辑已校对的译文回到待审。
 
