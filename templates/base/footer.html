@@ -74,7 +74,7 @@
       <div class="pg-footline__right">
         <a class="pg-nav__btn" href="https://github.com/pgsty/pgweb" title="本站源码：pgsty/pgweb" aria-label="本站源码：pgsty/pgweb" target="_blank" rel="noopener">{% include "base/icon.html" with name="github" %}</a>
         <a class="pg-nav__btn" href="/news.rss" title="RSS 订阅" aria-label="RSS 订阅">{% include "base/icon.html" with name="rss" %}</a>
-        <a class="pg-nav__btn" href="{{ source_url }}" title="{{ source_label }}" aria-label="{{ source_label }}" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}</a>
+        {% if source_url %}<a class="pg-nav__btn" href="{{ source_url }}" title="{{ source_label }}" aria-label="{{ source_label }}" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}</a>{% endif %}
         <button class="pg-nav__btn" type="button" title="切换深浅主题" aria-label="切换深浅主题" data-pg-theme-toggle>{% include "base/icon.html" with name="moon" %}{% include "base/icon.html" with name="sun" %}</button>
       </div>
     </div>

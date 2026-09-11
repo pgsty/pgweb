@@ -261,6 +261,16 @@ def _get_doc_majors():
     return majors
 
 
+# 本站独有的栏目，上游没有对应页面。给它们拼一个 postgresql.org 地址只会得到 404。
+LOCAL_ONLY_SECTIONS = ('/wiki/', '/info/', '/ext/', '/e/')
+
+
+def _source_url(path):
+    if path.startswith(LOCAL_ONLY_SECTIONS):
+        return ''
+    return 'https://www.postgresql.org' + path
+
+
 def PGWebContextProcessor(request):
     gitrev = SimpleLazyObject(_get_gitrev)
     return {
@@ -272,6 +282,6 @@ def PGWebContextProcessor(request):
         'doc_majors': SimpleLazyObject(_get_doc_majors),
         'site_search': bool(getattr(settings, 'SEARCH_DSN', '')),
         'seo': page_metadata(request.path),
-        'source_url': 'https://www.postgresql.org' + request.path,
+        'source_url': _source_url(request.path),
         'source_label': '前往 postgresql.org 对应页面',
     }

@@ -18,7 +18,7 @@
           <kbd aria-hidden="true">/</kbd>
         </form>
         <a class="pg-nav__btn pg-nav__search-btn" href="/search/" title="搜索文档" aria-label="搜索文档">{% include "base/icon.html" with name="search" %}</a>
-        <a class="pg-nav__btn pg-nav__alt" href="{{ source_url }}" title="{{ source_label }}" aria-label="{{ source_label }}" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}</a>
+        {% if source_url %}<a class="pg-nav__btn pg-nav__alt" href="{{ source_url }}" title="{{ source_label }}" aria-label="{{ source_label }}" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}</a>{% endif %}
         <button class="pg-nav__btn" type="button" title="切换深浅主题" aria-label="切换深浅主题" data-pg-theme-toggle>{% include "base/icon.html" with name="moon" %}{% include "base/icon.html" with name="sun" %}</button>
         <a class="pg-nav__btn pg-nav__account{% if request.path|nav_active:'account' %} active{% endif %}" href="/account/" title="您的账户" aria-label="您的账户">{% include "base/icon.html" with name="user" %}</a>
         <button class="pg-nav__btn pg-nav__toggle" type="button" title="菜单" aria-label="打开菜单" data-pg-drawer-toggle aria-controls="pgDrawer" aria-expanded="false">{% include "base/icon.html" with name="menu" %}{% include "base/icon.html" with name="close" %}</button>
@@ -36,6 +36,6 @@
     {% include "base/navitems.html" with mode="mobile" %}
     <div class="pg-drawer__sep" role="presentation"></div>
     <a class="pg-drawer__link{% if request.path|nav_active:'account' %} active{% endif %}" href="/account/">{% include "base/icon.html" with name="user" %}<span>您的账户</span></a>
-    <a class="pg-drawer__link" href="{{ source_url }}" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}<span>{{ source_label }}</span></a>
+    {% if source_url %}<a class="pg-drawer__link" href="{{ source_url }}" target="_blank" rel="noopener">{% include "base/icon.html" with name="external" %}<span>{{ source_label }}</span></a>{% endif %}
   </nav>
 </div>
