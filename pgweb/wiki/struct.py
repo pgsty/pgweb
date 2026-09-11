@@ -1,5 +1,5 @@
 from .columns import live_columns
-from .models import CatalogRelation, CatalogVersion, ErrorCode
+from .models import CatalogRelation, CatalogVersion, ErrorCode, GucParameter, GucVersion
 
 
 def get_struct():
@@ -11,3 +11,7 @@ def get_struct():
         yield ('docs/catalog/{}/'.format(name), None)
     for major in CatalogVersion.objects.values_list('major', flat=True):
         yield ('docs/catalog/changes/{}/'.format(major), None)
+    for name in GucParameter.objects.values_list('name', flat=True):
+        yield ('docs/guc/{}/'.format(name), None)
+    for major in GucVersion.objects.values_list('major', flat=True):
+        yield ('docs/guc/changes/{}/'.format(major), None)

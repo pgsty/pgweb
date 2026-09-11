@@ -1,0 +1,162 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<div class="wiki-tone-guc guc">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/guc/">配置参数</a> / {{ version.label }} 变更</p>
+<h1>PostgreSQL {{ version.label }} 配置参数变更</h1>
+{% if previous %}
+<p class="wiki-lead">{% if arbitrary %}以 PostgreSQL {{ previous.label }} 为基准现算的差异{% else %}相对 PostgreSQL {{ previous.label }} 的差异{% endif %}：{{ version.label }} 共有 {{ version.parameter_count }} 个配置参数。{% if arbitrary %}这不是相邻两版的比较，中间版本的过程变化不在其中。{% endif %}</p>
+{% else %}
+<p class="wiki-lead">{{ baseline_note }}本页列出 {{ version.label }} 当时已有的全部 {{ version.parameter_count }} 个参数。</p>
+{% endif %}
+{% if notice %}<p class="wiki-note guc-notice">{{ notice }}</p>{% endif %}
+
+<nav class="guc-verbar guc-verbar--releases" aria-label="按版本查看变更">
+  <ol class="guc-verbar__list">
+    {% for item in versions %}
+    <li class="guc-verbar__item"><a class="guc-pill guc-pill--link{% if item.is_current %} is-current{% endif %}{% if item.preview %} is-preview{% elif item.devel %} is-devel{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {{ item.status_label }} · {{ item.parameter_count }} 个参数">{{ item.major }}</a></li>
+    {% endfor %}
+  </ol>
+</nav>
+
+{% if arbitrary %}<p class="guc-basis">对比基准 <strong>PostgreSQL {{ from_major }}</strong></p>{% endif %}
+<details class="guc-rebase"{% if arbitrary %} open{% endif %}>
+  <summary>换一个对比基准</summary>
+  <form class="guc-rebase__form" action="/docs/guc/changes/{{ version.major }}/" method="get">
+    <label for="guc-from">与哪一版比较</label>
+    <select class="form-control" id="guc-from" name="from">
+      {% for item in versions %}{% if not item.is_current %}<option value="{{ item.major }}"{% if item.major == from_major %} selected{% elif not from_major and previous and item.major == previous.major %} selected{% endif %}>PostgreSQL {{ item.label }}</option>{% endif %}{% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit">比较</button>
+  </form>
+</details>
+
+{% if previous %}
+<h2 id="summary">汇总</h2>
+<ol class="guc-tiles">
+  <li class="guc-tile{% if not summary.added %} is-zero{% endif %}"><a class="guc-tile__link" href="#added"><span class="guc-tile__num">{{ summary.added }}</span><span class="guc-tile__label">新增参数</span></a></li>
+  <li class="guc-tile{% if not summary.removed %} is-zero{% endif %}"><a class="guc-tile__link" href="#removed"><span class="guc-tile__num">{{ summary.removed }}</span><span class="guc-tile__label">移除参数</span></a></li>
+  <li class="guc-tile{% if not summary.default_changed %} is-zero{% endif %}"><a class="guc-tile__link" href="#defaults"><span class="guc-tile__num">{{ summary.default_changed }}</span><span class="guc-tile__label">默认值变更</span></a></li>
+  <li class="guc-tile{% if not summary.changed %} is-zero{% endif %}"><a class="guc-tile__link" href="#changed"><span class="guc-tile__num">{{ summary.changed }}</span><span class="guc-tile__label">属性变更</span></a></li>
+  <li class="guc-tile{% if not summary.reworded %} is-zero{% endif %}"><a class="guc-tile__link" href="#reworded"><span class="guc-tile__num">{{ summary.reworded }}</span><span class="guc-tile__label">仅描述更新</span></a></li>
+</ol>
+<p class="guc-sectionlead">「默认值变更」指 <code class="guc-mono">boot_val</code> 或单位变了；「属性变更」指生效上下文、类型、取值范围或枚举值变了而默认值没变；「仅描述更新」是分类或说明文字的变化。</p>
+
+<h2 id="added">新增参数<span class="guc-h2count">{{ added|length }}</span></h2>
+{% if added %}
+<ul class="guc-cards">
+  {% for card in added %}
+  <li class="guc-card guc-card--added">
+    <p class="guc-card__head"><a class="guc-card__name" href="{{ card.url }}"><code class="guc-mono">{{ card.name }}</code></a><span class="guc-card__kind">{{ card.category_zh }}</span></p>
+    {% if card.short_desc_zh %}<p class="guc-card__lead">{{ card.short_desc_zh }}</p>{% elif card.short_desc %}<p class="guc-card__lead" lang="en">{{ card.short_desc }}</p>{% endif %}
+    <p class="guc-card__tags">
+      <span class="guc-tag guc-tag--type">{{ card.vartype_label }}</span>
+      <span class="guc-tag guc-tag--ctx">{{ card.context_label }}</span>
+      {% if card.boot_human %}<span class="guc-tag guc-tag--def"><code class="guc-mono">{{ card.boot_human }}</code></span>{% endif %}
+    </p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="wiki-empty">这一版没有新增参数。</p>
+{% endif %}
+
+<h2 id="removed">移除参数<span class="guc-h2count">{{ removed|length }}</span></h2>
+{% if removed %}
+<ul class="guc-cards">
+  {% for card in removed %}
+  <li class="guc-card guc-card--removed">
+    <p class="guc-card__head"><a class="guc-card__name" href="{{ card.url }}"><code class="guc-mono">{{ card.name }}</code></a><span class="guc-card__kind">{{ card.category_zh }}</span></p>
+    {% if card.short_desc_zh %}<p class="guc-card__lead">{{ card.short_desc_zh }}</p>{% elif card.short_desc %}<p class="guc-card__lead" lang="en">{{ card.short_desc }}</p>{% endif %}
+    <p class="guc-card__tags">
+      <span class="guc-tag guc-tag--removed">于 {{ version.major }} 移除</span>
+      <span class="guc-tag guc-tag--type">{{ card.vartype_label }}</span>
+      {% if card.boot_human %}<span class="guc-tag guc-tag--def"><code class="guc-mono">{{ card.boot_human }}</code></span>{% endif %}
+    </p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="wiki-empty">这一版没有移除参数。</p>
+{% endif %}
+
+<h2 id="defaults">默认值变更<span class="guc-h2count">{{ default_changed|length }}</span></h2>
+{% if default_changed %}
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table class="guc-difftable">
+  <thead><tr>
+    <th class="guc-th guc-th--name" scope="col">参数</th>
+    <th class="guc-th guc-th--cat" scope="col">分类</th>
+    <th class="guc-th" scope="col">旧默认值</th>
+    <th class="guc-th" scope="col">新默认值</th>
+  </tr></thead>
+  <tbody>
+  {% for item in default_changed %}
+  <tr class="guc-diffrow">
+    <th class="guc-diffrow__name" scope="row"><a href="{{ item.url }}"><code class="guc-mono">{{ item.name }}</code></a></th>
+    <td class="guc-diffrow__cat">{{ item.category_zh }}</td>
+    <td class="guc-diffrow__old"><code class="guc-mono">{{ item.from.human|default:"（无）" }}</code></td>
+    <td class="guc-diffrow__new"><code class="guc-mono">{{ item.to.human|default:"（无）" }}</code></td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% else %}
+<p class="wiki-empty">这一版没有参数改动默认值。</p>
+{% endif %}
+
+<h2 id="changed">属性变更<span class="guc-h2count">{{ changed|length }}</span></h2>
+{% if changed %}
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table class="guc-difftable">
+  <thead><tr>
+    <th class="guc-th guc-th--name" scope="col">参数</th>
+    <th class="guc-th guc-th--cat" scope="col">分类</th>
+    <th class="guc-th" scope="col">变化</th>
+  </tr></thead>
+  <tbody>
+  {% for item in changed %}
+  <tr class="guc-diffrow">
+    <th class="guc-diffrow__name" scope="row"><a href="{{ item.url }}"><code class="guc-mono">{{ item.name }}</code></a></th>
+    <td class="guc-diffrow__cat">{{ item.category_zh }}</td>
+    <td class="guc-diffrow__chips">
+      {% for field in item.fields %}
+      <span class="guc-chip guc-chip--{% if field.field == 'category' or field.field == 'short_desc' or field.field == 'extra_desc' %}note{% else %}typ{% endif %}">
+        <span class="guc-chip__label">{{ field.label }}</span>
+        <code class="guc-mono">{% if field.field == 'enumvals' %}{{ field.from|join:", "|default:"（无）" }}{% else %}{{ field.from|default:"（无）" }}{% endif %}</code>
+        <span class="guc-chip__arrow" aria-hidden="true">→</span>
+        <code class="guc-mono">{% if field.field == 'enumvals' %}{{ field.to|join:", "|default:"（无）" }}{% else %}{{ field.to|default:"（无）" }}{% endif %}</code>
+      </span>
+      {% endfor %}
+    </td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% else %}
+<p class="wiki-empty">这一版没有参数改动属性。</p>
+{% endif %}
+
+<h2 id="reworded">仅描述更新<span class="guc-h2count">{{ reworded|length }}</span></h2>
+{% if reworded %}
+<details class="guc-fold">
+  <summary>{{ reworded|length }} 个参数只改了分类或说明文字，事实未变</summary>
+  <p class="guc-rels guc-rels--tight">
+    {% for card in reworded %}<a class="guc-rel" href="{{ card.url }}" title="{{ card.short_desc_zh|default:card.short_desc }}"><code class="guc-mono">{{ card.name }}</code></a>{% endfor %}
+  </p>
+</details>
+{% else %}
+<p class="wiki-empty">这一版没有只改说明的参数。</p>
+{% endif %}
+{% endif %}
+
+{% if baseline %}
+<h2 id="baseline">{{ version.label }} 的全部参数<span class="guc-h2count">{{ version.parameter_count }}</span></h2>
+{% include "wiki/guc_table.html" with groups=baseline_groups %}
+{% endif %}
+
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

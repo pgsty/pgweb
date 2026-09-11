@@ -15,6 +15,7 @@
   /* 索引页筛选。两个栏目共用一套逻辑，差别都在 opts 里：
      prefix   表单、输入框、表格、计数与空状态的 id 前缀，也是下拉的 data 属性名
      group    一组（类别）的选择器，整组被过滤空时连标题行一起收起
+     sub      可选，组内子分类分隔行的选择器，本子分类被过滤空时这行也收起
      row      记录行的选择器
      more     第二行（说明行）的类名
      noun     计数文案里的量词
@@ -74,6 +75,19 @@
         if (mate) { mate.hidden = !ok; }
         if (ok) { shown += 1; }
       });
+      // 一个子分类下没有可见记录时，连它的分隔行一起收起来。分隔行管到下一条分隔行
+      // 或者本组结尾为止（同组的行都在一个 tbody 里，nextElementSibling 到头自然是 null）。
+      if (opts.sub) {
+        Array.prototype.slice.call(table.querySelectorAll(opts.sub)).forEach(function (mark) {
+          var node = mark.nextElementSibling;
+          var visible = false;
+          while (node && !node.matches(opts.sub)) {
+            if (node.matches(opts.row) && !node.hidden) { visible = true; break; }
+            node = node.nextElementSibling;
+          }
+          mark.hidden = !visible;
+        });
+      }
       // 整组都被过滤掉时，连它的标题行一起收起来。
       groups.forEach(function (group) {
         group.hidden = !group.querySelector(opts.row + ':not([hidden])');
@@ -121,5 +135,10 @@
   wireFilter({
     prefix: 'catalog', group: '.cat-group', row: '.cat-row',
     more: 'cat-row--more', noun: '个关系', tokens: ['present'],
+  });
+
+  wireFilter({
+    prefix: 'guc', group: '.guc-group', sub: '.guc-subrow', row: '.guc-row',
+    more: 'guc-row--more', noun: '个参数', tokens: ['present'],
   });
 }());

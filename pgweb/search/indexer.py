@@ -288,3 +288,82 @@ def rebuild_catalog(dry_run=False):
         SearchEntry.objects.bulk_create(objects, batch_size=200)
     service.forget_catalog()
     return {'catalog': len(objects)}
+
+
+# ---------------------------------------------------------------- 配置参数
+
+def guc_entry(parameter):
+    """One configuration parameter as a search entry, sharing the entity of the
+    manual's own GUC definition rows so the result list shows the 百科 entry once
+    and the preview still lists the manual versions."""
+    from pgweb.wiki.models import GUC_CONTEXT_LABEL, GUC_VARTYPE_LABEL
+    name = parameter.name
+    name_key = normalize_name(name)
+    aliases = {name_key}
+    if '_' in name_key:
+        aliases.add(name_key.replace('_', ''))
+    zh = ' '.join((parameter.short_desc_zh or '').split())
+    en = ' '.join((parameter.short_desc or '').split())
+    editorial = parameter.editorial or {}
+    summary = ' '.join((editorial.get('summary_zh') or '').split())
+    mechanism = [' '.join(str(part).split()) for part in (editorial.get('mechanism_zh') or ()) if part]
+    vartype = GUC_VARTYPE_LABEL.get(parameter.vartype, parameter.vartype)
+    context = GUC_CONTEXT_LABEL.get(parameter.context, parameter.context)
+    first = parameter.first_version + ('（基线）' if parameter.baseline else '')
+    facts = [('类型', vartype), ('上下文', context), ('默认值', parameter.boot_human),
+             ('引入版本', first), ('分类', parameter.category_zh),
+             ('版本覆盖', '{} – {}'.format(parameter.first_version, parameter.last_version)
+              if parameter.first_version else '')]
+    parts = []
+    if zh or en:
+        parts.append('<p class="ds-ext-desc">' + escape(zh or en) + '</p>')
+    if zh and en:
+        parts.append('<p class="ds-ext-desc-en">' + escape(en) + '</p>')
+    parts.append('<dl class="ds-ext-facts">' + ''.join(
+        '<div><dt>{}</dt><dd>{}</dd></div>'.format(escape(label), escape(str(value)))
+        for label, value in facts if value) + '</dl>')
+    track = [item for item in (parameter.default_history or ()) if item.get('from')]
+    if len(track) > 1:
+        parts.append('<h3>默认值变迁</h3><dl class="ds-ext-facts ds-ext-facts--stack">' + ''.join(
+            '<div><dt>{}</dt><dd>{}</dd></div>'.format(
+                escape('{} – {}'.format(item.get('from', ''), item.get('to', ''))),
+                escape(str(item.get('human') or item.get('boot_val') or '')))
+            for item in track) + '</dl>')
+    return {
+        'key': digest('guc\0' + name), 'entity_key': 'guc:' + name_key, 'kind': 'guc',
+        'subtype': parameter.group_slug, 'name': name, 'name_key': name_key,
+        'aliases': sorted(aliases), 'anchor': '',
+        'heading': '配置参数' + (' · ' + parameter.category_zh if parameter.category_zh else ''),
+        'signature': ' · '.join(v for v in (
+            vartype, context, '默认 ' + parameter.boot_human if parameter.boot_human else '') if v),
+        'body': '\n'.join(v for v in (zh, en, summary, ' '.join(mechanism),
+                                      parameter.category_zh, parameter.category) if v),
+        'preview': ''.join(parts), 'url': parameter.url, 'weight': 0.5,
+        '_title': ' '.join([name, *sorted(aliases)]), '_lead': ' '.join(v for v in (zh, en, summary) if v),
+    }
+
+
+def rebuild_guc(dry_run=False):
+    """Replace the search entries of the 配置参数 column (source 'guc')."""
+    from pgweb.wiki.models import GucParameter
+    # The per-version snapshots carry the translated manual text; the entry needs none of it.
+    parameters = list(GucParameter.objects.defer('versions', 'changes', 'docs', 'intro_commit'))
+    entries = [guc_entry(parameter) for parameter in parameters]
+    if dry_run:
+        return {'guc': len(entries)}
+    objects = []
+    for entry in entries:
+        title = index_text(entry.pop('_title'))
+        lead = index_text(entry.pop('_lead'))
+        vector = (SearchVector(Value(title), config='simple', weight='A') +
+                  SearchVector(Value(lead), config='simple', weight='B') +
+                  SearchVector(Value(index_text(entry['body'])), config='simple', weight='D'))
+        objects.append(SearchEntry(source='guc', document=None, version=None, vector=vector,
+                                   **entry))
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
+        SearchEntry.objects.filter(source='guc').delete()
+        SearchEntry.objects.bulk_create(objects, batch_size=200)
+    service.forget_catalog()
+    return {'guc': len(objects)}

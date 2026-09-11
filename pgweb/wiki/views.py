@@ -1,4 +1,5 @@
 import re
+from urllib.parse import quote
 
 from django.http import Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import render
@@ -7,14 +8,16 @@ from django.views.decorators.http import require_safe
 from pgweb.util.contexts import get_nav_menu
 from pgweb.util.decorators import queryparams
 
-from . import catalog, errcode
+from . import catalog, errcode, guc
 from .columns import BY_SLUG
-from .models import CatalogRelation, CatalogVersion, ErrorCode
+from .models import CatalogRelation, CatalogVersion, ErrorCode, GucParameter, GucVersion
 
 
 SQLSTATE = re.compile(r'^[0-9A-Za-z]{5}$')
 RELATION = re.compile(r'^pg_[a-z0-9_]+$')
+GUC_NAME = re.compile(r'^[A-Za-z][A-Za-z0-9_]*$')
 CATALOG_ROOT = '/docs/catalog/'
+GUC_ROOT = '/docs/guc/'
 
 
 def shell(ctx, title, description, canonical, class_code='', section='/docs/sqlstate/'):
@@ -127,3 +130,71 @@ def catalog_changes(request, major):
     return render(request, 'wiki/catalog_changes.html', shell(dict(
         payload, column=BY_SLUG['catalog'],
     ), title, description, '/docs/catalog/changes/{}/'.format(major), section=CATALOG_ROOT))
+
+
+# ---------------------------------------------------------------- 配置参数
+
+@require_safe
+# 筛选在当前页即时过滤，参数写进 URL；中间件只放行这几个。
+@queryparams('q', 'group', 'context', 'first', 'present')
+def guc_index(request):
+    column = BY_SLUG['guc']
+    payload = guc.index()
+    description = ('PostgreSQL 配置参数（GUC）的中文百科，共 {} 个参数，按 {} 个一级分类分组，'
+                   '覆盖 {} 至 {}，逐版本给出默认值、上下文、取值范围与变化。'.format(
+                       payload['total'], payload['group_count'],
+                       payload['earliest_major'], payload['latest_major']))
+    return render(request, 'wiki/guc_index.html', shell(dict(
+        payload, column=column,
+    ), 'PostgreSQL 配置参数', description, GUC_ROOT, section=GUC_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def guc_detail(request, name):
+    if not GUC_NAME.match(name):
+        raise Http404()
+    try:
+        payload = guc.detail(name, request.GET.get('v', ''))
+    except GucParameter.DoesNotExist:
+        raise Http404()
+    if payload['name'] != name:
+        # 站内规范形式是 pg_settings 里的大小写：datestyle → DateStyle。
+        wanted = request.GET.get('v', '')
+        return HttpResponsePermanentRedirect('/docs/guc/{}/{}'.format(
+            payload['name'], '?v=' + quote(wanted) if wanted else ''))
+
+    parameter = payload['parameter']
+    major = payload['version']['major'] if payload['version'] else ''
+    title = '{} · PostgreSQL 配置参数'.format(parameter.name)
+    description = '{} 是 PostgreSQL {}配置参数。{}'.format(
+        parameter.name, payload['group_label'],
+        parameter.short_desc_zh or parameter.short_desc or '')
+    return render(request, 'wiki/guc_detail.html', shell(dict(
+        payload, column=BY_SLUG['guc'], heading=parameter.name, major=major,
+    ), title, ' '.join(description.split())[:200], parameter.url, section=GUC_ROOT))
+
+
+@require_safe
+def guc_changes_root(request):
+    # 默认落在当前稳定版，不落在预发行或开发版。
+    return HttpResponseRedirect('/docs/guc/changes/{}/'.format(guc.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def guc_changes(request, major):
+    try:
+        payload = guc.changes(major, request.GET.get('from', ''))
+    except GucVersion.DoesNotExist:
+        raise Http404()
+    label = payload['version']['label']
+    summary = payload['summary']
+    title = 'PostgreSQL {} 配置参数变更'.format(label)
+    description = ('PostgreSQL {} 相对 {} 的配置参数变更：新增 {} 个，移除 {} 个，'
+                   '{} 个参数的默认值有变化。'.format(
+                       label, payload['previous']['label'] if payload['previous'] else '首个收录版本',
+                       summary['added'], summary['removed'], summary['default_changed']))
+    return render(request, 'wiki/guc_changes.html', shell(dict(
+        payload, column=BY_SLUG['guc'],
+    ), title, description, '/docs/guc/changes/{}/'.format(major), section=GUC_ROOT))

@@ -1,0 +1,244 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<article class="wiki-entry wiki-tone-guc guc">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/guc/">配置参数</a> / <a href="/docs/guc/#group-{{ group_slug }}">{{ group_label }}</a></p>
+
+<header class="wiki-entry__head guc-head">
+  <p class="guc-eyebrow"><span class="guc-eyebrow__en" lang="en">{{ eyebrow }}</span><span class="guc-eyebrow__zh">{{ category_zh }}</span></p>
+  <h1><span class="guc-title">{{ name }}</span></h1>
+  {% if parameter.short_desc_zh %}<p class="wiki-entry__name">{{ parameter.short_desc_zh }}</p>{% endif %}
+  {% if parameter.short_desc %}<p class="guc-subtitle" lang="en">{{ parameter.short_desc }}</p>{% endif %}
+  <p class="wiki-badges">
+    <span class="wiki-badge guc-badge guc-badge--type">{{ vartype_label }}</span>
+    <span class="wiki-badge guc-badge" title="{{ context_note }}">{{ context_label }}</span>
+    <span class="wiki-badge guc-badge">引入 {{ parameter.first_version }}{% if parameter.baseline %}（基线）{% endif %}</span>
+    {% for cell in ribbon %}{% if cell.state == 'removed' %}<span class="wiki-badge wiki-badge--removed">于 {{ cell.major }} 移除</span>{% endif %}{% endfor %}
+    {% with newest=versions|last %}{% if parameter.last_version == newest.major %}<span class="wiki-badge guc-badge">现存至 {{ newest.label }}</span>{% endif %}{% endwith %}
+    <span class="wiki-badge guc-badge">{{ parameter.default_changed_in|length }} 次默认值变更</span>
+    {% if notice %}<span class="wiki-badge guc-badge--unreleased" title="{{ notice }}">{{ version.status_label }}</span>{% endif %}
+  </p>
+</header>
+
+<section class="wiki-facts guc-factcard">
+  <dl class="guc-facts">
+    {% for fact in facts %}
+    <div class="guc-facts__item">
+      <dt{% if fact.note %} title="{{ fact.note }}"{% endif %}>{{ fact.label }}</dt>
+      <dd>{% if fact.url %}<a href="{{ fact.url }}">{% if fact.mono %}<code class="guc-mono">{{ fact.value }}</code>{% else %}{{ fact.value }}{% endif %}</a>{% elif fact.mono %}<code class="guc-mono">{{ fact.value }}</code>{% else %}{{ fact.value }}{% endif %}{% if fact.note %}<span class="guc-facts__note">{{ fact.note }}</span>{% endif %}</dd>
+    </div>
+    {% endfor %}
+  </dl>
+  <p class="guc-actions">
+    {% if links.doc %}<a class="guc-btn guc-btn--primary" href="{{ links.doc }}">{{ links.doc_label }}</a>{% endif %}
+    {% if links.official %}<a class="guc-btn" href="{{ links.official }}" target="_blank" rel="noopener">官方文档 <span class="guc-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+    {% if links.commit %}<a class="guc-btn" href="{{ links.commit }}" target="_blank" rel="noopener">引入提交{% if intro_commit.short %} <code class="guc-mono guc-btn__hash">{{ intro_commit.short }}</code>{% endif %} <span class="guc-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+  </p>
+</section>
+
+<section class="guc-ribbonwrap" aria-labelledby="guc-ribbon-title">
+  <h2 class="guc-ribbonwrap__title" id="guc-ribbon-title">版本轨迹</h2>
+  <nav class="guc-ribbon">
+    <ol class="guc-ribbon__track">
+      {% for cell in ribbon %}
+      <li class="guc-ribbon__item">{% if cell.url %}<a class="guc-pill guc-pill--{{ cell.state }}{% if cell.current %} is-current{% endif %}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" href="{{ cell.url }}"{% if cell.current %} aria-current="page"{% endif %} title="PostgreSQL {{ cell.label }} · {% if cell.state == 'added' %}本版新增{% elif cell.state == 'changed' %}本版有实质变化{% else %}存在{% endif %}{% if cell.current %} · 当前查看{% endif %}">{% if cell.state == 'added' %}<span class="guc-pill__sign" aria-hidden="true">+</span>{% endif %}{{ cell.major }}</a>{% else %}<span class="guc-pill guc-pill--{{ cell.state }}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" title="PostgreSQL {{ cell.label }} · {% if cell.state == 'removed' %}已移除{% else %}不存在{% endif %}">{% if cell.state == 'removed' %}<span class="guc-pill__sign" aria-hidden="true">−</span>{% endif %}{{ cell.major }}</span>{% endif %}</li>
+      {% endfor %}
+    </ol>
+  </nav>
+  <p class="guc-changenote">{{ change_note }}{% if notice %} <span class="guc-changenote__notice">{{ notice }}</span>{% endif %}</p>
+</section>
+
+<section class="guc-trackwrap" aria-labelledby="guc-track-title">
+  <h2 class="guc-trackwrap__title" id="guc-track-title">默认值变迁</h2>
+  {% if default_track %}
+  <div class="guc-track">
+    {% for seg in default_track %}
+    <span class="guc-track__seg guc-seg--n{{ seg.span }}{% if seg.current %} is-current{% endif %}" title="PostgreSQL {{ seg.from }}{% if seg.to != seg.from %} – {{ seg.to }}{% endif %} 的默认值：{{ seg.human }}{% if seg.unit %}（原始值 {{ seg.boot_val }}，单位 {{ seg.unit }}）{% endif %}">
+      <span class="guc-track__value">{{ seg.human }}</span>
+      <span class="guc-track__range">{{ seg.from }}{% if seg.to != seg.from %} – {{ seg.to }}{% endif %}</span>
+    </span>
+    {% endfor %}
+  </div>
+  <div class="guc-track__scale" aria-hidden="true">
+    {% for seg in default_track %}
+    <span class="guc-track__mark guc-seg--n{{ seg.span }}"><span class="guc-track__markfrom">{{ seg.from }}</span>{% if forloop.last %}<span class="guc-track__markto">{{ seg.to }}</span>{% endif %}</span>
+    {% endfor %}
+  </div>
+  <p class="guc-sectionlead">{% if default_track|length == 1 %}默认值自 PostgreSQL {{ default_track.0.from }} 起没有变过。{% else %}默认值一共换过 {{ default_track|length }} 档，每段的宽度按它覆盖的大版本数伸展，深色的一段是当前查看的 PostgreSQL {{ version.label }}。{% endif %}带单位的取值换算成了可读形式，原始的 <code class="guc-mono">boot_val</code> 与单位写在悬浮提示里。</p>
+  {% else %}
+  <p class="wiki-empty">{% with newest=versions|last %}{{ newest.major }} 开发版尚无 pg_settings 实测，默认值未采集。{% endwith %}</p>
+  {% endif %}
+</section>
+
+<nav class="wiki-toc" aria-label="本页目录">
+  <h2 class="wiki-toc__title">本页目录</h2>
+  <ol>
+    <li><a href="#doc">手册说明</a></li>
+    {% if editorial.mechanism %}<li><a href="#mechanism">机制详解</a></li>{% endif %}
+    {% if editorial.advice.oltp or editorial.advice.olap or editorial.advice.small %}<li><a href="#advice">调优建议</a></li>{% endif %}
+    {% if editorial.pitfalls %}<li><a href="#pitfalls">常见坑</a></li>{% endif %}
+    <li><a href="#timeline">演化历史</a></li>
+    {% if matrix.rows %}<li><a href="#matrix">逐版本快照</a></li>{% endif %}
+    {% if editorial.related %}<li><a href="#related">关联参数</a></li>{% endif %}
+    {% if editorial.references %}<li><a href="#references">参考资料</a></li>{% endif %}
+    {% if siblings %}<li><a href="#siblings">同类参数</a></li>{% endif %}
+  </ol>
+</nav>
+
+<section class="wiki-section" id="doc">
+<h2>手册说明</h2>
+<p class="guc-docmeta">
+  <span class="guc-docmeta__label">{{ doc.label }}</span>
+  {% if doc.local_url %}<a class="guc-docmeta__link" href="{{ doc.local_url }}">本站手册</a>{% endif %}
+  {% if doc.official_url %}<a class="guc-docmeta__link" href="{{ doc.official_url }}" target="_blank" rel="noopener">官方原文 <span class="guc-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+</p>
+{% if doc.borrowed %}<p class="wiki-note guc-borrowed">本站未收录 PostgreSQL {{ version.label }} 手册，以下为 PostgreSQL {{ doc.major }} 的译文。</p>{% elif doc.major and doc.major != version.major %}<p class="guc-docsame">本版译文与 PostgreSQL {{ doc.major }} 完全一致，下面就是同一段文字。</p>{% endif %}
+{% if doc.html %}
+<div class="guc-doc">{{ doc.html|safe }}</div>
+{% else %}
+<p class="wiki-empty">本站手册未收录此参数的说明。{% if doc.official_url %}<a href="{{ doc.official_url }}" target="_blank" rel="noopener">到官方文档查看 ↗</a>{% endif %}</p>
+{% endif %}
+</section>
+
+{% if editorial.mechanism %}
+<section class="wiki-section" id="mechanism">
+<h2>机制详解</h2>
+{% for para in editorial.mechanism %}<p class="guc-para">{{ para }}</p>{% endfor %}
+</section>
+{% endif %}
+
+{% if editorial.advice.oltp or editorial.advice.olap or editorial.advice.small %}
+<section class="wiki-section" id="advice">
+<h2>调优建议</h2>
+<p class="guc-sectionlead">按典型负载给出的取值思路，不是放之四海皆准的配方：实际取值要看数据量、并发度与硬件。</p>
+<ul class="guc-advice">
+  {% if editorial.advice.oltp %}
+  <li class="guc-advice__card guc-advice__card--oltp">
+    <p class="guc-advice__head"><span class="guc-advice__tag">OLTP</span><span class="guc-advice__sub">在线事务处理</span></p>
+    <p class="guc-advice__body">{{ editorial.advice.oltp }}</p>
+  </li>
+  {% endif %}
+  {% if editorial.advice.olap %}
+  <li class="guc-advice__card guc-advice__card--olap">
+    <p class="guc-advice__head"><span class="guc-advice__tag">OLAP</span><span class="guc-advice__sub">分析与批处理</span></p>
+    <p class="guc-advice__body">{{ editorial.advice.olap }}</p>
+  </li>
+  {% endif %}
+  {% if editorial.advice.small %}
+  <li class="guc-advice__card guc-advice__card--small">
+    <p class="guc-advice__head"><span class="guc-advice__tag">小规格</span><span class="guc-advice__sub">低配实例与开发机</span></p>
+    <p class="guc-advice__body">{{ editorial.advice.small }}</p>
+  </li>
+  {% endif %}
+</ul>
+</section>
+{% endif %}
+
+{% if editorial.pitfalls %}
+<section class="wiki-section" id="pitfalls">
+<h2>常见坑</h2>
+<ul class="guc-pitfalls">
+  {% for item in editorial.pitfalls %}<li class="guc-pitfalls__item">{{ item }}</li>{% endfor %}
+</ul>
+</section>
+{% endif %}
+
+<section class="wiki-section" id="timeline">
+<h2>演化历史</h2>
+<p class="guc-sectionlead">相邻两个大版本之间的差异，新的在前。版本号链到该版的快照。</p>
+<ol class="guc-tl">
+  {% for item in timeline %}
+  <li class="guc-tl__item guc-tl__item--{% if item.status == 'added' %}added{% elif item.status == 'removed' %}removed{% elif item.carried %}carried{% elif item.substantive %}changed{% else %}wording{% endif %}">
+    <p class="guc-tl__head">
+      <span class="guc-tl__dot" aria-hidden="true"></span>
+      {% if item.url %}<a class="guc-tl__ver" href="{{ item.url }}">PostgreSQL {{ item.to }}</a>{% else %}<span class="guc-tl__ver">PostgreSQL {{ item.to }}</span>{% endif %}
+      <span class="guc-tl__from" aria-label="相对 PostgreSQL {{ item.from }}">← {{ item.from }}</span>
+      <span class="guc-tl__label">{% if item.status == 'added' %}新增此参数{% elif item.status == 'removed' %}移除此参数{% elif item.carried %}沿用 {{ item.from }}{% elif item.default_changed %}默认值变更{% elif item.substantive %}属性变更{% else %}仅描述更新{% endif %}</span>
+    </p>
+    {% if item.fields or item.status == 'added' or item.status == 'removed' or item.carried %}
+    <p class="guc-tl__chips">
+      {% if item.status == 'added' %}<span class="guc-chip guc-chip--add"><span class="guc-chip__sign" aria-hidden="true">+</span>PostgreSQL {{ item.to }} 起可用</span>{% endif %}
+      {% if item.status == 'removed' %}<span class="guc-chip guc-chip--del"><span class="guc-chip__sign" aria-hidden="true">−</span>该版起不再存在</span>{% endif %}
+      {% if item.carried %}<span class="guc-chip guc-chip--note" title="开发版手册不含 pg_settings 事实，沿用上一版">事实沿用 {{ item.from }}</span>{% endif %}
+      {% for field in item.fields %}
+      <span class="guc-chip guc-chip--{% if field.field == 'category' or field.field == 'short_desc' or field.field == 'extra_desc' %}note{% else %}typ{% endif %}" title="{{ field.label }}在 PostgreSQL {{ item.to }} 发生变化">
+        <span class="guc-chip__label">{{ field.label }}</span>
+        <code class="guc-mono">{% if field.field == 'enumvals' %}{{ field.from|join:", "|default:"（无）" }}{% elif field.from_human %}{{ field.from_human }}{% else %}{{ field.from|default:"（无）" }}{% endif %}</code>
+        <span class="guc-chip__arrow" aria-hidden="true">→</span>
+        <code class="guc-mono">{% if field.field == 'enumvals' %}{{ field.to|join:", "|default:"（无）" }}{% elif field.to_human %}{{ field.to_human }}{% else %}{{ field.to|default:"（无）" }}{% endif %}</code>
+      </span>
+      {% endfor %}
+      {% if not item.fields and item.status != 'added' and item.status != 'removed' and not item.carried %}<span class="guc-chip guc-chip--note">无字段级差异记录</span>{% endif %}
+    </p>
+    {% endif %}
+  </li>
+  {% empty %}
+  <li class="guc-tl__empty">本数据集收录 {{ name }} 以来没有记录到变化。</li>
+  {% endfor %}
+</ol>
+</section>
+
+{% if matrix.rows %}
+<section class="wiki-section" id="matrix">
+<h2>逐版本快照</h2>
+<p class="guc-sectionlead">每个收录版本里的 {{ matrix.fields|length }} 项事实，与上一个存在的版本不同的格子带底色。版本号链到该版。</p>
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table class="guc-matrix">
+  <thead><tr>
+    <th class="guc-th guc-matrix__corner" scope="col">版本</th>
+    {% for field in matrix.fields %}<th class="guc-th guc-matrix__field" scope="col">{{ field.label }}</th>{% endfor %}
+  </tr></thead>
+  <tbody>
+  {% for row in matrix.rows %}
+  <tr class="guc-matrix__row{% if row.current %} is-current{% endif %}">
+    <th class="guc-matrix__ver" scope="row">
+      {% if row.url %}<a href="{{ row.url }}" title="PostgreSQL {{ row.label }}">{{ row.major }}</a>{% else %}<span title="PostgreSQL {{ row.label }}">{{ row.major }}</span>{% endif %}
+      {% if row.carried %}<span class="guc-matrix__carried" title="本版手册不含 pg_settings 事实，沿用上一版">沿用</span>{% endif %}
+    </th>
+    {% for cell in row.cells %}
+    <td class="guc-matrix__cell{% if cell.changed %} is-changed{% endif %}" title="PostgreSQL {{ row.major }} · {{ cell.field }}{% if cell.changed %} · 与上一版不同{% endif %}">{% if cell.value %}<code class="guc-mono">{{ cell.value }}</code>{% else %}<span class="guc-none">—</span>{% endif %}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+</section>
+{% endif %}
+
+{% if editorial.related %}
+<section class="wiki-section" id="related">
+<h2>关联参数</h2>
+<p class="guc-rels">
+  {% for item in editorial.related %}{% if item.exists %}<a class="guc-rel" href="{{ item.url }}" title="{{ item.short_desc_zh|default:item.name }}"><code class="guc-mono">{{ item.name }}</code></a>{% else %}<span class="guc-rel guc-rel--plain" title="本站未收录此参数"><code class="guc-mono">{{ item.name }}</code></span>{% endif %}{% endfor %}
+</p>
+</section>
+{% endif %}
+
+{% if editorial.references %}
+<section class="wiki-section" id="references">
+<h2>参考资料</h2>
+<ul class="guc-refs">
+  {% for ref in editorial.references %}<li><a href="{{ ref.url }}" target="_blank" rel="noopener">{{ ref.title }}</a></li>{% endfor %}
+</ul>
+</section>
+{% endif %}
+
+{% if siblings %}
+<section class="wiki-section" id="siblings">
+<h2>同类参数</h2>
+{% include "wiki/guc_table.html" with groups=siblings current=name %}
+</section>
+{% endif %}
+
+<footer class="wiki-entry__foot">
+  {% if doc_versions %}
+  <p>本站手册收录 {{ name }} 的版本：{% for item in doc_versions %}<a class="guc-docver" href="{{ item.url }}">{{ item.label }}</a>{% endfor %}</p>
+  {% endif %}
+  <p>参数事实来自 {% if origin_url %}<a href="{{ origin_url }}" target="_blank" rel="noopener">guc.pg.center</a>{% else %}guc.pg.center{% endif %}（仓库 <a href="https://github.com/pgsty/guc.pg.center" target="_blank" rel="noopener">pgsty/guc.pg.center</a>），说明的中文取自本站手册译文，最后同步 {{ parameter.imported_at|date:"Y-m-d" }}。</p>
+  <p>参数事实或版本数据有误请提交到 <a href="https://github.com/pgsty/guc.pg.center/issues" target="_blank" rel="noopener">数据仓库</a>；本站渲染或译文的问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
+</footer>
+
+</article>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

@@ -17,6 +17,11 @@ urlpatterns = [
     re_path(r'^catalog/changes/(?P<major>\d+(?:\.\d+)?)/$', views.catalog_changes,
             name='catalog_changes'),
     re_path(r'^catalog/(?P<name>pg_[a-z0-9_]+)/$', views.catalog_detail, name='catalog_detail'),
+    path('guc/', views.guc_index, name='guc'),
+    # 同理：changes/ 排在参数名的通配之前。
+    path('guc/changes/', views.guc_changes_root, name='guc_changes_root'),
+    re_path(r'^guc/changes/(?P<major>\d+(?:\.\d+)?)/$', views.guc_changes, name='guc_changes'),
+    re_path(r'^guc/(?P<name>[A-Za-z][A-Za-z0-9_]*)/$', views.guc_detail, name='guc_detail'),
 ] + [
     path('{}/'.format(column['slug']), RedirectView.as_view(url=column['origin'], permanent=False),
          name=column['slug'])
