@@ -1,0 +1,193 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<article class="wiki-entry">
+
+<p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/errcode/">错误码大全</a> / <a href="{{ klass.url }}">Class {{ klass.code }} {{ klass.label }}</a></p>
+
+<header class="wiki-entry__head">
+  <h1><span class="wiki-entry__code">{{ code.sqlstate }}</span> <span class="wiki-entry__cond">{{ code.condition_name }}</span></h1>
+  {% if name %}<p class="wiki-entry__name">{{ name }}</p>{% endif %}
+  <p class="wiki-badges">
+    <span class="wiki-sev wiki-sev--{{ code.severity }}">{{ code.severity_label }}</span>
+    <span class="wiki-tier wiki-tier--{{ code.evidence_tier }}">{{ code.tier_label }}</span>
+    <span class="wiki-badge">{{ code.depth_label }}</span>
+    {% if code.status != 'active' %}<span class="wiki-badge wiki-badge--removed">{{ code.status_label }}</span>{% endif %}
+    {% if code.runtime_verification %}<span class="wiki-badge">{{ code.runtime_label }}</span>{% endif %}
+  </p>
+</header>
+
+{% if removed_without_evidence %}
+<p class="wiki-note wiki-note--warn">这个代码在目录中标为已移除，但移除发生在哪个版本没有取到证据，所以这里不给版本。</p>
+{% endif %}
+
+<section class="wiki-facts">
+  <dl class="wiki-facts__grid">
+    {% for fact in facts %}
+    <div class="wiki-facts__cell">
+      <dt>{{ fact.label }}</dt>
+      <dd>{% if fact.url %}<a href="{{ fact.url }}">{{ fact.value }}</a>{% else %}{{ fact.value }}{% endif %}</dd>
+    </div>
+    {% endfor %}
+  </dl>
+
+  <div class="wiki-versions">
+    <h2 class="wiki-versions__title">版本覆盖</h2>
+    <ol class="wiki-versionbar">
+      {% for v in version_bar %}
+      <li class="wiki-versionbar__item{% if v.present %} is-present{% endif %}{% if v.preview %} is-preview{% endif %}"
+          title="PostgreSQL {{ v.release }}{% if v.present %}：存在{% else %}：该快照中未定义{% endif %}">{{ v.major }}</li>
+      {% endfor %}
+    </ol>
+    {% if gaps %}
+    <p class="wiki-note">
+      {% for gap in gaps %}{{ gap.before }} 与 {{ gap.after }} 之间没有正式发布标签，是来源断层，不表示该代码在此被移除。{% endfor %}
+    </p>
+    {% endif %}
+  </div>
+
+  {% if doc_url %}
+  <p class="wiki-doclink">
+    中文手册：<a href="{{ doc_url }}">附录 A 错误代码（PostgreSQL {{ version.value }}）</a>
+    {% if versions|length > 1 %}
+    <span class="wiki-doclink__switch">切换版本：{% for v in versions %}{% if v.has_doc %}<a href="?v={{ v.value }}"{% if v.value == version.value %} aria-current="true"{% endif %}>{{ v.value }}</a>{% endif %}{% endfor %}</span>
+    {% endif %}
+  </p>
+  {% endif %}
+</section>
+
+{% if toc|length > 1 %}
+<nav class="wiki-toc" aria-label="本页目录">
+  <h2 class="wiki-toc__title">本页目录</h2>
+  <ol>{% for s in toc %}<li><a href="#{{ s.anchor }}">{{ s.heading }}</a></li>{% endfor %}</ol>
+</nav>
+{% endif %}
+
+<div class="wiki-body">
+{% for block in blocks %}
+{% if block.type == 'section' %}
+  <section class="wiki-section" {% if block.section.anchor %}id="{{ block.section.anchor }}"{% endif %}>
+    {% if block.section.heading %}<h2>{{ block.section.heading }}</h2>{% endif %}
+    {{ block.section.html|safe }}
+  </section>
+
+{% elif block.type == 'templates' %}
+  <section class="wiki-panel" id="templates">
+    <h2>报文模板</h2>
+    <p class="wiki-panel__lead">源码里的格式串，不是某一次运行的输出。<code>%s</code> 之类是占位符，实际报文会填入对象名与取值。适用范围一栏是核验时留下的原始英文记录，未经翻译。</p>
+    {% for message in messages %}
+    <div class="wiki-msg">
+      {% for tpl in message.templates %}
+      <div class="wiki-msg__row">
+        <span class="wiki-msg__kind wiki-msg__kind--{{ tpl.kind }}">{{ tpl.get_kind_display }}{% if tpl.role %} · {{ tpl.role }}{% endif %}</span>
+        <code class="wiki-msg__tpl">{{ tpl.template }}</code>
+      </div>
+      {% endfor %}
+      {% if message.sources %}
+      <p class="wiki-msg__src">来源：{% for s in message.sources %}{% if not forloop.first %} · {% endif %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.path }}{% if s.location %}（{{ s.location }}）{% endif %}{% if s.tag %} @ {{ s.tag }}{% endif %}</a>{% endfor %}</p>
+      {% endif %}
+      {% if message.limits %}<p class="wiki-msg__limit">适用范围：{{ message.limits }}</p>{% endif %}
+    </div>
+    {% endfor %}
+  </section>
+
+{% elif block.type == 'cases' %}
+  <section class="wiki-panel" id="cases">
+    <h2>可复现案例</h2>
+    <p class="wiki-panel__lead">在一次性实例上执行过的场景。{% if code.snippet_count %}其中 {{ code.snippet_count }} 个附有可执行 SQL，正文相应小节里给出。{% endif %}</p>
+    {% for case in cases %}
+    <details class="wiki-case">
+      <summary>
+        <span class="wiki-case__id">{{ case.case_id }}</span>
+        {% if case.versions %}<span class="wiki-case__ver">PG {{ case.versions|join:" / " }}</span>{% endif %}
+        {% if case.has_snippet %}<span class="wiki-badge">有 SQL</span>{% endif %}
+      </summary>
+      {% if case.preconditions %}<h3>前置条件</h3><ul>{% for item in case.preconditions %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
+      {% if case.trigger %}<h3>触发</h3><p>{{ case.trigger }}</p>{% endif %}
+      {% if case.assertions %}<h3>断言</h3><ul>{% for item in case.assertions %}<li>{{ item }}</li>{% endfor %}</ul>{% endif %}
+      {% if case.repair %}<h3>处置</h3><p>{{ case.repair }}</p>{% endif %}
+      {% if case.cleanup %}<h3>清理</h3><p>{{ case.cleanup }}</p>{% endif %}
+    </details>
+    {% endfor %}
+  </section>
+
+{% elif block.type == 'evidence' %}
+  <section class="wiki-panel" id="evidence">
+    <h2>证据</h2>
+
+    {% if claims %}
+    <h3>断言</h3>
+    <p class="wiki-panel__lead">每条断言都写明了是怎么核实的，以及它不覆盖什么。这一层是核验时留下的原始英文记录，照原样呈现，未经翻译。</p>
+    <ul class="wiki-claims">
+      {% for claim in claims %}
+      <li class="wiki-claim">
+        <p class="wiki-claim__statement">{{ claim.statement }}</p>
+        {% if claim.method %}<p class="wiki-claim__meta"><span>核实方式</span>{{ claim.method }}</p>{% endif %}
+        {% if claim.limits %}<p class="wiki-claim__meta"><span>不覆盖</span>{{ claim.limits }}</p>{% endif %}
+        {% if claim.sources %}<p class="wiki-claim__meta"><span>来源</span>{% for s in claim.sources %}{% if not forloop.first %} · {% endif %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.path }}{% if s.location %}（{{ s.location }}）{% endif %}</a>{% endfor %}</p>{% endif %}
+      </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if runtimes %}
+    <h3>运行记录</h3>
+    <div class="wiki-table"><div class="wiki-table__scroll">
+    <table class="wiki-runtimes">
+      <thead><tr><th>目标</th><th>服务器版本</th><th>结果</th><th>覆盖案例</th></tr></thead>
+      <tbody>
+      {% for run in runtimes %}
+      <tr>
+        <td>{{ run.target }}</td>
+        <td>{{ run.server_version }}</td>
+        <td><span class="wiki-run wiki-run--{{ run.status }}">{{ run.status }}</span></td>
+        <td>{{ run.cases|join:"、" }}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div></div>
+    {% endif %}
+
+    {% if sources %}
+    <h3 id="sources">源码与文档</h3>
+    <p class="wiki-panel__lead">链接锚在核验时那个提交上，不指向会移动的分支，所以行号任何时候点开都还对得上。</p>
+    <div class="wiki-table"><div class="wiki-table__scroll">
+    <table class="wiki-sources">
+      <thead><tr><th>文件</th><th>位置</th><th>版本</th><th>提交</th></tr></thead>
+      <tbody>
+      {% for s in sources %}
+      <tr>
+        <td class="wiki-sources__path">{% if s.url %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.path }}</a>{% else %}{{ s.path }}{% endif %}</td>
+        <td>{{ s.location }}</td>
+        <td>{{ s.tag }}</td>
+        <td class="wiki-sources__commit">{% if s.commit %}<code>{{ s.commit|slice:":9" }}</code>{% endif %}</td>
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    </div></div>
+    {% endif %}
+  </section>
+{% endif %}
+{% endfor %}
+</div>
+
+{% if siblings %}
+<section class="wiki-panel" id="siblings">
+  <h2>同类错误码</h2>
+  <p class="wiki-panel__lead">Class {{ klass.code }} {{ klass.label }} 下的其他成员。</p>
+  <ul class="wiki-siblings">
+    {% for s in siblings %}
+    <li><a href="{{ s.url }}"><code>{{ s.sqlstate }}</code> <span>{{ s.condition_name }}</span></a></li>
+    {% endfor %}
+  </ul>
+</section>
+{% endif %}
+
+<footer class="wiki-entry__foot">
+  <p>数据来自 <a href="https://err.pg.center/{{ code.sqlstate|lower }}/" target="_blank" rel="noopener">err.pg.center</a>（仓库 <a href="https://github.com/pgsty/err.pg.center" target="_blank" rel="noopener">pgsty/err.pg.center</a>），最后同步 {{ code.imported_at|date:"Y-m-d" }}。</p>
+  <p>词条内容有误请提交到 <a href="https://github.com/pgsty/err.pg.center/issues" target="_blank" rel="noopener">数据仓库</a>；本站渲染或译文的问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
+</footer>
+
+</article>
+{% endblock %}

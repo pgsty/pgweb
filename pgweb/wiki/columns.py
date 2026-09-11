@@ -21,7 +21,7 @@ COLUMNS = (
         'coverage': 'PostgreSQL 9.0 – 19beta3',
         'repo': 'pgsty/err.pg.center',
         'origin': 'https://err.pg.center',
-        'live': False,
+        'live': True,
     },
     {
         'slug': 'guc',
