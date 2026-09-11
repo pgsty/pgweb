@@ -8,9 +8,9 @@ from .columns import COLUMNS
 
 app_name = 'wiki'
 urlpatterns = [
-    path('errcode/', views.errcode_index, name='errcode'),
+    path('sqlstate/', views.errcode_index, name='errcode'),
     # 通配放最后，免得遮蔽具名路由。
-    path('errcode/<str:sqlstate>/', views.errcode_detail, name='errcode_detail'),
+    path('sqlstate/<str:sqlstate>/', views.errcode_detail, name='errcode_detail'),
 ] + [
     path('{}/'.format(column['slug']), RedirectView.as_view(url=column['origin'], permanent=False),
          name=column['slug'])

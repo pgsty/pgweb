@@ -12,12 +12,12 @@
 
 COLUMNS = (
     {
-        'slug': 'errcode',
-        'name': '错误代码',
-        'short': '错误代码',
+        'slug': 'sqlstate',
+        'name': 'SQL 状态码',
+        'short': 'SQL 状态码',
         'tone': 'err',
         'lead': '全部 263 个 SQLSTATE 的含义、报文、诊断与处置。',
-        'scale': '263 个错误代码 · 44 个类',
+        'scale': '263 个 SQL 状态码 · 44 个类',
         'coverage': 'PostgreSQL 9.0 – 19beta3',
         'repo': 'pgsty/err.pg.center',
         'origin': 'https://err.pg.center',

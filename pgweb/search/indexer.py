@@ -184,14 +184,14 @@ def errcode_entry(code, text, card):
     return {
         'key': digest('errcode\0' + code.sqlstate), 'entity_key': 'error:' + name_key, 'kind': 'error',
         'subtype': code.klass.code, 'name': code.sqlstate, 'name_key': name_key,
-        'aliases': sorted(aliases), 'anchor': '', 'heading': 'Class ' + klass + ' · 错误代码',
+        'aliases': sorted(aliases), 'anchor': '', 'heading': 'Class ' + klass + ' · SQL 状态码',
         'signature': code.condition_name + ('（' + zh_name + '）' if zh_name else ''),
         'body': body, 'preview': ''.join(parts), 'url': code.url, 'weight': 0.5,
     }
 
 
 def rebuild_errcodes(dry_run=False):
-    """Replace the search entries of the 错误代码 column (source 'errcode')."""
+    """Replace the search entries of the SQL 状态码 column (source 'errcode')."""
     from pgweb.wiki import errcode as errcode_payload
     from pgweb.wiki.models import ErrorCode, ErrorCodeText
     texts = {t.errcode_id: t for t in ErrorCodeText.objects.filter(lang='zh')}

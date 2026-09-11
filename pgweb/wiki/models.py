@@ -62,7 +62,7 @@ class ErrorCodeClass(models.Model):
     @property
     def url(self):
         # 导航索引跳同页锚点，与手册附录 A 的读法一致。
-        return '/docs/errcode/#class-' + self.code
+        return '/docs/sqlstate/#class-' + self.code
 
     @property
     def label(self):
@@ -146,7 +146,7 @@ class ErrorCode(models.Model):
 
     @property
     def url(self):
-        return '/docs/errcode/{}/'.format(self.sqlstate)
+        return '/docs/sqlstate/{}/'.format(self.sqlstate)
 
     @property
     def severity(self):

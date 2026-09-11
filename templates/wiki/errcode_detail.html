@@ -2,7 +2,7 @@
 {% block wiki_content %}
 <article class="wiki-entry">
 
-<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/errcode/">错误代码</a> / <a href="{{ klass.url }}">Class {{ klass.code }} {{ klass.label }}</a></p>
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/sqlstate/">SQL 状态码</a> / <a href="{{ klass.url }}">Class {{ klass.code }} {{ klass.label }}</a></p>
 
 <header class="wiki-entry__head">
   <h1><span class="wiki-entry__code">{{ code.sqlstate }}</span> <span class="wiki-entry__cond">{{ code.condition_name }}</span></h1>
@@ -169,7 +169,7 @@
 
 {% if sibling_groups %}
 <section class="wiki-section" id="siblings">
-  <h2>同类错误代码</h2>
+  <h2>同类 SQL 状态码</h2>
   {% include "wiki/errcode_table.html" with groups=sibling_groups current=code.sqlstate %}
 </section>
 {% endif %}

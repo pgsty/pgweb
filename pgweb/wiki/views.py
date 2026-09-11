@@ -18,7 +18,7 @@ def shell(ctx, title, description, canonical, class_code=''):
     """The shared page context: the 文档 side navigation and SEO fields."""
     menu = get_nav_menu('docs')
     for item in menu:
-        if item.get('link') == '/docs/errcode/':
+        if item.get('link') == '/docs/sqlstate/':
             item['active'] = True
     ctx['navmenu'] = menu
     ctx['title'] = title
@@ -29,14 +29,14 @@ def shell(ctx, title, description, canonical, class_code=''):
 
 @require_safe
 def errcode_index(request):
-    column = BY_SLUG['errcode']
+    column = BY_SLUG['sqlstate']
     payload = errcode.index()
-    description = 'PostgreSQL 全部 {} 个 SQLSTATE 错误代码的中文索引，按 {} 个类别分组，' \
+    description = 'PostgreSQL 全部 {} 个 SQL 状态码（SQLSTATE）的中文索引，按 {} 个类别分组，' \
                   '每条给出条件名、宏名称、严重等级、起始版本与状态。'.format(
                       payload['total'], payload['class_count'])
     return render(request, 'wiki/errcode_index.html', shell(dict(
         payload, column=column,
-    ), 'PostgreSQL 错误代码', description, '/docs/errcode/'))
+    ), 'PostgreSQL SQL 状态码', description, '/docs/sqlstate/'))
 
 
 @require_safe
@@ -45,7 +45,7 @@ def errcode_detail(request, sqlstate):
         raise Http404()
     # 站内规范形式是大写：PostgreSQL 报错里输出的就是大写。
     if sqlstate != sqlstate.upper():
-        return HttpResponsePermanentRedirect('/docs/errcode/{}/'.format(sqlstate.upper()))
+        return HttpResponsePermanentRedirect('/docs/sqlstate/{}/'.format(sqlstate.upper()))
     try:
         payload = errcode.detail_payload(sqlstate, request.GET.get('v', ''))
     except ErrorCode.DoesNotExist:
@@ -54,9 +54,9 @@ def errcode_detail(request, sqlstate):
     code = payload['code']
     name = payload['name']
     heading = '{} {}'.format(code.sqlstate, code.condition_name).strip()
-    title = '{}{} · 错误代码'.format(heading, '（{}）'.format(name) if name else '')
+    title = '{}{} · SQL 状态码'.format(heading, '（{}）'.format(name) if name else '')
     text = payload['text']
     description = (text.summary or text.description) if text else heading
     return render(request, 'wiki/errcode_detail.html', shell(dict(
-        payload, column=BY_SLUG['errcode'], heading=heading,
+        payload, column=BY_SLUG['sqlstate'], heading=heading,
     ), title, description, code.url, class_code=code.klass_id))

@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--versions', nargs='+', type=int, help='Major versions of the manual to index')
         parser.add_argument('--extensions', action='store_true', help='Rebuild the extension catalogue entries')
-        parser.add_argument('--errcodes', action='store_true', help='Rebuild the 错误代码 entries')
+        parser.add_argument('--errcodes', action='store_true', help='Rebuild the SQL 状态码 entries')
         parser.add_argument('--force', action='store_true', help='Rebuild unchanged manual pages too')
         parser.add_argument('--dry-run', action='store_true', help='Extract and report without writing')
 

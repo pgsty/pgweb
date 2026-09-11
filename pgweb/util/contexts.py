@@ -263,7 +263,7 @@ def _get_doc_majors():
 
 
 # 本站独有的栏目，上游没有对应页面。给它们拼一个 postgresql.org 地址只会得到 404。
-LOCAL_ONLY_SECTIONS = ('/docs/errcode/', '/info/', '/ext/', '/e/')
+LOCAL_ONLY_SECTIONS = ('/docs/sqlstate/', '/info/', '/ext/', '/e/')
 
 
 def _source_url(path):

@@ -2,7 +2,7 @@
 <div class="wiki-table"><div class="wiki-table__scroll">
 <table{% if table_id %} id="{{ table_id }}"{% endif %} class="wiki-errcodes">
   <thead><tr>
-    <th scope="col">错误代码</th>
+    <th scope="col">状态码</th>
     <th scope="col">条件名</th>
     <th scope="col">宏名称</th>
     <th scope="col">严重等级</th>
@@ -17,7 +17,7 @@
           <span class="wiki-classrow__label">{{ group.label }}</span>
           {% if group.name_zh %}<span class="wiki-classrow__en">{{ group.name }}</span>{% endif %}
           <span class="wiki-classrow__count">{{ group.count }} 个</span>
-          {% if top_link %}<a class="wiki-classrow__top" href="{{ top_link }}" title="回到顶部" aria-label="回到顶部">↑</a>{% else %}<a class="wiki-classrow__top" href="/docs/errcode/#{{ group.anchor }}" title="在索引中查看本类">↗</a>{% endif %}
+          {% if top_link %}<a class="wiki-classrow__top" href="{{ top_link }}" title="回到顶部" aria-label="回到顶部">↑</a>{% else %}<a class="wiki-classrow__top" href="/docs/sqlstate/#{{ group.anchor }}" title="在索引中查看本类">↗</a>{% endif %}
         </div>
       </th>
     </tr>

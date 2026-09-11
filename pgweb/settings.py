@@ -129,6 +129,7 @@ INSTALLED_APPS = [
     'pgweb.pugs',
     'pgweb.util',
     'pgweb.release.apps.ReleaseAppConfig',
+    'pgweb.nls',
 ]
 
 # Default format for date/time (as it changes between machines)

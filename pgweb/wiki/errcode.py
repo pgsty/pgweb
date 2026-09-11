@@ -12,7 +12,7 @@ CACHE_KEY = 'pgweb:wiki:errcode-index'
 CACHE_SECONDS = 300
 
 # 手册附录只给码和条件名；这里再给宏名称、严重等级与启停版本，说明另起一行。
-COLUMNS = ('错误代码', '条件名', '宏名称', '严重等级', '版本')
+COLUMNS = ('状态码', '条件名', '宏名称', '严重等级', '版本')
 
 # 现行错误码的「弃用版本」列显示当前开发版：2026-09-11 与 master 的
 # src/backend/utils/errcodes.txt 核对，262 个现行码全部在列，没有新增。
@@ -167,8 +167,8 @@ def index(request=None):
 
 
 def class_nav(current=''):
-    """The 44 classes as the sub-navigation under 错误代码 in the side card."""
-    return [{'title': '{} {}'.format(g['code'], g['label']), 'link': '/docs/errcode/#' + g['anchor'],
+    """The 44 classes as the sub-navigation under SQL 状态码 in the side card."""
+    return [{'title': '{} {}'.format(g['code'], g['label']), 'link': '/docs/sqlstate/#' + g['anchor'],
              'active': g['code'] == current} for g in index()['groups']]
 
 
@@ -235,7 +235,7 @@ def card(code):
 def version_groups(code):
     """本站手册里有附录 A 的版本，按受支持、历史、预发行与开发版分组，链接到该版的附录 A。
 
-    只列本站已加载的手册版本；该版本不含此错误代码时只显示、不链接。
+    只列本站已加载的手册版本；该版本不含此状态码时只显示、不链接。
     """
     from pgweb.docs.versions import manual_groups
     available = set(doc_majors())

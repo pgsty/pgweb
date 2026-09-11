@@ -32,7 +32,7 @@
 
 ### 类别
 
-界面只显示十个类别：配置参数、SQL 命令与语法、函数与运算符、数据类型、系统目录与视图、错误代码、命令行工具（`pg_dump` 等程序及其选项、连接参数与环境变量）、psql 命令（`\d+` 等反斜线元命令）、扩展与模块（手册附录中的模块、访问方法、过程语言，以及扩展目录）、章节正文。数据库里的 `kind` 仍是细粒度种类，类别到种类的映射在 `pgweb/search/taxonomy.py`，调整分组不需要重建索引。
+界面只显示十个类别：配置参数、SQL 命令与语法、函数与运算符、数据类型、系统目录与视图、SQL 状态码、命令行工具（`pg_dump` 等程序及其选项、连接参数与环境变量）、psql 命令（`\d+` 等反斜线元命令）、扩展与模块（手册附录中的模块、访问方法、过程语言，以及扩展目录）、章节正文。数据库里的 `kind` 仍是细粒度种类，类别到种类的映射在 `pgweb/search/taxonomy.py`，调整分组不需要重建索引。
 
 ## 数据与提取
 
@@ -41,11 +41,11 @@
 | 表 | 用途 |
 | --- | --- |
 | `search_indexedpage` | 手册页面外键、内容及提取器版本的摘要、索引时间 |
-| `search_searchentry` | `source`（`pg` 手册 / `ext` 扩展目录 / `errcode` 错误代码）、版本、实体身份、种类、名称、别名、签名、正文片段、锚点、清洗后的预览 HTML、`url`、热度 `weight` 和 `tsvector` |
+| `search_searchentry` | `source`（`pg` 手册 / `ext` 扩展目录 / `errcode` SQL 状态码）、版本、实体身份、种类、名称、别名、签名、正文片段、锚点、清洗后的预览 HTML、`url`、热度 `weight` 和 `tsvector` |
 
 手册条目按结构提取：GUC 定义列表、函数与运算符表、类型表、错误码表、SQL reference、文档化的系统关系与章节标题；正文中偶然出现的函数名不会成为定义。长章节按结构拆分并保留标题路径。已有锚点优先，缺少锚点的定义用内容摘要生成 `SEARCH-*` 标识，阅读页使用同一生成函数，不改写 `docs.content`。
 
-错误代码条目来自百科的 `wiki_errcode` 表（`source = 'errcode'`），与手册附录 A 的同一 SQLSTATE 共享实体：结果列表里只出现百科条目（链接到 `/docs/errcode/<代码>/`），预览是一句话说明、事实卡与「速览」，版本行仍列出各版手册的附录行。
+SQL 状态码条目来自百科的 `wiki_errcode` 表（`source = 'errcode'`），与手册附录 A 的同一 SQLSTATE 共享实体：结果列表里只出现百科条目（链接到 `/docs/sqlstate/<代码>/`），预览是一句话说明、事实卡与「速览」，版本行仍列出各版手册的附录行。
 
 扩展条目直接来自 `pgext.universe` 当前快照：名称与包名为别名，中英文简介、标签、分类和包名进入正文，预览是一张事实卡（版本、分类、语言、许可证、PG 版本范围、来源、`CREATE EXTENSION`），链接到本站扩展页。同名的手册模块与目录条目共享实体身份：结果列表里折叠为一条，手册定义优先，预览底部给出目录卡片。`weight` 取 `log1p(stars)` 归一化到 0–1，只在有搜索词时参与排序。
 
@@ -68,7 +68,7 @@
 .venv/bin/python manage.py index_docs --versions 18         # 某个大版本，增量：未变化的页面跳过
 .venv/bin/python manage.py index_docs --versions 18 --force # 提取规则变化后重建
 .venv/bin/python manage.py index_docs --extensions          # 只重建扩展目录条目
-.venv/bin/python manage.py index_docs --errcodes            # 只重建错误代码条目（tools/wiki/sync_errcode.py 之后）
+.venv/bin/python manage.py index_docs --errcodes            # 只重建 SQL 状态码条目（tools/wiki/sync_errcode.py 之后）
 .venv/bin/python manage.py index_docs --dry-run             # 只提取统计，不写入
 ```
 

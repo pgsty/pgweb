@@ -8,8 +8,8 @@ from .models import ErrorCode, ErrorCodeClass, ErrorCodeRelease, ErrorCodeText
 
 class ColumnTests(SimpleTestCase):
     def test_four_columns_in_reading_order(self):
-        self.assertEqual([c['slug'] for c in COLUMNS], ['errcode', 'guc', 'waitevent', 'catalog'])
-        self.assertEqual(set(BY_SLUG), {'errcode', 'guc', 'waitevent', 'catalog'})
+        self.assertEqual([c['slug'] for c in COLUMNS], ['sqlstate', 'guc', 'waitevent', 'catalog'])
+        self.assertEqual(set(BY_SLUG), {'sqlstate', 'guc', 'waitevent', 'catalog'})
 
     def test_a_column_in_preparation_links_to_its_origin_site(self):
         """Navigation must never point at a route that does not exist yet."""
@@ -26,7 +26,7 @@ class ColumnTests(SimpleTestCase):
 
     def test_nav_lists_the_four_columns(self):
         items = nav_items()
-        self.assertEqual(items[0], {'title': '错误代码', 'link': '/docs/errcode/'})
+        self.assertEqual(items[0], {'title': 'SQL 状态码', 'link': '/docs/sqlstate/'})
         self.assertEqual(len(items), len(COLUMNS))
 
 
@@ -68,9 +68,9 @@ class LinkRewriteTests(SimpleTestCase):
 
     def test_code_links_become_uppercase_site_links(self):
         self.assertEqual(self.rewrite('见 [25P02](../25p02/)。'),
-                         '见 [25P02](/docs/errcode/25P02/)。')
+                         '见 [25P02](/docs/sqlstate/25P02/)。')
         self.assertEqual(self.rewrite('见 [HV00J](../../hv00j/)。'),
-                         '见 [HV00J](/docs/errcode/HV00J/)。')
+                         '见 [HV00J](/docs/sqlstate/HV00J/)。')
 
     def test_evidence_and_case_links_point_at_page_anchors(self):
         self.assertEqual(self.rewrite('[证据](../data/evidence/23505.json)'), '[证据](#sources)')
@@ -188,7 +188,7 @@ class ErrorCodePageTests(TestCase):
         self.assertEqual(report['updated'], 0)
 
     def test_index_groups_by_class(self):
-        response = self.client.get('/docs/errcode/')
+        response = self.client.get('/docs/sqlstate/')
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
         self.assertIn('导航索引', html)
@@ -197,7 +197,7 @@ class ErrorCodePageTests(TestCase):
         self.assertIn('唯一性冲突', html)
 
     def test_detail_renders_prose_and_panels(self):
-        html = self.client.get('/docs/errcode/23505/').content.decode()
+        html = self.client.get('/docs/sqlstate/23505/').content.decode()
         self.assertIn('unique_violation', html)
         self.assertIn('报文模板', html)
         self.assertIn('duplicate key value', html)
@@ -206,24 +206,24 @@ class ErrorCodePageTests(TestCase):
         self.assertIn('unique_violation condition', html)
 
     def test_a_code_without_evidence_still_renders(self):
-        response = self.client.get('/docs/errcode/23000/')
+        response = self.client.get('/docs/sqlstate/23000/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn('报文模板', response.content.decode())
 
     def test_lowercase_redirects_to_the_canonical_uppercase(self):
-        response = self.client.get('/docs/errcode/23505/'.replace('23505', '23p01'.upper().lower()))
+        response = self.client.get('/docs/sqlstate/23505/'.replace('23505', '23p01'.upper().lower()))
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/errcode/23P01/')
+        self.assertEqual(response['Location'], '/docs/sqlstate/23P01/')
 
     def test_unknown_code_is_404(self):
-        self.assertEqual(self.client.get('/docs/errcode/ZZZZZ/').status_code, 404)
-        self.assertEqual(self.client.get('/docs/errcode/toolong/').status_code, 404)
+        self.assertEqual(self.client.get('/docs/sqlstate/ZZZZZ/').status_code, 404)
+        self.assertEqual(self.client.get('/docs/sqlstate/toolong/').status_code, 404)
 
     def test_sitemap_lists_every_code(self):
         from .struct import get_struct
         pages = [page for page, _ in get_struct()]
-        self.assertIn('docs/errcode/', pages)
-        self.assertIn('docs/errcode/23505/', pages)
+        self.assertIn('docs/sqlstate/', pages)
+        self.assertIn('docs/sqlstate/23505/', pages)
 
     def test_panels_fall_back_when_the_matching_section_is_missing(self):
         """正文没有 messages 一节时，报文面板挂到含义那一节后面。"""

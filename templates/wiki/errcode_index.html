@@ -1,11 +1,11 @@
 {% extends "wiki/base.html" %}
 {% block wiki_content %}
-<p class="wiki-crumb"><a href="/docs/">文档</a> / 错误代码</p>
-<h1>PostgreSQL 错误代码</h1>
-<p class="wiki-lead">SQLSTATE 是 PostgreSQL 服务器为每条消息附带的五字符状态码：前两位是类别，后三位是类别内的具体条件，应用程序应依据它而不是消息文本判断错误。本目录收录 {{ total }} 个错误代码，分属 {{ class_count }} 个类别，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}；每条给出条件名、宏名称、严重等级、起始版本与当前状态，并附一句说明，点击任意一行进入详情页。</p>
+<p class="wiki-crumb"><a href="/docs/">文档</a> / SQL 状态码</p>
+<h1>PostgreSQL SQL 状态码</h1>
+<p class="wiki-lead">SQLSTATE 是 PostgreSQL 服务器为每条消息附带的五字符状态码：前两位是类别，后三位是类别内的具体条件，应用程序应依据它而不是消息文本判断错误。本目录收录 {{ total }} 个 SQL 状态码，分属 {{ class_count }} 个类别，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}；每条给出条件名、宏名称、严重等级、起始版本与当前状态，并附一句说明，点击任意一行进入详情页。</p>
 
 <h2 id="index">导航索引</h2>
-<nav class="wiki-classnav" aria-label="错误代码类别索引">
+<nav class="wiki-classnav" aria-label="SQL 状态码类别索引">
   {% for group in groups %}
   <a class="wiki-classnav__item" href="#{{ group.anchor }}">
     <span class="wiki-classnav__code">{{ group.code }}</span>
@@ -15,10 +15,10 @@
   {% endfor %}
 </nav>
 
-<form id="errcode-search" action="/docs/errcode/" method="get" role="search">
-  <label class="sr-only" for="errcode-q">搜索错误代码</label>
+<form id="errcode-search" action="/docs/sqlstate/" method="get" role="search">
+  <label class="sr-only" for="errcode-q">搜索 SQL 状态码</label>
   <input class="form-control" id="errcode-q" type="search" name="q" maxlength="120"
-         placeholder="输入错误代码、条件名或关键词，如 23505、unique_violation、唯一" autocomplete="off">
+         placeholder="输入状态码、条件名或关键词，如 23505、unique_violation、唯一" autocomplete="off">
   <div class="wiki-filters">
     {% for dd in filters %}
     <label for="errcode-{{ dd.param }}">{{ dd.label }}
@@ -35,9 +35,9 @@
 
 {% include "wiki/errcode_table.html" with groups=groups table_id="errcode-table" top_link="#index" %}
 
-<p class="wiki-empty" id="errcode-empty" hidden>没有匹配的错误代码。<a href="/docs/errcode/">清除筛选</a></p>
+<p class="wiki-empty" id="errcode-empty" hidden>没有匹配的 SQL 状态码。<a href="/docs/sqlstate/">清除筛选</a></p>
 
 <h2>说明</h2>
-<p>起始版本是该错误代码在 PostgreSQL 源码 <code>errcodes.txt</code> 定义中出现的最早版本，追溯下限为 7.4；状态为「活跃」表示当前开发版 {{ latest_major }} 仍定义该代码，已移除的代码给出弃用它的版本。数据来自 <a href="https://err.pg.center" target="_blank" rel="noopener">err.pg.center</a>；中文手册对应章节见 <a href="/docs/current/errcodes-appendix.html">附录 A 错误代码</a>。</p>
+<p>起始版本是该状态码在 PostgreSQL 源码 <code>errcodes.txt</code> 定义中出现的最早版本，追溯下限为 7.4；状态为「活跃」表示当前开发版 {{ latest_major }} 仍定义该状态码，已移除的状态码给出弃用它的版本。数据来自 <a href="https://err.pg.center" target="_blank" rel="noopener">err.pg.center</a>；中文手册对应章节见 <a href="/docs/current/errcodes-appendix.html">附录 A 错误代码</a>。</p>
 {% endblock %}
 {% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

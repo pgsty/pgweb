@@ -1,0 +1,80 @@
+{% extends "base/base.html" %}
+{% comment %}
+消息翻译 (/nls/): the PostgreSQL 19 zh_CN message review table. Everyone can
+read; the page is editable only for users holding nls.review (data-can-edit).
+The CSRF token travels as a data attribute because the cookie is HttpOnly.
+{% endcomment %}
+{% block title %}消息翻译{% endblock %}
+{% block extrahead %}
+<link rel="stylesheet" href="/media/css/nls.css?{{gitrev}}">
+<meta name="robots" content="noindex,follow">
+{% endblock %}
+{% block layoutblock %}
+<div class="container-fluid margin pg-page nls-page">
+<div id="nls" class="nls" data-csrf="{{ csrf_token }}" data-can-edit="{% if can_edit %}1{% else %}0{% endif %}" data-login="{{ login_url }}">
+  <header class="nls-head">
+    <h1>消息翻译</h1>
+    <span class="nls-spacer"></span>
+    <span id="nls-overall" class="nls-muted">加载中…</span>
+    <span class="nls-sep" aria-hidden="true"></span>
+    <span id="nls-user" class="nls-user"></span>
+    <span id="nls-save-state" role="status" class="nls-save-state"></span>
+    <a id="nls-export" class="nls-btn nls-quiet" href="/nls/api/export/" download="pg19-human-review.json" hidden>导出 JSON</a>
+  </header>
+  <div class="nls-body">
+    <aside class="nls-side">
+      <div class="nls-side-heading">组件 <span id="nls-component-count"></span></div>
+      <input id="nls-component-search" type="search" aria-label="查找组件" placeholder="查找组件…" autocomplete="off">
+      <nav id="nls-components" aria-label="组件列表"></nav>
+      <div class="nls-side-note">已校对数 / 消息总数<br>按消息数从多到少排列。</div>
+    </aside>
+    <main class="nls-main">
+      <div class="nls-toolbar">
+        <h2 id="nls-component-title">加载中</h2>
+        <select id="nls-component-select" class="nls-component-select" aria-label="切换组件" hidden></select>
+        <span id="nls-component-summary" class="nls-muted"></span>
+        <span class="nls-spacer"></span>
+        <button id="nls-undo" class="nls-btn nls-quiet" type="button" disabled hidden>撤销上次操作</button>
+        <button id="nls-save-component" class="nls-btn" type="button" disabled hidden>保存修改 <kbd>⌘S</kbd></button>
+        <button id="nls-submit-component" class="nls-btn nls-primary" type="button" disabled hidden>提交组件</button>
+      </div>
+      <div class="nls-tools">
+        <input id="nls-search" type="search" aria-label="搜索当前组件" placeholder="搜索英文、现有翻译或校准译文…" autocomplete="off">
+        <select id="nls-filter" aria-label="筛选记录">
+          <option value="all">全部消息</option><option value="pending">待校对</option><option value="approved">已校对</option>
+          <option value="issue">标疑 / 否定</option><option value="human">有人工稿</option><option value="dirty">未保存修改</option>
+          <option disabled>── 校准类别 ──</option>
+          <option value="cal:revised">修订语义</option><option value="cal:format">调整格式</option><option value="cal:retained">保留措辞</option>
+          <option value="cal:new">补充新译</option><option value="second_pass">本轮更新的推荐</option>
+        </select>
+        <span class="nls-spacer"></span>
+        <span class="nls-legend nls-swatches" title="现有翻译单元格的背景含义"><span class="same">与校准译文一致</span><span class="differs">有差异</span><span class="severe">占位符不匹配</span></span>
+        <span class="nls-legend" title="现有翻译与校准译文的逐字差异"><span class="d-del">删除</span><span class="d-ins">新增</span><span class="d-chg">修改</span></span>
+        <span class="nls-keys"><kbd>↑</kbd><kbd>↓</kbd>移动<kbd>空格</kbd>校对<kbd>⏎</kbd>编辑<kbd>→</kbd>展开</span>
+        <button id="nls-fullscreen" class="nls-btn nls-icon-btn" type="button" title="全屏（Esc 退出）" aria-label="全屏" aria-pressed="false">
+          <svg class="ico-max" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>
+          <svg class="ico-min" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v3a2 2 0 0 1-2 2H3M21 8h-3a2 2 0 0 1-2-2V3M3 16h3a2 2 0 0 1 2 2v3M16 21v-3a2 2 0 0 1 2-2h3"/></svg>
+        </button>
+      </div>
+      <div id="nls-notice" class="nls-notice" hidden></div>
+      <div id="nls-error" class="nls-error" role="alert" hidden></div>
+      <table class="nls-table" aria-label="消息翻译校准表">
+        <colgroup><col class="check-col"><col class="english-col"><col class="old-col"><col class="new-col"><col class="status-col"></colgroup>
+        <thead><tr>
+          <th class="check-th" title="已校对"><svg viewBox="0 0 24 24" aria-label="已校对"><path d="M20 6 9 17l-5-5"/></svg></th>
+          <th>英文原文<span class="col-grip" data-grip="0" title="拖动调整列宽，双击恢复默认"></span></th>
+          <th>现有翻译<span class="col-grip" data-grip="1" title="拖动调整列宽，双击恢复默认"></span></th>
+          <th>校准译文<span class="col-grip" data-grip="2" title="拖动调整列宽，双击恢复默认"></span></th>
+          <th>状态</th>
+        </tr></thead>
+        <tbody id="nls-rows"><tr><td colspan="5" class="empty">正在读取消息…</td></tr></tbody>
+      </table>
+      <div id="nls-table-end" class="nls-muted nls-table-end"></div>
+    </main>
+  </div>
+  <dialog id="nls-submit-dialog" class="nls-dialog"><h2>提交本组件</h2><p id="nls-submit-summary"></p><p class="nls-muted">写入前会用 msgfmt 检查每条译文的全部形式；原 PO 文件不会被直接改动。</p><div id="nls-submit-error" class="nls-error" hidden></div><div class="nls-dialog-actions"><button type="button" class="nls-btn" data-close="nls-submit-dialog">返回查看</button><button type="button" id="nls-submit-confirm" class="nls-btn nls-primary">确认提交</button></div></dialog>
+  <div id="nls-toast" class="nls-toast" role="status" hidden></div>
+</div>
+</div>
+{% endblock %}
+{% block extrascript %}<script type="module" src="/media/js/nls.js?{{gitrev}}"></script>{% endblock %}

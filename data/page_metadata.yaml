@@ -4330,3 +4330,7 @@ pages:
     title: PostgreSQL 服务器赞助者
     description: 查看为 PostgreSQL 官方网站提供服务器、托管和 CDN 服务的赞助者，以及相关基础设施信息。
     lang: zh
+  /nls/:
+    title: PostgreSQL 消息翻译
+    description: PostgreSQL 19 简体中文消息翻译校准：逐条对照英文原文、既有译法与校准译文，登录后可参与审校。
+    lang: zh

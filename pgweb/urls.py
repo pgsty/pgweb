@@ -33,8 +33,8 @@ admin.autodiscover()
 urlpatterns = [
     path('ext/', include('pgweb.ext.urls')),
     path('info/', include('pgweb.info.urls')),
-    path('docs/', include('pgweb.wiki.urls')),  # /docs/errcode/ 等百科栏目
-    re_path(r'^wiki/errcode/(?P<rest>.*)$', RedirectView.as_view(url='/docs/errcode/%(rest)s', permanent=True)),
+    path('docs/', include('pgweb.wiki.urls')),  # /docs/sqlstate/ 等百科栏目
+    re_path(r'^(?:wiki|docs)/errcode/(?P<rest>.*)$', RedirectView.as_view(url='/docs/sqlstate/%(rest)s', permanent=True)),
     re_path(r'^wiki/.*$', RedirectView.as_view(url='/docs/', permanent=True)),
     path('e/', include('pgweb.ext.urls_e')),
     re_path(r'^$', pgweb.core.views.home),
