@@ -36,6 +36,7 @@ urlpatterns = [
     path('docs/', include('pgweb.wiki.urls')),  # /docs/sqlstate/ 等百科栏目
     re_path(r'^(?:wiki|docs)/errcode/(?P<rest>.*)$', RedirectView.as_view(url='/docs/sqlstate/%(rest)s', permanent=True)),
     re_path(r'^wiki/.*$', RedirectView.as_view(url='/docs/', permanent=True)),
+    path('nls/', include('pgweb.nls.urls')),
     path('e/', include('pgweb.ext.urls_e')),
     re_path(r'^$', pgweb.core.views.home),
     re_path(r'^dyncss/(?P<css>base).css$', pgweb.core.views.dynamic_css),

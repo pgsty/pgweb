@@ -131,6 +131,7 @@ sitenav = {
         {'title': '邮件列表', 'link': 'https://www.postgresql.org/list/'},
         {'title': '开发者 FAQ', 'link': 'https://wiki.postgresql.org/wiki/Developer_FAQ'},
         {'title': '相关项目', 'link': '/developer/related-projects/'},
+        {'title': '消息翻译', 'link': '/nls/'},
     ],
     'support': [
         {'title': '支持', 'link': '/support/'},
@@ -263,7 +264,7 @@ def _get_doc_majors():
 
 
 # 本站独有的栏目，上游没有对应页面。给它们拼一个 postgresql.org 地址只会得到 404。
-LOCAL_ONLY_SECTIONS = ('/docs/sqlstate/', '/info/', '/ext/', '/e/')
+LOCAL_ONLY_SECTIONS = ('/docs/sqlstate/', '/info/', '/ext/', '/e/', '/nls/')
 
 
 def _source_url(path):
