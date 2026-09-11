@@ -1,0 +1,28 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<h1>PostgreSQL 百科</h1>
+<p class="wiki-lead">逐条查得到、每条有出处的 PostgreSQL 参考资料。每个条目都锁定到具体的发布标签、提交与源码行号；查不到的就如实留空，不猜测、不补齐。</p>
+
+<div class="wiki-cards">
+  {% for column in columns %}
+  <section class="wiki-card {{ column.tone_class }}" id="{{ column.slug }}">
+    <h2 class="wiki-card__title">
+      {% if column.live %}<a href="{{ column.url }}">{{ column.name }}</a>{% else %}{{ column.name }}{% endif %}
+      {% if not column.live %}<span class="wiki-badge wiki-badge--soon">筹备中</span>{% endif %}
+    </h2>
+    <p class="wiki-card__lead">{{ column.lead }}</p>
+    <dl class="wiki-card__meta">
+      <dt>规模</dt><dd>{{ column.scale }}</dd>
+      <dt>覆盖</dt><dd>{{ column.coverage }}</dd>
+      <dt>原站</dt><dd><a href="{{ column.origin }}" target="_blank" rel="noopener">{{ column.origin|cut:"https://" }}</a></dd>
+      <dt>仓库</dt><dd><a href="{{ column.repo_url }}" target="_blank" rel="noopener">{{ column.repo }}</a></dd>
+    </dl>
+  </section>
+  {% endfor %}
+</div>
+
+<h2>这批资料是怎么来的</h2>
+<p>四个栏目各自对应一个独立的双语站点，由 Pigsty 维护，按同一套标准产出：先从 PostgreSQL 各个发布标签的源码与官方文档中提取事实，再由人写含义、诊断与处置，最后逐条核对。本站的百科是它们的中文渲染，每张卡片都给出了原站与仓库地址。</p>
+<p>每条事实都要落到具体出处——某个 release tag 下某个文件的某几行，附带提交哈希与文件校验和。源码链接因此指向固定提交而不是会移动的分支，行号在任何时候点开都还对得上。</p>
+<p>条目会标明自己的把握程度，分三档：<strong>已实测</strong>表示在真实数据库实例上跑过并留有运行记录；<strong>源码确认</strong>表示在锁定的源码快照里核对过路径与代码；<strong>仅定义</strong>表示只能确认它在目录里存在。已知的缺口也会直接写在页面上，不用漂亮的版面盖过去。</p>
+{% endblock %}

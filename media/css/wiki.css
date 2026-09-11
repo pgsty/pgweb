@@ -1,0 +1,92 @@
+/* 百科 inside the standard pg-page layout. */
+.wiki {
+  /* One accent per column. */
+  --c-err: #d21f3c; --c-guc: #2456b8; --c-wait: #b97e0c; --c-cat: #2f9e4f;
+  --seg: var(--pg-blue);
+  min-width: 0;
+}
+
+[data-theme="dark"] .wiki {
+  --c-err: #ef5a72; --c-guc: #6b8fe0; --c-wait: #d9a030; --c-cat: #4fbf72;
+}
+
+/* Column accents travel as classes; the site CSP forbids inline styles. */
+.wiki-tone-err { --seg: var(--c-err); }
+.wiki-tone-guc { --seg: var(--c-guc); }
+.wiki-tone-wait { --seg: var(--c-wait); }
+.wiki-tone-cat { --seg: var(--c-cat); }
+
+.wiki-lead { max-width: 62ch; color: var(--pg-ink-2); }
+
+/* ------------------------------------------------------------- cards */
+
+.wiki-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 22px 0 32px;
+}
+
+@media (max-width: 720px) {
+  .wiki-cards { grid-template-columns: minmax(0, 1fr); }
+}
+
+.wiki-card {
+  position: relative;
+  padding: 18px 20px 16px;
+  background: var(--pg-surface);
+  border: 1px solid var(--pg-line);
+  border-radius: var(--pg-radius);
+  border-top: 3px solid var(--seg);
+  box-shadow: var(--pg-shadow-sm);
+}
+
+.wiki-card__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 6px;
+  font-size: 19px;
+  line-height: 1.3;
+}
+
+.wiki-card__title a { color: var(--pg-heading); }
+.wiki-card__title a:hover { color: var(--seg); }
+
+.wiki-card__lead {
+  margin: 0 0 12px;
+  color: var(--pg-ink-2);
+  font-size: 14px;
+}
+
+.wiki-card__meta {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 3px 12px;
+  margin: 0;
+  font-size: 13px;
+}
+
+.wiki-card__meta dt { color: var(--pg-muted); font-weight: 400; }
+.wiki-card__meta dd { margin: 0; color: var(--pg-ink); }
+
+/* ------------------------------------------------------------ badges */
+
+.wiki-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.wiki-badge--soon {
+  color: var(--pg-muted);
+  background: var(--pg-surface-2);
+  border: 1px solid var(--pg-line);
+}
+
+/* The theme draws a trailing rule after an inner-page h2; a card title is a
+   heading for structure, not a section divider, so it keeps no rule. */
+#pgContentWrap .wiki-card__title:after { content: none; }

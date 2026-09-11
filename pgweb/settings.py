@@ -116,6 +116,7 @@ INSTALLED_APPS = [
     'pgweb.docs',
     'pgweb.ext',
     'pgweb.info',
+    'pgweb.wiki',
     'pgweb.contributors',
     'pgweb.profserv',
     'pgweb.lists',

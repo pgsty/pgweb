@@ -46,6 +46,7 @@ _NAV_SECTIONS = {
     'about': (('/about/',), ()),
     'download': (('/download/', '/ftp/', '/ext/', '/e/'), ()),
     'docs': (('/docs/',), ()),
+    'wiki': (('/wiki/',), ()),
     'community': (('/community/',), ()),
     'developer': (('/developer/',), ()),
     'support': (('/support/',), ()),

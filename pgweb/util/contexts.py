@@ -4,6 +4,7 @@ from django.conf import settings
 from django.core.cache import cache
 
 from pgweb.util.seo import page_metadata
+from pgweb.wiki.columns import nav_items as wiki_nav_items
 
 
 TOPBAR_CACHE_KEY = 'pgweb:topbar-news'
@@ -103,9 +104,10 @@ sitenav = {
         {'title': '书籍', 'link': '/docs/books/'},
         {'title': '其他', 'link': '/docs/online-resources/'},
         {'title': 'FAQ', 'link': '/docs/faq/'},
-        {'title': 'Wiki', 'link': 'https://wiki.postgresql.org'},
+        {'title': 'PostgreSQL Wiki', 'link': 'https://wiki.postgresql.org'},
         {'title': '三方文档', 'link': '/docs/third-party/', 'id': 'ecosystem-docs'},
     ],
+    'wiki': wiki_nav_items(),
     'community': [
         {'title': '社区', 'link': '/community/'},
         {'title': '贡献者', 'link': '/community/contributors/'},

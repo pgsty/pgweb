@@ -1,0 +1,15 @@
+{% extends "base/page.html" %}
+{% comment %}
+The 百科 shell: the standard inner-page two-column layout with the column's
+own navigation, plus the 百科 stylesheet.
+{% endcomment %}
+{% block title %}{{ title }}{% endblock %}
+{% block extrahead %}
+<link rel="stylesheet" href="/media/css/wiki.css?{{gitrev}}">
+{% if noindex %}<meta name="robots" content="noindex,follow">{% endif %}
+{% endblock %}
+{% block contents %}
+<div class="wiki" lang="zh">
+  {% block wiki_content %}{% endblock %}
+</div>
+{% endblock %}
