@@ -1,0 +1,118 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<div class="wiki-tone-cat cat">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/catalog/">系统目录</a> / {{ version.label }} 变更</p>
+<h1>PostgreSQL {{ version.label }} 系统目录变更</h1>
+{% if previous %}
+<p class="wiki-lead">{% if arbitrary %}以 PostgreSQL {{ previous.label }} 为基准现算的差异{% else %}相对 PostgreSQL {{ previous.label }} 的差异{% endif %}：{{ version.relation_count }} 个关系、{{ version.column_count }} 个字段。{% if arbitrary %}这不是相邻两版的比较，中间版本的过程变化不在其中。{% endif %}</p>
+{% else %}
+<p class="wiki-lead">{{ baseline_note }}本页列出 {{ version.label }} 当时已有的全部 {{ version.relation_count }} 个关系。</p>
+{% endif %}
+{% if notice %}<p class="wiki-note cat-notice">{{ notice }}</p>{% endif %}
+
+<nav class="cat-verbar cat-verbar--releases" aria-label="按版本查看变更">
+  <ol class="cat-verbar__list">
+    {% for item in versions %}
+    <li class="cat-verbar__item"><a class="cat-pill cat-pill--link{% if item.is_current %} is-current{% endif %}{% if item.preview %} is-preview{% elif item.devel %} is-devel{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {{ item.status_label }} · {{ item.relation_count }} 个关系 · {{ item.column_count }} 个字段">{{ item.major }}</a></li>
+    {% endfor %}
+  </ol>
+</nav>
+
+{% if arbitrary %}<p class="cat-basis">对比基准 <strong>PostgreSQL {{ from_major }}</strong></p>{% endif %}
+<details class="cat-rebase"{% if arbitrary %} open{% endif %}>
+  <summary>换一个对比基准</summary>
+  <form class="cat-rebase__form" action="/docs/catalog/changes/{{ version.major }}/" method="get">
+    <label for="cat-from">与哪一版比较</label>
+    <select class="form-control" id="cat-from" name="from">
+      {% for item in versions %}{% if not item.is_current %}<option value="{{ item.major }}"{% if item.major == from_major %} selected{% elif not from_major and previous and item.major == previous.major %} selected{% endif %}>PostgreSQL {{ item.label }}</option>{% endif %}{% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit">比较</button>
+  </form>
+</details>
+
+{% if previous %}
+<h2 id="summary">汇总</h2>
+<ol class="cat-tiles">
+  <li class="cat-tile{% if not summary.added_relations %} is-zero{% endif %}"><span class="cat-tile__num">{{ summary.added_relations }}</span><span class="cat-tile__label">新增关系</span></li>
+  <li class="cat-tile{% if not summary.removed_relations %} is-zero{% endif %}"><span class="cat-tile__num">{{ summary.removed_relations }}</span><span class="cat-tile__label">移除关系</span></li>
+  <li class="cat-tile{% if not summary.changed_relations %} is-zero{% endif %}"><span class="cat-tile__num">{{ summary.changed_relations }}</span><span class="cat-tile__label">变化的关系</span></li>
+  <li class="cat-tile{% if not summary.structurally_changed %} is-zero{% endif %}"><span class="cat-tile__num">{{ summary.structurally_changed }}</span><span class="cat-tile__label">结构变更</span></li>
+  <li class="cat-tile{% if not summary.added_columns %} is-zero{% endif %}"><span class="cat-tile__num">{{ summary.added_columns }}</span><span class="cat-tile__label">新增字段</span></li>
+  <li class="cat-tile{% if not summary.removed_columns %} is-zero{% endif %}"><span class="cat-tile__num">{{ summary.removed_columns }}</span><span class="cat-tile__label">移除字段</span></li>
+  <li class="cat-tile{% if not summary.type_changes %} is-zero{% endif %}"><span class="cat-tile__num">{{ summary.type_changes }}</span><span class="cat-tile__label">类型变更</span></li>
+  <li class="cat-tile{% if not summary.description_changes %} is-zero{% endif %}"><span class="cat-tile__num">{{ summary.description_changes }}</span><span class="cat-tile__label">描述更新</span></li>
+</ol>
+<p class="cat-sectionlead">前四项按关系计数，后四项按字段计数。新增关系自带的字段不计入「新增字段」，它们在下面的关系卡片上写明。</p>
+
+<h2 id="added">新增的关系<span class="cat-h2count">{{ added|length }}</span></h2>
+{% if added %}
+<ul class="cat-cards">
+  {% for card in added %}
+  <li class="cat-card cat-card--added">
+    <p class="cat-card__head"><a class="cat-card__name" href="{{ card.url }}"><code class="cat-mono">{{ card.name }}</code></a><span class="cat-card__kind">{{ card.kind_label }}</span></p>
+    {% if card.summary_zh %}<p class="cat-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="cat-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
+    <p class="cat-card__tags">{% for tag in card.tags %}<span class="cat-tag cat-tag--{{ tag.kind }}">{{ tag.text }}</span>{% empty %}<span class="cat-tag cat-tag--added">{{ card.column_count }} 个字段</span>{% endfor %}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="wiki-empty">这一版没有新增关系。</p>
+{% endif %}
+
+<h2 id="removed">移除的关系<span class="cat-h2count">{{ removed|length }}</span></h2>
+{% if removed %}
+<ul class="cat-cards">
+  {% for card in removed %}
+  <li class="cat-card cat-card--removed">
+    <p class="cat-card__head"><a class="cat-card__name" href="{{ card.url }}"><code class="cat-mono">{{ card.name }}</code></a><span class="cat-card__kind">{{ card.kind_label }}</span></p>
+    {% if card.summary_zh %}<p class="cat-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="cat-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
+    <p class="cat-card__tags"><span class="cat-tag cat-tag--removed">于 {{ version.major }} 移除</span><span class="cat-tag cat-tag--desc">上一版有 {{ card.column_count }} 个字段</span></p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="wiki-empty">这一版没有移除关系。</p>
+{% endif %}
+
+<h2 id="changed">结构变更<span class="cat-h2count">{{ changed|length }}</span></h2>
+{% if changed %}
+<ul class="cat-cards">
+  {% for card in changed %}
+  <li class="cat-card cat-card--changed">
+    <p class="cat-card__head"><a class="cat-card__name" href="{{ card.url }}"><code class="cat-mono">{{ card.name }}</code></a><span class="cat-card__kind">{{ card.kind_label }}</span></p>
+    {% if card.summary_zh %}<p class="cat-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="cat-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
+    <p class="cat-card__tags">{% for tag in card.tags %}<span class="cat-tag cat-tag--{{ tag.kind }}">{{ tag.text }}</span>{% endfor %}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="wiki-empty">这一版没有关系的结构发生变化。</p>
+{% endif %}
+
+<h2 id="wording">仅描述更新<span class="cat-h2count">{{ wording|length }}</span></h2>
+{% if wording %}
+<details class="cat-fold">
+  <summary>{{ wording|length }} 个关系只改了说明文字，字段构成未变</summary>
+  <ul class="cat-cards cat-cards--tight">
+    {% for card in wording %}
+    <li class="cat-card cat-card--wording">
+      <p class="cat-card__head"><a class="cat-card__name" href="{{ card.url }}"><code class="cat-mono">{{ card.name }}</code></a><span class="cat-card__kind">{{ card.kind_label }}</span></p>
+      <p class="cat-card__tags">{% for tag in card.tags %}<span class="cat-tag cat-tag--{{ tag.kind }}">{{ tag.text }}</span>{% endfor %}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</details>
+{% else %}
+<p class="wiki-empty">这一版没有只改说明的关系。</p>
+{% endif %}
+{% endif %}
+
+{% if baseline %}
+<h2 id="baseline">{{ version.label }} 的全部关系<span class="cat-h2count">{{ version.relation_count }}</span></h2>
+{% include "wiki/catalog_table.html" with groups=baseline_groups %}
+{% endif %}
+
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

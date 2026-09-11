@@ -359,3 +359,123 @@ class ErrorCodeCase(models.Model):
     class Meta:
         db_table = 'wiki_errcode_case'
         ordering = ('errcode', 'position')
+
+
+# ------------------------------------------------------------------ 系统目录
+
+# 类别顺序固定，页面各处都按这个顺序走。
+CATALOG_KINDS = (
+    ('catalog', '系统目录表', 'SYSTEM CATALOG'),
+    ('view', '系统视图', 'SYSTEM VIEW'),
+    ('statistics', '统计视图', 'STATISTICS VIEW'),
+    ('progress', '进度视图', 'PROGRESS REPORT'),
+)
+CATALOG_KIND_LABEL = {kind: label for kind, label, _ in CATALOG_KINDS}
+CATALOG_KIND_EYEBROW = {kind: eyebrow for kind, _, eyebrow in CATALOG_KINDS}
+CATALOG_KIND_ORDER = {kind: index for index, (kind, _, _) in enumerate(CATALOG_KINDS)}
+
+# relkind 的可读名，事实卡用。
+RELKIND_LABEL = {'r': '普通表', 'v': '视图', 'm': '物化视图', 'i': '索引',
+                 'S': '序列', 't': 'TOAST 表', 'c': '复合类型', 'f': '外部表', 'p': '分区表'}
+
+CATALOG_STATUS_LABEL = {'historical': '历史版本', 'stable': '当前稳定版',
+                        'preview': '预发行', 'devel': '开发版'}
+
+
+class CatalogVersion(models.Model):
+    """一个大版本的系统目录快照概况，18 行（9.0 – 19 来自 cat，20 由本站 devel 手册推导）。"""
+
+    major = models.CharField(max_length=8, primary_key=True)
+    label = models.TextField(blank=True, default='')
+    status = models.TextField(blank=True, default='')
+    support_status = models.TextField(blank=True, default='')
+    source_tag = models.TextField(blank=True, default='')
+    documentation_version = models.TextField(blank=True, default='')
+    release = models.TextField(blank=True, default='')
+    # 本站手册地址段：'10' … '19'，20 为 'devel'；9.x 本站没有手册，仍照实记。
+    doc_slug = models.TextField(blank=True, default='')
+    relation_count = models.IntegerField(default=0)
+    column_count = models.IntegerField(default=0)
+    kinds = models.JSONField(default=dict, blank=True)
+    runtime_verified = models.BooleanField(default=False)
+    schema_source = models.TextField(blank=True, default='')
+    # 与上一版的汇总（cat transitions[] 的一项），9.0 为 {}。
+    transition = models.JSONField(default=dict, blank=True)
+    # 版本次序只认这一列：'9.0' 与 '10' 字符串比不出先后。
+    position = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'wiki_catalog_version'
+        ordering = ('position',)
+
+    def __str__(self):
+        return self.label or self.major
+
+    @property
+    def is_preview(self):
+        return self.status == 'preview'
+
+    @property
+    def is_devel(self):
+        return self.status == 'devel'
+
+    @property
+    def status_label(self):
+        return CATALOG_STATUS_LABEL.get(self.status, self.status)
+
+    @property
+    def changes_url(self):
+        return '/docs/catalog/changes/{}/'.format(self.major)
+
+
+class CatalogRelation(models.Model):
+    """一个系统目录表、系统视图、统计视图或进度视图，158 行。
+
+    逐版本快照与变化记录整份放 JSON：一个大版本才变一次，读多写少，拆表没有收益。
+    """
+
+    name = models.CharField(max_length=64, primary_key=True)
+    kind = models.CharField(max_length=12)
+    summary = models.TextField(blank=True, default='')
+    # 手册总览表里的中文一句话，采不到留空，页面显示英文。
+    summary_zh = models.TextField(blank=True, default='')
+    first_version = models.CharField(max_length=8, blank=True, default='')
+    last_version = models.CharField(max_length=8, blank=True, default='')
+    present_in = ArrayField(models.TextField(), default=list, blank=True)
+    changed_in = ArrayField(models.TextField(), default=list, blank=True)
+    column_count = models.IntegerField(default=0)
+    relation_oid = models.IntegerField(null=True, blank=True)
+    relkind = models.CharField(max_length=1, blank=True, default='')
+    shared = models.BooleanField(default=False)
+    versions = models.JSONField(default=dict, blank=True)
+    changes = models.JSONField(default=list, blank=True)
+    # 类别序 × 1000 + 类别内按名排序。
+    position = models.IntegerField(default=0)
+    source_rev = models.TextField(blank=True, default='')
+    imported_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'wiki_catalog'
+        ordering = ('position',)
+        indexes = [
+            models.Index(fields=('kind', 'name'), name='wiki_catalog_kind'),
+        ]
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def url(self):
+        return '/docs/catalog/{}/'.format(self.name)
+
+    @property
+    def kind_label(self):
+        return CATALOG_KIND_LABEL.get(self.kind, self.kind)
+
+    @property
+    def eyebrow(self):
+        return CATALOG_KIND_EYEBROW.get(self.kind, '')
+
+    @property
+    def relkind_label(self):
+        return RELKIND_LABEL.get(self.relkind, self.relkind)

@@ -7,7 +7,8 @@
 本站的百科是它们的中文渲染。
 
 条目数是各数据仓库当前的实际规模，不是站点已导入的行数；已上线栏目的页面
-自己按库里的真实数量显示。
+自己按库里的真实数量显示。系统目录是个例外：cat 收到 19 beta 3 的 157 个关系，
+本站在此之上从 devel 手册推出 PostgreSQL 20 一层，多出 pg_stat_kind_info 一个。
 """
 
 COLUMNS = (
@@ -53,11 +54,11 @@ COLUMNS = (
         'short': '系统目录',
         'tone': 'cat',
         'lead': '系统目录与视图的字段构成，以及逐版本的结构变化。',
-        'scale': '157 个关系 · 19171 条字段记录',
-        'coverage': 'PostgreSQL 9.0 – 19',
+        'scale': '158 个关系 · 4 类',
+        'coverage': 'PostgreSQL 9.0 – 20 devel',
         'repo': 'pgsty/cat.pg.center',
         'origin': 'https://cat.pg.center',
-        'live': False,
+        'live': True,
     },
 )
 

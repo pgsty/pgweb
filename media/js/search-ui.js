@@ -315,7 +315,7 @@ function versionLine(data, onVersion) {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || item.current) return;
       // A 百科 entry has no per-version definition: its version links open the
       // manual's appendix row for that version instead of swapping the preview.
-      if (data.source === 'errcode') return;
+      if (data.source === 'errcode' || data.source === 'catalog') return;
       event.preventDefault();
       onVersion(item.id);
     });
@@ -354,7 +354,7 @@ export function renderPreview(container, data, options = {}) {
   const kind = el('span', 'ds-preview-kind');
   kind.append(kindBadge(data.group), el('span', '', data.kind_label || data.label));
   bar.append(kind);
-  const open = el('a', 'ds-preview-open', data.source === 'ext' ? '打开扩展页' : data.source === 'errcode' ? '打开词条' : '打开文档');
+  const open = el('a', 'ds-preview-open', data.source === 'ext' ? '打开扩展页' : (data.source === 'errcode' || data.source === 'catalog') ? '打开词条' : '打开文档');
   open.href = data.url;
   open.append(icon('arrow-up-right'));
   bar.append(open);

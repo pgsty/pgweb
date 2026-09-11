@@ -1,24 +1,27 @@
 import re
 
-from django.http import Http404, HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_safe
 
 from pgweb.util.contexts import get_nav_menu
+from pgweb.util.decorators import queryparams
 
-from . import errcode
+from . import catalog, errcode
 from .columns import BY_SLUG
-from .models import ErrorCode
+from .models import CatalogRelation, CatalogVersion, ErrorCode
 
 
 SQLSTATE = re.compile(r'^[0-9A-Za-z]{5}$')
+RELATION = re.compile(r'^pg_[a-z0-9_]+$')
+CATALOG_ROOT = '/docs/catalog/'
 
 
-def shell(ctx, title, description, canonical, class_code=''):
+def shell(ctx, title, description, canonical, class_code='', section='/docs/sqlstate/'):
     """The shared page context: the 文档 side navigation and SEO fields."""
     menu = get_nav_menu('docs')
     for item in menu:
-        if item.get('link') == '/docs/sqlstate/':
+        if item.get('link') == section:
             item['active'] = True
     ctx['navmenu'] = menu
     ctx['title'] = title
@@ -40,6 +43,7 @@ def errcode_index(request):
 
 
 @require_safe
+@queryparams('v')
 def errcode_detail(request, sqlstate):
     if not SQLSTATE.match(sqlstate):
         raise Http404()
@@ -60,3 +64,66 @@ def errcode_detail(request, sqlstate):
     return render(request, 'wiki/errcode_detail.html', shell(dict(
         payload, column=BY_SLUG['sqlstate'], heading=heading,
     ), title, description, code.url, class_code=code.klass_id))
+
+
+# ---------------------------------------------------------------- 系统目录
+
+@require_safe
+# 筛选在当前页即时过滤，参数写进 URL；中间件只放行这几个。
+@queryparams('q', 'kind', 'present', 'first')
+def catalog_index(request):
+    column = BY_SLUG['catalog']
+    payload = catalog.index()
+    description = ('PostgreSQL 系统目录表、系统视图、统计视图与进度视图的中文字段百科，'
+                   '共 {} 个关系，覆盖 {} 至 {}，逐字段给出类型、说明与跨大版本的结构变化。'.format(
+                       payload['total'], payload['earliest_major'], payload['latest_major']))
+    return render(request, 'wiki/catalog_index.html', shell(dict(
+        payload, column=column,
+    ), 'PostgreSQL 系统目录', description, CATALOG_ROOT, section=CATALOG_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def catalog_detail(request, name):
+    if not RELATION.match(name):
+        raise Http404()
+    try:
+        payload = catalog.detail(name, request.GET.get('v', ''))
+    except CatalogRelation.DoesNotExist:
+        raise Http404()
+
+    relation = payload['relation']
+    major = payload['version']['major'] if payload['version'] else ''
+    title = '{} · {}'.format(relation.name, payload['kind_label'])
+    description = '{} 是 PostgreSQL {}。{}'.format(
+        relation.name, payload['kind_label'],
+        payload['description_zh'] or relation.summary_zh or relation.summary or '')
+    return render(request, 'wiki/catalog_detail.html', shell(dict(
+        payload, column=BY_SLUG['catalog'], heading=relation.name, major=major,
+    ), title, ' '.join(description.split())[:200], relation.url, section=CATALOG_ROOT))
+
+
+@require_safe
+def catalog_changes_root(request):
+    # 默认落在当前稳定版，不落在预发行或开发版。
+    return HttpResponseRedirect('/docs/catalog/changes/{}/'.format(catalog.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def catalog_changes(request, major):
+    try:
+        payload = catalog.changes(major, request.GET.get('from', ''))
+    except CatalogVersion.DoesNotExist:
+        raise Http404()
+    label = payload['version']['label']
+    title = 'PostgreSQL {} 系统目录变更'.format(label)
+    summary = payload['summary']
+    description = ('PostgreSQL {} 相对 {} 的系统目录变更：新增 {} 个关系，移除 {} 个，'
+                   '{} 个关系的结构有变化。'.format(
+                       label, payload['previous']['label'] if payload['previous'] else '首个收录版本',
+                       summary['added_relations'], summary['removed_relations'],
+                       summary['structurally_changed']))
+    return render(request, 'wiki/catalog_changes.html', shell(dict(
+        payload, column=BY_SLUG['catalog'],
+    ), title, description, '/docs/catalog/changes/{}/'.format(major), section=CATALOG_ROOT))

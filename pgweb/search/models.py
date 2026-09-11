@@ -21,7 +21,8 @@ class SearchEntry(models.Model):
     sources follow the same shape.
     """
 
-    SOURCES = (('pg', 'PostgreSQL 手册'), ('ext', '扩展目录'))
+    SOURCES = (('pg', 'PostgreSQL 手册'), ('ext', '扩展目录'), ('errcode', 'SQL 状态码'),
+               ('catalog', '系统目录'))
 
     source = models.CharField(max_length=8, default='pg')
     document = models.ForeignKey(IndexedPage, related_name='entries', null=True, blank=True, on_delete=models.CASCADE)

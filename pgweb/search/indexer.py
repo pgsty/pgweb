@@ -212,3 +212,79 @@ def rebuild_errcodes(dry_run=False):
         SearchEntry.objects.bulk_create(objects, batch_size=200)
     service.forget_catalog()
     return {'errcodes': len(objects)}
+
+
+# ---------------------------------------------------------------- 系统目录
+
+def catalog_entry(relation):
+    """One catalog relation as a search entry, sharing the manual rows' entity so the
+    result list shows the 百科 entry once and the preview still lists the manual
+    versions."""
+    name = relation.name
+    name_key = normalize_name(name)
+    aliases = {name_key, name_key.replace('_', '')}
+    # Drop the pg_ prefix only when what is left is still a compound name:
+    # "stat_activity" points at one relation, "class" or "index" is a word that
+    # belongs to the manual, not to pg_class.
+    stem = name_key[3:] if name_key.startswith('pg_') else ''
+    if '_' in stem:
+        aliases.update((stem, stem.replace('_', '')))
+    zh = ' '.join((relation.summary_zh or '').split())
+    en = ' '.join((relation.summary or '').split())
+    latest = relation.versions.get(relation.last_version) or {}
+    columns = [column['name'] for column in latest.get('columns') or ()]
+    description = ' '.join((latest.get('description_zh') or latest.get('description') or '').split())
+    facts = [('类别', relation.kind_label), ('字段数', relation.column_count),
+             ('引入版本', relation.first_version),
+             ('版本覆盖', '{} – {}'.format(relation.first_version, relation.last_version)),
+             ('结构变更', '{} 次'.format(len(relation.changed_in)) if relation.changed_in else ''),
+             ('关系 OID', relation.relation_oid or '')]
+    parts = []
+    if zh or en:
+        parts.append('<p class="ds-ext-desc">' + escape(zh or en) + '</p>')
+    if zh and en:
+        parts.append('<p class="ds-ext-desc-en">' + escape(en) + '</p>')
+    parts.append('<dl class="ds-ext-facts">' + ''.join(
+        '<div><dt>{}</dt><dd>{}</dd></div>'.format(escape(label), escape(str(value)))
+        for label, value in facts if value) + '</dl>')
+    if columns:
+        parts.append('<p class="ds-ext-tags">' + ' '.join(
+            '<code>' + escape(column) + '</code>' for column in columns) + '</p>')
+    return {
+        'key': digest('catalog\0' + name), 'entity_key': 'relation:' + name_key,
+        'kind': 'relation', 'subtype': relation.kind, 'name': name, 'name_key': name_key,
+        'aliases': sorted(aliases), 'anchor': '',
+        'heading': relation.kind_label + ' · 系统目录',
+        'signature': ' · '.join(v for v in (
+            relation.kind_label, '{} 个字段'.format(relation.column_count),
+            '{} – {}'.format(relation.first_version, relation.last_version)) if v),
+        'body': '\n'.join(v for v in (zh, en, description, ' '.join(columns),
+                                      relation.kind_label) if v),
+        'preview': ''.join(parts), 'url': relation.url, 'weight': 0.5,
+        '_title': ' '.join([name, *sorted(aliases)]), '_lead': zh + ' ' + en,
+    }
+
+
+def rebuild_catalog(dry_run=False):
+    """Replace the search entries of the 系统目录 column (source 'catalog')."""
+    from pgweb.wiki.models import CatalogRelation
+    relations = list(CatalogRelation.objects.all())
+    entries = [catalog_entry(relation) for relation in relations]
+    if dry_run:
+        return {'catalog': len(entries)}
+    objects = []
+    for entry in entries:
+        title = index_text(entry.pop('_title'))
+        lead = index_text(entry.pop('_lead'))
+        vector = (SearchVector(Value(title), config='simple', weight='A') +
+                  SearchVector(Value(lead), config='simple', weight='B') +
+                  SearchVector(Value(index_text(entry['body'])), config='simple', weight='D'))
+        objects.append(SearchEntry(source='catalog', document=None, version=None, vector=vector,
+                                   **entry))
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
+        SearchEntry.objects.filter(source='catalog').delete()
+        SearchEntry.objects.bulk_create(objects, batch_size=200)
+    service.forget_catalog()
+    return {'catalog': len(objects)}

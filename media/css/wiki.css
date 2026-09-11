@@ -388,3 +388,521 @@
 
 .wiki-entry__foot { margin: 32px 0 0; padding-top: 14px; border-top: 1px solid var(--pg-line); }
 .wiki-entry__foot p { margin: 0 0 4px; font-size: 12px; color: var(--pg-muted); }
+
+/* ===================================================== 系统目录 */
+
+/* 本栏目的强调色是绿色（--c-cat）。状态色借用站内另外三个栏目的红、琥珀与蓝，
+   含义在三张页面上一致：绿 = 新增，红 = 移除，琥珀 = 类型或属性改变，
+   蓝 = 顺序调整，灰 = 只改说明。--cat-fill 比 --c-cat 深一档，专门给填色药丸
+   上的白字留出对比度；方格不带文字，直接用 --c-cat。 */
+.wiki .cat {
+  --cat-fill: #24803f;
+  --cat-on-fill: #ffffff;
+  --cat-soft: rgba(47, 158, 79, .18);
+  --cat-soft-line: rgba(47, 158, 79, .40);
+  --cat-tint: rgba(47, 158, 79, .07);
+  --cat-add-fg: #1f6b38; --cat-add-bg: rgba(47, 158, 79, .12);
+  --cat-del-fg: #a61e2b; --cat-del-bg: rgba(210, 31, 60, .10); --cat-del-line: rgba(210, 31, 60, .55);
+  --cat-typ-fg: #8a5a06; --cat-typ-bg: rgba(185, 126, 12, .12); --cat-typ-line: rgba(185, 126, 12, .50);
+  --cat-ord-fg: #2456b8; --cat-ord-bg: rgba(36, 86, 184, .10);
+}
+
+[data-theme="dark"] .wiki .cat {
+  --cat-fill: #4fbf72;
+  --cat-on-fill: #0c1319;
+  --cat-soft: rgba(79, 191, 114, .20);
+  --cat-soft-line: rgba(79, 191, 114, .44);
+  --cat-tint: rgba(79, 191, 114, .09);
+  --cat-add-fg: #8fdca7; --cat-add-bg: rgba(79, 191, 114, .16);
+  --cat-del-fg: #ff9aa6; --cat-del-bg: rgba(239, 90, 114, .16); --cat-del-line: rgba(239, 90, 114, .55);
+  --cat-typ-fg: #e8c274; --cat-typ-bg: rgba(217, 160, 48, .16); --cat-typ-line: rgba(217, 160, 48, .55);
+  --cat-ord-fg: #9db8ee; --cat-ord-bg: rgba(107, 143, 224, .16);
+}
+
+/* 等宽标识符：站内 code 的字号与颜色带 !important，这里必须同样加重。 */
+#pgContentWrap .cat code.cat-mono,
+#pgContentWrap code.cat-mono {
+  padding: 0; margin: 0; border: 0; border-radius: 0; background: none;
+  font-family: var(--pg-font-mono);
+  font-size: 12.5px !important;
+  color: inherit !important;
+  font-weight: inherit;
+}
+#pgContentWrap .cat code.cat-mono--field { font-size: 13px !important; font-weight: 600; }
+
+/* --------------------------------------------------- 版本方格 */
+
+/* 一个大版本一个方格，五种状态：未收录、存在、首次出现、结构变更、已移除。
+   颜色之外还有形状差别（实心 / 实心带内点 / 空心带减号），并写进 title。 */
+.cat-sq {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  flex: none;
+  width: 12px; height: 12px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+.cat-sq--absent { border-color: var(--pg-line-strong); background: transparent; }
+.cat-sq--present, .cat-sq--exists { border-color: var(--cat-soft-line); background: var(--cat-soft); }
+.cat-sq--added, .cat-sq--changed { border-color: var(--c-cat); background: var(--c-cat); }
+.cat-sq--changed:after {
+  content: ''; position: absolute; left: 3px; top: 3px;
+  width: 4px; height: 4px; border-radius: 1px; background: var(--pg-surface);
+}
+.cat-sq--removed { border-color: var(--cat-del-line); background: transparent; }
+.cat-sq--removed:after {
+  content: ''; position: absolute; left: 2px; top: 4px;
+  width: 6px; height: 2px; background: var(--cat-del-line);
+}
+a.cat-sq:hover { border-color: var(--cat-fill); box-shadow: 0 0 0 1px var(--cat-fill); }
+a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 1px; }
+
+.cat-track { display: flex; gap: 2px; }
+
+.cat-legend {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 5px 16px;
+  margin: 14px 0 0; font-size: 12px; color: var(--pg-muted);
+}
+.cat-legend__title { color: var(--pg-ink-2); }
+.cat-legend__item { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+
+/* --------------------------------------------------- 四类关系 */
+
+.cat-kindnav { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.cat-kindnav__item {
+  display: grid; grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: baseline; gap: 0 8px; padding: 9px 12px;
+}
+.cat-kindnav__item:hover { border-color: var(--c-cat); background: var(--cat-tint); }
+.cat-kindnav__label { font-size: 14px; color: var(--pg-ink); }
+.cat-kindnav__count {
+  font-family: var(--pg-font-mono); font-size: 14px; font-weight: 600;
+  font-variant-numeric: tabular-nums; color: var(--cat-add-fg);
+}
+.cat-kindnav__eyebrow {
+  grid-column: 1 / -1; margin-top: 3px;
+  font-family: var(--pg-font-mono); font-size: 10px; letter-spacing: .07em;
+  color: var(--pg-muted);
+}
+
+/* --------------------------------------------------- 版本条与版本药丸 */
+
+.cat-verbar { margin: 14px 0 26px; }
+.cat-verbar__list { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.cat-verbar__item { display: block; }
+.cat-verbar__note { margin: 10px 0 0; font-size: 12.5px; color: var(--pg-muted); }
+
+.cat-pill {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center; gap: 1px;
+  box-sizing: border-box;
+  min-width: 38px; padding: 5px 7px;
+  border: 1px solid var(--pg-line); border-radius: var(--pg-radius-sm);
+  background: var(--pg-surface);
+  color: var(--pg-ink-2);
+  font-family: var(--pg-font-mono); font-size: 12px; font-weight: 600;
+  line-height: 1.35; white-space: nowrap;
+}
+#pgContentWrap a.cat-pill { color: var(--pg-ink-2); }
+#pgContentWrap a.cat-pill:hover {
+  border-color: var(--cat-fill); background: var(--cat-soft);
+  color: var(--cat-add-fg); text-decoration: none;
+}
+.cat-pill:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 2px; }
+.cat-pill__sign { font-weight: 700; }
+
+.cat-pill--absent {
+  background: var(--pg-surface-2); border-color: transparent;
+  color: var(--pg-muted); font-weight: 400;
+}
+.cat-pill--present { background: var(--pg-surface); }
+.cat-pill--added { background: var(--cat-soft); border-color: var(--cat-soft-line); }
+#pgContentWrap a.cat-pill--added { color: var(--cat-add-fg); }
+.cat-pill--removed { background: var(--cat-del-bg); border-color: var(--cat-del-line); color: var(--cat-del-fg); }
+/* 结构变更在药丸右上角点一个小圆点，与「首次出现」的加号区分开。 */
+.cat-pill--changed:after {
+  content: ''; position: absolute; right: 3px; top: 3px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--c-cat);
+}
+.cat-pill.is-preview, .cat-pill.is-devel { border-style: dashed; border-color: var(--cat-typ-line); }
+
+.cat-pill.is-default, .cat-pill.is-current {
+  background: var(--cat-fill); border-color: var(--cat-fill); border-style: solid;
+}
+#pgContentWrap a.cat-pill.is-default, #pgContentWrap a.cat-pill.is-current,
+.cat-pill.is-default, .cat-pill.is-current { color: var(--cat-on-fill); }
+#pgContentWrap a.cat-pill.is-default:hover, #pgContentWrap a.cat-pill.is-current:hover {
+  background: var(--cat-fill); color: var(--cat-on-fill); filter: brightness(1.12);
+}
+.cat-pill.is-current.cat-pill--changed:after { background: var(--cat-on-fill); }
+.cat-pill.is-current.is-preview, .cat-pill.is-current.is-devel { border-style: dashed; border-color: var(--cat-on-fill); }
+
+/* --------------------------------------------------- 索引大表 */
+
+.cat-relations thead th { padding: 9px 10px 8px; vertical-align: top; }
+.cat-relations th, .cat-relations td { padding-left: 10px; padding-right: 10px; }
+/* 名称列吃掉主要余量（第二行的一句话铺在它下面），引入与字段数固定宽度紧贴轨迹，
+   多出来的宽度留给最后一列。 */
+.cat-th--name { width: 30%; }
+.cat-th--first { width: 106px; }
+.cat-th--cols { width: 68px; }
+.cat-relations thead th.cat-th--cols { text-align: right; }
+.cat-th--strip { width: 278px; min-width: 278px; }
+.cat-th__title { display: block; }
+
+/* 表头的版本刻度：18 个标签竖排，与下面的方格一一对齐。 */
+.cat-ruler { display: flex; gap: 2px; align-items: flex-end; height: 30px; margin-top: 6px; }
+.cat-ruler__tick {
+  flex: none; width: 12px;
+  writing-mode: vertical-rl;
+  font-family: var(--pg-font-mono); font-size: 10px; font-weight: 500;
+  line-height: 12px; letter-spacing: 0;
+  color: var(--pg-ink-2); text-align: right;
+}
+.cat-ruler__tick.is-default { color: var(--cat-add-fg); font-weight: 700; }
+.cat-ruler__tick.is-unreleased { color: var(--cat-typ-fg); }
+
+.cat-grouprow__eyebrow { font-family: var(--pg-font-mono); font-size: 11px; letter-spacing: .06em; color: var(--cat-add-fg); }
+
+/* 一个关系两行：第一行名称、引入、字段数、轨迹与最近变更，第二行一句话与状态。
+   两行同属一条记录：一起高亮，整行可点。 */
+/* 名称格是 <th scope="row">，行内其余是 <td>，两者要一样。 */
+.cat-row > th, .cat-row > td { border-top: 1px solid var(--pg-line); vertical-align: baseline; }
+.cat-row > th { padding-top: 8px; text-align: left; font-weight: 400; }
+.cat-row:not(.cat-row--more) > th, .cat-row:not(.cat-row--more) > td { padding-bottom: 4px; }
+.cat-row--more td { padding-top: 0; padding-bottom: 10px; border-top: 0; }
+.cat-row[data-href] { cursor: pointer; }
+.cat-row:hover,
+.cat-row:hover + .cat-row--more,
+.cat-row:has(+ .cat-row--more:hover) { background: var(--pg-wash); }
+.cat-row.is-current, .cat-row.is-current + .cat-row--more { background: var(--cat-tint); }
+
+.cat-row__name { white-space: nowrap; }
+.cat-row__name a { font-weight: 600; }
+.cat-row__name a:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 2px; }
+.cat-row__first { white-space: nowrap; font-family: var(--pg-font-mono); font-variant-numeric: tabular-nums; color: var(--pg-ink-2); }
+.cat-baseline { display: inline-flex; align-items: baseline; gap: 4px; }
+.cat-baseline__mark {
+  padding: 0 4px; border-radius: 3px; background: var(--pg-surface-2);
+  font-family: var(--pg-font); font-size: 10px; color: var(--pg-muted);
+}
+.cat-row__cols { text-align: right; font-variant-numeric: tabular-nums; color: var(--pg-ink-2); }
+.cat-row__strip { width: 258px; }
+.cat-row__last { white-space: nowrap; font-family: var(--pg-font-mono); font-variant-numeric: tabular-nums; color: var(--pg-ink-2); }
+.cat-row__times { margin-left: 6px; font-family: var(--pg-font); font-size: 11px; color: var(--pg-muted); }
+.cat-row__none { color: var(--pg-line-strong); }
+.cat-row__desc {
+  max-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--pg-ink-2); line-height: 1.6;
+}
+.cat-row__status { white-space: nowrap; font-size: 12px; color: var(--pg-muted); }
+.cat-row__status--removed { color: var(--cat-del-fg); font-weight: 600; }
+
+#catalog-search { margin: 18px 0 8px; }
+#catalog-q { font-size: 14px; }
+.cat-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* --------------------------------------------------- 详情页页头 */
+
+.cat-head { margin: 0 0 20px; }
+.cat-eyebrow { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin: 0 0 4px; font-size: 11px; }
+.cat-eyebrow__en { font-family: var(--pg-font-mono); letter-spacing: .08em; color: var(--pg-muted); }
+.cat-eyebrow__zh { color: var(--cat-add-fg); }
+.cat-title {
+  font-family: var(--pg-font-mono);
+  font-size: clamp(23px, 4.6vw, 33px);
+  letter-spacing: .005em; word-break: break-all;
+}
+.cat-badge { color: var(--pg-ink-2); background: var(--pg-surface-2); border: 1px solid transparent; }
+.cat-badge--kind { color: var(--cat-add-fg); background: var(--cat-add-bg); }
+.cat-badge--unreleased { color: var(--cat-typ-fg); background: var(--cat-typ-bg); border: 1px dashed var(--cat-typ-line); }
+
+/* 事实卡：四列两行，外框沿用状态码页的 .wiki-facts。 */
+.cat-factcard { padding: 16px 18px; }
+.cat-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 24px; margin: 0; }
+.cat-facts__item { min-width: 0; }
+.cat-facts__item dt { margin: 0; font-size: 12px; font-weight: 400; color: var(--pg-muted); }
+.cat-facts__item dd { margin: 3px 0 0; font-size: 14px; color: var(--pg-ink); overflow-wrap: break-word; }
+
+.cat-actions {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--pg-line);
+}
+.cat-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 13px;
+  border: 1px solid var(--pg-line-strong); border-radius: var(--pg-radius-sm);
+  background: var(--pg-surface); font-size: 13px;
+}
+#pgContentWrap a.cat-btn { color: var(--pg-ink-2); }
+#pgContentWrap a.cat-btn:hover {
+  border-color: var(--cat-fill); background: var(--cat-soft);
+  color: var(--cat-add-fg); text-decoration: none;
+}
+.cat-btn:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 2px; }
+.cat-btn--primary { border-color: var(--cat-soft-line); background: var(--cat-soft); }
+#pgContentWrap a.cat-btn--primary { color: var(--cat-add-fg); font-weight: 600; }
+.cat-btn__out { font-size: 11px; color: var(--pg-muted); }
+
+/* --------------------------------------------------- 详情页版本轨迹 */
+
+.cat-ribbonwrap { margin: 0 0 24px; }
+#pgContentWrap .cat-ribbonwrap__title { margin: 0 0 9px; font-size: 12px; font-weight: 400; color: var(--pg-muted); }
+#pgContentWrap .cat-ribbonwrap__title:after { content: none; }
+.cat-ribbon__track { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; margin: 0; padding: 0; list-style: none; }
+.cat-ribbon__item { position: relative; display: block; }
+/* 药丸之间的细连线只在一行放得下 18 个版本时画；换行时关掉，免得留下悬空的线头。 */
+@media (min-width: 1024px) {
+  .cat-ribbon__item + .cat-ribbon__item:before {
+    content: ''; position: absolute; left: -6px; top: 50%;
+    width: 6px; height: 1px; background: var(--pg-line-strong);
+  }
+}
+.cat-changenote { margin: 12px 0 0; font-size: 14px; color: var(--pg-ink); }
+.cat-changenote__notice { display: block; margin-top: 4px; font-size: 12.5px; color: var(--pg-muted); }
+.cat-desc { margin: 0 0 24px; line-height: 1.8; }
+.cat-sectionlead { margin: 0 0 12px; font-size: 12.5px; line-height: 1.7; color: var(--pg-muted); }
+
+/* --------------------------------------------------- 字段表 */
+
+.cat-columns thead th { padding: 9px 12px; }
+.cat-columns tbody th, .cat-columns tbody td { padding: 9px 12px; border-top: 1px solid var(--pg-line); vertical-align: top; }
+.cat-columns tbody tr:hover { background: var(--pg-wash); }
+.cat-col.is-added { background: var(--cat-tint); }
+.cat-col.is-added:hover { background: var(--cat-soft); }
+.cat-th--field, .cat-th--type { width: 1%; }
+.cat-col__name { text-align: left; font-weight: 400; white-space: nowrap; }
+.cat-col__type { min-width: 132px; }
+.cat-col__typeline { display: block; }
+.cat-col__desc { color: var(--pg-ink-2); line-height: 1.65; }
+
+.cat-flag {
+  display: inline-block; margin-left: 5px; padding: 0 6px;
+  border-radius: 999px; font-size: 10.5px; font-weight: 500; line-height: 1.75; white-space: nowrap;
+}
+.cat-flag--new { color: var(--cat-add-fg); background: var(--cat-add-bg); }
+.cat-flag--hidden { color: var(--pg-muted); background: var(--pg-surface-2); }
+.cat-flag--type { display: inline-block; margin: 4px 5px 0 0; color: var(--cat-typ-fg); background: var(--cat-typ-bg); }
+.cat-nn {
+  margin-left: 6px; font-family: var(--pg-font-mono); font-size: 9.5px;
+  letter-spacing: .04em; color: var(--pg-muted); white-space: nowrap;
+}
+.cat-ref { display: block; margin-top: 4px; font-size: 11.5px; color: var(--pg-muted); }
+.cat-ref__arrow { margin-right: 3px; }
+#pgContentWrap .cat-ref a { font-weight: 400; }
+.cat-tag-en {
+  display: inline-block; margin-left: 6px; padding: 0 4px;
+  border: 1px solid var(--pg-line); border-radius: 3px;
+  font-size: 9.5px; line-height: 1.6; color: var(--pg-muted); vertical-align: 1px;
+}
+.cat-schemanote { display: block; margin-top: 4px; font-size: 11.5px; color: var(--pg-muted); }
+
+.cat-gone { margin: 10px 0 12px; padding: 0; list-style: none; }
+.cat-gone__item {
+  display: grid; grid-template-columns: max-content max-content minmax(0, 1fr);
+  align-items: baseline; gap: 0 14px;
+  padding: 7px 0; border-top: 1px solid var(--pg-line);
+  font-size: 12.5px; color: var(--pg-muted);
+}
+.cat-gone__name { text-decoration: line-through; font-weight: 600; }
+.cat-gone__desc { min-width: 0; line-height: 1.6; }
+
+/* --------------------------------------------------- 演化历史 */
+
+.cat-tl { margin: 0; padding: 0; list-style: none; }
+.cat-tl__item { position: relative; margin: 0; padding: 0 0 18px 20px; border-left: 1px solid var(--pg-line); }
+.cat-tl__item:last-child { padding-bottom: 0; border-left-color: transparent; }
+.cat-tl__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 9px; margin: 0 0 7px; }
+.cat-tl__dot {
+  position: absolute; left: -5px; top: 5px;
+  box-sizing: border-box; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--pg-surface); border: 2px solid var(--pg-line-strong);
+}
+.cat-tl__item--added .cat-tl__dot { border-color: var(--c-cat); background: var(--c-cat); }
+.cat-tl__item--removed .cat-tl__dot { border-color: var(--cat-del-line); background: var(--cat-del-line); }
+.cat-tl__item--changed .cat-tl__dot { border-color: var(--c-cat); }
+.cat-tl__ver { font-family: var(--pg-font-mono); font-size: 14px; font-weight: 600; }
+.cat-tl__from { font-family: var(--pg-font-mono); font-size: 12px; color: var(--pg-muted); }
+.cat-tl__label { padding: 1px 8px; border-radius: 999px; font-size: 11px; line-height: 1.7; white-space: nowrap; }
+.cat-tl__item--added .cat-tl__label { color: var(--cat-add-fg); background: var(--cat-add-bg); }
+.cat-tl__item--removed .cat-tl__label { color: var(--cat-del-fg); background: var(--cat-del-bg); }
+.cat-tl__item--changed .cat-tl__label { color: var(--cat-ord-fg); background: var(--cat-ord-bg); }
+.cat-tl__item--wording .cat-tl__label { color: var(--pg-muted); background: var(--pg-surface-2); }
+.cat-tl__chips { display: flex; flex-wrap: wrap; gap: 4px 5px; margin: 0; }
+.cat-tl__empty { margin: 0; color: var(--pg-muted); }
+
+.cat-chip {
+  display: inline-flex; align-items: baseline; gap: 3px;
+  padding: 1px 7px; border-radius: var(--pg-radius-sm);
+  font-size: 11.5px; line-height: 1.75;
+}
+.cat-chip__sign { font-weight: 700; }
+.cat-chip--add { color: var(--cat-add-fg); background: var(--cat-add-bg); }
+.cat-chip--del { color: var(--cat-del-fg); background: var(--cat-del-bg); }
+.cat-chip--type { color: var(--cat-typ-fg); background: var(--cat-typ-bg); }
+.cat-chip--order { color: var(--cat-ord-fg); background: var(--cat-ord-bg); }
+.cat-chip--note { color: var(--pg-muted); background: var(--pg-surface-2); }
+
+.cat-diff { margin: 8px 0 0; }
+.cat-diff > summary {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 1px 9px; border: 1px solid var(--pg-line); border-radius: var(--pg-radius-sm);
+  cursor: pointer; font-size: 11.5px; line-height: 1.75; color: var(--pg-ink-2); list-style: none;
+}
+.cat-diff > summary::-webkit-details-marker { display: none; }
+/* 自己画三角，不依赖字体里有没有 ▸ / ▾ 这两个字形。 */
+.cat-diff > summary:before {
+  content: ''; flex: none; width: 0; height: 0;
+  border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent;
+  border-left: 5px solid var(--pg-muted);
+}
+.cat-diff[open] > summary:before {
+  border-left: 3.5px solid transparent; border-right: 3.5px solid transparent;
+  border-top: 5px solid var(--pg-muted); border-bottom: 0;
+}
+.cat-diff > summary:hover { border-color: var(--cat-fill); color: var(--cat-add-fg); }
+.cat-diff__list { margin: 9px 0 0; padding: 0; list-style: none; }
+.cat-diff__list > li {
+  margin: 0 0 9px; padding: 0 0 9px;
+  border-bottom: 1px dashed var(--pg-line); font-size: 12.5px;
+}
+.cat-diff__list > li:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: 0; }
+.cat-diff__field { display: block; margin-bottom: 3px; color: var(--pg-ink); }
+.cat-diff__old, .cat-diff__new { position: relative; display: block; padding-left: 16px; line-height: 1.6; }
+.cat-diff__old { color: var(--pg-muted); }
+.cat-diff__new { color: var(--pg-ink-2); }
+.cat-diff__old:before { content: '−'; position: absolute; left: 2px; color: var(--cat-del-fg); }
+.cat-diff__new:before { content: '+'; position: absolute; left: 2px; color: var(--cat-add-fg); }
+
+/* --------------------------------------------------- 字段矩阵 */
+
+.cat-matrix thead th { padding: 8px 6px; text-align: center; }
+.cat-matrix__corner {
+  position: sticky; left: 0; z-index: 3;
+  padding-left: 12px !important; text-align: left !important;
+  box-shadow: 1px 0 0 var(--pg-line-strong);
+}
+.cat-matrix__ver { font-family: var(--pg-font-mono); font-size: 10px; color: var(--pg-muted); }
+.cat-matrix__ver.is-current { color: var(--cat-add-fg); font-weight: 700; }
+.cat-matrix__name {
+  position: sticky; left: 0; z-index: 2;
+  padding: 5px 14px 5px 12px; border-top: 1px solid var(--pg-line);
+  background: var(--pg-surface);
+  text-align: left; font-weight: 400; white-space: nowrap;
+  box-shadow: 1px 0 0 var(--pg-line);
+}
+.cat-matrix__cell { padding: 5px 4px !important; text-align: center; }
+.cat-matrix__cell .cat-sq { margin: 0 auto; }
+.cat-matrix__cell.is-current { background: var(--cat-tint); }
+
+/* --------------------------------------------------- 系统列 */
+
+.cat-sys > summary { cursor: pointer; font-size: 13px; color: var(--pg-ink-2); }
+.cat-sys > summary:hover { color: var(--cat-add-fg); }
+.cat-sys__list {
+  display: grid; grid-template-columns: repeat(auto-fill, 176px);
+  justify-content: start; gap: 4px 20px; margin: 12px 0 0; padding: 0; list-style: none;
+}
+.cat-sys__list li { display: flex; align-items: baseline; gap: 8px; font-size: 12.5px; }
+.cat-sys__name { font-weight: 600; }
+.cat-sys__type { color: var(--pg-muted); }
+.cat-sys__attnum { margin-left: auto; font-family: var(--pg-font-mono); font-size: 11px; color: var(--pg-line-strong); }
+
+.cat-docver { display: inline-block; margin-left: 7px; font-family: var(--pg-font-mono); font-size: 11.5px; }
+
+/* --------------------------------------------------- 变更页 */
+
+.cat-notice { margin: 12px 0 0; border-left-color: var(--cat-typ-line); }
+.cat-basis { margin: 0 0 8px; font-size: 13px; color: var(--pg-ink-2); }
+.cat-rebase { margin: 0 0 8px; }
+.cat-rebase > summary { cursor: pointer; font-size: 12.5px; color: var(--pg-muted); }
+.cat-rebase > summary:hover { color: var(--cat-add-fg); }
+.cat-rebase__form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0 0; }
+.cat-rebase__form label { margin: 0; font-size: 13px; font-weight: 500; }
+.cat-rebase__form select { width: auto; min-width: 190px; font-size: 13px; }
+/* base.css 给 .btn 定了 14em 宽和 auto 外边距，在 flex 行里会把按钮推到最右。 */
+.cat-rebase__form .btn { width: auto; margin: 0; padding: 5px 16px; font-size: 13px; }
+
+.cat-h2count {
+  align-self: center; margin-left: 10px; padding: 1px 9px;
+  border-radius: 999px; background: var(--pg-surface-2);
+  font-family: var(--pg-font-mono); font-size: 12px; font-weight: 400;
+  font-variant-numeric: tabular-nums; color: var(--pg-muted);
+}
+
+/* 汇总数字：上排按关系计数，下排按字段计数。 */
+.cat-tiles {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px; margin: 16px 0 10px; padding: 0; list-style: none;
+}
+.cat-tile {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 12px 14px;
+  border: 1px solid var(--pg-line); border-radius: var(--pg-radius);
+  background: var(--pg-surface);
+}
+.cat-tile__num {
+  font-family: var(--pg-font-mono); font-size: 26px; font-weight: 600;
+  line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--cat-add-fg);
+}
+.cat-tile__label { font-size: 12px; color: var(--pg-muted); }
+.cat-tile.is-zero { background: none; }
+.cat-tile.is-zero .cat-tile__num { color: var(--pg-muted); font-weight: 400; }
+
+.cat-cards {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 12px; margin: 16px 0 26px; padding: 0; list-style: none;
+}
+.cat-cards--tight { grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); margin-top: 12px; }
+.cat-card {
+  display: flex; flex-direction: column; gap: 7px;
+  padding: 12px 14px;
+  border: 1px solid var(--pg-line); border-left: 3px solid var(--pg-line-strong);
+  border-radius: 0 var(--pg-radius-sm) var(--pg-radius-sm) 0;
+  background: var(--pg-surface);
+}
+.cat-card--added { border-left-color: var(--c-cat); }
+.cat-card--removed { border-left-color: var(--c-err); }
+.cat-card--changed { border-left-color: var(--c-guc); }
+.cat-card__head { display: flex; align-items: baseline; gap: 10px; margin: 0; }
+.cat-card__name { font-weight: 600; }
+.cat-card__kind { margin-left: auto; font-size: 11px; color: var(--pg-muted); white-space: nowrap; }
+.cat-card__lead {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--pg-ink-2);
+}
+.cat-card__tags { display: flex; flex-wrap: wrap; gap: 4px; margin: auto 0 0; }
+
+.cat-tag { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; line-height: 1.75; white-space: nowrap; }
+.cat-tag--added { color: var(--cat-add-fg); background: var(--cat-add-bg); }
+.cat-tag--removed { color: var(--cat-del-fg); background: var(--cat-del-bg); }
+.cat-tag--type, .cat-tag--attr { color: var(--cat-typ-fg); background: var(--cat-typ-bg); }
+.cat-tag--order { color: var(--cat-ord-fg); background: var(--cat-ord-bg); }
+.cat-tag--desc, .cat-tag--ref { color: var(--pg-muted); background: var(--pg-surface-2); }
+
+.cat-fold { margin: 0 0 26px; }
+.cat-fold > summary { cursor: pointer; font-size: 13px; color: var(--pg-ink-2); }
+.cat-fold > summary:hover { color: var(--cat-add-fg); }
+
+/* --------------------------------------------------- 窄屏 */
+
+@media (max-width: 900px) {
+  .cat-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .cat-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cat-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cat-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .cat-cards, .cat-cards--tight { grid-template-columns: minmax(0, 1fr); }
+  .cat-row__desc { max-width: none; white-space: normal; }
+  .cat-kindnav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 460px) {
+  .cat-filters { grid-template-columns: minmax(0, 1fr); }
+  .cat-kindnav { grid-template-columns: minmax(0, 1fr); }
+  .cat-gone__item { grid-template-columns: minmax(0, 1fr); gap: 2px 0; }
+  .cat-rebase__form select { min-width: 0; width: 100%; }
+}

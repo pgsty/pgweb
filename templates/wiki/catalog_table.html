@@ -1,0 +1,50 @@
+{% comment %}
+可复用的分组表：每个类别一个 tbody，每个关系两行。
+参数：groups（必需）、table_id、top_link、current（高亮的关系名）。
+父模板必须提供 versions（版本轨迹的表头刻度按它渲染）。
+{% endcomment %}
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table{% if table_id %} id="{{ table_id }}"{% endif %} class="cat-relations" data-rowlink>
+  <thead><tr>
+    <th class="cat-th cat-th--name" scope="col">关系</th>
+    <th class="cat-th cat-th--first" scope="col">引入</th>
+    <th class="cat-th cat-th--cols" scope="col">字段</th>
+    <th class="cat-th cat-th--strip" scope="col">
+      <span class="cat-th__title">版本轨迹</span>
+      <span class="cat-ruler" aria-hidden="true">{% for v in versions %}<span class="cat-ruler__tick{% if v.is_default %} is-default{% endif %}{% if v.preview or v.devel %} is-unreleased{% endif %}">{{ v.major }}</span>{% endfor %}</span>
+    </th>
+    <th class="cat-th cat-th--last" scope="col">最近变更</th>
+  </tr></thead>
+  {% for group in groups %}
+  <tbody class="cat-group" data-kind="{{ group.kind }}">
+    <tr class="wiki-classrow cat-grouprow" id="{{ group.anchor }}">
+      <th colspan="5" scope="colgroup">
+        <div class="wiki-classrow__inner">
+          <span class="cat-grouprow__eyebrow">{{ group.eyebrow }}</span>
+          <span class="wiki-classrow__label">{{ group.label }}</span>
+          <span class="wiki-classrow__count">{{ group.count }} 个</span>
+          {% if top_link %}<a class="wiki-classrow__top" href="{{ top_link }}" title="回到版本条" aria-label="回到版本条">↑</a>{% else %}<a class="wiki-classrow__top" href="/docs/catalog/#{{ group.anchor }}" title="在索引中查看本类" aria-label="在索引中查看本类">↗</a>{% endif %}
+        </div>
+      </th>
+    </tr>
+    {% for row in group.rows %}
+    <tr class="cat-row{% if row.name == current %} is-current{% endif %}" data-href="{{ row.url }}"
+        data-kind="{{ row.kind }}" data-present="{{ row.present_tokens }}" data-first="{{ row.first }}"
+        data-text="{{ row.text }}">
+      <th class="cat-row__name" scope="row"><a href="{{ row.url }}"><code class="cat-mono">{{ row.name }}</code></a></th>
+      <td class="cat-row__first">{% if row.first == versions.0.major %}<span class="cat-baseline" title="{{ row.first }} 是本数据集的收录基线，不代表该关系首次于 {{ row.first }} 引入">{{ row.first }}<span class="cat-baseline__mark">基线</span></span>{% else %}{{ row.first }}{% endif %}</td>
+      <td class="cat-row__cols">{{ row.column_count }}</td>
+      <td class="cat-row__strip">
+        <span class="cat-track">{% for cell in row.strip %}{% if cell.url %}<a class="cat-sq cat-sq--{{ cell.state }}" href="{{ cell.url }}" title="{{ cell.label }}{% if cell.state == 'added' %} · 首次出现{% elif cell.state == 'changed' %} · 结构变更{% endif %}" aria-label="{{ cell.label }}{% if cell.state == 'added' %} 首次出现{% elif cell.state == 'changed' %} 结构变更{% else %} 存在{% endif %}"></a>{% else %}<span class="cat-sq cat-sq--{{ cell.state }}" title="{{ cell.label }}{% if cell.state == 'removed' %} · 已移除{% else %} · 未收录{% endif %}" aria-hidden="true"></span>{% endif %}{% endfor %}</span>
+      </td>
+      <td class="cat-row__last">{% if row.changed_in %}{{ row.changed_in|last }}<span class="cat-row__times">{{ row.change_count }} 次</span>{% else %}<span class="cat-row__none">—</span>{% endif %}</td>
+    </tr>
+    <tr class="cat-row cat-row--more{% if row.name == current %} is-current{% endif %}" data-href="{{ row.url }}">
+      <td colspan="4" class="cat-row__desc">{% if row.summary_zh %}{{ row.summary_zh }}{% elif row.summary %}<span lang="en">{{ row.summary }}</span>{% else %}<span class="cat-row__none">暂无一句话说明</span>{% endif %}</td>
+      <td class="cat-row__status{% if row.removed %} cat-row__status--removed{% endif %}">{% if row.removed %}于 {{ row.removed_in }} 移除{% else %}现存{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  {% endfor %}
+</table>
+</div></div>
