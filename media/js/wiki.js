@@ -69,6 +69,13 @@
     });
   }
 
+  // 整行可点：点在链接上走链接，点在别处也跳到该错误代码。
+  table.addEventListener('click', function (event) {
+    if (event.target.closest('a')) { return; }
+    var row = event.target.closest('tr[data-href]');
+    if (row) { window.location.href = row.getAttribute('data-href'); }
+  });
+
   form.addEventListener('submit', function (event) { event.preventDefault(); apply(); });
   query.addEventListener('input', apply);
   selects.forEach(function (select) { select.addEventListener('change', apply); });

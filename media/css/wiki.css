@@ -138,9 +138,8 @@
 
 @media (max-width: 720px) {
   .wiki-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  /* 窄屏让表格整体横向滚动，宏名称不再折行，说明行也不撑高。 */
-  .wiki-coderow__macro code { white-space: nowrap; }
-  .wiki-coderow__desc { white-space: normal; min-width: 0; }
+  /* 窄屏让表格整体横向滚动。 */
+  .wiki-coderow__desc { max-width: none; white-space: normal; }
 }
 
 /* ------------------------------------------------------- 大表格 */
@@ -153,7 +152,7 @@
   padding: 9px 12px; background: var(--pg-surface-2); border-bottom: 1px solid var(--pg-line-strong);
   text-align: left; font-size: 12px; font-weight: 600; color: var(--pg-ink-2); white-space: nowrap;
 }
-.wiki-table td { padding: 8px 12px; border-top: 1px solid var(--pg-line); vertical-align: baseline; }
+.wiki-table td { padding: 8px 10px; border-top: 1px solid var(--pg-line); vertical-align: baseline; }
 
 .wiki-classrow th {
   padding: 11px 12px 9px;
@@ -168,24 +167,28 @@
 .wiki-classrow__label { margin-left: 8px; }
 .wiki-classrow__en { margin-left: 8px; font-weight: 400; font-size: 12px; color: var(--pg-muted); }
 .wiki-classrow__count { margin-left: 8px; font-weight: 400; font-size: 12px; color: var(--pg-muted); }
-.wiki-classrow__top { margin-left: auto; font-size: 12px; font-weight: 400; white-space: nowrap; }
+.wiki-classrow__top { margin-left: auto; padding: 0 6px; font-size: 14px; font-weight: 600; line-height: 1; white-space: nowrap; text-decoration: none; }
 
-/* 每个错误码两行：第一行是码、条件名、宏名称、严重等级与启停版本，第二行是
-   横跨整表的说明。条件名与宏名称都不折行；表格在窄屏里整体横向滚动。 */
+/* 每个错误代码两行：第一行是码、条件名、宏名称、严重等级与起始版本，第二行是
+   说明与状态。两行同属一条记录：一起高亮，整行可点。 */
 .wiki-coderow td { border-top: 1px solid var(--pg-line); }
 .wiki-coderow--more td { padding-top: 0; padding-bottom: 10px; border-top: 0; }
 .wiki-coderow:not(.wiki-coderow--more) td { padding-bottom: 4px; }
+.wiki-coderow[data-href] { cursor: pointer; }
+.wiki-coderow:hover,
+.wiki-coderow:hover + .wiki-coderow--more,
+.wiki-coderow:has(+ .wiki-coderow--more:hover) { background: var(--pg-wash); }
 .wiki-coderow__code a { font-family: var(--pg-font-mono); font-weight: 600; white-space: nowrap; }
-.wiki-coderow__cond a { font-family: var(--pg-font-mono); color: var(--pg-ink-2); white-space: nowrap; }
+.wiki-coderow__cond a { font-family: var(--pg-font-mono); font-size: 12.5px; color: var(--pg-ink-2); white-space: nowrap; }
 .wiki-coderow__cond a:hover { color: var(--pg-link-hover); }
-/* 条件名不折行；宏名称可以在下划线处折行，免得最长的一对把表撑出容器。 */
-.wiki-coderow__macro code { font-family: var(--pg-font-mono); font-size: 12px; color: var(--pg-ink-2); background: none; padding: 0; overflow-wrap: anywhere; }
+/* base.css 给 code 的字号带 !important，这里只能同样加重。 */
+#pgContentWrap .wiki-coderow__macro code { font-family: var(--pg-font-mono); font-size: 11px !important; color: var(--pg-muted); background: none; border: 0; padding: 0; white-space: nowrap; }
 .wiki-coderow__sev { white-space: nowrap; }
 .wiki-coderow__ver { white-space: nowrap; font-family: var(--pg-font-mono); font-variant-numeric: tabular-nums; color: var(--pg-ink-2); }
-.wiki-coderow__removed { color: #a61e2b; font-weight: 600; }
-[data-theme="dark"] .wiki-coderow__removed { color: #ff9aa6; }
-.wiki-coderow__desc { color: var(--pg-ink-2); font-size: 13px; line-height: 1.6; }
-.wiki-coderow__desc b { color: var(--pg-ink); font-weight: 600; }
+.wiki-coderow__status { white-space: nowrap; font-size: 12px; color: var(--pg-muted); }
+.wiki-coderow__status--removed { color: #a61e2b; font-weight: 600; }
+[data-theme="dark"] .wiki-coderow__status--removed { color: #ff9aa6; }
+.wiki-coderow__desc { color: var(--pg-ink-2); font-size: 13px; line-height: 1.6; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0; }
 
 /* ------------------------------------------------------- 徽章 */
 
@@ -219,7 +222,7 @@
 
 /* ------------------------------------------------------- 详情页 */
 
-.wiki-entry { max-width: 62rem; }
+.wiki-entry { max-width: none; }
 .wiki-entry__head { margin: 0 0 18px; }
 .wiki-entry__head h1 { display: flex; align-items: baseline; flex-wrap: wrap; gap: 12px; margin: 0; }
 .wiki-entry__code { font-family: var(--pg-font-mono); font-size: 34px; letter-spacing: .01em; }
@@ -227,36 +230,47 @@
 .wiki-entry__name { margin: 4px 0 0; font-size: 17px; color: var(--pg-ink); }
 .wiki-badges { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
 
-/* 事实卡 */
+/* 事实卡：三栏两行 —— 类别与严重等级 / 条件名与宏名称 / 起始版本与状态 */
 .wiki-facts {
   margin: 0 0 24px; padding: 16px 18px;
   background: var(--pg-surface); border: 1px solid var(--pg-line); border-radius: var(--pg-radius);
 }
-.wiki-facts__grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px 22px; margin: 0;
+.wiki-facts__card {
+  display: grid; grid-template-columns: max-content minmax(0, max-content) max-content;
+  gap: 0 40px; margin: 0; justify-content: start;
 }
-.wiki-facts__cell dt { margin: 0; font-size: 12px; font-weight: 400; color: var(--pg-muted); }
-.wiki-facts__cell dd { margin: 2px 0 0; font-size: 14px; word-break: break-word; }
+.wiki-facts__col { display: grid; grid-template-rows: auto auto; gap: 10px 0; min-width: 0; }
+.wiki-facts__col dt { margin: 0; font-size: 12px; font-weight: 400; color: var(--pg-muted); }
+.wiki-facts__col dd { margin: 2px 0 0; font-size: 14px; white-space: nowrap; }
+.wiki-facts__col--wide dd { overflow: hidden; text-overflow: ellipsis; }
+#pgContentWrap .wiki-facts__mono { font-family: var(--pg-font-mono); font-size: 13.5px !important; color: var(--pg-ink); background: none; border: 0; padding: 0; }
+#pgContentWrap .wiki-facts__alias { color: var(--pg-muted); font-size: 12px !important; }
+
+@media (max-width: 720px) {
+  .wiki-facts__card { grid-template-columns: minmax(0, 1fr); gap: 14px 0; }
+  .wiki-facts__col dd { white-space: normal; }
+}
 
 .wiki-versions { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--pg-line); }
-.wiki-versions__title { margin: 0 0 8px; font-size: 12px; font-weight: 400; color: var(--pg-muted); }
-.wiki-versions__title:after { content: none; }
+#pgContentWrap .wiki-versions__title { margin: 0 0 8px; font-size: 12px; font-weight: 400; color: var(--pg-muted); }
+#pgContentWrap .wiki-versions__title:after { content: none; }
 
-.wiki-versionbar { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.wiki-versionbar__item {
-  min-width: 42px; padding: 4px 7px; border-radius: var(--pg-radius-sm);
-  background: var(--pg-surface-2); border: 1px solid transparent;
-  color: var(--pg-muted); font-family: var(--pg-font-mono); font-size: 12px; text-align: center;
+/* 版本条：受支持版本、历史版本、预发行与开发版三组，各自一种颜色；
+   该版本没有此代码时只显示不链接。 */
+.wiki-verbars { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 6px 18px; }
+.wiki-verbar { display: flex; flex-wrap: wrap; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.wiki-verbar li > a, .wiki-verbar li > span {
+  display: inline-block; min-width: 42px; padding: 4px 9px; border-radius: var(--pg-radius-sm);
+  border: 1px solid transparent; font-family: var(--pg-font-mono); font-size: 12px; font-weight: 600;
+  text-align: center; white-space: nowrap; line-height: 1.4;
 }
-.wiki-versionbar__item.is-present { background: rgba(36, 86, 184, .12); color: var(--pg-blue); font-weight: 600; }
-.wiki-versionbar__item.is-preview { border-style: dashed; border-color: var(--pg-line-strong); }
-[data-theme="dark"] .wiki-versionbar__item.is-present { background: rgba(107, 143, 224, .18); color: #9db8ee; }
-
-.wiki-doclink { margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--pg-line); font-size: 13px; }
-.wiki-doclink__switch { margin-left: 10px; color: var(--pg-muted); }
-.wiki-doclink__switch a { margin-left: 6px; font-family: var(--pg-font-mono); }
-.wiki-doclink__switch a[aria-current] { font-weight: 700; text-decoration: underline; }
+.wiki-verbar li > span { color: var(--pg-muted); background: var(--pg-surface-2); font-weight: 400; }
+.wiki-verbar--supported li > a { color: var(--pg-blue); background: rgba(36, 86, 184, .12); }
+.wiki-verbar--historical li > a { color: var(--pg-ink-2); background: var(--pg-wash); border-color: var(--pg-line); }
+.wiki-verbar--special li > a { color: #8a5a06; background: rgba(185, 126, 12, .12); border-style: dashed; border-color: rgba(185, 126, 12, .45); }
+#pgContentWrap .wiki-verbar li > a:hover { filter: brightness(.92); text-decoration: none; }
+[data-theme="dark"] .wiki-verbar--supported li > a { color: #9db8ee; background: rgba(107, 143, 224, .18); }
+[data-theme="dark"] .wiki-verbar--special li > a { color: #e8c274; background: rgba(217, 160, 48, .16); border-color: rgba(217, 160, 48, .5); }
 
 /* 本页目录 */
 .wiki-toc {

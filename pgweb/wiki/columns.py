@@ -13,11 +13,11 @@ sitemap 都从这份列表生成，栏目上线时只改这里的 `live`。
 COLUMNS = (
     {
         'slug': 'errcode',
-        'name': '错误码大全',
-        'short': '错误码',
+        'name': '错误代码',
+        'short': '错误代码',
         'tone': 'err',
         'lead': '全部 263 个 SQLSTATE 的含义、报文、诊断与处置。',
-        'scale': '263 个错误码 · 44 个类',
+        'scale': '263 个错误代码 · 44 个类',
         'coverage': 'PostgreSQL 9.0 – 19beta3',
         'repo': 'pgsty/err.pg.center',
         'origin': 'https://err.pg.center',
@@ -25,7 +25,7 @@ COLUMNS = (
     },
     {
         'slug': 'guc',
-        'name': '配置参数大全',
+        'name': '配置参数',
         'short': '配置参数',
         'tone': 'guc',
         'lead': '全部配置参数的作用、默认值演变与调优取舍。',
@@ -37,7 +37,7 @@ COLUMNS = (
     },
     {
         'slug': 'waitevent',
-        'name': '等待事件大全',
+        'name': '等待事件',
         'short': '等待事件',
         'tone': 'wait',
         'lead': '每个等待事件的触发机制、是否异常与排查手段。',
@@ -49,7 +49,7 @@ COLUMNS = (
     },
     {
         'slug': 'catalog',
-        'name': '系统目录大全',
+        'name': '系统目录',
         'short': '系统目录',
         'tone': 'cat',
         'lead': '系统目录与视图的字段构成，以及逐版本的结构变化。',

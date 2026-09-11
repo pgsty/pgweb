@@ -2,7 +2,7 @@
 {% block wiki_content %}
 <article class="wiki-entry">
 
-<p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/errcode/">错误码大全</a> / <a href="{{ klass.url }}">Class {{ klass.code }} {{ klass.label }}</a></p>
+<p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/errcode/">错误代码</a> / <a href="{{ klass.url }}">Class {{ klass.code }} {{ klass.label }}</a></p>
 
 <header class="wiki-entry__head">
   <h1><span class="wiki-entry__code">{{ code.sqlstate }}</span> <span class="wiki-entry__cond">{{ code.condition_name }}</span></h1>
@@ -17,37 +17,34 @@
 </header>
 
 <section class="wiki-facts">
-  <dl class="wiki-facts__grid">
-    {% for fact in facts %}
-    <div class="wiki-facts__cell">
-      <dt>{{ fact.label }}</dt>
-      <dd>{% if fact.url %}<a href="{{ fact.url }}">{{ fact.value }}</a>{% else %}{{ fact.value }}{% endif %}</dd>
+  <dl class="wiki-facts__card">
+    <div class="wiki-facts__col">
+      <dt>类别</dt><dd><a href="{{ klass.url }}">Class {{ klass.code }} {{ klass.label }}</a></dd>
+      <dt>严重等级</dt><dd><span class="wiki-sev wiki-sev--{{ code.severity }}">{{ code.severity_label }}</span></dd>
     </div>
-    {% endfor %}
+    <div class="wiki-facts__col wiki-facts__col--wide">
+      <dt>条件名</dt><dd><code class="wiki-facts__mono">{{ code.condition_name }}</code></dd>
+      <dt>宏名称</dt><dd><code class="wiki-facts__mono">{{ card.macro }}</code>{% for alias in card.aliases %} <code class="wiki-facts__mono wiki-facts__alias">{{ alias }}</code>{% endfor %}</dd>
+    </div>
+    <div class="wiki-facts__col">
+      <dt>启用版本</dt><dd>{{ card.since }}</dd>
+      <dt>状态</dt><dd>{{ card.status_text }}</dd>
+    </div>
   </dl>
 
+  {% if version_groups %}
   <div class="wiki-versions">
     <h2 class="wiki-versions__title">版本覆盖</h2>
-    <ol class="wiki-versionbar">
-      {% for v in version_bar %}
-      <li class="wiki-versionbar__item{% if v.present %} is-present{% endif %}{% if v.preview %} is-preview{% endif %}"
-          title="PostgreSQL {{ v.release }}{% if v.present %}：存在{% else %}：该快照中未定义{% endif %}">{{ v.major }}</li>
+    <div class="wiki-verbars">
+      {% for group in version_groups %}
+      <ol class="wiki-verbar wiki-verbar--{{ group.kind }}">
+        {% for v in group.items %}
+        <li>{% if v.present %}<a href="{{ v.url }}" title="PostgreSQL {{ v.label }} 手册 · 附录 A 错误代码">{{ v.label }}</a>{% else %}<span title="PostgreSQL {{ v.label }} 未定义此代码">{{ v.label }}</span>{% endif %}</li>
+        {% endfor %}
+      </ol>
       {% endfor %}
-    </ol>
-    {% if gaps %}
-    <p class="wiki-note">
-      {% for gap in gaps %}{{ gap.before }} 与 {{ gap.after }} 之间没有正式发布标签，是来源断层，不表示该代码在此被移除。{% endfor %}
-    </p>
-    {% endif %}
+    </div>
   </div>
-
-  {% if doc_url %}
-  <p class="wiki-doclink">
-    中文手册：<a href="{{ doc_url }}">附录 A 错误代码（PostgreSQL {{ version.value }}）</a>
-    {% if versions|length > 1 %}
-    <span class="wiki-doclink__switch">切换版本：{% for v in versions %}{% if v.has_doc %}<a href="?v={{ v.value }}"{% if v.value == version.value %} aria-current="true"{% endif %}>{{ v.value }}</a>{% endif %}{% endfor %}</span>
-    {% endif %}
-  </p>
   {% endif %}
 </section>
 
@@ -170,7 +167,7 @@
 
 {% if siblings %}
 <section class="wiki-panel" id="siblings">
-  <h2>同类错误码</h2>
+  <h2>同类错误代码</h2>
   <p class="wiki-panel__lead">Class {{ klass.code }} {{ klass.label }} 下的其他成员。</p>
   <ul class="wiki-siblings">
     {% for s in siblings %}

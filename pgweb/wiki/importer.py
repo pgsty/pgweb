@@ -506,6 +506,31 @@ def preview(snapshot):
     }
 
 
+SUMMARY_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                            'data', 'wiki', 'errcode-summaries.json')
+
+
+def summary_overrides(path=SUMMARY_FILE):
+    """索引页的一句话说明。源仓库的「速览」首句太长，站点自己维护一份 ≤ 36 字的版本。"""
+    try:
+        with open(path, encoding='utf-8') as handle:
+            return json.load(handle)
+    except FileNotFoundError:
+        return {}
+
+
+def apply_summaries(overrides):
+    """把一句话说明写进中文正文行；与源码版本无关，每次导入都核对一遍。"""
+    changed = 0
+    for text in ErrorCodeText.objects.filter(lang='zh', errcode_id__in=list(overrides)):
+        wanted = overrides[text.errcode_id]
+        if text.summary != wanted:
+            text.summary = wanted
+            text.save(update_fields=['summary'])
+            changed += 1
+    return changed
+
+
 @transaction.atomic
 def import_snapshot(snapshot, prune=False):
     """按 sqlstate 原位更新。无变化的码整条跳过，不重写子表。"""
@@ -557,5 +582,7 @@ def import_snapshot(snapshot, prune=False):
         stale = ErrorCode.objects.exclude(sqlstate__in=incoming)
         report['removed'] = stale.count()
         stale.delete()
+
+    report['summaries'] = apply_summaries(summary_overrides())
 
     return report

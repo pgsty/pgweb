@@ -1,5 +1,7 @@
 """错误码大全的取数与组装。视图只负责拼上下文，这里负责形状。"""
 
+import re
+
 from django.core.cache import cache
 
 from .models import (DEPTHS, ErrorCode, ErrorCodeRelease, ErrorCodeText,
@@ -10,7 +12,7 @@ CACHE_KEY = 'pgweb:wiki:errcode-index'
 CACHE_SECONDS = 300
 
 # 手册附录只给码和条件名；这里再给宏名称、严重等级与启停版本，说明另起一行。
-COLUMNS = ('错误码', '条件名', '宏名称', '严重等级', '启用版本', '弃用版本')
+COLUMNS = ('错误代码', '条件名', '宏名称', '严重等级', '版本')
 
 # 现行错误码的「弃用版本」列显示当前开发版：2026-09-11 与 master 的
 # src/backend/utils/errcodes.txt 核对，262 个现行码全部在列，没有新增。
@@ -54,8 +56,17 @@ def summaries():
     return rows
 
 
+def status_text(code, majors):
+    """活跃，或「于 17 弃用」。"""
+    if code.status != 'removed':
+        return '活跃'
+    until = until_of(code, majors)
+    return '于 {} 弃用'.format(until) if until else '已弃用'
+
+
 def row_of(code, text, majors=()):
     return {
+        'status_text': status_text(code, majors),
         'sqlstate': code.sqlstate,
         'url': code.url,
         'condition_name': code.condition_name,
@@ -199,6 +210,45 @@ def pick_version(code, wanted):
     return (formal or options)[-1]
 
 
+def card(code):
+    """详情页顶部的事实卡：类别与严重等级 / 条件名与宏名称 / 起始版本与状态。"""
+    majors = [r.major for r in ErrorCodeRelease.objects.all() if not r.is_preview] + [LATEST_MAJOR]
+    return {
+        'macro': code.primary_macro or (code.macros[0] if code.macros else ''),
+        'aliases': [m for m in code.macros if m != code.primary_macro] + list(code.aliases),
+        'since': since_of(code),
+        'status_text': status_text(code, majors),
+    }
+
+
+def version_groups(code):
+    """本站手册里有附录 A 的版本，按受支持、历史、预发行与开发版分组，链接到该版的附录 A。
+
+    只列本站已加载的手册版本；该版本不含此错误代码时只显示、不链接。
+    """
+    from pgweb.docs.versions import manual_groups
+    available = set(doc_majors())
+    groups = manual_groups()
+    present = set(code.present_in)
+
+    def entry(major, label, tree):
+        if str(tree) not in available:
+            return None
+        major = str(major)
+        is_present = major in present or (major == LATEST_MAJOR and code.status != 'removed')
+        return {'major': major, 'label': label, 'present': is_present,
+                'url': '/docs/{}/{}'.format('devel' if tree == 0 else major, DOC_FILE)}
+
+    supported = [entry(m, str(m), m) for m in groups['supported']]
+    historical = [entry(m, str(m), m) for m in groups['historical']]
+    special = [entry(t['major'], '{} {}'.format(t['major'], t['label']), t['major']) for t in groups['testing']]
+    if groups['devel']:
+        special.append(entry(groups['devel'], '{} dev'.format(groups['devel']), 0))
+    return [{'kind': kind, 'items': [e for e in items if e]}
+            for kind, items in (('supported', supported), ('historical', historical), ('special', special))
+            if any(items)]
+
+
 def fact_rows(code):
     """事实卡。留空的字段照实留空，不要编一个值出来。"""
     majors = [r.major for r in ErrorCodeRelease.objects.all() if not r.is_preview] + [LATEST_MAJOR]
@@ -304,7 +354,9 @@ def detail_payload(sqlstate, wanted_version=''):
 
     siblings = [c for c in ErrorCode.objects.filter(klass=code.klass).exclude(sqlstate=sqlstate)]
 
-    sections = text.sections if text else []
+    # 少数源文件在小节之前多一行「# <code>」，页面自己有标题，不再重复。
+    sections = [s for s in (text.sections if text else [])
+                if s.get('heading') or not re.match(r'^\s*(<|&lt;)h1', s.get('html', ''))]
     return {
         'code': code,
         'klass': code.klass,
@@ -315,6 +367,8 @@ def detail_payload(sqlstate, wanted_version=''):
         'blocks': blocks(sections, messages, list(code.cases.all()), claims,
                          list(code.sources.all()), list(code.runtimes.all())),
         'facts': fact_rows(code),
+        'card': card(code),
+        'version_groups': version_groups(code),
         'version_bar': version_bar(code),
         'versions': version_options(code),
         'version': version,

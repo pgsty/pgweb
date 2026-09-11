@@ -1,12 +1,11 @@
 {% extends "wiki/base.html" %}
 {% block wiki_content %}
-<p class="wiki-crumb"><a href="/wiki/">百科</a> / 错误码大全</p>
-<h1>PostgreSQL 错误码大全</h1>
-<p class="wiki-lead">SQLSTATE 是 PostgreSQL 服务器为每条消息附带的五字符状态码：前两位是类别，后三位是类别内的具体条件。应用程序应依据 SQLSTATE 而不是消息文本判断错误。</p>
-<p class="wiki-lead">本目录收录 {{ total }} 个错误码，分属 {{ class_count }} 个类别，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}。每条给出条件名、宏名称、严重等级、启用版本与弃用版本，并附一句说明；点击错误码或条件名进入详情页。</p>
+<p class="wiki-crumb"><a href="/wiki/">百科</a> / 错误代码</p>
+<h1>PostgreSQL 错误代码</h1>
+<p class="wiki-lead">SQLSTATE 是 PostgreSQL 服务器为每条消息附带的五字符状态码：前两位是类别，后三位是类别内的具体条件，应用程序应依据它而不是消息文本判断错误。本目录收录 {{ total }} 个错误代码，分属 {{ class_count }} 个类别，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}；每条给出条件名、宏名称、严重等级、起始版本与当前状态，并附一句说明，点击任意一行进入详情页。</p>
 
 <h2 id="index">导航索引</h2>
-<nav class="wiki-classnav" aria-label="错误码类别索引">
+<nav class="wiki-classnav" aria-label="错误代码类别索引">
   {% for group in groups %}
   <a class="wiki-classnav__item" href="#{{ group.anchor }}">
     <span class="wiki-classnav__code">{{ group.code }}</span>
@@ -17,9 +16,9 @@
 </nav>
 
 <form id="errcode-search" action="/wiki/errcode/" method="get" role="search">
-  <label class="sr-only" for="errcode-q">搜索错误码</label>
+  <label class="sr-only" for="errcode-q">搜索错误代码</label>
   <input class="form-control" id="errcode-q" type="search" name="q" maxlength="120"
-         placeholder="输入错误码、条件名或关键词，如 23505、unique_violation、唯一" autocomplete="off">
+         placeholder="输入错误代码、条件名或关键词，如 23505、unique_violation、唯一" autocomplete="off">
   <div class="wiki-filters">
     {% for dd in filters %}
     <label for="errcode-{{ dd.param }}">{{ dd.label }}
@@ -37,28 +36,27 @@
 <div class="wiki-table"><div class="wiki-table__scroll">
 <table id="errcode-table" class="wiki-errcodes">
   <thead><tr>
-    <th scope="col">错误码</th>
+    <th scope="col">错误代码</th>
     <th scope="col">条件名</th>
     <th scope="col">宏名称</th>
     <th scope="col">严重等级</th>
-    <th scope="col">启用版本</th>
-    <th scope="col">弃用版本</th>
+    <th scope="col">版本</th>
   </tr></thead>
   {% for group in groups %}
   <tbody class="wiki-classgroup" data-class="{{ group.code }}">
     <tr class="wiki-classrow" id="{{ group.anchor }}">
-      <th colspan="6" scope="colgroup">
+      <th colspan="5" scope="colgroup">
         <div class="wiki-classrow__inner">
           <span class="wiki-classrow__code">Class {{ group.code }}</span>
           <span class="wiki-classrow__label">{{ group.label }}</span>
           {% if group.name_zh %}<span class="wiki-classrow__en">{{ group.name }}</span>{% endif %}
           <span class="wiki-classrow__count">{{ group.count }} 个</span>
-          <a class="wiki-classrow__top" href="#index">回到索引</a>
+          <a class="wiki-classrow__top" href="#index" title="回到顶部" aria-label="回到顶部">↑</a>
         </div>
       </th>
     </tr>
     {% for row in group.rows %}
-    <tr class="wiki-coderow" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
+    <tr class="wiki-coderow" data-href="{{ row.url }}" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
         data-depth="{{ row.depth }}"
         data-text="{{ row.sqlstate }} {{ row.condition_name }} {{ row.macro }} {{ row.name }} {{ row.summary }}">
       <td class="wiki-coderow__code"><a href="{{ row.url }}">{{ row.sqlstate }}</a></td>
@@ -66,12 +64,12 @@
       <td class="wiki-coderow__macro"><code>{{ row.macro }}</code></td>
       <td class="wiki-coderow__sev"><span class="wiki-sev wiki-sev--{{ row.severity }}">{{ row.severity_label }}</span></td>
       <td class="wiki-coderow__ver">{{ row.since }}</td>
-      <td class="wiki-coderow__ver">{% if row.removed %}<span class="wiki-coderow__removed">{{ row.until }}</span>{% else %}{{ row.until }}{% endif %}</td>
     </tr>
-    <tr class="wiki-coderow wiki-coderow--more" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
+    <tr class="wiki-coderow wiki-coderow--more" data-href="{{ row.url }}" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
         data-depth="{{ row.depth }}"
         data-text="{{ row.sqlstate }} {{ row.condition_name }} {{ row.macro }} {{ row.name }} {{ row.summary }}">
-      <td colspan="6" class="wiki-coderow__desc">{% if row.name %}<b>{{ row.name }}</b> {% endif %}{{ row.summary }}{% if row.removed %} <span class="wiki-badge wiki-badge--removed">已移除</span>{% endif %}</td>
+      <td colspan="4" class="wiki-coderow__desc">{{ row.summary }}</td>
+      <td class="wiki-coderow__status{% if row.removed %} wiki-coderow__status--removed{% endif %}">{{ row.status_text }}</td>
     </tr>
     {% endfor %}
   </tbody>
@@ -79,10 +77,9 @@
 </table>
 </div></div>
 
-<p class="wiki-empty" id="errcode-empty" hidden>没有匹配的错误码。<a href="/wiki/errcode/">清除筛选</a></p>
+<p class="wiki-empty" id="errcode-empty" hidden>没有匹配的错误代码。<a href="/wiki/errcode/">清除筛选</a></p>
 
 <h2>说明</h2>
-<p>启用版本是该错误码在 PostgreSQL 源码 <code>errcodes.txt</code> 定义中出现的最早版本，追溯下限为 7.4。弃用版本是该错误码最后存在的版本：已移除的错误码给出移除它的版本，现行错误码以当前开发版 {{ latest_major }} 计。</p>
-<p>数据来自 <a href="https://err.pg.center" target="_blank" rel="noopener">err.pg.center</a>，每个错误码的详情页给出报文模板、可复现案例以及锁定到发布标签与提交的源码出处。中文手册对应章节见 <a href="/docs/current/errcodes-appendix.html">附录 A 错误代码</a>。</p>
+<p>起始版本是该错误代码在 PostgreSQL 源码 <code>errcodes.txt</code> 定义中出现的最早版本，追溯下限为 7.4；状态为「活跃」表示当前开发版 {{ latest_major }} 仍定义该代码，已移除的代码给出弃用它的版本。数据来自 <a href="https://err.pg.center" target="_blank" rel="noopener">err.pg.center</a>；中文手册对应章节见 <a href="/docs/current/errcodes-appendix.html">附录 A 错误代码</a>。</p>
 {% endblock %}
 {% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}
