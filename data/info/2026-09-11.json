@@ -1,0 +1,330 @@
+{
+  "date": "2026-09-11",
+  "origin": "PGSQL.CC 原创编选；PostgreSQL.org / Planet；PGNexus #264–266；厂商与项目原文；Hacker News；截稿 2026-09-12 07:32:45 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "逻辑复制溢写会按订阅数量放大发布端磁盘压力",
+      "summary": "逻辑复制的磁盘告警未必来自 WAL 保留。多订阅实验显示，大事务超过解码内存预算后，会在每个复制槽的 pg_replslot 目录各写一份溢出数据，提交后文件又迅速消失。开启 streaming 可将这部分压力转移至订阅端；parallel 模式有空闲工作进程时还能减少订阅端临时文件。PostgreSQL 18 虽已将新订阅默认值改为 parallel，旧设置和 TOAST 数据仍需关注，排查时应同时观察溢写与流式传输计数。",
+      "url": "https://www.pgedge.com/blog/pg-phriday-the-folder-that-ate-the-publisher",
+      "author": "Shaun Thomas",
+      "source": "pgEdge",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "连接数上限应按并发与内存预算设定",
+      "summary": "Christophe Pettus 将 max_connections 解释为资源预算与过载保护，而非吞吐量旋钮。该参数会影响启动时分配的共享结构，真正繁忙的连接还会叠加算子内存和锁竞争；仅按实例内存给出数千连接的云端默认值，可能把连接池问题拖成数据库故障。文章建议用事务连接池吸收应用连接，结合实际活跃量、角色连接限制及运维余量定额，并强调调高时先改备库、调低时先改主库，避免备库因参数不足暂停恢复。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_connections/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "参数",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 聚合钩子可消除多余排序",
+      "summary": "自动生成的 SQL 可能在求和时附带无效排序，浪费执行时间。pgEdge 演示 PostgreSQL 19 测试版的聚合规划支持钩子，借助扩展在规划阶段改写适用类型的 SUM，移除冗余 ORDER BY。pgEdge 称，千万行实验由约 5.7 秒缩短至 3.7 秒，同时解释了 DISTINCT、排序集聚合与依赖关系的边界。目前为聚合绑定支持函数的 DDL 尚未合入，示例仍需修改系统目录，绑定关系也不能随备份恢复或大版本升级自动保留。",
+      "url": "https://www.pgedge.com/blog/optimising-postgresql-aggregates-what-can-an-extension-do",
+      "author": "Andrei Lepikhov",
+      "source": "pgEdge",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "扩展",
+        "查询优化"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "WalShadow 从物理 WAL 直达 ClickHouse",
+      "summary": "ClickHouse 开源 WalShadow，将 PostgreSQL 物理 WAL 在源库之外解码，再写成分析库原生数据块。它用影子实例跟踪目录变化，覆盖初始装载、持续复制与表结构演进。厂商称，在同区单表测试中，提交到可查询约需 200 毫秒，吞吐接近源库。项目仍为开发预览，要求 PostgreSQL 16 以上且源库与影子实例同大版本；接入前还须确认部署环境开放物理 WAL。",
+      "url": "https://clickhouse.com/blog/introducing-walshadow",
+      "author": "Sai Srirampur",
+      "source": "ClickHouse",
+      "source_date": "2026-09-10",
+      "image": "https://clickhouse.com/uploads/walshadow_sep2026_banner_6dbc425dd9.jpg",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "WAL",
+        "分析"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Tom Lane 回顾 PostgreSQL 三十年的架构取舍",
+      "summary": "在 PostgreSQL 三十周年访谈中，Tom Lane 从进程模型、共享内存与 WAL 恢复，讲到 MVCC、规划器和扩展边界。他强调独立进程带来的代码简洁性，也解释会话目录缓存为何使连接复用与线程化成为棘手问题；后端崩溃后，为保护共享内存仍须重启其他后端。对未来，他支持继续探索线程化，同时倾向把能由扩展承担的功能留在内核之外。这些取舍有助于理解连接池、故障恢复与扩展设计背后的约束。",
+      "url": "https://www.snowflake.com/en/blog/engineering/30-years-of-postgres-architecture-tom-lane/",
+      "author": "Elizabeth Garrett Christensen",
+      "source": "Snowflake Engineering",
+      "source_date": "2026-09-09",
+      "image": "https://www.snowflake.com/adobe/dynamicmedia/deliver/dm-aid--46e8ce6e-b1de-4b95-95da-80bfd701994a/figure-1.-30-years-of-postgres-with-tom-lane.png?quality=85&preferwebp=true",
+      "domain": "pg",
+      "tags": [
+        "架构",
+        "内核"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "AWS 拆解 Iceberg 物化视图的查询改写",
+      "summary": "重复运行的分析查询常受复杂连接与聚合拖累，业务 SQL 又未必方便修改。AWS 展示了 Spark 自动匹配 Iceberg 物化视图的过程：优化器可替换整条查询或局部子树，按结构或精确形式匹配，并在视图过期时跳过改写。该功能从 EMR 7.12.0、Glue 5.1 起提供，需要显式启用。文章比较预聚合、预连接及完整结果三种设计，说明查询加速与存储、刷新成本和复用范围之间的取舍，适合据此检查真实执行计划。",
+      "url": "https://aws.amazon.com/blogs/big-data/accelerating-spark-queries-with-iceberg-materialized-views/",
+      "author": "AWS",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-10",
+      "image": "https://d2908q01vomqb2.cloudfront.net/b6692ea5df920cad691c20319a6fffd7a4a766b8/2026/08/17/BDB-5950-featured-image.png",
+      "domain": "db",
+      "tags": [
+        "Iceberg",
+        "Spark",
+        "性能"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 开发分支修复待分离分区上的更新崩溃",
+      "summary": "并发分离被中断后，即使没有发布对象，UPDATE 或 DELETE 也可能崩溃；已提交修复将此类分区按独立表处理。",
+      "url": "https://github.com/postgres/postgres/commit/479a931155c6758831e57ba76f9671565c1e5553",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "修复"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 开发分支修复外键快速路径的排序规则误判",
+      "summary": "索引与被引用列的排序规则不一致时，快速检查可能放过无效引用；修复改为回退 SPI，并补齐 ICU 回归用例。",
+      "url": "https://github.com/postgres/postgres/commit/0b0b413292161cf709b9dbc4d5adee23be53ee34",
+      "author": "Amit Langote",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "修复"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 开发分支回退 CREATE SCHEMA 的兼容性改动",
+      "summary": "已撤回扩大内嵌对象类型和改变子命令排序的两项改动，保留符合 SQL 标准的外键约束延后执行行为。",
+      "url": "https://github.com/postgres/postgres/commit/962e0a723a2dc3f77dc7ae51f992f3932819f81f",
+      "author": "Tom Lane",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "修复"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 开发分支修复并发修改发布对象的竞态",
+      "summary": "ALTER PUBLICATION 现先加锁再重读状态，避免并发切换 ALL TABLES 时触发断言或混入互斥的包含、排除记录。",
+      "url": "https://github.com/postgres/postgres/commit/5624de9904ca560c0d4473cb9e86108f4b69be38",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "修复"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "开发分支：副本标识索引被删后，并发 REPACK 改为拒绝执行",
+      "summary": "已提交修复阻止错误地回退主键，因为逻辑解码在这种状态下无法提供可用的行标识；补丁标记回移 PostgreSQL 19。",
+      "url": "https://github.com/postgres/postgres/commit/c1c5d28f4a2df9d83ca1bcd6bcd6ed8ca065791b",
+      "author": "Álvaro Herrera",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "修复"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Postgres FM 讨论备库反馈与查询冲突取舍",
+      "summary": "新一期围绕 hot_standby_feedback、备库查询取消与相关超时设置展开，并附 PostgreSQL 17 实验材料。",
+      "url": "https://postgres.fm/episodes/hot_standby_feedback",
+      "author": "",
+      "source": "Postgres FM",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "运维"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "SQLite-Vector 1.1.2 统一采用 Apache 2.0",
+      "summary": "新版本同步 Python、Node、Android 等包的许可证，并把基准改为文件数据库，明确区分进程内存与操作系统页缓存。",
+      "url": "https://github.com/sqliteai/sqlite-vector/releases/tag/1.1.2",
+      "author": "SQLite Cloud",
+      "source": "SQLite-Vector",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量检索",
+        "开源"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AWS 用 DuckDB 分析 DynamoDB 的零 ETL 副本",
+      "summary": "零 ETL 副本默认每 15 分钟刷新至 S3 Tables，再由 Lambda 中的 DuckDB 查询，入口使用 IAM 认证。",
+      "url": "https://aws.amazon.com/blogs/database/run-duckdb-analytics-on-your-amazon-dynamodb-data-with-zero-etl/",
+      "author": "AWS",
+      "source": "AWS Database Blog",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "DynamoDB",
+        "Iceberg"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Databricks 扩展 Iceberg 与联邦数据共享",
+      "summary": "OpenSharing 可共享联邦接入的外部表；普通外部表与模式会在提供方物化，产生计算和存储开销。",
+      "url": "https://docs.databricks.com/gcp/en/release-notes/product/2026/september#sharing-foreign-iceberg-tables-with-opensharing-is-now-generally-available",
+      "author": "Databricks",
+      "source": "Databricks",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Iceberg",
+        "数据共享"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes 1.37 试验原地扩容抢占",
+      "summary": "高优先级 Pod 扩容被延后时，调度器可驱逐同节点的低优先级负载腾出资源；Alpha 功能需显式启用。",
+      "url": "https://kubernetes.io/blog/2026/09/10/kubernetes-v1-37-scheduler-preemption-for-in-place-pod-resize-alpha/",
+      "author": "Natasha Sarkar",
+      "source": "Kubernetes",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "调度"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Actions 可限制缓存读写权限",
+      "summary": "工作流或任务可选择只读、读写、只写或禁用缓存，低信任事件默认只读，减少缓存投毒风险。",
+      "url": "https://github.blog/changelog/2026-09-10-control-github-actions-cache-access-with-cache-mode/",
+      "author": "GitHub",
+      "source": "GitHub Changelog",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "供应链安全"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "AI 生成的索引需要合并评估写入成本",
+      "summary": "Radim Marek 的实测显示，热点表上的索引组合会放大 WAL 并破坏 HOT 更新，单条读查询变快不足以证明整体收益。",
+      "url": "https://boringsql.com/posts/unbearable-lightness-of-one-more-index/",
+      "author": "",
+      "source": "boringSQL",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "性能"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 2,
+      "title": "AI 数据库账号的超时默认值不是权限边界",
+      "summary": "会话可自行修改 USERSET 参数；作者实测建议依靠对象授权、登录限制和独立监控连接约束代理，而非只设超时与只读默认值。",
+      "url": "https://seedfa.st/blog/postgres-role-for-ai-agent",
+      "author": "",
+      "source": "Seedfast",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "权限"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "CERN PGDay 2027 公布征稿安排",
+      "summary": "",
+      "url": "https://www.swisspug.org/cern-pgday-2027.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "活动"
+      ],
+      "position": 20
+    }
+  ]
+}
