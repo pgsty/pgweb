@@ -36,7 +36,7 @@ def errcode_index(request):
                       payload['total'], payload['class_count'])
     return render(request, 'wiki/errcode_index.html', shell(dict(
         payload, column=column,
-    ), 'PostgreSQL SQL 状态码', description, '/docs/sqlstate/'))
+    ), 'PostgreSQL 状态码', description, '/docs/sqlstate/'))
 
 
 @require_safe

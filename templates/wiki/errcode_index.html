@@ -1,7 +1,7 @@
 {% extends "wiki/base.html" %}
 {% block wiki_content %}
 <p class="wiki-crumb"><a href="/docs/">文档</a> / SQL 状态码</p>
-<h1>PostgreSQL SQL 状态码</h1>
+<h1>PostgreSQL 状态码</h1>
 <p class="wiki-lead">SQLSTATE 是 PostgreSQL 服务器为每条消息附带的五字符状态码：前两位是类别，后三位是类别内的具体条件，应用程序应依据它而不是消息文本判断错误。本目录收录 {{ total }} 个 SQL 状态码，分属 {{ class_count }} 个类别，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}；每条给出条件名、宏名称、严重等级、起始版本与当前状态，并附一句说明，点击任意一行进入详情页。</p>
 
 <h2 id="index">导航索引</h2>
