@@ -60,11 +60,12 @@ THIRD_PARTY_DOCS = [
 
 # This is the whole site navigation structure. Stick in a smarter file?
 sitenav = {
+    # 静态兜底；模板拿到的是 _get_sitenav() 里带最近七天日期的版本。
     'info': [
-        {'title': '最新收录', 'link': '/info/'},
-        {'title': '每日更新', 'link': '/info/daily/'},
-        {'title': '归档', 'link': '/info/archive/'},
-        {'title': '搜索', 'link': '/info/search/'},
+        {'title': '新闻博览', 'link': '/info/', 'keep': True},
+        {'title': 'PG 日报', 'link': '/info/daily/', 'submenu': [{'title': '日报归档', 'link': '/info/archive/'}]},
+        {'title': '社区新闻', 'link': '/about/newsarchive/'},
+        {'title': '近期活动', 'link': '/about/events/'},
     ],
     'about': [
         {'title': '关于', 'link': '/about/'},
@@ -273,6 +274,12 @@ def _source_url(path):
     return 'https://www.postgresql.org' + path
 
 
+def _get_sitenav():
+    """The navigation with the 博览 entry's recent days filled in (cached briefly)."""
+    from pgweb.info.highlights import info_nav
+    return dict(sitenav, info=info_nav())
+
+
 def PGWebContextProcessor(request):
     gitrev = SimpleLazyObject(_get_gitrev)
     return {
@@ -280,7 +287,7 @@ def PGWebContextProcessor(request):
         'do_esi': settings.DO_ESI,
         'gitrev': gitrev,
         'topbarnews': SimpleLazyObject(_get_topbar_news),
-        'sitenav': sitenav,
+        'sitenav': SimpleLazyObject(_get_sitenav),
         'doc_majors': SimpleLazyObject(_get_doc_majors),
         'site_search': bool(getattr(settings, 'SEARCH_DSN', '')),
         'seo': page_metadata(request.path),

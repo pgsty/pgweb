@@ -22,7 +22,7 @@ own side card instead of the site's quick links.
           </form>
           <p class="pg-sidecard__lead"><a href="/info/"{% if request.path == "/info/" %} aria-current="page"{% endif %}>新闻博览</a></p>
           {% if sidecard_days %}
-          <h2>每日更新</h2>
+          <h2>PG 日报</h2>
           <ul class="pg-sidecard__days">
             {% for d in sidecard_days %}
             <li><a href="{{ d.url }}"{% if d.date == sidecard_current %} aria-current="page"{% endif %}><span class="pg-sidecard__date">{{ d.date|date:"Y-m-d" }}</span><span class="pg-sidecard__count">{{ d.count }}</span></a></li>

@@ -309,7 +309,7 @@ class PageTests(TestCase):
     def test_the_side_card_lists_recent_days_and_marks_the_current_one(self):
         response = self.client.get('/info/2026-09-08/')
         self.assertEqual([day['count'] for day in response.context['sidecard_days']], [3, 3, 3])
-        self.assertContains(response, '每日更新')
+        self.assertContains(response, 'PG 日报')
         self.assertContains(response, 'href="/info/2026-09-08/" aria-current="page"')
         self.assertContains(response, 'href="/info/archive/"')
         self.assertContains(response, 'action="/info/search/"')
@@ -331,7 +331,7 @@ class PageTests(TestCase):
         self.assertTrue(nav_active('/info/2026-09-10/', 'info'))
         self.assertFalse(nav_active('/info/', 'home'))
         self.assertEqual([entry['link'] for entry in sitenav['info']],
-                         ['/info/', '/info/daily/', '/info/archive/', '/info/search/'])
+                         ['/info/', '/info/daily/', '/about/newsarchive/', '/about/events/'])
         response = self.client.get('/info/')
         self.assertContains(response, 'href="/info/" class', count=0)
         self.assertContains(response, '博览')

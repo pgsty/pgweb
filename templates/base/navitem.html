@@ -4,8 +4,8 @@ hover panel of its section links (mode="desktop") or as a drawer row with
 its children listed underneath (mode="mobile").
 
 Parameters: title, link, key (nav_active section), items (sitenav list, may
-be empty), mode. An item whose link equals the parent link is not repeated;
-its submenu is lifted to the top level of the panel instead.
+be empty), mode. An item whose link equals the parent link is not repeated
+(unless it carries keep=True); its submenu is lifted to the top level instead.
 {% endcomment %}{% load pgfilters %}{% with active=request.path|nav_active:key %}
 {% if mode == "desktop" %}
 <div class="pg-nav__item{% if items %} pg-nav__item--menu{% endif %}">
@@ -18,7 +18,7 @@ its submenu is lifted to the top level of the panel instead.
     </div>
     {% endif %}
     {% for m in items %}
-      {% if m.link == link %}
+      {% if m.link == link and not m.keep %}
         {% for sm in m.submenu %}<a class="pg-nav__panel-link" href="{{ sm.link }}">{{ sm.title }}</a>{% endfor %}
       {% else %}
         <a class="pg-nav__panel-link" href="{{ m.link }}">{{ m.title }}</a>
@@ -38,7 +38,7 @@ its submenu is lifted to the top level of the panel instead.
 <div class="pg-drawer__children">
   {% if key == "docs" and doc_majors %}{% for v in doc_majors %}<a class="pg-drawer__sublink pg-drawer__version" href="/docs/{{ v }}/index.html">PG {{ v }}</a>{% endfor %}{% endif %}
   {% for m in items %}
-    {% if m.link == link %}
+    {% if m.link == link and not m.keep %}
       {% for sm in m.submenu %}<a class="pg-drawer__sublink" href="{{ sm.link }}">{{ sm.title }}</a>{% endfor %}
     {% else %}
       <a class="pg-drawer__sublink" href="{{ m.link }}">{{ m.title }}</a>

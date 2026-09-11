@@ -4,7 +4,9 @@ from django.core.cache import cache
 from django.db.models import Max
 
 HOME_CACHE_KEY = 'pgweb:info-home'
+NAV_CACHE_KEY = 'pgweb:info-nav'
 HOME_CACHE_SECONDS = 300
+NAV_DAYS = 7
 
 
 def home_highlights():
@@ -44,5 +46,32 @@ def home_highlights():
     return result
 
 
+def info_nav():
+    """The 博览 dropdown: 新闻博览, PG 日报 with the last seven days and the
+    archive underneath, then the community news and events pages."""
+    cached = cache.get(NAV_CACHE_KEY)
+    if cached is not None:
+        return cached
+    days = []
+    try:
+        from .views import day_counts
+        days = day_counts(NAV_DAYS)
+    except Exception:
+        # Navigation never fails because the column is missing or unmigrated.
+        days = []
+    items = [
+        {'title': '新闻博览', 'link': '/info/', 'keep': True},
+        {'title': 'PG 日报', 'link': days[0]['url'] if days else '/info/daily/', 'submenu': [
+            {'title': day['date'].isoformat(), 'link': day['url']} for day in days
+        ] + [{'title': '日报归档', 'link': '/info/archive/'}]},
+        {'title': '社区新闻', 'link': '/about/newsarchive/'},
+        {'title': '近期活动', 'link': '/about/events/'},
+    ]
+    if days:
+        cache.set(NAV_CACHE_KEY, items, HOME_CACHE_SECONDS)
+    return items
+
+
 def forget_highlights():
     cache.delete(HOME_CACHE_KEY)
+    cache.delete(NAV_CACHE_KEY)
