@@ -3906,6 +3906,17 @@ button.pg-script-copy-btn.pg-code__btn {
   margin: 0;
   font-family: var(--pg-font-mono);
   font-size: 13px;
+  overflow-wrap: anywhere;
+}
+
+/* Identifier rows of a 百科 card: one per line, the following grid joins on. */
+.ds-ext-facts--stack {
+  grid-template-columns: minmax(0, 1fr);
+  margin-bottom: 0;
+}
+
+.ds-ext-facts--stack + .ds-ext-facts {
+  margin-top: 8px;
 }
 
 .ds-ext-tags code {

@@ -165,14 +165,18 @@ def errcode_entry(code, text, card):
     zh_name = text.name if text else ''
     summary = (text.summary if text else '') or ''
     klass = '{} {}'.format(code.klass.code, code.klass.label)
-    facts = [('条件名', code.condition_name), ('宏名称', card['macro']), ('类别', klass),
-             ('严重等级', code.severity_label), ('启用版本', card['since']), ('状态', card['status_text'])]
+    names = [('条件名', code.condition_name), ('宏名称', card['macro'])]
+    facts = [('类别', klass), ('严重等级', code.severity_label), ('启用版本', card['since']), ('状态', card['status_text'])]
+
+    def dl(rows, extra=''):
+        return '<dl class="ds-ext-facts{}">'.format(extra) + ''.join(
+            '<div><dt>{}</dt><dd>{}</dd></div>'.format(escape(label), escape(str(value)))
+            for label, value in rows if value) + '</dl>'
     parts = []
     if summary:
         parts.append('<p class="ds-ext-desc">' + escape(summary) + '</p>')
-    parts.append('<dl class="ds-ext-facts">' + ''.join(
-        '<div><dt>{}</dt><dd>{}</dd></div>'.format(escape(label), escape(str(value)))
-        for label, value in facts if value) + '</dl>')
+    # Identifiers get a full row each (macros run to 60 characters); the rest share a grid.
+    parts.append(dl(names, ' ds-ext-facts--stack ds-ext-facts--mono') + dl(facts))
     glance = next((sec.get('html', '') for sec in (text.sections if text else []) if sec.get('anchor') == 'at-a-glance'), '')
     if glance:
         parts.append('<h3>速览</h3>' + glance)

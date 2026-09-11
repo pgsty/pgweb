@@ -313,6 +313,9 @@ function versionLine(data, onVersion) {
     link.dataset.previewEntry = item.id;
     link.addEventListener('click', (event) => {
       if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || item.current) return;
+      // A 百科 entry has no per-version definition: its version links open the
+      // manual's appendix row for that version instead of swapping the preview.
+      if (data.source === 'errcode') return;
       event.preventDefault();
       onVersion(item.id);
     });

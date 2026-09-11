@@ -15,13 +15,11 @@ SQLSTATE = re.compile(r'^[0-9A-Za-z]{5}$')
 
 
 def shell(ctx, title, description, canonical, class_code=''):
-    """The shared page context: the 文档 side navigation with the error-code
-    classes as sub-items, and SEO fields."""
+    """The shared page context: the 文档 side navigation and SEO fields."""
     menu = get_nav_menu('docs')
     for item in menu:
         if item.get('link') == '/docs/errcode/':
             item['active'] = True
-            item['submenu'] = errcode.class_nav(class_code)
     ctx['navmenu'] = menu
     ctx['title'] = title
     ctx['seo'] = {'title': title if title.startswith('PostgreSQL ') else title + ' · PostgreSQL',
