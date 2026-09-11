@@ -141,4 +141,38 @@
     prefix: 'guc', group: '.guc-group', sub: '.guc-subrow', row: '.guc-row',
     more: 'guc-row--more', noun: '个参数', tokens: ['present'],
   });
+
+  wireFilter({
+    prefix: 'waitevent', group: '.we-group', row: '.we-row',
+    more: 'we-row--more', noun: '个等待事件', tokens: ['present'],
+  });
+
+  /* 代码块的复制按钮：data-copy-target 指向 <pre> 的 id。
+     clipboard 只在安全上下文里有，不可用或被拒时只改按钮文案，不弹窗。 */
+  document.querySelectorAll('[data-copy-target]').forEach(function (button) {
+    var original = button.textContent;
+    var timer = null;
+
+    function settle(ok) {
+      button.textContent = ok ? '已复制' : '复制失败';
+      button.classList.toggle('is-done', ok);
+      button.classList.toggle('is-failed', !ok);
+      if (timer) { window.clearTimeout(timer); }
+      timer = window.setTimeout(function () {
+        button.textContent = original;
+        button.classList.remove('is-done');
+        button.classList.remove('is-failed');
+      }, 1500);
+    }
+
+    button.addEventListener('click', function () {
+      var target = document.getElementById(button.getAttribute('data-copy-target'));
+      if (!target) { return; }
+      if (!navigator.clipboard || !navigator.clipboard.writeText) { settle(false); return; }
+      navigator.clipboard.writeText(target.textContent).then(
+        function () { settle(true); },
+        function () { settle(false); }
+      );
+    });
+  });
 }());

@@ -1,0 +1,68 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<div class="wiki-tone-wait we">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / 等待事件</p>
+<h1>PostgreSQL 等待事件</h1>
+<p class="wiki-lead"><code class="we-mono">pg_stat_activity</code> 的 <code class="we-mono">wait_event_type</code> 与 <code class="we-mono">wait_event</code> 两列说明一个后端进程正在等什么。本栏目收录 {{ total }} 个等待事件，分属 {{ type_count }} 类，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}；每个事件给出逐版本的官方描述与译文、名称与类型的变动，图谱收录的事件还有触发机制、诊断 SQL 与源码证据。等待事件机制自 {{ earliest_major }} 引入，9.0 – 9.5 没有这两列。</p>
+
+<h2 id="index">按类型浏览</h2>
+<nav class="wiki-classnav we-typenav" aria-label="等待事件类型索引">
+  {% for group in groups %}
+  <a class="wiki-classnav__item we-typenav__item" href="#{{ group.anchor }}" title="{{ group.label }} · 共 {{ group.count }} 个{% if group.count_latest %} · 最新版 {{ group.count_latest }} 个{% endif %}">
+    <span class="we-typenav__en"><code class="we-mono">{{ group.en|default:group.type }}</code></span>
+    <span class="we-typenav__count">{{ group.count }}</span>
+    <span class="we-typenav__zh">{{ group.label }}</span>
+    <span class="we-typenav__blurb">{{ group.blurb }}</span>
+  </a>
+  {% endfor %}
+</nav>
+
+<h2 id="versions">按版本看变更</h2>
+<nav class="we-verbar" aria-label="按版本查看变更">
+  <ol class="we-verbar__list">
+    {% for version in versions %}
+    <li class="we-verbar__item"><a class="we-pill we-pill--link{% if not version.has_wait_events %} we-pill--na{% endif %}{% if version.is_default %} is-default{% endif %}{% if version.preview %} is-preview{% elif version.devel %} is-devel{% endif %}" href="{{ version.url }}"{% if version.is_default %} aria-current="true"{% endif %} title="PostgreSQL {{ version.label }} · {% if version.has_wait_events %}{{ version.status_label }} · {{ version.event_count }} 个等待事件 · 查看该版变动{% else %}尚无等待事件机制{% endif %}">{{ version.major }}</a></li>
+    {% endfor %}
+  </ol>
+  <p class="we-verbar__note">收录了 {{ versions|length }} 个大版本。点线框的 9.0 – 9.5 尚无等待事件机制，{{ earliest_major }} 起引入；实心的是当前稳定版 {{ default_major }}，虚线框的尚未正式发布。</p>
+</nav>
+
+<form id="waitevent-search" class="we-search" action="/docs/waitevent/" method="get" role="search">
+  <label class="sr-only" for="waitevent-q">搜索等待事件</label>
+  <input class="form-control" id="waitevent-q" type="search" name="q" maxlength="120"
+         placeholder="输入事件名、类型或关键词，如 BufferContent、LWLock、checkpoint、等待客户端" autocomplete="off">
+  <div class="wiki-filters we-filters">
+    {% for dd in filters %}
+    <label for="waitevent-{{ dd.param }}">{{ dd.label }}
+      <select class="form-control" id="waitevent-{{ dd.param }}" name="{{ dd.param }}" data-waitevent-filter="{{ dd.param }}">
+        <option value="">不限</option>
+        {% for option in dd.options %}<option value="{{ option.value }}">{{ option.label }}（{{ option.count }}）</option>{% endfor %}
+      </select>
+    </label>
+    {% endfor %}
+  </div>
+  <noscript><button class="btn btn-primary" type="submit">筛选</button></noscript>
+</form>
+
+<p class="we-legend">
+  <span class="we-legend__title">版本轨迹</span>
+  <span class="we-legend__item"><span class="we-sq we-sq--na" aria-hidden="true"></span>不适用</span>
+  <span class="we-legend__item"><span class="we-sq we-sq--present" aria-hidden="true"></span>存在</span>
+  <span class="we-legend__item"><span class="we-sq we-sq--added" aria-hidden="true"></span>首次出现</span>
+  <span class="we-legend__item"><span class="we-sq we-sq--changed" aria-hidden="true"></span>有变动</span>
+  <span class="we-legend__item"><span class="we-sq we-sq--removed" aria-hidden="true"></span>已移除</span>
+  <span class="we-legend__item"><span class="we-sq we-sq--absent" aria-hidden="true"></span>未收录</span>
+</p>
+<p class="wiki-count" id="waitevent-count" aria-live="polite" hidden></p>
+
+{% include "wiki/waitevent_table.html" with groups=groups table_id="waitevent-table" top_link="#versions" %}
+
+<p class="wiki-empty" id="waitevent-empty" hidden>没有匹配的等待事件。<a href="/docs/waitevent/">清除筛选</a></p>
+
+<h2>说明</h2>
+<p>库里共 {{ stats.events }} 个等待事件、{{ stats.snapshots }} 份逐版本快照，相邻大版本之间记录到 {{ stats.changes }} 处变动（新增、移除、更名、类型变动与描述更新）；其中 {{ stats.dossiers }} 个事件有图谱档案，写明触发机制、诊断 SQL、处置步骤与源码证据。「引入」一栏写的是该事件在本数据集里最早出现的版本；标了「起点」的说明它在 {{ earliest_major }} 就已存在，那一版也正是等待事件机制本身的起点。图谱数据来自 <a href="https://wait.pg.center" target="_blank" rel="noopener">wait.pg.center</a>，9.6 – 12 与 19、20 的事件清单由本站手册译文与上游文档补齐，中文描述没有译文时按英文原文显示。</p>
+
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

@@ -1588,3 +1588,611 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
   .guc-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .guc-rebase__form select { min-width: 0; width: 100%; }
 }
+
+/* ===================================================== 等待事件 */
+
+/* 本栏目的强调色是琥珀（--c-wait）。状态色的含义在三张页面上一致：
+   琥珀 = 本栏目强调 / 新增 / 首次出现，红 = 移除，蓝 = 更名或类型变动，
+   灰 = 只改描述；9.0 – 9.5 没有等待事件机制，用点线框加更淡的灰表示「不适用」，
+   与「未收录」的空心实线框区分开。--we-fill 比 --c-wait 深一档，专门给填色药丸
+   上的白字留出对比度；方格不带文字，直接用 --c-wait。 */
+.wiki .we {
+  --we-fill: #9a6708;
+  --we-on-fill: #ffffff;
+  --we-soft: rgba(185, 126, 12, .18);
+  --we-soft-line: rgba(185, 126, 12, .42);
+  --we-tint: rgba(185, 126, 12, .07);
+  --we-acc-fg: #8a5a06; --we-acc-bg: rgba(185, 126, 12, .12);
+  --we-del-fg: #a61e2b; --we-del-bg: rgba(210, 31, 60, .10); --we-del-line: rgba(210, 31, 60, .55);
+  --we-ren-fg: #2456b8; --we-ren-bg: rgba(36, 86, 184, .10); --we-ren-line: rgba(36, 86, 184, .45);
+  --we-ok-fg: #1f6b38; --we-ok-bg: rgba(47, 158, 79, .10); --we-ok-line: rgba(47, 158, 79, .45);
+  --we-na-line: var(--pg-line-strong);
+}
+
+[data-theme="dark"] .wiki .we {
+  --we-fill: #d9a030;
+  --we-on-fill: #0c1319;
+  --we-soft: rgba(217, 160, 48, .20);
+  --we-soft-line: rgba(217, 160, 48, .46);
+  --we-tint: rgba(217, 160, 48, .09);
+  --we-acc-fg: #e8c274; --we-acc-bg: rgba(217, 160, 48, .16);
+  --we-del-fg: #ff9aa6; --we-del-bg: rgba(239, 90, 114, .16); --we-del-line: rgba(239, 90, 114, .55);
+  --we-ren-fg: #9db8ee; --we-ren-bg: rgba(107, 143, 224, .16); --we-ren-line: rgba(107, 143, 224, .50);
+  --we-ok-fg: #8fdca7; --we-ok-bg: rgba(79, 191, 114, .14); --we-ok-line: rgba(79, 191, 114, .50);
+  --we-na-line: var(--pg-line-strong);
+}
+
+/* 等宽标识符：站内 code 的字号与颜色带 !important，这里必须同样加重。 */
+#pgContentWrap .we code.we-mono,
+#pgContentWrap code.we-mono {
+  padding: 0; margin: 0; border: 0; border-radius: 0; background: none;
+  font-family: var(--pg-font-mono);
+  font-size: 12.5px !important;
+  color: inherit !important;
+  font-weight: inherit;
+}
+#pgContentWrap .we code.we-mono--name { font-size: 13px !important; font-weight: 600; }
+
+/* --------------------------------------------------- 版本方格 */
+
+/* 一个大版本一个方格，六种状态：不适用、未收录、存在、首次出现、有变动、已移除。
+   颜色之外还有形状差别（点线 / 实线空心 / 实心 / 实心带内点 / 空心带减号），
+   并写进 title。 */
+.we-sq {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  flex: none;
+  width: 12px; height: 12px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+.we-sq--na { border-style: dotted; border-color: var(--we-na-line); background: none; opacity: .75; }
+.we-sq--absent { border-color: var(--pg-line-strong); background: transparent; }
+.we-sq--present { border-color: var(--we-soft-line); background: var(--we-soft); }
+.we-sq--added, .we-sq--changed { border-color: var(--c-wait); background: var(--c-wait); }
+.we-sq--changed:after {
+  content: ''; position: absolute; left: 3px; top: 3px;
+  width: 4px; height: 4px; border-radius: 1px; background: var(--pg-surface);
+}
+.we-sq--removed { border-color: var(--we-del-line); background: transparent; }
+.we-sq--removed:after {
+  content: ''; position: absolute; left: 2px; top: 4px;
+  width: 6px; height: 2px; background: var(--we-del-line);
+}
+a.we-sq:hover { border-color: var(--we-fill); box-shadow: 0 0 0 1px var(--we-fill); }
+a.we-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 1px; }
+
+.we-track { display: flex; gap: 2px; }
+
+.we-legend {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 5px 16px;
+  margin: 14px 0 0; font-size: 12px; color: var(--pg-muted);
+}
+.we-legend__title { color: var(--pg-ink-2); }
+.we-legend__item { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+
+/* --------------------------------------------------- 九类等待事件 */
+
+/* 英文类型名是主标识（用户手里拿到的是 wait_event_type 的取值），中文标签与
+   一句话说明跟在下面。 */
+.we-typenav { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 8px; }
+.we-typenav__item {
+  display: grid; grid-template-columns: minmax(0, 1fr) max-content;
+  align-items: baseline; gap: 0 8px; padding: 9px 12px;
+}
+.we-typenav__item:hover { border-color: var(--c-wait); background: var(--we-tint); }
+.we-typenav__en { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#pgContentWrap .we-typenav__en code.we-mono { font-size: 14px !important; font-weight: 600; }
+.we-typenav__count {
+  font-family: var(--pg-font-mono); font-size: 14px; font-weight: 600;
+  font-variant-numeric: tabular-nums; color: var(--we-acc-fg); text-align: right;
+}
+.we-typenav__zh { grid-column: 1 / -1; margin-top: 3px; font-size: 12.5px; color: var(--pg-ink-2); }
+.we-typenav__blurb { grid-column: 1 / -1; margin-top: 2px; font-size: 11.5px; line-height: 1.5; color: var(--pg-muted); }
+
+/* --------------------------------------------------- 版本条与版本药丸 */
+
+.we-verbar { margin: 14px 0 26px; }
+.we-verbar__list { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.we-verbar__item { display: block; }
+.we-verbar__note { margin: 10px 0 0; font-size: 12.5px; color: var(--pg-muted); }
+
+.we-pill {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center; gap: 1px;
+  box-sizing: border-box;
+  min-width: 38px; padding: 5px 7px;
+  border: 1px solid var(--pg-line); border-radius: var(--pg-radius-sm);
+  background: var(--pg-surface);
+  color: var(--pg-ink-2);
+  font-family: var(--pg-font-mono); font-size: 12px; font-weight: 600;
+  line-height: 1.35; white-space: nowrap;
+}
+#pgContentWrap a.we-pill { color: var(--pg-ink-2); }
+#pgContentWrap a.we-pill:hover {
+  border-color: var(--we-fill); background: var(--we-soft);
+  color: var(--we-acc-fg); text-decoration: none;
+}
+.we-pill:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 2px; }
+.we-pill__sign { font-weight: 700; }
+
+.we-pill--absent {
+  background: var(--pg-surface-2); border-color: transparent;
+  color: var(--pg-muted); font-weight: 400;
+}
+.we-pill--present, .we-pill--run { background: var(--pg-surface); }
+.we-pill--added { background: var(--we-soft); border-color: var(--we-soft-line); }
+#pgContentWrap a.we-pill--added { color: var(--we-acc-fg); }
+.we-pill--removed { background: var(--we-del-bg); border-color: var(--we-del-line); color: var(--we-del-fg); }
+/* 有变动在药丸右上角点一个小圆点，与「首次出现」的加号区分开。 */
+.we-pill--changed:after {
+  content: ''; position: absolute; right: 3px; top: 3px;
+  width: 5px; height: 5px; border-radius: 50%; background: var(--c-wait);
+}
+/* 9.0 – 9.5 尚无等待事件机制：点线框、更淡的字，不填色。 */
+.we-pill--na { border-style: dotted; border-color: var(--we-na-line); background: none; color: var(--pg-muted); font-weight: 400; }
+#pgContentWrap a.we-pill--na { color: var(--pg-muted); }
+#pgContentWrap a.we-pill--na:hover { border-style: dotted; border-color: var(--pg-line-strong); background: var(--pg-wash); color: var(--pg-ink-2); }
+.we-pill.is-preview, .we-pill.is-devel { border-style: dashed; border-color: var(--we-soft-line); }
+
+.we-pill.is-default, .we-pill.is-current {
+  background: var(--we-fill); border-color: var(--we-fill); border-style: solid;
+}
+#pgContentWrap a.we-pill.is-default, #pgContentWrap a.we-pill.is-current,
+.we-pill.is-default, .we-pill.is-current { color: var(--we-on-fill); }
+#pgContentWrap a.we-pill.is-default:hover, #pgContentWrap a.we-pill.is-current:hover {
+  background: var(--we-fill); color: var(--we-on-fill); filter: brightness(1.12);
+}
+.we-pill.is-current.we-pill--changed:after { background: var(--we-on-fill); }
+.we-pill.is-current.is-preview, .we-pill.is-current.is-devel { border-style: dashed; border-color: var(--we-on-fill); }
+.we-pill.is-current.we-pill--na { background: none; border-style: dotted; border-color: var(--we-fill); }
+#pgContentWrap a.we-pill.is-current.we-pill--na,
+.we-pill.is-current.we-pill--na { color: var(--we-acc-fg); }
+#pgContentWrap a.we-pill.is-current.we-pill--na:hover { background: var(--we-soft); color: var(--we-acc-fg); }
+
+/* --------------------------------------------------- 索引大表 */
+
+.we-events thead th { padding: 9px 10px 8px; vertical-align: top; }
+.we-events th, .we-events td { padding-left: 10px; padding-right: 10px; }
+/* 事件名列吃掉主要余量（第二行的一句话铺在它下面），引入列固定宽度紧贴轨迹。 */
+.we-th--name { width: 32%; }
+.we-th--first { width: 106px; }
+.we-th--strip { width: 278px; min-width: 278px; }
+.we-th__title { display: block; }
+
+/* 表头的版本刻度：18 个标签竖排，与下面的方格一一对齐。 */
+.we-ruler { display: flex; gap: 2px; align-items: flex-end; height: 30px; margin-top: 6px; }
+.we-ruler__tick {
+  flex: none; width: 12px;
+  writing-mode: vertical-rl;
+  font-family: var(--pg-font-mono); font-size: 10px; font-weight: 500;
+  line-height: 12px; letter-spacing: 0;
+  color: var(--pg-ink-2); text-align: right;
+}
+.we-ruler__tick.is-default { color: var(--we-acc-fg); font-weight: 700; }
+.we-ruler__tick.is-unreleased { color: var(--we-acc-fg); font-weight: 400; }
+.we-ruler__tick.is-na { color: var(--pg-line-strong); font-weight: 400; }
+
+.we-grouprow__eyebrow { font-family: var(--pg-font-mono); font-size: 11px; letter-spacing: .06em; color: var(--we-acc-fg); }
+
+/* 一个事件两行：第一行名称、引入、轨迹与最近变动，第二行一句话与状态。
+   两行同属一条记录：一起高亮，整行可点。名称格是 <th scope="row">，
+   行内其余是 <td>，两者要一样。 */
+.we-row > th, .we-row > td { border-top: 1px solid var(--pg-line); vertical-align: baseline; }
+.we-row > th { padding-top: 8px; text-align: left; font-weight: 400; }
+.we-row:not(.we-row--more) > th, .we-row:not(.we-row--more) > td { padding-bottom: 4px; }
+.we-row--more td { padding-top: 0; padding-bottom: 10px; border-top: 0; }
+.we-row[data-href] { cursor: pointer; }
+.we-row:hover,
+.we-row:hover + .we-row--more,
+.we-row:has(+ .we-row--more:hover) { background: var(--pg-wash); }
+.we-row.is-current, .we-row.is-current + .we-row--more { background: var(--we-tint); }
+
+.we-row__name { white-space: nowrap; }
+.we-row__name a { font-weight: 600; }
+.we-row__name a:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 2px; }
+.we-row__first { white-space: nowrap; font-family: var(--pg-font-mono); font-variant-numeric: tabular-nums; color: var(--pg-ink-2); }
+.we-baseline { display: inline-flex; align-items: baseline; gap: 4px; }
+.we-baseline__mark {
+  padding: 0 4px; border-radius: 3px; background: var(--we-acc-bg);
+  font-family: var(--pg-font); font-size: 10px; color: var(--we-acc-fg);
+}
+.we-row__strip { width: 258px; }
+.we-row__last { white-space: nowrap; font-family: var(--pg-font-mono); font-variant-numeric: tabular-nums; color: var(--pg-ink-2); }
+.we-row__times { margin-left: 6px; font-family: var(--pg-font); font-size: 11px; color: var(--pg-muted); }
+.we-row__none { color: var(--pg-line-strong); }
+.we-row__desc {
+  max-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--pg-ink-2); line-height: 1.6;
+}
+.we-row__aliases { margin-left: 10px; font-size: 11.5px; color: var(--pg-muted); }
+.we-row__status { white-space: nowrap; font-size: 12px; color: var(--pg-muted); }
+.we-row__status--removed { color: var(--we-del-fg); font-weight: 600; }
+
+/* 行内小标签：档案、曾用名、今名。 */
+.we-mark, .we-flag {
+  display: inline-block; margin-left: 6px; padding: 0 6px;
+  border-radius: 999px; font-family: var(--pg-font);
+  font-size: 10.5px; font-weight: 500; line-height: 1.75; white-space: nowrap;
+}
+.we-mark--dossier { color: var(--we-acc-fg); background: var(--we-acc-bg); }
+.we-flag--alias { color: var(--we-ren-fg); background: var(--we-ren-bg); }
+
+#waitevent-search { margin: 18px 0 8px; }
+#waitevent-q { font-size: 14px; }
+.we-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* --------------------------------------------------- 详情页页头 */
+
+.we-head { margin: 0 0 20px; }
+.we-eyebrow { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin: 0 0 4px; font-size: 11px; }
+.we-eyebrow__en { font-family: var(--pg-font-mono); letter-spacing: .08em; color: var(--pg-muted); }
+.we-eyebrow__zh { color: var(--we-acc-fg); }
+
+/* H1 是「类型 / 名称」两段：类型小而灰，名称大而实。 */
+.wiki-entry__head h1.we-title { gap: 0 7px; font-family: var(--pg-font-mono); }
+.we-title__type { font-size: 60%; font-weight: 600; color: var(--pg-muted); }
+.we-title__sep { font-size: 60%; font-weight: 400; color: var(--pg-line-strong); }
+.we-title__name { font-size: clamp(23px, 4.6vw, 33px); letter-spacing: .005em; word-break: break-all; }
+.we-en { margin: 5px 0 0; font-size: 12.5px; line-height: 1.65; color: var(--pg-muted); }
+
+.we-badge { color: var(--pg-ink-2); background: var(--pg-surface-2); border: 1px solid transparent; }
+.we-badge--type { color: var(--we-acc-fg); background: var(--we-acc-bg); }
+.we-badge--dossier { color: var(--we-acc-fg); background: var(--we-acc-bg); }
+.we-badge--path { color: var(--we-ok-fg); background: var(--we-ok-bg); }
+.we-badge--unreleased { color: var(--we-acc-fg); background: var(--we-acc-bg); border: 1px dashed var(--we-soft-line); }
+
+/* 事实卡：四列两行，外框沿用状态码页的 .wiki-facts。 */
+.we-factcard { padding: 16px 18px; }
+.we-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px 24px; margin: 0; }
+.we-facts__item { min-width: 0; }
+.we-facts__item dt { margin: 0; font-size: 12px; font-weight: 400; color: var(--pg-muted); }
+.we-facts__item dd { margin: 3px 0 0; font-size: 14px; color: var(--pg-ink); overflow-wrap: break-word; }
+
+.we-actions {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--pg-line);
+}
+.we-actions--lead { margin: 0 0 18px; padding-top: 0; border-top: 0; }
+.we-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 13px;
+  border: 1px solid var(--pg-line-strong); border-radius: var(--pg-radius-sm);
+  background: var(--pg-surface); font-size: 13px;
+}
+#pgContentWrap a.we-btn { color: var(--pg-ink-2); }
+#pgContentWrap a.we-btn:hover {
+  border-color: var(--we-fill); background: var(--we-soft);
+  color: var(--we-acc-fg); text-decoration: none;
+}
+.we-btn:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 2px; }
+.we-btn--primary { border-color: var(--we-soft-line); background: var(--we-soft); }
+#pgContentWrap a.we-btn--primary { color: var(--we-acc-fg); font-weight: 600; }
+.we-btn__out { font-size: 11px; color: var(--pg-muted); }
+
+/* --------------------------------------------------- 详情页版本轨迹 */
+
+.we-ribbonwrap { margin: 0 0 24px; }
+#pgContentWrap .we-ribbonwrap__title { margin: 0 0 9px; font-size: 12px; font-weight: 400; color: var(--pg-muted); }
+#pgContentWrap .we-ribbonwrap__title:after { content: none; }
+.we-ribbon__track { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 6px; margin: 0; padding: 0; list-style: none; }
+.we-ribbon__item { position: relative; display: block; }
+/* 药丸之间的细连线只在一行放得下 18 个版本时画；换行时关掉，免得留下悬空的线头。 */
+@media (min-width: 1024px) {
+  .we-ribbon__item + .we-ribbon__item:before {
+    content: ''; position: absolute; left: -6px; top: 50%;
+    width: 6px; height: 1px; background: var(--pg-line-strong);
+  }
+}
+.we-changenote { margin: 12px 0 0; font-size: 14px; color: var(--pg-ink); }
+.we-changenote__notice { display: block; margin-top: 4px; font-size: 12.5px; color: var(--pg-muted); }
+.we-sectionlead { margin: 0 0 12px; font-size: 12.5px; line-height: 1.7; color: var(--pg-muted); }
+.we-prose { margin: 0 0 10px; font-size: 14px; line-height: 1.8; color: var(--pg-ink); }
+.we-prose--en { font-size: 12.5px; line-height: 1.7; color: var(--pg-muted); }
+
+/* --------------------------------------------------- 各版本描述 */
+
+/* 左列是这一段覆盖的版本，右列是该段的名称与描述；当前查看的版本整段染色。 */
+.we-runs { margin: 0; padding: 0; list-style: none; }
+.we-run {
+  display: grid; grid-template-columns: 118px minmax(0, 1fr); gap: 0 16px;
+  padding: 13px 0 13px 13px;
+  border-top: 1px solid var(--pg-line); border-left: 3px solid transparent;
+}
+.we-run:first-child { border-top: 0; }
+.we-run.is-current { background: var(--we-tint); border-left-color: var(--c-wait); }
+.we-run__vers { display: flex; flex-wrap: wrap; align-items: baseline; gap: 3px; }
+.we-run__dash { color: var(--pg-muted); font-family: var(--pg-font-mono); font-size: 12px; }
+.we-run__body { min-width: 0; }
+.we-run__ident { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0 4px; margin: 0 0 5px; }
+#pgContentWrap .we-run__ident code.we-run__type { font-size: 12px !important; color: var(--pg-muted) !important; }
+.we-run__slash { color: var(--pg-line-strong); }
+.we-run__zh { margin: 0; font-size: 14px; line-height: 1.75; color: var(--pg-ink); }
+.we-run__en { margin: 4px 0 0; font-size: 12.5px; line-height: 1.65; color: var(--pg-muted); }
+.we-run__none { color: var(--pg-muted); }
+
+.we-nodossier { margin: 18px 0 0; }
+
+/* --------------------------------------------------- 图谱档案 */
+
+/* 「通常正常」与「值得警惕」并排：绿条一块，琥珀条一块。 */
+.we-verdict { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 16px 0 0; }
+.we-verdict__panel {
+  padding: 12px 14px;
+  border: 1px solid var(--pg-line); border-left: 3px solid var(--pg-line-strong);
+  border-radius: 0 var(--pg-radius-sm) var(--pg-radius-sm) 0;
+  background: var(--pg-surface);
+}
+.we-verdict__ok { border-left-color: var(--we-ok-line); }
+.we-verdict__warn { border-left-color: var(--c-wait); }
+#pgContentWrap .we-verdict__title { margin: 0 0 6px; font-size: 12px; font-weight: 600; letter-spacing: .02em; }
+#pgContentWrap .we-verdict__title:after { content: none; }
+.we-verdict__ok .we-verdict__title { color: var(--we-ok-fg); }
+.we-verdict__warn .we-verdict__title { color: var(--we-acc-fg); }
+.we-verdict__zh { margin: 0; font-size: 13.5px; line-height: 1.7; color: var(--pg-ink-2); }
+.we-verdict__en { margin: 5px 0 0; font-size: 12px; line-height: 1.6; color: var(--pg-muted); }
+
+.we-incident, .we-dormant, .we-avail { margin: 14px 0 0; }
+.we-incident { border-left-color: var(--c-wait); }
+.we-dormant { border-left-color: var(--we-del-line); }
+.we-avail { border-left-color: var(--we-ren-line); }
+.we-incident p, .we-dormant p, .we-avail p { margin: 0 0 4px; }
+.we-incident p:last-child, .we-dormant p:last-child, .we-avail p:last-child { margin-bottom: 0; }
+.we-incident__title { font-weight: 600; color: var(--we-acc-fg); }
+.we-incident__zh { color: var(--pg-ink-2); line-height: 1.7; }
+.we-incident__en, .we-dormant__reason { font-size: 12px; line-height: 1.6; color: var(--pg-muted); }
+.we-dormant__note { color: var(--pg-ink-2); }
+.we-dormant__evidence, .we-avail__rel { font-size: 12px; color: var(--pg-muted); }
+
+/* 诊断 SQL */
+.we-sql { margin: 0 0 16px; }
+.we-sql__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 10px; margin: 0 0 6px; }
+#pgContentWrap .we-sql__title { margin: 0; font-size: 13.5px; font-weight: 600; }
+#pgContentWrap .we-sql__title:after { content: none; }
+.we-sql__en { margin-left: 8px; font-size: 11.5px; font-weight: 400; color: var(--pg-muted); }
+.we-sql__min {
+  padding: 1px 7px; border-radius: 999px; background: var(--pg-surface-2);
+  font-family: var(--pg-font-mono); font-size: 11px; color: var(--pg-muted); white-space: nowrap;
+}
+.we-copy {
+  margin-left: auto; padding: 2px 11px;
+  border: 1px solid var(--pg-line-strong); border-radius: var(--pg-radius-sm);
+  background: var(--pg-surface); color: var(--pg-ink-2);
+  font-size: 11.5px; line-height: 1.7; cursor: pointer;
+}
+.we-copy:hover { border-color: var(--we-fill); background: var(--we-soft); color: var(--we-acc-fg); }
+.we-copy:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 2px; }
+.we-copy.is-done { border-color: var(--we-ok-line); background: var(--we-ok-bg); color: var(--we-ok-fg); }
+.we-copy.is-failed { border-color: var(--we-del-line); background: var(--we-del-bg); color: var(--we-del-fg); }
+#pgContentWrap pre.we-sql__code {
+  margin: 0; padding: 12px 14px; overflow-x: auto;
+  background: var(--pg-code-bg); border: 1px solid var(--pg-line); border-radius: var(--pg-radius-sm);
+  font-size: 12.5px !important; line-height: 1.6;
+}
+#pgContentWrap .we-sql__code code {
+  padding: 0; border: 0; background: none;
+  font-family: var(--pg-font-mono); font-size: 12.5px !important; color: var(--pg-ink) !important;
+}
+
+/* 处置步骤与相关参数 */
+.we-steps { margin: 0 0 10px; padding-left: 22px; }
+.we-steps li { margin: 0 0 5px; font-size: 13.5px; line-height: 1.75; color: var(--pg-ink-2); }
+.we-steps--en { margin-top: 10px; }
+.we-steps--en li { font-size: 12.5px; line-height: 1.6; color: var(--pg-muted); }
+#pgContentWrap .we-subhead { margin: 18px 0 8px; font-size: 12px; font-weight: 400; color: var(--pg-muted); }
+#pgContentWrap .we-subhead:after { content: none; }
+.we-chips { display: flex; flex-wrap: wrap; gap: 5px; margin: 0; }
+.we-chip {
+  display: inline-flex; align-items: baseline; gap: 4px;
+  padding: 1px 9px; border-radius: 999px;
+  font-size: 11.5px; line-height: 1.8;
+}
+.we-chip__arrow { margin: 0 3px; }
+.we-chip--add { color: var(--we-acc-fg); background: var(--we-acc-bg); }
+.we-chip--del { color: var(--we-del-fg); background: var(--we-del-bg); }
+.we-chip--ren { color: var(--we-ren-fg); background: var(--we-ren-bg); }
+.we-chip--note { color: var(--pg-muted); background: var(--pg-surface-2); }
+.we-chip--guc { color: var(--we-ren-fg); background: var(--we-ren-bg); }
+#pgContentWrap a.we-chip--guc { color: var(--we-ren-fg); }
+#pgContentWrap a.we-chip--guc:hover { background: var(--we-soft); color: var(--we-acc-fg); text-decoration: none; }
+.we-chip--metric { color: var(--pg-muted); background: var(--pg-surface-2); font-family: var(--pg-font-mono); }
+
+/* 图谱正文里的 `标识符`：waitevent.py 转成行内等宽，底色比正文深一档。 */
+#pgContentWrap .we-prose code.we-mono, #pgContentWrap .we-verdict code.we-mono,
+#pgContentWrap .we-incident code.we-mono, #pgContentWrap .we-steps code.we-mono,
+#pgContentWrap .we-avail code.we-mono, #pgContentWrap .we-dormant code.we-mono {
+  padding: 0 4px; border-radius: 3px; background: var(--pg-surface-2);
+  font-size: 12px !important;
+}
+
+/* 源码证据：一行一个位置，路径与行号、符号、类型与状态。 */
+.we-srcgroup { margin: 0 0 10px; }
+.we-srcgroup__head {
+  display: flex; align-items: baseline; gap: 8px; margin: 0 0 6px;
+  font-family: var(--pg-font-mono); font-size: 12px; color: var(--pg-ink-2);
+}
+.we-src__tag {
+  padding: 1px 7px; border-radius: 999px; background: var(--we-acc-bg);
+  font-family: var(--pg-font-mono); font-size: 11px; color: var(--we-acc-fg); white-space: nowrap;
+}
+.we-srclist { margin: 0; padding: 0; list-style: none; border: 1px solid var(--pg-line); border-radius: var(--pg-radius); overflow: hidden; }
+.we-src { padding: 8px 14px; border-top: 1px solid var(--pg-line); }
+.we-src:first-child { border-top: 0; }
+.we-src:nth-child(even) { background: var(--pg-wash); }
+.we-src__line { display: flex; align-items: baseline; flex-wrap: wrap; gap: 4px 10px; margin: 0; font-size: 12.5px; }
+#pgContentWrap .we-src__path { font-family: var(--pg-font-mono); }
+#pgContentWrap .we-src__symbol { color: var(--pg-ink-2) !important; }
+.we-src__kind { font-size: 11px; color: var(--pg-muted); }
+.we-src__status { padding: 0 7px; border-radius: 999px; font-size: 10.5px; line-height: 1.8; background: var(--pg-surface-2); color: var(--pg-muted); white-space: nowrap; }
+.we-src__status--live_trigger { color: var(--we-ok-fg); background: var(--we-ok-bg); }
+.we-src__status--dynamic_trigger { color: var(--we-acc-fg); background: var(--we-acc-bg); }
+#pgContentWrap code.we-src__excerpt {
+  display: block; margin-top: 4px; padding: 0; border: 0; background: none;
+  font-family: var(--pg-font-mono); font-size: 11.5px !important; line-height: 1.6;
+  color: var(--pg-muted) !important; word-break: break-word;
+}
+.we-srcfold { margin: 0 0 8px; }
+.we-srcfold .we-srclist { margin-top: 8px; }
+
+/* --------------------------------------------------- 演化历史 */
+
+.we-tl { margin: 0; padding: 0; list-style: none; }
+.we-tl__item { position: relative; margin: 0; padding: 0 0 18px 20px; border-left: 1px solid var(--pg-line); }
+.we-tl__item:last-child { padding-bottom: 0; border-left-color: transparent; }
+.we-tl__head { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 9px; margin: 0 0 7px; }
+.we-tl__dot {
+  position: absolute; left: -5px; top: 5px;
+  box-sizing: border-box; width: 9px; height: 9px; border-radius: 50%;
+  background: var(--pg-surface); border: 2px solid var(--pg-line-strong);
+}
+.we-tl__item--added .we-tl__dot { border-color: var(--c-wait); background: var(--c-wait); }
+.we-tl__item--removed .we-tl__dot { border-color: var(--we-del-line); background: var(--we-del-line); }
+.we-tl__item--renamed .we-tl__dot { border-color: var(--we-ren-line); }
+.we-tl__ver { font-family: var(--pg-font-mono); font-size: 14px; font-weight: 600; }
+.we-tl__from { font-family: var(--pg-font-mono); font-size: 12px; color: var(--pg-muted); }
+.we-tl__label { padding: 1px 8px; border-radius: 999px; font-size: 11px; line-height: 1.7; white-space: nowrap; }
+.we-tl__item--added .we-tl__label { color: var(--we-acc-fg); background: var(--we-acc-bg); }
+.we-tl__item--removed .we-tl__label { color: var(--we-del-fg); background: var(--we-del-bg); }
+.we-tl__item--renamed .we-tl__label { color: var(--we-ren-fg); background: var(--we-ren-bg); }
+.we-tl__item--wording .we-tl__label { color: var(--pg-muted); background: var(--pg-surface-2); }
+.we-tl__chips { display: flex; flex-wrap: wrap; gap: 4px 5px; margin: 0; }
+.we-tl__chips:empty { display: none; }
+.we-tl__desc { margin: 7px 0 0; font-size: 12.5px; line-height: 1.7; color: var(--pg-ink-2); }
+.we-tl__empty { margin: 0; color: var(--pg-muted); }
+
+.we-diff { margin: 8px 0 0; }
+.we-diff > summary {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 1px 9px; border: 1px solid var(--pg-line); border-radius: var(--pg-radius-sm);
+  cursor: pointer; font-size: 11.5px; line-height: 1.75; color: var(--pg-ink-2); list-style: none;
+}
+.we-diff > summary::-webkit-details-marker { display: none; }
+/* 自己画三角，不依赖字体里有没有 ▸ / ▾ 这两个字形。 */
+.we-diff > summary:before {
+  content: ''; flex: none; width: 0; height: 0;
+  border-top: 3.5px solid transparent; border-bottom: 3.5px solid transparent;
+  border-left: 5px solid var(--pg-muted);
+}
+.we-diff[open] > summary:before {
+  border-left: 3.5px solid transparent; border-right: 3.5px solid transparent;
+  border-top: 5px solid var(--pg-muted); border-bottom: 0;
+}
+.we-diff > summary:hover { border-color: var(--we-fill); color: var(--we-acc-fg); }
+.we-diff__lines { margin: 9px 0 0; font-size: 12.5px; }
+.we-diff__old, .we-diff__new { position: relative; display: block; padding-left: 16px; line-height: 1.6; }
+.we-diff__old { color: var(--pg-muted); }
+.we-diff__new { color: var(--pg-ink-2); }
+.we-diff__old:before { content: '−'; position: absolute; left: 2px; color: var(--we-del-fg); }
+.we-diff__new:before { content: '+'; position: absolute; left: 2px; color: var(--we-acc-fg); }
+
+/* 页脚的手册版本：一版一个小方块，挨着排也分得清。 */
+.we-docver {
+  display: inline-block; margin: 0 4px 0 0; padding: 0 7px;
+  border: 1px solid var(--pg-line); border-radius: var(--pg-radius-sm);
+  font-family: var(--pg-font-mono); font-size: 11.5px; line-height: 1.8;
+}
+#pgContentWrap a.we-docver:hover { border-color: var(--we-soft-line); background: var(--we-soft); text-decoration: none; }
+
+/* --------------------------------------------------- 变更页 */
+
+.we-notice { margin: 12px 0 0; border-left-color: var(--we-soft-line); }
+.we-basis { margin: 0 0 8px; font-size: 13px; color: var(--pg-ink-2); }
+.we-rebase { margin: 0 0 8px; }
+.we-rebase > summary { cursor: pointer; font-size: 12.5px; color: var(--pg-muted); }
+.we-rebase > summary:hover { color: var(--we-acc-fg); }
+.we-rebase__form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 10px 0 0; }
+.we-rebase__form label { margin: 0; font-size: 13px; font-weight: 500; }
+.we-rebase__form select { width: auto; min-width: 190px; font-size: 13px; }
+/* base.css 给 .btn 定了 14em 宽和 auto 外边距，在 flex 行里会把按钮推到最右。 */
+.we-rebase__form .btn { width: auto; margin: 0; padding: 5px 16px; font-size: 13px; }
+
+.we-h2count {
+  align-self: center; margin-left: 10px; padding: 1px 9px;
+  border-radius: 999px; background: var(--pg-surface-2);
+  font-family: var(--pg-font-mono); font-size: 12px; font-weight: 400;
+  font-variant-numeric: tabular-nums; color: var(--pg-muted);
+}
+
+/* 汇总五格：新增 / 移除 / 更名 / 类型变动 / 描述更新。 */
+.we-tiles {
+  display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px; margin: 16px 0 10px; padding: 0; list-style: none;
+}
+.we-tile {
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 12px 14px;
+  border: 1px solid var(--pg-line); border-radius: var(--pg-radius);
+  background: var(--pg-surface);
+}
+.we-tile__num {
+  font-family: var(--pg-font-mono); font-size: 26px; font-weight: 600;
+  line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--we-acc-fg);
+}
+.we-tile__label { font-size: 12px; color: var(--pg-muted); }
+.we-tile.is-zero { background: none; }
+.we-tile.is-zero .we-tile__num { color: var(--pg-muted); font-weight: 400; }
+
+#pgContentWrap .we-cards__type { margin: 18px 0 0; font-size: 13px; font-weight: 600; color: var(--pg-ink-2); }
+#pgContentWrap .we-cards__type:after { content: none; }
+.we-cards {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 12px; margin: 12px 0 22px; padding: 0; list-style: none;
+}
+.we-cards--tight { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.we-card {
+  display: flex; flex-direction: column; gap: 7px;
+  padding: 12px 14px;
+  border: 1px solid var(--pg-line); border-left: 3px solid var(--pg-line-strong);
+  border-radius: 0 var(--pg-radius-sm) var(--pg-radius-sm) 0;
+  background: var(--pg-surface);
+}
+.we-card--added { border-left-color: var(--c-wait); }
+.we-card--removed { border-left-color: var(--c-err); }
+.we-card--renamed, .we-card--moved { border-left-color: var(--c-guc); }
+.we-card--reworded { border-left-color: var(--pg-line-strong); }
+/* 更名卡片的头行是「旧名 → 新名」两段等宽，最长的比卡片还宽：允许换行、允许在
+   标识符内部断，否则整列网格被撑开，整页出现横向滚动。 */
+.we-card__head { display: flex; align-items: baseline; gap: 10px; margin: 0; min-width: 0; }
+.we-card__name { min-width: 0; font-weight: 600; }
+#pgContentWrap .we-card code.we-mono { overflow-wrap: anywhere; }
+#pgContentWrap .we-card__was { color: var(--pg-muted) !important; }
+.we-card__arrow { margin: 0 4px; color: var(--pg-muted); }
+.we-card__type { flex: none; margin-left: auto; font-size: 11px; color: var(--pg-muted); white-space: nowrap; }
+.we-card__lead {
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  margin: 0; font-size: 12.5px; line-height: 1.6; color: var(--pg-ink-2);
+}
+
+.we-fold { margin: 0 0 22px; }
+.we-fold--tight { margin: 0 0 10px; }
+.we-fold > summary { cursor: pointer; font-size: 13px; color: var(--pg-ink-2); }
+.we-fold > summary:hover { color: var(--we-acc-fg); }
+
+/* --------------------------------------------------- 窄屏 */
+
+@media (max-width: 1000px) {
+  .we-verdict { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .we-facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .we-tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 720px) {
+  .we-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .we-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .we-typenav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .we-cards, .we-cards--tight { grid-template-columns: minmax(0, 1fr); }
+  .we-row__desc { max-width: none; white-space: normal; }
+  .we-run { grid-template-columns: minmax(0, 1fr); gap: 6px 0; }
+}
+
+@media (max-width: 460px) {
+  .we-filters { grid-template-columns: minmax(0, 1fr); }
+  .we-typenav { grid-template-columns: minmax(0, 1fr); }
+  .we-facts { grid-template-columns: minmax(0, 1fr); }
+  .we-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .we-rebase__form select { min-width: 0; width: 100%; }
+}

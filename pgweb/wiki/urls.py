@@ -22,6 +22,14 @@ urlpatterns = [
     path('guc/changes/', views.guc_changes_root, name='guc_changes_root'),
     re_path(r'^guc/changes/(?P<major>\d+(?:\.\d+)?)/$', views.guc_changes, name='guc_changes'),
     re_path(r'^guc/(?P<name>[A-Za-z][A-Za-z0-9_]*)/$', views.guc_detail, name='guc_detail'),
+    path('waitevent/', views.waitevent_index, name='waitevent'),
+    # 同理：changes/ 排在 <type>/<name>/ 之前，否则被类型的通配吃掉。
+    path('waitevent/changes/', views.waitevent_changes_root, name='waitevent_changes_root'),
+    re_path(r'^waitevent/changes/(?P<major>\d+(?:\.\d+)?)/$', views.waitevent_changes,
+            name='waitevent_changes'),
+    # 类型只有九个，大小写都放进来，视图里对不上规范 slug 就 404。
+    re_path(r'^waitevent/(?P<type>[A-Za-z]{2,12})/(?P<name>[A-Za-z0-9_.-]+)/$',
+            views.waitevent_detail, name='waitevent_detail'),
 ] + [
     path('{}/'.format(column['slug']), RedirectView.as_view(url=column['origin'], permanent=False),
          name=column['slug'])

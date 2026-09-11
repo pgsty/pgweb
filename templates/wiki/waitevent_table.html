@@ -1,0 +1,51 @@
+{% comment %}
+可复用的分组表：每个类型一个 tbody，每个等待事件两行。
+参数：groups（必需）、table_id、top_link、current（高亮的事件 key）。
+父模板必须提供 versions（版本轨迹的表头刻度按它渲染）。
+9.6 基线表的行另带 name_at / type_at，是该版当时的原名与原始类型标签。
+{% endcomment %}
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table{% if table_id %} id="{{ table_id }}"{% endif %} class="we-events" data-rowlink>
+  <thead><tr>
+    <th class="we-th we-th--name" scope="col">事件</th>
+    <th class="we-th we-th--first" scope="col">引入</th>
+    <th class="we-th we-th--strip" scope="col">
+      <span class="we-th__title">版本轨迹</span>
+      <span class="we-ruler" aria-hidden="true">{% for v in versions %}<span class="we-ruler__tick{% if v.is_default %} is-default{% endif %}{% if v.preview or v.devel %} is-unreleased{% endif %}{% if not v.has_wait_events %} is-na{% endif %}">{{ v.major }}</span>{% endfor %}</span>
+    </th>
+    <th class="we-th we-th--last" scope="col">最近变动</th>
+  </tr></thead>
+  {% for group in groups %}
+  <tbody class="we-group" data-type="{{ group.type_slug }}">
+    <tr class="wiki-classrow we-grouprow" id="{{ group.anchor }}">
+      <th colspan="4" scope="colgroup">
+        <div class="wiki-classrow__inner">
+          <span class="we-grouprow__eyebrow">{{ group.eyebrow }}</span>
+          <span class="wiki-classrow__label">{{ group.label }}</span>
+          <span class="wiki-classrow__count">{{ group.count }} 个</span>
+          {% if top_link %}<a class="wiki-classrow__top" href="{{ top_link }}" title="回到版本条" aria-label="回到版本条">↑</a>{% else %}<a class="wiki-classrow__top" href="/docs/waitevent/#{{ group.anchor }}" title="在索引中查看本类" aria-label="在索引中查看本类">↗</a>{% endif %}
+        </div>
+      </th>
+    </tr>
+    {% for row in group.rows %}
+    <tr class="we-row{% if row.key == current %} is-current{% endif %}" data-href="{{ row.url }}"
+        data-type="{{ row.type_slug }}" data-present="{{ row.present_tokens }}" data-first="{{ row.first }}"
+        data-text="{{ row.text }}">
+      <th class="we-row__name" scope="row">
+        <a href="{{ row.url }}"><code class="we-mono we-mono--name">{{ row.name_at|default:row.name }}</code></a>{% if row.name_at and row.name_at != row.name %}<span class="we-flag we-flag--alias" title="这个事件如今叫 {{ row.name }}">今名 {{ row.name }}</span>{% endif %}{% if row.type_at and row.type_at != row.type %}<span class="we-flag we-flag--alias" title="当时的类型标签是 {{ row.type_at }}，如今归入 {{ row.type }}">{{ row.type_at }}</span>{% endif %}{% if row.has_dossier %}<span class="we-mark we-mark--dossier" title="图谱收录：有触发机制、诊断 SQL 与源码证据">档案</span>{% endif %}
+      </th>
+      <td class="we-row__first">{% if row.first == '9.6' %}<span class="we-baseline" title="等待事件机制自 9.6 引入，9.6 是本栏目的收录起点">9.6<span class="we-baseline__mark">起点</span></span>{% else %}{{ row.first }}{% endif %}</td>
+      <td class="we-row__strip">
+        <span class="we-track">{% for cell in row.strip %}{% if cell.state == 'na' %}<span class="we-sq we-sq--na" title="PostgreSQL {{ cell.label }} · 尚无等待事件机制" aria-hidden="true"></span>{% elif cell.url %}<a class="we-sq we-sq--{{ cell.state }}" href="{{ cell.url }}" title="{{ cell.label }}{% if cell.state == 'added' %} · 首次出现{% elif cell.state == 'changed' %} · 有变动{% endif %}" aria-label="{{ cell.label }}{% if cell.state == 'added' %} 首次出现{% elif cell.state == 'changed' %} 有变动{% else %} 存在{% endif %}"></a>{% else %}<span class="we-sq we-sq--{{ cell.state }}" title="{{ cell.label }}{% if cell.state == 'removed' %} · 已移除{% else %} · 未收录{% endif %}" aria-hidden="true"></span>{% endif %}{% endfor %}</span>
+      </td>
+      <td class="we-row__last">{% if row.last_change %}{{ row.last_change }}<span class="we-row__times">{{ row.change_count }} 次</span>{% else %}<span class="we-row__none">—</span>{% endif %}</td>
+    </tr>
+    <tr class="we-row we-row--more{% if row.key == current %} is-current{% endif %}" data-href="{{ row.url }}">
+      <td colspan="3" class="we-row__desc">{% if row.summary_zh %}{{ row.summary_zh }}{% elif row.summary %}<span lang="en">{{ row.summary }}</span>{% else %}<span class="we-row__none">暂无官方描述</span>{% endif %}{% if row.aliases %}<span class="we-row__aliases">曾用名{% for alias in row.aliases %} <code class="we-mono">{{ alias }}</code>{% endfor %}</span>{% endif %}</td>
+      <td class="we-row__status{% if row.removed %} we-row__status--removed{% endif %}">{% if row.removed %}于 {{ row.removed_in }} 移除{% else %}现存{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  {% endfor %}
+</table>
+</div></div>

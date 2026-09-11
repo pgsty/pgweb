@@ -21,8 +21,9 @@ class SearchEntry(models.Model):
     sources follow the same shape.
     """
 
+    # `source` 是 varchar(8)：等待事件的来源写作 'wait'，kind 才是完整的 'waitevent'。
     SOURCES = (('pg', 'PostgreSQL 手册'), ('ext', '扩展目录'), ('errcode', 'SQL 状态码'),
-               ('catalog', '系统目录'))
+               ('catalog', '系统目录'), ('wait', '等待事件'))
 
     source = models.CharField(max_length=8, default='pg')
     document = models.ForeignKey(IndexedPage, related_name='entries', null=True, blank=True, on_delete=models.CASCADE)

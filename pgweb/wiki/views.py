@@ -8,9 +8,10 @@ from django.views.decorators.http import require_safe
 from pgweb.util.contexts import get_nav_menu
 from pgweb.util.decorators import queryparams
 
-from . import catalog, errcode, guc
+from . import catalog, errcode, guc, waitevent
 from .columns import BY_SLUG
-from .models import CatalogRelation, CatalogVersion, ErrorCode, GucParameter, GucVersion
+from .models import (CatalogRelation, CatalogVersion, ErrorCode, GucParameter, GucVersion,
+                     WaitEvent, WaitEventVersion)
 
 
 SQLSTATE = re.compile(r'^[0-9A-Za-z]{5}$')
@@ -18,6 +19,7 @@ RELATION = re.compile(r'^pg_[a-z0-9_]+$')
 GUC_NAME = re.compile(r'^[A-Za-z][A-Za-z0-9_]*$')
 CATALOG_ROOT = '/docs/catalog/'
 GUC_ROOT = '/docs/guc/'
+WAITEVENT_ROOT = '/docs/waitevent/'
 
 
 def shell(ctx, title, description, canonical, class_code='', section='/docs/sqlstate/'):
@@ -198,3 +200,76 @@ def guc_changes(request, major):
     return render(request, 'wiki/guc_changes.html', shell(dict(
         payload, column=BY_SLUG['guc'],
     ), title, description, '/docs/guc/changes/{}/'.format(major), section=GUC_ROOT))
+
+
+# ---------------------------------------------------------------- 等待事件
+
+@require_safe
+# 筛选在当前页即时过滤，参数写进 URL；中间件只放行这几个。
+@queryparams('q', 'type', 'present', 'first')
+def waitevent_index(request):
+    column = BY_SLUG['waitevent']
+    payload = waitevent.index()
+    description = ('PostgreSQL 等待事件（wait_event_type / wait_event）的中文百科，共 {} 个事件，'
+                   '按 {} 类分组，覆盖 {} 至 {}，逐个给出触发机制、是否异常与排查手段。'.format(
+                       payload['total'], payload['type_count'],
+                       payload['earliest_major'], payload['latest_major']))
+    return render(request, 'wiki/waitevent_index.html', shell(dict(
+        payload, column=column,
+    ), 'PostgreSQL 等待事件', description, WAITEVENT_ROOT, section=WAITEVENT_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def waitevent_detail(request, type, name):
+    try:
+        payload = waitevent.detail(type, name, request.GET.get('v', ''))
+    except WaitEvent.DoesNotExist:
+        raise Http404()
+    if payload['canonical']:
+        # 大小写、图谱 slug 与曾用名都认，进来之后 301 到规范地址。
+        wanted = request.GET.get('v', '')
+        return HttpResponsePermanentRedirect('{}{}'.format(
+            payload['canonical'], '?v=' + quote(wanted) if wanted else ''))
+
+    event = payload['event']
+    major = payload['version']['major'] if payload['version'] else ''
+    title = '{}/{} · 等待事件'.format(event.type, event.name)
+    description = '{}/{} 是 PostgreSQL {}等待事件。{}'.format(
+        event.type, event.name, payload['type_label'],
+        payload['description_zh'] or event.summary_zh or event.summary or '')
+    return render(request, 'wiki/waitevent_detail.html', shell(dict(
+        payload, column=BY_SLUG['waitevent'], heading=event.name, major=major,
+    ), title, ' '.join(description.split())[:200], event.url, section=WAITEVENT_ROOT))
+
+
+@require_safe
+def waitevent_changes_root(request):
+    # 默认落在当前稳定版，不落在预发行或开发版。
+    return HttpResponseRedirect('/docs/waitevent/changes/{}/'.format(waitevent.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def waitevent_changes(request, major):
+    try:
+        payload = waitevent.changes(major, request.GET.get('from', ''))
+    except WaitEventVersion.DoesNotExist:
+        raise Http404()
+    label = payload['version']['label']
+    summary = payload['summary']
+    title = 'PostgreSQL {} 等待事件变更'.format(label)
+    if payload['na']:
+        description = 'PostgreSQL {} 尚无等待事件机制，wait_event_type 与 wait_event 自 9.6 引入。'.format(label)
+    elif payload['baseline']:
+        description = ('PostgreSQL {} 引入等待事件机制，共 {} 个等待事件，'
+                       '分属 {} 类。'.format(label, summary['added'], summary['types']))
+    else:
+        description = ('PostgreSQL {} 相对 {} 的等待事件变更：新增 {} 个，移除 {} 个，'
+                       '更名 {} 个，类型变动 {} 个。'.format(
+                           label, payload['previous']['label'] if payload['previous'] else '上一版',
+                           summary['added'], summary['removed'],
+                           summary['renamed'], summary['moved']))
+    return render(request, 'wiki/waitevent_changes.html', shell(dict(
+        payload, column=BY_SLUG['waitevent'],
+    ), title, description, '/docs/waitevent/changes/{}/'.format(major), section=WAITEVENT_ROOT))

@@ -76,9 +76,9 @@ def parse_query(raw, scope='pg', kind='', available=(), current=None):
     if scope in EXTENSION_SCOPES:
         scope, sources, version = 'ex', ('ext',), current
     elif scope == 'pg':
-        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc'), current
+        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait'), current
     elif re.fullmatch(r'pg\d+', scope):
-        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc'), int(scope[2:])
+        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait'), int(scope[2:])
     else:
         raise ValueError('未知的文档作用域。请使用 pg:、pg17: 或 ex:。')
     if 'pg' in sources and version not in available:
@@ -158,7 +158,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
         'filtered': bool(kinds), 'kinds': kinds, 'offset': offset, 'limit': limit,
         'popular': [normalize_name(n) for n in POPULAR],
     }
-    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode', 'catalog', 'guc'))"
+    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode', 'catalog', 'guc', 'wait'))"
               if 'pg' in state['sources'] else "e.source = 'ext'")
     if not name:
         where = 'true'
@@ -189,7 +189,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
             FROM search_searchentry e CROSS JOIN q
             WHERE {source} AND {where}
         ), grouped AS (
-            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source NOT IN ('errcode', 'catalog', 'guc')), (source = 'ext'), relevance DESC, id) AS choice,
+            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source NOT IN ('errcode', 'catalog', 'guc', 'wait')), (source = 'ext'), relevance DESC, id) AS choice,
                    count(*) OVER (PARTITION BY entity_key) AS variants FROM matched
         ), chosen AS (SELECT * FROM grouped WHERE choice = 1),
         facet AS (SELECT kind, count(*) AS n FROM chosen GROUP BY kind),

@@ -7,7 +7,7 @@ from django.db.models import Q
 from pgweb.core.models import Version
 from pgweb.docs.versions import manual_major
 from pgweb.search.indexer import (rebuild_catalog, rebuild_errcodes, rebuild_extensions,
-                                  rebuild_guc, rebuild_version)
+                                  rebuild_guc, rebuild_version, rebuild_waitevents)
 
 
 class Command(BaseCommand):
@@ -21,6 +21,7 @@ class Command(BaseCommand):
         parser.add_argument('--errcodes', action='store_true', help='Rebuild the SQL 状态码 entries')
         parser.add_argument('--catalog', action='store_true', help='Rebuild the 系统目录 entries')
         parser.add_argument('--guc', action='store_true', help='Rebuild the 配置参数 entries')
+        parser.add_argument('--waitevents', action='store_true', help='Rebuild the 等待事件 entries')
         parser.add_argument('--force', action='store_true', help='Rebuild unchanged manual pages too')
         parser.add_argument('--dry-run', action='store_true', help='Extract and report without writing')
 
@@ -28,7 +29,7 @@ class Command(BaseCommand):
         available = [manual_major(tree) for tree in Version.objects.filter(
             Q(tree__gte=10) | Q(tree=0), docpage__isnull=False).values_list('tree', flat=True).distinct()]
         everything = not any((options['versions'], options['extensions'], options['errcodes'],
-                              options['catalog'], options['guc']))
+                              options['catalog'], options['guc'], options['waitevents']))
         versions = options['versions'] or (sorted(available, reverse=True) if everything else [])
         if any(v not in available for v in versions):
             raise CommandError('Requested version has no locally loaded PG10+ or development manual')
@@ -45,6 +46,8 @@ class Command(BaseCommand):
             self.stdout.write(json.dumps(rebuild_catalog(dry_run=options['dry_run']), ensure_ascii=False))
         if options['guc'] or everything:
             self.stdout.write(json.dumps(rebuild_guc(dry_run=options['dry_run']), ensure_ascii=False))
+        if options['waitevents'] or everything:
+            self.stdout.write(json.dumps(rebuild_waitevents(dry_run=options['dry_run']), ensure_ascii=False))
         if not options['dry_run']:
             with connection.cursor() as cursor:
                 cursor.execute('ANALYZE search_searchentry')

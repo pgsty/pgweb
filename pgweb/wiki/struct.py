@@ -1,5 +1,6 @@
 from .columns import live_columns
-from .models import CatalogRelation, CatalogVersion, ErrorCode, GucParameter, GucVersion
+from .models import (CatalogRelation, CatalogVersion, ErrorCode, GucParameter, GucVersion,
+                     WaitEvent, WaitEventVersion)
 
 
 def get_struct():
@@ -15,3 +16,7 @@ def get_struct():
         yield ('docs/guc/{}/'.format(name), None)
     for major in GucVersion.objects.values_list('major', flat=True):
         yield ('docs/guc/changes/{}/'.format(major), None)
+    for type_slug, name in WaitEvent.objects.values_list('type_slug', 'name'):
+        yield ('docs/waitevent/{}/{}/'.format(type_slug, name), None)
+    for major in WaitEventVersion.objects.values_list('major', flat=True):
+        yield ('docs/waitevent/changes/{}/'.format(major), None)

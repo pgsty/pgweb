@@ -367,3 +367,85 @@ def rebuild_guc(dry_run=False):
         SearchEntry.objects.bulk_create(objects, batch_size=200)
     service.forget_catalog()
     return {'guc': len(objects)}
+
+
+# ---------------------------------------------------------------- 等待事件
+
+def waitevent_entry(event):
+    """One wait event as a search entry. The manual has no per-event definition
+    row, so the entity is the 百科 entry's own; `Type/Name` and every historical
+    spelling are aliases, because that is how people paste them out of
+    pg_stat_activity."""
+    name = event.name
+    name_key = normalize_name(name)
+    pair = '{}/{}'.format(event.type, name)
+    aliases = {name_key, normalize_name(pair)}
+    for alias in event.aliases or ():
+        aliases.add(normalize_name(alias))
+        aliases.add(normalize_name('{}/{}'.format(event.type, alias)))
+    for variant in event.type_variants or ():
+        aliases.add(normalize_name('{}/{}'.format(variant, name)))
+    aliases.discard('')
+    zh = ' '.join((event.summary_zh or '').split())
+    en = ' '.join((event.summary or '').split())
+    dossier = event.dossier or {}
+    mechanism = ' '.join(((dossier.get('mechanism') or {}).get('zh') or '').split())
+    status = event.source_status_label
+    sql = [item.get('title_zh') or item.get('title') or '' for item in dossier.get('diagnostic_sql') or ()]
+    facts = [('类型', event.type_label), ('等待事件', pair),
+             ('引入版本', event.first_version),
+             ('版本覆盖', '{} – {}'.format(event.first_version, event.last_version)
+              if event.first_version else ''),
+             ('触发路径', status), ('名称变动', '、'.join(event.aliases or ()))]
+    parts = []
+    if zh or en:
+        parts.append('<p class="ds-ext-desc">' + escape(zh or en) + '</p>')
+    if zh and en:
+        parts.append('<p class="ds-ext-desc-en">' + escape(en) + '</p>')
+    parts.append('<dl class="ds-ext-facts">' + ''.join(
+        '<div><dt>{}</dt><dd>{}</dd></div>'.format(escape(label), escape(str(value)))
+        for label, value in facts if value) + '</dl>')
+    if sql and sql[0]:
+        parts.append('<h3>诊断 SQL</h3><p class="ds-ext-desc">' + escape(sql[0]) + '</p>')
+    return {
+        'key': digest('waitevent\0' + event.key), 'entity_key': 'waitevent:' + event.key,
+        'kind': 'waitevent', 'subtype': event.type_slug, 'name': name, 'name_key': name_key,
+        'aliases': sorted(aliases), 'anchor': '',
+        'heading': event.type_label + ' · 等待事件',
+        'signature': ' · '.join(v for v in (
+            pair, event.type_label,
+            '{} – {}'.format(event.first_version, event.last_version)
+            if event.first_version else '') if v),
+        'body': '\n'.join(v for v in (zh, en, mechanism, event.type_label, event.type, pair) if v),
+        'preview': ''.join(parts), 'url': event.url, 'weight': 0.5,
+        '_title': ' '.join([name, *sorted(aliases)]), '_lead': ' '.join(v for v in (zh, en) if v),
+    }
+
+
+def rebuild_waitevents(dry_run=False):
+    """Replace the search entries of the 等待事件 column (source 'wait').
+
+    'waitevent' does not fit SearchEntry.source (varchar(8)); the short source
+    keeps the schema untouched and `kind` carries the full name.
+    """
+    from pgweb.wiki.models import WaitEvent
+    events = list(WaitEvent.objects.defer('versions', 'changes'))
+    entries = [waitevent_entry(event) for event in events]
+    if dry_run:
+        return {'waitevents': len(entries)}
+    objects = []
+    for entry in entries:
+        title = index_text(entry.pop('_title'))
+        lead = index_text(entry.pop('_lead'))
+        vector = (SearchVector(Value(title), config='simple', weight='A') +
+                  SearchVector(Value(lead), config='simple', weight='B') +
+                  SearchVector(Value(index_text(entry['body'])), config='simple', weight='D'))
+        objects.append(SearchEntry(source='wait', document=None, version=None, vector=vector,
+                                   **entry))
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
+        SearchEntry.objects.filter(source='wait').delete()
+        SearchEntry.objects.bulk_create(objects, batch_size=200)
+    service.forget_catalog()
+    return {'waitevents': len(objects)}
