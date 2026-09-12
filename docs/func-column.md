@@ -47,9 +47,9 @@ PG 16 的 `any_value`、PG 17 的 `to_bin`、PG 18 的 `crc32`。译文仓库是
 4. **只在正文里提到的函数**：上游 ≤12 的 `functions-trigger.html` 整页零表格零 synopsis，
    `suppress_redundant_updates_trigger` 只出现在一句正文里；事件触发器与统计信息两页同理。
    这类条目**只收存在性**：快照 `signatures` 为空、`prose_only` 为真，页面上如实说明
-   「上游该版只在正文里提到此函数，未给出签名」。不借邻版签名——借用等于替上游编内容，
+   「PostgreSQL {major} 的手册只在正文里提到此函数，未给出签名。」（同一句用于 `change_note` 与 `signature_note`）。不借邻版签名——借用等于替上游编内容，
    而且那几版的签名未必相同。判据收紧到「段落里带 `code.function` 标记」且该名字在
-   **全部版本的确认集**里：那几页同时有「该函数返回哪些列」的输出表（表头
+   **别的版本有过真正的签名条目**（比按 `code.function` 标记的确认集更严：上游把 `LIKE` / `SIMILAR TO` 也标成了 `code.function`）：那几页同时有「该函数返回哪些列」的输出表（表头
    `Name | Type | Description`），其中一列就叫 `user`，按纯文本比对会凭空造出函数条目，
    而列名不带这个标记，因此收紧后不会误收。
 
