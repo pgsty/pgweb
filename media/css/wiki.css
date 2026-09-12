@@ -60,7 +60,11 @@
   background: linear-gradient(to bottom,
     transparent 0 6px, var(--pg-line-strong) 6px 8px, transparent 8px 14px);
 }
-.wiki-cell--present { background: var(--seg); opacity: .26; }
+/* 尚无该机制的版本：点线空格，与「未收录」区分开。 */
+.wiki-cell--na { border-style: dotted; border-color: var(--pg-line-strong); opacity: .7; }
+/* 「存在」用中性灰：颜色留给真正发生的事（新增 / 变更 / 移除），
+   否则等待事件那一栏的强调色本身就是琥珀，与「变更」撞在一起。 */
+.wiki-cell--present { background: var(--pg-ink-2); opacity: .22; }
 .wiki-cell--added { background: var(--state-add); }
 .wiki-cell--changed { background: var(--state-chg); }
 .wiki-cell--removed { border-color: var(--state-del); }
@@ -69,7 +73,7 @@
   width: 7px; height: 2px; background: var(--state-del);
 }
 a.wiki-cell { opacity: 1; }
-a.wiki-cell.wiki-cell--present { opacity: .26; }
+a.wiki-cell.wiki-cell--present { opacity: .22; }
 a.wiki-cell:hover { opacity: 1; box-shadow: 0 0 0 1px var(--seg); }
 a.wiki-cell:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 1px; }
 
@@ -87,6 +91,8 @@ a.wiki-cell:focus-visible { outline: 2px solid var(--pg-link-hover); outline-off
   content: ''; position: absolute; left: 50%; bottom: 0;
   width: 1px; height: 3px; background: var(--tone, var(--pg-line-strong)); opacity: .5;
 }
+.wiki-ruler__slot.is-na > i { color: var(--pg-muted); opacity: .7; }
+.wiki-ruler__slot.is-na:after { opacity: .25; }
 .wiki-ruler__slot.is-default > i { font-weight: 700; }
 .wiki-ruler__slot.is-default:after { opacity: 1; height: 4px; }
 
@@ -1680,40 +1686,6 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
 /* 一个大版本一个方格，六种状态：不适用、未收录、存在、首次出现、有变动、已移除。
    颜色之外还有形状差别（点线 / 实线空心 / 实心 / 实心带内点 / 空心带减号），
    并写进 title。 */
-.we-sq {
-  position: relative;
-  display: block;
-  box-sizing: border-box;
-  flex: none;
-  width: 12px; height: 12px;
-  border: 1px solid transparent;
-  border-radius: 2px;
-}
-.we-sq--na { border-style: dotted; border-color: var(--we-na-line); background: none; opacity: .75; }
-.we-sq--absent { border-color: var(--pg-line-strong); background: transparent; }
-.we-sq--present { border-color: var(--we-soft-line); background: var(--we-soft); }
-.we-sq--added, .we-sq--changed { border-color: var(--c-wait); background: var(--c-wait); }
-.we-sq--changed:after {
-  content: ''; position: absolute; left: 3px; top: 3px;
-  width: 4px; height: 4px; border-radius: 1px; background: var(--pg-surface);
-}
-.we-sq--removed { border-color: var(--we-del-line); background: transparent; }
-.we-sq--removed:after {
-  content: ''; position: absolute; left: 2px; top: 4px;
-  width: 6px; height: 2px; background: var(--we-del-line);
-}
-a.we-sq:hover { border-color: var(--we-fill); box-shadow: 0 0 0 1px var(--we-fill); }
-a.we-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 1px; }
-
-.we-track { display: flex; gap: 2px; }
-
-.we-legend {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 5px 16px;
-  margin: 14px 0 0; font-size: 12px; color: var(--pg-muted);
-}
-.we-legend__title { color: var(--pg-ink-2); }
-.we-legend__item { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
-
 /* --------------------------------------------------- 九类等待事件 */
 
 /* 英文类型名是主标识（用户手里拿到的是 wait_event_type 的取值），中文标签与
@@ -1796,25 +1768,12 @@ a.we-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset:
 /* --------------------------------------------------- 索引大表 */
 
 .we-events thead th { padding: 9px 10px 8px; vertical-align: top; }
-.we-events th, .we-events td { padding-left: 10px; padding-right: 10px; }
+.we-events th, .we-events td { padding-left: 9px; padding-right: 9px; }
 /* 事件名列吃掉主要余量（第二行的一句话铺在它下面），引入列固定宽度紧贴轨迹。 */
-.we-th--name { width: 32%; }
-.we-th--first { width: 106px; }
-.we-th--strip { width: 278px; min-width: 278px; }
+.we-th--name { width: 28%; }
+.we-th--first { width: 96px; }
+.we-th--strip { width: 330px; min-width: 330px; }
 .we-th__title { display: block; }
-
-/* 表头的版本刻度：18 个标签竖排，与下面的方格一一对齐。 */
-.we-ruler { display: flex; gap: 2px; align-items: flex-end; height: 30px; margin-top: 6px; }
-.we-ruler__tick {
-  flex: none; width: 12px;
-  writing-mode: vertical-rl;
-  font-family: var(--pg-font-mono); font-size: 10px; font-weight: 500;
-  line-height: 12px; letter-spacing: 0;
-  color: var(--pg-ink-2); text-align: right;
-}
-.we-ruler__tick.is-default { color: var(--we-acc-fg); font-weight: 700; }
-.we-ruler__tick.is-unreleased { color: var(--we-acc-fg); font-weight: 400; }
-.we-ruler__tick.is-na { color: var(--pg-line-strong); font-weight: 400; }
 
 .we-grouprow__eyebrow { font-family: var(--pg-font-mono); font-size: 11px; letter-spacing: .06em; color: var(--we-acc-fg); }
 

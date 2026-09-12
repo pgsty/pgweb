@@ -22,10 +22,10 @@
 <nav class="we-verbar" aria-label="按版本查看变更">
   <ol class="we-verbar__list">
     {% for version in versions %}
-    <li class="we-verbar__item"><a class="we-pill we-pill--link{% if not version.has_wait_events %} we-pill--na{% endif %}{% if version.is_default %} is-default{% endif %}{% if version.preview %} is-preview{% elif version.devel %} is-devel{% endif %}" href="{{ version.url }}"{% if version.is_default %} aria-current="true"{% endif %} title="PostgreSQL {{ version.label }} · {% if version.has_wait_events %}{{ version.status_label }} · {{ version.event_count }} 个等待事件 · 查看该版变动{% else %}尚无等待事件机制{% endif %}">{{ version.major }}</a></li>
+    <li class="we-verbar__item"><a class="we-pill we-pill--link{% if version.has_wait_events %} wiki-vpill is-{{ version.tone }}{% else %} we-pill--na{% endif %}{% if version.is_default %} is-default{% endif %}" href="{{ version.url }}"{% if version.is_default %} aria-current="true"{% endif %} title="PostgreSQL {{ version.label }} · {% if version.has_wait_events %}{{ version.status_label }} · {{ version.event_count }} 个等待事件 · 查看该版变动{% else %}尚无等待事件机制{% endif %}">{{ version.major }}</a></li>
     {% endfor %}
   </ol>
-  <p class="we-verbar__note">收录了 {{ versions|length }} 个大版本。点线框的 9.0 – 9.5 尚无等待事件机制，{{ earliest_major }} 起引入；实心的是当前稳定版 {{ default_major }}，虚线框的尚未正式发布。</p>
+  <p class="we-verbar__note">收录了 {{ versions|length }} 个大版本。点线框的 9.0 – 9.5 尚无等待事件机制，{{ earliest_major }} 起引入。其余颜色是版本的支持状态：<span class="wiki-tonekey is-eol">已停止维护</span><span class="wiki-tonekey is-live">仍在支持</span><span class="wiki-tonekey is-beta">测试版</span><span class="wiki-tonekey is-dev">开发版</span>；填实的是当前稳定版 {{ default_major }}。</p>
 </nav>
 
 <form id="waitevent-search" class="we-search" action="/docs/waitevent/" method="get" role="search">
@@ -45,14 +45,14 @@
   <noscript><button class="btn btn-primary" type="submit">筛选</button></noscript>
 </form>
 
-<p class="we-legend">
-  <span class="we-legend__title">版本轨迹</span>
-  <span class="we-legend__item"><span class="we-sq we-sq--na" aria-hidden="true"></span>不适用</span>
-  <span class="we-legend__item"><span class="we-sq we-sq--present" aria-hidden="true"></span>存在</span>
-  <span class="we-legend__item"><span class="we-sq we-sq--added" aria-hidden="true"></span>首次出现</span>
-  <span class="we-legend__item"><span class="we-sq we-sq--changed" aria-hidden="true"></span>有变动</span>
-  <span class="we-legend__item"><span class="we-sq we-sq--removed" aria-hidden="true"></span>已移除</span>
-  <span class="we-legend__item"><span class="we-sq we-sq--absent" aria-hidden="true"></span>未收录</span>
+<p class="wiki-striplegend">
+  <span class="wiki-striplegend__title">版本变动</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--na" aria-hidden="true"></span>不适用</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--present" aria-hidden="true"></span>存在</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--added" aria-hidden="true"></span>首次出现</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--changed" aria-hidden="true"></span>有变动</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--removed" aria-hidden="true"></span>已移除</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--absent" aria-hidden="true"></span>未收录</span>
 </p>
 <p class="wiki-count" id="waitevent-count" aria-live="polite" hidden></p>
 

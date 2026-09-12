@@ -18,7 +18,7 @@
 <nav class="we-verbar we-verbar--releases" aria-label="按版本查看变动">
   <ol class="we-verbar__list">
     {% for item in versions %}
-    <li class="we-verbar__item"><a class="we-pill we-pill--link{% if not item.has_wait_events %} we-pill--na{% endif %}{% if item.is_current %} is-current{% endif %}{% if item.preview %} is-preview{% elif item.devel %} is-devel{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {% if item.has_wait_events %}{{ item.status_label }} · {{ item.event_count }} 个等待事件{% else %}尚无等待事件机制{% endif %}">{{ item.major }}</a></li>
+    <li class="we-verbar__item"><a class="we-pill we-pill--link{% if item.has_wait_events %} wiki-vpill is-{{ item.tone }}{% else %} we-pill--na{% endif %}{% if item.is_current %} is-current{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {% if item.has_wait_events %}{{ item.status_label }} · {{ item.event_count }} 个等待事件{% else %}尚无等待事件机制{% endif %}">{{ item.major }}</a></li>
     {% endfor %}
   </ol>
 </nav>

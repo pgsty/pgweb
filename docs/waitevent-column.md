@@ -129,6 +129,8 @@ filters: [{param:'type', …}, {param:'present', …}, {param:'first', …}]
 stats: {events, types, snapshots, changes, dossiers}
 ```
 
+索引表的方格条与表头刻度用共用的 `.wiki-strip` / `.wiki-cell` / `.wiki-ruler`：一版一格，刻度逐格写出版本号，版本号与版本导航条的药丸按支持状态着色（橙 = 已停止维护、绿 = 仍在支持、蓝 = 测试版、紫 = 开发版，判定在 `pgweb/wiki/ruler.py` 的 `tone_of()`）；9.0 – 9.5 没有这套机制，刻度与药丸都走「不适用」的点线灰。
+
 `strip` 状态：`na` 9.0 – 9.5；`added` 首次出现（9.6 起点也算 added，因为机制在 9.6 引入）；`changed` 该版发生更名 / 类型变动 / 描述更新；`removed` 只标在 `last_version` 的下一版；其余 `present` / `absent`。
 
 ### 5.2 详情页上下文（`waitevent.detail(type_slug, name, wanted)`）

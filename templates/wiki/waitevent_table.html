@@ -1,7 +1,7 @@
 {% comment %}
 可复用的分组表：每个类型一个 tbody，每个等待事件两行。
 参数：groups（必需）、table_id、top_link、current（高亮的事件 key）。
-父模板必须提供 versions（版本轨迹的表头刻度按它渲染）。
+父模板必须提供 versions（版本变动的表头刻度按它渲染）。
 9.6 基线表的行另带 name_at / type_at，是该版当时的原名与原始类型标签。
 {% endcomment %}
 <div class="wiki-table"><div class="wiki-table__scroll">
@@ -10,8 +10,8 @@
     <th class="we-th we-th--name" scope="col">事件</th>
     <th class="we-th we-th--first" scope="col">引入</th>
     <th class="we-th we-th--strip" scope="col">
-      <span class="we-th__title">版本轨迹</span>
-      <span class="we-ruler" aria-hidden="true">{% for v in versions %}<span class="we-ruler__tick{% if v.is_default %} is-default{% endif %}{% if v.preview or v.devel %} is-unreleased{% endif %}{% if not v.has_wait_events %} is-na{% endif %}">{{ v.major }}</span>{% endfor %}</span>
+      <span class="we-th__title">版本变动</span>
+      <span class="wiki-ruler" aria-hidden="true">{% for v in versions %}<span class="wiki-ruler__slot is-{{ v.tone }}{% if v.is_default %} is-default{% endif %}{% if not v.has_wait_events %} is-na{% endif %}"><i>{{ v.tick_head }}{% if v.tick_tail %}<span class="wiki-ruler__dot">.</span>{{ v.tick_tail }}{% endif %}</i></span>{% endfor %}</span>
     </th>
     <th class="we-th we-th--last" scope="col">最近变动</th>
   </tr></thead>
@@ -36,7 +36,7 @@
       </th>
       <td class="we-row__first">{% if row.first == '9.6' %}<span class="we-baseline" title="等待事件机制自 9.6 引入，9.6 是本栏目的收录起点">9.6<span class="we-baseline__mark">起点</span></span>{% else %}{{ row.first }}{% endif %}</td>
       <td class="we-row__strip">
-        <span class="we-track">{% for cell in row.strip %}{% if cell.state == 'na' %}<span class="we-sq we-sq--na" title="PostgreSQL {{ cell.label }} · 尚无等待事件机制" aria-hidden="true"></span>{% elif cell.url %}<a class="we-sq we-sq--{{ cell.state }}" href="{{ cell.url }}" title="{{ cell.label }}{% if cell.state == 'added' %} · 首次出现{% elif cell.state == 'changed' %} · 有变动{% endif %}" aria-label="{{ cell.label }}{% if cell.state == 'added' %} 首次出现{% elif cell.state == 'changed' %} 有变动{% else %} 存在{% endif %}"></a>{% else %}<span class="we-sq we-sq--{{ cell.state }}" title="{{ cell.label }}{% if cell.state == 'removed' %} · 已移除{% else %} · 未收录{% endif %}" aria-hidden="true"></span>{% endif %}{% endfor %}</span>
+        <span class="wiki-strip">{% for cell in row.strip %}{% if cell.state == 'na' %}<span class="wiki-cell wiki-cell--na" title="PostgreSQL {{ cell.label }} · 尚无等待事件机制" aria-hidden="true"></span>{% elif cell.url %}<a class="wiki-cell wiki-cell--{{ cell.state }}" href="{{ cell.url }}" title="{{ cell.label }}{% if cell.state == 'added' %} · 首次出现{% elif cell.state == 'changed' %} · 有变动{% endif %}" aria-label="{{ cell.label }}{% if cell.state == 'added' %} 首次出现{% elif cell.state == 'changed' %} 有变动{% else %} 存在{% endif %}"></a>{% else %}<span class="wiki-cell wiki-cell--{{ cell.state }}" title="{{ cell.label }}{% if cell.state == 'removed' %} · 已移除{% else %} · 未收录{% endif %}" aria-hidden="true"></span>{% endif %}{% endfor %}</span>
       </td>
       <td class="we-row__last">{% if row.last_change %}{{ row.last_change }}<span class="we-row__times">{{ row.change_count }} 次</span>{% else %}<span class="we-row__none">—</span>{% endif %}</td>
     </tr>

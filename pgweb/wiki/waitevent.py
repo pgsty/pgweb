@@ -21,11 +21,12 @@ from django.utils.safestring import mark_safe
 
 from .models import (WAITEVENT_SOURCE_STATUS_LABEL, WAITEVENT_TYPES, GucParameter, WaitEvent,
                      WaitEventVersion)
+from .ruler import mark_ticks
 from .waitevent_common import compare_snapshots, normal_text
 
 
 CACHE_KEY = 'pgweb:wiki:waitevent-index'
-VERSION_CACHE_KEY = 'pgweb:wiki:waitevent-versions'
+VERSION_CACHE_KEY = 'pgweb:wiki:waitevent-versions2'
 DOC_CACHE_KEY = 'pgweb:wiki:waitevent-docpages'
 CHANGES_CACHE_KEY = 'pgweb:wiki:waitevent-changes:{}'
 GUC_CACHE_KEY = 'pgweb:wiki:waitevent-guc:{}'
@@ -80,7 +81,7 @@ def versions():
     if rows is None:
         stored = list(WaitEventVersion.objects.all())
         default = stable_major(stored)
-        rows = [version_data(version, version.major == default) for version in stored]
+        rows = mark_ticks([version_data(version, version.major == default) for version in stored])
         cache.set(VERSION_CACHE_KEY, rows, CACHE_SECONDS)
     return rows
 
