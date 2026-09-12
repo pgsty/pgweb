@@ -152,6 +152,11 @@
     more: 'cmd-row--more', noun: '条命令', tokens: ['present'],
   });
 
+  wireFilter({
+    prefix: 'func', group: '.fn-group', row: '.fn-row',
+    more: 'fn-row--more', noun: '个函数', tokens: ['present'],
+  });
+
   /* 代码块的复制按钮：data-copy-target 指向 <pre> 的 id。
      clipboard 只在安全上下文里有，不可用或被拒时只改按钮文案，不弹窗。 */
   document.querySelectorAll('[data-copy-target]').forEach(function (button) {

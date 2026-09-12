@@ -1,6 +1,6 @@
 from .columns import live_columns
-from .models import (CatalogRelation, CatalogVersion, ErrorCode, GucParameter, GucVersion,
-                     WaitEvent, WaitEventVersion)
+from .models import (CatalogRelation, CatalogVersion, ErrorCode, FuncVersion, GucParameter,
+                     GucVersion, PgFunction, WaitEvent, WaitEventVersion)
 
 
 def get_struct():
@@ -25,3 +25,7 @@ def get_struct():
         yield ('docs/sql/{}/'.format(slug), None)
     for version in sqlcmd.versions():
         yield ('docs/sql/changes/{}/'.format(version['major']), None)
+    for slug in PgFunction.objects.values_list('slug', flat=True):
+        yield ('docs/func/{}/'.format(slug), None)
+    for major in FuncVersion.objects.values_list('major', flat=True):
+        yield ('docs/func/changes/{}/'.format(major), None)

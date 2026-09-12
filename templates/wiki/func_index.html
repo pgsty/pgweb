@@ -1,0 +1,66 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<div class="wiki-tone-func fn">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / 函数百科</p>
+<h1>PostgreSQL 函数百科</h1>
+<p class="wiki-lead">内置函数是 PostgreSQL 手册第 9 章「函数和操作符」的全部内容：数学、字符串、日期时间、JSON、聚合、窗口、系统信息与管理函数都在其中，每一个都由一条或多条签名描述，写明参数、类型与返回值。本栏目收录 {{ total }} 个函数，分属 {{ group_count }} 个分组，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}，逐版本记下每条签名、说明与示例的变化。{{ earliest_major }} 是本数据集的收录基线，不代表这些函数首次于 {{ earliest_major }} 引入。</p>
+
+<h2 id="index">按分组浏览</h2>
+<nav class="wiki-classnav fn-groupnav" aria-label="函数分组索引">
+  {% for group in groups %}
+  <a class="wiki-classnav__item fn-groupnav__item" href="#{{ group.anchor }}">
+    <span class="fn-groupnav__label">{{ group.label }}</span>
+    <span class="fn-groupnav__count">{{ group.count }}</span>
+    <span class="fn-groupnav__eyebrow" lang="en">{{ group.eyebrow }}</span>
+  </a>
+  {% endfor %}
+</nav>
+
+<h2 id="versions">按版本看变更</h2>
+<nav class="fn-verbar" aria-label="按版本查看变更">
+  <ol class="fn-verbar__list">
+    {% for version in versions %}
+    <li class="fn-verbar__item"><a class="fn-pill fn-pill--link wiki-vpill is-{{ version.tone }}{% if version.is_default %} is-default{% endif %}" href="{{ version.url }}"{% if version.is_default %} aria-current="true"{% endif %} title="PostgreSQL {{ version.label }} · {{ version.status_label }} · {{ version.function_count }} 个函数 · {{ version.signature_count }} 条签名{% if version.added_count or version.removed_count or version.changed_count %} · 新增 {{ version.added_count }} / 移除 {{ version.removed_count }} / 签名有变 {{ version.changed_count }}{% endif %}{% if version.zh_coverage %} · {{ version.zh_coverage }} 个有中文说明{% endif %} · 查看该版变更">{{ version.major }}</a></li>
+    {% endfor %}
+  </ol>
+  <p class="fn-verbar__note">收录了 {{ versions|length }} 个大版本，每个链到它相对上一版的变更清单。颜色是版本的支持状态：<span class="wiki-tonekey is-eol">已停止维护</span><span class="wiki-tonekey is-live">仍在支持</span><span class="wiki-tonekey is-beta">测试版</span><span class="wiki-tonekey is-dev">开发版</span>；填实的是当前稳定版 {{ default_major }}。</p>
+</nav>
+
+<form id="func-search" class="fn-search" action="/docs/func/" method="get" role="search">
+  <label class="sr-only" for="func-q">搜索函数</label>
+  <input class="form-control" id="func-q" type="search" name="q" maxlength="120"
+         placeholder="输入函数名、签名片段或关键词，如 to_char、substring、正则" autocomplete="off">
+  <div class="wiki-filters fn-filters">
+    {% for dd in filters %}
+    <label for="func-{{ dd.param }}">{{ dd.label }}
+      <select class="form-control" id="func-{{ dd.param }}" name="{{ dd.param }}" data-func-filter="{{ dd.param }}">
+        <option value="">不限</option>
+        {% for option in dd.options %}<option value="{{ option.value }}">{{ option.label }}（{{ option.count }}）</option>{% endfor %}
+      </select>
+    </label>
+    {% endfor %}
+  </div>
+  <noscript><button class="btn btn-primary" type="submit">筛选</button></noscript>
+</form>
+
+<p class="wiki-striplegend">
+  <span class="wiki-striplegend__title">版本变动</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--absent" aria-hidden="true"></span>未收录</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--present" aria-hidden="true"></span>存在</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--added" aria-hidden="true"></span>新增</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--changed" aria-hidden="true"></span>签名变化</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--removed" aria-hidden="true"></span>已移除</span>
+</p>
+<p class="wiki-count" id="func-count" aria-live="polite" hidden></p>
+
+{% include "wiki/func_table.html" with groups=groups table_id="func-table" top_link="#versions" %}
+
+<p class="wiki-empty" id="func-empty" hidden>没有匹配的函数。<a href="/docs/func/">清除筛选</a></p>
+
+<h2>说明</h2>
+<p>库里共 {{ stats.functions }} 个函数、{{ stats.versions }} 个大版本、{{ stats.snapshots }} 份逐版本快照，最新一版合计 {{ stats.signatures }} 条签名；相邻大版本之间记录到 {{ stats.changes }} 处签名变化，{{ stats.removed }} 个函数已经不在最新版本里。「主签名」是该函数在最新收录版本里的第一条签名，完整签名与全部重载写在详情页；一个函数出现在多页时，这里归到它最新一版里页面序最靠前的那一组。每行的「版本变动」是一排方格，一格一个大版本，与表头刻度逐格对齐；鼠标停在某一格上会写出它是哪一版、发生了什么。PostgreSQL 13 重排了手册里函数表的写法，签名文本整体改变，那一跳只记函数的增删，不逐条比较签名。数据取自本站手册译文；本站未收录译文的版本按 <a href="https://www.postgresql.org/docs/" target="_blank" rel="noopener">postgresql.org</a> 的英文原页显示。</p>
+
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

@@ -1015,3 +1015,194 @@ class SqlCommand(models.Model):
     @property
     def eyebrow(self):
         return 'SQL COMMAND'
+
+
+# ================================================================ 函数百科
+
+# 手册第 9 章「函数和操作符」的全部页面，顺序就是手册目录的顺序（取自 19 的 functions.html）。
+# 一页即一个分组：(手册页, 分组 slug, 中文名, 英文眉题)。中文名是本站译文里的小节标题。
+FUNC_GROUPS = (
+    ('functions-logical.html', 'logical', '逻辑操作符', 'LOGICAL OPERATORS'),
+    ('functions-comparison.html', 'comparison', '比较函数和操作符', 'COMPARISON FUNCTIONS AND OPERATORS'),
+    ('functions-math.html', 'math', '数学函数和操作符', 'MATHEMATICAL FUNCTIONS AND OPERATORS'),
+    ('functions-string.html', 'string', '字符串函数和操作符', 'STRING FUNCTIONS AND OPERATORS'),
+    ('functions-binarystring.html', 'binarystring', '二进制串函数和操作符',
+     'BINARY STRING FUNCTIONS AND OPERATORS'),
+    ('functions-bitstring.html', 'bitstring', '位串函数和操作符', 'BIT STRING FUNCTIONS AND OPERATORS'),
+    ('functions-matching.html', 'matching', '模式匹配', 'PATTERN MATCHING'),
+    ('functions-formatting.html', 'formatting', '数据类型格式化函数', 'DATA TYPE FORMATTING FUNCTIONS'),
+    ('functions-datetime.html', 'datetime', '时间/日期函数和操作符', 'DATE/TIME FUNCTIONS AND OPERATORS'),
+    ('functions-enum.html', 'enum', '枚举支持函数', 'ENUM SUPPORT FUNCTIONS'),
+    ('functions-geometry.html', 'geometry', '几何函数和操作符', 'GEOMETRIC FUNCTIONS AND OPERATORS'),
+    ('functions-net.html', 'net', '网络地址函数和操作符', 'NETWORK ADDRESS FUNCTIONS AND OPERATORS'),
+    ('functions-textsearch.html', 'textsearch', '文本搜索函数和操作符',
+     'TEXT SEARCH FUNCTIONS AND OPERATORS'),
+    ('functions-tid.html', 'tid', 'TID 函数', 'TID FUNCTIONS'),
+    ('functions-uuid.html', 'uuid', 'UUID 函数', 'UUID FUNCTIONS'),
+    ('functions-xml.html', 'xml', 'XML 函数', 'XML FUNCTIONS'),
+    ('functions-json.html', 'json', 'JSON 函数和操作符', 'JSON FUNCTIONS AND OPERATORS'),
+    ('functions-sequence.html', 'sequence', '序列操作函数', 'SEQUENCE MANIPULATION FUNCTIONS'),
+    ('functions-conditional.html', 'conditional', '条件表达式', 'CONDITIONAL EXPRESSIONS'),
+    ('functions-array.html', 'array', '数组函数和操作符', 'ARRAY FUNCTIONS AND OPERATORS'),
+    ('functions-range.html', 'range', '范围/多范围函数和操作符',
+     'RANGE/MULTIRANGE FUNCTIONS AND OPERATORS'),
+    ('functions-aggregate.html', 'aggregate', '聚合函数', 'AGGREGATE FUNCTIONS'),
+    ('functions-window.html', 'window', '窗口函数', 'WINDOW FUNCTIONS'),
+    ('functions-merge-support.html', 'merge-support', '合并支持函数', 'MERGE SUPPORT FUNCTIONS'),
+    ('functions-subquery.html', 'subquery', '子查询表达式', 'SUBQUERY EXPRESSIONS'),
+    ('functions-comparisons.html', 'comparisons', '行和数组比较', 'ROW AND ARRAY COMPARISONS'),
+    ('functions-srf.html', 'srf', '集合返回函数', 'SET RETURNING FUNCTIONS'),
+    ('functions-info.html', 'info', '系统信息函数和操作符',
+     'SYSTEM INFORMATION FUNCTIONS AND OPERATORS'),
+    ('functions-admin.html', 'admin', '系统管理函数', 'SYSTEM ADMINISTRATION FUNCTIONS'),
+    ('functions-trigger.html', 'trigger', '触发器函数', 'TRIGGER FUNCTIONS'),
+    ('functions-event-triggers.html', 'event-triggers', '事件触发器函数', 'EVENT TRIGGER FUNCTIONS'),
+    ('functions-statistics.html', 'statistics', '统计信息函数', 'STATISTICS INFORMATION FUNCTIONS'),
+)
+FUNC_GROUP_PAGE = {slug: page for page, slug, _, _ in FUNC_GROUPS}
+FUNC_GROUP_OF_PAGE = {page: slug for page, slug, _, _ in FUNC_GROUPS}
+FUNC_GROUP_LABEL = {slug: label for _, slug, label, _ in FUNC_GROUPS}
+FUNC_GROUP_EYEBROW = {slug: eyebrow for _, slug, _, eyebrow in FUNC_GROUPS}
+FUNC_GROUP_ORDER = {slug: index for index, (_, slug, _, _) in enumerate(FUNC_GROUPS)}
+FUNC_GROUP_BY_SLUG = {slug: (label, eyebrow) for _, slug, label, eyebrow in FUNC_GROUPS}
+FUNC_PAGE_ORDER = {page: index for index, (page, _, _, _) in enumerate(FUNC_GROUPS)}
+
+FUNC_STATUS_LABEL = {'historical': '历史版本', 'stable': '当前稳定版',
+                     'preview': '预发行', 'devel': '开发版'}
+# 版本快照的来源与版面：事实恒取上游英文原页，版面是签名段还是五列表。
+FUNC_SOURCE_LABEL = {'manual': '本站手册译文', 'upstream': '上游英文原页'}
+# 中文描述的来路：本版译文 / 借用另一版 / 没有。
+FUNC_ZH_LABEL = {'doc': '本版译文', 'inherited': '借用译文', '': '暂无译文'}
+FUNC_LAYOUT_LABEL = {'table-new': '签名段（13 起）', 'table-old': '五列表（12 及以前）'}
+
+_FUNC_SLUG_JUNK = re.compile(r'[^a-z0-9]+')
+
+
+def func_slug(name):
+    """函数名 → 地址段：小写，下划线换连字符。名字开头不是字母时补 `fn-`。
+
+    `_pg_expandarray` 与 `pg_expandarray` 是两个函数，前缀不能就这么丢掉。
+    """
+    name = name or ''
+    slug = _FUNC_SLUG_JUNK.sub('-', name.lower()).strip('-')
+    if not slug:
+        return ''
+    head = name[0]
+    return slug if head.isascii() and head.isalpha() else 'fn-' + slug
+
+
+def func_group_of(page):
+    """手册页名 → 分组 slug；不认识的页归到页名本身推出来的 slug。"""
+    if page in FUNC_GROUP_OF_PAGE:
+        return FUNC_GROUP_OF_PAGE[page]
+    stem = (page or '').removeprefix('functions-').removesuffix('.html')
+    return _FUNC_SLUG_JUNK.sub('-', stem.lower()).strip('-')
+
+
+def func_page_order(page):
+    """页面序：手册目录里的次序，不认识的页排到最后。"""
+    return FUNC_PAGE_ORDER.get(page, len(FUNC_GROUPS))
+
+
+class FuncVersion(models.Model):
+    """一个大版本的函数清单概况，最多 18 行。
+
+    事实（哪些函数、什么签名）逐版本取自 postgresql.org 的英文原页；本站中文手册只叠
+    中文描述，不参与版本存在性判断——译文仓库是按新版为基底回填的，用它判断「哪一版引入」
+    会得出错误结论（契约 docs/func-column.md §1）。
+    """
+
+    major = models.CharField(max_length=8, primary_key=True)
+    label = models.TextField(blank=True, default='')
+    status = models.TextField(blank=True, default='')
+    support_status = models.TextField(blank=True, default='')
+    # 本站手册地址段：'10' … '19'，20 为 'devel'；9.x 本站没有手册，留空。
+    doc_slug = models.TextField(blank=True, default='')
+    # 事实一律来自上游英文原页，所以恒为 'upstream'；中文是叠加层，见 zh_coverage。
+    source = models.TextField(blank=True, default='')
+    layout = models.TextField(blank=True, default='')
+    function_count = models.IntegerField(default=0)
+    signature_count = models.IntegerField(default=0)
+    # 本版有中文描述的函数数（本版译文 + 借用）。
+    zh_coverage = models.IntegerField(default=0)
+    added_count = models.IntegerField(default=0)
+    removed_count = models.IntegerField(default=0)
+    changed_count = models.IntegerField(default=0)
+    # 与上一版的汇总，首个收录版本为 {}。
+    transition = models.JSONField(default=dict, blank=True)
+    # 版本次序只认这一列：'9.6' 与 '10' 字符串比不出先后。
+    position = models.IntegerField(default=0)
+
+    class Meta:
+        db_table = 'wiki_func_version'
+        ordering = ('position',)
+
+    def __str__(self):
+        return self.label or self.major
+
+    @property
+    def is_preview(self):
+        return self.status == 'preview'
+
+    @property
+    def is_devel(self):
+        return self.status == 'devel'
+
+    @property
+    def status_label(self):
+        return FUNC_STATUS_LABEL.get(self.status, self.status)
+
+    @property
+    def source_label(self):
+        return FUNC_SOURCE_LABEL.get(self.source, self.source)
+
+    @property
+    def changes_url(self):
+        return '/docs/func/changes/{}/'.format(self.major)
+
+
+class PgFunction(models.Model):
+    """一个内置函数；身份按小写函数名归一，逐版本签名与变化记录整份放 JSON。"""
+
+    slug = models.CharField(max_length=80, primary_key=True)
+    name = models.TextField()
+    # 跨版本对齐用的小写名；手册里 COALESCE 与 coalesce 是同一个函数。
+    name_key = models.CharField(max_length=80, db_index=True)
+    group = models.CharField(max_length=32)
+    group_label = models.TextField(blank=True, default='')
+    groups = ArrayField(models.TextField(), default=list, blank=True)
+    # 英文一句话，只有 9.x 上游层才有；本站译文层留空。
+    summary = models.TextField(blank=True, default='')
+    summary_zh = models.TextField(blank=True, default='')
+    signature = models.TextField(blank=True, default='')
+    first_version = models.CharField(max_length=8, blank=True, default='')
+    last_version = models.CharField(max_length=8, blank=True, default='')
+    present_in = ArrayField(models.TextField(), default=list, blank=True)
+    changed_in = ArrayField(models.TextField(), default=list, blank=True)
+    signature_count = models.IntegerField(default=0)
+    versions = models.JSONField(default=dict, blank=True)
+    changes = models.JSONField(default=list, blank=True)
+    # 分组序 × 1000 + 组内按 name_key 排序。
+    position = models.IntegerField(default=0)
+    source_rev = models.TextField(blank=True, default='')
+    imported_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'wiki_func'
+        ordering = ('position',)
+        indexes = [models.Index(fields=('group', 'name_key'), name='wiki_func_group')]
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def url(self):
+        return '/docs/func/{}/'.format(self.slug)
+
+    @property
+    def eyebrow(self):
+        return 'FUNCTION'
+
+    @property
+    def group_eyebrow(self):
+        return FUNC_GROUP_EYEBROW.get(self.group, '')

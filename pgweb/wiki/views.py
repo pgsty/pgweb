@@ -8,10 +8,10 @@ from django.views.decorators.http import require_safe
 from pgweb.util.contexts import get_nav_menu
 from pgweb.util.decorators import queryparams
 
-from . import catalog, errcode, guc, waitevent, sqlcmd
+from . import catalog, errcode, func, guc, waitevent, sqlcmd
 from .columns import BY_SLUG
-from .models import (CatalogRelation, CatalogVersion, ErrorCode, GucParameter,
-                     GucVersion, WaitEvent, WaitEventVersion)
+from .models import (CatalogRelation, CatalogVersion, ErrorCode, FuncVersion, GucParameter,
+                     GucVersion, PgFunction, WaitEvent, WaitEventVersion)
 
 
 SQLSTATE = re.compile(r'^[0-9A-Za-z]{5}$')
@@ -23,6 +23,7 @@ CATALOG_ROOT = '/docs/catalog/'
 GUC_ROOT = '/docs/guc/'
 WAITEVENT_ROOT = '/docs/waitevent/'
 SQLCMD_ROOT = '/docs/sql/'
+FUNC_ROOT = '/docs/func/'
 
 
 def shell(ctx, title, description, canonical, class_code='', section='/docs/sqlstate/'):
@@ -322,3 +323,69 @@ def sqlcmd_changes(request, major):
     return render(request, 'wiki/sqlcmd_changes.html', shell(dict(payload, column=BY_SLUG['sql']),
         title, title + '：新增、移除、文件改名、语法变化与正文更新。',
         SQLCMD_ROOT + 'changes/{}/'.format(major), section=SQLCMD_ROOT))
+
+
+# ---------------------------------------------------------------- 函数百科
+
+@require_safe
+# 筛选在当前页即时过滤，参数写进 URL；中间件只放行这几个。
+@queryparams('q', 'group', 'first', 'present')
+def func_index(request):
+    column = BY_SLUG['func']
+    payload = func.index()
+    description = ('PostgreSQL 内置函数的中文百科，共 {} 个函数，按 {} 个分组归类，'
+                   '覆盖 {} 至 {}，逐版本给出签名、说明、示例与签名演化。'.format(
+                       payload['total'], payload['group_count'],
+                       payload['earliest_major'], payload['latest_major']))
+    return render(request, 'wiki/func_index.html', shell(dict(
+        payload, column=column,
+    ), 'PostgreSQL 函数百科', description, FUNC_ROOT, section=FUNC_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def func_detail(request, slug):
+    try:
+        payload = func.detail(slug, request.GET.get('v', ''))
+    except PgFunction.DoesNotExist:
+        raise Http404()
+    if payload['slug'] != slug:
+        # 函数名（to_char、TO_CHAR）也认，进来之后 301 到规范地址。
+        wanted = request.GET.get('v', '')
+        return HttpResponsePermanentRedirect('{}{}/{}'.format(
+            FUNC_ROOT, payload['slug'], '?v=' + quote(wanted) if wanted else ''))
+
+    function = payload['function']
+    major = payload['version']['major'] if payload['version'] else ''
+    title = '{} · PostgreSQL 函数'.format(function.name)
+    description = '{} 是 PostgreSQL {}。{}'.format(
+        function.name, payload['group_label'],
+        payload['description_zh'] or function.summary_zh or function.summary or '')
+    return render(request, 'wiki/func_detail.html', shell(dict(
+        payload, column=BY_SLUG['func'], heading=function.name, major=major,
+    ), title, ' '.join(description.split())[:200], function.url, section=FUNC_ROOT))
+
+
+@require_safe
+def func_changes_root(request):
+    # 默认落在当前稳定版，不落在预发行或开发版。
+    return HttpResponseRedirect(FUNC_ROOT + 'changes/{}/'.format(func.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def func_changes(request, major):
+    try:
+        payload = func.changes(major, request.GET.get('from', ''))
+    except FuncVersion.DoesNotExist:
+        raise Http404()
+    label = payload['version']['label']
+    summary = payload['summary']
+    title = 'PostgreSQL {} 函数变更'.format(label)
+    description = ('PostgreSQL {} 相对 {} 的内置函数变更：新增 {} 个，移除 {} 个，'
+                   '{} 个函数的签名有变化。'.format(
+                       label, payload['previous']['label'] if payload['previous'] else '首个收录版本',
+                       summary['added'], summary['removed'], summary['changed']))
+    return render(request, 'wiki/func_changes.html', shell(dict(
+        payload, column=BY_SLUG['func'],
+    ), title, description, FUNC_ROOT + 'changes/{}/'.format(major), section=FUNC_ROOT))

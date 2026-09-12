@@ -10,10 +10,10 @@ from .models import (CatalogRelation, CatalogVersion, ErrorCode, ErrorCodeClass,
 
 
 class ColumnTests(SimpleTestCase):
-    def test_five_columns_in_reading_order(self):
+    def test_six_columns_in_reading_order(self):
         self.assertEqual([c['slug'] for c in COLUMNS],
-                         ['sql', 'sqlstate', 'catalog', 'guc', 'waitevent'])
-        self.assertEqual(set(BY_SLUG), {'sqlstate', 'guc', 'waitevent', 'catalog', 'sql'})
+                         ['sql', 'sqlstate', 'catalog', 'guc', 'waitevent', 'func'])
+        self.assertEqual(set(BY_SLUG), {'sqlstate', 'guc', 'waitevent', 'catalog', 'sql', 'func'})
 
     def test_a_column_in_preparation_links_to_its_origin_site(self):
         """Navigation must never point at a route that does not exist yet."""

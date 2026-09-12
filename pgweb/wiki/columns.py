@@ -1,10 +1,10 @@
-"""百科的五个栏目。
+"""百科的六个栏目。
 
 这里是栏目本身的唯一定义：名称、地址、规模、上线状态、上游来源。文档导航末尾的
-五个入口和 sitemap 都从这份列表生成，栏目上线时只改这里的 `live`。
+六个入口和 sitemap 都从这份列表生成，栏目上线时只改这里的 `live`。
 
 `origin` 是这批数据的上游双语站点，`repo` 是它的仓库；两者都由 Pigsty 维护，
-本站的百科是它们的中文渲染。SQL 命令直接来自本站手册，没有独立上游仓库。
+本站的百科是它们的中文渲染。SQL 命令与函数百科直接来自本站手册，没有独立上游仓库。
 
 条目数是各数据仓库当前的实际规模，不是站点已导入的行数；已上线栏目的页面
 自己按库里的真实数量显示。系统目录是个例外：cat 收到 19 beta 3 的 157 个关系，
@@ -72,6 +72,19 @@ COLUMNS = (
         'origin': 'https://wait.pg.center',
         'live': True,
     },
+    {
+        'slug': 'func',
+        'name': '函数百科',
+        'short': '函数百科',
+        'tone': 'func',
+        'lead': '每个内置函数的签名、说明、示例与逐版本的签名演化。',
+        'scale': '708 个函数 · 27 组',
+        'coverage': 'PostgreSQL 9.0 – 20 devel',
+        # 数据不来自独立的上游仓库：本站手册第 9 章就是来源。
+        'repo': '',
+        'origin': '',
+        'live': True,
+    },
 )
 
 BY_SLUG = {column['slug']: column for column in COLUMNS}
@@ -97,5 +110,5 @@ def live_columns():
 
 
 def nav_items():
-    """The five columns as entries at the end of the 文档 navigation."""
+    """The six columns as entries at the end of the 文档 navigation."""
     return [{'title': column['name'], 'link': url(column)} for column in COLUMNS if url(column)]

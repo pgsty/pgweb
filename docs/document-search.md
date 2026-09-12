@@ -41,7 +41,7 @@
 | 表 | 用途 |
 | --- | --- |
 | `search_indexedpage` | 手册页面外键、内容及提取器版本的摘要、索引时间 |
-| `search_searchentry` | `source`（`pg` 手册 / `ext` 扩展目录 / `errcode` SQL 状态码 / `catalog` 系统目录 / `guc` 配置参数 / `wait` 等待事件 / `sqlcmd` SQL 命令）、版本、实体身份、种类、名称、别名、签名、正文片段、锚点、清洗后的预览 HTML、`url`、热度 `weight` 和 `tsvector` |
+| `search_searchentry` | `source`（`pg` 手册 / `ext` 扩展目录 / `errcode` SQL 状态码 / `catalog` 系统目录 / `guc` 配置参数 / `wait` 等待事件 / `sqlcmd` SQL 命令 / `func` 函数百科）、版本、实体身份、种类、名称、别名、签名、正文片段、锚点、清洗后的预览 HTML、`url`、热度 `weight` 和 `tsvector` |
 
 手册条目按结构提取：GUC 定义列表、函数与运算符表、类型表、错误码表、SQL reference、文档化的系统关系与章节标题；正文中偶然出现的函数名不会成为定义。长章节按结构拆分并保留标题路径。已有锚点优先，缺少锚点的定义用内容摘要生成 `SEARCH-*` 标识，阅读页使用同一生成函数，不改写 `docs.content`。
 
@@ -53,6 +53,7 @@ SQL 状态码条目来自百科的 `wiki_errcode` 表（`source = 'errcode'`）�
 
 等待事件条目来自百科的 `wiki_waitevent` 表（`source = 'wait'`——列宽 8 字符——`kind = 'waitevent'`、`subtype` 是类型 slug），实体 `waitevent:<key>` 自成一体，不与手册条目合并：结果列表链接到 `/docs/waitevent/<类型>/<名称>/`，预览是中英文描述、事实卡（类型 / 引入版本 / 覆盖版本 / 触发路径）与首条诊断 SQL 的标题。别名含所有曾用名、`类型/名称` 与全小写写法（`LWLock/WALWrite`、`walwritelock` 都能找到）；`kind:wait` 与 `kind:waits` 是同义前缀。
 
+函数条目来自百科的 `wiki_func` 表（`source = 'func'`、`kind = 'function'`、`subtype` 是分组 slug），与手册函数表里抽出的同名定义共享 `function:<小写函数名>` 实体：结果列表里折叠为一条并由百科条目胜出（链接到 `/docs/func/<slug>/`），预览是中英文一句话、事实卡（分组 / 签名数 / 引入版本 / 版本覆盖 / 签名变更）与最新收录版本的前几条签名，版本行仍列出各版手册的定义。别名含小写与去下划线形式；正文收录两种一句话与该版全部签名文本。导入快照后运行 `manage.py index_docs --func`。
 
 后续加入更多来源时，沿用同一张表：新增一个 `source` 值、一段提取函数和对应的 `url`，不需要新表。
 

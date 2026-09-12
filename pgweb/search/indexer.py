@@ -506,3 +506,86 @@ def rebuild_sqlcmd(dry_run=False):
         SearchEntry.objects.bulk_create(objects, batch_size=200)
     service.forget_catalog()
     return {'sqlcmd': len(objects)}
+
+
+# ---------------------------------------------------------------- 函数百科
+
+# 条目只要最新收录版本的签名文本：整列 JSON（逐版本签名、示例与 HTML）比这大两个数量级。
+FUNC_TEXTS_SQL = """
+coalesce((SELECT jsonb_agg(s ->> 'text')
+          FROM jsonb_array_elements(coalesce(versions -> last_version -> 'signatures',
+                                             '[]'::jsonb)) s
+          WHERE s ->> 'text' IS NOT NULL), '[]'::jsonb)
+"""
+
+
+def func_entry(function, texts=None):
+    """One built-in function as a search entry, sharing the entity of the manual's
+    own function definition rows so the result list shows the 百科 entry once and
+    the preview still lists the manual versions."""
+    name = function.name
+    name_key = normalize_name(name)
+    aliases = {name_key}
+    if '_' in name_key:
+        aliases.add(name_key.replace('_', ''))
+    if texts is None:
+        snapshot = (function.versions or {}).get(function.last_version) or {}
+        texts = [item.get('text', '') for item in snapshot.get('signatures') or ()]
+    texts = [' '.join(str(text).split()) for text in texts or () if text]
+    zh = ' '.join((function.summary_zh or '').split())
+    en = ' '.join((function.summary or '').split())
+    group_label = function.group_label
+    signature = texts[0] if texts else ' '.join((function.signature or '').split())
+    facts = [('分组', group_label), ('签名数', len(texts) or function.signature_count),
+             ('引入版本', function.first_version),
+             ('版本覆盖', '{} – {}'.format(function.first_version, function.last_version)
+              if function.first_version else ''),
+             ('签名变更', '{} 次'.format(len(function.changed_in)) if function.changed_in else '')]
+    parts = []
+    if zh or en:
+        parts.append('<p class="ds-ext-desc">' + escape(zh or en) + '</p>')
+    if zh and en:
+        parts.append('<p class="ds-ext-desc-en">' + escape(en) + '</p>')
+    parts.append('<dl class="ds-ext-facts">' + ''.join(
+        '<div><dt>{}</dt><dd>{}</dd></div>'.format(escape(label), escape(str(value)))
+        for label, value in facts if value) + '</dl>')
+    if texts:
+        parts.append('<h3>签名（最新收录版本）</h3><pre>' + escape('\n'.join(texts[:8])) + '</pre>')
+    return {
+        'key': digest('func\0' + function.slug), 'entity_key': 'function:' + name_key,
+        'kind': 'function', 'subtype': function.group, 'name': name, 'name_key': name_key,
+        'aliases': sorted(aliases), 'anchor': '',
+        'heading': '函数' + (' · ' + group_label if group_label else ''),
+        'signature': signature,
+        'body': '\n'.join(v for v in (zh, en, '\n'.join(texts), group_label) if v),
+        'preview': ''.join(parts), 'url': function.url, 'weight': 0.5,
+        '_title': ' '.join([name, *sorted(aliases)]), '_lead': ' '.join(v for v in (zh, en) if v),
+    }
+
+
+def rebuild_func(dry_run=False):
+    """Replace the search entries of the 函数百科 column (source 'func')."""
+    from django.db.models import JSONField
+    from django.db.models.expressions import RawSQL
+    from pgweb.wiki.models import PgFunction
+    functions = list(PgFunction.objects.defer('versions', 'changes').annotate(
+        texts=RawSQL(FUNC_TEXTS_SQL, (), output_field=JSONField())))
+    entries = [func_entry(function, function.texts) for function in functions]
+    if dry_run:
+        return {'func': len(entries)}
+    objects = []
+    for entry in entries:
+        title = index_text(entry.pop('_title'))
+        lead = index_text(entry.pop('_lead'))
+        vector = (SearchVector(Value(title), config='simple', weight='A') +
+                  SearchVector(Value(lead), config='simple', weight='B') +
+                  SearchVector(Value(index_text(entry['body'])), config='simple', weight='D'))
+        objects.append(SearchEntry(source='func', document=None, version=None, vector=vector,
+                                   **entry))
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
+        SearchEntry.objects.filter(source='func').delete()
+        SearchEntry.objects.bulk_create(objects, batch_size=200)
+    service.forget_catalog()
+    return {'func': len(objects)}

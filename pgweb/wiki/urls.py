@@ -35,6 +35,13 @@ urlpatterns = [
     # 类型只有九个，大小写都放进来，视图里对不上规范 slug 就 404。
     re_path(r'^waitevent/(?P<type>[A-Za-z]{2,12})/(?P<name>[A-Za-z0-9_.-]+)/$',
             views.waitevent_detail, name='waitevent_detail'),
+    path('func/', views.func_index, name='func'),
+    # 同理：changes/ 排在函数名的通配之前。
+    path('func/changes/', views.func_changes_root, name='func_changes_root'),
+    re_path(r'^func/changes/(?P<major>\d+(?:\.\d+)?)/$', views.func_changes, name='func_changes'),
+    # 规范地址是小写连字符（to-char）；函数名本身（to_char、TO_CHAR）也接受，
+    # 随后由视图 301 到规范地址。
+    re_path(r'^func/(?P<slug>(?i:[a-z][a-z0-9_-]*))/$', views.func_detail, name='func_detail'),
 ] + [
     path('{}/'.format(column['slug']), RedirectView.as_view(url=column['origin'], permanent=False),
          name=column['slug'])
