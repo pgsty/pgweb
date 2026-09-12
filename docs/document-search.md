@@ -16,7 +16,7 @@
 | 清空输入，选择类别 | 像字典一样按类别浏览 |
 | `/search/?q=…&site=1` | 原有站内全文检索（新闻、活动、页面），`m=1` 仍是邮件列表检索 |
 | 单击 / 方向键、回车 / 双击 | 预览定义、打开正文并定位锚点 |
-| 预览里的版本行 | 与手册页顶部的版本链接同一风格，点击即切换到该版本的定义 |
+| 预览里的版本行 | 原地切换该大版本的摘要；SQL 命令同时更新铁道图、用途和手册链接。按住 ⌘ / Ctrl 点击仍可打开完整页面 |
 
 ### 范围标签
 
@@ -41,7 +41,7 @@
 | 表 | 用途 |
 | --- | --- |
 | `search_indexedpage` | 手册页面外键、内容及提取器版本的摘要、索引时间 |
-| `search_searchentry` | `source`（`pg` 手册 / `ext` 扩展目录 / `errcode` SQL 状态码 / `catalog` 系统目录 / `guc` 配置参数 / `wait` 等待事件）、版本、实体身份、种类、名称、别名、签名、正文片段、锚点、清洗后的预览 HTML、`url`、热度 `weight` 和 `tsvector` |
+| `search_searchentry` | `source`（`pg` 手册 / `ext` 扩展目录 / `errcode` SQL 状态码 / `catalog` 系统目录 / `guc` 配置参数 / `wait` 等待事件 / `sqlcmd` SQL 命令）、版本、实体身份、种类、名称、别名、签名、正文片段、锚点、清洗后的预览 HTML、`url`、热度 `weight` 和 `tsvector` |
 
 手册条目按结构提取：GUC 定义列表、函数与运算符表、类型表、错误码表、SQL reference、文档化的系统关系与章节标题；正文中偶然出现的函数名不会成为定义。长章节按结构拆分并保留标题路径。已有锚点优先，缺少锚点的定义用内容摘要生成 `SEARCH-*` 标识，阅读页使用同一生成函数，不改写 `docs.content`。
 
@@ -52,6 +52,7 @@ SQL 状态码条目来自百科的 `wiki_errcode` 表（`source = 'errcode'`）�
 配置参数条目来自百科的 `wiki_guc` 表（`source = 'guc'`、`kind = 'guc'`、`subtype` 是一级分类 slug），与手册里同名的 GUC 定义共享 `guc:<名称>` 实体：结果列表里折叠为一条并由百科条目胜出（链接到 `/docs/guc/<名称>/`），预览是中英文简述、事实卡（类型 / 上下文 / 默认值 / 引入版本 / 分类）与默认值变迁，版本行仍列出各版手册的定义。别名含小写与去下划线形式（`work_mem` 也能用 `workmem` 找到）。
 
 等待事件条目来自百科的 `wiki_waitevent` 表（`source = 'wait'`——列宽 8 字符——`kind = 'waitevent'`、`subtype` 是类型 slug），实体 `waitevent:<key>` 自成一体，不与手册条目合并：结果列表链接到 `/docs/waitevent/<类型>/<名称>/`，预览是中英文描述、事实卡（类型 / 引入版本 / 覆盖版本 / 触发路径）与首条诊断 SQL 的标题。别名含所有曾用名、`类型/名称` 与全小写写法（`LWLock/WALWrite`、`walwritelock` 都能找到）；`kind:wait` 与 `kind:waits` 是同义前缀。
+
 
 后续加入更多来源时，沿用同一张表：新增一个 `source` 值、一段提取函数和对应的 `url`，不需要新表。
 
@@ -92,3 +93,9 @@ node --check media/js/search-ui.js media/js/docsearch.js media/js/palette.js
 ```
 
 已加载的版本自动进入范围列表；PG20 开发快照沿用 `docs.version = 0` 和 `/docs/devel/`，检索前缀为 `pg20:`，开发版本号集中维护于 `pgweb/docs/versions.py`。`/docs/20/` 跳转到开发快照。生产发布时先安装依赖、应用迁移并建立索引，再切换应用代码；若代理缓存了旧阅读页面，需刷新对应 `pgdocs_<版本>` 缓存以使生成的锚点生效。
+
+SQL 命令栏目 `/docs/sql/` 使用 `source=sqlcmd`、`kind=sql`，与手册命令共用 `sql:<归一命令名>` 实体，优先显示本站词条；同步 `tools/wiki/sync_sqlcmd.py` 后运行 `manage.py index_docs --sqlcmd`。
+
+SQL 命令的预览接口 `/search/preview/<id>/?v=<major>` 直接读取 `wiki_sqlcmd.versions`：摘要取该版描述小节的前两段，铁道图取该版完整 `synopsis_html`，版本条显示命令实际收录的全部大版本（不限于手册检索索引的版本）。首次预览遵循搜索框的 PG 版本；该版没有命令时明确说明并展示稳定版或最后存在的版本。默认无 `v` 时遵循词条默认版本。手册命令定义也可复用对应词条的版本图；其他百科预览的版本链接原地加载该版手册定义。
+
+图的生成、缓存、校验见 `docs/sqlcmd-column.md`。`docsearch.js` 与 `palette.js` 把自身 URL 中的资源版本号传给共享模块，保证更新后两处都使用相同的预览交互代码。

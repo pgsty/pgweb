@@ -20,3 +20,8 @@ def get_struct():
         yield ('docs/waitevent/{}/{}/'.format(type_slug, name), None)
     for major in WaitEventVersion.objects.values_list('major', flat=True):
         yield ('docs/waitevent/changes/{}/'.format(major), None)
+    from . import sqlcmd
+    for slug in sqlcmd.SqlCommand.objects.values_list('slug', flat=True):
+        yield ('docs/sql/{}/'.format(slug), None)
+    for version in sqlcmd.versions():
+        yield ('docs/sql/changes/{}/'.format(version['major']), None)

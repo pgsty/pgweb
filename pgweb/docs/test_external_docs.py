@@ -26,8 +26,10 @@ class ExternalDocumentationTests(TestCase):
             response = self.client.get('/docs/third-party/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.context['components']), 9)
-        self.assertTrue(response.context['navmenu'][-1]['active'])
-        self.assertEqual(response.context['navmenu'][-1]['submenu'], THIRD_PARTY_DOCS)
+        entry = next(item for item in response.context['navmenu']
+                     if item.get('id') == 'ecosystem-docs')
+        self.assertTrue(entry['active'])
+        self.assertEqual(entry['submenu'], THIRD_PARTY_DOCS)
         for component in THIRD_PARTY_DOCS:
             # One external link in the sidebar and one in the overview;
             # neither the desktop dropdown nor the mobile drawer includes it.

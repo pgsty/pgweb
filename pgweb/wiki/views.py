@@ -8,18 +8,21 @@ from django.views.decorators.http import require_safe
 from pgweb.util.contexts import get_nav_menu
 from pgweb.util.decorators import queryparams
 
-from . import catalog, errcode, guc, waitevent
+from . import catalog, errcode, guc, waitevent, sqlcmd
 from .columns import BY_SLUG
-from .models import (CatalogRelation, CatalogVersion, ErrorCode, GucParameter, GucVersion,
-                     WaitEvent, WaitEventVersion)
+from .models import (CatalogRelation, CatalogVersion, ErrorCode, GucParameter,
+                     GucVersion, WaitEvent, WaitEventVersion)
 
 
 SQLSTATE = re.compile(r'^[0-9A-Za-z]{5}$')
 RELATION = re.compile(r'^pg_[a-z0-9_]+$')
 GUC_NAME = re.compile(r'^[A-Za-z][A-Za-z0-9_]*$')
+# 规范的函数地址段：小写，下划线写成连字符。路由放行的写法更宽，视图负责 301。
+FUNC_SLUG = re.compile(r'^[a-z][a-z0-9-]*$')
 CATALOG_ROOT = '/docs/catalog/'
 GUC_ROOT = '/docs/guc/'
 WAITEVENT_ROOT = '/docs/waitevent/'
+SQLCMD_ROOT = '/docs/sql/'
 
 
 def shell(ctx, title, description, canonical, class_code='', section='/docs/sqlstate/'):
@@ -273,3 +276,49 @@ def waitevent_changes(request, major):
     return render(request, 'wiki/waitevent_changes.html', shell(dict(
         payload, column=BY_SLUG['waitevent'],
     ), title, description, '/docs/waitevent/changes/{}/'.format(major), section=WAITEVENT_ROOT))
+
+
+# ---------------------------------------------------------------- SQL 命令
+
+@require_safe
+@queryparams('q', 'group', 'verb', 'first', 'present')
+def sqlcmd_index(request):
+    payload = sqlcmd.index()
+    description = 'PostgreSQL {} 条 SQL 命令，分为 {} 组，逐版本呈现语法概要、参数与手册说明。'.format(
+        payload['total'], payload['group_count'])
+    return render(request, 'wiki/sqlcmd_index.html', shell(dict(payload, column=BY_SLUG['sql']),
+        'PostgreSQL SQL 命令', description, SQLCMD_ROOT, section=SQLCMD_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def sqlcmd_detail(request, slug):
+    try:
+        payload = sqlcmd.detail(slug, request.GET.get('v', ''))
+    except sqlcmd.SqlCommand.DoesNotExist:
+        raise Http404()
+    command = payload['command']
+    if slug != command.slug:
+        wanted = request.GET.get('v', '')
+        return HttpResponsePermanentRedirect(command.url + ('?v=' + quote(wanted) if wanted else ''))
+    return render(request, 'wiki/sqlcmd_detail.html', shell(dict(payload, column=BY_SLUG['sql']),
+        command.name + ' · SQL 命令', payload['snapshot']['purpose_zh'],
+        command.url, section=SQLCMD_ROOT))
+
+
+@require_safe
+def sqlcmd_changes_root(request):
+    return HttpResponseRedirect(SQLCMD_ROOT + 'changes/{}/'.format(sqlcmd.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def sqlcmd_changes(request, major):
+    try:
+        payload = sqlcmd.changes(major, request.GET.get('from', ''))
+    except sqlcmd.SqlCommand.DoesNotExist:
+        raise Http404()
+    title = 'PostgreSQL {} SQL 命令变更'.format(payload['version']['label'])
+    return render(request, 'wiki/sqlcmd_changes.html', shell(dict(payload, column=BY_SLUG['sql']),
+        title, title + '：新增、移除、文件改名、语法变化与正文更新。',
+        SQLCMD_ROOT + 'changes/{}/'.format(major), section=SQLCMD_ROOT))

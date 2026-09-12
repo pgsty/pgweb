@@ -449,3 +449,60 @@ def rebuild_waitevents(dry_run=False):
         SearchEntry.objects.bulk_create(objects, batch_size=200)
     service.forget_catalog()
     return {'waitevents': len(objects)}
+
+
+# ---------------------------------------------------------------- SQL 命令
+
+def sqlcmd_entry(command):
+    """与手册 SQL 定义共用实体；存储简短兜底预览，实时预览按大版本派生。"""
+    name = command.name
+    name_key = normalize_name(name)
+    aliases = sorted({name_key, normalize_name(command.slug),
+                      *(normalize_name(alias) for alias in command.aliases)})
+    purpose = command.purpose_zh or command.purpose
+    from pgweb.wiki.sqlcmd import versions
+    order = versions()
+    baseline = bool(order and command.first_version == order[0]['major'])
+    facts = [('动词', command.verb), ('对象', command.object), ('分组', command.group_label),
+             ('引入版本', command.first_version + ('（基线）' if baseline else '')),
+             ('版本覆盖', '{} – {}'.format(command.first_version, command.last_version)),
+             ('语法变化', '{} 次'.format(len(command.changed_in)))]
+    preview = '<p class="ds-ext-desc">{}</p>'.format(escape(purpose))
+    preview += '<dl class="ds-ext-facts">' + ''.join(
+        '<div><dt>{}</dt><dd>{}</dd></div>'.format(escape(k), escape(str(v)))
+        for k, v in facts if v) + '</dl>'
+    if command.synopsis:
+        preview += '<h3>语法概要（最新收录版本）</h3><pre>{}</pre>'.format(
+            escape('\n'.join(command.synopsis.splitlines()[:12])))
+    return {
+        'key': digest('sqlcmd\0' + command.slug), 'entity_key': 'sql:' + name_key,
+        'kind': 'sql', 'subtype': command.group, 'name': name, 'name_key': name_key,
+        'aliases': aliases, 'anchor': '', 'heading': 'SQL 命令 · ' + command.group_label,
+        'signature': purpose,
+        'body': '\n'.join([command.purpose_zh, command.purpose, command.synopsis, command.group_label]),
+        'preview': preview, 'url': command.url, 'weight': 0.5,
+        '_title': ' '.join([name, *aliases]), '_lead': purpose,
+    }
+
+
+def rebuild_sqlcmd(dry_run=False):
+    from pgweb.wiki.models import SqlCommand
+    commands = SqlCommand.objects.defer('versions', 'changes', 'editorial')
+    entries = [sqlcmd_entry(command) for command in commands]
+    if dry_run:
+        return {'sqlcmd': len(entries)}
+    objects = []
+    for entry in entries:
+        title = index_text(entry.pop('_title'))
+        lead = index_text(entry.pop('_lead'))
+        vector = (SearchVector(Value(title), config='simple', weight='A') +
+                  SearchVector(Value(lead), config='simple', weight='B') +
+                  SearchVector(Value(index_text(entry['body'])), config='simple', weight='D'))
+        objects.append(SearchEntry(source='sqlcmd', document=None, version=None, vector=vector, **entry))
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
+        SearchEntry.objects.filter(source='sqlcmd').delete()
+        SearchEntry.objects.bulk_create(objects, batch_size=200)
+    service.forget_catalog()
+    return {'sqlcmd': len(objects)}

@@ -8,6 +8,8 @@
 结构化是增量，不是替换。
 """
 
+import re
+
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
@@ -877,3 +879,139 @@ class WaitEvent(models.Model):
     @property
     def source_status_label(self):
         return WAITEVENT_SOURCE_STATUS_LABEL.get(self.source_status, self.source_status)
+
+
+# ================================================================ SQL 命令
+
+SQLCMD_GROUPS = (
+    ('table', '表与视图', 'TABLES & VIEWS'),
+    ('index', '索引与统计', 'INDEXES & STATISTICS'),
+    ('routine', '函数与过程', 'FUNCTIONS & PROCEDURES'),
+    ('type', '类型与运算符', 'TYPES & OPERATORS'),
+    ('schema', '数据库、模式与表空间', 'DATABASES & SCHEMAS'),
+    ('role', '角色与权限', 'ROLES & PRIVILEGES'),
+    ('trigger', '触发器与规则', 'TRIGGERS & RULES'),
+    ('extension', '扩展与访问方法', 'EXTENSIONS & ACCESS METHODS'),
+    ('textsearch', '全文检索', 'TEXT SEARCH'),
+    ('foreign', '外部数据', 'FOREIGN DATA'),
+    ('replication', '逻辑复制', 'LOGICAL REPLICATION'),
+    ('query', '查询与数据操作', 'QUERIES & DATA'),
+    ('cursor', '游标与预备语句', 'CURSORS & PREPARED STATEMENTS'),
+    ('transaction', '事务控制', 'TRANSACTIONS'),
+    ('session', '会话与参数', 'SESSIONS & SETTINGS'),
+    ('maintenance', '维护', 'MAINTENANCE'),
+    ('misc', '其它对象', 'OTHER OBJECTS'),
+)
+SQLCMD_GROUP_LABEL = {slug: label for slug, label, _ in SQLCMD_GROUPS}
+SQLCMD_GROUP_ORDER = {slug: index for index, (slug, _, _) in enumerate(SQLCMD_GROUPS)}
+SQLCMD_GROUP_BY_SLUG = {slug: (label, eyebrow) for slug, label, eyebrow in SQLCMD_GROUPS}
+
+NAME_GROUP = {
+    name: group for group, names in (
+        ('table', ('TRUNCATE',)),
+        ('index', ('REINDEX',)),
+        ('routine', ('CALL', 'DO')),
+        ('role', ('GRANT', 'REVOKE', 'SET ROLE', 'SET SESSION AUTHORIZATION',
+                  'REASSIGN OWNED', 'DROP OWNED', 'SECURITY LABEL')),
+        ('extension', ('LOAD',)),
+        ('foreign', ('IMPORT FOREIGN SCHEMA',)),
+        ('query', ('SELECT', 'SELECT INTO', 'VALUES', 'INSERT', 'UPDATE', 'DELETE',
+                   'MERGE', 'COPY', 'EXPLAIN', 'LOCK')),
+        ('cursor', ('DECLARE', 'FETCH', 'MOVE', 'CLOSE', 'PREPARE', 'EXECUTE', 'DEALLOCATE')),
+        ('transaction', ('BEGIN', 'START TRANSACTION', 'COMMIT', 'END', 'ROLLBACK', 'ABORT',
+                         'SAVEPOINT', 'RELEASE SAVEPOINT', 'ROLLBACK TO SAVEPOINT',
+                         'SET TRANSACTION', 'SET CONSTRAINTS', 'PREPARE TRANSACTION',
+                         'COMMIT PREPARED', 'ROLLBACK PREPARED', 'WAIT FOR')),
+        ('session', ('SET', 'RESET', 'SHOW', 'ALTER SYSTEM', 'DISCARD', 'LISTEN', 'NOTIFY', 'UNLISTEN')),
+        ('maintenance', ('VACUUM', 'ANALYZE', 'CLUSTER', 'CHECKPOINT')),
+        ('misc', ('COMMENT',)),
+    ) for name in names
+}
+OBJECT_GROUP = {
+    name: group for group, names in (
+        ('table', ('TABLE', 'TABLE AS', 'VIEW', 'MATERIALIZED VIEW', 'SEQUENCE')),
+        ('index', ('INDEX', 'STATISTICS')),
+        ('routine', ('FUNCTION', 'PROCEDURE', 'ROUTINE', 'AGGREGATE', 'LANGUAGE', 'TRANSFORM')),
+        ('type', ('TYPE', 'DOMAIN', 'CAST', 'OPERATOR', 'OPERATOR CLASS', 'OPERATOR FAMILY',
+                  'COLLATION', 'CONVERSION')),
+        ('schema', ('DATABASE', 'SCHEMA', 'TABLESPACE')),
+        ('role', ('ROLE', 'USER', 'GROUP', 'DEFAULT PRIVILEGES', 'POLICY')),
+        ('trigger', ('TRIGGER', 'EVENT TRIGGER', 'RULE')),
+        ('extension', ('EXTENSION', 'ACCESS METHOD')),
+        ('textsearch', ('TEXT SEARCH CONFIGURATION', 'TEXT SEARCH DICTIONARY',
+                        'TEXT SEARCH PARSER', 'TEXT SEARCH TEMPLATE')),
+        ('foreign', ('FOREIGN DATA WRAPPER', 'SERVER', 'USER MAPPING', 'FOREIGN TABLE')),
+        ('replication', ('PUBLICATION', 'SUBSCRIPTION')),
+        ('misc', ('LARGE OBJECT', 'PROPERTY GRAPH')),
+    ) for name in names
+}
+SECTION_KEYS = {
+    title: key for key, titles in (
+        ('description', ('描述', 'Description')),
+        ('parameters', ('参数', 'Parameters')),
+        ('notes', ('注解', '注意', 'Notes')),
+        ('examples', ('示例', 'Examples')),
+        ('compatibility', ('兼容性', 'Compatibility')),
+        ('see_also', ('另见', '参见', '又见', 'See Also')),
+        ('outputs', ('输出', 'Outputs')),
+    ) for title in titles
+}
+
+
+def sqlcmd_split(name):
+    verb, _, object_name = ' '.join(name.upper().split()).partition(' ')
+    return verb, object_name
+
+
+def sqlcmd_group_of(name):
+    name = ' '.join(name.upper().split())
+    return NAME_GROUP.get(name, OBJECT_GROUP.get(sqlcmd_split(name)[1], 'misc'))
+
+
+def sqlcmd_slug(name):
+    return '-'.join(name.lower().split())
+
+
+class SqlCommand(models.Model):
+    """一个 SQL 命令；身份按命令名归一，逐版本手册全文放 JSON。"""
+
+    slug = models.CharField(max_length=64, primary_key=True)
+    name = models.TextField()
+    aliases = ArrayField(models.TextField(), default=list, blank=True)
+    verb = models.CharField(max_length=16)
+    object = models.TextField(blank=True, default='')
+    group = models.CharField(max_length=24)
+    purpose = models.TextField(blank=True, default='')
+    purpose_zh = models.TextField(blank=True, default='')
+    first_version = models.CharField(max_length=8)
+    last_version = models.CharField(max_length=8)
+    present_in = ArrayField(models.TextField(), default=list, blank=True)
+    changed_in = ArrayField(models.TextField(), default=list, blank=True)
+    synopsis = models.TextField(blank=True, default='')
+    related = ArrayField(models.TextField(), default=list, blank=True)
+    versions = models.JSONField(default=dict, blank=True)
+    changes = models.JSONField(default=list, blank=True)
+    editorial = models.JSONField(default=dict, blank=True)
+    position = models.IntegerField(default=0)
+    source_rev = models.TextField(blank=True, default='')
+    imported_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'wiki_sqlcmd'
+        ordering = ('position',)
+        indexes = [models.Index(fields=('group', 'slug'), name='wiki_sqlcmd_group')]
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def url(self):
+        return '/docs/sql/{}/'.format(self.slug)
+
+    @property
+    def group_label(self):
+        return SQLCMD_GROUP_LABEL.get(self.group, self.group)
+
+    @property
+    def eyebrow(self):
+        return 'SQL COMMAND'

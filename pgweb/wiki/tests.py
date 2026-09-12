@@ -10,9 +10,10 @@ from .models import (CatalogRelation, CatalogVersion, ErrorCode, ErrorCodeClass,
 
 
 class ColumnTests(SimpleTestCase):
-    def test_four_columns_in_reading_order(self):
-        self.assertEqual([c['slug'] for c in COLUMNS], ['sqlstate', 'guc', 'waitevent', 'catalog'])
-        self.assertEqual(set(BY_SLUG), {'sqlstate', 'guc', 'waitevent', 'catalog'})
+    def test_five_columns_in_reading_order(self):
+        self.assertEqual([c['slug'] for c in COLUMNS],
+                         ['sql', 'sqlstate', 'catalog', 'guc', 'waitevent'])
+        self.assertEqual(set(BY_SLUG), {'sqlstate', 'guc', 'waitevent', 'catalog', 'sql'})
 
     def test_a_column_in_preparation_links_to_its_origin_site(self):
         """Navigation must never point at a route that does not exist yet."""
@@ -27,9 +28,9 @@ class ColumnTests(SimpleTestCase):
         for column in listing():
             self.assertTrue(column['tone_class'].startswith('wiki-tone-'))
 
-    def test_nav_lists_the_four_columns(self):
+    def test_nav_lists_every_column(self):
         items = nav_items()
-        self.assertEqual(items[0], {'title': 'SQL 状态码', 'link': '/docs/sqlstate/'})
+        self.assertEqual(items[0], {'title': 'SQL 命令', 'link': '/docs/sql/'})
         self.assertEqual(len(items), len(COLUMNS))
 
 

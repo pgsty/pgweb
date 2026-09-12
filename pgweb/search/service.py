@@ -2,9 +2,11 @@ import re
 from time import perf_counter
 from urllib.parse import quote
 
+from bs4 import BeautifulSoup
 from django.core.cache import cache
 from django.db import connection
 from django.utils.html import escape
+from django.template.loader import render_to_string
 
 from pgweb.core.models import Version
 from pgweb.docs.versions import manual_major
@@ -76,9 +78,9 @@ def parse_query(raw, scope='pg', kind='', available=(), current=None):
     if scope in EXTENSION_SCOPES:
         scope, sources, version = 'ex', ('ext',), current
     elif scope == 'pg':
-        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait'), current
+        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd'), current
     elif re.fullmatch(r'pg\d+', scope):
-        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait'), int(scope[2:])
+        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd'), int(scope[2:])
     else:
         raise ValueError('未知的文档作用域。请使用 pg:、pg17: 或 ex:。')
     if 'pg' in sources and version not in available:
@@ -158,7 +160,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
         'filtered': bool(kinds), 'kinds': kinds, 'offset': offset, 'limit': limit,
         'popular': [normalize_name(n) for n in POPULAR],
     }
-    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode', 'catalog', 'guc', 'wait'))"
+    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd'))"
               if 'pg' in state['sources'] else "e.source = 'ext'")
     if not name:
         where = 'true'
@@ -189,7 +191,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
             FROM search_searchentry e CROSS JOIN q
             WHERE {source} AND {where}
         ), grouped AS (
-            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source NOT IN ('errcode', 'catalog', 'guc', 'wait')), (source = 'ext'), relevance DESC, id) AS choice,
+            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source NOT IN ('errcode', 'catalog', 'guc', 'wait', 'sqlcmd')), (source = 'ext'), relevance DESC, id) AS choice,
                    count(*) OVER (PARTITION BY entity_key) AS variants FROM matched
         ), chosen AS (SELECT * FROM grouped WHERE choice = 1),
         facet AS (SELECT kind, count(*) AS n FROM chosen GROUP BY kind),
@@ -238,7 +240,59 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
     return result
 
 
-def preview(entry):
+def sqlcmd_preview(entry, wanted_major=''):
+    from pgweb.wiki import sqlcmd
+    from pgweb.wiki.models import SqlCommand
+    from pgweb.wiki.sqlcmd_common import sections_at
+    from pgweb.wiki.sqlcmd_railroad import context as railroad_context
+
+    slug = entry.url.rstrip('/').rsplit('/', 1)[-1]
+    command = SqlCommand.objects.filter(slug=slug).first()
+    if command is None:
+        return None
+    order = sqlcmd.versions()
+    wanted = str(wanted_major or '')
+    major = sqlcmd.pick_major(wanted, command.present_in, order)
+    snapshot = command.versions[major]
+    version = next(v for v in order if v['major'] == major)
+    fallback = ('此命令未收录 PostgreSQL {} 的语法，当前展示 {}。'.format(wanted, version['label'])
+                if wanted and wanted != major else '')
+    sections = sections_at(command.versions, major)
+    description = next((s['html'] for s in sections if s['key'] == 'description'), '')
+    paragraphs = BeautifulSoup(description, 'html.parser').find_all('p', limit=2)
+    description = ''.join(str(p) for p in paragraphs)
+    manual_url = '/docs/{}/{}{}'.format(snapshot['slug'], snapshot['file'],
+                                       '#' + snapshot['anchor'] if snapshot['anchor'] else '')
+    railroad = railroad_context(snapshot, 'rr-preview-' + str(entry.id) + '-' + major)
+    data = entry_data(entry)
+    data.update({
+        'name': snapshot['name'], 'signature': snapshot['purpose_zh'] or snapshot['purpose'],
+        'version': int(major) if major.isdigit() else major,
+        'url': command.url + '?v=' + major, 'manual_url': manual_url,
+        'html': render_to_string('wiki/sqlcmd_preview.html', {
+            'command': command, 'version': version, 'snapshot': snapshot, 'description': description,
+            'railroad': railroad, 'manual_url': manual_url, 'notice': sqlcmd.notice_of(version),
+            'fallback_note': fallback,
+        }),
+        'syntax_digest': railroad['digest'],
+        'versions': [{'version': int(v['major']) if v['major'].isdigit() else v['major'],
+                      'label': v['label'], 'url': command.url + '?v=' + v['major'],
+                      'id': entry.id, 'current': v['major'] == major}
+                     for v in reversed(order) if v['major'] in command.versions],
+        'other_versions': [], 'definitions': [], 'catalog': None,
+    })
+    return data
+
+
+def preview(entry, wanted_major=''):
+    if entry.source == 'pg' and entry.kind == 'sql':
+        command_entry = SearchEntry.objects.filter(source='sqlcmd', entity_key=entry.entity_key).first()
+        if command_entry is not None:
+            return preview(command_entry, wanted_major or entry.version)
+    if entry.source == 'sqlcmd':
+        data = sqlcmd_preview(entry, wanted_major)
+        if data is not None:
+            return data
     data = entry_data(entry)
     data['html'] = entry.preview
     others = (SearchEntry.objects.filter(entity_key=entry.entity_key).select_related('document__page')

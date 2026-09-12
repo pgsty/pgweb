@@ -8,6 +8,11 @@ from .columns import COLUMNS
 
 app_name = 'wiki'
 urlpatterns = [
+    path('sql/', views.sqlcmd_index, name='sqlcmd'),
+    path('sql/changes/', views.sqlcmd_changes_root, name='sqlcmd_changes_root'),
+    re_path(r'^sql/changes/(?P<major>\d+(?:\.\d+)?)/$', views.sqlcmd_changes, name='sqlcmd_changes'),
+    # 大写形式也接受，随后 301 到小写规范地址。
+    re_path(r'^sql/(?P<slug>(?i:[a-z][a-z0-9-]*))/$', views.sqlcmd_detail, name='sqlcmd_detail'),
     path('sqlstate/', views.errcode_index, name='errcode'),
     # 通配放最后，免得遮蔽具名路由。
     path('sqlstate/<str:sqlstate>/', views.errcode_detail, name='errcode_detail'),
@@ -33,5 +38,5 @@ urlpatterns = [
 ] + [
     path('{}/'.format(column['slug']), RedirectView.as_view(url=column['origin'], permanent=False),
          name=column['slug'])
-    for column in COLUMNS if not column['live']
+    for column in COLUMNS if not column['live'] and column['origin']
 ]

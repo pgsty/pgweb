@@ -1,0 +1,75 @@
+/* Shared by SQL command pages and both document-search previews. */
+.sql-railroad {
+  --rail-line: #8290a5;
+  --rail-fill: #f5f0fc;
+  --rail-border: #9873cf;
+  --rail-text: #45315f;
+  --rail-param: #f4f7fb;
+  margin: 1rem 0;
+  min-width: 0;
+}
+[data-theme="dark"] .sql-railroad {
+  --rail-line: #79899f;
+  --rail-fill: #312743;
+  --rail-border: #a286ce;
+  --rail-text: #e4d9f6;
+  --rail-param: #222d3c;
+}
+.sql-railroad .sql-railroad__legend {
+  color: var(--pg-muted, #758092);
+  font-size: .78rem;
+  line-height: 1.7;
+  margin: 0 0 .8rem;
+}
+.sql-railroad__rule {
+  border: 1px solid var(--pg-line, #dbe2ec);
+  border-radius: 7px;
+  margin: .55rem 0;
+  overflow: hidden;
+}
+.sql-railroad__rule summary {
+  cursor: pointer;
+  padding: .6rem .9rem;
+  font-size: .83rem;
+  color: var(--rail-text);
+}
+.sql-railroad__rule summary:hover { background: var(--rail-fill); }
+.sql-railroad__rule summary code { color: inherit; background: none; }
+.sql-railroad__scroll {
+  overflow: auto;
+  max-height: 38rem;
+  padding: .3rem;
+  scrollbar-width: thin;
+}
+.sql-railroad__scroll:focus-visible { outline: 2px solid var(--rail-border); outline-offset: -2px; }
+.sql-railroad .railroad-diagram {
+  display: block;
+  max-width: none;
+  margin: .25rem auto;
+  background: transparent;
+}
+.sql-railroad .railroad-diagram path {
+  stroke-width: 1.5;
+  stroke: var(--rail-line);
+  fill: none;
+}
+.sql-railroad .railroad-diagram rect {
+  stroke: var(--rail-border);
+  stroke-width: 1;
+  fill: var(--rail-fill);
+}
+.sql-railroad .railroad-diagram text {
+  font: 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  text-anchor: middle;
+  white-space: pre;
+  fill: var(--rail-text);
+}
+.sql-railroad .railroad-diagram .non-terminal rect {
+  fill: var(--rail-param);
+  stroke: var(--rail-line);
+}
+.sql-railroad .railroad-diagram .non-terminal text { font-style: italic; }
+.sql-railroad .railroad-diagram a text { text-decoration: underline; text-underline-offset: 3px; }
+.sql-railroad .railroad-diagram a:hover text { fill: var(--rail-border); }
+.ds-doc .sql-railroad__scroll { max-height: 28rem; }
+.ds-doc .sql-preview-version { font-size: .8rem; color: var(--pg-muted, #758092); }
