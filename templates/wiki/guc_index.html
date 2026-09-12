@@ -44,13 +44,13 @@
   <noscript><button class="btn btn-primary" type="submit">筛选</button></noscript>
 </form>
 
-<p class="guc-legend">
-  <span class="guc-legend__title">生命线</span>
-  <span class="guc-legend__item"><span class="guc-seg guc-seg--absent guc-legend__swatch" aria-hidden="true"></span>未收录</span>
-  <span class="guc-legend__item"><span class="guc-seg guc-seg--present guc-legend__swatch" aria-hidden="true"></span>存在</span>
-  <span class="guc-legend__item"><span class="guc-seg guc-seg--added guc-legend__swatch" aria-hidden="true"></span>新增</span>
-  <span class="guc-legend__item"><span class="guc-seg guc-seg--changed guc-legend__swatch" aria-hidden="true"></span>属性或默认值变化</span>
-  <span class="guc-legend__item"><span class="guc-seg guc-seg--removed guc-legend__swatch" aria-hidden="true"></span>已移除</span>
+<p class="wiki-striplegend">
+  <span class="wiki-striplegend__title">版本变动</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--absent" aria-hidden="true"></span>未收录</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--present" aria-hidden="true"></span>存在</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--added" aria-hidden="true"></span>新增</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--changed" aria-hidden="true"></span>属性或默认值变化</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--removed" aria-hidden="true"></span>已移除</span>
 </p>
 <p class="wiki-count" id="guc-count" aria-live="polite" hidden></p>
 
@@ -59,7 +59,7 @@
 <p class="wiki-empty" id="guc-empty" hidden>没有匹配的参数。<a href="/docs/guc/">清除筛选</a></p>
 
 <h2>说明</h2>
-<p>库里共 {{ stats.parameters }} 个参数、{{ stats.versions }} 个大版本、{{ stats.snapshots }} 份逐版本快照；相邻大版本之间记录到 {{ stats.default_changes }} 次默认值变更与 {{ stats.changes }} 处实质变化（默认值、单位、生效上下文、类型、取值范围或枚举值），{{ stats.removed }} 个参数已经不在最新版本里。每行的「生命线」是一条从 {{ earliest_major }} 到 {{ latest_major }} 的横条，一格一个大版本，与表头刻度对齐；鼠标停在某一段上会写出它覆盖的版本区间与状态。「默认值」一列取的是当前稳定版 {{ default_major }} 的 <code class="guc-mono">boot_val</code>，带单位的值换算成了可读形式；{{ default_major }} 里不存在的参数取它最后存在的那一版。数据来自 <a href="https://guc.pg.center" target="_blank" rel="noopener">guc.pg.center</a>，说明的中文取自本站手册译文，没有译文的按英文原文显示。</p>
+<p>库里共 {{ stats.parameters }} 个参数、{{ stats.versions }} 个大版本、{{ stats.snapshots }} 份逐版本快照；相邻大版本之间记录到 {{ stats.default_changes }} 次默认值变更与 {{ stats.changes }} 处实质变化（默认值、单位、生效上下文、类型、取值范围或枚举值），{{ stats.removed }} 个参数已经不在最新版本里。每行的「版本变动」是一排方格，一格一个大版本，与表头刻度逐格对齐；鼠标停在某一格上会写出它是哪一版、发生了什么。「默认值」一列取的是当前稳定版 {{ default_major }} 的 <code class="guc-mono">boot_val</code>，带单位的值换算成了可读形式；{{ default_major }} 里不存在的参数取它最后存在的那一版。数据来自 <a href="https://guc.pg.center" target="_blank" rel="noopener">guc.pg.center</a>，说明的中文取自本站手册译文，没有译文的按英文原文显示。</p>
 
 </div>
 {% endblock %}

@@ -292,7 +292,7 @@ class GucFixture(TestCase):
 # ---------------------------------------------------------------- 索引页
 
 class GucIndexTests(GucFixture):
-    """索引页的分组、生命线与筛选。"""
+    """索引页的分组、版本变动与筛选。"""
 
     def test_versions_cover_the_whole_range_with_one_default(self):
         order = guc.versions()
@@ -328,33 +328,27 @@ class GucIndexTests(GucFixture):
         self.assertEqual(guc.category_label('锁管理', '锁管理'), '')
         self.assertEqual(guc.category_anchor('locks', 'Lock Management'), 'cat-locks')
 
-    def test_every_lifeline_spans_the_whole_version_range(self):
+    def test_every_strip_has_one_cell_per_version(self):
         rows = {row['name']: row for group in guc.index()['groups']
                 for sub in group['subgroups'] for row in sub['rows']}
         for name, row in rows.items():
-            self.assertEqual(sum(segment['span'] for segment in row['strip']), len(MAJORS), name)
+            self.assertEqual([cell['major'] for cell in row['strip']], list(MAJORS), name)
 
-    def test_lifeline_merges_runs_and_names_each_segment(self):
+    def test_the_strip_marks_every_version_and_names_each_cell(self):
         rows = {row['name']: row for group in guc.index()['groups']
                 for sub in group['subgroups'] for row in sub['rows']}
+        states = lambda name: [cell['state'] for cell in rows[name]['strip']]
+        self.assertEqual(states('wal_level'), ['present'] * 7 + ['changed'] + ['present'] * 10)
         wal = rows['wal_level']['strip']
-        self.assertEqual([(s['state'], s['from'], s['to'], s['span']) for s in wal],
-                         [('present', '9.0', '9.6', 7), ('changed', '10', '10', 1),
-                          ('present', '11', '20', 10)])
-        self.assertEqual(wal[0]['label'], '9.0 – 9.6 · 存在')
-        self.assertEqual(wal[1]['label'], '10 · 默认值变更')
-        skip = rows['wal_skip_threshold']['strip']
-        self.assertEqual([(s['state'], s['span']) for s in skip],
-                         [('absent', 10), ('added', 1), ('present', 7)])
-        old = rows['old_snapshot_threshold']['strip']
-        self.assertEqual([(s['state'], s['from'], s['span']) for s in old],
-                         [('absent', '9.0', 5), ('added', '9.5', 1), ('present', '9.6', 3),
-                          ('changed', '12', 1), ('present', '13', 2), ('changed', '15', 1),
-                          ('present', '16', 1), ('removed', '17', 1), ('absent', '18', 3)])
+        self.assertEqual(wal[0]['label'], '9.0 · 存在')
+        self.assertEqual(wal[7]['label'], '10 · 默认值变更')
+        self.assertEqual(states('wal_skip_threshold'), ['absent'] * 10 + ['added'] + ['present'] * 7)
+        self.assertEqual(states('old_snapshot_threshold'),
+                         ['absent'] * 5 + ['added'] + ['present'] * 3 + ['changed']
+                         + ['present'] * 2 + ['changed'] + ['present'] + ['removed'] + ['absent'] * 3)
         self.assertTrue(rows['old_snapshot_threshold']['removed'])
         self.assertEqual(rows['old_snapshot_threshold']['removed_in'], '17')
-        fresh = rows['enable_groupagg']['strip']
-        self.assertEqual([(s['state'], s['span']) for s in fresh], [('absent', 17), ('added', 1)])
+        self.assertEqual(states('enable_groupagg'), ['absent'] * 17 + ['added'])
 
     def test_the_baseline_version_is_never_marked_added(self):
         rows = {row['name']: row for group in guc.index()['groups']

@@ -1,7 +1,7 @@
 {% comment %}
 可复用的分组表：每个一级分类一个 tbody，子分类一条浅色分隔行，每个参数两行。
 参数：groups（必需）、table_id、top_link、current（高亮的参数名）。
-父模板必须提供 versions（生命线的表头刻度按它渲染，与每行的分段一一对齐）。
+父模板必须提供 versions（版本变动的表头刻度按它渲染，与每行的方格一一对齐）。
 {% endcomment %}
 <div class="wiki-table"><div class="wiki-table__scroll">
 <table{% if table_id %} id="{{ table_id }}"{% endif %} class="guc-params" data-rowlink>
@@ -11,10 +11,10 @@
     <th class="guc-th guc-th--ctx" scope="col">上下文</th>
     <th class="guc-th guc-th--def" scope="col">默认值</th>
     <th class="guc-th guc-th--line" scope="col">
-      <span class="guc-th__title">生命线</span>
-      <span class="guc-ruler" aria-hidden="true">{% for v in versions %}<span class="guc-ruler__tick{% if v.is_default %} is-default{% endif %}{% if v.preview or v.devel %} is-unreleased{% endif %}">{{ v.major }}</span>{% endfor %}</span>
+      <span class="guc-th__title">版本变动</span>
+      <span class="wiki-ruler" aria-hidden="true">{% for v in versions %}<span class="wiki-ruler__slot{% if v.tick %} is-tick{% endif %}{% if v.is_default %} is-default{% endif %}{% if v.preview or v.devel %} is-unreleased{% endif %}">{% if v.tick %}<i>{{ v.major }}</i>{% endif %}</span>{% endfor %}</span>
     </th>
-    <th class="guc-th guc-th--last" scope="col">变更</th>
+    <th class="guc-th guc-th--last" scope="col">最近变更</th>
   </tr></thead>
   {% for group in groups %}
   <tbody class="guc-group" data-group="{{ group.slug }}">
@@ -46,7 +46,7 @@
       <td class="guc-row__ctx"><span class="guc-ctx" title="{{ row.context_label }}：{{ row.context_note }}">{{ row.context_label }}</span></td>
       <td class="guc-row__def">{% if row.boot_human %}<code class="guc-mono">{{ row.boot_human }}</code>{% else %}<span class="guc-none">—</span>{% endif %}</td>
       <td class="guc-row__line">
-        <span class="guc-line" role="img" aria-label="版本生命线：{{ row.first }} 起{% if row.removed %}，于 {{ row.removed_in }} 移除{% else %}，现存至 {{ row.last }}{% endif %}">{% for cell in row.strip %}<span class="guc-seg guc-seg--{{ cell.state }} guc-seg--n{{ cell.span }}" title="{{ cell.label }}"></span>{% endfor %}</span>
+        <span class="wiki-strip" role="img" aria-label="版本变动：{{ row.first }} 起{% if row.removed %}，于 {{ row.removed_in }} 移除{% else %}，现存至 {{ row.last }}{% endif %}">{% for cell in row.strip %}<span class="wiki-cell wiki-cell--{{ cell.state }}" title="{{ cell.label }}"></span>{% endfor %}</span>
       </td>
       <td class="guc-row__last">{% if row.last_change %}{{ row.last_change }}<span class="guc-row__times">{{ row.change_count }} 次</span>{% else %}<span class="guc-none">—</span>{% endif %}</td>
     </tr>

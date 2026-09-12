@@ -159,7 +159,7 @@ guc 到 19 beta 3 为止；20 由本站 devel 手册（`DocPage.version=0`）推
 ## 4. 地址与页面
 
 ```
-/docs/guc/                       索引：导览 + 分类入口 + 版本条 + 筛选 + 按分类分组的大表（含生命线）
+/docs/guc/                       索引：导览 + 分类入口 + 版本条 + 筛选 + 按分类分组的大表（含版本变动方格）
 /docs/guc/<name>/                详情，?v=<major> 切版本；默认 status='stable' 的那一版（当前 18）
 /docs/guc/changes/               302 → /docs/guc/changes/<默认版本>/
 /docs/guc/changes/<major>/       该版本相对上一版的变更；?from=<major> 改比较基准
@@ -183,7 +183,7 @@ groups: [{slug, group, label, anchor('group-wal'), count,
 row: {name, url, group_slug, category, category_zh, vartype, vartype_label, context, context_label, context_note,
       boot_human, boot_val, unit, short_desc, short_desc_zh, first, last, baseline(bool), removed(bool), removed_in,
       change_count, default_change_count, last_change('' 或 major),
-      strip: [{state, from, to, span, label}],   # 生命线：同状态的连续版本合成一段；state ∈ absent | present | added | changed | removed
+      strip: [{major, state, label}],   # 版本变动：一版一格；state ∈ absent | present | added | changed | removed
       present_tokens('9.0 9.1 … 20'), text(名称 + 两种简述 + 分类，供前端搜索)}
 filters: [{param:'group', label:'分类', options:[{value: slug, label, count}]},
           {param:'context', label:'上下文', options:[...]},
@@ -193,7 +193,7 @@ stats: {parameters, versions, snapshots, default_changes, changes, removed}
 ```
 
 行上显示的 `vartype / context / boot_human` 取**默认版本**的快照，默认版本没有该参数时取最后存在的版本。
-生命线状态：`added` 首次出现（9.0 基线除外）；`changed` 该版落地实质变化；`removed` 只标在 `last_version` 的下一版；其余 `present` / `absent`。
+版本变动状态：`added` 首次出现（9.0 基线除外）；`changed` 该版落地实质变化；`removed` 只标在 `last_version` 的下一版；其余 `present` / `absent`。
 `span` 是该段覆盖的版本数，`label` 形如 `'9.0 – 9.6 · 存在'`、`'10 · 默认值变更'`。18 个版本合计每行 `span` 之和恒为 18（含 absent 段），
 前端按 `span` 给每段 `flex-grow`，与表头刻度对齐。
 
@@ -267,8 +267,8 @@ baseline_groups: 索引页 groups 形状，只含 9.0 存在的参数
 
 - **索引**：面包屑 → H1「PostgreSQL 配置参数」→ 导语 → 十六个分类入口（`wiki-classnav` 形，紧凑网格，中文名 + 数量 + 英文眉题）→ 版本条（18 个药丸链到变更页，实心 = 默认版本，虚线 = 未发布）→ 搜索框 + 四个下拉 → 图例 → 分组大表 → 说明段。
   表：每个一级分类一个 `tbody`（组标题行），子分类一行浅色分隔行，每个参数两行：
-  第一行 `名称 · 类型 · 上下文 · 默认值 · 生命线 · 变更`，第二行 `中文简述（无则英文并 lang="en"）· 状态（现存 / 于 16 移除）`。
-  生命线是一条分段的细条（每段按 `span` 伸展，颜色按 state，`title` 写 label），表头上方一排 18 个刻度与之对齐。
+  第一行 `名称 · 类型 · 上下文 · 默认值 · 版本变动 · 最近变更`，第二行 `中文简述（无则英文并 lang="en"）· 状态（现存 / 于 16 移除）`。
+  版本变动是一排方格（一版一格，颜色按 state，`title` 写 label），表头下方的横向刻度与之逐格对齐；刻度隔一格写一个版本号，由 `pgweb/wiki/ruler.py` 的 `mark_ticks()` 在版本条上标 `tick`。
 - **详情**：面包屑（文档 / 配置参数 / 一级分类）→ 眉题 `CONFIGURATION PARAMETER · 预写式日志 / 设置` → H1（等宽参数名）→ 中文简述 + 英文简述（灰、小）→ 徽章（类型 / 上下文 / 引入 / 状态 / N 次默认值变更 / 未发布提示）→ 事实卡（三栏）与三个按钮（本站手册 · 官方文档 ↗ · 引入提交 ↗）→ 版本条（当前高亮，变化版本带角标，缺席灰）→ 本版变化一句话 → **默认值变迁条**（横向分段条，每段标 human 值与版本区间，当前版本所在段高亮；只有一段时也画，表明"自 9.0 起未变"）→ 本页目录 →
   「手册说明」（`<div class="guc-doc">` 渲染 `doc.html`，顶部一行写来源与链接，借用时加提示）→「机制详解」（段落）→「调优建议」（OLTP / OLAP / 小规格三张卡）→「常见问题」（列表）→「演化历史」（时间线，新在前，每项一组字段变化芯片：`默认值 minimal → replica`、`上下文 …`、新增 / 移除 / 沿用）→「逐版本快照」（矩阵：行 = 版本，列 = 七个字段；有变的格高亮，当前版本行高亮，版本号链到该版）→「关联参数」（芯片链接，不在本站的只显示名字）→「参考资料」→「同类参数」（复用索引表，只含本子分类）→ 页脚（数据来源 guc.pg.center、手册译文、纠错入口）。
   `.guc-doc` 要给手册 HTML 配样式：段落间距、`code.varname / literal / type`、`table.simplelist`、`div.note / tip / warning / caution` 提示框，亮暗两套。

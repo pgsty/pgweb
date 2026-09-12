@@ -7,12 +7,13 @@
 from django.core.cache import cache
 
 from .catalog_importer import compare_snapshots
+from .ruler import mark_ticks
 from .models import (CATALOG_KINDS, CATALOG_KIND_EYEBROW, CATALOG_KIND_LABEL, CatalogRelation,
                      CatalogVersion, RELKIND_LABEL)
 
 
 CACHE_KEY = 'pgweb:wiki:catalog-index'
-VERSION_CACHE_KEY = 'pgweb:wiki:catalog-versions'
+VERSION_CACHE_KEY = 'pgweb:wiki:catalog-versions2'
 DOC_CACHE_KEY = 'pgweb:wiki:catalog-docpages'
 CHANGES_CACHE_KEY = 'pgweb:wiki:catalog-changes:{}'
 CACHE_SECONDS = 300
@@ -55,7 +56,7 @@ def versions():
     if rows is None:
         stored = list(CatalogVersion.objects.all())
         default = stable_major(stored)
-        rows = [version_data(version, version.major == default) for version in stored]
+        rows = mark_ticks([version_data(version, version.major == default) for version in stored])
         cache.set(VERSION_CACHE_KEY, rows, CACHE_SECONDS)
     return rows
 

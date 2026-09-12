@@ -1,7 +1,7 @@
 {% comment %}
 可复用的分组表：每个类别一个 tbody，每个关系两行。
 参数：groups（必需）、table_id、top_link、current（高亮的关系名）。
-父模板必须提供 versions（版本轨迹的表头刻度按它渲染）。
+父模板必须提供 versions（版本变动的表头刻度按它渲染）。
 {% endcomment %}
 <div class="wiki-table"><div class="wiki-table__scroll">
 <table{% if table_id %} id="{{ table_id }}"{% endif %} class="cat-relations" data-rowlink>
@@ -10,8 +10,8 @@
     <th class="cat-th cat-th--first" scope="col">引入</th>
     <th class="cat-th cat-th--cols" scope="col">字段</th>
     <th class="cat-th cat-th--strip" scope="col">
-      <span class="cat-th__title">版本轨迹</span>
-      <span class="cat-ruler" aria-hidden="true">{% for v in versions %}<span class="cat-ruler__tick{% if v.is_default %} is-default{% endif %}{% if v.preview or v.devel %} is-unreleased{% endif %}">{{ v.major }}</span>{% endfor %}</span>
+      <span class="cat-th__title">版本变动</span>
+      <span class="wiki-ruler" aria-hidden="true">{% for v in versions %}<span class="wiki-ruler__slot{% if v.tick %} is-tick{% endif %}{% if v.is_default %} is-default{% endif %}{% if v.preview or v.devel %} is-unreleased{% endif %}">{% if v.tick %}<i>{{ v.major }}</i>{% endif %}</span>{% endfor %}</span>
     </th>
     <th class="cat-th cat-th--last" scope="col">最近变更</th>
   </tr></thead>
@@ -35,7 +35,7 @@
       <td class="cat-row__first">{% if row.first == versions.0.major %}<span class="cat-baseline" title="{{ row.first }} 是本数据集的收录基线，不代表该关系首次于 {{ row.first }} 引入">{{ row.first }}<span class="cat-baseline__mark">基线</span></span>{% else %}{{ row.first }}{% endif %}</td>
       <td class="cat-row__cols">{{ row.column_count }}</td>
       <td class="cat-row__strip">
-        <span class="cat-track">{% for cell in row.strip %}{% if cell.url %}<a class="cat-sq cat-sq--{{ cell.state }}" href="{{ cell.url }}" title="{{ cell.label }}{% if cell.state == 'added' %} · 首次出现{% elif cell.state == 'changed' %} · 结构变更{% endif %}" aria-label="{{ cell.label }}{% if cell.state == 'added' %} 首次出现{% elif cell.state == 'changed' %} 结构变更{% else %} 存在{% endif %}"></a>{% else %}<span class="cat-sq cat-sq--{{ cell.state }}" title="{{ cell.label }}{% if cell.state == 'removed' %} · 已移除{% else %} · 未收录{% endif %}" aria-hidden="true"></span>{% endif %}{% endfor %}</span>
+        <span class="wiki-strip">{% for cell in row.strip %}{% if cell.url %}<a class="wiki-cell wiki-cell--{{ cell.state }}" href="{{ cell.url }}" title="{{ cell.label }}{% if cell.state == 'added' %} · 首次出现{% elif cell.state == 'changed' %} · 结构变更{% endif %}" aria-label="{{ cell.label }}{% if cell.state == 'added' %} 首次出现{% elif cell.state == 'changed' %} 结构变更{% else %} 存在{% endif %}"></a>{% else %}<span class="wiki-cell wiki-cell--{{ cell.state }}" title="{{ cell.label }}{% if cell.state == 'removed' %} · 已移除{% else %} · 未收录{% endif %}" aria-hidden="true"></span>{% endif %}{% endfor %}</span>
       </td>
       <td class="cat-row__last">{% if row.changed_in %}{{ row.changed_in|last }}<span class="cat-row__times">{{ row.change_count }} 次</span>{% else %}<span class="cat-row__none">—</span>{% endif %}</td>
     </tr>

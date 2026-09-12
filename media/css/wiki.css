@@ -1,13 +1,13 @@
 /* 百科 inside the standard pg-page layout. */
 .wiki {
   /* One accent per column. */
-  --c-err: #d21f3c; --c-guc: #2456b8; --c-wait: #b97e0c; --c-cat: #2f9e4f;
+  --c-err: #d21f3c; --c-guc: #2456b8; --c-wait: #b97e0c; --c-cat: #2f9e4f; --c-sql: #6f42c1;
   --seg: var(--pg-blue);
   min-width: 0;
 }
 
 [data-theme="dark"] .wiki {
-  --c-err: #ef5a72; --c-guc: #6b8fe0; --c-wait: #d9a030; --c-cat: #4fbf72;
+  --c-err: #ef5a72; --c-guc: #6b8fe0; --c-wait: #d9a030; --c-cat: #4fbf72; --c-sql: #b08ae8;
 }
 
 /* Column accents travel as classes; the site CSP forbids inline styles. */
@@ -15,6 +15,66 @@
 .wiki-tone-guc { --seg: var(--c-guc); }
 .wiki-tone-wait { --seg: var(--c-wait); }
 .wiki-tone-cat { --seg: var(--c-cat); }
+.wiki-tone-sql { --seg: var(--c-sql); }
+
+/* ------------------------------------------- 版本变动：各栏目索引表共用 */
+
+/* 索引表最宽的那一列：一版一格的方格条，配一把横向刻度尺。方格按栏目色调着色，
+   三种状态色全站统一——绿为新增、琥珀为变更、红为移除，读者换个栏目不用重学。
+   刻度与方格共用同一套宽度和间距，因此逐格对齐；版本号横排，隔一格写一个，
+   写不下的那些靠方格自己的 title 补。 */
+.wiki { --state-add: var(--c-cat); --state-chg: var(--c-wait); --state-del: var(--c-err); }
+
+.wiki-strip, .wiki-ruler { display: flex; gap: 2px; }
+
+.wiki-cell {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  flex: none;
+  width: 12px; height: 12px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+/* 未收录的版本不画方块，只留一条居中的细线：时间轴还在走，条目不在。 */
+.wiki-cell--absent {
+  background: linear-gradient(to bottom,
+    transparent 0 5px, var(--pg-line-strong) 5px 7px, transparent 7px 12px);
+}
+.wiki-cell--present { background: var(--seg); opacity: .26; }
+.wiki-cell--added { background: var(--state-add); }
+.wiki-cell--changed { background: var(--state-chg); }
+.wiki-cell--removed { border-color: var(--state-del); }
+.wiki-cell--removed:after {
+  content: ''; position: absolute; left: 2px; top: 4px;
+  width: 6px; height: 2px; background: var(--state-del);
+}
+a.wiki-cell { opacity: 1; }
+a.wiki-cell.wiki-cell--present { opacity: .26; }
+a.wiki-cell:hover { opacity: 1; box-shadow: 0 0 0 1px var(--seg); }
+a.wiki-cell:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 1px; }
+
+/* 刻度尺：版本号挂在自己那一格的中线上，两侧铺开，下面一根短竖线指向方格。 */
+.wiki-ruler { align-items: flex-end; height: 17px; margin-top: 5px; }
+.wiki-ruler__slot { position: relative; flex: none; width: 12px; }
+.wiki-ruler__slot > i {
+  position: absolute; left: 50%; bottom: 4px; transform: translateX(-50%);
+  font-family: var(--pg-font-mono); font-size: 10px; font-weight: 500; font-style: normal;
+  line-height: 1; color: var(--pg-ink-2); white-space: nowrap;
+}
+.wiki-ruler__slot.is-tick:after {
+  content: ''; position: absolute; left: 50%; bottom: 0;
+  width: 1px; height: 3px; background: var(--pg-line-strong);
+}
+.wiki-ruler__slot.is-default > i { color: var(--seg); font-weight: 700; }
+.wiki-ruler__slot.is-unreleased > i { color: var(--pg-muted); }
+
+.wiki-striplegend {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 5px 16px;
+  margin: 14px 0 0; font-size: 12px; color: var(--pg-muted);
+}
+.wiki-striplegend__title { color: var(--pg-ink-2); }
+.wiki-striplegend__item { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
 
 .wiki-lead { color: var(--pg-ink-2); }
 
@@ -458,8 +518,6 @@
 a.cat-sq:hover { border-color: var(--cat-fill); box-shadow: 0 0 0 1px var(--cat-fill); }
 a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 1px; }
 
-.cat-track { display: flex; gap: 2px; }
-
 .cat-legend {
   display: flex; flex-wrap: wrap; align-items: center; gap: 5px 16px;
   margin: 14px 0 0; font-size: 12px; color: var(--pg-muted);
@@ -548,20 +606,8 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
 .cat-th--first { width: 106px; }
 .cat-th--cols { width: 68px; }
 .cat-relations thead th.cat-th--cols { text-align: right; }
-.cat-th--strip { width: 278px; min-width: 278px; }
+.cat-th--strip { width: 268px; min-width: 268px; }
 .cat-th__title { display: block; }
-
-/* 表头的版本刻度：18 个标签竖排，与下面的方格一一对齐。 */
-.cat-ruler { display: flex; gap: 2px; align-items: flex-end; height: 30px; margin-top: 6px; }
-.cat-ruler__tick {
-  flex: none; width: 12px;
-  writing-mode: vertical-rl;
-  font-family: var(--pg-font-mono); font-size: 10px; font-weight: 500;
-  line-height: 12px; letter-spacing: 0;
-  color: var(--pg-ink-2); text-align: right;
-}
-.cat-ruler__tick.is-default { color: var(--cat-add-fg); font-weight: 700; }
-.cat-ruler__tick.is-unreleased { color: var(--cat-typ-fg); }
 
 .cat-grouprow__eyebrow { font-family: var(--pg-font-mono); font-size: 11px; letter-spacing: .06em; color: var(--cat-add-fg); }
 
@@ -911,7 +957,7 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
 
 /* 本栏目的强调色是蓝色（--c-guc）。状态色与系统目录一致：绿 = 新增，红 = 移除，
    琥珀 = 默认值或属性变化，灰 = 只改措辞。--guc-fill 比 --c-guc 深一档，专门给填色
-   药丸上的白字留出对比度；生命线的分段不带文字，直接用 --c-guc。 */
+   药丸上的白字留出对比度。索引表的版本变动方格用共用的 .wiki-cell。 */
 .wiki .guc {
   --guc-fill: #1f4ea8;
   --guc-on-fill: #ffffff;
@@ -948,74 +994,30 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
 }
 .guc-none { color: var(--pg-line-strong); }
 
-/* --------------------------------------------------- 生命线 */
+/* ------------------------------------------- 默认值变迁条的分段宽度 */
 
-/* 一条横条覆盖全部大版本，同状态的连续版本合成一段。段宽走 grid：容器按列自动排布，
-   每列等宽，一段占 span 列，段与段之间留 1px 缝；表头刻度用同一套排布，两者因此
-   逐版本对齐，且不写死版本个数。 */
-.guc-line, .guc-ruler {
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(0, 1fr);
-  gap: 1px;
-}
-
-.guc-seg { display: block; height: 10px; border-radius: 2px; }
-/* 未收录的版本不画方块，只留一条居中的细线：时间轴还在走，参数不在。
-   1px 的描边在这个尺寸上几乎看不见，实测读不出「从哪一版才有」。 */
-.guc-seg--absent {
-  background: linear-gradient(to bottom,
-    transparent 0 4px, var(--pg-line-strong) 4px 6px, transparent 6px 10px);
-}
-.guc-seg--present { background: var(--guc-soft); }
-.guc-seg--added { background: var(--c-guc); }
-.guc-seg--changed { background: var(--guc-typ-line); }
-.guc-seg--removed { background: var(--guc-del-bg); box-shadow: inset 0 0 0 1px var(--guc-del-line); }
-
-/* 段宽（grid）与默认值变迁条的段宽（flex）共用这一组类：grid 容器里只有
-   grid-column 生效，flex 容器里只有 flex-grow 生效。 */
-.guc-seg--n1 { grid-column: span 1; flex-grow: 1; }
-.guc-seg--n2 { grid-column: span 2; flex-grow: 2; }
-.guc-seg--n3 { grid-column: span 3; flex-grow: 3; }
-.guc-seg--n4 { grid-column: span 4; flex-grow: 4; }
-.guc-seg--n5 { grid-column: span 5; flex-grow: 5; }
-.guc-seg--n6 { grid-column: span 6; flex-grow: 6; }
-.guc-seg--n7 { grid-column: span 7; flex-grow: 7; }
-.guc-seg--n8 { grid-column: span 8; flex-grow: 8; }
-.guc-seg--n9 { grid-column: span 9; flex-grow: 9; }
-.guc-seg--n10 { grid-column: span 10; flex-grow: 10; }
-.guc-seg--n11 { grid-column: span 11; flex-grow: 11; }
-.guc-seg--n12 { grid-column: span 12; flex-grow: 12; }
-.guc-seg--n13 { grid-column: span 13; flex-grow: 13; }
-.guc-seg--n14 { grid-column: span 14; flex-grow: 14; }
-.guc-seg--n15 { grid-column: span 15; flex-grow: 15; }
-.guc-seg--n16 { grid-column: span 16; flex-grow: 16; }
-.guc-seg--n17 { grid-column: span 17; flex-grow: 17; }
-.guc-seg--n18 { grid-column: span 18; flex-grow: 18; }
-.guc-seg--n19 { grid-column: span 19; flex-grow: 19; }
-.guc-seg--n20 { grid-column: span 20; flex-grow: 20; }
-
-.guc-line:hover .guc-seg { opacity: .85; }
-.guc-line .guc-seg:hover { opacity: 1; box-shadow: 0 0 0 1px var(--guc-fill); }
-
-/* 表头刻度：版本号竖排，一列一个，与下面的分段一一对齐。 */
-.guc-ruler { align-items: flex-end; height: 30px; margin-top: 6px; }
-.guc-ruler__tick {
-  writing-mode: vertical-rl;
-  font-family: var(--pg-font-mono); font-size: 10px; font-weight: 500;
-  line-height: 1; letter-spacing: 0;
-  color: var(--pg-ink-2); text-align: right;
-}
-.guc-ruler__tick.is-default { color: var(--guc-fg); font-weight: 700; }
-.guc-ruler__tick.is-unreleased { color: var(--guc-typ-fg); }
-
-.guc-legend {
-  display: flex; flex-wrap: wrap; align-items: center; gap: 5px 16px;
-  margin: 14px 0 0; font-size: 12px; color: var(--pg-muted);
-}
-.guc-legend__title { color: var(--pg-ink-2); }
-.guc-legend__item { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
-.guc-legend__swatch { display: inline-block; flex: none; width: 20px; }
+/* 详情页的默认值变迁条按覆盖的大版本数伸展；索引表的版本变动方格用共用的
+   .wiki-cell，不再复用这组类。 */
+.guc-seg--n1 { flex-grow: 1; }
+.guc-seg--n2 { flex-grow: 2; }
+.guc-seg--n3 { flex-grow: 3; }
+.guc-seg--n4 { flex-grow: 4; }
+.guc-seg--n5 { flex-grow: 5; }
+.guc-seg--n6 { flex-grow: 6; }
+.guc-seg--n7 { flex-grow: 7; }
+.guc-seg--n8 { flex-grow: 8; }
+.guc-seg--n9 { flex-grow: 9; }
+.guc-seg--n10 { flex-grow: 10; }
+.guc-seg--n11 { flex-grow: 11; }
+.guc-seg--n12 { flex-grow: 12; }
+.guc-seg--n13 { flex-grow: 13; }
+.guc-seg--n14 { flex-grow: 14; }
+.guc-seg--n15 { flex-grow: 15; }
+.guc-seg--n16 { flex-grow: 16; }
+.guc-seg--n17 { flex-grow: 17; }
+.guc-seg--n18 { flex-grow: 18; }
+.guc-seg--n19 { flex-grow: 19; }
+.guc-seg--n20 { flex-grow: 20; }
 
 /* --------------------------------------------------- 十六个分类入口 */
 
@@ -1102,7 +1104,7 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
 .guc-th--type { width: 7%; }
 .guc-th--ctx { width: 10%; }
 .guc-th--def { width: 15%; }
-.guc-th--line { width: auto; min-width: 250px; }
+.guc-th--line { width: 262px; min-width: 262px; }
 .guc-th--last { width: 9%; }
 .guc-th__title { display: block; }
 
@@ -1121,7 +1123,7 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
   font-variant-numeric: tabular-nums; color: var(--pg-muted);
 }
 
-/* 一个参数两行：第一行名称、类型、上下文、默认值、生命线与最近变更，
+/* 一个参数两行：第一行名称、类型、上下文、默认值、版本变动与最近变更，
    第二行一句话与状态。两行同属一条记录：一起高亮，整行可点。 */
 .guc-row > th, .guc-row > td { border-top: 1px solid var(--pg-line); vertical-align: baseline; }
 .guc-row > th { padding-top: 8px; text-align: left; font-weight: 400; }

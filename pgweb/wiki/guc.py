@@ -14,13 +14,14 @@ from django.db.models import JSONField, Q
 from django.db.models.expressions import RawSQL
 
 from .guc_common import diff_fields, human_value, is_default_change, is_substantive
+from .ruler import mark_ticks
 from .models import (GUC_CATEGORY_ORDER, GUC_CONTEXT_LABEL, GUC_CONTEXT_NOTE, GUC_CONTEXTS,
                      GUC_FIELD_LABEL, GUC_FIELDS, GUC_GROUP_LABEL, GUC_GROUPS,
                      GUC_SUBSTANTIVE_FIELDS, GUC_VARTYPE_LABEL, GucParameter, GucVersion)
 
 
 CACHE_KEY = 'pgweb:wiki:guc-index'
-VERSION_CACHE_KEY = 'pgweb:wiki:guc-versions'
+VERSION_CACHE_KEY = 'pgweb:wiki:guc-versions2'
 DOC_CACHE_KEY = 'pgweb:wiki:guc-docpages'
 CHANGES_CACHE_KEY = 'pgweb:wiki:guc-changes:{}'
 CACHE_SECONDS = 300
@@ -76,7 +77,7 @@ def versions():
     if rows is None:
         stored = list(GucVersion.objects.all())
         default = stable_major(stored)
-        rows = [version_data(version, version.major == default) for version in stored]
+        rows = mark_ticks([version_data(version, version.major == default) for version in stored])
         cache.set(VERSION_CACHE_KEY, rows, CACHE_SECONDS)
     return rows
 
@@ -257,7 +258,7 @@ def category_label(category_zh, group_label):
 # ---------------------------------------------------------------- 索引页
 
 def states_of(parameter, order):
-    """逐版本的生命线状态，未合段。"""
+    """逐版本的版本变动状态。"""
     present = set(parameter.present_in)
     changed = set(parameter.changed_in)
     removed_in = removed_after(parameter, order)
@@ -289,31 +290,17 @@ def removed_after(parameter, order):
     return majors[index + 1] if index + 1 < len(majors) else ''
 
 
-def segment_label(state, first, last, majors, defaults):
-    span = '{} – {}'.format(first, last) if first != last else first
+def cell_label(major, state, defaults):
     if state == 'changed':
-        marks = {major in defaults for major in majors}
-        kind = 'default' if marks == {True} else 'attribute' if marks == {False} else 'mixed'
-        return '{} · {}'.format(span, CHANGED_LABEL[kind])
-    return '{} · {}'.format(span, STATE_LABEL.get(state, state))
+        return '{} · {}'.format(major, CHANGED_LABEL['default' if major in defaults else 'attribute'])
+    return '{} · {}'.format(major, STATE_LABEL.get(state, state))
 
 
 def strip_of(parameter, order):
-    """生命线：同状态的连续版本合成一段，各段 span 之和恒等于版本数。"""
+    """版本变动：一排方格，每格一个版本，与表头刻度一一对应。"""
     defaults = set(parameter.default_changed_in)
-    segments = []
-    for major, state in states_of(parameter, order):
-        if segments and segments[-1]['state'] == state:
-            segments[-1]['to'] = major
-            segments[-1]['span'] += 1
-            segments[-1]['majors'].append(major)
-        else:
-            segments.append({'state': state, 'from': major, 'to': major, 'span': 1,
-                             'majors': [major]})
-    for segment in segments:
-        segment['label'] = segment_label(segment['state'], segment['from'], segment['to'],
-                                         segment.pop('majors'), defaults)
-    return segments
+    return [{'major': major, 'state': state, 'label': cell_label(major, state, defaults)}
+            for major, state in states_of(parameter, order)]
 
 
 def row_of(parameter, order, snapshot=None):
