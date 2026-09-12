@@ -14,7 +14,7 @@
 <nav class="cat-verbar cat-verbar--releases" aria-label="按版本查看变更">
   <ol class="cat-verbar__list">
     {% for item in versions %}
-    <li class="cat-verbar__item"><a class="cat-pill cat-pill--link{% if item.is_current %} is-current{% endif %}{% if item.preview %} is-preview{% elif item.devel %} is-devel{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {{ item.status_label }} · {{ item.relation_count }} 个关系 · {{ item.column_count }} 个字段">{{ item.major }}</a></li>
+    <li class="cat-verbar__item"><a class="cat-pill cat-pill--link wiki-vpill is-{{ item.tone }}{% if item.is_current %} is-current{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {{ item.status_label }} · {{ item.relation_count }} 个关系 · {{ item.column_count }} 个字段">{{ item.major }}</a></li>
     {% endfor %}
   </ol>
 </nav>

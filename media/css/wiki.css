@@ -19,55 +19,76 @@
 
 /* ------------------------------------------- 版本变动：各栏目索引表共用 */
 
-/* 索引表最宽的那一列：一版一格的方格条，配一把横向刻度尺。方格按栏目色调着色，
-   三种状态色全站统一——绿为新增、琥珀为变更、红为移除，读者换个栏目不用重学。
-   刻度与方格共用同一套宽度和间距，因此逐格对齐；版本号横排，隔一格写一个，
-   写不下的那些靠方格自己的 title 补。 */
-.wiki { --state-add: var(--c-cat); --state-chg: var(--c-wait); --state-del: var(--c-err); }
+/* 索引表最宽的那一列：一版一格的方格条，下面一把写满版本号的横向刻度尺。
+   方格按栏目色调着色，状态色全站统一——绿为新增、琥珀为变更、红为移除；
+   版本号则按支持状态着色——橙为已停止维护、绿为仍在支持、蓝为测试版、
+   紫为开发版，同一套色也用在页面上方的版本导航条上。
+   刻度与方格共用同一套宽度和间距，因此逐格对齐。 */
+.wiki {
+  --state-add: var(--c-cat); --state-chg: var(--c-wait); --state-del: var(--c-err);
+  --tone-eol: #c2410c; --tone-eol-bg: rgba(194, 65, 12, .10); --tone-eol-line: rgba(194, 65, 12, .40);
+  --tone-live: #2f7d4f; --tone-live-bg: rgba(47, 125, 79, .12); --tone-live-line: rgba(47, 125, 79, .42);
+  --tone-beta: #2456b8; --tone-beta-bg: rgba(36, 86, 184, .10); --tone-beta-line: rgba(36, 86, 184, .40);
+  --tone-dev: #6f42c1; --tone-dev-bg: rgba(111, 66, 193, .10); --tone-dev-line: rgba(111, 66, 193, .40);
+  --tone-on: #ffffff;
+}
+[data-theme="dark"] .wiki {
+  --tone-eol: #f0985c; --tone-eol-bg: rgba(240, 152, 92, .16); --tone-eol-line: rgba(240, 152, 92, .46);
+  --tone-live: #5fc383; --tone-live-bg: rgba(95, 195, 131, .16); --tone-live-line: rgba(95, 195, 131, .46);
+  --tone-beta: #7fa5ee; --tone-beta-bg: rgba(127, 165, 238, .16); --tone-beta-line: rgba(127, 165, 238, .46);
+  --tone-dev: #b08ae8; --tone-dev-bg: rgba(176, 138, 232, .16); --tone-dev-line: rgba(176, 138, 232, .46);
+  --tone-on: #0c1319;
+}
+.wiki .is-eol { --tone: var(--tone-eol); --tone-bg: var(--tone-eol-bg); --tone-line: var(--tone-eol-line); }
+.wiki .is-live { --tone: var(--tone-live); --tone-bg: var(--tone-live-bg); --tone-line: var(--tone-live-line); }
+.wiki .is-beta { --tone: var(--tone-beta); --tone-bg: var(--tone-beta-bg); --tone-line: var(--tone-beta-line); }
+.wiki .is-dev { --tone: var(--tone-dev); --tone-bg: var(--tone-dev-bg); --tone-line: var(--tone-dev-line); }
 
-.wiki-strip, .wiki-ruler { display: flex; gap: 2px; }
+.wiki-strip, .wiki-ruler { display: flex; gap: 3px; }
 
 .wiki-cell {
   position: relative;
   display: block;
   box-sizing: border-box;
   flex: none;
-  width: 12px; height: 12px;
+  width: 15px; height: 14px;
   border: 1px solid transparent;
   border-radius: 2px;
 }
 /* 未收录的版本不画方块，只留一条居中的细线：时间轴还在走，条目不在。 */
 .wiki-cell--absent {
   background: linear-gradient(to bottom,
-    transparent 0 5px, var(--pg-line-strong) 5px 7px, transparent 7px 12px);
+    transparent 0 6px, var(--pg-line-strong) 6px 8px, transparent 8px 14px);
 }
 .wiki-cell--present { background: var(--seg); opacity: .26; }
 .wiki-cell--added { background: var(--state-add); }
 .wiki-cell--changed { background: var(--state-chg); }
 .wiki-cell--removed { border-color: var(--state-del); }
 .wiki-cell--removed:after {
-  content: ''; position: absolute; left: 2px; top: 4px;
-  width: 6px; height: 2px; background: var(--state-del);
+  content: ''; position: absolute; left: 3px; top: 5px;
+  width: 7px; height: 2px; background: var(--state-del);
 }
 a.wiki-cell { opacity: 1; }
 a.wiki-cell.wiki-cell--present { opacity: .26; }
 a.wiki-cell:hover { opacity: 1; box-shadow: 0 0 0 1px var(--seg); }
 a.wiki-cell:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 1px; }
 
-/* 刻度尺：版本号挂在自己那一格的中线上，两侧铺开，下面一根短竖线指向方格。 */
-.wiki-ruler { align-items: flex-end; height: 17px; margin-top: 5px; }
-.wiki-ruler__slot { position: relative; flex: none; width: 12px; }
+/* 刻度尺：每格都写出版本号，颜色按支持状态；9.x 的点号单独缩小，
+   让三位数的版本号占位与两位数相当，整排因此看着齐。 */
+.wiki-ruler { align-items: flex-end; height: 18px; margin-top: 6px; }
+.wiki-ruler__slot { position: relative; flex: none; width: 15px; }
 .wiki-ruler__slot > i {
   position: absolute; left: 50%; bottom: 4px; transform: translateX(-50%);
   font-family: var(--pg-font-mono); font-size: 10px; font-weight: 500; font-style: normal;
-  line-height: 1; color: var(--pg-ink-2); white-space: nowrap;
+  line-height: 1; letter-spacing: -.02em; color: var(--tone, var(--pg-ink-2)); white-space: nowrap;
 }
-.wiki-ruler__slot.is-tick:after {
+.wiki-ruler__dot { font-size: 6px; font-weight: 400; opacity: .75; vertical-align: 1.5px; margin: 0 -.5px; }
+.wiki-ruler__slot:after {
   content: ''; position: absolute; left: 50%; bottom: 0;
-  width: 1px; height: 3px; background: var(--pg-line-strong);
+  width: 1px; height: 3px; background: var(--tone, var(--pg-line-strong)); opacity: .5;
 }
-.wiki-ruler__slot.is-default > i { color: var(--seg); font-weight: 700; }
-.wiki-ruler__slot.is-unreleased > i { color: var(--pg-muted); }
+.wiki-ruler__slot.is-default > i { font-weight: 700; }
+.wiki-ruler__slot.is-default:after { opacity: 1; height: 4px; }
 
 .wiki-striplegend {
   display: flex; flex-wrap: wrap; align-items: center; gap: 5px 16px;
@@ -75,6 +96,25 @@ a.wiki-cell:focus-visible { outline: 2px solid var(--pg-link-hover); outline-off
 }
 .wiki-striplegend__title { color: var(--pg-ink-2); }
 .wiki-striplegend__item { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; }
+
+/* 版本导航条上的药丸：底色与文字都按支持状态，当前版本整块填实。
+   选择器压过各栏目自己的 .cat-pill / .guc-pill / .cmd-pill 规则。 */
+#pgContentWrap .wiki a.wiki-vpill,
+#pgContentWrap .wiki a.wiki-vpill:hover {
+  color: var(--tone); background: var(--tone-bg); border-color: var(--tone-line);
+}
+#pgContentWrap .wiki a.wiki-vpill:hover { background: var(--tone); color: var(--tone-on); }
+#pgContentWrap .wiki a.wiki-vpill.is-default,
+#pgContentWrap .wiki a.wiki-vpill.is-current {
+  color: var(--tone-on); background: var(--tone); border-color: var(--tone);
+}
+.wiki .wiki-vpill.is-beta, .wiki .wiki-vpill.is-dev { border-style: dashed; }
+
+.wiki-tonekey { display: inline-flex; align-items: center; gap: 4px; margin: 0 1px 0 10px; white-space: nowrap; }
+.wiki-tonekey:before {
+  content: ''; width: 9px; height: 9px; border-radius: 2px;
+  background: var(--tone); border: 1px solid var(--tone-line);
+}
 
 .wiki-lead { color: var(--pg-ink-2); }
 
@@ -602,11 +642,11 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
 .cat-relations th, .cat-relations td { padding-left: 10px; padding-right: 10px; }
 /* 名称列吃掉主要余量（第二行的一句话铺在它下面），引入与字段数固定宽度紧贴轨迹，
    多出来的宽度留给最后一列。 */
-.cat-th--name { width: 30%; }
-.cat-th--first { width: 106px; }
+.cat-th--name { width: 24%; }
+.cat-th--first { width: 96px; }
 .cat-th--cols { width: 68px; }
 .cat-relations thead th.cat-th--cols { text-align: right; }
-.cat-th--strip { width: 268px; min-width: 268px; }
+.cat-th--strip { width: 330px; min-width: 330px; }
 .cat-th__title { display: block; }
 
 .cat-grouprow__eyebrow { font-family: var(--pg-font-mono); font-size: 11px; letter-spacing: .06em; color: var(--cat-add-fg); }
@@ -1096,16 +1136,16 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
 #guc-q { font-size: 14px; }
 .guc-filters { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 
-.guc-params { min-width: 940px; }
+.guc-params { min-width: 900px; }
 .guc-params thead th { padding: 9px 10px 8px; vertical-align: top; }
-.guc-params th, .guc-params td { padding-left: 10px; padding-right: 10px; }
+.guc-params th, .guc-params td { padding-left: 9px; padding-right: 9px; }
 /* 参数名最长 36 个字符，给名称列留出一行放得下大多数名字的宽度。 */
-.guc-th--name { width: 24%; }
-.guc-th--type { width: 7%; }
-.guc-th--ctx { width: 10%; }
-.guc-th--def { width: 15%; }
-.guc-th--line { width: 262px; min-width: 262px; }
-.guc-th--last { width: 9%; }
+.guc-th--name { width: 17%; }
+.guc-th--type { width: 6%; }
+.guc-th--ctx { width: 8%; min-width: 76px; }
+.guc-th--def { width: 11%; }
+.guc-th--line { width: 330px; min-width: 330px; }
+.guc-th--last { width: 8%; }
 .guc-th__title { display: block; }
 
 .guc-grouprow__eyebrow { font-family: var(--pg-font-mono); font-size: 11px; letter-spacing: .06em; color: var(--guc-fg); }
@@ -1139,9 +1179,9 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
 .guc-row__name a { font-weight: 600; }
 .guc-row__name a:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset: 2px; }
 .guc-row__type { white-space: nowrap; color: var(--pg-ink-2); }
-.guc-row__ctx { white-space: nowrap; }
+.guc-row__ctx { overflow-wrap: anywhere; }
 .guc-ctx { border-bottom: 1px dotted var(--pg-line-strong); color: var(--pg-ink-2); cursor: help; }
-.guc-row__def { color: var(--pg-ink-2); line-height: 1.5; overflow-wrap: break-word; }
+.guc-row__def { color: var(--pg-ink-2); line-height: 1.5; overflow-wrap: anywhere; }
 .guc-row__line { min-width: 250px; }
 .guc-row__last { white-space: nowrap; font-family: var(--pg-font-mono); font-variant-numeric: tabular-nums; color: var(--pg-ink-2); }
 .guc-row__times { margin-left: 6px; font-family: var(--pg-font); font-size: 11px; color: var(--pg-muted); }

@@ -14,7 +14,7 @@
 <nav class="guc-verbar guc-verbar--releases" aria-label="按版本查看变更">
   <ol class="guc-verbar__list">
     {% for item in versions %}
-    <li class="guc-verbar__item"><a class="guc-pill guc-pill--link{% if item.is_current %} is-current{% endif %}{% if item.preview %} is-preview{% elif item.devel %} is-devel{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {{ item.status_label }} · {{ item.parameter_count }} 个参数">{{ item.major }}</a></li>
+    <li class="guc-verbar__item"><a class="guc-pill guc-pill--link wiki-vpill is-{{ item.tone }}{% if item.is_current %} is-current{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {{ item.status_label }} · {{ item.parameter_count }} 个参数">{{ item.major }}</a></li>
     {% endfor %}
   </ol>
 </nav>

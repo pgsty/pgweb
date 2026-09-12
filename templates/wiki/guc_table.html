@@ -12,7 +12,7 @@
     <th class="guc-th guc-th--def" scope="col">默认值</th>
     <th class="guc-th guc-th--line" scope="col">
       <span class="guc-th__title">版本变动</span>
-      <span class="wiki-ruler" aria-hidden="true">{% for v in versions %}<span class="wiki-ruler__slot{% if v.tick %} is-tick{% endif %}{% if v.is_default %} is-default{% endif %}{% if v.preview or v.devel %} is-unreleased{% endif %}">{% if v.tick %}<i>{{ v.major }}</i>{% endif %}</span>{% endfor %}</span>
+      <span class="wiki-ruler" aria-hidden="true">{% for v in versions %}<span class="wiki-ruler__slot is-{{ v.tone }}{% if v.is_default %} is-default{% endif %}"><i>{{ v.tick_head }}{% if v.tick_tail %}<span class="wiki-ruler__dot">.</span>{{ v.tick_tail }}{% endif %}</i></span>{% endfor %}</span>
     </th>
     <th class="guc-th guc-th--last" scope="col">最近变更</th>
   </tr></thead>
