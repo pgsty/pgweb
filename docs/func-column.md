@@ -30,17 +30,28 @@ PG 16 的 `any_value`、PG 17 的 `to_bin`、PG 18 的 `crc32`。译文仓库是
 按版本距离就近借用另一版的中文，快照里记 `zh_from`（`'doc'` 本版译文 / `'inherited'` 借用 / `''` 无），
 借用只在**英文描述完全相同**时才做，否则留空显示英文。9.0 – 9.6 本站没有手册，只有英文。
 
-三种抽取形态，同一份导入器里并存：
+四种抽取形态，同一份导入器里并存：
 
 1. **签名表（13 起）**：`div.table table.table` 里 `td.func_table_entry`，每格一条或多条 `p.func_signature`
    （`code.function` 是函数名，`code.type` 是参数类型，`code.returnvalue` 是返回类型），后面第一个 `<p>` 是描述，
    再后面带 `→` 的 `<p>` 是示例。18 有 1106 条签名段，其中 772 条带 `code.function`（其余是纯操作符，见 §1.1）。
 2. **五列表（9.0 – 12）**：`div.table table.table`，表头为「函数 | 返回类型 | 描述 | 示例 | 结果」
    （英文 `Function | Return Type | Description | Example | Result`）。函数名在首格的 `code.function` 里，
-   文本形如 `ascii(string)`，取第一个 `(` 之前的部分。
+   文本形如 `ascii(string)`，取第一个 `(` 之前的部分。上游偶尔把标记写坏
+   （`pg_replication_origin_advance` 的名字留在外层 `code.literal` 里、内层 `code.function`
+   从左括号才开始），所以判据是「标记有没有取出合法的函数名」，取不出才退回按整格文本认；
+   有些页（≤12 的枚举与 JSON）整页没有 `code.function`，同样走这条兜底。
 3. **散文页的 synopsis 块**：`functions-xml.html`、`functions-statistics.html` 这类页面没有函数表，
    每个函数占一个 `div.sect2`，标题即函数名，`pre.synopsis` 是签名（同样是 `name ( args ) → return` 的写法），
    其后的 `<p>` 是描述。这一形态与第 1 种共用签名解析。
+4. **只在正文里提到的函数**：上游 ≤12 的 `functions-trigger.html` 整页零表格零 synopsis，
+   `suppress_redundant_updates_trigger` 只出现在一句正文里；事件触发器与统计信息两页同理。
+   这类条目**只收存在性**：快照 `signatures` 为空、`prose_only` 为真，页面上如实说明
+   「上游该版只在正文里提到此函数，未给出签名」。不借邻版签名——借用等于替上游编内容，
+   而且那几版的签名未必相同。判据收紧到「段落里带 `code.function` 标记」且该名字在
+   **全部版本的确认集**里：那几页同时有「该函数返回哪些列」的输出表（表头
+   `Name | Type | Description`），其中一列就叫 `user`，按纯文本比对会凭空造出函数条目，
+   而列名不带这个标记，因此收紧后不会误收。
 
 9.x 上游页面是老式 DocBook：class 全大写（`CALSTABLE` / `FUNCTION` / `TYPE`），
 解析前把整棵树的 class 统一小写一次，就能复用第 2 种形态的解析器（2026-09-12 对 9.0 与 9.6 实测可行）。
@@ -139,7 +150,13 @@ class PgFunction(models.Model):             # db_table = 'wiki_func'
 **12 → 13 是手册重排**：函数表从五列改成签名段，签名文本整体换了写法，逐条比会把几百个函数
 全标成「变化」。这一跳一律 `doc_overhaul=True`，只记函数的增删（`status`），`signatures` 恒为空，
 `descriptions_changed` 恒为 False。同理，中英之间（9.6 → 10）不比描述，只比签名与增删。
-`changed_in` 只收 `signatures` 非空的 `to`。
+`changed_in` 只收 `signatures` 非空的 `to`。任一侧 `signatures` 为空（只在正文里提到的那一版）
+时同样跳过签名比对，否则「12 没签名、13 有签名」会被算成「13 新增 N 条签名」，
+`changed_in`、`FuncVersion.changed_count` 与索引页的版本方格都会脏。这道闸在导入器的
+`compare_snapshots()` 与页面侧的 `func.compare()` **两处都要加**：前者产出的 `changes[]` 喂详情页
+时间线与索引页方格，后者只喂变更页，只改一处会出现「详情页说新增了签名、变更页说没有」的矛盾。
+描述比较一律比英文原文（事实层），不比译文：译文改个措辞不是 PostgreSQL 的说明变了。
+`validate()` 允许个别版本没有签名，但一个函数在所有版本里都没有签名仍然报错。
 
 ### 2.1 版本汇总 `FuncVersion.transition`
 

@@ -50,7 +50,7 @@
     <p class="fn-card__head"><a class="fn-card__name" href="{{ card.url }}"><code class="fn-mono">{{ card.name }}</code></a><span class="fn-card__kind">{{ card.group_label }}</span></p>
     {% if card.summary_zh %}<p class="fn-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="fn-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
     {% if card.signature %}<p class="fn-card__sig"><code class="fn-mono" title="{{ card.signature }}">{{ card.signature }}</code></p>{% endif %}
-    <p class="fn-card__tags"><span class="fn-tag fn-tag--added">{{ card.signature_count }} 条签名</span></p>
+    <p class="fn-card__tags">{% if card.prose_only %}<span class="fn-tag fn-tag--desc">仅正文提及</span>{% else %}<span class="fn-tag fn-tag--added">{{ card.signature_count }} 条签名</span>{% endif %}</p>
   </li>
   {% endfor %}
 </ul>
@@ -66,7 +66,7 @@
     <p class="fn-card__head"><a class="fn-card__name" href="{{ card.url }}"><code class="fn-mono">{{ card.name }}</code></a><span class="fn-card__kind">{{ card.group_label }}</span></p>
     {% if card.summary_zh %}<p class="fn-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="fn-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
     {% if card.signature %}<p class="fn-card__sig"><code class="fn-mono" title="{{ card.signature }}">{{ card.signature }}</code></p>{% endif %}
-    <p class="fn-card__tags"><span class="fn-tag fn-tag--removed">于 {{ version.major }} 移除</span><span class="fn-tag fn-tag--desc">上一版有 {{ card.signature_count }} 条签名</span></p>
+    <p class="fn-card__tags"><span class="fn-tag fn-tag--removed">于 {{ version.major }} 移除</span>{% if card.prose_only %}<span class="fn-tag fn-tag--desc">上一版只在正文里提到</span>{% else %}<span class="fn-tag fn-tag--desc">上一版有 {{ card.signature_count }} 条签名</span>{% endif %}</p>
   </li>
   {% endfor %}
 </ul>

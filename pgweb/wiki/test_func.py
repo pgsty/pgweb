@@ -88,8 +88,12 @@ def sig(text, returns='', zh='', en='', examples=()):
     }
 
 
-def make_snapshot(major, group, page, anchor, signatures, pages=None):
-    """一版快照。本站手册没有该版译文时，中文整份留空，只剩上游英文描述。"""
+def make_snapshot(major, group, page, anchor, signatures, pages=None, prose=False):
+    """一版快照。本站手册没有该版译文时，中文整份留空，只剩上游英文描述。
+
+    `prose=True` 是「上游这一版只在正文里提到这个函数、没有给出签名」：签名列表为空，
+    描述照常，另带 `prose_only` 标记。
+    """
     zh_from = zh_from_of(major)
     rows = []
     for item in copy.deepcopy(signatures):
@@ -105,7 +109,7 @@ def make_snapshot(major, group, page, anchor, signatures, pages=None):
         'pages': list(pages or (page,)),
         'doc': {'file': page, 'anchor': anchor, 'slug': doc_slug(major)},
         'layout': layout_of(major), 'zh_from': zh_from,
-        'signatures': rows,
+        'signatures': [] if prose else rows, 'prose_only': bool(prose),
         'description_zh': first.get('description_zh', ''),
         'description': first.get('description', ''),
     }
@@ -134,14 +138,18 @@ def make_changes(versions, majors):
     return changes
 
 
-def make_function(name, slug, group, page, anchor, snapshots, position, groups=None):
-    """`snapshots` 是 {major: [签名…]}，其余字段照导入器的算法推出来。"""
+def make_function(name, slug, group, page, anchor, snapshots, position, groups=None, prose=()):
+    """`snapshots` 是 {major: [签名…]}，其余字段照导入器的算法推出来。
+
+    `prose` 列出「上游只在正文里提到、没有给出签名」的版本。
+    """
     majors = [major for major in MAJORS if major in snapshots]
     versions = {}
     for major in majors:
         item = snapshots[major]
         signatures, where = (item if isinstance(item, tuple) else (item, group))
-        versions[major] = make_snapshot(major, where, page, anchor, signatures)
+        versions[major] = make_snapshot(major, where, page, anchor, signatures,
+                                        prose=major in prose)
     changes = make_changes(versions, majors)
     latest = versions[majors[-1]]
     first_signature = (latest['signatures'] or [{}])[0]
@@ -225,7 +233,9 @@ def make_dataset():
     # 3) 13 新增。
     uuid = {major: UUID_NEW for major in MAJORS[MAJORS.index('13'):]}
     make_function('gen_random_uuid', 'gen-random-uuid', 'uuid', 'functions-uuid.html',
-                  'FUNCTIONS-UUID', uuid, position=14000)
+                  'FUNCTIONS-UUID', uuid, position=14000,
+                  # 引入那一版上游只在正文里提到，没有给签名。
+                  prose=('13',))
 
     # 4) 全大写的语法型函数：名字原样保留，地址走小写。
     coalesce = {major: (COALESCE_OLD if major in OLD_LAYOUT else COALESCE_NEW)
@@ -244,7 +254,9 @@ def make_dataset():
     # 6) 12 之后移除。
     xip = {major: XIP_OLD for major in OLD_LAYOUT}
     make_function('txid_snapshot_xip', 'txid-snapshot-xip', 'info', 'functions-info.html',
-                  'FUNCTIONS-TXID-SNAPSHOT', xip, position=27000)
+                  'FUNCTIONS-TXID-SNAPSHOT', xip, position=27000,
+                  # 上游 9.x 的原页只在正文里提到它，10 起才列进函数表。
+                  prose=('9.0', '9.1', '9.2', '9.3', '9.4', '9.5', '9.6'))
 
     counts, signatures, zh = {}, {}, {}
     added, removed, changed = {}, {}, {}
@@ -533,6 +545,54 @@ class FuncDetailTests(FuncFixture):
         self.assertEqual([row['added'] for row in func.detail('substring', '18')['signatures']],
                          [False, False, False])
 
+    def test_a_version_with_only_prose_says_so_instead_of_faking_signatures(self):
+        """上游某版只在正文里提到这个函数：如实说，不借别版的签名充数。"""
+        payload = func.detail('txid-snapshot-xip', '9.0')
+        self.assertTrue(payload['prose_only'])
+        self.assertEqual(payload['signatures'], [])
+        self.assertEqual(payload['signature_note'],
+                         'PostgreSQL 9.0 的手册只在正文里提到此函数，未给出签名。')
+        facts = {row['label']: row['value'] for row in payload['facts']}
+        self.assertEqual(facts['本版形态'], '仅正文提及')
+        self.assertNotIn('签名数', facts)
+        # 本站手册与官方文档的链接照给，读者有去处。
+        self.assertTrue(payload['doc']['official_url'])
+        # 给出签名的版本照旧。
+        later = func.detail('txid-snapshot-xip', '12')
+        self.assertFalse(later['prose_only'])
+        self.assertEqual(later['signature_note'], '')
+        self.assertEqual(len(later['signatures']), 1)
+        self.assertEqual({row['label']: row['value'] for row in later['facts']}['签名数'], '1 条')
+
+    def test_the_matrix_lists_only_versions_that_give_signatures(self):
+        """只有正文的版本没有签名可画，列进矩阵整列都是「不存在」，会被读成没有这个函数。"""
+        matrix = func.detail('txid-snapshot-xip', '12')['matrix']
+        self.assertEqual([v['major'] for v in matrix['versions']], ['10', '11', '12'])
+        self.assertEqual([row['text'] for row in matrix['rows']], [XIP_OLD[0]['text']])
+        self.assertTrue(all(cell['state'] == 'exists'
+                            for row in matrix['rows'] for cell in row['cells']))
+        # 版本条与版本方格仍然列全 18 版，读者不会漏掉这个函数在 9.x 也存在。
+        self.assertEqual(len(func.detail('txid-snapshot-xip', '12')['ribbon']), len(MAJORS))
+        rows = {row['slug']: row for group in func.index()['groups'] for row in group['rows']}
+        self.assertEqual(len(rows['txid-snapshot-xip']['strip']), len(MAJORS))
+        self.assertEqual(rows['txid-snapshot-xip']['strip'][0]['state'], 'present')
+
+    def test_a_version_without_signatures_never_reports_signature_changes(self):
+        """9.6 只有正文、10 给出签名，这不是「新增了一条签名」。"""
+        function = PgFunction.objects.get(slug='txid-snapshot-xip')
+        self.assertEqual(function.changed_in, [])
+        self.assertEqual([c['to'] for c in function.changes], ['13'])
+        bare = {'layout': 'table-old', 'group': 'info', 'prose_only': True,
+                'texts': [], 'description': 'A.'}
+        full = {'layout': 'table-old', 'group': 'info', 'texts': ['f ( ) → int'],
+                'description': 'A.'}
+        self.assertIsNone(func.compare(bare, full, '9.6', '10'))
+        self.assertIsNone(func.compare(full, bare, '10', '11'))
+        # 两边都有签名时照常比。
+        self.assertEqual(func.compare(full, dict(full, texts=['f ( int ) → int']), '10',
+                                      '11')['signatures'],
+                         {'added': ['f ( int ) → int'], 'removed': ['f ( ) → int']})
+
     def test_removed_signatures_come_from_the_previous_version(self):
         # 夹具里 15 只增不减。
         self.assertEqual(func.detail('substring', '15')['removed_signatures'], [])
@@ -564,8 +624,11 @@ class FuncDetailTests(FuncFixture):
         self.assertEqual(func.detail('substring', '9.0')['change_note'],
                          '9.0 是本数据集的收录基线，不代表该函数首次于 9.0 引入。'
                          '本站手册未收录该版的这条译文，说明按英文原文显示。')
+        # 引入那一版上游只给了正文，没有签名：如实说，不说「共 0 条签名」。
         self.assertEqual(func.detail('gen-random-uuid', '13')['change_note'],
-                         'PostgreSQL 13 新增此函数，共 1 条签名。')
+                         'PostgreSQL 13 的手册只在正文里提到此函数，未给出签名。')
+        self.assertEqual(func.detail('substring', '15')['change_note'],
+                         '相对 PostgreSQL 14：新增 1 条签名。')
         self.assertEqual(func.detail('substring', '15')['change_note'],
                          '相对 PostgreSQL 14：新增 1 条签名。')
         self.assertEqual(func.detail('substring', '13')['change_note'],
@@ -690,9 +753,13 @@ class FuncChangesTests(FuncFixture):
         self.assertEqual(card['name'], 'gen_random_uuid')
         self.assertEqual(card['url'], '/docs/func/gen-random-uuid/')
         self.assertEqual(card['group_label'], 'UUID 函数')
-        self.assertEqual(card['signature'], 'gen_random_uuid ( ) → uuid')
-        self.assertEqual(card['signature_count'], 1)
         self.assertEqual(card['summary_zh'], '生成版本 4 的随机 UUID。')
+        # 引入那一版上游只在正文里提到：卡片如实写 0，不拿最新版的签名充数。
+        self.assertTrue(card['prose_only'])
+        self.assertEqual((card['signature'], card['signature_count']), ('', 0))
+        # 下一版给出签名之后照常显示。
+        later = func.changes('14')
+        self.assertEqual(later['summary'], {'added': 0, 'removed': 0, 'changed': 0, 'moved': 1})
         # 手册重排那一跳只记增删，不把几百个函数全标成变化。
         self.assertTrue(payload['doc_overhaul'])
         self.assertIn('重排', payload['overhaul_note'])
@@ -775,12 +842,15 @@ class FuncChangesTests(FuncFixture):
         # 版面不同就不逐条比，语言不同就不比描述。
         overhaul = func.compare(dict(left, layout='table-old'), right, '12', '13')
         self.assertIsNone(overhaul)
-        # 一边有译文一边没有：差的是译文覆盖面，不是说明变了。
+        # 只比英文原文那一层：译文覆盖面不同、中文措辞改了，都不算说明变了。
         english = dict(left, zh_from='', description_zh='')
         self.assertIsNone(func.compare(english, left, '9.6', '10'))
-        # 两边都没有译文就比英文原文。
+        self.assertIsNone(func.compare(left, dict(left, description_zh='乙。'), '17', '18'))
+        # 英文原文变了才算。
         other = dict(english, description='B.')
         self.assertTrue(func.compare(english, other, '9.5', '9.6')['descriptions_changed'])
+        # 折叠空白之后一致就不算变。
+        self.assertIsNone(func.compare(left, dict(left, description='A.  '), '17', '18'))
 
     def test_changes_for_an_unknown_version_raises(self):
         with self.assertRaises(FuncVersion.DoesNotExist):

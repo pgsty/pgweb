@@ -100,6 +100,9 @@ ROLE_OF_HEADER = {name: role for role, names in HEADER_ROLES.items() for name in
 # 带限定语的函数列仍是函数列：9.6 起三角函数表的表头是
 # 「Function (radians) | Function (degrees)」，两列都要采。
 NAME_HEADER_PREFIXES = ('函数', 'function')
+# 输出列表的表头是「名称 | 类型 | 描述」，讲的是函数返回哪些列，不是函数清单。
+# 它的「名称」列里有一行就叫 user，当成函数会凭空造出条目。
+OUTPUT_TABLE_HEADERS = ('type', '类型', '数据类型')
 
 VERSION_FIELDS = ('label', 'status', 'support_status', 'doc_slug', 'source', 'layout',
                   'function_count', 'signature_count', 'zh_coverage', 'added_count',
@@ -108,7 +111,7 @@ FUNCTION_FIELDS = ('name', 'name_key', 'group', 'group_label', 'groups', 'summar
                    'signature', 'first_version', 'last_version', 'present_in', 'changed_in',
                    'signature_count', 'versions', 'changes', 'position', 'source_rev')
 SNAPSHOT_FIELDS = ('group', 'group_label', 'pages', 'doc', 'lang', 'layout', 'signatures',
-                   'description_zh', 'description', 'zh_from')
+                   'description_zh', 'description', 'zh_from', 'prose_only')
 ZH_SOURCES = ('doc', 'inherited', '')
 SIGNATURE_FIELDS = ('text', 'html', 'returns', 'description_zh', 'description', 'examples',
                     'zh_from')
@@ -461,7 +464,11 @@ def table_roles(table):
     row = head.find('tr')
     if row is None:
         return None
-    roles = [header_role(text_of(cell)) for cell in row.find_all(['th', 'td'])]
+    labels = [' '.join(text_of(cell).lower().split()).strip(' #')
+              for cell in row.find_all(['th', 'td'])]
+    if any(label in OUTPUT_TABLE_HEADERS for label in labels):
+        return None
+    roles = [header_role(label) for label in labels]
     return roles if 'name' in roles else None
 
 
@@ -620,9 +627,16 @@ def build_old_signature(raw, returns):
 
 
 def old_calls(cell, returns):
-    """一格里的全部调用式：有标记就按标记逐个取，没有就按文本兜底。"""
+    """一格里的全部调用式：有标记就按标记逐个取，取不出名字再按文本兜底。
+
+    判据是「标记有没有取出合法的函数名」，不是「有没有标记」：上游偶尔把标记写坏，
+    `pg_replication_origin_advance` 的名字留在外层 `code.literal` 的文本里，内层
+    `code.function` 从左括号才开始，按「有标记就用」会拿到一个括号、整格作废。
+    """
     nodes = top_level(cell.find_all(attrs={'class': 'function'}))
-    raws = [call_text(node, cell) for node in nodes] if nodes else bare_calls(cell)
+    raws = [call_text(node, cell) for node in nodes]
+    if not any(NAME_RE.match(split_call(raw)[0] or '') for raw in raws):
+        raws = bare_calls(cell)
     return [build_old_signature(raw, returns) for raw in raws]
 
 
@@ -741,8 +755,33 @@ def harvest_synopsis(soup, version, filename):
     return found
 
 
+def harvest_prose_mentions(soup, version, filename):
+    """形态四：正文段落里带标记的函数名，只记存在性。
+
+    上游 ≤12 的 `functions-trigger.html`、`functions-event-triggers.html`、
+    `functions-statistics.html` 只写一句「`pg_mcv_list_items` returns a list of …」，
+    既没有表格行也没有 `pre.synopsis`。判据收得很紧：必须是 `<p>` 的直接子节点、
+    带 `code.function` 标记，且该名字在别的版本有过真正的签名条目（调用方把关）。
+    收进来的快照签名为空、`prose_only` 为真——如实说「上游这一版只在正文里提到」，
+    不借别版的签名冒充。
+    """
+    found, seen = [], set()
+    for node in soup.find_all(attrs={'class': 'function'}):
+        parent = node.parent
+        if parent is None or parent.name != 'p':
+            continue
+        name = text_of(node).partition('(')[0].strip()
+        if not NAME_RE.match(name) or name.lower() in seen:
+            continue
+        seen.add(name.lower())
+        html = clean_fragment(fragment_of(parent), version, filename)
+        found.append({'name': name, 'anchor': nearest_anchor(node), 'file': filename,
+                      'description': prose_text(html), 'description_html': html})
+    return found
+
+
 def parse_page(content, filename, version):
-    """一页手册 → ([(函数名, 签名字典, 锚点, 兜底)], 本页标过的函数名)，三种形态都跑一遍。"""
+    """一页手册 → ([(函数名, 签名字典, 锚点, 兜底)], 本页标过的名字, 正文里提到的函数)。"""
     soup = BeautifulSoup(content or '', 'html.parser')
     if version.get('docbook'):
         normalize_docbook(soup)
@@ -754,7 +793,7 @@ def parse_page(content, filename, version):
     found = harvest_signature_entries(soup, version, filename)
     found += harvest_old_tables(soup, version, filename)
     found += harvest_synopsis(soup, version, filename)
-    return found, marked
+    return found, marked, harvest_prose_mentions(soup, version, filename)
 
 
 # ------------------------------------------------------------------ 组装一个版本
@@ -774,12 +813,13 @@ def marked_names(contents):
 
 
 def harvest_version(pages, version, report, known=None):
-    """一个版本的全部函数页 → {name_key: 版本快照}。"""
+    """一个版本的全部函数页 → ({name_key: 版本快照}, 正文里提到的函数)。"""
     order = sorted(pages, key=lambda name: (func_page_order(name), name))
-    harvested, marked = [], set()
+    harvested, marked, mentions = [], set(), []
     for filename in order:
-        found, names = parse_page(pages[filename], filename, version)
+        found, names, mentioned = parse_page(pages[filename], filename, version)
         marked |= names
+        mentions.extend(mentioned)
         if not any(not tentative for *_, tentative in found):
             report['pages_without_functions'].append([version['major'], filename])
         harvested.append((filename, found))
@@ -804,7 +844,7 @@ def harvest_version(pages, version, report, known=None):
                     'lang': version['lang'], 'layout': version['layout'],
                     'signatures': [], 'description_zh': '', 'description': '',
                     'description_html': '', 'description_zh_html': '', 'zh_from': '',
-                    '_seen': set(),
+                    'prose_only': False, '_seen': set(),
                 }
             if filename not in item['pages']:
                 item['pages'].append(filename)
@@ -818,7 +858,44 @@ def harvest_version(pages, version, report, known=None):
         item['description_zh'] = head['description_zh']
         item['description'] = head['description']
         item['description_html'] = head['description_html']
-    return collected
+    return collected, mentions
+
+
+def prose_snapshot(mention, version):
+    """正文里提到的函数 → 一份没有签名的版本快照。"""
+    group = func_group_of(mention['file'])
+    return {
+        'name': mention['name'], 'group': group,
+        'group_label': FUNC_GROUP_LABEL.get(group, group),
+        'pages': [mention['file']],
+        'doc': {'file': mention['file'], 'anchor': mention['anchor'],
+                'slug': version['doc_slug']},
+        # 事实一律来自上游英文原页，版本行上没有 lang 这一列。
+        'lang': 'en', 'layout': version['layout'],
+        'signatures': [], 'prose_only': True, 'zh_from': '',
+        'description_zh': '', 'description': mention['description'],
+        'description_html': mention['description_html'], 'description_zh_html': '',
+    }
+
+
+def apply_mentions(per_version, mentions, versions, report):
+    """正文提到的函数：别的版本有过真正的签名条目才收，只记存在性。
+
+    上游 ≤12 只在正文里写一句的那几个函数（`pg_mcv_list_items` 一类），不收就会被
+    误判成 13 才引入；借别版的签名又等于替上游编内容，所以签名留空、记 `prose_only`。
+    """
+    confirmed = {key for snapshots in per_version.values() for key in snapshots}
+    added = []
+    for version in versions:
+        major = version['major']
+        for mention in mentions.get(major, ()):
+            key = mention['name'].lower()
+            if key not in confirmed or key in per_version[major]:
+                continue
+            per_version[major][key] = prose_snapshot(mention, version)
+            added.append('{}@{}'.format(mention['name'], major))
+    report['prose_only'] = {'count': len(added), 'entries': sorted(added)}
+    return added
 
 
 # ------------------------------------------------------------------ 版本间比较
@@ -846,7 +923,10 @@ def compare_snapshots(left, right, from_major='', to_major=''):
     if left.get('group') != right.get('group'):
         record['group_changed'] = {'from': left.get('group', ''), 'to': right.get('group', '')}
     record['doc_overhaul'] = left.get('layout') != right.get('layout')
-    if not record['doc_overhaul']:
+    # 一侧只在正文里被提到、没有签名时，两边没有可比的东西：硬比会把「12 没签名、
+    # 13 有签名」算成新增 N 条签名，changed_in 与索引页的版本方格都会脏。
+    comparable = bool(left.get('signatures')) and bool(right.get('signatures'))
+    if not record['doc_overhaul'] and comparable:
         before = [item['text'] for item in left.get('signatures') or ()]
         after = [item['text'] for item in right.get('signatures') or ()]
         record['signatures'] = {'added': [text for text in after if text not in set(before)],
@@ -952,7 +1032,7 @@ def harvest_manual(major, doc_slug):
     if not pages:
         return {}
     context = parse_context(major, doc_slug, 'zh')
-    collected = harvest_version(pages, context, {'pages_without_functions': []})
+    collected, mentions = harvest_version(pages, context, {'pages_without_functions': []})
     out = {}
     for key, item in collected.items():
         out[key] = {
@@ -964,6 +1044,14 @@ def harvest_manual(major, doc_slug):
             'order': [signature['description_zh'] for signature in item['signatures']],
             'order_html': [signature['description_html'] for signature in item['signatures']],
         }
+    # 只在正文里提到的函数也要出中文，否则那几版的条目只有英文。
+    for mention in mentions:
+        key = mention['name'].lower()
+        if key in out or not mention['description']:
+            continue
+        out[key] = {'description': mention['description'],
+                    'description_html': mention['description_html'],
+                    'signatures': {}, 'order': [], 'order_html': []}
     return out
 
 
@@ -1058,11 +1146,15 @@ def export_snapshot(offline=False, cache_dir=CACHE_DIR):
     known = marked_names(content for pages in fetched.values() for content in pages.values())
     versions = version_rows(fetched, manual)
     order = [version['major'] for version in versions]
-    per_version = {}
+    per_version, mentions = {}, {}
     for version in versions:
         major = version['major']
         context = parse_context(major, version['doc_slug'], 'en')
-        per_version[major] = harvest_version(fetched[major], context, report, known)
+        per_version[major], mentions[major] = harvest_version(
+            fetched[major], context, report, known)
+    apply_mentions(per_version, mentions, versions, report)
+    for version in versions:
+        major = version['major']
         version['function_count'] = len(per_version[major])
         version['signature_count'] = sum(len(item['signatures'])
                                          for item in per_version[major].values())
@@ -1215,11 +1307,17 @@ def validate(snapshot):
         for group in [item['group'], *item['groups']]:
             if group not in FUNC_GROUP_ORDER:
                 raise ValueError('{} 的分组不认识：{!r}'.format(slug, group))
+        if not any(snap['signatures'] for snap in item['versions'].values()):
+            # 允许个别版本只在正文里被提到（签名为空），但不能一条签名都没有。
+            raise ValueError('{} 在所有版本里都没有签名'.format(slug))
         for major, snap in item['versions'].items():
             label = '{} @ {}'.format(slug, major)
             require(snap, SNAPSHOT_FIELDS, label)
-            if not snap['signatures']:
-                raise ValueError('{} 没有任何签名'.format(label))
+            # 没有签名的版本必须如实标成「只在正文里提到」，反过来也不许自相矛盾。
+            if not snap['signatures'] and not snap['prose_only']:
+                raise ValueError('{} 没有签名却没标 prose_only'.format(label))
+            if snap['prose_only'] and snap['signatures']:
+                raise ValueError('{} 标了 prose_only 却带着签名'.format(label))
             for signature in snap['signatures']:
                 require(signature, SIGNATURE_FIELDS, label + ' 签名')
                 if signature['zh_from'] not in ZH_SOURCES:

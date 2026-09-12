@@ -50,6 +50,8 @@ BASELINE_TEMPLATE = '{0} 是本数据集的收录基线，不代表该函数首�
 PREVIEW_TEMPLATE = '{} 为预发行快照，正式发布前仍可能变化。'
 DEVEL_TEMPLATE = 'PostgreSQL {} 开发版尚未定稿：函数清单取自本站 devel 手册，正式发布前仍可能变化。'
 OVERHAUL_TEMPLATE = 'PostgreSQL {} 重排了函数表的写法，签名文本整体改变，此处不逐条比较。'
+# 上游该版只在正文里提到这个函数、没有给出签名。不借别版的签名充数，如实说。
+PROSE_TEMPLATE = 'PostgreSQL {} 的手册只在正文里提到此函数，未给出签名。'
 # 事实一律来自上游英文页，本站手册只提供中文描述：所以「来源」说的是描述的来源。
 NO_ZH_NOTE = '本站手册未收录该版的这条译文，说明按英文原文显示。'
 
@@ -244,19 +246,29 @@ def texts_of(snapshot):
             if signature.get('text')]
 
 
-def descriptions_differ(left, right):
-    """首条签名的描述变没变。只在可比的两者之间比。
+def prose_only(snapshot):
+    """本版只在正文里提到这个函数，没有给出签名。
 
-    一边有译文、另一边没有，差的是本站译文的覆盖面，不是 PostgreSQL 的说明变了；
-    这种情况一律算没变。两边都有中文就比中文，都没有就比英文原文。
+    导入器对这种快照写 `prose_only: True` 且 `signatures` 为空列表；没有这个标记的
+    老数据就看签名本身，两种都认。
+    """
+    snapshot = snapshot or {}
+    if snapshot.get('prose_only'):
+        return True
+    return not (snapshot.get('signatures') or snapshot.get('texts'))
+
+
+def descriptions_differ(left, right):
+    """首条签名的描述变没变。只比英文原文那一层。
+
+    事实（存在性、签名、示例、说明）逐版本取自上游英文页，中文是本站叠加的一层：
+    译文改了一个措辞不是 PostgreSQL 的说明变了，两版译文覆盖面不同更不是。所以这里
+    一律比 `description`，与导入器 `compare_snapshots()` 写进 `changes[]` 的口径一致
+    ——同一个概念由两处算出来，规则必须是同一套。
     """
     left, right = left or {}, right or {}
-    left_zh, right_zh = left.get('description_zh') or '', right.get('description_zh') or ''
-    if left_zh and right_zh:
-        return left_zh != right_zh
-    if left_zh or right_zh:
-        return False
-    return (left.get('description') or '') != (right.get('description') or '')
+    return ' '.join((left.get('description') or '').split()) != \
+        ' '.join((right.get('description') or '').split())
 
 
 # ---------------------------------------------------------------- 索引页
@@ -457,7 +469,8 @@ def change_note(function, major, order, change, version=None, snapshot=None):
         note = baseline_note(order)
     elif change is not None and change.get('status') == 'added':
         count = len(((function.versions or {}).get(major) or {}).get('signatures') or ())
-        note = 'PostgreSQL {} 新增此函数，共 {} 条签名。'.format(major, count)
+        note = ('PostgreSQL {} 新增此函数，共 {} 条签名。'.format(major, count) if count
+                else PROSE_TEMPLATE.format(major))
     elif (change or {}).get('doc_overhaul') or overhaul_between(function, major):
         note = OVERHAUL_TEMPLATE.format(major)
     elif change is None:
@@ -515,7 +528,11 @@ def facts_of(function, major, snapshot, order, version):
 
     group = snapshot.get('group') or function.group
     add('分组', snapshot.get('group_label') or function.group_label, url=ROOT + '#group-' + group)
-    add('签名数', '{} 条'.format(len(snapshot.get('signatures') or ())))
+    count = len(snapshot.get('signatures') or ())
+    if count:
+        add('签名数', '{} 条'.format(count))
+    else:
+        add('本版形态', '仅正文提及')
     baseline = order[0]['major'] if order else ''
     first = function.first_version
     add('引入版本', '{}（基线）'.format(first) if first == baseline else first)
@@ -583,8 +600,14 @@ def timeline_of(function):
 
 
 def matrix_of(function, major, order):
-    """签名 × 版本。行按签名首次出现的版本次序排，格子只说存在与否。"""
-    present = [version for version in order if version['major'] in (function.versions or {})]
+    """签名 × 版本。行按签名首次出现的版本次序排，格子只说存在与否。
+
+    只列出给出了签名的版本：只在正文里提到这个函数的版本没有签名可画，列进来整列都是
+    「不存在」，会被读成「这一版没有这个函数」。版本条与版本方格仍然列全 18 版。
+    """
+    present = [version for version in order
+               if version['major'] in (function.versions or {})
+               and not prose_only(function.versions[version['major']])]
     texts, seen = [], set()
     per_version = {}
     for version in present:
@@ -680,6 +703,9 @@ def detail(slug, wanted=''):
         'description': snapshot.get('description', ''),
         'facts': facts_of(function, major, snapshot, order, version),
         'signatures': signatures_of(snapshot, change),
+        # 本版没有签名时模板不要留白：出这一句灰字，并给 doc 里的两个链接。
+        'prose_only': prose_only(snapshot),
+        'signature_note': PROSE_TEMPLATE.format(major) if prose_only(snapshot) else '',
         'removed_signatures': removed_signatures_of(function, major, change),
         'ribbon': ribbon_of(function, major, order, pages),
         'change': change,
@@ -716,7 +742,9 @@ def compare(left, right, from_major='', to_major=''):
                 'descriptions_changed': False, 'group_changed': None, 'doc_overhaul': False}
     overhaul = bool(left.get('layout')) and bool(right.get('layout')) \
         and left['layout'] != right['layout']
-    if overhaul:
+    # 一侧只有正文、没有签名：两边不可比，比了就会把「上游这一版没列签名」说成签名增删。
+    bare = prose_only(left) or prose_only(right)
+    if overhaul or bare:
         signatures = dict(blank)
     else:
         before, after = texts_of(left), texts_of(right)
@@ -734,6 +762,13 @@ def compare(left, right, from_major='', to_major=''):
 
 
 def card_of(function, snapshot=None):
+    """变更页的一张卡片。
+
+    `snapshot` 给了就照它说：整版只有正文、没有签名时如实写 0，不要退回热字段，
+    那是最新版的签名，安在这一版头上就是编内容。只有整份快照缺席（比较的另一侧
+    根本没有这一版）才退回热字段。
+    """
+    missing = not snapshot
     snapshot = snapshot or {}
     texts = texts_of(snapshot)
     return {
@@ -741,8 +776,9 @@ def card_of(function, snapshot=None):
         'group': snapshot.get('group') or function.group,
         'group_label': snapshot.get('group_label') or function.group_label,
         'summary_zh': function.summary_zh, 'summary': function.summary,
-        'signature': texts[0] if texts else function.signature,
-        'signature_count': len(texts) if texts else function.signature_count,
+        'signature': texts[0] if texts else (function.signature if missing else ''),
+        'signature_count': len(texts) if texts else (function.signature_count if missing else 0),
+        'prose_only': not missing and prose_only(snapshot),
     }
 
 

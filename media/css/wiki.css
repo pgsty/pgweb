@@ -2661,6 +2661,10 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
 .wiki .fn-sig:last-child { margin-bottom: 0; }
 .wiki .fn-sig.is-added { border-left-color: var(--state-add); background: var(--fn-add-bg); }
 .wiki .fn-sig--empty { color: var(--pg-muted); font-size: 13px; }
+/* 上游该版只在正文里提到这个函数、没给签名：如实说明，并把两个去处摆出来，
+   不借别版签名充数，也不留一片空白。 */
+.wiki .fn-prosenote { margin: 0 0 14px; border-left-color: var(--fn-soft-line); }
+.wiki .fn-prose__links { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; }
 
 .wiki .fn-sig__line { position: relative; margin: 0; }
 .wiki .fn-sig__new {

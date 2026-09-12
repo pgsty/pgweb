@@ -182,6 +182,15 @@ def upstream_pages(major):
             (['enum_range(anyenum)'], 'Returns all values of the input enum type.',
              'enum_range(null::rainbow)', '{red,orange}'),
         ]))
+        # 只在正文里提到的函数：既没有表格行也没有 synopsis，13 起才有签名条目。
+        pages['functions-statistics.html'] = page(
+            '<div class="sect2" id="FUNCTIONS-STATISTICS-MCV">'
+            '<h3 class="title">Inspecting MCV Lists</h3>'
+            '<p><code class="function">pg_mcv_list_items</code> returns all items stored '
+            'in a multi-column MCV list.</p>'
+            '<table class="table"><thead><tr><th>Name</th><th>Type</th><th>Description</th>'
+            '</tr></thead><tbody><tr><td><code class="literal">user</code></td>'
+            '<td>name</td><td>Role name.</td></tr></tbody></table></div>')
         pages['functions-json.html'] = page(unmarked_table('FUNCTIONS-JSON-CREATION', [
             (['to_json(anyelement)', 'to_jsonb(anyelement)'],
              'Returns the value as json or jsonb.', "to_json('Fred'::text)", '"Fred"'),
@@ -229,6 +238,9 @@ def upstream_pages(major):
         ]))
         pages['functions-subquery.html'] = page(
             prose('FUNCTIONS-EXISTS', [(EXISTS_SYNOPSIS, 'Subquery existence test.')]))
+        pages['functions-statistics.html'] = page(new_table('FUNCTIONS-STATISTICS-TABLE', [
+            entry([call('pg_mcv_list_items', '<code class="type">pg_mcv_list</code>',
+                        'setof record')], 'Returns all items stored in an MCV list.')]))
         if major == '18':
             pages['functions-json.html'] = page(
                 prose('FUNCTIONS-SQLJSON-TABLE',
@@ -600,6 +612,37 @@ class FuncExportTests(TestCase):
         # 操作符行不匹配「标识符 (」，不会误收。
         self.assertNotIn('string', self.items)
 
+    def test_prose_only_entries(self):
+        """只在正文里提到的函数：收存在性、不造签名，也不借别版签名。"""
+        item = self.items['pg-mcv-list-items']
+        self.assertEqual(item['first_version'], '9.6')
+        self.assertEqual(item['present_in'], ['9.6', '12', '13', '18'])
+        old = item['versions']['12']
+        self.assertTrue(old['prose_only'])
+        self.assertEqual(old['signatures'], [])
+        self.assertEqual(old['description'],
+                         'pg_mcv_list_items returns all items stored in a multi-column '
+                         'MCV list.')
+        self.assertEqual(old['doc']['file'], 'functions-statistics.html')
+        self.assertFalse(item['versions']['13']['prose_only'])
+        self.assertEqual(len(item['versions']['13']['signatures']), 1)
+        # 没有签名的那一版不参与签名比对，13 不会凭空多出一次签名变更。
+        self.assertEqual(item['changed_in'], [])
+        change = change_between(item, '12', '13')
+        self.assertEqual(change['signatures'], {'added': [], 'removed': []})
+        self.assertTrue(change['doc_overhaul'])
+        # 9.6 → 12 两侧都没有签名，同样不该报签名变化。
+        self.assertIsNone(change_between(item, '9.6', '12'))
+        report = self.snapshot['harvest']['prose_only']
+        self.assertEqual(report['count'], 2)
+        self.assertEqual(report['entries'],
+                         ['pg_mcv_list_items@12', 'pg_mcv_list_items@9.6'])
+
+    def test_prose_mentions_do_not_invent_functions(self):
+        """输出列表里的列名（含 user）与没被别版确认过的名字都不能变成函数。"""
+        self.assertNotIn('user', self.items)
+        self.assertNotIn('exists', self.items)
+
     def test_manual_does_not_invent_versions(self):
         """13 的译文里混进了上游 18 才有的函数，存在性必须只认上游。"""
         self.assertEqual(self.items['json-table']['present_in'], ['18'])
@@ -746,6 +789,9 @@ class FuncExportTests(TestCase):
             lambda snap: snap['functions'][0]['versions']['18'].update(zh_from='maybe'),
             lambda snap: snap['functions'][0]['versions']['18']['signatures'][0].pop('zh_from'),
             lambda snap: snap['versions'][0].pop('zh_coverage'),
+            # 没有签名却不标 prose_only，以及标了 prose_only 又带签名，都是自相矛盾。
+            lambda snap: snap['functions'][0]['versions']['18'].update(signatures=[]),
+            lambda snap: snap['functions'][0]['versions']['18'].update(prose_only=True),
         ):
             broken = deepcopy(self.snapshot)
             mutate(broken)

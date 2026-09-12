@@ -14,7 +14,7 @@
     <span class="wiki-badge fn-badge">引入 {{ function.first_version }}{% if function.first_version == versions.0.major %}（基线）{% endif %}</span>
     {% for cell in ribbon %}{% if cell.state == 'removed' %}<span class="wiki-badge wiki-badge--removed">于 {{ cell.major }} 移除</span>{% endif %}{% endfor %}
     {% with newest=versions|last %}{% if function.last_version == newest.major %}<span class="wiki-badge fn-badge">现存至 {{ newest.label }}</span>{% endif %}{% endwith %}
-    <span class="wiki-badge fn-badge">{{ signatures|length }} 条签名</span>
+    {% if signatures %}<span class="wiki-badge fn-badge">{{ signatures|length }} 条签名</span>{% elif prose_only %}<span class="wiki-badge fn-badge">仅正文提及</span>{% endif %}
     <span class="wiki-badge fn-badge">{{ function.changed_in|length }} 次签名变更</span>
     {% if notice %}<span class="wiki-badge fn-badge--unreleased" title="{{ notice }}">{{ version.status_label }}</span>{% endif %}
   </p>
@@ -61,7 +61,15 @@
 
 <section class="wiki-section" id="signatures">
 <h2>签名</h2>
+{% if not signatures %}
+<p class="wiki-note fn-prosenote">{% if signature_note %}{{ signature_note }}{% else %}本版快照没有记录签名。{% endif %}</p>
+<p class="fn-prose__links">
+  {% if doc.local_url %}<a class="fn-btn fn-btn--primary" href="{{ doc.local_url }}">{{ doc.label|default:"本站手册" }}</a>{% endif %}
+  {% if doc.official_url %}<a class="fn-btn" href="{{ doc.official_url }}" target="_blank" rel="noopener">官方文档 <span class="fn-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+</p>
+{% else %}
 <p class="fn-sectionlead">PostgreSQL {{ version.label }} 里 {{ name }} 的 {{ signatures|length }} 条签名，按上游手册顺序排列。参数名用斜体，类型用弱化色，<span class="fn-sectionlead__arrow" aria-hidden="true">→</span> 之后是返回类型。说明取自本站手册译文：标「沿用」的借用了另一版的译文，标「EN」的本站暂无译文、按英文原文显示。</p>
+{% endif %}
 <ol class="fn-sigs">
   {% for item in signatures %}
   <li class="fn-sig{% if item.added %} is-added{% endif %}">
@@ -95,8 +103,6 @@
     {% endif %}
     {% endif %}
   </li>
-  {% empty %}
-  <li class="fn-sig fn-sig--empty">本版快照没有记录签名。</li>
   {% endfor %}
 </ol>
 </section>
@@ -148,7 +154,7 @@
 {% if matrix.rows %}
 <section class="wiki-section" id="matrix">
 <h2>签名矩阵</h2>
-<p class="fn-sectionlead">每条签名在 {{ matrix.versions|length }} 个收录版本里的存在情况；方格指向该版的签名。签名文本在 PostgreSQL 13 前后写法不同，跨越那一跳的同一条签名会显示成两行。</p>
+<p class="fn-sectionlead">每条签名在给出了签名的 {{ matrix.versions|length }} 个版本里的存在情况；方格指向该版的签名。只在正文里提到此函数、没有给出签名的版本不列进来，上面的版本轨迹里仍然有它们。签名文本在 PostgreSQL 13 前后写法不同，跨越那一跳的同一条签名会显示成两行。</p>
 <p class="wiki-striplegend">
   <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--present" aria-hidden="true"></span>存在</span>
   <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--absent" aria-hidden="true"></span>不存在</span>
