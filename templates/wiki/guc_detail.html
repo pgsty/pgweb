@@ -76,7 +76,7 @@
     <li><a href="#doc">手册说明</a></li>
     {% if editorial.mechanism %}<li><a href="#mechanism">机制详解</a></li>{% endif %}
     {% if editorial.advice.oltp or editorial.advice.olap or editorial.advice.small %}<li><a href="#advice">调优建议</a></li>{% endif %}
-    {% if editorial.pitfalls %}<li><a href="#pitfalls">常见坑</a></li>{% endif %}
+    {% if editorial.pitfalls %}<li><a href="#pitfalls">常见问题</a></li>{% endif %}
     <li><a href="#timeline">演化历史</a></li>
     {% if matrix.rows %}<li><a href="#matrix">逐版本快照</a></li>{% endif %}
     {% if editorial.related %}<li><a href="#related">关联参数</a></li>{% endif %}
@@ -136,7 +136,7 @@
 
 {% if editorial.pitfalls %}
 <section class="wiki-section" id="pitfalls">
-<h2>常见坑</h2>
+<h2>常见问题</h2>
 <ul class="guc-pitfalls">
   {% for item in editorial.pitfalls %}<li class="guc-pitfalls__item">{{ item }}</li>{% endfor %}
 </ul>
