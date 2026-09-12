@@ -148,6 +148,12 @@ class NlsTests(TestCase):
         layout = self.post('/nls/api/decide/', self.decision('m_a2', 'approved', forms={'': '内存不足'}))
         self.assertEqual(layout.status_code, 409)
         self.assertIn('换行', layout.json()['error'])
+        from .validate import layout_problem
+        self.assertIsNone(layout_problem('long text\nthat wraps\n', '合并成一行\n'))          # R8: width wrap may be joined
+        self.assertIsNotNone(layout_problem('  -x  help\n  -y  more\n', '  -x  帮助 -y  更多\n'))  # structure must stay
+        self.assertIsNotNone(layout_problem('x y', 'x\ny'))
+        self.assertIsNone(layout_problem('  -n, --dry-run   show the\n                 names\n', '  -n, --dry-run   显示名称\n'))
+        self.assertIsNotNone(layout_problem('a\n\nb\n', 'a b\n'))
         self.assertEqual(Message.objects.filter(version__gt=0).count(), 1)  # only the imported alice row
         good = self.post('/nls/api/decide/', self.decision('m_a1', 'approved'))
         self.assertEqual(good.status_code, 200, good.content)

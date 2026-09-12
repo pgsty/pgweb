@@ -65,14 +65,34 @@ def _boundary(value):
     return (re.match(r'^[ \t\r\n\v\f]*', value)[0], re.search(r'[ \t\r\n\v\f]*$', value)[0])
 
 
+def layout_anchors(text):
+    """Lines that carry structure: option/label/list items and blank lines. Their count must survive."""
+    return sum(1 for line in text.split('\n') if re.match(r'^\s*(?:-{1,2}[\w?]|\[|\d+[.)]\s|\S.*:\s{3,}\S)', line) or line.strip() == '')
+
+
+def layout_problem(source, text):
+    """nls-v3 R8: edges, tabs and CRs match the English; never add line breaks; option, label, list
+    and blank lines keep their structure; only a sentence or description wrapped for width may be joined."""
+    if _boundary(source) != _boundary(text):
+        return '首尾空白与换行必须与英文原文一致。'
+    if source.count('\t') != text.count('\t') or source.count('\r') != text.count('\r'):
+        return '制表符、回车的数量必须与英文原文一致。'
+    if text.count('\n') > source.count('\n'):
+        return '译文不能比英文多出换行。'
+    if text.count('\n') < source.count('\n') and layout_anchors(source.strip('\n')) != layout_anchors(text.strip('\n')):
+        return '选项行、标签行、列表项和空行必须保留换行结构，只有纯因行宽折行的句子才可合并为一行。'
+    return None
+
+
 def check_approval(message, forms, msgfmt='msgfmt'):
     """The stricter checks an approved translation must pass. Raises ValidationError."""
     for key, text in forms.items():
         if not text:
             raise ValidationError('已校对的译文各形式都不能为空。')
         source = message.msgid if key in ('', '0') else message.msgid_plural
-        if _boundary(source) != _boundary(text) or any(source.count(c) != text.count(c) for c in '\n\r\t'):
-            raise ValidationError('首尾空白以及换行、制表符的数量必须与英文原文一致。')
+        problem = layout_problem(source, text)
+        if problem:
+            raise ValidationError(problem)
     binary = shutil.which(msgfmt)
     if binary is None:
         # Fall back to a placeholder multiset comparison when gettext is not installed.

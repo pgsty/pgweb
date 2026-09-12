@@ -54,7 +54,7 @@ cd ~/pgsty/pgnls && review-app/.venv/bin/python review-app/manage.py import /tmp
 | POST `/nls/api/save/` | 组件批量保存 / 提交（`submit: true` 需含组件全部消息；未改动的行只传 `id` + `expected_version`）；任一条失败整批不写。`component: '*'` 可跨组件批量保存，但不能 `submit` | nls.review |
 | GET `/nls/api/export/` | pgnls-human-review-v1 JSON | nls.review |
 
-校验：每次保存检查形式完整、长度、NUL；状态改为“已校对”时再检查首尾空白与换行/制表数与英文一致，并用 GNU `msgfmt --check --check-format` 编译隔离 PO 片段（服务器需安装 gettext；缺失时退化为占位符多重集比较）。任何校验失败返回 409，页面在状态列显示“保存失败”并回退勾选框。`ValidationError` 与版本冲突都是 409；查询参数受 `@queryparams` 白名单约束。
+校验：每次保存检查形式完整、长度、NUL；状态改为“已校对”时再检查首尾空白、制表符和回车与英文一致，不允许新增换行。仅为行宽折行的句子或说明可合并，选项行、标签行、列表项和空行仍须保留结构。随后用 GNU `msgfmt --check --check-format` 编译隔离 PO 片段（服务器需安装 gettext；缺失时退化为占位符多重集比较）。任何校验失败返回 409，页面在状态列显示“保存失败”并回退勾选框。`ValidationError` 与版本冲突都是 409；查询参数受 `@queryparams` 白名单约束。
 
 ## 5. 界面
 
