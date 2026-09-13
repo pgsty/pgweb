@@ -1,0 +1,420 @@
+{
+  "date": "2026-09-12",
+  "origin": "PGSQL.CC 主动采编；PostgreSQL / Planet / pgnexus；项目与厂商原文；截稿 2026-09-13 07:32:14 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "WAIT FOR LSN 合入死锁与唤醒竞态修复",
+      "summary": "PostgreSQL 开发分支已提交一组 WAIT FOR LSN 修复，此前讨论的等待竞态有了实质进展。备库会拒绝在持有重量级锁时等待尚未到达的 LSN，避免查询与 WAL 回放互相等待、却无法被死锁检测器发现。配套提交补上了 WAL 段隐式刷盘后的等待者唤醒，并在升主结束时重新读取回放位置，防止使用旧值误报已退出恢复。这些改动完善了复制位点等待的并发语义，目前确认的是代码提交状态。",
+      "url": "https://github.com/postgres/postgres/commit/e0c160c307264654a2e91d582cc0935243bc9253",
+      "author": "Xuneng Zhou",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "复制",
+        "并发控制"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "扩展容器的 SBOM 需要覆盖构建依赖与许可证",
+      "summary": "为 CNPG-Extensions 构建容器时，Jeremy Schneider 发现，生成软件物料清单并不等于完整追溯供应链。Rust 工作区、仅来自 Git 的依赖及 Debian 包许可证，都可能被扫描工具遗漏；扩展显示的 SQL 版本也可能与安装包版本不同。他结合多种工具补全依赖和许可证，再用 Cosign 签名与附加证明关联产物。这份工程记录还提醒维护者，测试版进入稳定分发渠道仍需明确的发布策略。",
+      "url": "https://ardentperf.com/2026/09/11/misc-learnings-sboms-provenance-and-attestations/",
+      "author": "Jeremy Schneider",
+      "source": "Ardent Performance Computing",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "容器",
+        "供应链"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "HorizonDB 将持久化与回放工作下移到存储层",
+      "summary": "微软解释了 Azure HorizonDB 的存储分工：计算节点只提交 WAL，不直接写数据页，页面由存储服务按日志重建。独立的 WAL 服务负责持久化与分发，Page Server 维护页面状态，主节点和只读副本共享存储。日志过滤服务进一步按页面分片转发记录，减少计算侧的网络与处理负担。脏页刷写、部分复制和归档职责因此离开 PostgreSQL 计算进程，使查询与事务可以使用更多计算资源。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/smarter-storage-for-azure-horizondb/4551351",
+      "author": "Adam Prout",
+      "source": "Microsoft",
+      "source_date": "2026-09-04",
+      "image": "https://techcommunity.microsoft.com/t5/s/gxcuf89792/images/bS00NTUxMzUxLVJFWE55Qw?revision=5",
+      "domain": "pg",
+      "tags": [
+        "云数据库",
+        "存储",
+        "WAL"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "CloudWatch 支持监控 EC2 自建 PostgreSQL",
+      "summary": "AWS 将 CloudWatch Database Insights 扩展到 EC2 上自行管理的 PostgreSQL，可与 RDS、Aurora 放在同一监控界面排查问题。主机代理采集数据库活动、语句统计与操作系统指标，支持关联数据库负载、等待事件、热点 SQL、执行计划和日志，历史指标可保留 15 个月。自建实例尚不支持跨区域、跨账户的集群视图，也没有锁分析等全部托管功能，接入时仍需核对可用能力。",
+      "url": "https://aws.amazon.com/blogs/database/monitor-self-managed-databases-with-amazon-cloudwatch-database-insights/",
+      "author": "Nirupam Datta、Joe Alioto、Cade Kettner",
+      "source": "AWS",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "性能诊断",
+        "云数据库"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "1.1.1.1 默认验证后量子 DNSSEC 签名",
+      "summary": "Cloudflare 的 1.1.1.1 解析器已默认支持 ML-DSA-44 后量子 DNSSEC 验证。新签名长达 2420 字节，超出常用 UDP 响应预算，因此解析器需要妥善处理截断与 TCP 重试。若经过认证的父区声明存在后量子信任路径，解析器会要求至少一条后量子路径验证成功，避免攻击者降级到传统签名。这是解析端的能力更新，完整信任链的部署仍涉及权威 DNS 服务和注册商对新算法的支持。",
+      "url": "https://blog.cloudflare.com/post-quantum-dnssec-1111/",
+      "author": "Sebastiaan Neuteboom、Bas Westerbaan",
+      "source": "Cloudflare",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNSSEC",
+        "后量子密码",
+        "网络安全"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "workerd 重写模块注册表并完善 Node.js 兼容",
+      "summary": "Cloudflare 重写了 Workers 的模块注册表，将模块标识统一为 URL，并按查询参数和片段区分模块实例。新实现补齐 import.meta 属性与解析能力，支持符合 Node.js 规则的同步 require(esm)，通过惰性编译和缓存共享减少重复工作。它也严格校验导入属性，并对含顶层 await 的模块保留同步加载限制。目前须显式开启 new_module_registry 兼容开关，迁移时应回归模块解析与加载行为。",
+      "url": "https://blog.cloudflare.com/workers-module-registry-nodejs/",
+      "author": "Logan Gatlin、James Snell",
+      "source": "Cloudflare",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "JavaScript",
+        "运行时",
+        "兼容性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "开发分支修复并发 REPACK 的 TOAST 解码崩溃",
+      "summary": "修复重写堆表时遗漏 TOAST 解码抑制标志，并跳过缺少新元组的更新；影响请求接收重写变更的输出插件。",
+      "url": "https://github.com/postgres/postgres/commit/7164dcb6653242f757b5bdc4a26714a24207b1db",
+      "author": "Antonin Houska",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "逻辑解码"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Azure PostgreSQL 可通过外部表查询 Oracle",
+      "summary": "单向 TLS 可连接 Oracle Autonomous；连接与过滤可下推，但 oracle_fdw 2.8 不下推聚合，统计信息须手动采集。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/connecting-azure-postgresql-to-oracle-autonomous-with-oracle-fdw/4547941",
+      "author": "Franck Pachot",
+      "source": "Microsoft",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "Oracle"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Tortoise ORM 接入 Aurora DSQL 需调整连接行为",
+      "summary": "示例改写 asyncpg 连接重置、按新连接生成认证令牌，并在乐观并发冲突后以新事务重新读取和退避重试。",
+      "url": "https://aws.amazon.com/blogs/database/building-async-python-applications-with-tortoise-orm-and-amazon-aurora-dsql/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Python",
+        "分布式数据库"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Aurora 跨区 JDBC 连接需显式指定全局方言",
+      "summary": "次级区域读端点无法自动识别全局拓扑；误用区域方言会导致连接初始化超时，故障转移插件与主机模式也须匹配。",
+      "url": "https://aws.amazon.com/blogs/database/troubleshoot-aws-advanced-jdbc-wrapper-configuration-for-aurora-global-database-write-forwarding/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "JDBC",
+        "高可用"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Mongorewind 用变更流回退 MongoDB 测试数据",
+      "summary": "工具记录变更及修改前镜像，再逆序撤销增删改；需要 MongoDB 6.0 以上的复制集或分片部署，不能替代备份。",
+      "url": "https://www.percona.com/blog/mongorewind-rewind-your-mongodb-test-data-without-restoring-a-backup/",
+      "author": "Zelmar Michelini",
+      "source": "Percona",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MongoDB",
+        "测试"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Percona 公开 MySQL 的 OIDC 认证实现",
+      "summary": "插件以签名令牌映射用户组和角色，权限变化须重连才生效；文章对应的 8.4.11-11 与 9.7.2-2 版本当时尚未发布。",
+      "url": "https://www.percona.com/blog/oidc-authentication-for-percona-mysql/",
+      "author": "Michał Jankowski",
+      "source": "Percona",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "身份认证"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 按源站能力自动选择 TLS 密钥交换",
+      "summary": "每日探测支持的算法，优先使用后量子混合密钥交换，并逐步放量、监测重试率；兼容的源站可少一次握手往返。",
+      "url": "https://blog.cloudflare.com/automatic-key-exchange-for-origins/",
+      "author": "Cloudflare",
+      "source": "Cloudflare",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TLS",
+        "后量子密码"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes 命令行登录宜使用公共 OIDC 客户端",
+      "summary": "以 PKCE 保护授权码交换，避免向每台机器分发共享客户端密钥，再将身份提供方的用户组映射到 RBAC 权限。",
+      "url": "https://www.cncf.io/blog/2026/09/08/kubernetes-access-via-an-identity-provider-public-client-not-confidential/",
+      "author": "Kolawole Olowoporoku",
+      "source": "CNCF",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "身份认证"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG18 的 io_uring 描述符另占系统额度",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_files_per_process/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置参数"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制来源配额须预留表同步槽位",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_active_replication_origins/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Fabric 镜像可经 PostgreSQL 中转库预先过滤行",
+      "summary": "",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/filtered-postgresql-logical-replication-for-microsoft-fabric-mirroring/4548118",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Cloud SQL 管理 API 的区域端点正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/sql/docs/postgres/release-notes#September_08_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "DocumentDB 告警可按分钟、小时与周检分级",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/from-noise-to-signal-monitoring-amazon-documentdb-like-a-pro/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "监控"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "CloudSearch 迁移须从原始数据重建索引",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/how-to-migrate-from-amazon-cloudsearch-to-amazon-opensearch-serverless/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "搜索",
+        "迁移"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "TiDB Cloud Premium 新增 CDC 任务管理 API",
+      "summary": "",
+      "url": "https://docs.pingcap.com/zh/tidbcloud/tidb-cloud-release-notes/#september-8-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "TiDB",
+        "CDC"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "MongoDB 同 CA 同身份的证书续期可在线重载",
+      "summary": "",
+      "url": "https://www.percona.com/blog/rotating-expiring-x-509-certificates-in-percona-server-for-mongodb-with-minimal-service-interruption/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MongoDB",
+        "TLS"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 托管 Kafka 开放公网集群接入",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/managed-service-for-apache-kafka/docs/release-notes#September_10_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Actions 可由组织级 Webhook 汇总追踪",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/09/08/distributed-tracing-for-ci-pipelines-without-touching-a-single-workflow-file/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "OpenTelemetry",
+        "CI"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 预览 AI Scan 的组织与仓库管理 API",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-10-ai-scan-for-pull-request-apis-in-public-preview/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "代码安全"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 复审会自动关闭已解决的评论",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-11-auto-resolution-and-analysis-updates-in-copilot-code-review/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "代码审查"
+      ],
+      "position": 26
+    }
+  ]
+}
