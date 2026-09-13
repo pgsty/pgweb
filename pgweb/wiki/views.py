@@ -1,24 +1,36 @@
 import re
+from urllib.parse import quote
 
-from django.http import Http404, HttpResponsePermanentRedirect
+from django.http import Http404, HttpResponsePermanentRedirect, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.http import require_safe
 
 from pgweb.util.contexts import get_nav_menu
+from pgweb.util.decorators import queryparams
 
-from . import errcode
+from . import catalog, errcode, func, guc, waitevent, sqlcmd
 from .columns import BY_SLUG
-from .models import ErrorCode
+from .models import (CatalogRelation, CatalogVersion, ErrorCode, FuncVersion, GucParameter,
+                     GucVersion, PgFunction, WaitEvent, WaitEventVersion)
 
 
 SQLSTATE = re.compile(r'^[0-9A-Za-z]{5}$')
+RELATION = re.compile(r'^pg_[a-z0-9_]+$')
+GUC_NAME = re.compile(r'^[A-Za-z][A-Za-z0-9_]*$')
+# 规范的函数地址段：小写，下划线写成连字符。路由放行的写法更宽，视图负责 301。
+FUNC_SLUG = re.compile(r'^[a-z][a-z0-9-]*$')
+CATALOG_ROOT = '/docs/catalog/'
+GUC_ROOT = '/docs/guc/'
+WAITEVENT_ROOT = '/docs/waitevent/'
+SQLCMD_ROOT = '/docs/sql/'
+FUNC_ROOT = '/docs/func/'
 
 
-def shell(ctx, title, description, canonical, class_code=''):
+def shell(ctx, title, description, canonical, class_code='', section='/docs/sqlstate/'):
     """The shared page context: the 文档 side navigation and SEO fields."""
     menu = get_nav_menu('docs')
     for item in menu:
-        if item.get('link') == '/docs/sqlstate/':
+        if item.get('link') == section:
             item['active'] = True
     ctx['navmenu'] = menu
     ctx['title'] = title
@@ -40,6 +52,7 @@ def errcode_index(request):
 
 
 @require_safe
+@queryparams('v')
 def errcode_detail(request, sqlstate):
     if not SQLSTATE.match(sqlstate):
         raise Http404()
@@ -60,3 +73,319 @@ def errcode_detail(request, sqlstate):
     return render(request, 'wiki/errcode_detail.html', shell(dict(
         payload, column=BY_SLUG['sqlstate'], heading=heading,
     ), title, description, code.url, class_code=code.klass_id))
+
+
+# ---------------------------------------------------------------- 系统目录
+
+@require_safe
+# 筛选在当前页即时过滤，参数写进 URL；中间件只放行这几个。
+@queryparams('q', 'kind', 'present', 'first')
+def catalog_index(request):
+    column = BY_SLUG['catalog']
+    payload = catalog.index()
+    description = ('PostgreSQL 系统目录表、系统视图、统计视图与进度视图的中文字段百科，'
+                   '共 {} 个关系，覆盖 {} 至 {}，逐字段给出类型、说明与跨大版本的结构变化。'.format(
+                       payload['total'], payload['earliest_major'], payload['latest_major']))
+    return render(request, 'wiki/catalog_index.html', shell(dict(
+        payload, column=column,
+    ), 'PostgreSQL 系统目录', description, CATALOG_ROOT, section=CATALOG_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def catalog_detail(request, name):
+    if not RELATION.match(name):
+        raise Http404()
+    try:
+        payload = catalog.detail(name, request.GET.get('v', ''))
+    except CatalogRelation.DoesNotExist:
+        raise Http404()
+
+    relation = payload['relation']
+    major = payload['version']['major'] if payload['version'] else ''
+    title = '{} · {}'.format(relation.name, payload['kind_label'])
+    description = '{} 是 PostgreSQL {}。{}'.format(
+        relation.name, payload['kind_label'],
+        payload['description_zh'] or relation.summary_zh or relation.summary or '')
+    return render(request, 'wiki/catalog_detail.html', shell(dict(
+        payload, column=BY_SLUG['catalog'], heading=relation.name, major=major,
+    ), title, ' '.join(description.split())[:200], relation.url, section=CATALOG_ROOT))
+
+
+@require_safe
+def catalog_changes_root(request):
+    # 默认落在当前稳定版，不落在预发行或开发版。
+    return HttpResponseRedirect('/docs/catalog/changes/{}/'.format(catalog.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def catalog_changes(request, major):
+    try:
+        payload = catalog.changes(major, request.GET.get('from', ''))
+    except CatalogVersion.DoesNotExist:
+        raise Http404()
+    label = payload['version']['label']
+    title = 'PostgreSQL {} 系统目录变更'.format(label)
+    summary = payload['summary']
+    description = ('PostgreSQL {} 相对 {} 的系统目录变更：新增 {} 个关系，移除 {} 个，'
+                   '{} 个关系的结构有变化。'.format(
+                       label, payload['previous']['label'] if payload['previous'] else '首个收录版本',
+                       summary['added_relations'], summary['removed_relations'],
+                       summary['structurally_changed']))
+    return render(request, 'wiki/catalog_changes.html', shell(dict(
+        payload, column=BY_SLUG['catalog'],
+    ), title, description, '/docs/catalog/changes/{}/'.format(major), section=CATALOG_ROOT))
+
+
+# ---------------------------------------------------------------- 配置参数
+
+@require_safe
+# 筛选在当前页即时过滤，参数写进 URL；中间件只放行这几个。
+@queryparams('q', 'group', 'context', 'first', 'present')
+def guc_index(request):
+    column = BY_SLUG['guc']
+    payload = guc.index()
+    description = ('PostgreSQL 配置参数（GUC）的中文百科，共 {} 个参数，按 {} 个一级分类分组，'
+                   '覆盖 {} 至 {}，逐版本给出默认值、上下文、取值范围与变化。'.format(
+                       payload['total'], payload['group_count'],
+                       payload['earliest_major'], payload['latest_major']))
+    return render(request, 'wiki/guc_index.html', shell(dict(
+        payload, column=column,
+    ), 'PostgreSQL 配置参数', description, GUC_ROOT, section=GUC_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def guc_detail(request, name):
+    if not GUC_NAME.match(name):
+        raise Http404()
+    try:
+        payload = guc.detail(name, request.GET.get('v', ''))
+    except GucParameter.DoesNotExist:
+        raise Http404()
+    if payload['name'] != name:
+        # 站内规范形式是 pg_settings 里的大小写：datestyle → DateStyle。
+        wanted = request.GET.get('v', '')
+        return HttpResponsePermanentRedirect('/docs/guc/{}/{}'.format(
+            payload['name'], '?v=' + quote(wanted) if wanted else ''))
+
+    parameter = payload['parameter']
+    major = payload['version']['major'] if payload['version'] else ''
+    title = '{} · PostgreSQL 配置参数'.format(parameter.name)
+    description = '{} 是 PostgreSQL {}配置参数。{}'.format(
+        parameter.name, payload['group_label'],
+        parameter.short_desc_zh or parameter.short_desc or '')
+    return render(request, 'wiki/guc_detail.html', shell(dict(
+        payload, column=BY_SLUG['guc'], heading=parameter.name, major=major,
+    ), title, ' '.join(description.split())[:200], parameter.url, section=GUC_ROOT))
+
+
+@require_safe
+def guc_changes_root(request):
+    # 默认落在当前稳定版，不落在预发行或开发版。
+    return HttpResponseRedirect('/docs/guc/changes/{}/'.format(guc.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def guc_changes(request, major):
+    try:
+        payload = guc.changes(major, request.GET.get('from', ''))
+    except GucVersion.DoesNotExist:
+        raise Http404()
+    label = payload['version']['label']
+    summary = payload['summary']
+    title = 'PostgreSQL {} 配置参数变更'.format(label)
+    description = ('PostgreSQL {} 相对 {} 的配置参数变更：新增 {} 个，移除 {} 个，'
+                   '{} 个参数的默认值有变化。'.format(
+                       label, payload['previous']['label'] if payload['previous'] else '首个收录版本',
+                       summary['added'], summary['removed'], summary['default_changed']))
+    return render(request, 'wiki/guc_changes.html', shell(dict(
+        payload, column=BY_SLUG['guc'],
+    ), title, description, '/docs/guc/changes/{}/'.format(major), section=GUC_ROOT))
+
+
+# ---------------------------------------------------------------- 等待事件
+
+@require_safe
+# 筛选在当前页即时过滤，参数写进 URL；中间件只放行这几个。
+@queryparams('q', 'type', 'present', 'first')
+def waitevent_index(request):
+    column = BY_SLUG['waitevent']
+    payload = waitevent.index()
+    description = ('PostgreSQL 等待事件（wait_event_type / wait_event）的中文百科，共 {} 个事件，'
+                   '按 {} 类分组，覆盖 {} 至 {}，逐个给出触发机制、是否异常与排查手段。'.format(
+                       payload['total'], payload['type_count'],
+                       payload['earliest_major'], payload['latest_major']))
+    return render(request, 'wiki/waitevent_index.html', shell(dict(
+        payload, column=column,
+    ), 'PostgreSQL 等待事件', description, WAITEVENT_ROOT, section=WAITEVENT_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def waitevent_detail(request, type, name):
+    try:
+        payload = waitevent.detail(type, name, request.GET.get('v', ''))
+    except WaitEvent.DoesNotExist:
+        raise Http404()
+    if payload['canonical']:
+        # 大小写、图谱 slug 与曾用名都认，进来之后 301 到规范地址。
+        wanted = request.GET.get('v', '')
+        return HttpResponsePermanentRedirect('{}{}'.format(
+            payload['canonical'], '?v=' + quote(wanted) if wanted else ''))
+
+    event = payload['event']
+    major = payload['version']['major'] if payload['version'] else ''
+    title = '{}/{} · 等待事件'.format(event.type, event.name)
+    description = '{}/{} 是 PostgreSQL {}等待事件。{}'.format(
+        event.type, event.name, payload['type_label'],
+        payload['description_zh'] or event.summary_zh or event.summary or '')
+    return render(request, 'wiki/waitevent_detail.html', shell(dict(
+        payload, column=BY_SLUG['waitevent'], heading=event.name, major=major,
+    ), title, ' '.join(description.split())[:200], event.url, section=WAITEVENT_ROOT))
+
+
+@require_safe
+def waitevent_changes_root(request):
+    # 默认落在当前稳定版，不落在预发行或开发版。
+    return HttpResponseRedirect('/docs/waitevent/changes/{}/'.format(waitevent.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def waitevent_changes(request, major):
+    try:
+        payload = waitevent.changes(major, request.GET.get('from', ''))
+    except WaitEventVersion.DoesNotExist:
+        raise Http404()
+    label = payload['version']['label']
+    summary = payload['summary']
+    title = 'PostgreSQL {} 等待事件变更'.format(label)
+    if payload['na']:
+        description = 'PostgreSQL {} 尚无等待事件机制，wait_event_type 与 wait_event 自 9.6 引入。'.format(label)
+    elif payload['baseline']:
+        description = ('PostgreSQL {} 引入等待事件机制，共 {} 个等待事件，'
+                       '分属 {} 类。'.format(label, summary['added'], summary['types']))
+    else:
+        description = ('PostgreSQL {} 相对 {} 的等待事件变更：新增 {} 个，移除 {} 个，'
+                       '更名 {} 个，类型变动 {} 个。'.format(
+                           label, payload['previous']['label'] if payload['previous'] else '上一版',
+                           summary['added'], summary['removed'],
+                           summary['renamed'], summary['moved']))
+    return render(request, 'wiki/waitevent_changes.html', shell(dict(
+        payload, column=BY_SLUG['waitevent'],
+    ), title, description, '/docs/waitevent/changes/{}/'.format(major), section=WAITEVENT_ROOT))
+
+
+# ---------------------------------------------------------------- SQL 命令
+
+@require_safe
+@queryparams('q', 'group', 'verb', 'first', 'present')
+def sqlcmd_index(request):
+    payload = sqlcmd.index()
+    description = 'PostgreSQL {} 条 SQL 命令，分为 {} 组，逐版本呈现语法概要、参数与手册说明。'.format(
+        payload['total'], payload['group_count'])
+    return render(request, 'wiki/sqlcmd_index.html', shell(dict(payload, column=BY_SLUG['sql']),
+        'PostgreSQL SQL 命令', description, SQLCMD_ROOT, section=SQLCMD_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def sqlcmd_detail(request, slug):
+    try:
+        payload = sqlcmd.detail(slug, request.GET.get('v', ''))
+    except sqlcmd.SqlCommand.DoesNotExist:
+        raise Http404()
+    command = payload['command']
+    if slug != command.slug:
+        wanted = request.GET.get('v', '')
+        return HttpResponsePermanentRedirect(command.url + ('?v=' + quote(wanted) if wanted else ''))
+    return render(request, 'wiki/sqlcmd_detail.html', shell(dict(payload, column=BY_SLUG['sql']),
+        command.name + ' · SQL 命令', payload['snapshot']['purpose_zh'],
+        command.url, section=SQLCMD_ROOT))
+
+
+@require_safe
+def sqlcmd_changes_root(request):
+    return HttpResponseRedirect(SQLCMD_ROOT + 'changes/{}/'.format(sqlcmd.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def sqlcmd_changes(request, major):
+    try:
+        payload = sqlcmd.changes(major, request.GET.get('from', ''))
+    except sqlcmd.SqlCommand.DoesNotExist:
+        raise Http404()
+    title = 'PostgreSQL {} SQL 命令变更'.format(payload['version']['label'])
+    return render(request, 'wiki/sqlcmd_changes.html', shell(dict(payload, column=BY_SLUG['sql']),
+        title, title + '：新增、移除、文件改名、语法变化与正文更新。',
+        SQLCMD_ROOT + 'changes/{}/'.format(major), section=SQLCMD_ROOT))
+
+
+# ---------------------------------------------------------------- 函数百科
+
+@require_safe
+# 筛选在当前页即时过滤，参数写进 URL；中间件只放行这几个。
+@queryparams('q', 'group', 'first', 'present')
+def func_index(request):
+    column = BY_SLUG['func']
+    payload = func.index()
+    description = ('PostgreSQL 内置函数的中文百科，共 {} 个函数，按 {} 个分组归类，'
+                   '覆盖 {} 至 {}，逐版本给出签名、说明、示例与签名演化。'.format(
+                       payload['total'], payload['group_count'],
+                       payload['earliest_major'], payload['latest_major']))
+    return render(request, 'wiki/func_index.html', shell(dict(
+        payload, column=column,
+    ), 'PostgreSQL 函数百科', description, FUNC_ROOT, section=FUNC_ROOT))
+
+
+@require_safe
+@queryparams('v')
+def func_detail(request, slug):
+    try:
+        payload = func.detail(slug, request.GET.get('v', ''))
+    except PgFunction.DoesNotExist:
+        raise Http404()
+    if payload['slug'] != slug:
+        # 函数名（to_char、TO_CHAR）也认，进来之后 301 到规范地址。
+        wanted = request.GET.get('v', '')
+        return HttpResponsePermanentRedirect('{}{}/{}'.format(
+            FUNC_ROOT, payload['slug'], '?v=' + quote(wanted) if wanted else ''))
+
+    function = payload['function']
+    major = payload['version']['major'] if payload['version'] else ''
+    title = '{} · PostgreSQL 函数'.format(function.name)
+    description = '{} 是 PostgreSQL {}。{}'.format(
+        function.name, payload['group_label'],
+        payload['description_zh'] or function.summary_zh or function.summary or '')
+    return render(request, 'wiki/func_detail.html', shell(dict(
+        payload, column=BY_SLUG['func'], heading=function.name, major=major,
+    ), title, ' '.join(description.split())[:200], function.url, section=FUNC_ROOT))
+
+
+@require_safe
+def func_changes_root(request):
+    # 默认落在当前稳定版，不落在预发行或开发版。
+    return HttpResponseRedirect(FUNC_ROOT + 'changes/{}/'.format(func.default_major()))
+
+
+@require_safe
+@queryparams('from')
+def func_changes(request, major):
+    try:
+        payload = func.changes(major, request.GET.get('from', ''))
+    except FuncVersion.DoesNotExist:
+        raise Http404()
+    label = payload['version']['label']
+    summary = payload['summary']
+    title = 'PostgreSQL {} 函数变更'.format(label)
+    description = ('PostgreSQL {} 相对 {} 的内置函数变更：新增 {} 个，移除 {} 个，'
+                   '{} 个函数的签名有变化。'.format(
+                       label, payload['previous']['label'] if payload['previous'] else '首个收录版本',
+                       summary['added'], summary['removed'], summary['changed']))
+    return render(request, 'wiki/func_changes.html', shell(dict(
+        payload, column=BY_SLUG['func'],
+    ), title, description, FUNC_ROOT + 'changes/{}/'.format(major), section=FUNC_ROOT))

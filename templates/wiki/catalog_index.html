@@ -1,0 +1,66 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<div class="wiki-tone-cat cat">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / 系统目录</p>
+<h1>PostgreSQL 系统目录</h1>
+<p class="wiki-lead">系统目录是 PostgreSQL 存放自身元数据的地方：表、索引、函数、类型与权限都记在目录表里，运行时状态则由系统视图、统计视图与进度视图给出。本栏目收录 {{ total }} 个关系，分属 {{ kind_count }} 类，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}，逐版本记下每个字段的类型、说明与结构变化。{{ earliest_major }} 是本数据集的收录基线，不代表这些关系首次于 {{ earliest_major }} 引入。</p>
+
+<h2 id="index">按类别浏览</h2>
+<nav class="wiki-classnav cat-kindnav" aria-label="系统目录类别索引">
+  {% for group in groups %}
+  <a class="wiki-classnav__item cat-kindnav__item" href="#{{ group.anchor }}">
+    <span class="cat-kindnav__label">{{ group.label }}</span>
+    <span class="cat-kindnav__count">{{ group.count }}</span>
+    <span class="cat-kindnav__eyebrow">{{ group.eyebrow }}</span>
+  </a>
+  {% endfor %}
+</nav>
+
+<h2 id="versions">按版本看变更</h2>
+<nav class="cat-verbar" aria-label="按版本查看变更">
+  <ol class="cat-verbar__list">
+    {% for version in versions %}
+    <li class="cat-verbar__item"><a class="cat-pill cat-pill--link wiki-vpill is-{{ version.tone }}{% if version.is_default %} is-default{% endif %}" href="{{ version.url }}"{% if version.is_default %} aria-current="true"{% endif %} title="PostgreSQL {{ version.label }} · {{ version.status_label }} · {{ version.relation_count }} 个关系 · {{ version.column_count }} 个字段 · 查看该版变更">{{ version.major }}</a></li>
+    {% endfor %}
+  </ol>
+  <p class="cat-verbar__note">收录了 {{ versions|length }} 个大版本，每个链到它相对上一版的变更清单。颜色是版本的支持状态：<span class="wiki-tonekey is-eol">已停止维护</span><span class="wiki-tonekey is-live">仍在支持</span><span class="wiki-tonekey is-beta">测试版</span><span class="wiki-tonekey is-dev">开发版</span>；填实的是当前稳定版 {{ default_major }}。</p>
+</nav>
+
+<form id="catalog-search" class="cat-search" action="/docs/catalog/" method="get" role="search">
+  <label class="sr-only" for="catalog-q">搜索系统目录</label>
+  <input class="form-control" id="catalog-q" type="search" name="q" maxlength="120"
+         placeholder="输入关系名、字段名或关键词，如 pg_class、relkind、活动连接" autocomplete="off">
+  <div class="wiki-filters cat-filters">
+    {% for dd in filters %}
+    <label for="catalog-{{ dd.param }}">{{ dd.label }}
+      <select class="form-control" id="catalog-{{ dd.param }}" name="{{ dd.param }}" data-catalog-filter="{{ dd.param }}">
+        <option value="">不限</option>
+        {% for option in dd.options %}<option value="{{ option.value }}">{{ option.label }}（{{ option.count }}）</option>{% endfor %}
+      </select>
+    </label>
+    {% endfor %}
+  </div>
+  <noscript><button class="btn btn-primary" type="submit">筛选</button></noscript>
+</form>
+
+<p class="wiki-striplegend">
+  <span class="wiki-striplegend__title">版本变动</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--absent" aria-hidden="true"></span>未收录</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--present" aria-hidden="true"></span>存在</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--added" aria-hidden="true"></span>首次出现</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--changed" aria-hidden="true"></span>结构变更</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--removed" aria-hidden="true"></span>已移除</span>
+</p>
+<p class="wiki-count" id="catalog-count" aria-live="polite" hidden></p>
+
+{% include "wiki/catalog_table.html" with groups=groups table_id="catalog-table" top_link="#versions" %}
+
+<p class="wiki-empty" id="catalog-empty" hidden>没有匹配的关系。<a href="/docs/catalog/">清除筛选</a></p>
+
+<h2>说明</h2>
+<p>库里共 {{ stats.relations }} 个关系、{{ stats.snapshots }} 份逐版本快照，最新一版合计 {{ stats.columns }} 个字段；相邻大版本之间记录到 {{ stats.structural_changes }} 处结构变化（字段增删、类型或属性改变、顺序调整）。「引入」一栏写的是本数据集里该关系最早出现的版本；标了「基线」的说明它在 {{ earliest_major }} 就已存在，更早的情况本数据集不覆盖。数据来自 <a href="https://cat.pg.center" target="_blank" rel="noopener">cat.pg.center</a>，字段说明的中文取自本站手册译文，没有译文的条目按原文显示。</p>
+
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

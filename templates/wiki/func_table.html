@@ -1,0 +1,50 @@
+{% comment %}
+可复用的分组表：每个分组一个 tbody，每个函数两行。
+参数：groups（必需）、table_id、top_link、current（高亮的函数 slug）。
+父模板必须提供 versions（版本变动的表头刻度按它渲染，与每行的方格一一对齐）。
+{% endcomment %}
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table{% if table_id %} id="{{ table_id }}"{% endif %} class="fn-funcs" data-rowlink>
+  <thead><tr>
+    <th class="fn-th fn-th--name" scope="col">函数</th>
+    <th class="fn-th fn-th--sigs" scope="col">签名</th>
+    <th class="fn-th fn-th--sig" scope="col">主签名</th>
+    <th class="fn-th fn-th--strip" scope="col">
+      <span class="fn-th__title">版本变动</span>
+      <span class="wiki-ruler" aria-hidden="true">{% for v in versions %}<span class="wiki-ruler__slot is-{{ v.tone }}{% if v.is_default %} is-default{% endif %}"><i>{{ v.tick_head }}{% if v.tick_tail %}<span class="wiki-ruler__dot">.</span>{{ v.tick_tail }}{% endif %}</i></span>{% endfor %}</span>
+    </th>
+    <th class="fn-th fn-th--last" scope="col">最近变更</th>
+  </tr></thead>
+  {% for group in groups %}
+  <tbody class="fn-group" data-group="{{ group.slug }}">
+    <tr class="wiki-classrow fn-grouprow" id="{{ group.anchor }}">
+      <th colspan="5" scope="colgroup">
+        <div class="wiki-classrow__inner">
+          <span class="fn-grouprow__eyebrow" lang="en">{{ group.eyebrow }}</span>
+          <span class="wiki-classrow__label">{{ group.label }}</span>
+          <span class="wiki-classrow__count">{{ group.count }} 个</span>
+          {% if top_link %}<a class="wiki-classrow__top" href="{{ top_link }}" title="回到版本条" aria-label="回到版本条">↑</a>{% else %}<a class="wiki-classrow__top" href="/docs/func/#{{ group.anchor }}" title="在索引中查看本组" aria-label="在索引中查看本组">↗</a>{% endif %}
+        </div>
+      </th>
+    </tr>
+    {% for row in group.rows %}
+    <tr class="fn-row{% if row.slug == current %} is-current{% endif %}" data-href="{{ row.url }}"
+        data-group="{{ row.group }}" data-first="{{ row.first }}"
+        data-present="{{ row.present_tokens }}" data-text="{{ row.text }}">
+      <th class="fn-row__name" scope="row"><a href="{{ row.url }}"><code class="fn-mono fn-mono--name">{{ row.name }}</code></a>{% if row.baseline %}<span class="fn-baseline" title="{{ row.first }} 是本数据集的收录基线，不代表该函数首次于 {{ row.first }} 引入">基线</span>{% endif %}</th>
+      <td class="fn-row__sigs" title="PostgreSQL {{ row.last }} 里共 {{ row.signature_count }} 条签名">{{ row.signature_count }}</td>
+      <td class="fn-row__sig">{% if row.signature %}<code class="fn-mono fn-row__sigtext" title="{{ row.signature }}">{{ row.signature }}</code>{% else %}<span class="fn-none">—</span>{% endif %}</td>
+      <td class="fn-row__strip">
+        <span class="wiki-strip" role="img" aria-label="版本变动：{{ row.first }} 起{% if row.removed %}，于 {{ row.removed_in }} 移除{% else %}，现存至 {{ row.last }}{% endif %}">{% for cell in row.strip %}<span class="wiki-cell wiki-cell--{{ cell.state }}" title="{{ cell.label }}"></span>{% endfor %}</span>
+      </td>
+      <td class="fn-row__last">{% if row.last_change %}{{ row.last_change }}<span class="fn-row__times">{{ row.change_count }} 次</span>{% else %}<span class="fn-none">—</span>{% endif %}</td>
+    </tr>
+    <tr class="fn-row fn-row--more{% if row.slug == current %} is-current{% endif %}" data-href="{{ row.url }}">
+      <td colspan="4" class="fn-row__desc">{% if row.summary_zh %}{{ row.summary_zh }}{% elif row.summary %}<span lang="en">{{ row.summary }}</span>{% else %}<span class="fn-none">暂无一句话说明</span>{% endif %}</td>
+      <td class="fn-row__status{% if row.removed %} fn-row__status--removed{% endif %}">{% if row.removed %}于 {{ row.removed_in }} 移除{% else %}现存{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+  {% endfor %}
+</table>
+</div></div>

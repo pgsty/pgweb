@@ -11,6 +11,7 @@ pynliner==0.8.0
 Babel==2.6.0
 bleach==6.4.0
 beautifulsoup4>=4.12,<5
+railroad-diagrams==3.0.1
 jieba==0.42.1
 PyYAML==3.13
 zstandard==0.23.0

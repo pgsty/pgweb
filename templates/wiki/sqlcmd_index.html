@@ -1,0 +1,34 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<div class="wiki-tone-sql cmd">
+<p class="wiki-crumb"><a href="/docs/">文档</a> / SQL 命令</p>
+<h1>PostgreSQL SQL 命令</h1>
+<p class="wiki-lead">从建表、查询到事务与维护，每条 SQL 命令都有自己的语法、参数与使用说明。本栏目收录 {{ total }} 条命令，分为 {{ group_count }} 组，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}，逐版本呈现手册参考页与语法演化。{{ earliest_major }} 是本数据集的收录基线，不代表这些命令首次于 {{ earliest_major }} 引入。</p>
+
+<h2 id="index">按分组浏览</h2>
+<nav class="wiki-classnav cmd-groupnav" aria-label="SQL 命令分组">
+{% for group in groups %}<a class="wiki-classnav__item cmd-groupnav__item" href="#{{ group.anchor }}"><span class="cmd-groupnav__label">{{ group.label }}</span><span class="cmd-groupnav__count">{{ group.count }}</span><span class="cmd-groupnav__eyebrow" lang="en">{{ group.eyebrow }}</span></a>{% endfor %}
+</nav>
+
+<h2 id="versions">按版本看变更</h2>
+<nav class="cmd-verbar" aria-label="按版本查看变更"><ol class="cmd-verbar__list">
+{% for version in versions %}<li><a class="cmd-pill wiki-vpill is-{{ version.tone }}{% if version.is_default %} is-default{% endif %}" href="{{ version.url }}"{% if version.is_default %} aria-current="true"{% endif %} title="PostgreSQL {{ version.label }} · {{ version.status_label }} · {{ version.command_count }} 条命令">{{ version.major }}</a></li>{% endfor %}
+</ol><p class="cmd-sectionlead">颜色是版本的支持状态：<span class="wiki-tonekey is-eol">已停止维护</span><span class="wiki-tonekey is-live">仍在支持</span><span class="wiki-tonekey is-beta">测试版</span><span class="wiki-tonekey is-dev">开发版</span>；填实的是当前稳定版 {{ default_major }}。点击版本号查看相对上一版的变更。</p></nav>
+
+<form id="sqlcmd-search" class="cmd-search" action="/docs/sql/" method="get" role="search">
+<label class="sr-only" for="sqlcmd-q">搜索 SQL 命令</label>
+<input class="form-control" id="sqlcmd-q" type="search" name="q" maxlength="120" placeholder="输入命令、别名或语法关键词，如 CREATE TABLE、MERGE、RETURNING" autocomplete="off">
+<div class="wiki-filters cmd-filters">{% for dd in filters %}<label for="sqlcmd-{{ dd.param }}">{{ dd.label }}<select class="form-control" id="sqlcmd-{{ dd.param }}" name="{{ dd.param }}" data-sqlcmd-filter="{{ dd.param }}"><option value="">不限</option>{% for option in dd.options %}<option value="{{ option.value }}">{{ option.label }}（{{ option.count }}）</option>{% endfor %}</select></label>{% endfor %}</div>
+<noscript><p>启用 JavaScript 后可即时筛选；下方列出全部命令。</p></noscript>
+</form>
+<p class="wiki-striplegend"><span class="wiki-striplegend__title">版本变动</span><span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--absent" aria-hidden="true"></span>未收录</span><span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--present" aria-hidden="true"></span>存在</span><span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--added" aria-hidden="true"></span>新增</span><span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--changed" aria-hidden="true"></span>语法变化</span><span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--removed" aria-hidden="true"></span>已移除</span></p>
+<p class="wiki-count" id="sqlcmd-count" aria-live="polite" hidden></p>
+{% include "wiki/sqlcmd_table.html" with groups=groups table_id="sqlcmd-table" top_link="#versions" %}
+<p class="wiki-empty" id="sqlcmd-empty" hidden>没有匹配的命令。<a href="/docs/sql/">清除筛选</a></p>
+
+<h2>说明</h2>
+<p>共 {{ stats.commands }} 条命令、{{ stats.versions }} 个大版本、{{ stats.snapshots }} 份参考页快照，记录 {{ stats.synopsis_changes }} 次语法概要变化，{{ stats.removed }} 条命令已不在最新快照中。「版本变动」一格一个大版本，与表头刻度逐格对齐；悬浮可看清是哪一版、发生了什么。只有语法概要改变才计入「语法变化」，仅更新正文的版本仍标为「存在」。名称、简介与语法搜索关键词取最新收录版本；进入详情后默认查看稳定版，稳定版未收录的命令显示最后存在的版本。</p>
+<p>内容来自本站 PostgreSQL 手册译文。<a href="https://github.com/pgsty/pgdoc/issues" target="_blank" rel="noopener">反馈译文问题</a> · <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">反馈本站问题</a></p>
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

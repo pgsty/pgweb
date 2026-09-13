@@ -1,0 +1,11 @@
+<div class="sql-railroad" data-syntax-digest="{{ railroad.digest }}">
+<p class="sql-railroad__legend">沿轨道从左向右阅读，分岔表示选择，绕行表示可选，回环表示重复。方框为参数，点击带下划线的参数可展开子规则。</p>
+{% for rule in railroad.rules %}
+{% if forloop.first %}<div class="sql-railroad__rule" id="{{ rule.id }}">
+<div class="sql-railroad__scroll" tabindex="0" role="region" aria-label="{{ rule.label }} 铁道图，可横向滚动">{{ rule.svg|safe }}</div>
+</div>{% else %}<details class="sql-railroad__rule" id="{{ rule.id }}">
+<summary>{% if rule.main %}{{ rule.label }} · 语法 {{ rule.number }}{% else %}<code>{{ rule.label }}</code>{% endif %}</summary>
+<div class="sql-railroad__scroll" tabindex="0" role="region" aria-label="{{ rule.label }} 铁道图，可横向滚动">{{ rule.svg|safe }}</div>
+</details>{% endif %}
+{% endfor %}
+</div>

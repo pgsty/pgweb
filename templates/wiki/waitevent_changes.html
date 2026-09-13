@@ -1,0 +1,149 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<div class="wiki-tone-wait we">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/waitevent/">等待事件</a> / {{ version.label }}{% if not na %} 变动{% endif %}</p>
+<h1>PostgreSQL {{ version.label }} 等待事件{% if not na %}变动{% endif %}</h1>
+
+{% if na %}
+<p class="wiki-lead">{{ na_note }}</p>
+<p class="we-actions we-actions--lead"><a class="we-btn we-btn--primary" href="{{ first_url }}">看 9.6 引入的等待事件</a></p>
+{% elif baseline %}
+<p class="wiki-lead">{{ baseline_note }}本页列出当时的全部 {{ summary.total }} 个事件。类型标签与名称按那一版的手册原样呈现，与如今写法不同的在行内标出。</p>
+{% elif previous %}
+<p class="wiki-lead">{% if arbitrary %}以 PostgreSQL {{ previous.label }} 为基准现算的差异{% else %}相对 PostgreSQL {{ previous.label }} 的差异{% endif %}：{{ version.event_count }} 个等待事件。{% if arbitrary %}这不是相邻两版的比较，中间版本的过程变化不在其中。{% endif %}</p>
+{% endif %}
+{% if notice %}<p class="wiki-note we-notice">{{ notice }}</p>{% endif %}
+
+<nav class="we-verbar we-verbar--releases" aria-label="按版本查看变动">
+  <ol class="we-verbar__list">
+    {% for item in versions %}
+    <li class="we-verbar__item"><a class="we-pill we-pill--link{% if item.has_wait_events %} wiki-vpill is-{{ item.tone }}{% else %} we-pill--na{% endif %}{% if item.is_current %} is-current{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {% if item.has_wait_events %}{{ item.status_label }} · {{ item.event_count }} 个等待事件{% else %}尚无等待事件机制{% endif %}">{{ item.major }}</a></li>
+    {% endfor %}
+  </ol>
+</nav>
+
+{% if not na %}
+{% if arbitrary %}<p class="we-basis">对比基准 <strong>PostgreSQL {{ from_major }}</strong></p>{% endif %}
+{% if previous or arbitrary %}
+<details class="we-rebase"{% if arbitrary %} open{% endif %}>
+  <summary>换一个对比基准</summary>
+  <form class="we-rebase__form" action="/docs/waitevent/changes/{{ version.major }}/" method="get">
+    <label for="we-from">与哪一版比较</label>
+    <select class="form-control" id="we-from" name="from">
+      {% for item in versions %}{% if not item.is_current %}<option value="{{ item.major }}"{% if item.major == from_major %} selected{% elif not from_major and previous and item.major == previous.major %} selected{% endif %}>PostgreSQL {{ item.label }}</option>{% endif %}{% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit">比较</button>
+  </form>
+</details>
+{% endif %}
+{% endif %}
+
+{% if previous and not na %}
+<h2 id="summary">汇总</h2>
+<ol class="we-tiles">
+  <li class="we-tile{% if not summary.added %} is-zero{% endif %}"><span class="we-tile__num">{{ summary.added }}</span><span class="we-tile__label">新增事件</span></li>
+  <li class="we-tile{% if not summary.removed %} is-zero{% endif %}"><span class="we-tile__num">{{ summary.removed }}</span><span class="we-tile__label">移除事件</span></li>
+  <li class="we-tile{% if not summary.renamed %} is-zero{% endif %}"><span class="we-tile__num">{{ summary.renamed }}</span><span class="we-tile__label">更名</span></li>
+  <li class="we-tile{% if not summary.moved %} is-zero{% endif %}"><span class="we-tile__num">{{ summary.moved }}</span><span class="we-tile__label">类型变动</span></li>
+  <li class="we-tile{% if not summary.reworded %} is-zero{% endif %}"><span class="we-tile__num">{{ summary.reworded }}</span><span class="we-tile__label">描述更新</span></li>
+</ol>
+<p class="we-sectionlead">这一版有 {{ summary.total }} 个事件发生变动，涉及 {{ summary.types }} 类；PostgreSQL {{ version.label }} 合计 {{ version.event_count }} 个等待事件。更名与类型变动按上一版的身份对上，机械对不上的会如实显示为一次移除加一次新增。</p>
+
+<h2 id="added">新增的事件<span class="we-h2count">{{ summary.added }}</span></h2>
+{% if added %}
+{% for group in added %}
+<h3 class="we-cards__type">{{ group.type_label }}<span class="we-h2count">{{ group.cards|length }}</span></h3>
+<ul class="we-cards">
+  {% for card in group.cards %}
+  <li class="we-card we-card--added">
+    <p class="we-card__head"><a class="we-card__name" href="{{ card.url }}"><code class="we-mono">{{ card.name }}</code></a><span class="we-card__type">{{ card.type_label }}</span></p>
+    {% if card.summary_zh %}<p class="we-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="we-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
+{% else %}
+<p class="wiki-empty">这一版没有新增等待事件。</p>
+{% endif %}
+
+<h2 id="removed">移除的事件<span class="we-h2count">{{ summary.removed }}</span></h2>
+{% if removed %}
+{% for group in removed %}
+<h3 class="we-cards__type">{{ group.type_label }}<span class="we-h2count">{{ group.cards|length }}</span></h3>
+<ul class="we-cards">
+  {% for card in group.cards %}
+  <li class="we-card we-card--removed">
+    <p class="we-card__head"><a class="we-card__name" href="{{ card.url }}"><code class="we-mono">{{ card.name }}</code></a><span class="we-card__type">{{ card.type_label }}</span></p>
+    {% if card.summary_zh %}<p class="we-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="we-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
+{% else %}
+<p class="wiki-empty">这一版没有移除等待事件。</p>
+{% endif %}
+
+<h2 id="renamed">更名的事件<span class="we-h2count">{{ summary.renamed }}</span></h2>
+{% if renamed %}
+{% for group in renamed %}
+<h3 class="we-cards__type">{{ group.type_label }}<span class="we-h2count">{{ group.cards|length }}</span></h3>
+<ul class="we-cards">
+  {% for card in group.cards %}
+  <li class="we-card we-card--renamed">
+    <p class="we-card__head"><a class="we-card__name" href="{{ card.url }}"><code class="we-mono we-card__was">{{ card.from_name }}</code><span class="we-card__arrow" aria-hidden="true">→</span><code class="we-mono">{{ card.to_name|default:card.name }}</code></a><span class="we-card__type">{{ card.type_label }}</span></p>
+    {% if card.summary_zh %}<p class="we-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="we-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
+{% else %}
+<p class="wiki-empty">这一版没有事件更名。</p>
+{% endif %}
+
+<h2 id="moved">类型变动的事件<span class="we-h2count">{{ summary.moved }}</span></h2>
+{% if moved %}
+{% for group in moved %}
+<h3 class="we-cards__type">{{ group.type_label }}<span class="we-h2count">{{ group.cards|length }}</span></h3>
+<ul class="we-cards">
+  {% for card in group.cards %}
+  <li class="we-card we-card--moved">
+    <p class="we-card__head"><a class="we-card__name" href="{{ card.url }}"><code class="we-mono">{{ card.name }}</code></a><span class="we-card__type"><code class="we-mono we-card__was">{{ card.from_type }}</code><span class="we-card__arrow" aria-hidden="true">→</span><code class="we-mono">{{ card.to_type }}</code></span></p>
+    {% if card.summary_zh %}<p class="we-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="we-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% endfor %}
+{% else %}
+<p class="wiki-empty">这一版没有事件改变类型。</p>
+{% endif %}
+
+<h2 id="reworded">描述更新<span class="we-h2count">{{ summary.reworded }}</span></h2>
+{% if reworded %}
+<details class="we-fold">
+  <summary>{{ summary.reworded }} 个事件只改了官方描述的措辞，名称与类型未变</summary>
+  {% for group in reworded %}
+  <h3 class="we-cards__type">{{ group.type_label }}<span class="we-h2count">{{ group.cards|length }}</span></h3>
+  <ul class="we-cards we-cards--tight">
+    {% for card in group.cards %}
+    <li class="we-card we-card--reworded">
+      <p class="we-card__head"><a class="we-card__name" href="{{ card.url }}"><code class="we-mono">{{ card.name }}</code></a><span class="we-card__type">{{ card.type_label }}</span></p>
+      <p class="we-diff__lines"><span class="we-diff__old" lang="en">{{ card.from_text }}</span><span class="we-diff__new" lang="en">{{ card.to_text }}</span></p>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endfor %}
+</details>
+{% else %}
+<p class="wiki-empty">这一版没有事件的描述发生变化。</p>
+{% endif %}
+{% endif %}
+
+{% if baseline %}
+<h2 id="baseline">{{ version.label }} 的全部等待事件<span class="we-h2count">{{ summary.total }}</span></h2>
+{% include "wiki/waitevent_table.html" with groups=baseline_groups %}
+{% endif %}
+
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

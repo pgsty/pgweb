@@ -4,7 +4,7 @@
  * this script takes over navigation without reloading. Rendering is
  * shared with the site palette (search-ui.js).
  */
-import { PREVIEW_API, SEARCH_API, TYPED_PREFIX, createScopeField, el, emptyNode, fallbackRows, fetchJSON, kindBadge, renderPreview, resultNode, scopeLabel } from './search-ui.js';
+const { PREVIEW_API, SEARCH_API, TYPED_PREFIX, createScopeField, el, emptyNode, fallbackRows, fetchJSON, kindBadge, renderPreview, resultNode, scopeLabel } = await import('./search-ui.js' + new URL(import.meta.url).search);
 
 const root = document.getElementById('doc-search');
 if (root) {
@@ -148,13 +148,14 @@ if (root) {
     }
   }
 
-  async function loadPreview(id) {
+  async function loadPreview(id, version = state.version) {
     if (previewController) previewController.abort();
     previewController = new AbortController();
     const request = ++previewRevision;
     panel.setAttribute('aria-busy', 'true');
     try {
-      const data = await fetchJSON(PREVIEW_API + id + '/', previewController.signal);
+      const query = version ? '?v=' + encodeURIComponent(version) : '';
+      const data = await fetchJSON(PREVIEW_API + id + '/' + query, previewController.signal);
       if (request !== previewRevision) return;
       renderPreview(panel, data, {
         onVersion: loadPreview,

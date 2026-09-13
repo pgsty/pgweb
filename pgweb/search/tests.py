@@ -311,3 +311,92 @@ class ExtensionSearchTests(TestCase):
         rebuilt = rebuild_extensions()
         self.assertEqual(rebuilt, {'extensions': 2})
         self.assertEqual(SearchEntry.objects.filter(source='ext').count(), 2)
+
+
+RELATION_PAGE = '''<div class="sect1" id="CATALOG-PG-DEMO">
+<div class="titlepage"><div><div><h2 class="title">52.1.&nbsp;<code class="structname">pg_demo</code></h2></div></div></div>
+<p>目录<code class="structname">pg_demo</code>记录演示对象。</p>
+<div class="table" id="id-2"><p class="title"><strong>Table&nbsp;52.1.&nbsp;<code class="structname">pg_demo</code> 列</strong></p>
+<div class="table-contents"><table class="table" summary="pg_demo 列" border="1"><colgroup><col /></colgroup>
+<thead><tr><th class="catalog_table_entry"><p class="column_definition">列类型</p><p>描述</p></th></tr></thead>
+<tbody>
+<tr><td class="catalog_table_entry"><p class="column_definition"><code class="structfield">oid</code> <code class="type">oid</code></p>
+<p>行标识符</p></td></tr>
+<tr><td class="catalog_table_entry"><p class="column_definition"><code class="structfield">demoname</code> <code class="type">name</code></p>
+<p>演示对象的名字</p></td></tr>
+</tbody></table></div></div></div>'''
+
+
+class CatalogSearchTests(TestCase):
+    """系统目录词条与手册里抽出的关系条目共用同一个实体，结果里只出现一条。"""
+
+    @classmethod
+    def setUpTestData(cls):
+        from pgweb.wiki import tests as wiki_tests
+        from pgweb.wiki.catalog_importer import import_snapshot as import_catalog
+        from pgweb.search.indexer import rebuild_catalog
+        # 10 – 12 的手册供中文采集，18 的手册供检索抽取。
+        wiki_tests.load_manuals(devel=False)
+        Version.objects.bulk_create([Version(tree=18, current=True, reldate=date(2025, 9, 1),
+                                             firstreldate=date(2025, 9, 1), eoldate=date(2030, 1, 1))])
+        DocPage.objects.create(file='catalog-pg-demo.html', version_id=18,
+                               title='52.1. pg_demo', content=RELATION_PAGE)
+        rebuild_version(18)
+        import_catalog(wiki_tests.export())
+        cls.report = rebuild_catalog()
+
+    def test_every_relation_becomes_one_entry(self):
+        self.assertEqual(self.report, {'catalog': SearchEntry.objects.filter(source='catalog').count()})
+        entry = SearchEntry.objects.get(source='catalog', name='pg_demo')
+        self.assertEqual((entry.kind, entry.subtype, entry.url),
+                         ('relation', 'catalog', '/docs/catalog/pg_demo/'))
+        self.assertIn('pgdemo', entry.aliases)
+        # 去掉 pg_ 之后还是复合名才留别名：stat_demo 指得明确，demo 不指任何东西。
+        self.assertNotIn('demo', entry.aliases)
+        stat = SearchEntry.objects.get(source='catalog', name='pg_stat_demo')
+        self.assertIn('stat_demo', stat.aliases)
+        self.assertIn('statdemo', stat.aliases)
+
+    def test_the_entity_key_matches_the_manual_relation_entry(self):
+        manual = SearchEntry.objects.get(source='pg', kind='relation', name='pg_demo')
+        entry = SearchEntry.objects.get(source='catalog', name='pg_demo')
+        self.assertEqual(entry.entity_key, manual.entity_key)
+        self.assertEqual(entry.entity_key, 'relation:pg_demo')
+
+    def test_the_column_entry_wins_over_the_manual_row(self):
+        result = search('pg_demo')
+        first = result['results'][0]
+        self.assertEqual((first['source'], first['source_label'], first['url']),
+                         ('catalog', '本站词条', '/docs/catalog/pg_demo/'))
+        self.assertEqual(first['group'], 'relation')
+        # 同一实体的手册条目折进同一条结果里。
+        self.assertGreater(first['variants'], 1)
+
+    def test_a_column_name_finds_the_relation(self):
+        self.assertEqual(search('demoname')['results'][0]['name'], 'pg_demo')
+
+    def test_a_generic_word_does_not_resolve_to_a_relation(self):
+        """pg_class 不能靠 class 这个词把手册条目挤下去。"""
+        entry = SearchEntry.objects.get(source='catalog', name='pg_demo')
+        self.assertNotIn('demo', entry.aliases)
+
+    def test_the_preview_keeps_the_manual_version_line(self):
+        entry = SearchEntry.objects.get(source='catalog', name='pg_demo')
+        detail = preview(entry)
+        self.assertIn('演示用的目录表', detail['html'])
+        self.assertIn('demoname', detail['html'])
+        self.assertEqual(detail['source_label'], '本站词条')
+        # 词条自己没有版本，但同一实体的手册页仍然列在版本行里。
+        self.assertEqual([item['version'] for item in detail['versions']], [18])
+        self.assertFalse(any(item['current'] for item in detail['versions']))
+
+    def test_rebuilding_replaces_the_previous_entries(self):
+        from pgweb.search.indexer import rebuild_catalog
+        before = SearchEntry.objects.filter(source='catalog').count()
+        self.assertEqual(rebuild_catalog(), {'catalog': before})
+        self.assertEqual(SearchEntry.objects.filter(source='catalog').count(), before)
+        self.assertEqual(rebuild_catalog(dry_run=True), {'catalog': before})
+
+    def test_the_scope_includes_the_column(self):
+        self.assertIn('catalog', parse_query('pg_demo', 'pg', '', [18], 18)['sources'])
+        self.assertIn('catalog', parse_query('pg_demo', 'pg18', '', [18], 18)['sources'])

@@ -1,0 +1,130 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<div class="wiki-tone-func fn">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/func/">函数百科</a> / {{ version.label }} 变更</p>
+<h1>PostgreSQL {{ version.label }} 函数变更</h1>
+{% if previous %}
+<p class="wiki-lead">{% if arbitrary %}以 PostgreSQL {{ previous.label }} 为基准现算的差异{% else %}相对 PostgreSQL {{ previous.label }} 的差异{% endif %}：{{ version.label }} 共有 {{ version.function_count }} 个函数、{{ version.signature_count }} 条签名。{% if arbitrary %}这不是相邻两版的比较，中间版本的过程变化不在其中。{% endif %}</p>
+{% else %}
+<p class="wiki-lead">{{ baseline_note }}本页列出 {{ version.label }} 当时已有的全部 {{ version.function_count }} 个函数。</p>
+{% endif %}
+{% if overhaul_note %}<p class="wiki-note fn-notice">{{ overhaul_note }}本页只列函数的增删与分组变动。</p>{% endif %}
+{% if notice %}<p class="wiki-note fn-notice">{{ notice }}</p>{% endif %}
+
+<nav class="fn-verbar fn-verbar--releases" aria-label="按版本查看变更">
+  <ol class="fn-verbar__list">
+    {% for item in versions %}
+    <li class="fn-verbar__item"><a class="fn-pill fn-pill--link wiki-vpill is-{{ item.tone }}{% if item.is_current %} is-current{% endif %}" href="{{ item.url }}"{% if item.is_current %} aria-current="page"{% endif %} title="PostgreSQL {{ item.label }} · {{ item.status_label }} · {{ item.function_count }} 个函数 · {{ item.signature_count }} 条签名">{{ item.major }}</a></li>
+    {% endfor %}
+  </ol>
+</nav>
+
+{% if arbitrary %}<p class="fn-basis">对比基准 <strong>PostgreSQL {{ from_major }}</strong></p>{% endif %}
+<details class="fn-rebase"{% if arbitrary %} open{% endif %}>
+  <summary>换一个对比基准</summary>
+  <form class="fn-rebase__form" action="/docs/func/changes/{{ version.major }}/" method="get">
+    <label for="fn-from">与哪一版比较</label>
+    <select class="form-control" id="fn-from" name="from">
+      {% for item in versions %}{% if not item.is_current %}<option value="{{ item.major }}"{% if item.major == from_major %} selected{% elif not from_major and previous and item.major == previous.major %} selected{% endif %}>PostgreSQL {{ item.label }}</option>{% endif %}{% endfor %}
+    </select>
+    <button class="btn btn-primary" type="submit">比较</button>
+  </form>
+</details>
+
+{% if previous %}
+<h2 id="summary">汇总</h2>
+<ol class="fn-tiles">
+  <li class="fn-tile{% if not summary.added %} is-zero{% endif %}"><a class="fn-tile__link" href="#added"><span class="fn-tile__num">{{ summary.added }}</span><span class="fn-tile__label">新增函数</span></a></li>
+  <li class="fn-tile{% if not summary.removed %} is-zero{% endif %}"><a class="fn-tile__link" href="#removed"><span class="fn-tile__num">{{ summary.removed }}</span><span class="fn-tile__label">移除函数</span></a></li>
+  <li class="fn-tile{% if not summary.changed %} is-zero{% endif %}"><a class="fn-tile__link" href="#changed"><span class="fn-tile__num">{{ summary.changed }}</span><span class="fn-tile__label">签名变化</span></a></li>
+  <li class="fn-tile{% if not summary.moved %} is-zero{% endif %}"><a class="fn-tile__link" href="#moved"><span class="fn-tile__num">{{ summary.moved }}</span><span class="fn-tile__label">换了分组</span></a></li>
+</ol>
+<p class="fn-sectionlead">「签名变化」指函数还在，但它的签名有增有删；只改说明文字不计入。「换了分组」指手册把这个函数挪到了另一页。</p>
+
+<h2 id="added">新增函数<span class="fn-h2count">{{ added|length }}</span></h2>
+{% if added %}
+<ul class="fn-cards">
+  {% for card in added %}
+  <li class="fn-card fn-card--added">
+    <p class="fn-card__head"><a class="fn-card__name" href="{{ card.url }}"><code class="fn-mono">{{ card.name }}</code></a><span class="fn-card__kind">{{ card.group_label }}</span></p>
+    {% if card.summary_zh %}<p class="fn-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="fn-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
+    {% if card.signature %}<p class="fn-card__sig"><code class="fn-mono" title="{{ card.signature }}">{{ card.signature }}</code></p>{% endif %}
+    <p class="fn-card__tags">{% if card.prose_only %}<span class="fn-tag fn-tag--desc">仅正文提及</span>{% else %}<span class="fn-tag fn-tag--added">{{ card.signature_count }} 条签名</span>{% endif %}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="wiki-empty">这一版没有新增函数。</p>
+{% endif %}
+
+<h2 id="removed">移除函数<span class="fn-h2count">{{ removed|length }}</span></h2>
+{% if removed %}
+<ul class="fn-cards">
+  {% for card in removed %}
+  <li class="fn-card fn-card--removed">
+    <p class="fn-card__head"><a class="fn-card__name" href="{{ card.url }}"><code class="fn-mono">{{ card.name }}</code></a><span class="fn-card__kind">{{ card.group_label }}</span></p>
+    {% if card.summary_zh %}<p class="fn-card__lead">{{ card.summary_zh }}</p>{% elif card.summary %}<p class="fn-card__lead" lang="en">{{ card.summary }}</p>{% endif %}
+    {% if card.signature %}<p class="fn-card__sig"><code class="fn-mono" title="{{ card.signature }}">{{ card.signature }}</code></p>{% endif %}
+    <p class="fn-card__tags"><span class="fn-tag fn-tag--removed">于 {{ version.major }} 移除</span>{% if card.prose_only %}<span class="fn-tag fn-tag--desc">上一版只在正文里提到</span>{% else %}<span class="fn-tag fn-tag--desc">上一版有 {{ card.signature_count }} 条签名</span>{% endif %}</p>
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p class="wiki-empty">这一版没有移除函数。</p>
+{% endif %}
+
+<h2 id="changed">签名变化<span class="fn-h2count">{{ changed|length }}</span></h2>
+{% if changed %}
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table class="fn-difftable">
+  <thead><tr>
+    <th class="fn-th fn-th--dname" scope="col">函数</th>
+    <th class="fn-th fn-th--dgroup" scope="col">分组</th>
+    <th class="fn-th fn-th--dcount" scope="col">增删</th>
+    <th class="fn-th" scope="col">第一条新增签名</th>
+  </tr></thead>
+  <tbody>
+  {% for item in changed %}
+  <tr class="fn-diffrow">
+    <th class="fn-diffrow__name" scope="row"><a href="{{ item.url }}"><code class="fn-mono">{{ item.name }}</code></a></th>
+    <td class="fn-diffrow__group">{{ item.group_label }}</td>
+    <td class="fn-diffrow__count">{% if item.added %}<span class="fn-delta fn-delta--add">+{{ item.added }}</span>{% endif %}{% if item.removed %}<span class="fn-delta fn-delta--del">−{{ item.removed }}</span>{% endif %}</td>
+    <td class="fn-diffrow__sample">{% if item.sample %}<code class="fn-mono" title="{{ item.sample }}">{{ item.sample }}</code>{% else %}<span class="fn-none">—</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+{% else %}
+<p class="wiki-empty">这一版没有函数改动签名。</p>
+{% endif %}
+
+<h2 id="moved">换了分组<span class="fn-h2count">{{ moved|length }}</span></h2>
+{% if moved %}
+<details class="fn-fold">
+  <summary>{{ moved|length }} 个函数被手册挪到了另一页</summary>
+  <ul class="fn-moves">
+    {% for item in moved %}
+    <li class="fn-moves__item">
+      <a class="fn-moves__name" href="{{ item.url }}"><code class="fn-mono">{{ item.name }}</code></a>
+      <span class="fn-moves__from" title="{{ item.from_group }}">{{ item.from_group_label|default:item.from_group }}</span>
+      <span class="fn-moves__arrow" aria-hidden="true">→</span>
+      <span class="fn-moves__to" title="{{ item.to_group }}">{{ item.to_group_label|default:item.to_group }}</span>
+    </li>
+    {% endfor %}
+  </ul>
+</details>
+{% else %}
+<p class="wiki-empty">这一版没有函数换分组。</p>
+{% endif %}
+{% endif %}
+
+{% if baseline %}
+<h2 id="baseline">{{ version.label }} 的全部函数<span class="fn-h2count">{{ version.function_count }}</span></h2>
+{% include "wiki/func_table.html" with groups=baseline_groups %}
+{% endif %}
+
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

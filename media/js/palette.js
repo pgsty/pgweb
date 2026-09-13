@@ -6,7 +6,7 @@
  * text, site-wide search, postgresql.org) at the end of the list. Enter
  * opens the selected row. Narrow screens go straight to /search/.
  */
-import { PREVIEW_API, SEARCH_API, TYPED_PREFIX, categoryGrid, contextScope, createScopeField, el, emptyNode, fallbackRows, fetchJSON, renderPreview, resultNode, scopeLabel, searchURL } from './search-ui.js';
+const { PREVIEW_API, SEARCH_API, TYPED_PREFIX, categoryGrid, contextScope, createScopeField, el, emptyNode, fallbackRows, fetchJSON, renderPreview, resultNode, scopeLabel, searchURL } = await import('./search-ui.js' + new URL(import.meta.url).search);
 
 const dialog = document.getElementById('pgPalette');
 const onSearchPage = Boolean(document.getElementById('doc-search'));
@@ -134,13 +134,14 @@ if (dialog && typeof dialog.showModal === 'function') {
     }
   }
 
-  async function loadPreview(id) {
+  async function loadPreview(id, version = state.version) {
     if (!withPreview.matches) return;
     if (previewController) previewController.abort();
     previewController = new AbortController();
     const request = ++previewRevision;
     try {
-      const data = await fetchJSON(PREVIEW_API + id + '/', previewController.signal);
+      const query = version ? '?v=' + encodeURIComponent(version) : '';
+      const data = await fetchJSON(PREVIEW_API + id + '/' + query, previewController.signal);
       if (request === previewRevision) renderPreview(preview, data, { onVersion: loadPreview, onDefinition: loadPreview });
     } catch (error) {
       if (error.name !== 'AbortError' && request === previewRevision) preview.replaceChildren();

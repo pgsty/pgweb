@@ -641,7 +641,10 @@ def root(request):
 
 def third_party(request):
     navmenu = get_nav_menu('docs')
-    navmenu[-1].update({'submenu': THIRD_PARTY_DOCS, 'active': True})
+    # 百科栏目排在三方文档之后，按 id 定位，不能用末位。
+    for item in navmenu:
+        if item.get('id') == 'ecosystem-docs':
+            item.update({'submenu': THIRD_PARTY_DOCS, 'active': True})
     return render(request, 'docs/third_party.html', {
         'navmenu': navmenu,
         'components': THIRD_PARTY_DOCS,

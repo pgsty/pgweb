@@ -48,10 +48,10 @@ def search_api(request):
     return response
 
 
-@queryparams()
+@queryparams('v')
 @require_GET
 def preview_api(request, entry_id):
     entry = get_object_or_404(SearchEntry.objects.select_related('document__page').defer('vector', 'document__page__content'), pk=entry_id)
-    response = JsonResponse(service.preview(entry), json_dumps_params={'ensure_ascii': False})
+    response = JsonResponse(service.preview(entry, request.GET.get('v', '')), json_dumps_params={'ensure_ascii': False})
     response['Cache-Control'] = 'no-cache'
     return response
