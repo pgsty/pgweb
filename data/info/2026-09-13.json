@@ -1,0 +1,403 @@
+{
+  "date": "2026-09-13",
+  "origin": "PGSQL.CC 主动采编；PostgreSQL、Planet、PGNexus #255–268；原文回看 2026-08-31 至截稿 2026-09-14 07:33:14 +08:00",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 回退三个对象 DDL 导出函数",
+      "summary": "PostgreSQL 19 分支已提交回退，移除 pg_get_role_ddl()、pg_get_tablespace_ddl()、pg_get_database_ddl() 及对应发布说明。此前审查仍在讨论权限边界、输出完整性与 pg_dump 的一致性，如今已从设计争论变成明确的版本变更。开发主分支继续保留这项工作，社区将在后续周期重做权限与测试。正在试用 19 测试版的管理工具，应撤掉对这三个接口的依赖。",
+      "url": "https://github.com/postgres/postgres/commit/db169985c10f02fa6d97920b0fafdde0ade3fde8",
+      "author": "Andrew Dunstan",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "兼容性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "ADBC 尝试把整条查询推到 PostgreSQL",
+      "summary": "Query.Farm 在 DuckDB 2.0 开发分支上测试 ADBC 整体查询下推：同一远端数据库中的连接、过滤和聚合可交给远端一次执行，DuckDB 只接收结果的 Arrow 数据流。厂商称，在五百万行 PostgreSQL 数据上，两类查询约快 10–11 倍，收益主要来自减少数据搬运。该能力仍依赖开发版本和测试分支，只有通过语义检查的查询才下推，不支持的部分回退本地执行；使用前也要评估远端数据库增加的计算负载。",
+      "url": "https://query.farm/blog/one-query-one-arrow-stream-adbc-duckdb-2/",
+      "author": "Rusty Conover",
+      "source": "Query.Farm",
+      "source_date": "2026-09-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "ADBC",
+        "查询优化"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Oracle 用逻辑复制降低低写入负载的跨区延迟",
+      "summary": "低写入负载下，等待 WAL 归档段触发传输可能拉长跨区复制延迟。Oracle 介绍了 OCI PostgreSQL Warm Standby 场景的替代路径：通过 pglogical 扩展持续传递变更，避免仅靠缩短归档超时增加小批量传输成本。厂商称，在跨三个大洲的案例中，变更约 1–2 秒可见。这里仍是异步逻辑复制，应用必须规划写入归属、冲突处理和最终一致性，不能把该数字理解为同步提交保证或所有跨区部署的固定表现。",
+      "url": "https://blogs.oracle.com/cloud-infrastructure/reducing-postgresql-replication-latency",
+      "author": "Mark Janzen",
+      "source": "Oracle Cloud Infrastructure",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "跨区域"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 26.8 LTS 补齐视图初始装载一致性",
+      "summary": "ClickHouse 26.8 是新的长期支持版本，除了查询性能优化，还处理了物化视图初始化时容易遗漏的并发写入。默认启用的原子 POPULATE 会协调快照与后续订阅，填补历史数据装载和增量接收之间的空隙。新版本同时提供后台查询、更完整的中文分词及流水线式 SQL。已有服务升级时，可重点回归并发插入下的视图结果、后台任务生命周期和分词后的检索效果；发布说明中的基准提升仍需结合自身数据分布验证。",
+      "url": "https://clickhouse.com/blog/clickhouse-release-26-08",
+      "author": "ClickHouse",
+      "source": "ClickHouse",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "发布",
+        "数据完整性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Moovit 按负载重划 Redshift 与 Spark 分工",
+      "summary": "Moovit 的数据平台改造从逐条核算查询 CPU 消耗开始，把大规模转换迁往 EMR 上的 Spark，稳定报表保留在 Redshift，探索查询交给独立的无服务器资源。团队先清理无效任务，再改写重度去重与数据交换步骤，并用行数、用户数和业务指标验证迁移前后的结果。厂商称，这套分工使整体成本降低 33%，而不是依靠一次性扩大集群。案例也展示了逐步缩容和逐轮性能检查的过程，适合已有数仓出现转换任务与查询争抢资源时参考。",
+      "url": "https://aws.amazon.com/blogs/big-data/how-moovit-achieved-33-cost-optimization-through-architectural-modernization/",
+      "author": "Saar Porat、Vova Nevski",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "架构",
+        "数据工程"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 用缓存内转码原型换取存储空间",
+      "summary": "Cloudflare 在 Pingora 缓存链路中试验 Zstandard 转码：符合条件的未压缩文本在写入缓存时压缩一次，压缩表示可继续在分层缓存间传递，发送给客户端前再还原。厂商称，测试语料取得约 2.8 倍压缩比，并在所测负载下控制住 CPU 开销。方案仍是原型，实验只覆盖特定状态码、已知长度和大小门槛的对象；范围请求、源站已压缩响应及更广语料仍待验证，不能据此推算整个缓存网络已经节省的容量。",
+      "url": "https://blog.cloudflare.com/cache-transcoding/",
+      "author": "Aashi Patel",
+      "source": "Cloudflare Blog",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "缓存",
+        "压缩"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 遇到未就绪索引将提前报错",
+      "summary": "已提交修复统一并发与非并发路径，遇到未就绪索引时先报错，由用户决定如何处理索引，避免进入后续重建。",
+      "url": "https://github.com/postgres/postgres/commit/0c5d6269614e107d1d2d669f82f63f7e232b30c9",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "访问时修剪先固定 VM 页，再拿清理锁",
+      "summary": "已提交并回移至 19 的修复把可见性映射页固定提前，避免持有堆页清理锁时因固定 VM 页而触发 I/O。",
+      "url": "https://github.com/postgres/postgres/commit/512d3e8919b649d36a6f246c657c8b8df7536e8a",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "RDS 升级跨入 PG 15 前需排查循环角色授权",
+      "summary": "从 14 及更早版本升级时，托管超级用户新增的内置角色成员关系可能闭合已有授权链，导致升级失败并回滚。",
+      "url": "https://aws.amazon.com/blogs/database/resolve-circular-role-dependencies-during-upgrades-of-amazon-rds-for-postgresql-and-amazon-aurora/",
+      "author": "",
+      "source": "AWS Database Blog",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "权限"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 托管 PG 可设两小时维护窗口",
+      "summary": "Scale 与 Enterprise 可按 UTC 设置平台维护窗口；用户主动变更及紧急磁盘扩容仍立即执行。",
+      "url": "https://clickhouse.com/blog/introducing-scheduled-upgrades-in-clickhouse-managed-postgres",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Sony LIV 用 ClickHouse 与 Iceberg 分流分析",
+      "summary": "实时事件经 Kinesis 进入 ClickHouse，批量数据经 S3 与 Spark 去重写入 Iceberg，分别服务即时分析与大规模处理。",
+      "url": "https://aws.amazon.com/blogs/big-data/how-sony-liv-built-real-time-video-streaming-analytics-with-aws/",
+      "author": "",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "流处理"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 公布按查询借用计算资源的私测方案",
+      "summary": "On-Demand Compute 将重查询交给共享工作池，最短租用 60 秒；厂商计划在 9 月 24 日活动后开始推送。",
+      "url": "https://clickhouse.com/blog/on-demand-compute",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "计算分离"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "OpenSearch Serverless 简化私网接入与 DNS",
+      "summary": "新一代数据端点使用标准 PrivateLink，原文梳理跨账号与本地机房接入，强调网络放行和身份授权仍需分别配置。",
+      "url": "https://aws.amazon.com/blogs/big-data/network-connectivity-patterns-for-the-next-generation-of-amazon-opensearch-serverless/",
+      "author": "",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "私网"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare CASB 可按策略自动撤销违规共享",
+      "summary": "新发现的风险可触发修复或 webhook，管理员可设置匹配条件与例外，减少文件过度共享长期依赖人工处理的空档。",
+      "url": "https://blog.cloudflare.com/casb-policies/",
+      "author": "",
+      "source": "Cloudflare Blog",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "函数参数超过 100 个时可改传复合值",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_function_args/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Valkey Admin 可跨分片抽样定位大键",
+      "summary": "",
+      "url": "https://valkey.io/blog/finding-big-keys-in-a-running-valkey-cluster/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "运维"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Valkey 原子槽迁移还需目标端写入权限",
+      "summary": "",
+      "url": "https://valkey.io/blog/atomic-slot-migration-acl-requirements/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "权限"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "用 clickhouse-local 将 Parquet 导入 MySQL",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/parquet-to-mysql-with-clickhouse",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据导入"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Flink 可按记录路由并演进 Iceberg 表结构",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/build-a-dynamic-streaming-data-lake-with-apache-iceberg-and-apache-flink/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "流处理"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "EMR Trino 可经 Iceberg REST 查询 S3 Tables",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/query-amazon-s3-tables-from-amazon-emr-trino-using-the-iceberg-rest-endpoint/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据湖"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "OpenSearch 用点击与曝光数据评估搜索质量",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/measuring-and-improving-search-quality-with-amazon-opensearch-service/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "检索"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Redshift 单点登录可走专用 VPC 端点",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/integrate-amazon-redshift-and-iam-identity-center-with-enhanced-vpc-routing/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-08-31",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "身份"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "etcd RangeStream 降低大列表读取内存峰值",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/09/01/kubernetes-v1-37-etcd-range-stream/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "内存"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "CNCF 给中小项目梳理漏洞接报与协调披露流程",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/09/07/handling-vulnerability-reports-recipe-card/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "AI DBA Workbench 接入 llama.cpp 本地推理",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/batteries-included-powering-ai-dba-workbench-locally-with-llama-cpp",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据库工具"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Strands 可用 DynamoDB 持久化会话与长期记忆",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/introducing-strands-dynamodb-storage-durable-agent-storage-for-the-strands-agents-sdk/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据库工具"
+      ],
+      "position": 26
+    }
+  ]
+}
