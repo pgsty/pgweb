@@ -1,0 +1,40 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<article class="wiki-entry wiki-tone-sql cmd">
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/sql/">SQL 命令</a> / <a href="/docs/sql/#group-{{ group }}">{{ group_label }}</a></p>
+<header class="wiki-entry__head cmd-head">
+<p class="cmd-eyebrow"><span lang="en">{{ eyebrow }}</span> · {{ group_label }}</p>
+<h1><span class="cmd-title">{{ name }}</span></h1>
+<p class="wiki-entry__name">{{ snapshot.purpose_zh }}</p>{% if snapshot.purpose %}<p class="cmd-subtitle" lang="en">{{ snapshot.purpose }}</p>{% endif %}
+<p class="wiki-badges"><span class="wiki-badge cmd-badge">{{ verb }}</span><span class="wiki-badge cmd-badge">{{ group_label }}</span><span class="wiki-badge">引入 {{ command.first_version }}{% if command.first_version == versions.0.major %}（基线）{% endif %}</span>{% for cell in ribbon %}{% if cell.state == 'removed' %}<span class="wiki-badge wiki-badge--removed">于 {{ cell.major }} 移除</span>{% endif %}{% endfor %}{% with newest=versions|last %}{% if command.last_version == newest.major %}<span class="wiki-badge">现存至 {{ newest.label }}</span>{% endif %}{% endwith %}<span class="wiki-badge">{{ command.changed_in|length }} 次语法变更</span></p>
+</header>
+<section class="wiki-facts cmd-factcard" aria-label="命令概况"><dl class="cmd-facts">{% for fact in facts %}<div><dt>{{ fact.label }}</dt><dd>{% if fact.url %}<a href="{{ fact.url }}">{{ fact.value }}</a>{% elif fact.mono %}<code class="cmd-mono">{{ fact.value }}</code>{% else %}{{ fact.value }}{% endif %}</dd></div>{% endfor %}</dl><p class="cmd-actions">{% if links.doc %}<a class="cmd-btn cmd-btn--primary" href="{{ links.doc }}">本站手册 · {{ version.label }}</a>{% endif %}<a class="cmd-btn" href="{{ links.official }}" target="_blank" rel="noopener">官方文档 ↗</a></p></section>
+
+<section class="cmd-ribbonwrap" aria-label="版本轨迹"><h2 class="cmd-minor-title">版本轨迹</h2><nav><ol class="cmd-verbar__list">{% for cell in ribbon %}<li>{% if cell.url %}<a class="cmd-pill cmd-pill--{{ cell.state }}{% if cell.current %} is-current{% endif %}{% if cell.preview or cell.devel %} is-unreleased{% endif %}" href="{{ cell.url }}"{% if cell.current %} aria-current="page"{% endif %} title="PostgreSQL {{ cell.label }}{% if cell.state == 'changed' %} · 本版语法变化{% elif cell.state == 'added' %} · 本版新增{% endif %}">{% if cell.state == 'added' %}+{% endif %}{{ cell.major }}</a>{% else %}<span class="cmd-pill cmd-pill--{{ cell.state }}" title="PostgreSQL {{ cell.label }} · {% if cell.state == 'removed' %}已移除{% else %}不存在{% endif %}">{% if cell.state == 'removed' %}−{% endif %}{{ cell.major }}</span>{% endif %}</li>{% endfor %}</ol></nav><p class="cmd-changenote">{{ change_note }}</p>{% if notice %}<p class="cmd-sectionlead">{{ notice }}</p>{% endif %}</section>
+
+<section class="wiki-section" id="railroad"><h2>语法铁道图 <small>PostgreSQL {{ version.major }}</small></h2>
+{% include "wiki/sqlcmd_railroad.html" %}
+</section>
+<section class="wiki-section" id="synopsis"><h2>语法概要</h2>
+{% if synopsis_diff %}<p class="cmd-sectionlead">相对 PostgreSQL {{ previous_major }} 新增 {{ synopsis_diff.added|length }} 行，移除 {{ synopsis_diff.removed|length }} 行；新增行以绿色标记。</p>{% endif %}
+<pre class="cmd-synopsis">{{ synopsis.html|safe }}</pre>
+{% if synopsis_diff.removed %}<details class="cmd-fold"><summary>查看移除的 {{ synopsis_diff.removed|length }} 行</summary><pre class="cmd-removed-lines">{% for line in synopsis_diff.removed %}− {{ line }}{% if not forloop.last %}
+{% endif %}{% endfor %}</pre></details>{% endif %}
+</section>
+
+<nav class="wiki-toc" aria-label="本页目录"><h2 class="wiki-toc__title">本页目录</h2><ol><li><a href="#railroad">语法铁道图</a></li><li><a href="#synopsis">语法概要</a></li>{% for section in sections %}<li><a href="#{{ section.anchor }}">{{ section.title }}</a></li>{% endfor %}<li><a href="#timeline">语法演化</a></li>{% if related %}<li><a href="#related">相关命令</a></li>{% endif %}<li><a href="#siblings">同组命令</a></li></ol></nav>
+<p class="cmd-docmeta">{{ doc.label }}{% if doc.local_url %} · <a href="{{ doc.local_url }}">查看完整参考页</a>{% endif %}</p>
+{% if doc.borrowed %}<p class="wiki-note">以下说明借用 PostgreSQL {{ doc.major }} 的手册。</p>{% endif %}
+{% for section in sections %}<section class="wiki-section" id="{{ section.anchor }}"><h2>{{ section.title }}</h2><div class="cmd-doc">{{ section.html|safe }}</div></section>{% endfor %}
+
+<section class="wiki-section" id="timeline"><h2>语法演化</h2><p class="cmd-sectionlead">相邻大版本之间的差异，新的在前。版本号链接到对应快照。</p><ol class="cmd-tl">
+{% for item in timeline %}<li class="cmd-tl__item cmd-tl__item--{% if item.status == 'added' %}added{% elif item.status == 'removed' %}removed{% elif item.synopsis or item.renamed %}changed{% else %}wording{% endif %}"><p class="cmd-tl__head"><span class="cmd-tl__dot" aria-hidden="true"></span>{% if item.url %}<a class="cmd-tl__ver" href="{{ item.url }}">PostgreSQL {{ item.to }}</a>{% else %}<span class="cmd-tl__ver">PostgreSQL {{ item.to }}</span>{% endif %}<span class="cmd-tl__from">← {{ item.from }}</span><span class="cmd-tl__label">{% if item.status == 'added' %}新增此命令{% elif item.status == 'removed' %}移除此命令{% elif item.synopsis %}语法变化{% elif item.renamed %}文件改名{% else %}正文更新{% endif %}</span></p>
+{% if item.renamed %}<p class="cmd-sectionlead">{{ item.renamed.from_file }} → {{ item.renamed.to_file }}</p>{% endif %}
+<div class="cmd-tl__chips">{% for line in item.synopsis.added %}<span class="cmd-chip cmd-chip--add"><code class="cmd-mono">+ {{ line }}</code></span>{% endfor %}{% for line in item.synopsis.removed %}<span class="cmd-chip cmd-chip--del"><code class="cmd-mono">− {{ line }}</code></span>{% endfor %}{% if item.sections.added or item.sections.removed or item.sections.changed or item.purpose_changed %}<span class="cmd-chip cmd-chip--note">正文更新</span>{% endif %}</div></li>
+{% empty %}<li class="cmd-sectionlead">收录以来没有记录到变化。</li>{% endfor %}</ol></section>
+{% if related %}<section class="wiki-section" id="related"><h2>相关命令</h2><p class="cmd-rels">{% for item in related %}{% if item.exists %}<a class="cmd-rel" href="{{ item.url }}" title="{{ item.purpose_zh }}"><code class="cmd-mono">{{ item.name }}</code></a>{% else %}<span class="cmd-rel">{{ item.name }}</span>{% endif %}{% endfor %}</p></section>{% endif %}
+<section class="wiki-section" id="siblings"><h2>同组命令</h2>{% include "wiki/sqlcmd_table.html" with groups=siblings current=slug %}</section>
+<footer class="wiki-entry__foot"><p>本站手册收录版本：{% for item in doc_versions %}<a class="cmd-docver" href="{{ item.url }}">{{ item.label }}</a> {% endfor %}</p><p>内容来自本站 PostgreSQL 手册译文，最后同步 {{ command.imported_at|date:"Y-m-d" }}。</p><p>译文问题请提交到 <a href="https://github.com/pgsty/pgdoc/issues" target="_blank" rel="noopener">pgsty/pgdoc</a>；本站展示或功能问题请提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p></footer>
+</article>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

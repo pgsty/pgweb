@@ -1,0 +1,15 @@
+{% comment %}分组表是 include 片段；父模板提供 versions，详情页也可复用。{% endcomment %}
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table{% if table_id %} id="{{ table_id }}"{% endif %} class="cmd-commands" data-rowlink>
+<thead><tr><th class="cmd-th--name" scope="col">命令</th><th scope="col">动词</th><th scope="col">对象</th><th class="cmd-th--line" scope="col"><span class="cmd-th__title">版本变动</span><span class="wiki-ruler" aria-hidden="true">{% for v in versions %}<span class="wiki-ruler__slot is-{{ v.tone }}{% if v.is_default %} is-default{% endif %}"><i>{{ v.tick_head }}{% if v.tick_tail %}<span class="wiki-ruler__dot">.</span>{{ v.tick_tail }}{% endif %}</i></span>{% endfor %}</span></th><th scope="col">最近变更</th></tr></thead>
+{% for group in groups %}{% if group.count %}
+<tbody class="cmd-group" data-group="{{ group.slug }}">
+<tr class="wiki-classrow cmd-grouprow" id="{{ group.anchor }}"><th colspan="5" scope="colgroup"><div class="wiki-classrow__inner"><span class="cmd-grouprow__eyebrow" lang="en">{{ group.eyebrow }}</span><span class="wiki-classrow__label">{{ group.label }}</span><span class="wiki-classrow__count">{{ group.count }} 条</span><a class="wiki-classrow__top" href="{% if top_link %}{{ top_link }}{% else %}/docs/sql/#{{ group.anchor }}{% endif %}" aria-label="{% if top_link %}回到版本条{% else %}在索引中查看本组{% endif %}">↑</a></div></th></tr>
+{% for row in group.rows %}
+<tr class="cmd-row{% if row.slug == current %} is-current{% endif %}" data-href="{{ row.url }}" data-group="{{ row.group }}" data-verb="{{ row.verb_filter }}" data-first="{{ row.first }}" data-present="{{ row.present_tokens }}" data-text="{{ row.text }}">
+<th class="cmd-row__name" scope="row"><a href="{{ row.url }}"><code class="cmd-mono">{{ row.name }}</code></a></th><td class="cmd-row__verb">{{ row.verb }}</td><td class="cmd-row__object">{{ row.object|default:"—" }}</td>
+<td><span class="wiki-strip" role="img" aria-label="版本变动：{{ row.first }} 起{% if row.removed %}，于 {{ row.removed_in }} 移除{% else %}，存在至 {{ row.last }}{% endif %}">{% for cell in row.strip %}<span class="wiki-cell wiki-cell--{{ cell.state }}" title="{{ cell.label }}"></span>{% endfor %}</span></td>
+<td class="cmd-row__last">{% if row.last_change %}{{ row.last_change }}<span class="cmd-row__times">{{ row.change_count }} 次</span>{% else %}<span class="cmd-none">—</span>{% endif %}</td></tr>
+<tr class="cmd-row cmd-row--more{% if row.slug == current %} is-current{% endif %}" data-href="{{ row.url }}"><td colspan="4" class="cmd-row__desc">{% if row.purpose_zh %}{{ row.purpose_zh }}{% else %}<span lang="en">{{ row.purpose }}</span>{% endif %}</td><td class="cmd-row__status{% if row.removed %} is-removed{% endif %}">{% if row.removed %}于 {{ row.removed_in }} 移除{% else %}现存{% endif %}</td></tr>
+{% endfor %}</tbody>{% endif %}{% endfor %}
+</table></div></div>

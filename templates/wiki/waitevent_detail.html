@@ -1,0 +1,272 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<article class="wiki-entry wiki-tone-wait we">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/waitevent/">等待事件</a> / <a href="/docs/waitevent/#type-{{ type_slug }}">{{ type_label }}</a></p>
+
+<header class="wiki-entry__head we-head">
+  <p class="we-eyebrow"><span class="we-eyebrow__en">WAIT EVENT · {{ eyebrow }}</span><span class="we-eyebrow__zh">{{ type_label }}</span></p>
+  <h1 class="we-title"><span class="we-title__type">{{ type }}</span><span class="we-title__sep" aria-hidden="true">/</span><span class="we-title__name">{{ name }}</span></h1>
+  {% if description_zh %}<p class="wiki-entry__name">{{ description_zh }}</p>
+  <p class="we-en" lang="en">{{ description }}</p>
+  {% elif description %}<p class="wiki-entry__name" lang="en">{{ description }}</p>{% endif %}
+  <p class="wiki-badges">
+    <span class="wiki-badge we-badge we-badge--type">{{ type_label }}</span>
+    <span class="wiki-badge we-badge">引入 {{ event.first_version }}{% if event.first_version == '9.6' %}（机制起点）{% endif %}</span>
+    {% for cell in ribbon %}{% if cell.state == 'removed' %}<span class="wiki-badge wiki-badge--removed">于 {{ cell.major }} 移除</span>{% endif %}{% endfor %}
+    {% with newest=versions|last %}{% if newest.major and event.last_version == newest.major %}<span class="wiki-badge we-badge">现存至 {{ newest.label }}</span>{% endif %}{% endwith %}
+    <span class="wiki-badge we-badge">{{ event.changed_in|length }} 次变动</span>
+    {% if has_dossier %}{% if dossier.status_label %}<span class="wiki-badge we-badge we-badge--path" title="图谱核验到的触发路径">{{ dossier.status_label }}</span>{% endif %}<span class="wiki-badge we-badge we-badge--dossier">图谱档案</span>{% endif %}
+    {% if notice %}<span class="wiki-badge we-badge--unreleased" title="{{ notice }}">{{ version.status_label }}</span>{% endif %}
+  </p>
+</header>
+
+<section class="wiki-facts we-factcard">
+  <dl class="we-facts">
+    {% for fact in facts %}
+    <div class="we-facts__item">
+      <dt>{{ fact.label }}</dt>
+      <dd>{% if fact.url %}<a href="{{ fact.url }}">{{ fact.value }}</a>{% else %}{{ fact.value }}{% endif %}</dd>
+    </div>
+    {% endfor %}
+  </dl>
+  <p class="we-actions">
+    {% if links.doc %}<a class="we-btn we-btn--primary" href="{{ links.doc }}">{{ links.doc_label|default:"本站手册" }}</a>{% endif %}
+    {% if links.official %}<a class="we-btn" href="{{ links.official }}" target="_blank" rel="noopener">官方文档 <span class="we-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+    {% if links.source %}<a class="we-btn" href="{{ links.source }}" target="_blank" rel="noopener">源码 <span class="we-btn__out" aria-hidden="true">↗</span></a>{% elif links.definition %}<a class="we-btn" href="{{ links.definition }}" target="_blank" rel="noopener">源码 <span class="we-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+    {% if has_dossier and dossier.wait_url %}<a class="we-btn" href="{{ dossier.wait_url }}" target="_blank" rel="noopener">wait.pg.center <span class="we-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+  </p>
+</section>
+
+<section class="we-ribbonwrap" aria-labelledby="we-ribbon-title">
+  <h2 class="we-ribbonwrap__title" id="we-ribbon-title">版本轨迹</h2>
+  <nav class="we-ribbon">
+    <ol class="we-ribbon__track">
+      {% for cell in ribbon %}
+      <li class="we-ribbon__item">{% if cell.state == 'na' %}<span class="we-pill we-pill--na" title="PostgreSQL {{ cell.label }} · 尚无等待事件机制">{{ cell.major }}</span>{% elif cell.url %}<a class="we-pill we-pill--{{ cell.state }}{% if cell.current %} is-current{% endif %}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" href="{{ cell.url }}"{% if cell.current %} aria-current="page"{% endif %} title="PostgreSQL {{ cell.label }} · {% if cell.state == 'added' %}首次出现{% elif cell.state == 'changed' %}有变动{% else %}存在{% endif %}{% if cell.current %} · 当前查看{% endif %}">{% if cell.state == 'added' %}<span class="we-pill__sign" aria-hidden="true">+</span>{% endif %}{{ cell.major }}</a>{% else %}<span class="we-pill we-pill--{{ cell.state }}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" title="PostgreSQL {{ cell.label }} · {% if cell.state == 'removed' %}已移除{% else %}未收录{% endif %}">{% if cell.state == 'removed' %}<span class="we-pill__sign" aria-hidden="true">−</span>{% endif %}{{ cell.major }}</span>{% endif %}</li>
+      {% endfor %}
+    </ol>
+  </nav>
+  <p class="we-changenote">{{ change_note }}{% if notice %} <span class="we-changenote__notice">{{ notice }}</span>{% endif %}</p>
+</section>
+
+<nav class="wiki-toc" aria-label="本页目录">
+  <h2 class="wiki-toc__title">本页目录</h2>
+  <ol>
+    <li><a href="#versions">各版本描述</a></li>
+    {% if has_dossier %}
+    {% if dossier.mechanism.zh or dossier.mechanism.en %}<li><a href="#mechanism">触发机制</a></li>{% endif %}
+    {% if dossier.sql %}<li><a href="#sql">诊断 SQL</a></li>{% endif %}
+    {% if dossier.actions_zh %}<li><a href="#actions">处置步骤</a></li>{% endif %}
+    {% if dossier.sources_by_major %}<li><a href="#sources">源码证据</a></li>{% endif %}
+    {% endif %}
+    <li><a href="#timeline">演化历史</a></li>
+    {% if siblings %}<li><a href="#siblings">同类事件</a></li>{% endif %}
+  </ol>
+</nav>
+
+<section class="wiki-section" id="versions">
+<h2>各版本描述</h2>
+<p class="we-sectionlead">相邻版本里类型、名称与英文描述都相同的合并成一段，旧的在前。中文取自图谱或本站手册译文，没有译文的只给英文原文。</p>
+<ol class="we-runs">
+  {% for run in runs %}
+  <li class="we-run{% if run.current or version.major in run.majors %} is-current{% endif %}">
+    <div class="we-run__vers">
+      <span class="we-pill we-pill--run{% if run.current or version.major in run.majors %} is-current{% endif %}">{{ run.first }}</span>{% if run.last != run.first %}<span class="we-run__dash" aria-hidden="true">–</span><span class="we-pill we-pill--run{% if run.current or version.major in run.majors %} is-current{% endif %}">{{ run.last }}</span>{% endif %}
+    </div>
+    <div class="we-run__body">
+      <p class="we-run__ident"><code class="we-mono we-run__type">{{ run.type }}</code><span class="we-run__slash" aria-hidden="true">/</span><code class="we-mono we-mono--name">{{ run.name }}</code>{% if run.renamed or run.moved %}<span class="we-flag we-flag--alias" title="当时的写法与如今的 {{ type }}/{{ name }} 不同">曾用名</span>{% endif %}</p>
+      {% if run.description_zh %}<p class="we-run__zh">{{ run.description_zh }}</p>{% endif %}
+      {% if run.description %}<p class="we-run__en" lang="en">{{ run.description }}</p>{% endif %}
+      {% if not run.description_zh and not run.description %}<p class="we-run__zh we-run__none">这一版的手册没有给出描述。</p>{% endif %}
+    </div>
+  </li>
+  {% empty %}
+  <li class="we-run"><div class="we-run__body"><p class="we-run__zh we-run__none">没有逐版本的描述快照。</p></div></li>
+  {% endfor %}
+</ol>
+{% if not has_dossier %}
+<p class="wiki-note we-nodossier">图谱（<a href="https://wait.pg.center" target="_blank" rel="noopener">wait.pg.center</a>）尚未收录此事件的机制档案；本页只有各版本的官方描述与演化历史。</p>
+{% endif %}
+</section>
+
+{% if has_dossier %}
+{% if dossier.mechanism.zh or dossier.mechanism.en %}
+<section class="wiki-section" id="mechanism">
+<h2>触发机制</h2>
+{% if dossier.mechanism.zh %}<p class="we-prose">{{ dossier.mechanism.zh }}</p>{% endif %}
+{% if dossier.mechanism.en %}<p class="we-prose we-prose--en" lang="en">{{ dossier.mechanism.en }}</p>{% endif %}
+
+{% if dossier.normal.zh or dossier.trouble.zh or dossier.normal.en or dossier.trouble.en %}
+<div class="we-verdict">
+  <div class="we-verdict__panel we-verdict__ok">
+    <h3 class="we-verdict__title">通常正常</h3>
+    {% if dossier.normal.zh %}<p class="we-verdict__zh">{{ dossier.normal.zh }}</p>{% endif %}
+    {% if dossier.normal.en %}<p class="we-verdict__en" lang="en">{{ dossier.normal.en }}</p>{% endif %}
+  </div>
+  <div class="we-verdict__panel we-verdict__warn">
+    <h3 class="we-verdict__title">值得警惕</h3>
+    {% if dossier.trouble.zh %}<p class="we-verdict__zh">{{ dossier.trouble.zh }}</p>{% endif %}
+    {% if dossier.trouble.en %}<p class="we-verdict__en" lang="en">{{ dossier.trouble.en }}</p>{% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% if dossier.incident_pattern.zh or dossier.incident_pattern.en %}
+<div class="wiki-note we-incident">
+  <p class="we-incident__title">典型事故模式</p>
+  {% if dossier.incident_pattern.zh %}<p class="we-incident__zh">{{ dossier.incident_pattern.zh }}</p>{% endif %}
+  {% if dossier.incident_pattern.en %}<p class="we-incident__en" lang="en">{{ dossier.incident_pattern.en }}</p>{% endif %}
+</div>
+{% endif %}
+
+{% if dossier.emission_note %}
+<div class="wiki-note we-dormant">
+  <p class="we-dormant__note">{{ dossier.emission_note }}</p>
+  {% if dossier.emission_reason %}<p class="we-dormant__reason" lang="en">{{ dossier.emission_reason }}</p>{% endif %}
+  {% if dossier.emission_evidence %}<p class="we-dormant__evidence">证据：{% for item in dossier.emission_evidence %}{% if not forloop.first %} · {% endif %}<a href="{{ item.url }}" target="_blank" rel="noopener">{{ item.label|default:item.url }}</a>{% endfor %}</p>{% endif %}
+</div>
+{% endif %}
+
+{% if dossier.availability_note %}
+<div class="wiki-note we-avail">
+  <p class="we-avail__note">{{ dossier.availability_note }}</p>
+  {% if dossier.observed_releases %}<p class="we-avail__rel">实测出现：{{ dossier.observed_releases|join:"、" }}</p>{% endif %}
+  {% if dossier.not_observed %}<p class="we-avail__rel">实测未出现：{{ dossier.not_observed|join:"、" }}</p>{% endif %}
+</div>
+{% endif %}
+</section>
+{% endif %}
+
+{% with queries=dossier.sql %}
+{% if queries %}
+<section class="wiki-section" id="sql">
+<h2>诊断 SQL</h2>
+<p class="we-sectionlead">直接在 psql 里跑；标注的是语句里用到的视图与列所要求的最低版本。</p>
+{% for query in queries %}
+<div class="we-sql">
+  <div class="we-sql__head">
+    <h3 class="we-sql__title">{{ query.title_zh|default:query.title }}{% if query.title_zh and query.title %}<span class="we-sql__en" lang="en">{{ query.title }}</span>{% endif %}</h3>
+    {% if query.min_version %}<span class="we-sql__min">PG ≥ {{ query.min_version }}</span>{% endif %}
+    <button type="button" class="we-copy" data-copy-target="{{ query.dom_id|default:query.id }}">复制</button>
+  </div>
+  <pre class="we-sql__code" id="{{ query.dom_id|default:query.id }}"><code>{{ query.sql }}</code></pre>
+</div>
+{% endfor %}
+</section>
+{% endif %}
+{% endwith %}
+
+{% with steps=dossier.actions_zh %}
+{% if steps or dossier.gucs or dossier.metrics %}
+<section class="wiki-section" id="actions">
+<h2>处置步骤</h2>
+{% if steps %}
+<ol class="we-steps">{% for step in steps %}<li>{{ step }}</li>{% endfor %}</ol>
+{% if dossier.actions_en %}
+<details class="we-fold we-fold--tight">
+  <summary>英文原文</summary>
+  <ol class="we-steps we-steps--en" lang="en">{% for step in dossier.actions_en %}<li>{{ step }}</li>{% endfor %}</ol>
+</details>
+{% endif %}
+{% endif %}
+{% if dossier.gucs or dossier.metrics %}
+<h3 class="we-subhead">相关参数与指标</h3>
+<p class="we-chips">
+  {% for guc in dossier.gucs %}{% if guc.url %}<a class="we-chip we-chip--guc" href="{{ guc.url }}"><code class="we-mono">{{ guc.name }}</code></a>{% else %}<span class="we-chip we-chip--guc"><code class="we-mono">{{ guc.name|default:guc }}</code></span>{% endif %}{% endfor %}
+  {% for metric in dossier.metrics %}<span class="we-chip we-chip--metric">{{ metric.name|default:metric }}</span>{% endfor %}
+</p>
+{% endif %}
+</section>
+{% endif %}
+{% endwith %}
+
+{% if dossier.sources_by_major %}
+<section class="wiki-section" id="sources">
+<h2>源码证据</h2>
+<p class="we-sectionlead">图谱在各版本源码树里核对到的位置，新的在前。「触发点」是真正上报等待事件的调用处，「目录定义」只说明这个名字在枚举里存在。</p>
+{% for group in dossier.sources_by_major %}
+{% if forloop.first %}
+<div class="we-srcgroup">
+  <p class="we-srcgroup__head">PostgreSQL {{ group.major }}{% if group.tag %}<span class="we-src__tag">{{ group.tag }}</span>{% endif %}</p>
+  <ul class="we-srclist">
+    {% for row in group.rows %}
+    <li class="we-src">
+      <p class="we-src__line">{% if row.url %}<a class="we-src__path" href="{{ row.url }}" target="_blank" rel="noopener"><code class="we-mono">{{ row.path_line|default:row.path }}</code></a>{% else %}<code class="we-mono we-src__path">{{ row.path_line|default:row.path }}</code>{% endif %}{% if row.symbol %}<code class="we-mono we-src__symbol">{{ row.symbol }}</code>{% endif %}{% if row.kind_label %}<span class="we-src__kind">{{ row.kind_label }}</span>{% endif %}{% if row.status_label %}<span class="we-src__status we-src__status--{{ row.status }}">{{ row.status_label }}</span>{% endif %}</p>
+      {% if row.excerpt %}<code class="we-src__excerpt" lang="en">{{ row.excerpt }}</code>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% else %}
+<details class="we-fold we-srcfold">
+  <summary>PostgreSQL {{ group.major }}{% if group.tag %} · {{ group.tag }}{% endif %}（{{ group.rows|length }} 处）</summary>
+  <ul class="we-srclist">
+    {% for row in group.rows %}
+    <li class="we-src">
+      <p class="we-src__line">{% if row.url %}<a class="we-src__path" href="{{ row.url }}" target="_blank" rel="noopener"><code class="we-mono">{{ row.path_line|default:row.path }}</code></a>{% else %}<code class="we-mono we-src__path">{{ row.path_line|default:row.path }}</code>{% endif %}{% if row.symbol %}<code class="we-mono we-src__symbol">{{ row.symbol }}</code>{% endif %}{% if row.kind_label %}<span class="we-src__kind">{{ row.kind_label }}</span>{% endif %}{% if row.status_label %}<span class="we-src__status we-src__status--{{ row.status }}">{{ row.status_label }}</span>{% endif %}</p>
+      {% if row.excerpt %}<code class="we-src__excerpt" lang="en">{{ row.excerpt }}</code>{% endif %}
+    </li>
+    {% endfor %}
+  </ul>
+</details>
+{% endif %}
+{% endfor %}
+</section>
+{% endif %}
+{% endif %}
+
+<section class="wiki-section" id="timeline">
+<h2>演化历史</h2>
+<p class="we-sectionlead">相邻两个大版本之间的差异，新的在前。版本号链到该版的变动清单。</p>
+<ol class="we-tl">
+  {% for item in timeline %}
+  <li class="we-tl__item we-tl__item--{% if item.status == 'added' %}added{% elif item.status == 'removed' %}removed{% elif item.renamed or item.moved %}renamed{% else %}wording{% endif %}">
+    <p class="we-tl__head">
+      <span class="we-tl__dot" aria-hidden="true"></span>
+      {% if item.url %}<a class="we-tl__ver" href="{{ item.url }}">PostgreSQL {{ item.to }}</a>{% else %}<span class="we-tl__ver">PostgreSQL {{ item.to }}</span>{% endif %}
+      {% if item.from %}<span class="we-tl__from" aria-label="相对 PostgreSQL {{ item.from }}">← {{ item.from }}</span>{% endif %}
+      <span class="we-tl__label">{% if item.status == 'added' %}新增此事件{% elif item.status == 'removed' %}移除此事件{% elif item.renamed %}更名{% elif item.moved %}类型变动{% else %}描述更新{% endif %}</span>
+    </p>
+    <p class="we-tl__chips">
+      {% if item.status == 'added' %}<span class="we-chip we-chip--add">{% if item.to == '9.6' %}9.6 引入等待事件机制，此为本事件的首个版本{% else %}该版起出现{% endif %}</span>{% endif %}
+      {% if item.status == 'removed' %}<span class="we-chip we-chip--del">该版起不再存在</span>{% endif %}
+      {% if item.renamed %}<span class="we-chip we-chip--ren">更名 <code class="we-mono">{{ item.renamed.from }}</code><span class="we-chip__arrow" aria-hidden="true">→</span><code class="we-mono">{{ item.renamed.to }}</code></span>{% endif %}
+      {% if item.moved %}<span class="we-chip we-chip--ren">类型 <code class="we-mono">{{ item.moved.from }}</code><span class="we-chip__arrow" aria-hidden="true">→</span><code class="we-mono">{{ item.moved.to }}</code></span>{% endif %}
+      {% if item.reworded %}<span class="we-chip we-chip--note">描述措辞更新</span>{% endif %}
+    </p>
+    {% if item.description_zh_to %}<p class="we-tl__desc">{{ item.description_zh_to }}</p>{% endif %}
+    {% if item.reworded %}
+    <details class="we-diff">
+      <summary>描述前后对照</summary>
+      <div class="we-diff__lines">
+        <span class="we-diff__old" lang="en">{{ item.reworded.from }}</span>
+        <span class="we-diff__new" lang="en">{{ item.reworded.to }}</span>
+      </div>
+    </details>
+    {% endif %}
+  </li>
+  {% empty %}
+  <li class="we-tl__empty">本数据集收录 {{ name }} 以来没有记录到变动。</li>
+  {% endfor %}
+</ol>
+</section>
+
+{% if siblings %}
+<section class="wiki-section" id="siblings">
+<h2>同类事件</h2>
+{% include "wiki/waitevent_table.html" with groups=siblings current=event.key %}
+</section>
+{% endif %}
+
+<footer class="wiki-entry__foot">
+  {% if doc_versions %}
+  <p>本站手册收录此事件的版本：{% for item in doc_versions %}<a class="we-docver" href="{{ item.url }}">{{ item.label }}</a>{% endfor %}</p>
+  {% endif %}
+  <p>数据来自 <a href="{{ dossier.wait_url|default:'https://wait.pg.center' }}" target="_blank" rel="noopener">wait.pg.center</a>（仓库 <a href="https://github.com/pgsty/wait.pg.center" target="_blank" rel="noopener">pgsty/wait.pg.center</a>），中文取自图谱与本站手册译文，最后同步 {{ event.imported_at|date:"Y-m-d" }}。</p>
+  <p>事件数据或机制档案有误请提交到 <a href="https://github.com/pgsty/wait.pg.center/issues" target="_blank" rel="noopener">数据仓库</a>；本站渲染或译文的问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
+</footer>
+
+</article>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

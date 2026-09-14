@@ -10,7 +10,8 @@ export const PREVIEW_API = '/search/preview/';
 
 export const GROUP_ICON = {
   all: 'layers', guc: 'sliders', sql: 'terminal-square', function: 'sigma', type: 'braces',
-  relation: 'table', error: 'alert', tool: 'terminal', psql: 'backslash', extension: 'blocks', guide: 'book',
+  relation: 'table', error: 'alert', waitevent: 'layers', tool: 'terminal', psql: 'backslash',
+  extension: 'blocks', guide: 'book',
 };
 
 export function el(tag, className, text) {
@@ -308,16 +309,13 @@ function versionLine(data, onVersion) {
     if (index) line.append(el('span', 'ds-preview-versions__sep', '/'));
     const link = el('a', item.current ? 'is-current' : '', String(item.version));
     link.href = item.url;
-    link.title = 'PostgreSQL ' + item.version;
+    link.title = 'PostgreSQL ' + (item.label || item.version);
     if (item.current) link.setAttribute('aria-current', 'true');
     link.dataset.previewEntry = item.id;
     link.addEventListener('click', (event) => {
-      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || item.current) return;
-      // A 百科 entry has no per-version definition: its version links open the
-      // manual's appendix row for that version instead of swapping the preview.
-      if (data.source === 'errcode') return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
       event.preventDefault();
-      onVersion(item.id);
+      if (!item.current) onVersion(item.id, item.version);
     });
     line.append(link);
   });
@@ -336,7 +334,7 @@ function catalogCard(entry) {
 
 /*
  * Render a definition preview into `container`.
- * options.onVersion(id): load another version's definition in place.
+ * options.onVersion(id, version): load another version's definition in place.
  * options.onDefinition(id): load an overload / another definition.
  * options.back(): shown on narrow layouts to return to the list.
  */
@@ -354,7 +352,7 @@ export function renderPreview(container, data, options = {}) {
   const kind = el('span', 'ds-preview-kind');
   kind.append(kindBadge(data.group), el('span', '', data.kind_label || data.label));
   bar.append(kind);
-  const open = el('a', 'ds-preview-open', data.source === 'ext' ? '打开扩展页' : data.source === 'errcode' ? '打开词条' : '打开文档');
+  const open = el('a', 'ds-preview-open', data.source === 'ext' ? '打开扩展页' : (data.source === 'errcode' || data.source === 'catalog' || data.source === 'guc' || data.source === 'wait' || data.source === 'sqlcmd' || data.source === 'func') ? '打开词条' : '打开文档');
   open.href = data.url;
   open.append(icon('arrow-up-right'));
   bar.append(open);

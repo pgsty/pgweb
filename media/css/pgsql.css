@@ -3541,6 +3541,7 @@ button.pg-script-copy-btn.pg-code__btn {
 .ds-kind-type { --kind-color: #9a4f1e; --kind-bg: rgba(194, 131, 63, 0.14); }
 .ds-kind-relation { --kind-color: #5a4fa8; --kind-bg: rgba(124, 113, 188, 0.14); }
 .ds-kind-error { --kind-color: #9a2f3f; --kind-bg: rgba(195, 86, 104, 0.12); }
+.ds-kind-waitevent { --kind-color: #7b3f6b; --kind-bg: rgba(150, 90, 135, 0.14); }
 .ds-kind-tool { --kind-color: #2f5d7a; --kind-bg: rgba(63, 126, 187, 0.13); }
 .ds-kind-psql { --kind-color: #4a5d75; --kind-bg: rgba(91, 111, 140, 0.14); }
 .ds-kind-extension { --kind-color: #1f6f80; --kind-bg: rgba(55, 147, 167, 0.14); }
@@ -3552,6 +3553,7 @@ button.pg-script-copy-btn.pg-code__btn {
 [data-theme="dark"] .ds-kind-type { --kind-color: #f0b78a; }
 [data-theme="dark"] .ds-kind-relation { --kind-color: #c1b8f3; }
 [data-theme="dark"] .ds-kind-error { --kind-color: #f2a6ae; }
+[data-theme="dark"] .ds-kind-waitevent { --kind-color: #e0a8d2; }
 [data-theme="dark"] .ds-kind-tool { --kind-color: #9fc7e6; }
 [data-theme="dark"] .ds-kind-psql { --kind-color: #b7c6d8; }
 [data-theme="dark"] .ds-kind-extension { --kind-color: #8fd3e2; }

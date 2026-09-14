@@ -16,6 +16,7 @@ KINDS = (
     ('type', '数据类型'),
     ('relation', '系统目录与视图'),
     ('error', 'SQL 状态码'),
+    ('waitevent', '等待事件'),
     ('psql', 'psql 命令'),
     ('tool', '命令行工具'),
     ('option', '选项与变量'),
@@ -34,6 +35,7 @@ GROUPS = (
     ('type', '数据类型', ('type',), 'jsonb、integer、uuid'),
     ('relation', '系统目录与视图', ('relation',), 'pg_class、pg_stat_activity'),
     ('error', 'SQL 状态码', ('error',), 'SQLSTATE 与条件名称'),
+    ('waitevent', '等待事件', ('waitevent',), 'BufferMapping、DataFileRead'),
     ('tool', '命令行工具', ('tool', 'option'), 'pg_dump、pg_basebackup、sslmode、PGHOST'),
     ('psql', 'psql 命令', ('psql',), '\\d+、\\copy、\\watch'),
     ('extension', '扩展与模块', ('extension', 'am', 'language'), 'postgis、pg_trgm、PL/pgSQL'),
@@ -45,7 +47,9 @@ KIND_ALIASES = {'param': 'guc', 'setting': 'guc', 'settings': 'guc', 'func': 'fu
                 'op': 'operator', 'operators': 'operator', 'view': 'relation', 'catalog': 'relation',
                 'command': 'sql', 'commands': 'sql', 'err': 'error', 'errors': 'error', 'types': 'type',
                 'ext': 'extension', 'extensions': 'extension', 'module': 'extension', 'tools': 'tool',
-                'cli': 'tool', 'meta': 'psql', 'backslash': 'psql', 'chapter': 'guide', 'doc': 'guide'}
+                'cli': 'tool', 'meta': 'psql', 'backslash': 'psql', 'chapter': 'guide', 'doc': 'guide',
+                'wait': 'waitevent', 'waits': 'waitevent', 'waitevents': 'waitevent',
+                'wait_event': 'waitevent'}
 
 
 def resolve_group(value):

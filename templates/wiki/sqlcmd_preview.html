@@ -1,0 +1,7 @@
+<p class="sql-preview-version">PostgreSQL {{ version.label }}{% if notice %} · {{ notice }}{% endif %}</p>
+{% if fallback_note %}<p class="sql-preview-version">{{ fallback_note }}</p>{% endif %}
+<dl class="ds-ext-facts"><div><dt>分组</dt><dd>{{ command.group_label }}</dd></div><div><dt>当前版本</dt><dd>{{ version.label }}</dd></div><div><dt>手册</dt><dd><a href="{{ manual_url }}">{{ snapshot.name }}</a></dd></div></dl>
+{% if description %}<h3>摘要</h3>{{ description|safe }}{% endif %}
+<h3>语法铁道图 · PostgreSQL {{ version.major }}</h3>
+{% include "wiki/sqlcmd_railroad.html" %}
+<details class="sql-railroad__rule"><summary>原始语法概要</summary><pre>{{ snapshot.synopsis_text }}</pre></details>

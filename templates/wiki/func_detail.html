@@ -1,0 +1,210 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<article class="wiki-entry wiki-tone-func fn">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/func/">函数百科</a> / <a href="/docs/func/#group-{{ group_slug }}">{{ group_label }}</a></p>
+
+<header class="wiki-entry__head fn-head">
+  <p class="fn-eyebrow"><span class="fn-eyebrow__en" lang="en">{{ eyebrow }}</span><span class="fn-eyebrow__zh">{{ group_label }}</span></p>
+  <h1><span class="fn-title">{{ name }}</span></h1>
+  {% if summary_zh %}<p class="wiki-entry__name">{{ summary_zh }}</p>{% endif %}
+  {% if summary %}<p class="fn-subtitle" lang="en">{{ summary }}</p>{% endif %}
+  <p class="wiki-badges">
+    <span class="wiki-badge fn-badge fn-badge--group">{{ group_label }}</span>
+    <span class="wiki-badge fn-badge">引入 {{ function.first_version }}{% if function.first_version == versions.0.major %}（基线）{% endif %}</span>
+    {% for cell in ribbon %}{% if cell.state == 'removed' %}<span class="wiki-badge wiki-badge--removed">于 {{ cell.major }} 移除</span>{% endif %}{% endfor %}
+    {% with newest=versions|last %}{% if function.last_version == newest.major %}<span class="wiki-badge fn-badge">现存至 {{ newest.label }}</span>{% endif %}{% endwith %}
+    {% if signatures %}<span class="wiki-badge fn-badge">{{ signatures|length }} 条签名</span>{% elif prose_only %}<span class="wiki-badge fn-badge">仅正文提及</span>{% endif %}
+    <span class="wiki-badge fn-badge">{{ function.changed_in|length }} 次签名变更</span>
+    {% if notice %}<span class="wiki-badge fn-badge--unreleased" title="{{ notice }}">{{ version.status_label }}</span>{% endif %}
+  </p>
+</header>
+
+<section class="wiki-facts fn-factcard">
+  <dl class="fn-facts">
+    {% for fact in facts %}
+    <div class="fn-facts__item">
+      <dt>{{ fact.label }}</dt>
+      <dd>{% if fact.url %}<a href="{{ fact.url }}">{% if fact.mono %}<code class="fn-mono">{{ fact.value }}</code>{% else %}{{ fact.value }}{% endif %}</a>{% elif fact.mono %}<code class="fn-mono">{{ fact.value }}</code>{% else %}{{ fact.value }}{% endif %}</dd>
+    </div>
+    {% endfor %}
+  </dl>
+  <p class="fn-actions">
+    {% if doc.local_url %}<a class="fn-btn fn-btn--primary" href="{{ doc.local_url }}">{{ doc.label|default:"本站手册" }}</a>{% endif %}
+    {% if doc.official_url %}<a class="fn-btn" href="{{ doc.official_url }}" target="_blank" rel="noopener">官方文档 <span class="fn-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+  </p>
+</section>
+
+<section class="fn-ribbonwrap" aria-labelledby="fn-ribbon-title">
+  <h2 class="fn-ribbonwrap__title" id="fn-ribbon-title">版本轨迹</h2>
+  <nav class="fn-ribbon">
+    <ol class="fn-ribbon__track">
+      {% for cell in ribbon %}
+      <li class="fn-ribbon__item">{% if cell.url %}<a class="fn-pill fn-pill--{{ cell.state }}{% if cell.current %} is-current{% endif %}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" href="{{ cell.url }}"{% if cell.current %} aria-current="page"{% endif %} title="PostgreSQL {{ cell.label }} · {% if cell.state == 'added' %}本版新增{% elif cell.state == 'changed' %}签名有变{% else %}存在{% endif %}{% if cell.current %} · 当前查看{% endif %}">{% if cell.state == 'added' %}<span class="fn-pill__sign" aria-hidden="true">+</span>{% endif %}{{ cell.major }}</a>{% else %}<span class="fn-pill fn-pill--{{ cell.state }}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" title="PostgreSQL {{ cell.label }} · {% if cell.state == 'removed' %}已移除{% else %}不存在{% endif %}">{% if cell.state == 'removed' %}<span class="fn-pill__sign" aria-hidden="true">−</span>{% endif %}{{ cell.major }}</span>{% endif %}</li>
+      {% endfor %}
+    </ol>
+  </nav>
+  <p class="fn-changenote">{{ change_note }}{% if notice %} <span class="fn-changenote__notice">{{ notice }}</span>{% endif %}</p>
+</section>
+
+<nav class="wiki-toc" aria-label="本页目录">
+  <h2 class="wiki-toc__title">本页目录</h2>
+  <ol>
+    <li><a href="#signatures">签名</a></li>
+    {% if removed_signatures %}<li><a href="#removed-signatures">本版移除的签名</a></li>{% endif %}
+    <li><a href="#timeline">演化历史</a></li>
+    {% if matrix.rows %}<li><a href="#matrix">签名矩阵</a></li>{% endif %}
+    {% if related %}<li><a href="#related">相关函数</a></li>{% endif %}
+    {% if siblings %}<li><a href="#siblings">同组函数</a></li>{% endif %}
+  </ol>
+</nav>
+
+<section class="wiki-section" id="signatures">
+<h2>签名</h2>
+{% if not signatures %}
+<p class="wiki-note fn-prosenote">{% if signature_note %}{{ signature_note }}{% else %}本版快照没有记录签名。{% endif %}</p>
+<p class="fn-prose__links">
+  {% if doc.local_url %}<a class="fn-btn fn-btn--primary" href="{{ doc.local_url }}">{{ doc.label|default:"本站手册" }}</a>{% endif %}
+  {% if doc.official_url %}<a class="fn-btn" href="{{ doc.official_url }}" target="_blank" rel="noopener">官方文档 <span class="fn-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+</p>
+{% else %}
+<p class="fn-sectionlead">PostgreSQL {{ version.label }} 里 {{ name }} 的 {{ signatures|length }} 条签名，按上游手册顺序排列。参数名用斜体，类型用弱化色，<span class="fn-sectionlead__arrow" aria-hidden="true">→</span> 之后是返回类型。说明取自本站手册译文：标「沿用」的借用了另一版的译文，标「EN」的本站暂无译文、按英文原文显示。</p>
+{% endif %}
+<ol class="fn-sigs">
+  {% for item in signatures %}
+  <li class="fn-sig{% if item.added %} is-added{% endif %}">
+    <p class="fn-sig__line">
+      {% if item.added %}<span class="fn-sig__new" title="PostgreSQL {{ version.label }} 新增的签名">新</span>{% endif %}
+      <code class="fn-sig__code">{% if item.html %}{{ item.html|safe }}{% else %}{{ item.text }}{% endif %}</code>
+    </p>
+    {% comment %}描述分中英两份，各自另有一份保留行内标记的 HTML（中文 description_zh_html、
+    英文 description_html），缺席时退回同名的纯文本。inherited 由后端逐条判定：整份快照标
+    'doc' 不代表每条签名都配上了中文，所以这里只认签名自己那份，不回落快照。{% endcomment %}
+    {% if item.description_zh %}
+    <div class="fn-sig__desc">{% if item.inherited %}<span class="fn-mark fn-mark--carry" title="本版没有单独的译文，英文原文与另一版完全一致，沿用那一版的译文">沿用</span>{% endif %}{% if item.description_zh_html %}{{ item.description_zh_html|safe }}{% else %}{{ item.description_zh }}{% endif %}</div>
+    {% elif item.description %}
+    <div class="fn-sig__desc" lang="en"><span class="fn-mark fn-mark--en" title="本站手册暂无该版译文，按英文原文显示">EN</span>{% if item.description_html %}{{ item.description_html|safe }}{% else %}{{ item.description }}{% endif %}</div>
+    {% endif %}
+    {% if item.examples %}
+    <ul class="fn-ex">
+      {% for ex in item.examples|slice:":3" %}
+      <li class="fn-ex__row{% if not ex.result %} is-bare{% endif %}"><code class="fn-mono fn-ex__expr">{{ ex.expr }}</code>{% if ex.result %}<span class="fn-ex__arrow" aria-hidden="true">→</span><code class="fn-mono fn-ex__result">{{ ex.result }}</code>{% endif %}</li>
+      {% endfor %}
+    </ul>
+    {% if item.examples|length > 3 %}
+    <details class="fn-exfold">
+      <summary>另外 {{ item.examples|length|add:"-3" }} 个示例</summary>
+      <ul class="fn-ex">
+        {% for ex in item.examples|slice:"3:" %}
+        <li class="fn-ex__row{% if not ex.result %} is-bare{% endif %}"><code class="fn-mono fn-ex__expr">{{ ex.expr }}</code>{% if ex.result %}<span class="fn-ex__arrow" aria-hidden="true">→</span><code class="fn-mono fn-ex__result">{{ ex.result }}</code>{% endif %}</li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
+    {% endif %}
+  </li>
+  {% endfor %}
+</ol>
+</section>
+
+{% if removed_signatures %}
+<section class="wiki-section" id="removed-signatures">
+<h2>本版移除的签名</h2>
+<p class="fn-sectionlead">PostgreSQL {{ previous_major }} 有、{{ version.label }} 不再有的 {{ removed_signatures|length }} 条签名，取自上一版快照。</p>
+<ul class="fn-gone">
+  {% for item in removed_signatures %}
+  <li class="fn-gone__item">
+    <code class="fn-mono fn-gone__code">{{ item.text }}</code>
+    {% if item.description_zh %}<span class="fn-gone__desc">{{ item.description_zh }}</span>{% elif item.description %}<span class="fn-gone__desc" lang="en">{{ item.description }}<span class="fn-mark fn-mark--en" title="本站手册暂无该版译文，按英文原文显示">EN</span></span>{% endif %}
+  </li>
+  {% endfor %}
+</ul>
+</section>
+{% endif %}
+
+<section class="wiki-section" id="timeline">
+<h2>演化历史</h2>
+<p class="fn-sectionlead">相邻两个大版本之间的差异，新的在前。版本号链到该版的签名。</p>
+<ol class="fn-tl">
+  {% for item in timeline %}
+  <li class="fn-tl__item fn-tl__item--{% if item.status == 'added' %}added{% elif item.status == 'removed' %}removed{% elif item.doc_overhaul %}overhaul{% elif item.added or item.removed %}changed{% else %}wording{% endif %}">
+    <p class="fn-tl__head">
+      <span class="fn-tl__dot" aria-hidden="true"></span>
+      {% if item.url %}<a class="fn-tl__ver" href="{{ item.url }}">PostgreSQL {{ item.to }}</a>{% else %}<span class="fn-tl__ver">PostgreSQL {{ item.to }}</span>{% endif %}
+      <span class="fn-tl__from" aria-label="相对 PostgreSQL {{ item.from }}">← {{ item.from }}</span>
+      <span class="fn-tl__label">{% if item.status == 'added' %}新增此函数{% elif item.status == 'removed' %}移除此函数{% elif item.doc_overhaul %}手册重排{% elif item.added or item.removed %}签名变更{% elif item.group_changed %}换了分组{% elif item.descriptions_changed %}说明更新{% else %}无实质变化{% endif %}</span>
+    </p>
+    <p class="fn-tl__chips">
+      {% if item.status == 'added' %}<span class="fn-chip fn-chip--add"><span class="fn-chip__sign" aria-hidden="true">+</span>PostgreSQL {{ item.to }} 起可用</span>{% endif %}
+      {% if item.status == 'removed' %}<span class="fn-chip fn-chip--del"><span class="fn-chip__sign" aria-hidden="true">−</span>该版起不再存在</span>{% endif %}
+      {% for text in item.added %}<span class="fn-chip fn-chip--add" title="{{ text }}"><span class="fn-chip__sign" aria-hidden="true">+</span><code class="fn-mono">{{ text }}</code></span>{% endfor %}
+      {% for text in item.removed %}<span class="fn-chip fn-chip--del" title="{{ text }}"><span class="fn-chip__sign" aria-hidden="true">−</span><code class="fn-mono">{{ text }}</code></span>{% endfor %}
+      {% if item.group_changed %}<span class="fn-chip fn-chip--move"><span class="fn-chip__sign" aria-hidden="true">↕</span><code class="fn-mono">{{ item.group_changed.from }}</code><span class="fn-chip__arrow" aria-hidden="true">→</span><code class="fn-mono">{{ item.group_changed.to }}</code></span>{% endif %}
+      {% if item.descriptions_changed %}<span class="fn-chip fn-chip--note">说明更新</span>{% endif %}
+      {% if not item.doc_overhaul and item.status != 'added' and item.status != 'removed' and not item.added and not item.removed and not item.group_changed and not item.descriptions_changed %}<span class="fn-chip fn-chip--note">无签名级差异记录</span>{% endif %}
+    </p>
+    {% if item.doc_overhaul %}<p class="fn-tl__note">这一跳手册重排了函数表的写法，签名文本整体改写，只记函数的增删，不逐条比较签名。</p>{% endif %}
+  </li>
+  {% empty %}
+  <li class="fn-tl__empty">本数据集收录 {{ name }} 以来没有记录到变化。</li>
+  {% endfor %}
+</ol>
+</section>
+
+{% if matrix.rows %}
+<section class="wiki-section" id="matrix">
+<h2>签名矩阵</h2>
+<p class="fn-sectionlead">每条签名在给出了签名的 {{ matrix.versions|length }} 个版本里的存在情况；方格指向该版的签名。只在正文里提到此函数、没有给出签名的版本不列进来，上面的版本轨迹里仍然有它们。签名文本在 PostgreSQL 13 前后写法不同，跨越那一跳的同一条签名会显示成两行。</p>
+<p class="wiki-striplegend">
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--present" aria-hidden="true"></span>存在</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--absent" aria-hidden="true"></span>不存在</span>
+</p>
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table class="fn-matrix">
+  <thead><tr>
+    <th class="fn-th fn-matrix__corner" scope="col">签名</th>
+    {% for v in matrix.versions %}<th class="fn-th fn-matrix__ver{% if v.major == version.major %} is-current{% endif %}" scope="col" title="PostgreSQL {{ v.label }}">{{ v.major }}</th>{% endfor %}
+  </tr></thead>
+  <tbody>
+  {% for row in matrix.rows %}
+  <tr>
+    <th class="fn-matrix__name" scope="row"><code class="fn-mono" title="{{ row.text }}">{{ row.text }}</code></th>
+    {% for cell in row.cells %}
+    <td class="fn-matrix__cell{% if cell.current %} is-current{% endif %}">{% if cell.url %}<a class="wiki-cell wiki-cell--present" href="{{ cell.url }}#signatures" title="{{ name }} · PostgreSQL {{ cell.major }} · 存在"><span class="sr-only">存在</span></a>{% else %}<span class="wiki-cell wiki-cell--{% if cell.state == 'exists' %}present{% else %}absent{% endif %}" title="{{ name }} · PostgreSQL {{ cell.major }} · {% if cell.state == 'exists' %}存在{% else %}不存在{% endif %}"><span class="sr-only">{% if cell.state == 'exists' %}存在{% else %}不存在{% endif %}</span></span>{% endif %}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+</section>
+{% endif %}
+
+{% if related %}
+<section class="wiki-section" id="related">
+<h2>相关函数</h2>
+<p class="fn-sectionlead">同一分组里紧挨着的函数。</p>
+<p class="fn-rels">
+  {% for item in related %}<a class="fn-rel" href="{{ item.url }}" title="{{ item.summary_zh|default:item.name }}"><code class="fn-mono">{{ item.name }}</code></a>{% endfor %}
+</p>
+</section>
+{% endif %}
+
+{% if siblings %}
+<section class="wiki-section" id="siblings">
+<h2>同组函数</h2>
+{% include "wiki/func_table.html" with groups=siblings current=slug %}
+</section>
+{% endif %}
+
+<footer class="wiki-entry__foot">
+  {% if doc_versions %}
+  <p>本站手册收录 {{ name }} 的版本：{% for item in doc_versions %}<a class="fn-docver" href="{{ item.url }}">{{ item.label }}</a>{% endfor %}</p>
+  {% endif %}
+  <p>签名、说明与示例取自本站手册第 9 章的译文{% if doc.borrowed %}；本版未收录译文，上面显示的是 PostgreSQL {{ doc.major }} 的内容{% endif %}，9.x 各版取自 <a href="https://www.postgresql.org/docs/" target="_blank" rel="noopener">postgresql.org</a> 的英文原页，最后同步 {{ function.imported_at|date:"Y-m-d" }}。</p>
+  <p>译文有误请提交到 <a href="https://github.com/pgsty/pgdoc/issues" target="_blank" rel="noopener">pgsty/pgdoc</a>；本站渲染或数据的问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
+</footer>
+
+</article>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

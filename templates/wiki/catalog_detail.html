@@ -1,0 +1,229 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<article class="wiki-entry wiki-tone-cat cat">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/catalog/">系统目录</a> / <a href="/docs/catalog/#kind-{{ relation.kind }}">{{ kind_label }}</a></p>
+
+<header class="wiki-entry__head cat-head">
+  <p class="cat-eyebrow"><span class="cat-eyebrow__en">{{ eyebrow }}</span><span class="cat-eyebrow__zh">{{ kind_label }}</span></p>
+  <h1><span class="cat-title">{{ name }}</span></h1>
+  {% if relation.summary_zh %}<p class="wiki-entry__name">{{ relation.summary_zh }}</p>{% elif relation.summary %}<p class="wiki-entry__name" lang="en">{{ relation.summary }}</p>{% endif %}
+  <p class="wiki-badges">
+    <span class="wiki-badge cat-badge cat-badge--kind">{{ kind_label }}</span>
+    <span class="wiki-badge cat-badge">引入 {{ relation.first_version }}{% if relation.first_version == versions.0.major %}（基线）{% endif %}</span>
+    {% for cell in ribbon %}{% if cell.state == 'removed' %}<span class="wiki-badge wiki-badge--removed">于 {{ cell.major }} 移除</span>{% endif %}{% endfor %}
+    {% with newest=versions|last %}{% if relation.last_version == newest.major %}<span class="wiki-badge cat-badge">现存至 {{ newest.label }}</span>{% endif %}{% endwith %}
+    <span class="wiki-badge cat-badge">{{ relation.changed_in|length }} 次结构变更</span>
+    {% if notice %}<span class="wiki-badge cat-badge--unreleased" title="{{ notice }}">{{ version.status_label }}</span>{% endif %}
+  </p>
+</header>
+
+<section class="wiki-facts cat-factcard">
+  <dl class="cat-facts">
+    {% for fact in facts %}
+    <div class="cat-facts__item">
+      <dt>{{ fact.label }}</dt>
+      <dd>{% if fact.url %}<a href="{{ fact.url }}">{{ fact.value }}</a>{% else %}{{ fact.value }}{% endif %}</dd>
+    </div>
+    {% endfor %}
+  </dl>
+  <p class="cat-actions">
+    {% if links.doc %}<a class="cat-btn cat-btn--primary" href="{{ links.doc }}">{{ links.doc_label }}</a>{% endif %}
+    {% if links.official %}<a class="cat-btn" href="{{ links.official }}" target="_blank" rel="noopener">官方文档 <span class="cat-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+    {% if links.definition %}<a class="cat-btn" href="{{ links.definition }}" target="_blank" rel="noopener">源码定义 <span class="cat-btn__out" aria-hidden="true">↗</span></a>{% endif %}
+  </p>
+</section>
+
+<section class="cat-ribbonwrap" aria-labelledby="cat-ribbon-title">
+  <h2 class="cat-ribbonwrap__title" id="cat-ribbon-title">版本轨迹</h2>
+  <nav class="cat-ribbon">
+    <ol class="cat-ribbon__track">
+      {% for cell in ribbon %}
+      <li class="cat-ribbon__item">{% if cell.url %}<a class="cat-pill cat-pill--{{ cell.state }}{% if cell.current %} is-current{% endif %}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" href="{{ cell.url }}"{% if cell.current %} aria-current="page"{% endif %} title="PostgreSQL {{ cell.label }} · {% if cell.state == 'added' %}首次出现{% elif cell.state == 'changed' %}结构变更{% else %}存在{% endif %}{% if cell.current %} · 当前查看{% endif %}">{% if cell.state == 'added' %}<span class="cat-pill__sign" aria-hidden="true">+</span>{% endif %}{{ cell.major }}</a>{% else %}<span class="cat-pill cat-pill--{{ cell.state }}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" title="PostgreSQL {{ cell.label }} · {% if cell.state == 'removed' %}已移除{% else %}未收录{% endif %}">{% if cell.state == 'removed' %}<span class="cat-pill__sign" aria-hidden="true">−</span>{% endif %}{{ cell.major }}</span>{% endif %}</li>
+      {% endfor %}
+    </ol>
+  </nav>
+  <p class="cat-changenote">{{ change_note }}{% if notice %} <span class="cat-changenote__notice">{{ notice }}</span>{% endif %}</p>
+</section>
+
+{% if description_zh %}<p class="cat-desc">{{ description_zh|linebreaksbr }}</p>{% elif description %}<p class="cat-desc" lang="en">{{ description|linebreaksbr }}</p>{% endif %}
+
+<nav class="wiki-toc" aria-label="本页目录">
+  <h2 class="wiki-toc__title">本页目录</h2>
+  <ol>
+    <li><a href="#columns">字段</a></li>
+    <li><a href="#timeline">演化历史</a></li>
+    {% if matrix.rows %}<li><a href="#matrix">字段矩阵</a></li>{% endif %}
+    {% if system_columns %}<li><a href="#system-columns">系统列</a></li>{% endif %}
+    {% if sibling_groups %}<li><a href="#siblings">同类关系</a></li>{% endif %}
+  </ol>
+</nav>
+
+<section class="wiki-section" id="columns">
+<h2>字段</h2>
+<p class="cat-sectionlead">PostgreSQL {{ version.label }} 的 {{ columns|length }} 个字段，按定义顺序排列。说明默认用本站手册的译文，没有译文的按英文原文显示。</p>
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table class="cat-columns">
+  <thead><tr>
+    <th class="cat-th cat-th--field" scope="col">字段</th>
+    <th class="cat-th cat-th--type" scope="col">类型</th>
+    <th class="cat-th" scope="col">说明</th>
+  </tr></thead>
+  <tbody>
+  {% for column in columns %}
+  <tr class="cat-col{% if column.added %} is-added{% endif %}">
+    <th class="cat-col__name" scope="row">
+      <code class="cat-mono cat-mono--field">{{ column.name }}</code>
+      {% if column.added %}<span class="cat-flag cat-flag--new" title="PostgreSQL {{ version.label }} 新增的字段">新</span>{% endif %}
+      {% if column.hidden %}<span class="cat-flag cat-flag--hidden" title="手册未列出的隐式字段">隐式</span>{% endif %}
+    </th>
+    <td class="cat-col__type">
+      <span class="cat-col__typeline"><code class="cat-mono">{{ column.type }}</code>{% if column.not_null %}<span class="cat-nn" title="该字段非空">NOT NULL</span>{% endif %}</span>
+      {% if column.type_change %}<span class="cat-flag cat-flag--type" title="本版类型由 {{ column.type_change.from }} 变为 {{ column.type_change.to }}"><code class="cat-mono">{{ column.type_change.from }}</code> → <code class="cat-mono">{{ column.type_change.to }}</code></span>{% endif %}
+      {% if column.references %}<span class="cat-ref" title="引用 {{ column.references.text }}">{% if column.references.url %}<a href="{{ column.references.url }}"><span class="cat-ref__arrow" aria-hidden="true">→</span><code class="cat-mono">{{ column.references.text }}</code></a>{% else %}<span class="cat-ref__arrow" aria-hidden="true">→</span><code class="cat-mono">{{ column.references.text }}</code>{% endif %}</span>{% endif %}
+    </td>
+    <td class="cat-col__desc">
+      {% if column.description_zh %}{{ column.description_zh }}{% if column.zh_from == 'inherited' %}<span class="cat-tag-en" title="本版没有单独的译文；英文原文与另一版完全一致，沿用那一版的译文">沿用</span>{% endif %}{% elif column.description %}<span lang="en">{{ column.description }}</span><span class="cat-tag-en" title="本版暂无中文译文，按英文原文显示">EN</span>{% else %}<span class="cat-row__none">—</span>{% endif %}
+      {% if column.schema_note %}<span class="cat-schemanote" lang="en">{{ column.schema_note }}</span>{% endif %}
+    </td>
+  </tr>
+  {% empty %}
+  <tr><td class="cat-col__desc" colspan="3">本版快照没有记录字段。</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+
+{% if removed_columns %}
+<h3 id="removed-columns">本版移除的字段</h3>
+<ul class="cat-gone">
+  {% for column in removed_columns %}
+  <li class="cat-gone__item">
+    <code class="cat-mono cat-gone__name">{{ column.name }}</code>
+    <code class="cat-mono cat-gone__type">{{ column.type }}</code>
+    <span class="cat-gone__desc">{% if column.description_zh %}{{ column.description_zh }}{% elif column.description %}<span lang="en">{{ column.description }}</span>{% endif %}</span>
+  </li>
+  {% endfor %}
+</ul>
+<p class="cat-sectionlead">取值来自 PostgreSQL {{ previous_major }} 的快照。</p>
+{% endif %}
+</section>
+
+<section class="wiki-section" id="timeline">
+<h2>演化历史</h2>
+<p class="cat-sectionlead">相邻两个大版本之间的差异，新的在前。版本号链到该版的字段表。</p>
+<ol class="cat-tl">
+  {% for item in timeline %}
+  <li class="cat-tl__item cat-tl__item--{% if item.status == 'added' %}added{% elif item.status == 'removed' %}removed{% elif item.structural %}changed{% else %}wording{% endif %}">
+    <p class="cat-tl__head">
+      <span class="cat-tl__dot" aria-hidden="true"></span>
+      {% if item.url %}<a class="cat-tl__ver" href="{{ item.url }}">PostgreSQL {{ item.to }}</a>{% else %}<span class="cat-tl__ver">PostgreSQL {{ item.to }}</span>{% endif %}
+      <span class="cat-tl__from" aria-label="相对 PostgreSQL {{ item.from }}">← {{ item.from }}</span>
+      <span class="cat-tl__label">{% if item.status == 'added' %}新增此关系{% elif item.status == 'removed' %}移除此关系{% elif item.structural %}结构变更{% else %}仅描述更新{% endif %}</span>
+    </p>
+    {% if item.status == 'added' or item.status == 'removed' or item.added or item.removed or item.types or item.attrs or item.order_changed or item.relation_description_changed or item.carried or not item.descriptions and not item.references %}
+    <p class="cat-tl__chips">
+      {% if item.status == 'added' %}<span class="cat-chip cat-chip--add">共 {{ item.added|length }} 个字段</span>{% elif item.status == 'removed' %}<span class="cat-chip cat-chip--del">该版起不再存在</span>{% else %}{% for field in item.added %}<span class="cat-chip cat-chip--add"><span class="cat-chip__sign" aria-hidden="true">+</span><code class="cat-mono">{{ field }}</code></span>{% endfor %}{% endif %}
+      {% for field in item.removed %}<span class="cat-chip cat-chip--del"><span class="cat-chip__sign" aria-hidden="true">−</span><code class="cat-mono">{{ field }}</code></span>{% endfor %}
+      {% for change in item.types %}<span class="cat-chip cat-chip--type" title="{{ change.name }} 的类型由 {{ change.from }} 变为 {{ change.to }}"><code class="cat-mono">{{ change.name }}</code>：{{ change.from }} → {{ change.to }}</span>{% endfor %}
+      {% for change in item.attrs %}<span class="cat-chip cat-chip--type" title="{{ change.name }}：{{ change.attribute }} {{ change.from }} → {{ change.to }}"><code class="cat-mono">{{ change.name }}</code>{% if change.attribute == 'hidden' %}：{% if change.from %}隐式列 → 常规列{% else %}常规列 → 隐式列{% endif %}{% elif change.attribute == 'not_null' %}：{% if change.from %}非空 → 可空{% else %}可空 → 非空{% endif %}{% elif change.attribute == 'array_dimensions' %}：数组维数 {{ change.from }} → {{ change.to }}{% elif change.attribute == 'type_modifier' %}：类型修饰 {{ change.from }} → {{ change.to }}{% else %}：{{ change.attribute }} {{ change.from }} → {{ change.to }}{% endif %}</span>{% endfor %}
+      {% if item.order_changed %}<span class="cat-chip cat-chip--order"><span class="cat-chip__sign" aria-hidden="true">↕</span>字段顺序调整</span>{% endif %}
+      {% if item.relation_description_changed %}<span class="cat-chip cat-chip--note">关系说明更新</span>{% endif %}
+      {% if item.carried %}<span class="cat-chip cat-chip--note" title="手册里没有这张表，字段沿用上一版">字段沿用上一版</span>{% endif %}
+      {% if item.status != 'removed' and not item.added and not item.removed and not item.types and not item.attrs and not item.order_changed and not item.descriptions and not item.references and not item.relation_description_changed and not item.carried %}<span class="cat-chip cat-chip--note">无字段级差异记录</span>{% endif %}
+    </p>
+    {% endif %}
+    {% if item.descriptions %}
+    <details class="cat-diff">
+      <summary>{{ item.descriptions|length }} 处描述更新</summary>
+      <ul class="cat-diff__list">
+        {% for change in item.descriptions %}
+        <li><code class="cat-mono cat-diff__field">{{ change.name }}</code>
+          <span class="cat-diff__old" lang="en">{{ change.from }}</span>
+          <span class="cat-diff__new" lang="en">{{ change.to }}</span></li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
+    {% if item.references %}
+    <details class="cat-diff">
+      <summary>{{ item.references|length }} 处引用更新</summary>
+      <ul class="cat-diff__list">
+        {% for change in item.references %}
+        <li><code class="cat-mono cat-diff__field">{{ change.name }}</code>
+          <span class="cat-diff__old"><code class="cat-mono">{{ change.from|default:"（无）" }}</code></span>
+          <span class="cat-diff__new"><code class="cat-mono">{{ change.to|default:"（无）" }}</code></span></li>
+        {% endfor %}
+      </ul>
+    </details>
+    {% endif %}
+  </li>
+  {% empty %}
+  <li class="cat-tl__empty">本数据集收录 {{ name }} 以来没有记录到变化。</li>
+  {% endfor %}
+</ol>
+</section>
+
+{% if matrix.rows %}
+<section class="wiki-section" id="matrix">
+<h2>字段矩阵</h2>
+<p class="cat-sectionlead">每个字段在 {{ matrix.versions|length }} 个收录版本里的存在情况；方格指向该版的字段表。「有变」指类型、可空、隐式或数组维数与上一版不同。</p>
+<p class="cat-legend">
+  <span class="cat-legend__item"><span class="cat-sq cat-sq--exists" aria-hidden="true"></span>存在</span>
+  <span class="cat-legend__item"><span class="cat-sq cat-sq--changed" aria-hidden="true"></span>有变</span>
+  <span class="cat-legend__item"><span class="cat-sq cat-sq--removed" aria-hidden="true"></span>已移除</span>
+  <span class="cat-legend__item"><span class="cat-sq cat-sq--absent" aria-hidden="true"></span>不存在</span>
+</p>
+<div class="wiki-table"><div class="wiki-table__scroll">
+<table class="cat-matrix">
+  <thead><tr>
+    <th class="cat-th cat-matrix__corner" scope="col">字段</th>
+    {% for v in matrix.versions %}<th class="cat-th cat-matrix__ver{% if v.major == version.major %} is-current{% endif %}" scope="col" title="PostgreSQL {{ v.label }}">{{ v.major }}</th>{% endfor %}
+  </tr></thead>
+  <tbody>
+  {% for row in matrix.rows %}
+  <tr>
+    <th class="cat-matrix__name" scope="row"><code class="cat-mono">{{ row.name }}</code></th>
+    {% for cell in row.cells %}
+    <td class="cat-matrix__cell{% if cell.major == version.major %} is-current{% endif %}">{% if cell.url %}<a class="cat-sq cat-sq--{{ cell.state }}" href="{{ cell.url }}#columns" title="{{ name }} · {{ cell.major }} · {{ row.name }}{% if cell.type %} {{ cell.type }}{% endif %}{% if cell.state == 'changed' %} · 有变{% endif %}"><span class="sr-only">{% if cell.state == 'changed' %}有变{% else %}存在{% endif %}</span></a>{% else %}<span class="cat-sq cat-sq--{{ cell.state }}" title="{{ name }} · {{ cell.major }} · {{ row.name }}{% if cell.state == 'removed' %} · 已移除{% else %} · 不存在{% endif %}"><span class="sr-only">{% if cell.state == 'removed' %}已移除{% else %}不存在{% endif %}</span></span>{% endif %}</td>
+    {% endfor %}
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+</div></div>
+</section>
+{% endif %}
+
+{% if system_columns %}
+<section class="wiki-section" id="system-columns">
+<h2>系统列</h2>
+<details class="cat-sys">
+  <summary>每张表都有的 {{ system_columns|length }} 个系统列</summary>
+  <ul class="cat-sys__list">
+    {% for column in system_columns %}
+    <li><code class="cat-mono cat-sys__name">{{ column.name }}</code><code class="cat-mono cat-sys__type">{{ column.type }}</code><span class="cat-sys__attnum" title="attnum">{{ column.attnum }}</span></li>
+    {% endfor %}
+  </ul>
+</details>
+</section>
+{% endif %}
+
+{% if sibling_groups %}
+<section class="wiki-section" id="siblings">
+<h2>同类关系</h2>
+{% include "wiki/catalog_table.html" with groups=sibling_groups current=name %}
+</section>
+{% endif %}
+
+<footer class="wiki-entry__foot">
+  {% if doc_versions %}
+  <p>本站手册收录 {{ name }} 的版本：{% for item in doc_versions %}<a class="cat-docver" href="{{ item.url }}">{{ item.label }}</a>{% endfor %}</p>
+  {% endif %}
+  <p>数据来自 <a href="https://cat.pg.center/catalog/{{ name }}/" target="_blank" rel="noopener">cat.pg.center</a>（仓库 <a href="https://github.com/pgsty/cat.pg.center" target="_blank" rel="noopener">pgsty/cat.pg.center</a>），中文取自本站手册译文，最后同步 {{ relation.imported_at|date:"Y-m-d" }}。</p>
+  <p>字段与版本数据有误请提交到 <a href="https://github.com/pgsty/cat.pg.center/issues" target="_blank" rel="noopener">数据仓库</a>；本站渲染或译文的问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
+</footer>
+
+</article>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

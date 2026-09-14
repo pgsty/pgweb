@@ -1,0 +1,66 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<div class="wiki-tone-guc guc">
+
+<p class="wiki-crumb"><a href="/docs/">文档</a> / 配置参数</p>
+<h1>PostgreSQL 配置参数</h1>
+<p class="wiki-lead">配置参数（GUC）决定 PostgreSQL 运行时的行为：内存分配、预写式日志、检查点、查询规划、日志记录与自动清理都由它们控制，每一个都是 <code class="guc-mono">pg_settings</code> 里的一行。本栏目收录 {{ total }} 个参数，分属 {{ group_count }} 个一级分类，覆盖 PostgreSQL {{ earliest_major }} 至 {{ latest_major }}，逐版本记下每个参数的默认值、生效方式、取值范围与说明变化。{{ earliest_major }} 是本数据集的收录基线，不代表这些参数首次于 {{ earliest_major }} 引入。</p>
+
+<h2 id="index">按分类浏览</h2>
+<nav class="wiki-classnav guc-groupnav" aria-label="配置参数分类索引">
+  {% for group in groups %}
+  <a class="wiki-classnav__item guc-groupnav__item" href="#{{ group.anchor }}">
+    <span class="guc-groupnav__label">{{ group.label }}</span>
+    <span class="guc-groupnav__count">{{ group.count }}</span>
+    <span class="guc-groupnav__eyebrow" lang="en">{{ group.group }}</span>
+  </a>
+  {% endfor %}
+</nav>
+
+<h2 id="versions">按版本看变更</h2>
+<nav class="guc-verbar" aria-label="按版本查看变更">
+  <ol class="guc-verbar__list">
+    {% for version in versions %}
+    <li class="guc-verbar__item"><a class="guc-pill guc-pill--link wiki-vpill is-{{ version.tone }}{% if version.is_default %} is-default{% endif %}" href="{{ version.url }}"{% if version.is_default %} aria-current="true"{% endif %} title="PostgreSQL {{ version.label }} · {{ version.status_label }} · {{ version.parameter_count }} 个参数 · 查看该版变更">{{ version.major }}</a></li>
+    {% endfor %}
+  </ol>
+  <p class="guc-verbar__note">收录了 {{ versions|length }} 个大版本，每个链到它相对上一版的变更清单。颜色是版本的支持状态：<span class="wiki-tonekey is-eol">已停止维护</span><span class="wiki-tonekey is-live">仍在支持</span><span class="wiki-tonekey is-beta">测试版</span><span class="wiki-tonekey is-dev">开发版</span>；填实的是当前稳定版 {{ default_major }}。</p>
+</nav>
+
+<form id="guc-search" class="guc-search" action="/docs/guc/" method="get" role="search">
+  <label class="sr-only" for="guc-q">搜索配置参数</label>
+  <input class="form-control" id="guc-q" type="search" name="q" maxlength="120"
+         placeholder="输入参数名或关键词，如 wal_level、shared_buffers、检查点" autocomplete="off">
+  <div class="wiki-filters guc-filters">
+    {% for dd in filters %}
+    <label for="guc-{{ dd.param }}">{{ dd.label }}
+      <select class="form-control" id="guc-{{ dd.param }}" name="{{ dd.param }}" data-guc-filter="{{ dd.param }}">
+        <option value="">不限</option>
+        {% for option in dd.options %}<option value="{{ option.value }}">{{ option.label }}（{{ option.count }}）</option>{% endfor %}
+      </select>
+    </label>
+    {% endfor %}
+  </div>
+  <noscript><button class="btn btn-primary" type="submit">筛选</button></noscript>
+</form>
+
+<p class="wiki-striplegend">
+  <span class="wiki-striplegend__title">版本变动</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--absent" aria-hidden="true"></span>未收录</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--present" aria-hidden="true"></span>存在</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--added" aria-hidden="true"></span>新增</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--changed" aria-hidden="true"></span>属性或默认值变化</span>
+  <span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--removed" aria-hidden="true"></span>已移除</span>
+</p>
+<p class="wiki-count" id="guc-count" aria-live="polite" hidden></p>
+
+{% include "wiki/guc_table.html" with groups=groups table_id="guc-table" top_link="#versions" %}
+
+<p class="wiki-empty" id="guc-empty" hidden>没有匹配的参数。<a href="/docs/guc/">清除筛选</a></p>
+
+<h2>说明</h2>
+<p>库里共 {{ stats.parameters }} 个参数、{{ stats.versions }} 个大版本、{{ stats.snapshots }} 份逐版本快照；相邻大版本之间记录到 {{ stats.default_changes }} 次默认值变更与 {{ stats.changes }} 处实质变化（默认值、单位、生效上下文、类型、取值范围或枚举值），{{ stats.removed }} 个参数已经不在最新版本里。每行的「版本变动」是一排方格，一格一个大版本，与表头刻度逐格对齐；鼠标停在某一格上会写出它是哪一版、发生了什么。「默认值」一列取的是当前稳定版 {{ default_major }} 的 <code class="guc-mono">boot_val</code>，带单位的值换算成了可读形式；{{ default_major }} 里不存在的参数取它最后存在的那一版。数据来自 <a href="https://guc.pg.center" target="_blank" rel="noopener">guc.pg.center</a>，说明的中文取自本站手册译文，没有译文的按英文原文显示。</p>
+
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}
