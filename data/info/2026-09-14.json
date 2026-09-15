@@ -1,0 +1,384 @@
+{
+  "date": "2026-09-14",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、PGXN、官方原文；pgnexus #256–269；截稿 2026-09-14T23:34:06Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "开发分支修复校验和状态的跨节点误传播",
+      "summary": "PostgreSQL 开发分支修复了恢复流程错误继承其他节点校验和状态的问题。此前仅在主库离线开启校验和，备库可能开始验证自己并未写入的校验和；备库本地调整也可能被后续检查点覆盖。修复让控制文件保留本节点状态，回放时核对差异，并同步收紧 pg_rewind 与增量备份合并的状态校验。这批改动已进入 master，涉及控制文件版本递增；离线调整仍须逐个数据目录处理，复制不会自动替所有节点切换。",
+      "url": "https://github.com/postgres/postgres/commit/b52a1c2c8a6acd4541a52e04cd14e3fcaffbeba0",
+      "author": "Zsolt Parragi、Bertrand Drouvot",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "校验和",
+        "恢复"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "并行 GIN 建索引修复超长键截断",
+      "summary": "PostgreSQL 的并行 GIN 索引构建会把键值暂存为排序元组，其中键长原先只用 16 位字段保存。遇到超过 65535 字节的键时，长度被截断，后续代码会把键内容误当作倒排列表，可能触发断言、越界读取，甚至向索引写入错误数据。新提交把键长改为 Size，并显式保证数据对齐，兼顾 32 位平台。问题仅涉及并行构建使用的临时格式，同一数据的串行构建不走这条路径；修复已合入 master 和 19 分支。",
+      "url": "https://github.com/postgres/postgres/commit/bad8829872d4d16f0d5de38c2cf9c0e9db86ac22",
+      "author": "Ewan Young",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "数据完整性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "orafce 4.16.9 修复文件路径穿越",
+      "summary": "orafce 为 PostgreSQL 提供 Oracle 兼容函数与工具包，其中 utl_file 允许 SQL 程序操作服务端文件。4.16.9 修复了这一包的路径穿越：旧逻辑信任已登记的目录，却没有在拼接文件名并规范化路径后再次检查实际位置，已获授权的用户可能访问目录范围以外、数据库操作系统账号能够打开的文件。新版对最终路径统一执行安全目录检查。该包默认关闭，已启用它的团队应核对版本、授权与目录配置，并在升级后回归文件访问流程。",
+      "url": "https://github.com/orafce/orafce/releases/tag/VERSION_4_16_9",
+      "author": "Pavel Stěhule",
+      "source": "orafce",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "安全"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_stat_monitor 2.4 调整统计口径与权限",
+      "summary": "Percona 发布 pg_stat_monitor 2.4.0，修复崩溃、内存泄漏与错误统计，并收紧普通用户读取他人查询标识和文本字段的权限。plans 现在只累计实际规划次数，复用缓存计划或执行工具语句不再抬高计数；未设置的 application_name 改为 NULL，名称缺失时的占位字符串也被移除。新版本最低要求 PostgreSQL 14，并删除已废弃的溢出参数。依赖这些字段的监控面板、告警和采集配置需要随升级一起校准。",
+      "url": "https://github.com/percona/pg_stat_monitor/releases/tag/2.4.0",
+      "author": "Percona",
+      "source": "Percona",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "扩展",
+        "兼容性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "用阻塞树定位 Aurora PostgreSQL 行锁争用",
+      "summary": "行锁争用可能在 CPU 和磁盘指标平稳时拖垮订单吞吐，扩容存储或增加只读副本也无法消除同一行上的写入竞争。AWS 新发布的两篇技术文章先从行版本、事务锁和系统视图解释阻塞关系，再演示用 Database Insights 高级模式的阻塞树还原历史等待链。治理方案包括缩短事务、把外部调用移出持锁区间、设置超时，以及把热点计数拆到多行。文章同时给出可复现的库存负载，便于区分临时解阻与应用结构调整的效果。",
+      "url": "https://aws.amazon.com/blogs/database/resolve-amazon-aurora-postgresql-lock-contention-with-database-insights-part-2/",
+      "author": "AWS",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "锁",
+        "运维"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "研究用 eBPF 解释云数据库的隐性写回停顿",
+      "summary": "NTT 的研究用 eBPF 追踪云端 PostgreSQL 的写回路径，发现每个块设备的单一回写线程可能来不及排出脏页，进而触发前台写入限流，而普通磁盘统计难以直接呈现这些停顿。实验在 PostgreSQL 16.4、Linux 5.14 和相同总 IOPS、带宽配置下比较一、二、四块云盘。论文报告，四盘布局相对单盘减少约 70% 的限流停顿，吞吐提高约 23%，最大事务延迟降低约 59%。这些结果提示排障时还应检查内核写回并行度。",
+      "url": "https://arxiv.org/abs/2609.12597",
+      "author": "Mitsumasa Kondo",
+      "source": "arXiv / NTT",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "存储",
+        "研究"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "开发分支修复 JSON 构造器在 CASE 中误判",
+      "summary": "修复带 RETURNING 的构造器被外层常量替换的问题，并消除相关 SQL 函数内联阻碍，避免产生错误结果。",
+      "url": "https://github.com/postgres/postgres/commit/e17df18a811e082a47d68263c154ae0385cd1494",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "开发分支修复子查询中的占位变量副本",
+      "summary": "在所属查询层提前预处理 PlaceHolderVar 副本，避免连接消除时遇到过期引用并触发断言。",
+      "url": "https://github.com/postgres/postgres/commit/e28cf96e9351152760a24ccb55f3f66c26961294",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "COPY FREEZE 回放补齐空闲空间映射",
+      "summary": "开发分支及 19 分支修复备库 FSM 信息缺失，避免提升后 VACUUM 跳过全冻结页而无法发现可用空间。",
+      "url": "https://github.com/postgres/postgres/commit/f7700080dc4c9226dd0fd81795214c02635e474d",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "开发分支禁止将发布排除表改为 UNLOGGED",
+      "summary": "补齐 EXCEPT TABLE 的约束检查，防止产生创建发布时不接受、pg_dump 也无法正常恢复的状态。",
+      "url": "https://github.com/postgres/postgres/commit/7056ed4663f5ce4214cc1ebce42ec40f4400a7ea",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pg_durable 0.2.8 支持隔离循环活动失败",
+      "summary": "循环可跳过可消费的活动错误继续运行；同时修复长事务交接，并对 HTTP 地址中的秘密信息做脱敏。",
+      "url": "https://github.com/microsoft/pg_durable/releases/tag/v0.2.8",
+      "author": "",
+      "source": "Microsoft",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "LuBot 用独立分支隔离租户数据库",
+      "summary": "支付回调用确定性分支名抵御重复创建，统一租户解析器负责连接路由，闲置计算可自动暂停。",
+      "url": "https://neon.com/blog/inside-lubots-database-per-tenant-architecture",
+      "author": "",
+      "source": "Neon",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "架构"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "PXC 可分两轮滚动重启启用复制 TLS",
+      "summary": "PXC 8.0.28 起可先用 socket.dynamic 兼容明文与 TLS，再逐节点关闭回退，避免全群停机。",
+      "url": "https://www.percona.com/blog/enabling-tls-in-pxc-without-downtime/",
+      "author": "",
+      "source": "Percona",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "运维"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Generalized DBLog 验证快照与日志交接条件",
+      "summary": "研究形式化证明分块读取与 CDC 日志合并的正确性条件，覆盖 Debezium、Flink CDC 等设计。",
+      "url": "https://arxiv.org/abs/2609.08160",
+      "author": "",
+      "source": "arXiv",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "CDC",
+        "研究"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "开发分支修复 WAIT FOR LSN 超大超时值溢出",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/6c44473c2deed07b4cca3c202dd48b1e8e002ec9",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 标识符默认上限按 63 字节计算",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_identifier_length/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "nominatim_fdw 2.2 可及时取消 HTTP 请求",
+      "summary": "",
+      "url": "https://github.com/jimjonesbr/nominatim_fdw/releases/tag/v2.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pg_search 0.25.9 支持聚合中的 JSON 路径",
+      "summary": "",
+      "url": "https://github.com/paradedb/paradedb/releases/tag/v0.25.9",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "t-digest 1.4.6 修复空值校验与舍入边界",
+      "summary": "",
+      "url": "https://github.com/tvondra/tdigest/releases/tag/v1.4.6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "ulak 0.2 改用共享内存唤醒，默认不再发通知",
+      "summary": "",
+      "url": "https://github.com/zeybek/ulak/releases/tag/v0.2.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "pg_trickle 0.105.3 补充流表结果修复流程",
+      "summary": "",
+      "url": "https://github.com/trickle-labs/pg-trickle/releases/tag/v0.105.3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "IBM 托管 PostgreSQL Gen 2 开放 14 项参数",
+      "summary": "",
+      "url": "https://cloud.ibm.com/docs/databases-for-postgresql-gen2?topic=databases-for-postgresql-gen2-postgresql-relnotes",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Kinesis 可用较低预热吞吐量触发容量缩减",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/scale-down-kinesis-data-streams-on-demand-capacity-with-oda-warm-throughput/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Kubernetes 1.37 新增节点维护与排空状态",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/09/09/kubernetes-v1-37-node-lifecycle-conditions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Kubernetes HPA 缩至零副本进入 Beta",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/09/02/kubernetes-v1-37-hpa-scale-to-zero-beta/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Kubernetes 无根节点模式进入 Beta",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/09/04/kubernetes-v1-37-rootless-beta/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}
