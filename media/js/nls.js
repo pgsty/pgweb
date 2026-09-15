@@ -131,11 +131,21 @@ const root=document.getElementById('nls');
 if(root)void start(root);
 async function start(root){
  const $=id=>document.getElementById('nls-'+id);
- const state={components:[],records:[],visible:[],rendered:0,byId:new Map(),component:'',query:'',filter:'all',busy:false,undo:[],lastSaved:null,activeId:null,user:{authenticated:false,can_edit:false,login_url:root.dataset.login}};
+ // 大版本：URL ?v= 优先，其次上次选择（localStorage），默认 19。切换时更新 URL，便于分享。
+ const urlMajor=()=>{const v=parseInt(new URLSearchParams(location.search).get('v'),10);return Number.isInteger(v)&&v>0?v:null};
+ const state={major:19,components:[],records:[],visible:[],rendered:0,byId:new Map(),component:'',query:'',filter:'all',busy:false,undo:[],lastSaved:null,activeId:null,user:{authenticated:false,can_edit:false,login_url:root.dataset.login}};
  const canEdit=()=>state.user.can_edit;
  const span=()=>state.component===ALL?6:5;   // 全部组件模式下多一列「组件名称」
  let toastTimer,searchTimer;
  const local={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}},del:k=>{try{localStorage.removeItem(k)}catch{}}};
+ state.major=urlMajor()||Number(local.get('pgnls-major'))||19;
+ const majorQuery=()=>'major='+state.major;
+ function setMajor(major){
+  state.major=major;local.set('pgnls-major',String(major));
+  const params=new URLSearchParams(location.search);params.set('v',String(major));
+  history.replaceState(null,'',location.pathname+(params.toString()?'?'+params:''));
+  $('export').href='/nls/api/export/?'+majorQuery();
+ }
  const n=v=>Number(v).toLocaleString('zh-CN');
  const isFull=()=>root.classList.contains('fullscreen');
  const scroller=()=>isFull()?root:window;
@@ -156,7 +166,7 @@ async function start(root){
  }
  function setBusy(b){
   state.busy=b;root.classList.toggle('busy',b);
-  root.querySelectorAll('.nls-toolbar button,.nls-toolbar select,.nls-tools input,.nls-tools select,.nls-dialog button').forEach(el=>el.disabled=b);
+  root.querySelectorAll('.nls-toolbar button,.nls-toolbar select,.nls-tools input,.nls-tools select,.nls-dialog button,.nls-head .nls-major-select').forEach(el=>el.disabled=b);
   refreshStatus();
  }
  function refreshStatus(){
@@ -366,15 +376,19 @@ async function start(root){
   try{await fn()}catch(e){error(e)}finally{setBusy(false)}
  }
  async function bootstrap(){
-  const data=await api('bootstrap/');
+  const data=await api('bootstrap/?'+majorQuery());
   state.components=data.components;state.lastSaved=data.storage.last_saved;state.user=data.user;
+  // 版本下拉：服务器返回已导入的大版本；仅一个版本时隐藏，保持原界面不变。
+  const select=$('major');
+  select.innerHTML=(data.majors||[state.major]).map(m=>'<option value="'+m+'"'+(m===data.major?' selected':'')+'>PG'+m+'</option>').join('');
+  select.hidden=(data.majors||[]).length<2;
   $('overall').textContent=n(data.total)+' 条消息 · '+n(data.forms)+' 个译文形式';
   $('component-count').textContent=data.components.length;
   renderUser();renderSidebar();
   return data;
  }
  async function loadComponent(name){
-  const data=await api('component/?name='+encodeURIComponent(name));
+  const data=await api('component/?name='+encodeURIComponent(name)+'&'+majorQuery());
   state.component=name;state.activeId=null;setAllMode(name===ALL);
   state.records=data.records.map((r,index)=>({...r,forms:{...r.forms},_index:index,_dirty:false,_serial:0,_saving:null,_error:'',_saved:{status:r.stored_status,forms:{...r.forms},note:r.note}}));
   state.byId=new Map(state.records.map(r=>[r.id,r]));state.query='';state.filter='all';
@@ -448,7 +462,7 @@ async function start(root){
   const serials=new Map(selected.map(r=>[r.id,r._serial])),befores=new Map(selected.map(r=>[r.id,r._saved]));
   // 提交时未改动的行只传 id 和版本号，译文由服务器沿用。
   const decisions=selected.map(r=>r._dirty?decisionFor(r,submit?'approved':'pending'):{id:r.id,expected_version:r.version});
-  const result=await api('save/',{component:state.component,submit,decisions});
+  const result=await api('save/',{component:state.component,major:state.major,submit,decisions});
   const items=[];
   for(const value of result.results){const r=state.byId.get(value.id);applySave(r,value,serials.get(r.id));r._error='';state.lastSaved=value.updated_at;refreshRow(r);items.push({id:r.id,before:befores.get(r.id),expected:value.version})}
   state.undo.push({items});progress();toast(submit?'组件已提交：'+n(selected.length)+' 条':'已保存 '+n(selected.length)+' 条修改');
@@ -469,7 +483,7 @@ async function start(root){
   if(r&&row.classList.contains('message-row')&&!e.target.closest('button,input,textarea,select,a,label')){rowCheckbox(r.id)?.focus({preventScroll:true})}
   const close=e.target.closest('[data-close]');if(close){document.getElementById(close.dataset.close).close();return}
  });
- $('export').addEventListener('click',e=>{e.preventDefault();void run(async()=>{await flush();const response=await fetch('/nls/api/export/',{headers:{'Accept':'application/json'}});if(!response.ok)throw new Error('导出失败（HTTP '+response.status+'）');const url=URL.createObjectURL(await response.blob());const a=document.createElement('a');a.href=url;a.download='pg19-human-review.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('已导出当前审校状态')})});
+ $('export').addEventListener('click',e=>{e.preventDefault();void run(async()=>{await flush();const response=await fetch('/nls/api/export/?'+majorQuery(),{headers:{'Accept':'application/json'}});if(!response.ok)throw new Error('导出失败（HTTP '+response.status+'）');const url=URL.createObjectURL(await response.blob());const a=document.createElement('a');a.href=url;a.download='pg'+state.major+'-human-review.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('已导出 PG'+state.major+' 的审校状态')})});
  root.addEventListener('focusin',e=>{const row=e.target.closest?.('tr.message-row');if(row)setActive(row.dataset.id)});
  root.addEventListener('input',e=>{
   const row=e.target.closest('tr[data-id]'),r=row&&state.byId.get(row.dataset.id);if(!r)return;
@@ -515,6 +529,13 @@ async function start(root){
    if(first){e.preventDefault();focusRow(first.dataset.id)}
   }
  });
+ $('major').onchange=()=>{const major=parseInt($('major').value,10);if(!(major>0)||major===state.major)return;void run(async()=>{
+  await flush();state.undo=[];setMajor(major);
+  await bootstrap();
+  const previous=local.get('pgnls-table-component');
+  await loadComponent(previous===ALL||state.components.some(c=>c.name===previous)?previous:state.components[0].name);
+  toast('已切换到 PG'+major);
+ })};
  $('component-search').oninput=renderSidebar;
  $('search').oninput=()=>{clearTimeout(searchTimer);const q=$('search').value;searchTimer=setTimeout(()=>void run(async()=>{await flush();state.query=q;renderTable()}),250)};
  $('filter').onchange=()=>void run(async()=>{await flush();state.filter=$('filter').value;renderTable()});
@@ -523,5 +544,5 @@ async function start(root){
  $('submit-confirm').onclick=()=>void run(async()=>{await saveComponent(true);$('submit-dialog').close()});
  $('undo').onclick=()=>void run(undo);
  window.addEventListener('beforeunload',e=>{if(state.records.some(r=>r._dirty||r._saving)){e.preventDefault();e.returnValue=''}});
- await run(async()=>{await bootstrap();if(!state.components.length){$('rows').innerHTML='<tr><td colspan="'+span()+'" class="empty">尚未导入任何消息。</td></tr>';$('component-title').textContent='—';return}const previous=local.get('pgnls-table-component');await loadComponent(previous===ALL||state.components.some(c=>c.name===previous)?previous:state.components[0].name)});
+ await run(async()=>{setMajor(state.major);await bootstrap();if(!state.components.length){$('rows').innerHTML='<tr><td colspan="'+span()+'" class="empty">尚未导入任何消息。</td></tr>';$('component-title').textContent='—';return}const previous=local.get('pgnls-table-component');await loadComponent(previous===ALL||state.components.some(c=>c.name===previous)?previous:state.components[0].name)});
 }

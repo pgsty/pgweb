@@ -14,12 +14,13 @@ The CSRF token travels as a data attribute because the cookie is HttpOnly.
 <div id="nls" class="nls" data-csrf="{{ csrf_token }}" data-can-edit="{% if can_edit %}1{% else %}0{% endif %}" data-login="{{ login_url }}">
   <header class="nls-head">
     <h1>消息翻译</h1>
+    <select id="nls-major" class="nls-major-select" aria-label="选择 PostgreSQL 大版本" hidden></select>
     <span class="nls-spacer"></span>
     <span id="nls-overall" class="nls-muted">加载中…</span>
     <span class="nls-sep" aria-hidden="true"></span>
     <span id="nls-user" class="nls-user"></span>
     <span id="nls-save-state" role="status" class="nls-save-state"></span>
-    <a id="nls-export" class="nls-btn nls-quiet" href="/nls/api/export/" download="pg19-human-review.json" hidden>导出 JSON</a>
+    <a id="nls-export" class="nls-btn nls-quiet" href="/nls/api/export/" hidden>导出 JSON</a>
   </header>
   <div class="nls-body">
     <aside class="nls-side">

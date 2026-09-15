@@ -22,6 +22,7 @@ HISTORY_LIMIT = 40
 class Message(models.Model):
     # m_<sha256 of version, language, component, msgctxt, msgid, msgid_plural>: stable across imports.
     id = models.CharField(primary_key=True, max_length=72)
+    pg_major = models.PositiveSmallIntegerField(default=19, db_index=True)   # PostgreSQL major version
     number = models.IntegerField(default=0)
     component = models.CharField(max_length=64, db_index=True)
     msgid = models.TextField()
@@ -58,6 +59,7 @@ class Message(models.Model):
         ordering = ('component', 'number')
         permissions = [('review', '可以校对消息翻译')]
         indexes = [
+            models.Index(fields=('pg_major', 'component', 'status'), name='nls_message_major_comp_status'),
             models.Index(fields=('component', 'status'), name='nls_message_component_status'),
             GistIndex(fields=('msgid',), name='nls_message_msgid_trgm', opclasses=('gist_trgm_ops',)),
         ]

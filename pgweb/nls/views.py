@@ -67,26 +67,28 @@ def index(request):
         'title': TITLE,
         'can_edit': service.can_edit(request.user),
         'login_url': service.LOGIN_URL,
-        'seo': {'title': TITLE + ' · pgsql.cc', 'description': 'PostgreSQL 19 简体中文消息翻译校准：逐条对照英文原文、既有译法与校准译文。'},
+        'seo': {'title': TITLE + ' · pgsql.cc', 'description': 'PostgreSQL 简体中文消息翻译校准：按大版本逐条对照英文原文、既有译法与校准译文。'},
     })
     response['Cache-Control'] = 'no-store'
     response['X-Robots-Tag'] = ROBOTS
     return response
 
 
-@queryparams()
+@queryparams('major')
 @require_GET
 @nocache
+@api_errors
 def api_bootstrap(request):
-    return json_response(service.bootstrap(request.user))
+    return json_response(service.bootstrap(request.user, service.checked_major(request.GET.get('major'))))
 
 
-@queryparams('name')
+@queryparams('name', 'major')
 @require_GET
 @gzip_page
 @api_errors
 def api_component(request):
-    return json_response(service.component_table(request.GET.get('name', '')))
+    major = service.checked_major(request.GET.get('major'))
+    return json_response(service.component_table(request.GET.get('name', ''), major))
 
 
 @queryparams('id')
@@ -113,13 +115,15 @@ def api_decide(request):
 def api_save(request):
     data = body(request)
     return json_response(service.decide_many(data.get('component', ''), data.get('decisions'), request.user,
-                                             submit=data.get('submit') is True))
+                                             submit=data.get('submit') is True,
+                                             major=service.checked_major(data.get('major'))))
 
 
-@queryparams()
+@queryparams('major')
 @require_GET
 @reviewer_required
 def api_export(request):
-    response = json_response(service.export())
-    response['Content-Disposition'] = 'attachment; filename="pg19-human-review.json"'
+    major = service.checked_major(request.GET.get('major'))
+    response = json_response(service.export(major))
+    response['Content-Disposition'] = 'attachment; filename="pg%d-human-review.json"' % major
     return response

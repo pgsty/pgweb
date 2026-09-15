@@ -17,6 +17,23 @@ STATUS_KEYS = tuple(key for key, _label in STATUSES)
 ALL = '*'
 PERMISSION = 'nls.review'
 LOGIN_URL = '/account/login/?next=/nls/'
+DEFAULT_MAJOR = 19
+
+
+def majors():
+    """Imported PostgreSQL major versions, newest first."""
+    rows = Message.objects.order_by('-pg_major').values_list('pg_major', flat=True).distinct()
+    return [DEFAULT_MAJOR] + [m for m in rows if m != DEFAULT_MAJOR]
+
+
+def checked_major(value):
+    try:
+        major = int(value or DEFAULT_MAJOR)
+    except (TypeError, ValueError):
+        raise ValidationError('未知 PostgreSQL 大版本。')
+    if major not in majors():
+        raise ValidationError('该 PostgreSQL 大版本尚未导入。')
+    return major
 TABLE_FIELDS = ('id', 'number', 'component', 'msgid', 'msgid_plural', 'original_forms', 'suggested_forms',
                 'calibration', 'old_assessment', 'assessment_reason', 'plural_issue', 'revision',
                 'status', 'forms', 'note', 'source_revision', 'version', 'updated_at', 'updated_by__username')
@@ -45,9 +62,9 @@ def display_status(row):
     return 'stale' if stale else row['status']
 
 
-def component_stats():
+def component_stats(major=DEFAULT_MAJOR):
     """[{name, total, approved, pending, flagged, rejected}] in name order, so the page opens on a small component."""
-    rows = Message.objects.values('component', 'status').annotate(n=Count('id'))
+    rows = Message.objects.filter(pg_major=major).values('component', 'status').annotate(n=Count('id'))
     stats = {}
     for row in rows:
         entry = stats.setdefault(row['component'], {'name': row['component'], 'total': 0, 'approved': 0,
@@ -57,17 +74,17 @@ def component_stats():
     return sorted(stats.values(), key=lambda c: c['name'])
 
 
-def bootstrap(user):
-    components = component_stats()
+def bootstrap(user, major=DEFAULT_MAJOR):
+    components = component_stats(major)
     counts = Counter()
     for c in components:
         for key in STATUS_KEYS:
             counts[key] += c[key]
-    last = Message.objects.aggregate(last=Max('updated_at'))['last']
-    forms = sum(len(f) for f in Message.objects.values_list('suggested_forms', flat=True)) if components else 0
+    last = Message.objects.filter(pg_major=major).aggregate(last=Max('updated_at'))['last']
+    forms = sum(len(f) for f in Message.objects.filter(pg_major=major).values_list('suggested_forms', flat=True)) if components else 0
     return {'total': sum(c['total'] for c in components), 'forms': forms, 'components': components,
             'counts': dict(counts), 'storage': {'kind': 'PostgreSQL', 'table': 'nls_message', 'last_saved': isoformat(last)},
-            'user': user_info(user)}
+            'major': major, 'majors': majors(), 'user': user_info(user)}
 
 
 def record(row):
@@ -83,12 +100,14 @@ def record(row):
             'reviewer': row['updated_by__username'] or ''}
 
 
-def component_table(name):
-    query = Message.objects.all() if name == ALL else Message.objects.filter(component=name)
+def component_table(name, major=DEFAULT_MAJOR):
+    query = Message.objects.filter(pg_major=major)
+    if name != ALL:
+        query = query.filter(component=name)
     rows = list(query.order_by('component', 'number').values(*TABLE_FIELDS))
     if not rows:
         raise ValidationError('未知组件。')
-    return {'component': name, 'records': [record(r) for r in rows], 'total': len(rows)}
+    return {'component': name, 'major': major, 'records': [record(r) for r in rows], 'total': len(rows)}
 
 
 def state(message):
@@ -126,9 +145,9 @@ def similar(message, limit=12):
         cur.execute('''SELECT m.id, m.component, m.msgid, m.msgid_plural, m.forms, m.status, m.version,
                               u.username, similarity(m.msgid, %s) AS similarity
                        FROM nls_message m LEFT JOIN auth_user u ON u.id = m.updated_by_id
-                       WHERE m.id <> %s
+                       WHERE m.id <> %s AND m.pg_major = %s
                        ORDER BY m.msgid <-> %s, (m.status = 'approved') DESC, (m.version > 0) DESC, m.id
-                       LIMIT 40''', [message.msgid, message.id, message.msgid])
+                       LIMIT 40''', [message.msgid, message.id, message.pg_major, message.msgid])
         rows = cur.fetchall()
     merged = {}
     for mid, component, msgid, plural, forms, status, version, username, score in rows:
@@ -204,7 +223,7 @@ def decide(decision, user):
 
 
 @transaction.atomic
-def decide_many(component, decisions, user, submit=False):
+def decide_many(component, decisions, user, submit=False, major=DEFAULT_MAJOR):
     """Save a batch for one component atomically. Submitting approves every message of the component."""
     if not isinstance(decisions, list) or not decisions:
         raise ValidationError('没有要保存的记录。')
@@ -216,10 +235,11 @@ def decide_many(component, decisions, user, submit=False):
             raise ValidationError('提交组件必须选择具体组件，「全部组件」下只能保存。')
         messages = {m.id: m for m in Message.objects.select_for_update().filter(id__in=ids)}
     else:
-        messages = {m.id: m for m in Message.objects.select_for_update().filter(component=component, id__in=ids)}
+        messages = {m.id: m for m in Message.objects.select_for_update().filter(
+            pg_major=major, component=component, id__in=ids)}
     if set(messages) != set(ids):
         raise ValidationError('包含未知或不属于该组件的消息。')
-    if submit and Message.objects.filter(component=component).exclude(id__in=ids).exists():
+    if submit and Message.objects.filter(pg_major=major, component=component).exclude(id__in=ids).exists():
         raise ValidationError('提交组件必须包含该组件的全部消息。')
     prepared, errors = [], []
     for d in decisions:
@@ -234,17 +254,18 @@ def decide_many(component, decisions, user, submit=False):
     return {'results': [state(_apply(m, fields, user, when)) for m, fields in prepared]}
 
 
-def export():
+def export(major=DEFAULT_MAJOR):
     """pgnls-human-review-v1: what the pgnls review-app imports and the PO writer consumes."""
     saved = {}
-    rows = Message.objects.filter(version__gt=0).values('id', 'status', 'forms', 'note', 'source_revision',
-                                                        'version', 'updated_at', 'updated_by__username')
+    rows = Message.objects.filter(pg_major=major, version__gt=0).values(
+        'id', 'status', 'forms', 'note', 'source_revision', 'version', 'updated_at', 'updated_by__username')
     for r in rows:
         saved[r['id']] = {'status': r['status'], 'forms': r['forms'], 'note': r['note'],
                           'source_revision': r['source_revision'], 'version': r['version'],
                           'updated_at': isoformat(r['updated_at'])}
         if r['updated_by__username']:
             saved[r['id']]['reviewer'] = r['updated_by__username']
-    sha = Message.objects.exclude(workbook_sha256='').values_list('workbook_sha256', flat=True).first() or ''
-    return {'schema': 'pgnls-human-review-v1', 'workbook_sha256': sha, 'exported_at': isoformat(now()),
-            'source': 'pgsql.cc /nls/', 'saved_state': saved}
+    sha = (Message.objects.filter(pg_major=major).exclude(workbook_sha256='')
+           .values_list('workbook_sha256', flat=True).first() or '')
+    return {'schema': 'pgnls-human-review-v1', 'pg_major': major, 'workbook_sha256': sha,
+            'exported_at': isoformat(now()), 'source': 'pgsql.cc /nls/', 'saved_state': saved}

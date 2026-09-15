@@ -14,7 +14,7 @@ from .models import Message
 SCHEMA = 'pgnls-message-bundle-v1'
 SOURCE_FIELDS = ('number', 'component', 'msgid', 'msgid_plural', 'msgctxt', 'flags', 'plural_forms',
                  'original_forms', 'suggested_forms', 'suggestion_source', 'calibration', 'old_assessment',
-                 'assessment_reason', 'context', 'plural_issue', 'revision', 'workbook_sha256')
+                 'assessment_reason', 'context', 'plural_issue', 'revision', 'workbook_sha256', 'pg_major')
 
 
 class BundleError(ValueError):
@@ -49,6 +49,8 @@ def source_values(row, header):
     for key in ('suggestion_source', 'assessment_reason'):
         values[key] = values[key] or ''
     values['old_assessment'] = values['old_assessment'] or 'unreviewed'
+    # Bundles from the multi-version runs carry their PostgreSQL major; the original v19 bundles predate it.
+    values['pg_major'] = values.pop('pg_major', None) or header.get('pg_major') or 19
     if values['msgid'] is None or not values['component'] or not values['revision']:
         raise BundleError('Row {} lacks component, msgid or revision.'.format(row.get('id')))
     return values

@@ -269,3 +269,6 @@ body.nls-fullscreen { overflow: hidden; }
   #nls .check-col { width: 28px; } #nls .english-col { width: 36%; } #nls .status-col { width: 66px; }
   #nls .detail-top { display: block; } #nls .reference-pair, #nls .diff-pair { grid-template-columns: 1fr; gap: 5px; }
 }
+
+/* ---- major version picker in the header ---- */
+#nls .nls-major-select { font-size: 13px; padding: 3px 8px; font-family: var(--nls-mono); }
