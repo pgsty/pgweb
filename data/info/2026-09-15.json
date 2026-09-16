@@ -1,0 +1,422 @@
+{
+  "date": "2026-09-15",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、PGXN、厂商及项目原文；pgnexus #257–269；截稿 2026-09-15T23:32:35Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "ON CONFLICT 修复可串行化隔离缺口",
+      "summary": "PostgreSQL 修复了 ON CONFLICT 对冲突行读取缺少谓词锁的问题。采用 DO NOTHING，或更新条件拒绝该行时，语句可能没有实际写入，原先的冲突探测也未登记读依赖，导致可串行化事务仍出现写偏斜。新实现用查询快照重新读取冲突行，在缓冲区锁保护下获取读锁并检查并发写入。前两类路径自 9.5 起受影响，修复已回补至 14 等受支持分支；这是代码修复合入，正式小版本尚未发布。",
+      "url": "https://github.com/postgres/postgres/commit/fb60892f4034017e77b8d4376d3ca8937dcbbab2",
+      "author": "Zsolt Parragi、Andrey Borodin",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "事务",
+        "数据完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 回退时间段更新与删除语法",
+      "summary": "PostgreSQL 19 分支撤回了 UPDATE/DELETE FOR PORTION OF 及后续修正，并删除对应发布说明。这套语法原本用于只修改或删除范围列覆盖的部分时间段，自动保留两侧剩余记录。临近下一轮测试版，审查仍在讨论并发更新的处理方式；本次回退同时撤下解析、执行、补全和测试代码，属于已执行的版本范围调整。已经按测试版语法开展验证的应用需要重新评估依赖，不能继续把这项能力视为 19 的既定交付。",
+      "url": "https://github.com/postgres/postgres/commit/a9d2f7282407a32280c72cd99e243d62033de57b",
+      "author": "Peter Eisentraut",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "版本",
+        "兼容性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "开发分支打通 TOAST 的 64 位对象标识",
+      "summary": "PostgreSQL 开发分支为 TOAST 外置大字段加入 64 位对象标识的磁盘指针格式。此前扩宽对象编号计数器之后，这次进一步让块标识列使用 oid8 的 TOAST 表实际保存八字节编号，并同步调整解压读取、关系缓存及 amcheck 校验。新指针比原格式多四字节，类型标记必须与 TOAST 表的块标识类型一致。改动已合入 master 并递增系统目录版本，为大规模外置值提供更宽的编号空间，仍属于开发快照中的存储格式变化。",
+      "url": "https://github.com/postgres/postgres/commit/6e58d6356fcb58f06bfcebb5bfa808660e9531d2",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "存储",
+        "TOAST"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "开发分支让表访问方法接管索引扫描",
+      "summary": "PostgreSQL 开发分支引入统一的表访问方法索引扫描入口，由表访问方法在扫描开始时选择普通扫描或仅索引扫描的具体实现。原先散落在执行器中的可见性映射检查移入堆表实现，自定义存储因此可以实现不依赖堆表可见性映射的仅索引扫描。约束检查另走专用的元组读取接口，扫描统计也随之调整。这是已经合入的接口重构，为后续批量取索引项和预取数据页准备基础；本次提交本身尚未交付那两项性能特性。",
+      "url": "https://github.com/postgres/postgres/commit/ddce1da5b1b1b4672e621c0da245e01474cbd4e8",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "索引",
+        "架构"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Percona 用缓冲池改造缓解高并发性能退化",
+      "summary": "Percona 拆解了 Server for MySQL 8.4.11-11 的缓冲池性能改进。前台线程不再持有 LRU 互斥锁清零整块内存，锁只保护必要的链表操作；后台管理线程提前准备空闲页，并把干净页淘汰计入工作量，减少过度休眠和重复扫描。厂商称，在同一台机器的测试中，这些调整改善了中等并发吞吐，并减轻高并发时的性能下滑。文章同时比较多个 Percona 与上游版本，提示排查吞吐拐点时关注内部锁和页回收，而不只看查询计划。",
+      "url": "https://www.percona.com/blog/performance-improvements-in-percona-server-8-4-11-11/",
+      "author": "Bogdan Degtyariov",
+      "source": "Percona",
+      "source_date": "2026-09-15",
+      "image": "https://www.percona.com/wp-content/uploads/2026/08/graph-8g.png",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "性能",
+        "存储"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare Workers 开放单个服务的细粒度授权",
+      "summary": "Cloudflare 为 Workers 增加按单个服务分配的权限，成员和 API 令牌可获得元数据只读、代码只读、编辑或管理员角色。团队可让运维查看设置与指标，同时限制读取代码、创建或删除服务。权限可通过控制台、API 和 Terraform 管理，Durable Objects 随所属 Worker 继承授权；路由管理仍需相应区域权限。功能面向所有客户，可缩小协作账号与自动化凭据的权限，D1、R2、KV 的同类控制仍在后续计划中。",
+      "url": "https://blog.cloudflare.com/workers-granular-authorization/",
+      "author": "Dina Kozlov、Anthony Oreglia、Visal In",
+      "source": "Cloudflare",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "权限",
+        "安全",
+        "无服务器"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 将拒绝范围扩大到所有无效索引",
+      "summary": "此前只拦截尚未就绪的索引，新提交连已就绪但验证失败的索引也一并拒绝，避免复制和切换不完整的索引。",
+      "url": "https://github.com/postgres/postgres/commit/78142821dfd42a7ca1010811ce77ff7b96218741",
+      "author": "Álvaro Herrera",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "数据完整性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Postgres 开发统计量化邮件与提交增长",
+      "summary": "Tomas Vondra 对照邮件归档与 Git 历史，观察到日均邮件约百封、周提交约五十次，并区分附件和翻译更新对规模指标的影响。",
+      "url": "https://vondra.me/posts/postgres-development-activity/",
+      "author": "Tomas Vondra",
+      "source": "Tomas Vondra 博客",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发",
+        "社区"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_promise_guard 为约束巡检保留状态与时效",
+      "summary": "0.2 接入持久化断言记录巡检结果和新鲜度，并固定函数的 search_path，修复监控会话找不到内部函数的问题。",
+      "url": "https://pgxn.org/dist/pg_promise_guard/0.2.0/",
+      "author": "manu15",
+      "source": "PGXN",
+      "source_date": "2026-09-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "监控"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Azure 弹性集群预览 PostgreSQL 18",
+      "summary": "预览版结合 Citus 14，扩展分布式 JSON_TABLE、时间约束等支持，并可从协调节点查看跨工作节点的执行计划。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/preview-pg18-for-elastic-clusters-of-azure-postgres/4555821",
+      "author": "JaredMeade",
+      "source": "Microsoft",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库",
+        "预览"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Lakebase 快照开放程序化管理接口",
+      "summary": "测试版 API 可创建、查询、列出和删除分支时间点快照，恢复操作从指定快照创建新分支。",
+      "url": "https://docs.databricks.com/gcp/en/oltp/projects/snapshots#create-snapshot",
+      "author": "Databricks",
+      "source": "Databricks",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "API"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Unity Catalog 将属性访问控制扩展到视图",
+      "summary": "测试功能把行过滤和列掩码策略应用到视图，需管理员启用预览，并使用 Databricks Runtime 19 或更高版本。",
+      "url": "https://docs.databricks.com/gcp/en/data-governance/unity-catalog/abac/",
+      "author": "Databricks",
+      "source": "Databricks",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "权限",
+        "数据治理"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "用文件身份缓存减少 eBPF 策略检查开销",
+      "summary": "作者在重复打开同一文件的测试中显著减少 CPU 周期，以挂载命名空间和 inode 等定位缓存，遇到硬链接则回退完整检查。",
+      "url": "https://nathannaveen.dev/posts/dropping-ebpf-cpu-cost-by-90/",
+      "author": "",
+      "source": "nathannaveen.dev",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "eBPF",
+        "性能"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "微软发布面向 Postgres 的智能体技能集",
+      "summary": "32 项子技能结合数据库检查工具，让代理按实际版本、目录和权限处理查询调优、迁移与运维任务，兼顾自建与托管环境。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/postgres-skills-give-your-ai-agent-postgresql-expertise/4556705",
+      "author": "Aditi_Gupta",
+      "source": "Microsoft",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "PostgreSQL",
+        "开发工具"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "开发分支合入 UUID 常见格式的快速解析",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/72af14bccd2127bf20ddeaf198b78de46e9e892b",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "性能"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "索引的 32 列上限也计入 INCLUDE 列",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_index_keys/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_local_cache 修复 MGET 计划内存泄漏",
+      "summary": "",
+      "url": "https://github.com/profundium/pg_local_cache/releases/tag/v2.0.3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "内存"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "CNPG 扩展容器实验改用统一 SBOM 生成器",
+      "summary": "",
+      "url": "https://ardentperf.com/2026/09/15/agents-gone-awry-on-postgres-sboms-start-over/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "供应链",
+        "容器"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Postgres 贡献汇总站新增免登录投稿表单",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/96/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "OpenSharing 向谷歌云提供方开放 SecureConnect",
+      "summary": "",
+      "url": "https://docs.databricks.com/gcp/en/opensharing/secureconnect-provider",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据共享"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Linux Doctor 0.6 修复故障磁盘漏报",
+      "summary": "",
+      "url": "https://github.com/zShaD0w7x/linux-doctor/releases/tag/v0.6.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "运维",
+        "存储"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 的 HTTPS 连接停用 SHA-1",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-15-sha-1-in-https-on-github-sunset/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 企业安全策略可阻止组织管理员覆盖",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-15-enforce-github-advanced-security-configurations/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "权限"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "pnpm 12.4 实验支持统一安装 Python 依赖",
+      "summary": "",
+      "url": "https://github.com/pnpm/pnpm/releases/tag/v12.4.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "依赖管理"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "pg_grammar_guard 按所选表约束可生成的列名",
+      "summary": "",
+      "url": "https://pgxn.org/dist/pg_grammar_guard/0.4.0/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-12",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "PostgreSQL",
+        "结构化生成"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Cursor 自托管机器池支持按队列扩缩",
+      "summary": "",
+      "url": "https://cursor.com/blog/self-hosted-machines",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-02",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}
