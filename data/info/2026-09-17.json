@@ -1,0 +1,421 @@
+{
+  "date": "2026-09-17",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、PGXN、厂商及项目原文；Hacker News 与 GitHub 活跃研究；截稿 2026-09-17T23:33:37Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgAdmin 4 v9.18 修复四个安全漏洞",
+      "summary": "pgAdmin 4 v9.18 带来 29 项修复，并修复 CVE-2026-86861 至 CVE-2026-86864。默认 CSP 收紧，内联脚本改用请求级 nonce，移除 `unsafe-eval`；还修复 Webserver 认证身份伪造、备份/恢复连接字符串注入、Maintenance 密码重定向泄露和 File Manager 符号链接竞态。LLM API 重定向受允许列表约束。升级后回归认证、备份与文件权限。",
+      "url": "https://www.postgresql.org/about/news/pgadmin-4-v918-released-3381/",
+      "author": "pgAdmin Development Team",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "工具"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "TimescaleDB 2.30.1 修复四项查询与冲突问题",
+      "summary": "TimescaleDB 2.30.1 修复 2.30.0 的四类问题：多唯一约束下 `INSERT ... ON CONFLICT` 漏报冲突、单列 bloom filter 的 NULL 冲突处理、`DeferredChunkAppend` 在 LIMIT 未下推时重复返回行，以及 enum 列查询的 cstring 转换错误。涉及冲突写入、分块追加或 LIMIT 查询的应用应在升级窗口回归。",
+      "url": "https://github.com/timescale/timescaledb/releases/tag/2.30.1",
+      "author": "Timescale",
+      "source": "TimescaleDB",
+      "source_date": "2026-09-17",
+      "image": "https://opengraph.githubassets.com/86bdec8b83082be60ff00a0e1c7746a31b49652691ff8eb419de85a1240fa76c/timescale/timescaledb/releases/tag/2.30.1",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "修复"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgColumnar alpha4 引入 Hilbert 布局与连接过滤",
+      "summary": "pgColumnar 1.0-alpha4 完善 PostgreSQL 列式表访问方法，重点是布局与跳过：新增 Hilbert 聚类，实测读取 chunk group 比 Z-order 少 1.24–2.04 倍；星型连接默认启用运行时过滤，可跳过不匹配事实表分组；宽表相邻列读取合并，平行索引构建也让 worker 分担不同 row group。原生 PGCN v1 格式不变，但升级仍需执行两项函数更新命令。",
+      "url": "https://www.commandprompt.com/blog/pgcolumnar-10-alpha4-released/",
+      "author": "Joshua D. Drake",
+      "source": "Command Prompt",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "分析"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 私有预览 PromQL 时序引擎",
+      "summary": "ClickHouse Cloud 开放 PromQL 与 TimeSeries 表引擎私有预览，并在 ClickStack 中提供 PromQL。Prometheus remote write 进入专用时序表后，现有查询可通过 ClickStack、Grafana 或 ClickHouse 执行，无需改写 SQL。方案把日志、追踪和指标放到同一平台；接入前要核对保留策略、写入吞吐、查询兼容度和服务区域。",
+      "url": "https://clickhouse.com/blog/introducing-promql",
+      "author": "James Cunningham",
+      "source": "ClickHouse",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "监控",
+        "时序",
+        "云"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "boringSQL 逐页解释 PostgreSQL 行锁写入",
+      "summary": "boringSQL 以 PostgreSQL 18.6 逐页演示行锁如何写入元组头：SELECT FOR UPDATE/SHARE、外键检查把锁事务写入 t_xmax，再由 t_infomask 标记；两个会话同时锁一行时使用 MultiXactId，相关文件会随大量行锁增长。文章把可见性、共享内存锁表上限和页面写放在一起，适合作为排查锁争用与 pg_multixact 增长的底层参考；示例事务 ID 不能照搬生产。",
+      "url": "https://boringsql.com/posts/row-locks-on-the-page/",
+      "author": "Radim Marek",
+      "source": "boringSQL",
+      "source_date": "2026-09-17",
+      "image": "https://boringsql.com/og-images/row-locks-on-the-page-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "锁",
+        "存储"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "pganalyze 解析 SQL Server DBA 的 PG 监控",
+      "summary": "pganalyze 面向 SQL Server DBA 解释 PostgreSQL 监控差异：必须主动配置 pg_stat_statements、日志参数、采集周期和保留策略，才能覆盖慢查询排查。文章把 DMV、Query Store 与 PostgreSQL 视图/日志对应，说明如何从总耗时、调用次数、计划变化和错误日志定位问题，并提醒权限、磁盘占用与隐私字段要一起设计。迁移团队可先建立观测基线，再决定是否接入 GUI。",
+      "url": "https://pganalyze.com/blog/postgres-monitoring-for-sql-server-dbas",
+      "author": "Ryan Booz",
+      "source": "pganalyze",
+      "source_date": "2026-09-17",
+      "image": "https://pganalyze.com/blog/postgres-monitoring-for-sql-server-dbas/pganalyze_OG_postgres-monitoring-for-sql-server-dbas.png",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "运维"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pgEdge 拆解企业级自托管的完整运维要求",
+      "summary": "pgEdge 将企业自托管拆成安装、升级、监控、备份、权限、故障恢复和支持等完整运维面，提醒“开源即可自托管”不等于生产就绪。",
+      "url": "https://www.pgedge.com/blog/flexible-deployment-what-enterprise-grade-self-hosting-actually-demands",
+      "author": "Muhammad Aqeel",
+      "source": "pgEdge",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "自托管"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "max_logical_replication_workers 耗尽会让订阅停滞",
+      "summary": "max_logical_replication_workers 耗尽时订阅不会失败，只会告警停滞；文章解释 apply worker 上限的诊断。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_logical_replication_workers/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "GUC"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "荷兰 PostgreSQL 周汇总 PGDay 与 Percona Live",
+      "summary": "ClickHouse 汇总 PGDay Lowlands 与 Percona Live 2026 的荷兰 PostgreSQL 社群活动和议题。",
+      "url": "https://clickhouse.com/blog/postgres-week-in-the-netherlands-pgday-lowlands-percona-live-2026",
+      "author": "Gülçin Yıldırım Jelínek",
+      "source": "ClickHouse",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "活动",
+        "社区"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "DBOS 解释 PostgreSQL 大表分批删除的代价",
+      "summary": "DBOS 讨论在 PostgreSQL 中分批删除持久化工作流状态，重点是锁、膨胀、WAL 与可恢复的限速策略。",
+      "url": "https://www.dbos.dev/blog/scaling-deletions-in-postgres",
+      "author": "Peter Kraft、Qian Li",
+      "source": "DBOS",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "删除",
+        "性能"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 修复 JOIN_ORDER 反馈误判",
+      "summary": "pg_plan_advice 修正 JOIN_ORDER 反馈对无序、首位与单元素子列表的误判，避免“匹配但失败”假象。",
+      "url": "https://github.com/postgres/postgres/commit/e1d8f81d4961ca6c4228eb9a3ab5d36168008e42",
+      "author": "Robert Haas",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "计划"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "对象地址区分逻辑复制发布排除项",
+      "summary": "PostgreSQL 对象地址现在区分发布排除项，复制与 DDL 工具处理发布关系时可保留语义。",
+      "url": "https://github.com/postgres/postgres/commit/94670ba6d560b0738992b9bb7d0313d7d90af1d1",
+      "author": "Amit Kapila",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "DDL"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 解码 worker 修复启停等待竞态",
+      "summary": "REPACK 解码 worker 启停改用明确的附加、Terminate 消息，避免异常或高日志量下 steering 进程永久等待。",
+      "url": "https://github.com/postgres/postgres/commit/16735af3e39eeb6e3a2c2bcc1e4a17eabc74d377",
+      "author": "Álvaro Herrera",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "并发"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "pgstats 防止部分条目触发空指针崩溃",
+      "summary": "pgstats 清理逻辑现在容忍 ERROR 后留下的部分条目，避免解引用 NULL 导致崩溃。",
+      "url": "https://github.com/postgres/postgres/commit/16706f1f4dc202d502f07f7b14bb600eb0daef92",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计",
+        "稳定性"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 修复空白 OAuth 验证器导致的崩溃",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/1d094904bc76b57fa1fd634b9c49bbb5ab76ece0",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "认证"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "内部子事务在提交阶段中止不再触发断言",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/0a87bc9ca2494cbc5a41a1ee506dac45c794d060",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 要求分区名称带模式",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/63920eb099ab7e0e9d9eb49a3aa392c9441d52ef",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "GEQO 适配 disabled_nodes 成本比较",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/c9c660e6ae03027615adff90cf4b26da5f8f97c1",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "GEQO"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "WAIT 文档明确 read-your-writes 的目标 LSN",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/a203d20190059ee8a8dd830ecfb7834c704cb53c",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "文档"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "WAIT NO_THROW 文档补充适用场景",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/3f8b8ddea08a110e9f44af2b2e52312fca901eac",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "文档"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "角色级只读设置可能被会话内部改写",
+      "summary": "",
+      "url": "https://thebuild.com/blog/the-call-is-coming-from-inside-the-session/",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限",
+        "GUC"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "4B 模型用强化学习生成更快的 PostgreSQL 计划",
+      "summary": "",
+      "url": "https://rohanbansal.com/qorl",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "优化器",
+        "AI"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "分区外部表多行更新删除的已知问题",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAKZiRmwr4zEZ2rFWv54GVh7FfAstQTdbA0HAv2M4E4dpLsX1-Q@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "postgres_fdw"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "TOAST 索引创建不再虚报进度",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/4b445479f9e0ea5039c782e9dab35ec9af6b6d4d",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "监控"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "ReadySet 公布单节点缓存查询吞吐基准",
+      "summary": "",
+      "url": "https://readyset.io/case-studies/how-we-reached-43-million-qps-for-mysql-and-postgresql-workloads-on-a-single-readyset-node",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能",
+        "缓存"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Cockroach 介绍面向 Agent 的弹性数据库架构",
+      "summary": "",
+      "url": "https://www.cockroachlabs.com/blog/continuum-architecture/",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "架构",
+        "AI"
+      ],
+      "position": 26
+    }
+  ]
+}

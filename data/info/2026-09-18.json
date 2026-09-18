@@ -1,0 +1,424 @@
+{
+  "date": "2026-09-18",
+  "origin": "PGSQL.CC 主动采集；Planet 9v2、GitHub、PostgreSQL hackers、厂商原文及 Hacker News；截稿 2026-09-18T01:37:47Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "SILO 20260916 修复安全与跨池一致性问题",
+      "summary": "SILO 20260916 是安全与正确性版本：认证策略拒绝未签名 x-amz-* 并校验预签名 payload，修复 IAM 撤销、多池条件写入、Object Lock、删除标记、multipart 严格列表和复制一致性。版本同步 Console v2.4.1、MC 与 silo-pkg v3.14.1，TLS 曲线交回 Go 1.27 默认值；有 TLS 检查设备必须先评估握手兼容性。",
+      "url": "https://github.com/pgsty/silo/releases/tag/RELEASE.2026-09-16T00-00-00Z",
+      "author": "Pigsty SILO team",
+      "source": "SILO",
+      "source_date": "2026-09-16",
+      "image": "https://opengraph.githubassets.com/96daad133066f7a928392f5456d672504ca395845746971efa4da2625e3705ff/pgsty/silo/releases/tag/RELEASE.2026-09-16T00-00-00Z",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "对象存储",
+        "复制"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 解析 max_notify_queue_pages",
+      "summary": "max_notify_queue_pages 是 PostgreSQL 17 引入的启动参数，限制全库 NOTIFY/LISTEN 队列可分配的 SLRU 页数；默认 1,048,576 页，按 8 KB 页约 8 GB。Christophe Pettus 解释它为何取代旧的自发限制，并提醒队列增长常由长期未消费通知的监听者造成。排查堵塞时应同时观察 pg_notify、监听会话、磁盘和重启级 GUC，不能只调大上限。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_notify_queue_pages/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "通知"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PG19 分区路由 ON CONFLICT 暴露延迟约束故障",
+      "summary": "PostgreSQL 19 与 master 仍有一个分区路由 ON CONFLICT 边界：遇到分区本地的可延迟唯一约束时，插入会走异常路径。该问题在 beta4 冻结前被列为待修复事项，讨论中的补丁还涉及排序规则处理、测试覆盖和 indnkeyatts 检查，说明“索引键列数不同但冲突语义等价”是否可互换仍未定。依赖分区写入与可延迟唯一约束的应用，应在 19 beta/最终版前暂缓升级或自行构造回归用例。",
+      "url": "https://www.postgresql.org/message-id/aqq48iKIUbOuxT1q@nathan",
+      "author": "Nathan Bossart、Álvaro Herrera、Dmitry Dolgov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "ON CONFLICT",
+        "数据完整性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "64 位 MultiXactOffset 审查暴露升级边界风险",
+      "summary": "64 位 MultiXactOffset 审查发现，9.3→9.4 pg_upgrade、备机 pg_get_multixact_stats() 和 members 截断都可能产生误导或数据风险。若升级前已发生 multixid 回绕，oldestMulti 处理存在极端静默损坏可能；恢复期间 oldestOffset 未随 WAL 更新会让统计虚高。修复与测试在推进，升级前应检查旧版本状态、备机统计和 pg_multixact 文件。",
+      "url": "https://www.postgresql.org/message-id/8fc26d4c-ff74-4cae-9c3d-db5c4f41d4ec@iki.fi",
+      "author": "Heikki Linnakangas、Noah Misch",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MultiXact",
+        "升级",
+        "恢复"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 拒绝认证前处理用户输入的 POC",
+      "summary": "PostgreSQL hackers 讨论了一份在认证前根据用户输入暴露服务器信息的概念验证补丁。审阅者认为，任何在认证或授权之前处理外部输入的功能都扩大了攻击面，无法靠实现细节把风险降到可接受范围；Tom Lane 明确表示这类方案不可能合入。它不是已发布漏洞或功能，而是一次安全边界审查，提醒扩展和代理设计不要在身份确认前执行可观测操作。",
+      "url": "https://www.postgresql.org/message-id/496975.1789568457@sss.pgh.pa.us",
+      "author": "Tom Lane、Daniel Gustafsson",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "认证"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "WAL_LOG 建库可能留下错误可见性映射",
+      "summary": "PostgreSQL hackers 发现 WAL_LOG CREATE DATABASE 在故障切换后可能留下错误的可见性映射：堆页清除了 PD_ALL_VISIBLE，VM 页却保持 all-visible，索引扫描可能返回错误。讨论建议 update/delete 路径若堆页原有该标志就注册 VM 清除操作，并为无变化情况使用 REGBUF_NO_CHANGE。问题仍在补丁阶段，使用 WAL_LOG 建库的团队应纳入故障切换测试。",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_bK7oJvtrrzL_V-OHouCWDKyU2-ERv+QvV6XM9Wh2dpUg@mail.gmail.com",
+      "author": "Melanie Plageman、Andres Freund",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "数据完整性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PGQ 目录行为与 pg_dump 支持需要重新设计",
+      "summary": "PGQ 的 CREATE/ALTER 目录行为差异过大，补丁作者被要求重新设计并补充 pg_dump 语义。",
+      "url": "https://www.postgresql.org/message-id/CA+TgmoYkyXSkParQXSemQ0Vdh2HZ5HVLnn4P1osJp+U6LZ4O9Q@mail.gmail.com",
+      "author": "Robert Haas、Ashutosh Bapat",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/PGQ",
+        "pg_dump"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 用 C11 alignas 改造内存对齐",
+      "summary": "PostgreSQL 用 C11 alignas 替代仅为对齐而分配的 palloc/malloc，兼顾 WAL 填充与树外兼容。",
+      "url": "https://www.postgresql.org/message-id/45e3c87f-b783-4221-8f81-375a1fe2638b@eisentraut.org",
+      "author": "Peter Eisentraut、Manuel Reyes Bravo",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "C",
+        "WAL"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "CAST ON DEFAULT 补丁重构错误安全转换",
+      "summary": "CAST(... DEFAULT ... ON CONVERSION ERROR) 补丁重构错误安全类型转换和表达式求值上下文。",
+      "url": "https://www.postgresql.org/message-id/CACJufxF86NMYChEXLDWBhDKRrD8qM1Vs-uoqrH-AjLGScrJVqA@mail.gmail.com",
+      "author": "PostgreSQL hackers",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "类型转换",
+        "SQL"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "remove_useless_joins 相关 PHV 副本会触发断言",
+      "summary": "remove_useless_joins 相关 PHV 副本可触发断言，修复方向是调整子链接预处理时机。",
+      "url": "https://www.postgresql.org/message-id/CAMbWs48TMvXkdojqpWzKy_-EEe_25UG1fXAGxBq5mBJ6KFgqqQ@mail.gmail.com",
+      "author": "Richard Guo、Tender Wang",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "稳定性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "PGConf.dev 统计 PostgreSQL Commitfest 趋势",
+      "summary": "PGConf.dev 统计了 PostgreSQL Commitfest 的提交、审查与合并趋势，补充项目开发节奏观察。",
+      "url": "https://vyruss.org/blog/postgresql-commitfest-metrics-pgconfdev-2026-part-one.html",
+      "author": "Jimmy Angelakos",
+      "source": "PGConf.dev",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发",
+        "社区"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "用 pg_stat_statements 定位慢 PostgreSQL 查询",
+      "summary": "文章给出用 pg_stat_statements 与日志定位慢 SQL 的简化流程，适合初次排查。",
+      "url": "https://bookofrevenue.com/blog/6aa8d8b292d31a00012a8642/identify-slow-postgres-query",
+      "author": "Book of Revenue",
+      "source": "Book of Revenue",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "性能"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Ddlforge 监督 Node ORM 的零停机迁移",
+      "summary": "Ddlforge 为 Node ORM 提供零停机 PostgreSQL 迁移监督器，强调可恢复与分批执行。",
+      "url": "https://github.com/x7ssss/ddlforge",
+      "author": "Ddlforge",
+      "source": "GitHub",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "工具"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 通过删减补丁实现 group commit",
+      "summary": "文章展示 PostgreSQL 通过删去大半补丁实现 group commit 的设计取舍。",
+      "url": "https://frn.sh/pgfsync/",
+      "author": "Francesco Romani",
+      "source": "frn.sh",
+      "source_date": "2026-09-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务",
+        "性能"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Jev 在 PostgreSQL 中做内容感知 PII 脱敏",
+      "summary": "",
+      "url": "https://pg-redact.vercel.app",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "隐私"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Postgres 图 RAG 项目支持事实替换",
+      "summary": "",
+      "url": "https://github.com/crajah/post-graph-rag",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RAG",
+        "图"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Dalibo 发布 PostgreSQL Migrator 1.0",
+      "summary": "",
+      "url": "https://blog.dalibo.com/2026/09/07/postgresql-migrator-1-en.html",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "工具"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PlanetScale 追踪分片 PostgreSQL 查询链路",
+      "summary": "",
+      "url": "https://planetscale.com/blog/the-lifecycle-of-a-sharded-postgres-query",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "架构"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PGSkiff 为 IPv4 客户端接入 IPv6 PostgreSQL",
+      "summary": "",
+      "url": "https://pgskiff.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "网络",
+        "连接"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "DBOS 分析 PostgreSQL 的 DISTINCT 扩展性",
+      "summary": "",
+      "url": "https://www.dbos.dev/blog/postgres-select-distinct-does-not-scale",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询",
+        "性能"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "ClickHouse 把数据库变成流式 HTTP API",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/clickhouse-streaming-http-api",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "HTTP",
+        "流式"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "LWN 回顾 PostgreSQL 19 的激烈补丁竞赛",
+      "summary": "",
+      "url": "https://lwn.net/Articles/1092003",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "版本",
+        "社区"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "CoreSQL 探索可扩展的 C++ 嵌入式数据库",
+      "summary": "",
+      "url": "https://github.com/morishuz/CoreSQL",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据库",
+        "C++"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Scry 用 ClickHouse 建立 500 TB 网络索引",
+      "summary": "",
+      "url": "https://scry.io/",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "索引"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Hacker News 全文搜索直接运行在 Postgres 上",
+      "summary": "",
+      "url": "https://hnsearch.vercel.app",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Antfly 分享从零构建 Zig 搜索推理数据库",
+      "summary": "",
+      "url": "https://antfly.io/research/antfly-zig",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据库",
+        "AI"
+      ],
+      "position": 26
+    }
+  ]
+}

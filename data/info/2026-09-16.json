@@ -1,0 +1,415 @@
+{
+  "date": "2026-09-16",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、PGXN、厂商及项目原文；pgnexus #271；截稿 2026-09-17T23:33:37Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgAssistant 3.8.0 建立 PostgreSQL 持续改进闭环",
+      "summary": "pgAssistant 3.8.0 把 PostgreSQL 分析从一次性检查推进为持续改进闭环：观察、诊断、排序、规划、实施、再采集并衡量结果。结合 Collector，新版 Workload Insights 对比相邻采集，展示建议变化、配置差异、负载趋势、执行时间、调用次数和高影响查询。Executive Plan 继续明确 DEV/OPS 负责人，但项目提醒相关性不等于因果关系；它用于跟踪优化成效，不是实时监控替代品。",
+      "url": "https://www.postgresql.org/about/news/pgassistant-380-continuous-improvement-loop-for-postgres-3378/",
+      "author": "pgAssistant dev team",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具",
+        "监控",
+        "优化"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 发布节奏调整并回退关键特性",
+      "summary": "PostgreSQL 19 的发布节奏出现调整：Snowflake 梳理了测试期间回退的关键特性与后续计划，指出在线数据校验和转换等改动已从稳定分支撤回，时间段 UPDATE/DELETE 语法也不再按此前状态交付。开发者若根据 beta 行为提前接入，需要重新检查语法、迁移脚本和测试矩阵；最终版本范围以正式发布分支和 release notes 为准。文章还解释了回退背后的审查与稳定性取舍，适合作为升级前的变更清单。",
+      "url": "https://www.snowflake.com/en/blog/engineering/postgresql-19-release-delay-feature-reverts/",
+      "author": "Elizabeth Garrett Christensen",
+      "source": "Snowflake",
+      "source_date": "2026-09-16",
+      "image": "https://www.snowflake.com/content/dam/snowflake-site/engineering-blog/featured-images/sf-eng-blog-ML-1.png",
+      "domain": "pg",
+      "tags": [
+        "版本",
+        "兼容性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PlanetScale 发布 TIN 1.0 PostgreSQL 全文检索扩展",
+      "summary": "PlanetScale 宣布 TIN 1.0 GA，这是面向 PostgreSQL 的全文检索扩展，使用新索引和 `==>` 运算符，支持布尔、短语、跨度、模糊、通配符与正则匹配。它在持续更新、备份和事务可见性上仍遵循 PostgreSQL 语义，并用 8 GB Wikipedia 数据与 GIN、ParadeDB、pg_textsearch 比较。上线前应在自己的写入负载上复测索引体积、更新成本与可见性。",
+      "url": "https://planetscale.com/blog/introducing-tin",
+      "author": "Eric Ridge、Patrick Reynolds",
+      "source": "PlanetScale",
+      "source_date": "2026-09-16",
+      "image": "https://planetscale.com/assets/introducing-tin-social-BxZcr7Qp.png",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "扩展"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Percona 实测 pgBackRest 压缩级别的 CPU 代价",
+      "summary": "Percona 在一台装有 4 GiB 热数据的主机上测量 pgBackRest 压缩组合，把节省比例、CPU 秒数和吞吐放在同一条效率曲线上。结果显示 zstd 的拐点在低级别，默认 zstd(3) 约节省 64.7%，每 GB 约 13.8 CPU 秒；lz4(1) 更适合 CPU 或备份窗口紧张的场景，而 zstd(19–22) 和 bzip2 的额外压缩不划算。文章强调数字只用于比较，应先用代表性数据库测量。",
+      "url": "https://www.percona.com/blog/pgbackrest-compression-how-much-cpu-is-a-smaller-backup-worth/",
+      "author": "Agustín Gallego",
+      "source": "Percona",
+      "source_date": "2026-09-16",
+      "image": "https://www.percona.com/wp-content/uploads/2026/09/diminishing_returns.png",
+      "domain": "db",
+      "tags": [
+        "备份",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 回退在线数据校验和转换",
+      "summary": "PostgreSQL 19 稳定分支撤回了在线启用或关闭数据校验和的整组改动。提交说明称 beta 期间已有多次后续修正，团队选择在 GA 前移除仍可能暴露新问题的代码，仅保留离线校验和初始化、故障日志提示、枚举定义和改写后的文档。已经按在线切换方案设计运维流程的团队，需要删除这条假设并继续为每个数据目录安排离线操作；这次提交是分支代码回退，不能当作正式小版本公告。",
+      "url": "https://github.com/postgres/postgres/commit/c05d5ce12366f1008e95b09a0a9b08a49818b0e1",
+      "author": "Daniel Gustafsson",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-16",
+      "image": "https://opengraph.githubassets.com/8d989fb39eb4488a145e927dfb4cbd344af55c7488b40a69d567a71280eb2f79/postgres/postgres/commit/c05d5ce12366f1008e95b09a0a9b08a49818b0e1",
+      "domain": "pg",
+      "tags": [
+        "校验和",
+        "版本",
+        "运维"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复 MultiXact 页面边界截断告警",
+      "summary": "PostgreSQL 修复了 pg_multixact 成员截断在页面边界上的页号计算错误。截断点恰好落在页边界时，旧逻辑可能把尚未创建的页传给 SimpleLruTruncate，日志随后误报目录出现 wraparound。修复与其他 SLRU 截断路径一致，先退回上一页再计算清理范围，并回补到 PostgreSQL 19。它不改变多事务语义，却避免维护任务在边界条件下产生误导性告警；升级或回溯补丁时应把该提交纳入分支检查。",
+      "url": "https://github.com/postgres/postgres/commit/d8408e8d6823036bb88310b36eed8d9607220847",
+      "author": "Heikki Linnakangas",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-16",
+      "image": "https://opengraph.githubassets.com/d59d6db3b3f236d310602b909f4e2c14c5c521e82838773a3cc76781252fdace/postgres/postgres/commit/d8408e8d6823036bb88310b36eed8d9607220847",
+      "domain": "pg",
+      "tags": [
+        "MultiXact",
+        "维护"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_migrate 用目录快照核对迁移前后的结构差异",
+      "summary": "pg_migrate 用目录快照核对关系、列、类型与约束，适合迁移前后差异检查。",
+      "url": "https://fljd.in/en/2026/09/16/inspecting-a-catalog-with-pg_migrate/",
+      "author": "Florent Jardin",
+      "source": "Florent Jardin",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "工具"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_stat_statements 深入拆解慢查询成本",
+      "summary": "第 7 部分用 pg_stat_statements 拆解慢查询、调用量与总耗时，补充生产排查路径。",
+      "url": "https://pganalyze.com/blog/postgres-in-production-pg-stat-statements-deep-dive-part-7",
+      "author": "Ryan Booz",
+      "source": "pganalyze",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "性能"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 19 汇总 9 月中旬开发进展",
+      "summary": "汇总 9 月 8–16 日 PostgreSQL 19 提交、回退与测试状态，便于跟进发布节奏。",
+      "url": "https://www.commandprompt.com/blog/postgresql-19-sept-08-sept-16-2026/",
+      "author": "Joshua Drake",
+      "source": "Command Prompt",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "版本",
+        "开发"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Meshtastic 把八次 Prometheus 查询合成一次 JOIN",
+      "summary": "Meshtastic 在 1 万节点、50 万指标序列下把八次 Prometheus 查询合成一次 PostgreSQL JOIN。",
+      "url": "https://www.tigerdata.com/blog/meshtastic-metrics-exporter-case-study-tiger-data",
+      "author": "Andrew Stebbins",
+      "source": "Tiger Data",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "监控"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 修复 JOIN_ORDER 空子列表反馈",
+      "summary": "pg_plan_advice 禁止 JOIN_ORDER 空子列表，修复手写建议反馈的错误匹配状态。",
+      "url": "https://github.com/postgres/postgres/commit/5e595d659fdb4829e10a1c4122ad4dec9dd0bd3",
+      "author": "Robert Haas",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "计划"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "半连接去重改用连接排序规则",
+      "summary": "半连接去重改用连接排序规则，避免非确定性排序规则下重复输出行。",
+      "url": "https://github.com/postgres/postgres/commit/d237a7a83668bc228f7c58f104ffb25cbb607a1a",
+      "author": "Alexander Korotkov",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "排序规则"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 并发重建索引补正进度计数",
+      "summary": "REPACK 并发重建索引时，进度视图现在正确递增已完成索引数。",
+      "url": "https://github.com/postgres/postgres/commit/ccbea44294bb3813882052d14a6158302c4b19aa",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "监控"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "PG19 批量回滚暴露 RI 快速路径问题",
+      "summary": "PG19 批量回滚测试发现两个引用完整性快速路径问题，补丁将并发与回滚路径纳入回归。",
+      "url": "https://www.postgresql.org/message-id/CA+HiwqH5Kgb3wPLaYgq4=haJUfvd=Ukd_zKrC4z20pAjGvH3Cg@mail.gmail.com",
+      "author": "Amit Langote、Melanie Plageman、Nikolay Samokhvalov",
+      "source": "PostgreSQL hackers",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "测试"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "SQL 调用槽函数出错时释放复制槽",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/1BF0B15F-1EA8-4E3F-9ADD-93BE5102B825@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "REPACK 并发重建补充进度测试",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CA+bCEdCOiewao+v85Ptz1vXoPaRtvMZGLD-OQsyK2MF6yVhqyw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 统计信息导入改为原子操作",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/aqq6OstP89YpdLZt@nathan",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "ALTER SYSTEM 修复 GUC_LIST_QUOTE 空字符串",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOYmi+=TomajOOr3OkshSMrNWERAc9fT1je_TEy6Z1UseNy-hA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_createsubscriber 检查输出插件库",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/TYRPR01MB12845F38A9E0ACF1487EA8F7EF5B92@TYRPR01MB12845.jpnprd01.prod.outlook.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Autovacuum 追踪被跳过的表",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAOzEurRddqm-etFkG9T4auovYUDdB1bBasNJGg1jW09tXcOmTg@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Autovacuum"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "备用服务器修复 FSM 数据不一致",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAPpHfduf7-kJUbCWwZRQJ5M4fh4BYtg5r2P5b5gtbYrkOG=NpA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "FSM"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "XMLSERIALIZE 增加 CANONICAL 选项提案",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAF0whuf1SjYi7=SEH95G9n9bO3bePRq5bTxiL9m06-WzDiAOzQ@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "XML"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "按 XID 年龄让复制槽自动失效提案",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CABdArM5zjth_zzD_bYnZbMwm3svCndZu8hB8+pd5O=s-PRVN0g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "pg_backup_stop 返回 pg_control 提案",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAGRkXqQ737wzDadAh3qQncZm-S8QBEPu5NdiK2u_c8DDHsj=9g@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "逻辑复制冲突日志历史表提案",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAD21AoC5ze1czhTco9PchvtUnGpY5=AjpYCWfHOxE_7QBKdxww@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "WAL_LOG CREATE DATABASE 适配非标准页面布局",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAAKRu_Zh8kwrMxr1dDZKhFbekj-0ZniR9Twj=Y_Jy1b6u3wUSw@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "数据库"
+      ],
+      "position": 26
+    }
+  ]
+}
