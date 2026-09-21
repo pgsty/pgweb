@@ -1,0 +1,382 @@
+{
+  "date": "2026-09-20",
+  "origin": "PGSQL.CC 每日博览；截稿 2026-09-21 07:33:26 Asia/Shanghai；PostgreSQL.org、Planet、pgnexus #262–275、主动检索与一手原文；回看 2026-09-07 至截稿",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 简中消息校准覆盖六个大版本",
+      "summary": "PostgreSQL 简体中文消息长期存在未译条目、术语不一和格式占位符错误。冯若航公布了针对 PostgreSQL 14–19 的校准工作，项目统计覆盖 162 个目录文件、67,487 条消息。流程先固定术语与翻译规范，再逐项对照英文审校，并跨组件、跨版本检查一致性，使用 msgfmt 校验格式。本轮还修正了遗漏系统错误原因、引用多余格式参数等问题。上游开发期仍会新增或调整消息，后续通过跟踪仓库持续补齐。",
+      "url": "https://vonng.com/en/pg/pg-nls/",
+      "author": "冯若航",
+      "source": "vonng.com",
+      "source_date": "2026-09-19",
+      "image": "https://vonng.com/pg/pg-nls/featured.webp",
+      "domain": "pg",
+      "tags": [
+        "本地化",
+        "消息翻译"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "并行查询预算受会话设置与工作进程池共同约束",
+      "summary": "并行查询的参数上限不等于实际启动的工作进程数。Christophe Pettus 通过执行计划和并发实验说明，单个 Gather 的规划上限只是请求许可，多个 Gather 还可分别申请进程。集群虽统一统计已运行数量，max_parallel_workers 却可由普通会话修改；真正的硬上限来自 max_worker_processes。运维应同时核对计划与实际启动数，为逻辑复制和扩展预留槽位，防止报表查询耗尽共享进程池。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_parallel_workers-and-max_parallel_workers_per_gather/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-09-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并行查询",
+        "资源管理"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Lakebase 向量与 BM25 搜索正式可用",
+      "summary": "Databricks 将此前处于测试阶段的 Lakebase Search 推进到正式可用。两个 PostgreSQL 扩展分别提供兼容 pgvector 类型与查询语法的近似向量索引，以及面向标准 tsvector 的 BM25 排序和前 K 项下推，应用可在同一数据库组合语义与关键词检索。索引保存在存储层，计算实例缩到零后再次启动无需重新预热索引。使用前需在项目设置启用功能并安装扩展，具体账号仍按分阶段发布节奏获得更新。",
+      "url": "https://docs.databricks.com/aws/en/release-notes/lakebase#lakebase-search-is-generally-available",
+      "author": "Databricks",
+      "source": "Databricks",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "搜索",
+        "向量",
+        "BM25"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Oracle 到 Aurora 的 CDC 实测揭示类型与运行时陷阱",
+      "summary": "DBAglobe 实测了用 Debezium、LogMiner 和 MSK 将 Oracle 复制到 Aurora PostgreSQL 的链路，覆盖初始快照与后续增删改。类型映射是关键：NUMBER(19,0) 在所用配置下转为 Decimal，目标应选 numeric，不能直接当作 bigint。托管接收端还出现 Jackson 类路径冲突，实验改用自管接收端完成复制。所选日志解析策略不跟踪在线 DDL，迁移前须单独评估模式变化。",
+      "url": "https://www.dbaglobe.com/2026/09/zero-downtime-oracle-postgresql.html",
+      "author": "DBAglobe",
+      "source": "DBAglobe",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "CDC"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "美联航用目录联邦连接 Redshift 与 Unity Catalog",
+      "summary": "美联航将湖仓数据保存在 S3，用 Unity Catalog 管理，同时使用 Redshift 分析。其工程案例通过 Glue 目录联邦和 Iceberg REST 接口连接两者，再创建资源链接供外部模式访问。Lake Formation 在查询时提供受限的临时凭据，省去另一条数据同步管线。配置时须分别授权资源链接与目标表；Delta 表还要启用 UniForm，才能提供兼容元数据，不能仅连通目录就假定所有表均可查询。",
+      "url": "https://aws.amazon.com/blogs/big-data/how-united-airlines-uses-amazon-redshift-and-aws-glue-data-catalog-federation-to-query-databricks-managed-data/",
+      "author": "Ankit Aggarwal、Raja Kalluri 等",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-15",
+      "image": "https://d2908q01vomqb2.cloudfront.net/b6692ea5df920cad691c20319a6fffd7a4a766b8/2026/09/10/BDB-5928-featured-image.png",
+      "domain": "db",
+      "tags": [
+        "湖仓",
+        "联邦查询"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "objgit 重做 packfile 以减少对象存储往返",
+      "summary": "把 Git 文件访问直接映射为对象存储请求，会让细碎读写累积成网络延迟。Tigris 的 objgit 实验重做了 packfile：用数据文件与独立索引记录对象偏移及压缩前后的长度，使服务端可通过 HTTP Range 精确读取对象，并在后台预取整个包。作者比较了三类仓库的请求次数和推送、克隆耗时，显示减少往返比简单替换存储接口更关键。这一进展仍是存储布局实验，鉴权与包合并机制尚未实现。",
+      "url": "https://www.tigrisdata.com/blog/objgit-packfiles/",
+      "author": "Xe Iaso",
+      "source": "Tigris",
+      "source_date": "2026-09-15",
+      "image": "https://www.tigrisdata.com/blog/assets/images/hero-image-81fc688a5cf1e95701d66a80813da3c1.webp",
+      "domain": "infra",
+      "tags": [
+        "对象存储",
+        "Git"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "原生逻辑复制迁入 RDS 要单独处理序列与切换",
+      "summary": "实测提醒：副本标识、DDL 与序列需单独处理；停止源端写入并核对追平后再切换，同时监控复制槽的 WAL 保留量。",
+      "url": "https://www.dbaglobe.com/2026/09/migrating-postgresql-to-amazon-rds-with.html",
+      "author": "DBAglobe",
+      "source": "DBAglobe",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "迁移",
+        "RDS"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Voyager 提前拒绝不支持的可延迟唯一约束",
+      "summary": "2026.9.2 在实时迁移导出阶段列出问题表并失败，避免到 CDC 阶段才停滞，同时改进分区键与冲突诊断。",
+      "url": "https://docs.yugabyte.com/stable/yugabyte-voyager/release-notes/#v2026-9-2-september-15-2026",
+      "author": "YugabyteDB",
+      "source": "YugabyteDB",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 公测按副本粘滞路由",
+      "summary": "企业版可用 HTTP 标记或原生协议 SNI 保持请求落在同一副本；扩缩容和重启仍可能改变映射。",
+      "url": "https://clickhouse.com/blog/replica-aware-routing-public-beta",
+      "author": "ClickHouse",
+      "source": "ClickHouse",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "查询路由"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 的 dbt v2 适配器进入公测",
+      "summary": "适配器随 Rust 版 dbt 分发并使用 ADBC，托管平台接入另处私测；公测版适合开发与预发布环境，功能仍待补齐。",
+      "url": "https://clickhouse.com/blog/clickhouse-is-now-available-on-the-dbt-platform",
+      "author": "ClickHouse",
+      "source": "ClickHouse",
+      "source_date": "2026-09-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据管线"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Airflow 官方提供 ClickHouse 集成",
+      "summary": "新 provider 使用 ClickHouse Connect 的 HTTP 接口，支持通用 SQL 算子及批量写入 hook。",
+      "url": "https://clickhouse.com/blog/clickhouse-airflow-provider",
+      "author": "ClickHouse",
+      "source": "ClickHouse",
+      "source_date": "2026-09-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据编排"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "SageMaker 联邦治理 Snowflake 数据与质量结果",
+      "summary": "通过 Glue 连接发现表，再将质量规则结果回写统一目录，供其他项目发现和订阅，业务数据无需先行复制。",
+      "url": "https://aws.amazon.com/blogs/big-data/discover-and-govern-snowflake-data-using-sagemaker-unified-studio/",
+      "author": "AWS",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据治理"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "BigQuery 预览按数据块缓存跨云查询",
+      "summary": "缓存复用已读取的 Parquet 列块，读取前检查远端元数据；同期连接能力覆盖 S3、Azure 上的开放格式文件。",
+      "url": "https://cloud.google.com/blog/products/data-analytics/borderless-lakehouse-cross-cloud-caching-and-connections",
+      "author": "Google Cloud",
+      "source": "Google Cloud Blog",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "湖仓",
+        "缓存"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Google Cloud 后端 mTLS 托管身份正式可用",
+      "summary": "应用负载均衡器可用 SPIFFE 身份自动签发、轮换证书，并由统一信任配置完成后端双向认证。",
+      "url": "https://docs.cloud.google.com/load-balancing/docs/managed-workload-identities-load-balancers-overview",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络安全"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_acm 更新访问控制代码，征集测试反馈",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/09/19/major-updates-to-pg_acm/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 预览源数据库迁移血缘分析",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/migration/migration-lineage",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Datastream 默认用规范 JSON 保留 BSON 类型",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/datastream/docs/bq-map-data-types#mongodb-data-types",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Databricks 应用遥测正式落入统一目录表",
+      "summary": "",
+      "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/september#databricks-apps-telemetry-is-now-generally-available",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 统一路由正式支持自动回程与 BGP",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-18-unified-routing-ga/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Artifact Registry 预览托管 Conda 软件包",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/artifact-registry/docs/conda",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Browser Run 录制可查网络、日志与页面结构",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-18-browser-run-session-recording-inspect/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare WAF 新增云元数据 SSRF 阻断规则",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-15-waf-release/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Actions 可按工作流文件设置执行保护",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-17-workflow-execution-protections-in-github-actions-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 支持批量授权令牌与 SSH 密钥的 SSO",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-16-automate-sso-authorization-for-classic-pats-and-ssh-keys/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub REST API 可配置代码覆盖率合并门槛",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-18-manage-the-code-coverage-ruleset-condition-with-the-rest-api/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Workers AI 可在容量不足时立即拒绝同步请求",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-17-reject-if-busy/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}
