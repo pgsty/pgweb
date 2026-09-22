@@ -1,0 +1,421 @@
+{
+  "date": "2026-09-21",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL 官方与 Planet；项目博客与发布说明；HN；pgnexus #263–275；截至 2026-09-22 07:33:36 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 合入默认分区漏行修复",
+      "summary": "此前报道的多列范围分区裁剪问题已有实质进展：当分区上界含 MAXVALUE，部分查询会错误排除默认分区，静默漏掉本应返回的行。修复重新安排了边界判断，并加入回归用例；相关提交已进入主干和 PostgreSQL 19 稳定分支。它处理的是查询结果正确性，而非单纯的执行效率。使用多列范围分区与默认分区的团队可用原始用例检查自己的查询，并关注后续维护版本是否包含该修复。",
+      "url": "https://github.com/postgres/postgres/commit/b9d9e9bcc5786e48713d0d44de3f02c200bb7eff",
+      "author": "Ewan Young",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "分区",
+        "正确性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复共享内存分配的溢出路径",
+      "summary": "PostgreSQL 的共享内存接口允许调用方在不知道大小时附着到已有对象，但目标不存在时，旧路径会把特殊大小值当成分配请求，触发整数溢出并可能损坏内存。新提交明确拒绝这种创建请求，同时给底层分配器补上溢出检查、文档与测试，已合入主干和 PostgreSQL 19 稳定分支。影响集中在调用该接口的代码与扩展，维护者需要检查未知大小附着的失败处理；这一变更尚不能等同于已发布的维护版本。",
+      "url": "https://github.com/postgres/postgres/commit/311df1dc0392f06973cf98eac51d63cb007267ce",
+      "author": "Ashutosh Bapat",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "共享内存",
+        "正确性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PgBouncer 事务池中的租户状态可能跨请求残留",
+      "summary": "事务结束会归还数据库连接，却不意味着所有会话状态都已清空。一组可复现测试梳理了 PgBouncer 事务池中的租户变量、角色、搜索路径、临时表与会话锁：普通 SET 留下的状态可能被下一个借用者看到。文章将租户隔离落实到显式事务和 SET LOCAL，并要求行级安全策略在上下文缺失时拒绝访问。还需分别处理临时表与锁的生命周期，不能把连接池视为租户隔离边界；协议级预备语句的跟踪也不能替代这些约束。",
+      "url": "https://seedfa.st/blog/pgbouncer-transaction-mode",
+      "author": "Mikhail Shytsko",
+      "source": "Seedfast",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "多租户",
+        "运维"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "SQL Server 多结果集迁移需要重设计调用约定",
+      "summary": "SQL Server 存储过程一次调用可返回多个独立结果集，迁到 PostgreSQL 时不能只改 SQL 语法。AWS 对比了游标、会话临时表与 JSON 聚合三种方案：临时表便于保留关系结构和流式读取，但创建与读取必须在同一连接、同一事务中完成；JSON 可合成一次响应，却需要控制结果规模和内存。文章同时给出数据库与 Npgsql 客户端改造及等价性验证步骤，帮助迁移团队把结果形状、排序和连接池行为一起纳入验收。",
+      "url": "https://aws.amazon.com/blogs/database/migrate-sql-server-multi-result-set-procedures-to-postgresql/",
+      "author": "Jian (Ken) Zhang",
+      "source": "AWS",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "SQL",
+        "工程"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Redis 安全更新修复事务执行时的权限撤销漏洞",
+      "summary": "Redis 发布多条维护分支的安全更新，其中 8.10.2 修复了事务排队后撤销 ACL 权限仍可访问相关键的问题，并处理时间序列、向量检索和深层 JSON 输入引发的崩溃。集群总线还新增未认证启动告警，以及要求总线启用 TLS 认证的可选保护配置；该选项默认关闭。对使用细粒度权限和集群部署的团队，这次更新既涉及升级，也涉及核对总线网络暴露与认证设置，不能把新增告警误当成认证已自动启用。",
+      "url": "https://github.com/redis/redis/releases/tag/8.10.2",
+      "author": "Redis",
+      "source": "Redis",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "权限",
+        "发布"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Python Workers 正式可用并打通数据库连接",
+      "summary": "Cloudflare 将 Python Workers 推向正式可用，补齐常见 Web 框架、服务绑定与网络访问能力。TCP 桥接让常用数据库客户端可配合 Hyperdrive 访问 PostgreSQL 和 MySQL，WSGI 与 ASGI 支持则帮助已有应用接入。依赖原生扩展的包仍需适配 WebAssembly 构建，迁移时要核对依赖和运行约束；变化的重点是把 Python 应用与数据库连接纳入边缘运行环境。",
+      "url": "https://blog.cloudflare.com/python-workers-ga/",
+      "author": "Gyeongjae Choi、Dominik Picheta、Hood Chatham",
+      "source": "Cloudflare",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Python",
+        "数据库连接",
+        "边缘计算"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 修复从旧版本导入统计的兼容问题",
+      "summary": "远端低于 PostgreSQL 12 时先将名称转成文本，再应用排序规则，避免统计信息导入失败。",
+      "url": "https://github.com/postgres/postgres/commit/bea01b825c077e73b009be0a6f000ed643490ae9",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "统计信息"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "REPACK 解码进程继承发起会话的超时设置",
+      "summary": "修复让后台工作进程沿用调用方的锁等待与事务超时，避免角色或数据库默认值覆盖会话中的调整。",
+      "url": "https://github.com/postgres/postgres/commit/a62ff0829d6b151a7107f6ae7f7f90b52405a247",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "运维"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "CYPEX 2.0 将租户隔离写入应用目录",
+      "summary": "以组织字段和行级安全约束隔离平台自身目录；用户业务表仍需单独设计并迁移租户边界。",
+      "url": "https://www.cybertec-postgresql.com/en/whats-new-in-cypex-v2-0-0-tenancy-moves-from-the-query-to-the-catalog/",
+      "author": "",
+      "source": "CYBERTEC",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "多租户",
+        "RLS"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Neon Functions 可由外部计划唤醒执行",
+      "summary": "定时触发器在数据库计算节点之外运行，可唤醒已缩容到零的计算节点；继承到子分支的触发器默认关闭。",
+      "url": "https://neon.com/blog/your-neon-functions-can-now-run-on-a-schedule",
+      "author": "",
+      "source": "Neon",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "无服务器",
+        "调度"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Valkey 9.2 候选版加入免 fork 快照",
+      "summary": "首个候选版提供可选的免 fork RDB 保存路径，并可限制缓存脚本内存；启用前需验证备份与资源配置。",
+      "url": "https://github.com/valkey-io/valkey/releases/tag/9.2.0-rc1",
+      "author": "",
+      "source": "Valkey",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "候选版",
+        "备份"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Polars 2.0 候选版扩展 SQL 与 Map 类型",
+      "summary": "rc.2 支持 GROUPING SETS 等分组语法，引入 Map 类型并调整 Parquet 枚举读取，升级需核对破坏性变更。",
+      "url": "https://github.com/pola-rs/polars/releases/tag/py-2.0.0-rc.2",
+      "author": "",
+      "source": "Polars",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分析",
+        "候选版"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "VictoriaMetrics 修复 JWT 路由授权绕过",
+      "summary": "1.152.0 修复 vmauth 使用 match_claims 时的权限绕过，并为重标签调试返回的错误内容补上转义。",
+      "url": "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.152.0",
+      "author": "",
+      "source": "VictoriaMetrics",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "监控"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "DBA 智能体评测发现模型会擅改目标版本",
+      "summary": "Percona 的多主机部署测试显示，模型可能用可安装版本替代指定版本，验收必须检查实际结果，不能只看执行成功。",
+      "url": "https://www.percona.com/blog/evaluating-llm-models-for-dba-tasks/",
+      "author": "",
+      "source": "Percona",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据库运维",
+        "评测"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "MIN/MAX 优化修复 WITH TIES 子查询报错",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/32872d0c9790e570105f55682e92fba22ae1b38d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "复杂分区裁剪规划补上查询取消检查",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/2631e08d791d3b504ddc6a4c790520f9878a1642",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "并行逻辑应用额度只分给流式大事务",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_parallel_apply_workers_per_subscription/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pg_cron 1.6.8 修复同步复制下的退出挂起",
+      "summary": "",
+      "url": "https://github.com/citusdata/pg_cron/releases/tag/v1.6.8",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_search 0.26 候选版加入向量 RRF 下推",
+      "summary": "",
+      "url": "https://github.com/paradedb/paradedb/releases/tag/v0.26.0-rc.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检索"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "持久内存普及受制于成本与数据库适配",
+      "summary": "",
+      "url": "https://momjian.us/main/blogs/pgblog/2026.html#September_21_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "SQLite Modal 原型用显式推拉同步数据库",
+      "summary": "",
+      "url": "https://github.com/modal-projects/sqlite-modal",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "原型",
+        "同步"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Kubernetes 试验性卷选项可限制执行与删除",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/09/16/kubernetes-v1-37-hardening-container-storage/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "存储"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Memory QoS 升级后须显式配置内存限流",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/09/14/kubernetes-v1-37-memory-qos-graduates-to-beta/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "内存"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "CSI 块跟踪升级需手动迁移到 v1beta1",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/09/14/csi-changed-block-tracking-beta/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "备份",
+        "存储"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Enterprise 支持导出凭证清单",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-21-github-enterprise-adds-credential-inventory-exports/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "审计"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "MySQL MCP Server 修复注释绕过只读检查",
+      "summary": "",
+      "url": "https://aws.amazon.com/security/security-bulletins/2026-103-aws/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "安全"
+      ],
+      "position": 26
+    }
+  ]
+}
