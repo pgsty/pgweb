@@ -131,26 +131,28 @@ const root=document.getElementById('nls');
 if(root)void start(root);
 async function start(root){
  const $=id=>document.getElementById('nls-'+id);
- // 大版本：URL ?v= 优先，其次上次选择（localStorage），默认 19。切换时更新 URL，便于分享。
+ // 旧链接默认简体；语言显式放在 URL，组件和版本偏好按语言分别保存。
  const urlMajor=()=>{const v=parseInt(new URLSearchParams(location.search).get('v'),10);return Number.isInteger(v)&&v>0?v:null};
- const state={major:19,components:[],records:[],visible:[],rendered:0,byId:new Map(),component:'',query:'',filter:'all',busy:false,undo:[],lastSaved:null,activeId:null,user:{authenticated:false,can_edit:false,login_url:root.dataset.login}};
+ const state={language:new URLSearchParams(location.search).get('lang')||'zh_CN',major:19,components:[],records:[],visible:[],rendered:0,byId:new Map(),component:'',query:'',filter:'all',busy:false,undo:[],lastSaved:null,activeId:null,user:{authenticated:false,can_edit:false,login_url:root.dataset.login}};
  const canEdit=()=>state.user.can_edit;
  const span=()=>state.component===ALL?6:5;   // 全部组件模式下多一列「组件名称」
  let toastTimer,searchTimer;
  const local={get:k=>{try{return localStorage.getItem(k)}catch{return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch{}},del:k=>{try{localStorage.removeItem(k)}catch{}}};
- state.major=urlMajor()||Number(local.get('pgnls-major'))||19;
- const majorQuery=()=>'major='+state.major;
- function setMajor(major){
-  state.major=major;local.set('pgnls-major',String(major));
-  const params=new URLSearchParams(location.search);params.set('v',String(major));
+ state.major=urlMajor()||Number(local.get('pgnls-major-'+state.language))||(state.language==='zh_CN'?Number(local.get('pgnls-major')):0)||19;
+ const scopeQuery=(language=state.language,major=state.major)=>new URLSearchParams({lang:language,major:String(major)}).toString();
+ const componentKey=(language=state.language,major=state.major)=>'pgnls-table-component-'+language+'-'+major;
+ const htmlLanguage=()=>state.language.replace('_','-');
+ function setScope(language,major){
+  state.language=language;state.major=major;local.set('pgnls-major-'+language,String(major));
+  const params=new URLSearchParams(location.search);params.set('v',String(major));params.set('lang',language);
   history.replaceState(null,'',location.pathname+(params.toString()?'?'+params:''));
-  $('export').href='/nls/api/export/?'+majorQuery();
+  $('export').href='/nls/api/export/?'+scopeQuery();
  }
- const n=v=>Number(v).toLocaleString('zh-CN');
+ const n=v=>Number(v).toLocaleString(htmlLanguage());
  const isFull=()=>root.classList.contains('fullscreen');
  const scroller=()=>isFull()?root:window;
  async function api(path,body){
-  const response=await fetch('/nls/api/'+path,body===undefined?{headers:{'Accept':'application/json'}}:{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRFToken':root.dataset.csrf},body:JSON.stringify(body)});
+  const response=await fetch('/nls/api/'+path,body===undefined?{headers:{'Accept':'application/json'}}:{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json','X-CSRFToken':root.dataset.csrf},body:JSON.stringify({language:state.language,major:state.major,...body})});
   let value=null;
   try{value=await response.json()}catch{value={error:'请求失败（HTTP '+response.status+'）'}}
   if(!response.ok){const e=new Error(value.error||'请求失败（HTTP '+response.status+'）');e.status=response.status;e.login=value.login_url;throw e}
@@ -162,11 +164,11 @@ async function start(root){
   $('error').textContent=/Failed to fetch|Load failed/.test(message)?'无法连接服务器。未保存的文字仍保留在页面上，恢复后请再次保存。':message;
   $('error').hidden=false;refreshStatus();
   if($('submit-dialog').open){$('submit-error').textContent=$('error').textContent;$('submit-error').hidden=false}
-  if(e.status===401)toast('',true,'登录后才能保存 — <a href="'+h(e.login||state.user.login_url)+'">登录</a>');
+  if(e.status===401)toast('',true,'登录后才能保存 — <a href="'+h(state.user.login_url||e.login)+'">登录</a>');
  }
  function setBusy(b){
   state.busy=b;root.classList.toggle('busy',b);
-  root.querySelectorAll('.nls-toolbar button,.nls-toolbar select,.nls-tools input,.nls-tools select,.nls-dialog button,.nls-head .nls-major-select').forEach(el=>el.disabled=b);
+  root.querySelectorAll('.nls-toolbar button,.nls-toolbar select,.nls-tools input,.nls-tools select,.nls-dialog button,.nls-head select').forEach(el=>el.disabled=b);
   refreshStatus();
  }
  function refreshStatus(){
@@ -191,8 +193,8 @@ async function start(root){
   const sum=state.components.reduce((a,c)=>({approved:a.approved+c.approved,total:a.total+c.total}),{approved:0,total:0});
   const all={name:ALL,label:ALL_LABEL,all:true,...sum};
   const button=c=>'<button type="button" class="component-button'+(c.all?' all':'')+(c.name===state.component?' active':'')+'" data-component="'+h(c.name)+'" title="已校对 '+c.approved+' / '+c.total+(c.all?' · 跨组件浏览与搜索，统一译法':'')+'"><span class="name">'+h(c.label||c.name)+'</span><span class="count">'+c.approved+'<i>/</i>'+c.total+'</span></button>';
-  $('components').innerHTML=button(all)+state.components.filter(c=>c.name.includes(query)).map(button).join('');
-  $('component-select').innerHTML=[all,...state.components].map(c=>'<option value="'+h(c.name)+'"'+(c.name===state.component?' selected':'')+'>'+h(c.label||c.name)+'  '+c.approved+'/'+c.total+'</option>').join('');
+  $('components').innerHTML=(state.components.length?button(all):'')+state.components.filter(c=>c.name.includes(query)).map(button).join('');
+  $('component-select').innerHTML=(state.components.length?[all,...state.components]:[]).map(c=>'<option value="'+h(c.name)+'"'+(c.name===state.component?' selected':'')+'>'+h(c.label||c.name)+'  '+c.approved+'/'+c.total+'</option>').join('');
  }
  function progress(){
   if(state.component===ALL){
@@ -231,7 +233,7 @@ async function start(root){
  }
  function rowHTML(r,index){
   const diffs=rowDiffs(r);
-  return '<tr class="message-row'+(r.id===state.activeId?' active':'')+'" id="nls-row-'+r.id+'" data-id="'+r.id+'"><td class="check-cell"><input type="checkbox" data-check aria-label="第 '+(index+1)+' 行已校对"'+(r.status==='approved'?' checked':'')+(canEdit()?'':' class="ro" aria-disabled="true" title="登录审校账号后才能勾选"')+'></td>'+(state.component===ALL?'<td class="component-cell" title="所属组件">'+h(r.component)+'</td>':'')+'<td class="english"><span class="row-num">'+(index+1)+'</span>'+text(r.english)+(r.english_plural?'<div class="form-separator"><span class="form-label">复数原文</span>'+text(r.english_plural)+'</div>':'')+'</td><td class="old '+oldCellKind(r)+'" lang="zh-CN">'+oldCellHTML(r,diffs)+'</td><td class="candidate'+(r._error?' failed':'')+'" lang="zh-CN">'+candidateCellHTML(r,index,diffs)+'</td><td class="status-cell"><div class="status">'+statusHTML(r)+'</div></td></tr>';
+  return '<tr class="message-row'+(r.id===state.activeId?' active':'')+'" id="nls-row-'+r.id+'" data-id="'+r.id+'"><td class="check-cell"><input type="checkbox" data-check aria-label="第 '+(index+1)+' 行已校对"'+(r.status==='approved'?' checked':'')+(canEdit()?'':' class="ro" aria-disabled="true" title="登录审校账号后才能勾选"')+'></td>'+(state.component===ALL?'<td class="component-cell" title="所属组件">'+h(r.component)+'</td>':'')+'<td class="english"><span class="row-num">'+(index+1)+'</span>'+text(r.english)+(r.english_plural?'<div class="form-separator"><span class="form-label">复数原文</span>'+text(r.english_plural)+'</div>':'')+'</td><td class="old '+oldCellKind(r)+'" lang="'+htmlLanguage()+'">'+oldCellHTML(r,diffs)+'</td><td class="candidate'+(r._error?' failed':'')+'" lang="'+htmlLanguage()+'">'+candidateCellHTML(r,index,diffs)+'</td><td class="status-cell"><div class="status">'+statusHTML(r)+'</div></td></tr>';
  }
  // 分批渲染：先画 CHUNK 行，滚到表尾、按「继续显示」或用键盘走到最后一行时再续。全部组件有一万多条，一次画完太慢。
  function renderTable(){
@@ -375,9 +377,9 @@ async function start(root){
   $('error').hidden=true;setBusy(true);
   try{await fn()}catch(e){error(e)}finally{setBusy(false)}
  }
- async function bootstrap(){
-  const data=await api('bootstrap/?'+majorQuery());
+ function showBootstrap(data){
   state.components=data.components;state.lastSaved=data.storage.last_saved;state.user=data.user;
+  $('language').innerHTML=data.languages.map(l=>'<option value="'+h(l.code)+'"'+(l.code===data.language?' selected':'')+'>'+h(l.label)+'</option>').join('');
   // 版本下拉：服务器返回已导入的大版本；仅一个版本时隐藏，保持原界面不变。
   const select=$('major');
   select.innerHTML=(data.majors||[state.major]).map(m=>'<option value="'+m+'"'+(m===data.major?' selected':'')+'>PG'+m+'</option>').join('');
@@ -385,20 +387,44 @@ async function start(root){
   $('overall').textContent=n(data.total)+' 条消息 · '+n(data.forms)+' 个译文形式';
   $('component-count').textContent=data.components.length;
   renderUser();renderSidebar();
-  return data;
+ }
+ function preferredComponent(data,language,major){
+  const previous=local.get(componentKey(language,major))||(language==='zh_CN'?local.get('pgnls-table-component'):null)||state.component;
+  return data.components.length?(previous===ALL||data.components.some(c=>c.name===previous)?previous:data.components[0].name):null;
+ }
+ async function switchScope(language,major){
+  try{
+   await flush();
+   // Fetch before replacing the current table. Failed switches leave its scope,
+   // saved state and undo history together, so retrying cannot target another catalog.
+   let data=await api('bootstrap/?'+scopeQuery(language,language===state.language?major:19));
+   if(data.major!==major&&data.majors.includes(major))data=await api('bootstrap/?'+scopeQuery(language,major));
+   const name=preferredComponent(data,language,data.major);
+   const table=name?await api('component/?name='+encodeURIComponent(name)+'&'+scopeQuery(language,data.major)):null;
+   state.undo=[];setScope(language,data.major);showBootstrap(data);
+   if(table)showComponent(name,table);
+   else{
+    state.component='';state.records=[];state.visible=[];state.rendered=0;state.byId=new Map();state.activeId=null;
+    setAllMode(false);$('rows').innerHTML='<tr><td colspan="5" class="empty">此语言版本尚未导入消息。</td></tr>';
+    $('component-title').textContent='—';$('component-summary').textContent='';$('table-end').textContent='';refreshStatus();
+   }
+  }finally{$('language').value=state.language;$('major').value=String(state.major)}
  }
  async function loadComponent(name){
-  const data=await api('component/?name='+encodeURIComponent(name)+'&'+majorQuery());
+  const data=await api('component/?name='+encodeURIComponent(name)+'&'+scopeQuery());
+  showComponent(name,data);
+ }
+ function showComponent(name,data){
   state.component=name;state.activeId=null;setAllMode(name===ALL);
   state.records=data.records.map((r,index)=>({...r,forms:{...r.forms},_index:index,_dirty:false,_serial:0,_saving:null,_error:'',_saved:{status:r.stored_status,forms:{...r.forms},note:r.note}}));
   state.byId=new Map(state.records.map(r=>[r.id,r]));state.query='';state.filter='all';
   $('search').value='';$('filter').value='all';$('component-title').textContent=name===ALL?ALL_LABEL:name;
-  renderTable();applyWidths();local.set('pgnls-table-component',name);scroller().scrollTo(0,0);
+  renderTable();applyWidths();local.set(componentKey(),name);scroller().scrollTo(0,0);
  }
  function editCell(el,r){
   if(state.busy||!canEdit()||!el||el.tagName==='TEXTAREA')return;
   const form=el.dataset.edit,area=document.createElement('textarea');
-  area.dataset.edit=form;area.setAttribute('aria-label',el.getAttribute('aria-label'));area.value=r.forms[form];area.lang='zh-CN';
+  area.dataset.edit=form;area.setAttribute('aria-label',el.getAttribute('aria-label'));area.value=r.forms[form];area.lang=htmlLanguage();
   area.rows=Math.max(1,Math.min(18,area.value.split('\n').length));el.replaceWith(area);area.focus();
   area.setSelectionRange(area.value.length,area.value.length);
  }
@@ -424,13 +450,13 @@ async function start(root){
  function referenceHTML(ref){
   const sources=[...new Set(ref.sources.map(s=>s.component+(s.reviewer?' · '+s.reviewer:'')))];
   const en=ref.diff.map(d=>d.changed?'<mark>'+text(d.text)+'</mark>':text(d.text)).join('');
-  return '<article class="reference"><div class="reference-head"><b class="'+(ref.kind==='approved'?'human':'')+'">'+h(refKinds[ref.kind]||ref.kind)+'</b><span>'+(ref.exact?'英文相同':'相似 '+Math.round(ref.similarity*100)+'%')+'</span><span>'+h(sources.slice(0,3).join(' / '))+'</span></div><div class="reference-pair"><div>'+en+(ref.english_plural?'<br>复数：'+text(ref.english_plural):'')+'</div><div lang="zh-CN">'+text(ref.translation)+'</div></div></article>';
+  return '<article class="reference"><div class="reference-head"><b class="'+(ref.kind==='approved'?'human':'')+'">'+h(refKinds[ref.kind]||ref.kind)+'</b><span>'+(ref.exact?'英文相同':'相似 '+Math.round(ref.similarity*100)+'%')+'</span><span>'+h(sources.slice(0,3).join(' / '))+'</span></div><div class="reference-pair"><div>'+en+(ref.english_plural?'<br>复数：'+text(ref.english_plural):'')+'</div><div lang="'+htmlLanguage()+'">'+text(ref.translation)+'</div></div></article>';
  }
  function diffHTML(title,rows){
-  return '<div class="calibration-diff"><div class="detail-heading">'+h(title)+' <span class="nls-muted">红色删除 · 绿色新增 · “·” 表示空格</span></div>'+rows.map(r=>'<div class="diff-pair">'+(r.form!==''?'<div class="form-label">形式 '+h(r.form)+'</div>':'')+'<div><label>之前</label><pre lang="zh-CN">'+diffMarkup(r.before,'del')+'</pre></div><div><label>二次推荐</label><pre lang="zh-CN">'+diffMarkup(r.after,'ins')+'</pre></div></div>').join('')+'</div>';
+  return '<div class="calibration-diff"><div class="detail-heading">'+h(title)+' <span class="nls-muted">红色删除 · 绿色新增 · “·” 表示空格</span></div>'+rows.map(r=>'<div class="diff-pair">'+(r.form!==''?'<div class="form-label">形式 '+h(r.form)+'</div>':'')+'<div><label>之前</label><pre lang="'+htmlLanguage()+'">'+diffMarkup(r.before,'del')+'</pre></div><div><label>二次推荐</label><pre lang="'+htmlLanguage()+'">'+diffMarkup(r.after,'ins')+'</pre></div></div>').join('')+'</div>';
  }
  function recommendationHTML(r){
-  const pairs=Object.keys(r.suggested_forms).map(k=>{const ops=charDiff(r.forms[k]??'',r.suggested_forms[k]??'');return '<div class="diff-pair">'+(k!==''?'<div class="form-label">形式 '+h(k)+'</div>':'')+'<div><label>当前人工稿</label><pre lang="zh-CN">'+sideMarkup(ops,'a')+'</pre></div><div><label>二次推荐</label><pre lang="zh-CN">'+sideMarkup(ops,'b')+'</pre></div></div>'}).join('');
+  const pairs=Object.keys(r.suggested_forms).map(k=>{const ops=charDiff(r.forms[k]??'',r.suggested_forms[k]??'');return '<div class="diff-pair">'+(k!==''?'<div class="form-label">形式 '+h(k)+'</div>':'')+'<div><label>当前人工稿</label><pre lang="'+htmlLanguage()+'">'+sideMarkup(ops,'a')+'</pre></div><div><label>二次推荐</label><pre lang="'+htmlLanguage()+'">'+sideMarkup(ops,'b')+'</pre></div></div>'}).join('');
   return '<div class="recommendation"><div class="detail-heading">二次推荐与当前人工稿不同 <span class="nls-muted">表格中显示的是人工稿</span><span class="nls-spacer"></span>'+(canEdit()?'<button type="button" class="nls-btn nls-quiet" data-adopt>采用推荐</button>':'')+'</div>'+pairs+'</div>';
  }
  function savedInfo(r){
@@ -448,7 +474,7 @@ async function start(root){
   button.setAttribute('aria-expanded','true');button.classList.add('open');
   details.innerHTML='<td colspan="'+span()+'"><div class="row-details nls-muted">正在查询相近消息…</div></td>';
   try{
-   const data=await api('references/?id='+encodeURIComponent(r.id));
+   const data=await api('references/?id='+encodeURIComponent(r.id)+'&'+scopeQuery());
    if(!details.isConnected)return;
    details.innerHTML='<td colspan="'+span()+'">'+detailsHTML(r,data)+'</td>';
    details.querySelector('[data-note]').value=r.note;
@@ -483,7 +509,7 @@ async function start(root){
   if(r&&row.classList.contains('message-row')&&!e.target.closest('button,input,textarea,select,a,label')){rowCheckbox(r.id)?.focus({preventScroll:true})}
   const close=e.target.closest('[data-close]');if(close){document.getElementById(close.dataset.close).close();return}
  });
- $('export').addEventListener('click',e=>{e.preventDefault();void run(async()=>{await flush();const response=await fetch('/nls/api/export/?'+majorQuery(),{headers:{'Accept':'application/json'}});if(!response.ok)throw new Error('导出失败（HTTP '+response.status+'）');const url=URL.createObjectURL(await response.blob());const a=document.createElement('a');a.href=url;a.download='pg'+state.major+'-human-review.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('已导出 PG'+state.major+' 的审校状态')})});
+ $('export').addEventListener('click',e=>{e.preventDefault();void run(async()=>{await flush();const response=await fetch('/nls/api/export/?'+scopeQuery(),{headers:{'Accept':'application/json'}});if(!response.ok)throw new Error('导出失败（HTTP '+response.status+'）');const url=URL.createObjectURL(await response.blob());const a=document.createElement('a');a.href=url;a.download='pg'+state.major+'-'+state.language+'-human-review.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('已导出 '+$('language').selectedOptions[0].text+' PG'+state.major+' 的审校状态')})});
  root.addEventListener('focusin',e=>{const row=e.target.closest?.('tr.message-row');if(row)setActive(row.dataset.id)});
  root.addEventListener('input',e=>{
   const row=e.target.closest('tr[data-id]'),r=row&&state.byId.get(row.dataset.id);if(!r)return;
@@ -529,13 +555,8 @@ async function start(root){
    if(first){e.preventDefault();focusRow(first.dataset.id)}
   }
  });
- $('major').onchange=()=>{const major=parseInt($('major').value,10);if(!(major>0)||major===state.major)return;void run(async()=>{
-  await flush();state.undo=[];setMajor(major);
-  await bootstrap();
-  const previous=local.get('pgnls-table-component');
-  await loadComponent(previous===ALL||state.components.some(c=>c.name===previous)?previous:state.components[0].name);
-  toast('已切换到 PG'+major);
- })};
+ $('major').onchange=()=>{const major=parseInt($('major').value,10);if(!(major>0)||major===state.major)return;void run(()=>switchScope(state.language,major))};
+ $('language').onchange=()=>{const language=$('language').value;if(language===state.language)return;void run(()=>switchScope(language,state.major))};
  $('component-search').oninput=renderSidebar;
  $('search').oninput=()=>{clearTimeout(searchTimer);const q=$('search').value;searchTimer=setTimeout(()=>void run(async()=>{await flush();state.query=q;renderTable()}),250)};
  $('filter').onchange=()=>void run(async()=>{await flush();state.filter=$('filter').value;renderTable()});
@@ -544,5 +565,5 @@ async function start(root){
  $('submit-confirm').onclick=()=>void run(async()=>{await saveComponent(true);$('submit-dialog').close()});
  $('undo').onclick=()=>void run(undo);
  window.addEventListener('beforeunload',e=>{if(state.records.some(r=>r._dirty||r._saving)){e.preventDefault();e.returnValue=''}});
- await run(async()=>{setMajor(state.major);await bootstrap();if(!state.components.length){$('rows').innerHTML='<tr><td colspan="'+span()+'" class="empty">尚未导入任何消息。</td></tr>';$('component-title').textContent='—';return}const previous=local.get('pgnls-table-component');await loadComponent(previous===ALL||state.components.some(c=>c.name===previous)?previous:state.components[0].name)});
+ await run(()=>switchScope(state.language,state.major));
 }

@@ -15,7 +15,7 @@ _HEADER = ('Project-Id-Version: candidate-validation-only\n'
            'Report-Msgid-Bugs-To: \nPOT-Creation-Date: 2026-09-09 00:00+0000\n'
            'PO-Revision-Date: 2026-09-09 00:00+0000\n'
            'Last-Translator: isolated validation fixture\nLanguage-Team: isolated validation fixture\n'
-           'Language: zh_CN\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n'
+           'Language: {language}\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\n'
            'Content-Transfer-Encoding: 8bit\nPlural-Forms: {plural}\n')
 
 
@@ -30,7 +30,9 @@ def quote(text):
 
 def candidate_po(message, forms):
     plural = message.plural_forms.strip() if message.msgid_plural else ''
-    out = ['msgid ""', 'msgstr ' + quote(_HEADER.format(plural=plural or 'nplurals=1; plural=0;')), '']
+    language = getattr(message, 'language', 'zh_CN')
+    out = ['msgid ""', 'msgstr ' + quote(_HEADER.format(language=language,
+            plural=plural or 'nplurals=1; plural=0;')), '']
     flags = [f for f in message.flags if f != 'fuzzy']
     if flags:
         out.append('#, ' + ', '.join(flags))

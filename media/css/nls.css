@@ -272,3 +272,5 @@ body.nls-fullscreen { overflow: hidden; }
 
 /* ---- major version picker in the header ---- */
 #nls .nls-major-select { font-size: 13px; padding: 3px 8px; font-family: var(--nls-mono); }
+#nls .nls-language-select { font-size: 13px; padding: 3px 8px; }
+@media (max-width: 767px) { #nls .nls-head { flex-wrap: wrap; gap: 8px; } }

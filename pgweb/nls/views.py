@@ -59,7 +59,7 @@ def body(request):
     return data
 
 
-@queryparams()
+@queryparams('v', 'lang')
 @require_GET
 @nocache
 def index(request):
@@ -67,36 +67,43 @@ def index(request):
         'title': TITLE,
         'can_edit': service.can_edit(request.user),
         'login_url': service.LOGIN_URL,
-        'seo': {'title': TITLE + ' · pgsql.cc', 'description': 'PostgreSQL 简体中文消息翻译校准：按大版本逐条对照英文原文、既有译法与校准译文。'},
+        'seo': {'title': TITLE + ' · pgsql.cc', 'description': 'PostgreSQL 简体与繁体中文消息翻译校准：按语言和大版本逐条对照英文原文、既有译法与校准译文。'},
     })
     response['Cache-Control'] = 'no-store'
     response['X-Robots-Tag'] = ROBOTS
     return response
 
 
-@queryparams('major')
+@queryparams('major', 'lang')
 @require_GET
 @nocache
 @api_errors
 def api_bootstrap(request):
-    return json_response(service.bootstrap(request.user, service.checked_major(request.GET.get('major'))))
+    language = service.checked_language(request.GET.get('lang'))
+    major = service.checked_major(request.GET.get('major'), language)
+    return json_response(service.bootstrap(request.user, major, language))
 
 
-@queryparams('name', 'major')
+@queryparams('name', 'major', 'lang')
 @require_GET
 @gzip_page
 @api_errors
 def api_component(request):
-    major = service.checked_major(request.GET.get('major'))
-    return json_response(service.component_table(request.GET.get('name', ''), major))
+    language = service.checked_language(request.GET.get('lang'))
+    major = service.checked_major(request.GET.get('major'), language)
+    return json_response(service.component_table(request.GET.get('name', ''), major, language))
 
 
-@queryparams('id')
+@queryparams('id', 'major', 'lang')
 @require_GET
 @api_errors
 def api_references(request):
+    language = service.checked_language(request.GET.get('lang'))
+    query = service.Message.objects.filter(language=language)
+    if request.GET.get('major') is not None:
+        query = query.filter(pg_major=service.checked_major(request.GET['major'], language))
     try:
-        message = service.Message.objects.get(pk=request.GET.get('id', ''))
+        message = query.get(pk=request.GET.get('id', ''))
     except service.Message.DoesNotExist:
         raise ValidationError('未知消息。')
     return json_response(service.references(message))
@@ -114,16 +121,19 @@ def api_decide(request):
 @api_errors
 def api_save(request):
     data = body(request)
+    language = service.checked_language(data.get('language'))
     return json_response(service.decide_many(data.get('component', ''), data.get('decisions'), request.user,
                                              submit=data.get('submit') is True,
-                                             major=service.checked_major(data.get('major'))))
+                                             major=service.checked_major(data.get('major'), language), language=language))
 
 
-@queryparams('major')
+@queryparams('major', 'lang')
 @require_GET
 @reviewer_required
+@api_errors
 def api_export(request):
-    major = service.checked_major(request.GET.get('major'))
-    response = json_response(service.export(major))
-    response['Content-Disposition'] = 'attachment; filename="pg%d-human-review.json"' % major
+    language = service.checked_language(request.GET.get('lang'))
+    major = service.checked_major(request.GET.get('major'), language)
+    response = json_response(service.export(major, language))
+    response['Content-Disposition'] = 'attachment; filename="pg%d-%s-human-review.json"' % (major, language)
     return response

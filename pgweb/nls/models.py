@@ -9,6 +9,8 @@ from django.conf import settings
 from django.contrib.postgres.indexes import GistIndex
 from django.db import models
 
+from .languages import DEFAULT_LANGUAGE, LANGUAGES
+
 
 STATUSES = (
     ('pending', '待审'),
@@ -22,6 +24,8 @@ HISTORY_LIMIT = 40
 class Message(models.Model):
     # m_<sha256 of version, language, component, msgctxt, msgid, msgid_plural>: stable across imports.
     id = models.CharField(primary_key=True, max_length=72)
+    language = models.CharField(max_length=16, choices=LANGUAGES, default=DEFAULT_LANGUAGE,
+                                db_default=DEFAULT_LANGUAGE)
     pg_major = models.PositiveSmallIntegerField(default=19, db_index=True)   # PostgreSQL major version
     number = models.IntegerField(default=0)
     component = models.CharField(max_length=64, db_index=True)
@@ -56,13 +60,15 @@ class Message(models.Model):
 
     class Meta:
         db_table = 'nls_message'
-        ordering = ('component', 'number')
+        ordering = ('language', 'pg_major', 'component', 'number')
         permissions = [('review', '可以校对消息翻译')]
         indexes = [
-            models.Index(fields=('pg_major', 'component', 'status'), name='nls_message_major_comp_status'),
+            models.Index(fields=('language', 'pg_major', 'component', 'status'), name='nls_lang_major_comp_status'),
             models.Index(fields=('component', 'status'), name='nls_message_component_status'),
             GistIndex(fields=('msgid',), name='nls_message_msgid_trgm', opclasses=('gist_trgm_ops',)),
         ]
+        constraints = [models.CheckConstraint(condition=models.Q(language__in=[code for code, _ in LANGUAGES]),
+                                               name='nls_message_language_valid')]
 
     def __str__(self):
         return '{} · {}'.format(self.component, self.msgid[:60])

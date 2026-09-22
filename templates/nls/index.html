@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
 {% comment %}
-消息翻译 (/nls/): the PostgreSQL 19 zh_CN message review table. Everyone can
+消息翻译 (/nls/): PostgreSQL zh_CN / zh_TW message review by major version. Everyone can
 read; the page is editable only for users holding nls.review (data-can-edit).
 The CSRF token travels as a data attribute because the cookie is HttpOnly.
 {% endcomment %}
@@ -14,6 +14,9 @@ The CSRF token travels as a data attribute because the cookie is HttpOnly.
 <div id="nls" class="nls" data-csrf="{{ csrf_token }}" data-can-edit="{% if can_edit %}1{% else %}0{% endif %}" data-login="{{ login_url }}">
   <header class="nls-head">
     <h1>消息翻译</h1>
+    <select id="nls-language" class="nls-language-select" aria-label="选择消息语言">
+      <option value="zh_CN">简体中文</option><option value="zh_TW">繁體中文</option>
+    </select>
     <select id="nls-major" class="nls-major-select" aria-label="选择 PostgreSQL 大版本" hidden></select>
     <span class="nls-spacer"></span>
     <span id="nls-overall" class="nls-muted">加载中…</span>

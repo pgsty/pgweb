@@ -10,11 +10,14 @@ import json
 from django.db import transaction
 
 from .models import Message
+from .languages import DEFAULT_LANGUAGE, checked_language
+from .validate import ValidationError
 
 SCHEMA = 'pgnls-message-bundle-v1'
-SOURCE_FIELDS = ('number', 'component', 'msgid', 'msgid_plural', 'msgctxt', 'flags', 'plural_forms',
+SOURCE_FIELDS = ('language', 'number', 'component', 'msgid', 'msgid_plural', 'msgctxt', 'flags', 'plural_forms',
                  'original_forms', 'suggested_forms', 'suggestion_source', 'calibration', 'old_assessment',
                  'assessment_reason', 'context', 'plural_issue', 'revision', 'workbook_sha256', 'pg_major')
+IDENTITY_FIELDS = ('language', 'pg_major', 'component', 'msgctxt', 'msgid', 'msgid_plural')
 
 
 class BundleError(ValueError):
@@ -39,6 +42,12 @@ def read(path):
 
 def source_values(row, header):
     values = {k: row.get(k) for k in SOURCE_FIELDS}
+    try:
+        values['language'] = checked_language(header.get('language', DEFAULT_LANGUAGE))
+        if row.get('language', values['language']) != values['language']:
+            raise BundleError('Row {} has a different language from the bundle header.'.format(row.get('id')))
+    except ValidationError as exc:
+        raise BundleError(str(exc)) from exc
     values['msgid_plural'] = values['msgid_plural'] or ''
     values['flags'] = values['flags'] or []
     values['plural_forms'] = values['plural_forms'] or ''
@@ -76,11 +85,28 @@ def human_values(row):
 def load(path, check=False):
     """Returns {'new', 'updated', 'kept', 'total'}; `kept` rows had local review state that was preserved."""
     report = {'new': 0, 'updated': 0, 'kept': 0, 'total': 0}
-    existing = {m.id: m for m in Message.objects.all()}
+    # Read only the affected IDs, and lock their review state before refreshing
+    # source fields. A second language must never rebind an existing message ID.
+    entries = list(read(path))
+    ids = [row.get('id') for _, row in entries]
+    if any(not isinstance(mid, str) or not mid for mid in ids) or len(set(ids)) != len(ids):
+        raise BundleError('The bundle contains missing or duplicate message IDs.')
+    sources = [source_values(row, header) for header, row in entries]
+    identities = {tuple(source[key] for key in IDENTITY_FIELDS): mid for source, mid in zip(sources, ids)}
+    if len(identities) != len(ids):
+        raise BundleError('The bundle contains duplicate source messages under different IDs.')
+    # PG14–18 have historical IDs. Reject a new ID for the same source instead
+    # of duplicating the message or disconnecting its existing review history.
+    for values in Message.objects.filter(language__in={source['language'] for source in sources},
+                                         pg_major__in={source['pg_major'] for source in sources}).values_list('id', *IDENTITY_FIELDS):
+        incoming = identities.get(values[1:])
+        if incoming is not None and incoming != values[0]:
+            raise BundleError('Source message {} already exists as {}; preserve its existing ID.'.format(incoming, values[0]))
+    existing = {m.id: m for m in Message.objects.select_for_update().filter(pk__in=ids)}
     reviewers = {}
-    for header, row in read(path):
+    created, updated, followed = [], [], []
+    for (header, row), source in zip(entries, sources):
         report['total'] += 1
-        source = source_values(row, header)
         human, reviewer = human_values(row)
         message = existing.get(row['id'])
         if message is None:
@@ -89,19 +115,36 @@ def load(path, check=False):
                 message.history = [{'version': human['version'], 'status': human['status'], 'forms': human['forms'],
                                     'note': human['note'], 'reviewer': reviewer, 'updated_at': row['human'].get('updated_at')}]
             report['new'] += 1
+            created.append(message)
         else:
+            if any(getattr(message, key) != source[key] for key in
+                   ('language', 'pg_major', 'component', 'msgid', 'msgctxt', 'msgid_plural')):
+                raise BundleError('Message ID {} already belongs to another language or source message.'.format(row['id']))
+            changed = any(getattr(message, key) != value for key, value in source.items())
+            follows = message.version == 0
+            if follows:
+                changed = changed or any(getattr(message, key) != value for key, value in human.items())
             for key, value in source.items():
                 setattr(message, key, value)
             if message.version == 0:
                 for key, value in human.items():
                     setattr(message, key, value)
                 report['updated'] += 1
+                if changed:
+                    followed.append(message)
             else:
                 report['kept'] += 1
+                if changed:
+                    updated.append(message)
         if reviewer and message.version and message.updated_by_id is None:
             reviewers[message.id] = reviewer
-        if not check:
-            message.save()
+    if not check:
+        Message.objects.bulk_create(created, batch_size=500)
+        # Keep reviewed rows' human columns out of the update statement entirely.
+        for messages, fields in ((updated, SOURCE_FIELDS), (followed, SOURCE_FIELDS +
+                                  ('status', 'forms', 'note', 'version', 'source_revision', 'updated_at'))):
+            for offset in range(0, len(messages), 200):
+                Message.objects.bulk_update(messages[offset:offset + 200], fields, batch_size=200)
     if not check and reviewers:
         from django.contrib.auth.models import User
         users = {u.username: u for u in User.objects.filter(username__in=set(reviewers.values()))}
