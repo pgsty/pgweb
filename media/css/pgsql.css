@@ -3402,6 +3402,48 @@ button.pg-script-copy-btn.pg-code__btn {
   line-height: 1.6;
 }
 
+/* Manual tables. Chinese text may break between any two characters, so a
+   squeezed header read "部分模/式": keep header words whole. Function and
+   catalog reference tables span the text column, as the English pages
+   effectively do with their longer descriptions, and a short side column
+   (部分模式 on the aggregate page) takes only the width its label needs. */
+#docContent table.table th {
+  word-break: keep-all;
+}
+
+#docContent table.table:has(> thead > tr > th:is(.func_table_entry, .catalog_table_entry)) {
+  width: 100%;
+}
+
+#docContent table.table:has(> thead > tr > th.func_table_entry) > thead > tr > th:not(.func_table_entry) {
+  width: 1%;
+  white-space: nowrap;
+}
+
+/* Code inside note / tip / warning / caution / important boxes. code.js
+   leaves a one-line listing unframed (pre.pg-code-line) so it reads as a
+   line of the note, wrapping inside the box. Longer listings keep the
+   frame, but upstream's `.note pre { padding: 0 !important }` glued their
+   text to its edges. */
+pre.pg-code-line {
+  margin: 0 0 1rem;
+  padding: 0 !important;
+  border: 0;
+  border-radius: 0;
+  background: transparent !important;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  overflow: visible;
+}
+
+pre.pg-code-line:last-child {
+  margin-bottom: 0;
+}
+
+#docContent :is(.note, .tip, .warning, .caution, .important) .pg-code > pre {
+  padding: 12px 48px 12px 14px !important;
+}
+
 /* Manual navigation rows on phones: the five cells no longer share fixed
    10% widths, so the link labels stay on one line and the chapter title
    takes what is left. */

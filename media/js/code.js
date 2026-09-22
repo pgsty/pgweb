@@ -185,6 +185,15 @@ function watch(pre) {
   mo.observe(pre, { childList: true, characterData: true, subtree: true });
 }
 
+/* A one-line listing inside a manual note, tip, warning, caution or
+   important box belongs to the sentence around it: it is highlighted but
+   gets neither the frame nor the copy button (pre.pg-code-line). */
+const ADMONITION = '.note, .tip, .warning, .caution, .important';
+
+function isLineListing(pre) {
+  return !!pre.closest(ADMONITION) && !pre.textContent.trim().includes('\n');
+}
+
 /* Enhance every code block under `root`. Also exposed as window.pgEnhanceCode
    for content that arrives after load (search previews). */
 export function enhance(root = document) {
@@ -192,6 +201,11 @@ export function enhance(root = document) {
   root.querySelectorAll('pre').forEach((pre) => {
     if (pre.closest('.pg-script-container')) return;
     if (!pre.closest('.pg-page, #docContent, .pg-prose')) return;
+    if (isLineListing(pre)) {
+      pre.classList.add('pg-code-line');
+      highlight(pre);
+      return;
+    }
     enhancePre(pre);
   });
 }
