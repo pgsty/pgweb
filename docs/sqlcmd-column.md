@@ -223,6 +223,8 @@ baseline: bool, baseline_groups
 
 ## 7. 维护
 
+发布完成后执行[百科数据发布验收](wiki-data-deployment.md#发布检查)，确认 PG 10–20 数据、版本汇总和检索条目齐全。
+
 ```
 .venv/bin/python manage.py migrate wiki                                            # wiki.0005_sqlcmd
 .venv/bin/python tools/wiki/sync_sqlcmd.py --export /tmp/sqlcmd-YYYYMMDD.json.gz   # 本地导出（读本地手册；二期加 --fetch）

@@ -284,6 +284,8 @@ baseline_groups: 索引页 groups 形状，只含 9.0 存在的参数
 
 ## 7. 维护
 
+发布完成后执行[百科数据发布验收](wiki-data-deployment.md#发布检查)，确认 PG 10–20 数据、版本汇总和检索条目齐全。
+
 ```
 .venv/bin/python manage.py migrate wiki
 .venv/bin/python tools/wiki/sync_guc.py --export /tmp/guc-YYYYMMDD.json.gz      # 本地导出（读 guc 仓库 + 本地手册）

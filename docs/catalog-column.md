@@ -278,6 +278,8 @@ CSP 禁内联样式，状态一律走 class。亮暗两套。脚本追加到 `me
 
 ## 7. 维护
 
+发布完成后执行[百科数据发布验收](wiki-data-deployment.md#发布检查)，确认 PG 10–20 数据、版本汇总和检索条目齐全。
+
 ```
 .venv/bin/python tools/wiki/sync_catalog.py --export /tmp/catalog-YYYYMMDD.json.gz   # 本地导出（读 cat 仓库 + 本地手册）
 .venv/bin/python tools/wiki/sync_catalog.py --input /tmp/catalog-….json.gz --write   # 写本地

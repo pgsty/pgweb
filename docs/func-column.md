@@ -310,6 +310,8 @@ CSP 禁内联样式与脚本；站内 legacy CSS（`.btn` 宽度、`code` 的 `!
 
 ## 7. 维护
 
+发布完成后执行[百科数据发布验收](wiki-data-deployment.md#发布检查)，确认 PG 10–20 数据、版本汇总和检索条目齐全。
+
 ```
 .venv/bin/python manage.py migrate wiki                                   # wiki.0006_func
 .venv/bin/python tools/wiki/sync_func.py --export /tmp/func-YYYYMMDD.json.gz        # 本地导出（读本地手册；加 --fetch 抓 9.x）

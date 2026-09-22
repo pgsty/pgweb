@@ -189,6 +189,8 @@ baseline: bool（9.6）, na: bool（9.0 – 9.5，页面只放一段说明并链
 
 ## 8. 维护
 
+发布完成后执行[百科数据发布验收](wiki-data-deployment.md#发布检查)，确认 PG 10–20 数据、版本汇总和检索条目齐全。
+
 ```
 .venv/bin/python tools/wiki/sync_waitevent.py --export /tmp/waitevent-YYYYMMDD.json.gz      # 本地导出（读图谱 + 本地手册 + 联网缓存）
 .venv/bin/python tools/wiki/sync_waitevent.py --input /tmp/waitevent-….json.gz --write      # 写本地
