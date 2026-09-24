@@ -1,0 +1,411 @@
+{
+  "date": "2026-09-22",
+  "origin": "PGSQL.CC direct editorial collection; cutoff 2026-09-24 07:33:29 Asia/Shanghai; window 2026-09-10–2026-09-24; pgnexus #265–278, Planet, official sources and active search",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 减少备用库回放的多余清理锁",
+      "summary": "PostgreSQL 已合入一项备用库回放修复：只冻结元组或更新可见性映射的 WAL 记录，不再无条件申请清理锁。旧行为会等待其他进程释放缓冲区引用，即使记录并未移动或删除元组，也可能拖慢恢复并取消备用库上的查询。补丁把清理锁限定到真正执行页面修剪的记录，提交注明回补至 PostgreSQL 17；可见性映射的额外受影响路径从 19 起出现。这有助于减少分析查询与恢复进程之间不必要的冲突，已合入的修复仍需等待相应版本发布。",
+      "url": "https://github.com/postgres/postgres/commit/07c73f45063f6fcdc7f460aec84396ae4e0f71c5",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "复制",
+        "修复"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_upgrade 增加系统类型数组的升级保护",
+      "summary": "PostgreSQL 开发分支为 pg_upgrade 增加数据类型检查，阻止含有特定系统类型数组的用户表直接升级。数组值保存元素类型的 OID，而部分系统类型及 information_schema 域的标识可能跨大版本变化；升级工具不重写用户数据，旧值随后可能报类型查找失败，甚至被按错误类型解读。新检查提前列出问题列，要求删除或转换类型后重试。提交说明该场景较少见，暂未回补；这是升级前的数据完整性保护，并非对已升级数据的自动修复。",
+      "url": "https://github.com/postgres/postgres/commit/77f54eb07488341025073a370f6e381a6ee05e04",
+      "author": "John Naylor",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "数据完整性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "十年逻辑复制演进如何支撑中心库与工作库",
+      "summary": "Dimitri Fontaine 用可重现的中心库与工作库示例，梳理 PostgreSQL 原生逻辑复制逐版消除的应用限制：中心库向各工作库分发必要的参考数据，工作库再把事件汇总回来。文章把行列过滤、复制标识、大事务流式传输及防止复制循环放到同一架构中，说明过滤列与复制标识必须配合，分散写入还要单独设计全局唯一键。示例同时划清原生功能边界：DDL 仍需另行迁移，冲突记录也不等于自动解决冲突。涉及 19 的序列复制明确属于测试版能力。",
+      "url": "https://tapoueh.org/blog/2026/09/ten-years-of-postgres-logical-replication/",
+      "author": "Dimitri Fontaine",
+      "source": "Tapoueh",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "架构"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_stat_statements 淘汰机制会抹去低频操作",
+      "summary": "一次性执行的 SQL 即使成功，也未必长期留在 pg_stat_statements 中。Mikhail Shytsko 的实验展示了大量不同查询形状挤出低频写操作的过程，并解释统计视图按角色、数据库与查询标识等聚合，无法仅凭应用名区分共用账号的调用方。默认只追踪顶层语句，函数内语句与失败操作还存在其他可见性边界。排障时应观察淘汰计数、为调用方分配角色，并结合带身份信息的日志；扩大统计容量可以缓解淘汰，却不能把聚合统计变成持久审计记录。",
+      "url": "https://seedfa.st/blog/pg-stat-statements-missing-queries",
+      "author": "Mikhail Shytsko",
+      "source": "Seedfast",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "排障"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Kafka 大消费组可能卡在元数据大小上限",
+      "summary": "AWS 分析了大型 Kafka 消费组反复再均衡的一条隐蔽路径：协调器写入内部位点主题的组元数据，可能随成员、订阅与名称长度增长，超过记录大小限制。提高业务消息上限并不能直接解决这个内部主题的问题，还必须协调主题记录上限与副本拉取上限，避免复制落后。文章同时讨论拆分消费组、限制自动扩容规模和缩短命名带来的取舍。调大限额会增加代理处理再均衡时的堆内存压力，因此需要连同垃圾回收、复制健康与消费进度一起验证。",
+      "url": "https://aws.amazon.com/blogs/big-data/best-practices-for-scaling-large-consumer-groups-on-amazon-msk/",
+      "author": "Pallavi Jha、Sunil Kumar Patro",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Kafka",
+        "运维",
+        "流处理"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 为缓存规则加入 Vary 控制",
+      "summary": "同一 URL 按语言或格式返回不同内容时，缓存既要避免串用响应，也要防止请求头的细微差异制造大量冷缓存。Cloudflare 将 Vary 支持加入所有套餐的缓存规则，允许按请求头选择归一化、原值匹配或绕过缓存，并把归一化后的部分协商头传给源站，保持缓存选择与源站行为一致。源站仍须稳定声明正确的 Vary 字段；个性化或高基数请求头适合绕过缓存，Vary: * 始终绕过。修改配置不会自动清理旧缓存，发布时仍需验证各变体并按需清除内容。",
+      "url": "https://blog.cloudflare.com/vary-support/",
+      "author": "Alex Krivit",
+      "source": "Cloudflare Blog",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "缓存",
+        "HTTP"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "谓词锁升级阈值要与共享内存预算一起调整",
+      "summary": "提高锁粒度精度可减少误报的可串行化冲突，却会更快消耗固定锁表；仅提高页面阈值还可能提前触发表级升级。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_pred_locks_per_page-and-max_pred_locks_per_relation/",
+      "author": "",
+      "source": "The Build",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务",
+        "参数"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "多租户 PostgreSQL 设计要预演单租户恢复",
+      "summary": "Now-Next 实测指出，逐租户模式会放大备份锁表需求，共享表则须自行覆盖租户导出与外键索引。",
+      "url": "https://now-next.nl/en/insights/multi-tenant-saas-on-postgresql/",
+      "author": "",
+      "source": "Now-Next",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "多租户",
+        "备份"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PlanetScale 在计划切换前检查逻辑复制槽",
+      "summary": "计划切换前核验故障转移槽并等待就绪；配置不合格先阻止切换并告警，宽限期后仍会放行，运维需及时修正。",
+      "url": "https://planetscale.com/blog/how-to-make-a-replication-slot-survive-a-cutover",
+      "author": "",
+      "source": "PlanetScale",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "高可用"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Moeve 把 dbt 执行与数据湖编排解耦",
+      "summary": "案例用集中启动器与事件总线统一运行，并按输入分区生成合并条件，减少 Athena 扫描量与历史重跑差异。",
+      "url": "https://aws.amazon.com/blogs/big-data/how-moeve-standardized-dbt-runs-across-data-lakes-with-amazon-athena/",
+      "author": "",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "dbt",
+        "数据湖"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes 1.37 默认记录 PVC 闲置状态",
+      "summary": "Unused 条件及状态转换时间可定位闲置卷；尚未调度的 Pod 仍算使用者，已结束的 Pod 则不再占用。",
+      "url": "https://kubernetes.io/blog/2026/09/21/kubernetes-v1-37-pvc-last-used-time/",
+      "author": "",
+      "source": "Kubernetes",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "存储"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes 试验按 Pod 分配 NUMA 资源",
+      "summary": "1.37 的 Beta 功能默认关闭，允许主容器独占资源、边车共享 Pod 内资源池，无需让每个容器独占核心。",
+      "url": "https://kubernetes.io/blog/2026/09/15/kubernetes-v1-37-pod-level-resource-managers-beta/",
+      "author": "",
+      "source": "Kubernetes",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "资源管理",
+        "性能"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Worker Previews 为每次改动提供隔离环境",
+      "summary": "代码、配置、观测及 Durable Objects 状态按预览隔离；D1、R2、KV 等账号级资源仍需绑定独立实例。",
+      "url": "https://blog.cloudflare.com/worker-previews/",
+      "author": "",
+      "source": "Cloudflare Blog",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "测试",
+        "部署"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "TOLAP 在工具调用边界实施对象级授权",
+      "summary": "AWS 开源方案把授权条件用于工具可访问的数据对象，弥补仅允许调用工具却未限制其读取哪些数据的缺口。",
+      "url": "https://aws.amazon.com/blogs/opensource/introducing-tolap-object-level-access-control-for-ai-agent-tools/",
+      "author": "",
+      "source": "AWS Open Source Blog",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "授权",
+        "开源"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pgsql-test 用真实数据库事务测试 RLS 角色",
+      "summary": "",
+      "url": "https://pgsql.cc/about/news/pgsql-test-postgres-3380/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Vondra 建议拆小补丁并标明实验性缺口",
+      "summary": "",
+      "url": "https://vondra.me/posts/being-considerate-of-other-peoples-time/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Neon 新分支继承文件触发器并默认停用",
+      "summary": "",
+      "url": "https://neon.com/blog/when-a-file-is-uploaded-run-the-job-on-neon",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "应用开发"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Neon Functions 支持分支内独立的自定义域名",
+      "summary": "",
+      "url": "https://neon.com/blog/custom-domains-for-neon-functions",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "应用开发"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Kubernetes 1.37 默认启用原生直方图",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/09/11/kubernetes-v1-37-native-histograms-beta/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "监控"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare Access 可自动清理闲置服务令牌",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-22-service-token-inactivity-cleanup/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 基础设施访问策略支持目标标签",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-15-infrastructure-target-tags/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "授权"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 日志投递可排除已识别的 DDoS 流量",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-18-filter-ddos-attack-traffic/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "日志"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare Workflows 可订阅执行事件流",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-15-instance-event-subscriptions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "工作流"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "CodeQL 计划停止分发全平台二进制包",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-22-deprecation-notice-all-platform-codeql-bundle/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全工具"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Copilot CLI 为 C++ 建立可复用的全库符号索引",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-22-faster-c-code-intelligence-with-whole-codebase-indexing/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare MCP 门户可连接私网工具服务",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-22-private-mcp-servers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "网络"
+      ],
+      "position": 26
+    }
+  ]
+}
