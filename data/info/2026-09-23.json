@@ -1,0 +1,411 @@
+{
+  "date": "2026-09-23",
+  "origin": "PGSQL.CC independent editorial collection; cutoff 2026-09-23T23:33:29Z; official sources, Planet RSS, project releases; 14-day supplementary scan",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 的 IO 指标解释预取效果",
+      "summary": "Franck Pachot 用执行计划示例解析 PostgreSQL 19 测试版的 EXPLAIN IO 选项：传统 BUFFERS 统计缓存命中与读取块数，新指标则展示预取深度、实际 I/O 请求数量、请求大小、并发度及未及时完成的读取次数。示例将约 2.9 万次块读取合并为 1825 次请求，扫描只在其中 7 次遭遇尚未完成的 I/O。分析慢扫描时应结合这些指标判断预取是否隐藏延迟，不能把等待次数直接当作等待时长。",
+      "url": "https://dev.to/franckpachot/explain-analyze-io-in-postgresql-19-igh",
+      "author": "Franck Pachot",
+      "source": "Franck Pachot / DEV",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "执行计划"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PgBouncer 1.26.0 修复三项拒绝服务漏洞",
+      "summary": "PgBouncer 1.26.0 修复三项拒绝服务漏洞：未认证客户端可触发进程崩溃或缓冲区增长死循环，恶意 PostgreSQL 服务端则可通过过大的 SCRAM 迭代次数拖住登录。新版本还默认跟踪搜索路径与事务只读状态，新增空闲连接池超时，并允许按用户和数据库设置查询排队超时。已弃用的在线重启选项 -R 被移除，维护连接池的团队需要同时核对认证风险、会话状态与升级时的重启方式。",
+      "url": "https://www.pgbouncer.org/2026/09/pgbouncer-1-26-0",
+      "author": "PgBouncer 项目组",
+      "source": "PgBouncer",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "连接池"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "托管 PostgreSQL 的提权窗口暴露隔离缺口",
+      "summary": "安全研究者 Mehmet Ince 发布系列第二篇，称已向多家托管 PostgreSQL 厂商报告 76 项安全加固扩展漏洞。文章聚焦临时借用超级用户身份时的校验缺口：对象先按名称通过检查，切换身份后再次解析，却可能执行另一个对象；单纯屏蔽函数名也存在绕过路径。研究者称 Supabase 已修复其中四项问题。服务商审计需要覆盖对象身份、权限切换和底层危险能力，而不能只核对一份函数黑名单。",
+      "url": "https://mehmetince.net/part-2-6-breaking-the-superuser-guardrails-attacking-security-hardening-extensions-systemic-risks-in-the-managed-postgresql-industry/",
+      "author": "Mehmet Ince",
+      "source": "Mehmet Ince",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "托管数据库"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "CloudNativePG 1.30.1 修复切换与租约竞态",
+      "summary": "CloudNativePG 1.30.1 集中修复高可用控制流程：故障切换不再被已隔离实例拖住，待完成的切换持续推进，并在提升前重新检查仲裁安全；主节点启动 PostgreSQL 前必须先持有主租约，避免重启后过早接受写入。版本还修复扩展路径校验绕过，以及插件恢复将 WAL 写入错误卷导致空间耗尽的问题，同时补正备份与监控行为。同日发布的 1.29.3 是该分支最后维护版本，使用者需要安排迁往受支持分支。",
+      "url": "https://github.com/cloudnative-pg/cloudnative-pg/releases/tag/v1.30.1",
+      "author": "CloudNativePG 项目组",
+      "source": "CloudNativePG",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "Kubernetes",
+        "安全"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pgBackRest 实测揭示主备切换后的归档断点",
+      "summary": "Stefan Fercot 复现了备库在关闭归档时被提升的场景：即使让下游备库归档并成功生成新备份，也无法补回切换附近缺失的 WAL 和时间线历史文件，旧备份仍可能无法跨越该断点恢复。关闭归档模式检查并不会放行主库的归档关闭状态，修改工具绕过检查也不能证明恢复链完整。实验建议提前为候选主库启用归档并配置归档命令；若已进入错误配置，应通过计划重启或受控切换恢复，再验证跨时间线恢复能力。",
+      "url": "https://pgstef.github.io/2026/09/23/pgbackrest_and_postgresql_failover_why_archive_mode_matters.html",
+      "author": "Stefan Fercot",
+      "source": "pgstef.github.io",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "高可用",
+        "WAL"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "FireTV 用垂直分区与并行读取重做 DynamoDB 模型",
+      "summary": "FireTV 的观看进度原先把整个用户档案压成一个 DynamoDB 条目，档案增长后既逼近 400 KB 上限，也让每次小更新承担整块写入成本。团队改为按内容拆分小条目，再在排序键前加入哈希，将完整档案拆成多个范围并行读取，避开大结果集的串行分页。厂商称写成本下降 97%，平均读取约 8 毫秒；代价是读取字节增多，按内容提供方等条件查询还需额外索引。迁移通过双写、影子读取与全量比对逐步切换。",
+      "url": "https://aws.amazon.com/blogs/database/megabytes-in-milliseconds-how-firetv-uses-parallel-queries-and-vertical-partitioning-to-serve-millions-of-customers-in-amazon-dynamodb/",
+      "author": "Mohit Agarwal、John Terhune",
+      "source": "AWS Database Blog",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DynamoDB",
+        "数据模型",
+        "性能"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修复 MERGE 并发删除时的错误分支",
+      "summary": "目标行并发删除后，缺少源行的操作不应转入插入分支；修复已回补至引入该功能的 PostgreSQL 17。",
+      "url": "https://github.com/postgres/postgres/commit/85f55534e80b633bdb7bfc91eaa5793021d6bf66",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "正确性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修复订阅刷新与序列同步的竞态",
+      "summary": "同步进程会在订阅锁内确认序列仍被订阅，避免并发移除序列导致整批回滚，甚至触发订阅禁用；修复回补至 19。",
+      "url": "https://github.com/postgres/postgres/commit/dca73f7dd03ddfc89a88019659fc0161e0427a8c",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "TID 范围扫描修复可滚动游标提前结束的问题",
+      "summary": "反向跨页读取曾错误递减剩余块数，可能过早结束扫描；这项结果正确性修复已回补至 PostgreSQL 14。",
+      "url": "https://github.com/postgres/postgres/commit/374522aa63af1187c15dd21db0b2c988b55c9a3a",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "正确性"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Vitess 25 将收紧故障切换的候选历史检查",
+      "summary": "官方详解待发布版本的 GTID 候选筛选与脑裂恢复：只竞争领先历史，选择冲突分支须由运维显式确认且会丢失另一支事务。",
+      "url": "https://vitess.io/blog/2026-09-23-hardening-emergency-reparent-shard/",
+      "author": "",
+      "source": "Vitess",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "高可用"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "EMR 支持通过 Spark Connect 远程调试 PySpark",
+      "summary": "本地 Python 可调用集群的 DataFrame 与 SQL 引擎；首版不支持 RDD、多主节点及 Lake Formation 细粒度授权。",
+      "url": "https://aws.amazon.com/blogs/big-data/announcing-spark-connect-on-amazon-emr-on-ec2-interactive-pyspark-anywhere/",
+      "author": "",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Spark",
+        "数据工程"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "NATS 2.15 重做 JetStream 迁移与扩缩容控制",
+      "summary": "新的期望状态协调引擎支持取消迁移和疏散节点，同时引入每流默认 1000 个消费者上限，现有消费者不受删除影响。",
+      "url": "https://github.com/nats-io/nats-server/releases/tag/v2.15.0",
+      "author": "",
+      "source": "NATS",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "消息队列"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "VillageSQL 将 MCP 服务嵌入 MySQL 进程",
+      "summary": "预览扩展用服务器变量控制只读查询、模式和表白名单，默认隐藏写工具，实际权限边界仍由专用数据库账户的授权决定。",
+      "url": "https://villagesql.com/blog/mcp/",
+      "author": "",
+      "source": "VillageSQL",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MySQL",
+        "MCP"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 拆分代码与评论布局以渲染百万行差异",
+      "summary": "工程团队将确定高度的代码行与动态评论分开索引，按视口延迟测量并保留滚动锚点，避免大规模审查时跳动和重复计算。",
+      "url": "https://github.blog/engineering/user-experience/rendering-huge-pull-requests-in-the-github-copilot-app/",
+      "author": "",
+      "source": "GitHub Engineering",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具",
+        "性能"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "开发分支的 amcheck 新增可见性标志一致性检查",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/5d84c76021cb5a7591be848cd0004b8fd9453d1c",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "10 月 PG 开发工作坊讲解 pg_plan_advice",
+      "summary": "",
+      "url": "https://rhaas.blogspot.com/2026/09/hacking-workshop-for-october-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "活动"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "VillageSQL 可将 DuckDB 文件查询结果连接回 MySQL",
+      "summary": "",
+      "url": "https://villagesql.com/blog/duckdb/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker 域级 VPC 不会自动迁移既有项目",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/configure-domain-level-vpc-networking-in-amazon-sagemaker-unified-studio/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Prometheus 候选版修复 Agent 模式的 WAL 损坏",
+      "summary": "",
+      "url": "https://github.com/prometheus/prometheus/releases/tag/v3.15.0-rc.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "监控"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Airflow 3.3.2 修复跨 DAG 回填标识泄露",
+      "summary": "",
+      "url": "https://github.com/apache/airflow/releases/tag/3.3.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据工程",
+        "安全"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "gRPC-Go 1.84 禁止 STS 换令牌时跟随重定向",
+      "summary": "",
+      "url": "https://github.com/grpc/grpc-go/releases/tag/v1.84.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Actions 移除 Node 20 运行时与临时豁免",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-23-node-20-is-no-longer-available-in-github-actions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "持续集成"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 新 RSA 密钥 10 月起至少需 3072 位",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-22-security-improvements-for-ssh/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 桌面端公测按项目限制本地命令权限",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-23-local-sandboxing-in-the-github-copilot-app/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "沙箱"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 桌面端支持企业统一导出 OTel 追踪",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-22-opentelemetry-in-the-github-copilot-app/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 代码审查可按企业配置默认审查强度",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-23-copilot-code-review-more-ways-to-request-and-configure-reviews/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}
