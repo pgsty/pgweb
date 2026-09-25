@@ -43,7 +43,7 @@ DOC_FILE = 'monitoring-stats.html'
 DEVEL_MAJOR = str(DEVEL_MAJOR_VERSION)
 DEVEL_TREE = 0
 
-# 18 个大版本。9.0 – 9.5 没有等待事件机制；状态与 position 跟 wiki_catalog_version 同一套值。
+# 18 个大版本。9.0 – 9.5 没有等待事件机制；状态与 position 跟 catalog_version 同一套值。
 # (major, label, status, support_status, doc_slug, has_wait_events)
 VERSION_SPEC = (
     ('9.0', '9.0', 'historical', 'end-of-life', '9.0', False),
