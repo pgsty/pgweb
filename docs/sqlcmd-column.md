@@ -28,7 +28,7 @@
 与 `DocPage` 的收录情况现算并缓存（形状与 `guc.versions()` 一致）。
 
 ```python
-class SqlCommand(models.Model):             # db_table = 'wiki_sqlcmd'，约 190 行
+class SqlCommand(models.Model):             # db_table = 'sqlcmd'，约 190 行
     slug = CharField(max_length=64, primary_key=True)   # 'create-table'
     name = TextField()                        # 'CREATE TABLE'（最新存在版本的写法）
     aliases = ArrayField(TextField())         # 手册文件名形式与曾用 slug：['createtable', 'wait-for']
@@ -258,3 +258,6 @@ PGWEB_TEST_DB=test_pgweb_sql .venv/bin/python manage.py test pgweb.wiki pgweb.se
 - 9.0 – 9.6 英文层（`--fetch`），索引与版本条自动延伸到 9.0，措辞上基线改为 9.0。
 - 编辑分析 `editorial`：每条命令一段中文摘要、用法要点、常见问题、精选示例；由批次文件 `data/sqlcmd/<slug>.json` 导入，形状在实现时再定，表不改。
 - 与 SQL 状态码、配置参数、系统目录的互链：正文里出现的 GUC 名、pg_* 关系名、SQLSTATE 自动链到对应栏目。
+
+
+2026-09-25 模型整理：实体表增加 `content_hash`，按实际落库内容判断是否更新；`source_rev` 和导出时间不参与内容比较，未变更的实体保留 `imported_at`。表名与版本表已去掉 `wiki_` 前缀，Python 模型、应用标签、命令、URL 和检索身份保持原约定。全局契约与回退步骤见 [百科模型](encyclopedia-design.md) 和 [模型整理实施记录](reference-model-rollout.md)。

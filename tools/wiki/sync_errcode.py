@@ -44,7 +44,7 @@ def main():
             snapshot = json.loads(gzip.decompress(payload))
         else:
             snapshot = importer.export_snapshot(args.root)
-        importer.validate(snapshot)
+        snapshot = importer.prepare(snapshot)
 
         if args.export:
             args.export.write_bytes(blob(snapshot))
@@ -71,7 +71,7 @@ def main():
 
         print(json.dumps(report, ensure_ascii=False, indent=2, default=str))
         if args.write:
-            print('别忘了重建检索：.venv/bin/python manage.py index_docs --wiki', file=sys.stderr)
+            print('别忘了重建检索：.venv/bin/python manage.py index_docs --errcodes', file=sys.stderr)
         return 0
     except (OSError, ValueError, DatabaseError) as exc:
         print('错误码同步失败：{}'.format(exc), file=sys.stderr)

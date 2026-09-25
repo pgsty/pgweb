@@ -18,6 +18,7 @@ from pgweb.docs.models import DocPage
 
 from .catalog_importer import text_of
 from .guc_importer import DOC_ATTRS, DOC_TAGS, collapse, rewrite_href
+from .snapshot import item_hash, hashed_defaults
 from .models import (SECTION_KEYS, SQLCMD_GROUP_ORDER, SqlCommand,
                      sqlcmd_group_of, sqlcmd_slug, sqlcmd_split)
 from .sqlcmd_common import (compare, major_of, section_text, sections_at, version_rows)
@@ -176,7 +177,7 @@ def export_snapshot(fetch=False, cache_dir=CACHE_DIR):
     generated = datetime.now(timezone.utc).isoformat()
     rev = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], cwd=Path(__file__).resolve().parents[2],
                          capture_output=True, text=True, timeout=10)
-    source_rev = '{}@{}'.format(generated, rev.stdout.strip() or 'unknown')
+    source_rev = rev.stdout.strip() or 'unknown'
     report = {'versions': {}, 'sections': {}, 'orphans': [], 'unmapped_groups': [], 'renamed': [],
               'upstream': {'fetched': False}}
     if fetch:
@@ -320,16 +321,18 @@ def validate(snapshot):
     for version in snapshot['versions']:
         if version['command_count'] != sum(version['major'] in c['versions'] for c in snapshot['commands']):
             raise ValueError('{} 命令数不一致'.format(version['major']))
+    for item in snapshot['commands']:
+        item_hash(SqlCommand, item, COMMAND_FIELDS)
     return True
 
 
 def changed_slugs(snapshot):
-    stored = {row.slug: row for row in SqlCommand.objects.all()}
+    stored = {row.slug: row for row in SqlCommand.objects.only('slug', 'content_hash')}
     added, updated, unchanged = [], [], []
     for item in snapshot['commands']:
+        calculated = item_hash(SqlCommand, item, COMMAND_FIELDS)
         row = stored.get(item['slug'])
-        bucket = added if row is None else updated if any(
-            getattr(row, field) != item[field] for field in COMMAND_FIELDS) else unchanged
+        bucket = added if row is None else updated if row.content_hash != calculated else unchanged
         bucket.append(item['slug'])
     return added, updated, unchanged, sorted(set(stored) - {c['slug'] for c in snapshot['commands']})
 
@@ -351,15 +354,15 @@ def import_snapshot(snapshot, prune=False):
     write = set(added + updated)
     for item in snapshot['commands']:
         if item['slug'] in write:
-            SqlCommand.objects.update_or_create(slug=item['slug'], defaults={
-                field: item[field] for field in COMMAND_FIELDS})
+            SqlCommand.objects.update_or_create(
+                slug=item['slug'], defaults=hashed_defaults(SqlCommand, item, COMMAND_FIELDS))
     if prune:
         report['removed'] = len(missing)
         SqlCommand.objects.filter(slug__in=missing).delete()
         report['note'] = ''
     report['pruned'] = bool(prune)
     from . import sqlcmd
-    sqlcmd.forget()
+    transaction.on_commit(sqlcmd.forget)
     return report
 
 

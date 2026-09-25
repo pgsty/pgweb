@@ -36,7 +36,7 @@ cat 的 `relations[]` 每项：`name / kind / summary / first_version / last_ver
 这批数据一个大版本才变一次，读多写少，整份快照放 JSON 列即可；不拆字段表、变化表。
 
 ```python
-class CatalogVersion(models.Model):            # db_table = 'wiki_catalog_version'，18 行
+class CatalogVersion(models.Model):            # db_table = 'catalog_version'，18 行
     major = CharField(max_length=8, primary_key=True)   # '9.0' … '19', '20'
     label = TextField()                       # '18' / '19 beta 3' / '20 devel'
     status = TextField()                      # historical | stable | preview | devel
@@ -54,7 +54,7 @@ class CatalogVersion(models.Model):            # db_table = 'wiki_catalog_versio
     position = IntegerField(default=0)        # 9.0 → 0 … 20 → 17
     class Meta: ordering = ('position',)
 
-class CatalogRelation(models.Model):           # db_table = 'wiki_catalog'，158 行
+class CatalogRelation(models.Model):           # db_table = 'catalog'，158 行
     name = CharField(max_length=64, primary_key=True)
     kind = CharField(max_length=12)           # catalog | view | statistics | progress
     summary = TextField(blank=True)           # cat 的英文一句话
@@ -322,3 +322,6 @@ unlocated                                       # 定位不到字段表的「关
 页面：`/docs/catalog/`、`/docs/catalog/pg_class/?v=12`、`/docs/catalog/pg_stat_activity/`、
 `/docs/catalog/pg_pltemplate/`、`/docs/catalog/pg_statistic/?v=20`、`/docs/catalog/changes/18/`、
 `/docs/catalog/changes/9.0/`、`/docs/catalog/changes/20/` 都 200，`/docs/catalog/changes/` 302，无效关系名 404。
+
+
+2026-09-25 模型整理：实体表增加 `content_hash`，按实际落库内容判断是否更新；`source_rev` 和导出时间不参与内容比较，未变更的实体保留 `imported_at`。表名与版本表已去掉 `wiki_` 前缀，Python 模型、应用标签、命令、URL 和检索身份保持原约定。全局契约与回退步骤见 [百科模型](encyclopedia-design.md) 和 [模型整理实施记录](reference-model-rollout.md)。

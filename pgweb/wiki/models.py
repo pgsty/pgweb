@@ -1,19 +1,18 @@
-"""百科 · 错误码大全。
+"""六类 PostgreSQL 参考资料的领域实体与版本元数据。
 
-数据是 pgsty/err.pg.center 仓库的投影，导入工具可以随时整体重建。权威三层在那边：
+SQLSTATE 是 pgsty/err.pg.center 仓库的投影，导入工具可以随时整体重建。权威三层在那边：
 `evidence/<CODE>.json`（人工证据）、`data/errcodes/<CODE>.json`（规范事实）、
 `content/docs/<CODE>.md` 与 `.zh.md`（正文）。这里的表只为渲染与查询服务。
 
-热字段提成真列供筛选与排序，整份原始事实同时留在 `ErrorCode.facts` 里——
-结构化是增量，不是替换。
+每个实体一行。筛选字段用普通列，事实、正文与证据分别保存在 JSON 文档中。
 """
 
 import re
 
 from django.contrib.postgres.fields import ArrayField
-from django.contrib.postgres.indexes import GinIndex
-from django.contrib.postgres.search import SearchVectorField
 from django.db import models
+from django.db.models.functions import Left
+from django.db.models.lookups import Exact
 
 
 # 证据强度由弱到强。源数据把状态挂在单条证据上，一个码可以同时有好几档；
@@ -51,7 +50,7 @@ class ErrorCodeClass(models.Model):
     severity_classes = ArrayField(models.TextField(), default=list, blank=True)
 
     class Meta:
-        db_table = 'wiki_errcode_class'
+        db_table = 'sqlstate_class'
         ordering = ('code',)
 
     def __str__(self):
@@ -72,7 +71,7 @@ class ErrorCodeClass(models.Model):
 
 
 class ErrorCodeRelease(models.Model):
-    """一个锁定的版本快照。commit 让详情页能把源码链接切到指定版本。"""
+    """一个锁定的版本快照；commit 标明此清单的实际取样构建。"""
 
     major = models.CharField(max_length=12, primary_key=True)
     channel = models.CharField(max_length=8, default='formal')
@@ -84,7 +83,7 @@ class ErrorCodeRelease(models.Model):
     position = models.IntegerField(default=0)
 
     class Meta:
-        db_table = 'wiki_errcode_release'
+        db_table = 'sqlstate_version'
         ordering = ('position',)
 
     def __str__(self):
@@ -130,17 +129,33 @@ class ErrorCode(models.Model):
     snippet_count = models.IntegerField(default=0)
 
     facts = models.JSONField(default=dict, blank=True)
+    texts = models.JSONField(default=dict, blank=True)
+    evidence = models.JSONField(default=dict, blank=True)
+    name_zh = models.TextField(blank=True, default='')
+    summary_zh = models.TextField(blank=True, default='')
+    content_hash = models.CharField(max_length=64, blank=True, default='')
     source_rev = models.TextField(blank=True, default='')
     imported_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'wiki_errcode'
+        db_table = 'sqlstate'
         # 与手册附录一致：先按类，再按码。
         ordering = ('klass', 'sqlstate')
         indexes = [
-            models.Index(fields=('klass', 'sqlstate'), name='wiki_errcode_class_order'),
-            models.Index(fields=('evidence_tier',), name='wiki_errcode_tier'),
-            models.Index(fields=('condition_name',), name='wiki_errcode_condition'),
+            models.Index(fields=('klass', 'sqlstate'), name='sqlstate_class_order'),
+            models.Index(fields=('evidence_tier',), name='sqlstate_tier'),
+            models.Index(fields=('condition_name',), name='sqlstate_condition'),
+        ]
+        constraints = [
+            models.CheckConstraint(condition=models.Q(sqlstate__regex=r'^[0-9A-Z]{5}$'),
+                                   name='sqlstate_code_format'),
+            models.CheckConstraint(condition=models.Q(klass_id=Left('sqlstate', 2)),
+                                   name='sqlstate_class_prefix'),
+            *[models.CheckConstraint(
+                condition=Exact(models.Func(models.F(field), function='jsonb_typeof',
+                                            output_field=models.CharField()), models.Value('object')),
+                name='sqlstate_' + field + '_object')
+              for field in ('facts', 'texts', 'evidence')],
         ]
 
     def __str__(self):
@@ -189,180 +204,6 @@ class ErrorCode(models.Model):
         return majors[0] if len(majors) == 1 else '{} – {}'.format(majors[0], majors[-1])
 
 
-class ErrorCodeText(models.Model):
-    """正文，每个码每种语言一行。站点只渲染中文，英文原文一并存着。"""
-
-    errcode = models.ForeignKey(ErrorCode, related_name='texts', on_delete=models.CASCADE)
-    lang = models.CharField(max_length=5)
-    title = models.TextField(blank=True, default='')
-    # 中文短名，只有 114/263 个码的标题里写了，缺的留空而不是回落到英文。
-    name = models.TextField(blank=True, default='')
-    description = models.TextField(blank=True, default='')
-    # 「速览」首句，263 个码都有，索引页表格用它。
-    summary = models.TextField(blank=True, default='')
-    body_md = models.TextField(blank=True, default='')
-    sections = models.JSONField(default=list, blank=True)
-    # 对应英文正文的内容哈希；英文改了而译文没跟上时置 is_stale。
-    translation_source_rev = models.TextField(blank=True, default='')
-    is_stale = models.BooleanField(default=False)
-    search_vector = SearchVectorField(null=True)
-
-    class Meta:
-        db_table = 'wiki_errcode_text'
-        ordering = ('errcode', 'lang')
-        constraints = [
-            models.UniqueConstraint(fields=('errcode', 'lang'), name='wiki_errcode_text_lang'),
-        ]
-        indexes = [GinIndex(fields=('search_vector',), name='wiki_errcode_text_vector')]
-
-    def __str__(self):
-        return '{} [{}]'.format(self.errcode_id, self.lang)
-
-
-class ErrorCodePresence(models.Model):
-    """存在性区间。源数据的逐补丁版行（11 万条）压在这里，源仓库仍留有全量。"""
-
-    errcode = models.ForeignKey(ErrorCode, related_name='presence', on_delete=models.CASCADE)
-    era = models.CharField(max_length=8, default='modern')  # modern / pre9
-    start = models.TextField(blank=True, default='')
-    end = models.TextField(blank=True, default='')
-    start_tag = models.TextField(blank=True, default='')
-    end_tag = models.TextField(blank=True, default='')
-    start_major = models.TextField(blank=True, default='')
-    end_major = models.TextField(blank=True, default='')
-    evidence_count = models.IntegerField(default=0)
-    position = models.IntegerField(default=0)
-
-    class Meta:
-        db_table = 'wiki_errcode_presence'
-        ordering = ('errcode', 'era', 'position')
-        indexes = [models.Index(fields=('errcode', 'era'), name='wiki_errcode_presence_era')]
-
-
-class ErrorCodeSource(models.Model):
-    """人工证据引用的源码位置，带 tag、commit 与行号。"""
-
-    errcode = models.ForeignKey(ErrorCode, related_name='sources', on_delete=models.CASCADE)
-    source_id = models.TextField()
-    kind = models.TextField(blank=True, default='')
-    tag = models.TextField(blank=True, default='')
-    commit = models.CharField(max_length=40, blank=True, default='')
-    path = models.TextField(blank=True, default='')
-    location = models.TextField(blank=True, default='')
-    url = models.TextField(blank=True, default='')
-    docs_url = models.TextField(blank=True, default='')
-    sha256 = models.CharField(max_length=64, blank=True, default='')
-    position = models.IntegerField(default=0)
-
-    class Meta:
-        db_table = 'wiki_errcode_source'
-        ordering = ('errcode', 'position')
-
-
-class ErrorCodeClaim(models.Model):
-    """一句可核实的论断，附佐证来源与限制条件。详情页证据面板的一行。"""
-
-    errcode = models.ForeignKey(ErrorCode, related_name='claims', on_delete=models.CASCADE)
-    claim_id = models.TextField()
-    statement = models.TextField()
-    method = models.TextField(blank=True, default='')
-    limits = models.TextField(blank=True, default='')
-    sources = ArrayField(models.TextField(), default=list, blank=True)
-    runtime = ArrayField(models.TextField(), default=list, blank=True)
-    position = models.IntegerField(default=0)
-
-    class Meta:
-        db_table = 'wiki_errcode_claim'
-        ordering = ('errcode', 'position')
-
-
-class ErrorCodeMessage(models.Model):
-    """一条报文记录。模板本身摊平进 ErrorCodeTemplate，这里留身份与限制。"""
-
-    errcode = models.ForeignKey(ErrorCode, related_name='messages', on_delete=models.CASCADE)
-    message_id = models.TextField()
-    severity = models.TextField(blank=True, default='')
-    path = models.TextField(blank=True, default='')
-    limits = models.TextField(blank=True, default='')
-    sources = ArrayField(models.TextField(), default=list, blank=True)
-    raw = models.JSONField(default=dict, blank=True)
-    position = models.IntegerField(default=0)
-
-    class Meta:
-        db_table = 'wiki_errcode_message'
-        ordering = ('errcode', 'position')
-
-
-class ErrorCodeTemplate(models.Model):
-    """摊平后的报文模板。
-
-    565 条报文里只有 539 条走 `primary_template` 一个键，其余散在单复数分支、
-    变体数组与角色映射里。报文反查检索这张表，只认 primary_template 会漏掉那些码。
-    """
-
-    KINDS = (('primary', '主消息'), ('detail', 'DETAIL'), ('hint', 'HINT'), ('context', 'CONTEXT'))
-
-    message = models.ForeignKey(ErrorCodeMessage, related_name='templates', on_delete=models.CASCADE)
-    errcode = models.ForeignKey(ErrorCode, related_name='templates', on_delete=models.CASCADE)
-    kind = models.CharField(max_length=12, choices=KINDS)
-    # 变体标签：single/plural、roles[].role、variants 的 target 等，没有就留空。
-    role = models.TextField(blank=True, default='')
-    template = models.TextField()
-    # 模板去掉 %s/%d 之类占位符后的字面部分，供反查匹配。
-    literal = models.TextField(blank=True, default='')
-    position = models.IntegerField(default=0)
-    search_vector = SearchVectorField(null=True)
-
-    class Meta:
-        db_table = 'wiki_errcode_template'
-        ordering = ('errcode', 'position')
-        indexes = [
-            GinIndex(fields=('search_vector',), name='wiki_errcode_tpl_vector'),
-            models.Index(fields=('errcode', 'kind'), name='wiki_errcode_tpl_kind'),
-        ]
-
-    def __str__(self):
-        return '{} {} {}'.format(self.errcode_id, self.kind, self.template[:40])
-
-
-class ErrorCodeRuntime(models.Model):
-    """一次被选定的真实运行记录。assertions/observed/environment 形状自由，整块留 JSON。"""
-
-    errcode = models.ForeignKey(ErrorCode, related_name='runtimes', on_delete=models.CASCADE)
-    runtime_id = models.TextField()
-    run_id = models.TextField(blank=True, default='')
-    status = models.TextField(blank=True, default='')
-    target = models.TextField(blank=True, default='')
-    server_version = models.TextField(blank=True, default='')
-    cases = ArrayField(models.TextField(), default=list, blank=True)
-    limits = models.TextField(blank=True, default='')
-    raw = models.JSONField(default=dict, blank=True)
-    position = models.IntegerField(default=0)
-
-    class Meta:
-        db_table = 'wiki_errcode_runtime'
-        ordering = ('errcode', 'position')
-
-
-class ErrorCodeCase(models.Model):
-    """可复现案例。87 个码有用例定义，其中 66 个另有可执行 SQL 片段。"""
-
-    errcode = models.ForeignKey(ErrorCode, related_name='cases', on_delete=models.CASCADE)
-    case_id = models.TextField()
-    versions = ArrayField(models.TextField(), default=list, blank=True)
-    preconditions = ArrayField(models.TextField(), default=list, blank=True)
-    trigger = models.TextField(blank=True, default='')
-    assertions = ArrayField(models.TextField(), default=list, blank=True)
-    repair = models.TextField(blank=True, default='')
-    cleanup = models.TextField(blank=True, default='')
-    has_snippet = models.BooleanField(default=False)
-    position = models.IntegerField(default=0)
-
-    class Meta:
-        db_table = 'wiki_errcode_case'
-        ordering = ('errcode', 'position')
-
-
 # ------------------------------------------------------------------ 系统目录
 
 # 类别顺序固定，页面各处都按这个顺序走。
@@ -407,7 +248,7 @@ class CatalogVersion(models.Model):
     position = models.IntegerField(default=0)
 
     class Meta:
-        db_table = 'wiki_catalog_version'
+        db_table = 'catalog_version'
         ordering = ('position',)
 
     def __str__(self):
@@ -453,14 +294,15 @@ class CatalogRelation(models.Model):
     changes = models.JSONField(default=list, blank=True)
     # 类别序 × 1000 + 类别内按名排序。
     position = models.IntegerField(default=0)
+    content_hash = models.CharField(max_length=64, blank=True, default='')
     source_rev = models.TextField(blank=True, default='')
     imported_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'wiki_catalog'
+        db_table = 'catalog'
         ordering = ('position',)
         indexes = [
-            models.Index(fields=('kind', 'name'), name='wiki_catalog_kind'),
+            models.Index(fields=('kind', 'name'), name='catalog_kind'),
         ]
 
     def __str__(self):
@@ -638,7 +480,7 @@ class GucVersion(models.Model):
     position = models.IntegerField(default=0)
 
     class Meta:
-        db_table = 'wiki_guc_version'
+        db_table = 'guc_version'
         ordering = ('position',)
 
     def __str__(self):
@@ -701,14 +543,15 @@ class GucParameter(models.Model):
     intro_commit = models.JSONField(default=dict, blank=True)
     # 一级分类序 × 10000 + 子分类序 × 100 + 子分类内按名排序。
     position = models.IntegerField(default=0)
+    content_hash = models.CharField(max_length=64, blank=True, default='')
     source_rev = models.TextField(blank=True, default='')
     imported_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'wiki_guc'
+        db_table = 'guc'
         ordering = ('position',)
         indexes = [
-            models.Index(fields=('group_slug', 'name'), name='wiki_guc_group'),
+            models.Index(fields=('group_slug', 'name'), name='guc_group'),
         ]
 
     def __str__(self):
@@ -790,7 +633,7 @@ class WaitEventVersion(models.Model):
     notes = models.JSONField(default=dict, blank=True)
 
     class Meta:
-        db_table = 'wiki_waitevent_version'
+        db_table = 'waitevent_version'
         ordering = ('position',)
 
     def __str__(self):
@@ -842,15 +685,16 @@ class WaitEvent(models.Model):
     has_dossier = models.BooleanField(default=False)
     # 类型序 × 1000 + 类型内按名。
     position = models.IntegerField(default=0)
+    content_hash = models.CharField(max_length=64, blank=True, default='')
     source_rev = models.TextField(blank=True, default='')
     imported_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'wiki_waitevent'
+        db_table = 'waitevent'
         ordering = ('position',)
         indexes = [
-            models.Index(fields=('type_slug', 'name'), name='wiki_waitevent_type'),
-            models.Index(fields=('name',), name='wiki_waitevent_name'),
+            models.Index(fields=('type_slug', 'name'), name='waitevent_type'),
+            models.Index(fields=('name',), name='waitevent_name'),
         ]
 
     def __str__(self):
@@ -993,13 +837,14 @@ class SqlCommand(models.Model):
     changes = models.JSONField(default=list, blank=True)
     editorial = models.JSONField(default=dict, blank=True)
     position = models.IntegerField(default=0)
+    content_hash = models.CharField(max_length=64, blank=True, default='')
     source_rev = models.TextField(blank=True, default='')
     imported_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'wiki_sqlcmd'
+        db_table = 'sqlcmd'
         ordering = ('position',)
-        indexes = [models.Index(fields=('group', 'slug'), name='wiki_sqlcmd_group')]
+        indexes = [models.Index(fields=('group', 'slug'), name='sqlcmd_group')]
 
     def __str__(self):
         return self.name
@@ -1134,7 +979,7 @@ class FuncVersion(models.Model):
     position = models.IntegerField(default=0)
 
     class Meta:
-        db_table = 'wiki_func_version'
+        db_table = 'func_version'
         ordering = ('position',)
 
     def __str__(self):
@@ -1184,13 +1029,14 @@ class PgFunction(models.Model):
     changes = models.JSONField(default=list, blank=True)
     # 分组序 × 1000 + 组内按 name_key 排序。
     position = models.IntegerField(default=0)
+    content_hash = models.CharField(max_length=64, blank=True, default='')
     source_rev = models.TextField(blank=True, default='')
     imported_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        db_table = 'wiki_func'
+        db_table = 'func'
         ordering = ('position',)
-        indexes = [models.Index(fields=('group', 'name_key'), name='wiki_func_group')]
+        indexes = [models.Index(fields=('group', 'name_key'), name='func_group')]
 
     def __str__(self):
         return self.name

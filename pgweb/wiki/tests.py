@@ -6,7 +6,7 @@ from django.test import SimpleTestCase, TestCase
 from . import catalog, catalog_importer, errcode, importer, markup
 from .columns import BY_SLUG, COLUMNS, listing, live_columns, nav_items, url
 from .models import (CatalogRelation, CatalogVersion, ErrorCode, ErrorCodeClass,
-                     ErrorCodeRelease, ErrorCodeText)
+                     ErrorCodeRelease)
 
 
 class ColumnTests(SimpleTestCase):
@@ -181,10 +181,10 @@ class ErrorCodePageTests(TestCase):
         self.assertEqual(ErrorCode.objects.count(), 3)
         self.assertEqual(ErrorCodeClass.objects.count(), 1)
         self.assertEqual(ErrorCodeRelease.objects.count(), 1)
-        self.assertEqual(ErrorCodeText.objects.filter(lang='zh').count(), 1)
+        self.assertEqual(ErrorCode.objects.filter(texts__has_key='zh').count(), 1)
         code = ErrorCode.objects.get(sqlstate='23505')
         self.assertEqual(code.evidence_tier, 'observed_runtime')
-        self.assertEqual(code.templates.count(), 2)
+        self.assertEqual(sum(len(m['templates']) for m in code.evidence['messages']), 2)
 
     def test_import_is_idempotent(self):
         report = importer.import_snapshot(snapshot())
@@ -283,7 +283,7 @@ def snapshot():
             }] if with_evidence else [],
         })
     return {
-        'format': importer.FORMAT, 'generated_at': '2026-09-11', 'root': '/tmp',
+        'format': 1, 'generated_at': '2026-09-11', 'root': '/tmp',
         'classes': [{'code': '23', 'name': 'Integrity Constraint Violation',
                      'name_zh': '完整性约束冲突', 'summary': '类别说明。',
                      'sqlstate_count': 3, 'severity_classes': ['E']}],

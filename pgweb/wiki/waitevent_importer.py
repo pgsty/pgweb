@@ -29,6 +29,7 @@ from django.db import transaction
 
 from pgweb.docs.versions import DEVEL_MAJOR_VERSION
 
+from .snapshot import item_hash, hashed_defaults
 from .models import WAITEVENT_TYPE_ORDER, WaitEvent, WaitEventVersion
 from .waitevent_common import canonical_type, compare_snapshots, identity, normal_text, position_of
 
@@ -889,18 +890,21 @@ def validate(snapshot):
             raise ValueError('{} 引用了未知版本：{}'.format(key, sorted(unknown)))
         for major, item in event['versions'].items():
             require(item, SNAPSHOT_FIELDS, '{} 的 {} 快照'.format(key, major))
+    for item in snapshot['events']:
+        item_hash(WaitEvent, item, EVENT_FIELDS)
     return True
 
 
 def changed_keys(snapshot):
-    """这次导入会改动哪些事件。JSON 列整份比对，无变化的整条跳过。"""
-    stored = {row.pk: row for row in WaitEvent.objects.all()}
+    """这次导入会改动哪些事件。按稳定内容指纹比对，无变化的整条跳过。"""
+    stored = {row.pk: row for row in WaitEvent.objects.only('key', 'content_hash')}
     added, updated, unchanged = [], [], []
     for event in snapshot['events']:
+        calculated = item_hash(WaitEvent, event, EVENT_FIELDS)
         row = stored.get(event['key'])
         if row is None:
             added.append(event['key'])
-        elif any(getattr(row, field) != event[field] for field in EVENT_FIELDS):
+        elif row.content_hash != calculated:
             updated.append(event['key'])
         else:
             unchanged.append(event['key'])
@@ -981,7 +985,7 @@ def import_snapshot(snapshot, prune=False):
         if event['key'] not in write:
             continue
         WaitEvent.objects.update_or_create(
-            key=event['key'], defaults={field: event[field] for field in EVENT_FIELDS})
+            key=event['key'], defaults=hashed_defaults(WaitEvent, event, EVENT_FIELDS))
 
     harvest = snapshot.get('harvest') or {}
     report = {
@@ -1001,6 +1005,8 @@ def import_snapshot(snapshot, prune=False):
     else:
         report['removed'] = {'events': 0, 'versions': []}
         report['note'] = retention_note(missing)
+    from . import waitevent
+    transaction.on_commit(waitevent.forget)
     return report
 
 

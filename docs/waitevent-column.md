@@ -33,7 +33,7 @@
 ## 3. 数据建模：两张表
 
 ```python
-class WaitEventVersion(models.Model):         # db_table = 'wiki_waitevent_version'，18 行
+class WaitEventVersion(models.Model):         # db_table = 'waitevent_version'，18 行
     major = CharField(max_length=8, primary_key=True)   # '9.0' … '20'
     label = TextField()                       # '18' / '19 beta 3' / '20 devel'
     status = TextField()                      # historical | stable | preview | devel
@@ -48,7 +48,7 @@ class WaitEventVersion(models.Model):         # db_table = 'wiki_waitevent_versi
     notes = JSONField(default=dict)           # 来源说明：文档版本、tag、抓取时间等
     class Meta: ordering = ('position',)
 
-class WaitEvent(models.Model):                # db_table = 'wiki_waitevent'
+class WaitEvent(models.Model):                # db_table = 'waitevent'
     key = CharField(max_length=96, primary_key=True)    # 'lwlock/buffermapping'
     type = CharField(max_length=16)           # 规范类型标签：'LWLock' / 'Buffer' …
     type_slug = CharField(max_length=16)      # 'lwlock'
@@ -253,3 +253,6 @@ baseline: bool（9.6）, na: bool（9.0 – 9.5，页面只放一段说明并链
 - `runs[]` 没有 `current` 键，模板用 `version.major in run.majors` 判断当前段；`run.renamed / run.moved` 标出该段名称或类型与最新写法不同。
 - `links` 给 `doc / doc_label / official / definition / source / atlas`，动作行优先 `source`。
 - `sibling_groups` 与 `siblings` 同义。
+
+
+2026-09-25 模型整理：实体表增加 `content_hash`，按实际落库内容判断是否更新；`source_rev` 和导出时间不参与内容比较，未变更的实体保留 `imported_at`。表名与版本表已去掉 `wiki_` 前缀，Python 模型、应用标签、命令、URL 和检索身份保持原约定。全局契约与回退步骤见 [百科模型](encyclopedia-design.md) 和 [模型整理实施记录](reference-model-rollout.md)。

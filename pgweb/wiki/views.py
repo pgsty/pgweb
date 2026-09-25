@@ -69,7 +69,7 @@ def errcode_detail(request, sqlstate):
     heading = '{} {}'.format(code.sqlstate, code.condition_name).strip()
     title = '{}{} · SQL 状态码'.format(heading, '（{}）'.format(name) if name else '')
     text = payload['text']
-    description = (text.summary or text.description) if text else heading
+    description = (text.get('summary') or text.get('description')) if text else heading
     return render(request, 'wiki/errcode_detail.html', shell(dict(
         payload, column=BY_SLUG['sqlstate'], heading=heading,
     ), title, description, code.url, class_code=code.klass_id))

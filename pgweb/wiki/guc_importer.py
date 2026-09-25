@@ -33,6 +33,7 @@ from pgweb.docs.versions import DEVEL_MAJOR_VERSION
 
 from .catalog_importer import Manual, text_of
 from .guc_common import diff_fields, human_value, is_default_change, is_substantive
+from .snapshot import item_hash, hashed_defaults
 from .models import (GUC_CATEGORY_ORDER, GUC_CATEGORY_ZH, GUC_FIELDS, GUC_GROUP_ORDER,
                      GUC_GROUP_SLUG, GucParameter, GucVersion, guc_group_of)
 
@@ -971,18 +972,21 @@ def validate(snapshot):
         unknown = set(item['versions']) - majors
         if unknown:
             raise ValueError('{} 引用了未知版本：{}'.format(name, sorted(unknown)))
+    for item in snapshot['parameters']:
+        item_hash(GucParameter, item, PARAMETER_FIELDS)
     return True
 
 
 def changed_names(snapshot):
-    """这次导入会改动哪些参数。JSON 列整份比对，无变化的整条跳过。"""
-    stored = {row.pk: row for row in GucParameter.objects.all()}
+    """这次导入会改动哪些参数。按稳定内容指纹比对，无变化的整条跳过。"""
+    stored = {row.pk: row for row in GucParameter.objects.only('name', 'content_hash')}
     added, updated, unchanged = [], [], []
     for item in snapshot['parameters']:
+        calculated = item_hash(GucParameter, item, PARAMETER_FIELDS)
         row = stored.get(item['name'])
         if row is None:
             added.append(item['name'])
-        elif any(getattr(row, field) != item[field] for field in PARAMETER_FIELDS):
+        elif row.content_hash != calculated:
             updated.append(item['name'])
         else:
             unchanged.append(item['name'])
@@ -1063,7 +1067,7 @@ def import_snapshot(snapshot, prune=False):
         if item['name'] not in write:
             continue
         GucParameter.objects.update_or_create(
-            name=item['name'], defaults={field: item[field] for field in PARAMETER_FIELDS})
+            name=item['name'], defaults=hashed_defaults(GucParameter, item, PARAMETER_FIELDS))
     report.update({'added': len(added), 'updated': len(updated), 'unchanged': len(unchanged)})
 
     report['pruned'] = bool(prune)
@@ -1079,6 +1083,8 @@ def import_snapshot(snapshot, prune=False):
 
     report['coverage'] = coverage(snapshot)
     report['harvest'] = harvest_note(snapshot)
+    from . import guc
+    transaction.on_commit(guc.forget)
     return report
 
 

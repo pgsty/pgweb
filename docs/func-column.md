@@ -74,7 +74,7 @@ PG 16 的 `any_value`、PG 17 的 `to_bin`、PG 18 的 `crc32`。译文仓库是
 一个大版本才变一次，读多写少，不拆字段表、不拆签名表。
 
 ```python
-class FuncVersion(models.Model):            # db_table = 'wiki_func_version'，最多 18 行
+class FuncVersion(models.Model):            # db_table = 'func_version'，最多 18 行
     major = CharField(max_length=8, primary_key=True)   # '9.0' … '19', '20'
     label = TextField()                     # '18' / '19 beta 3' / '20 devel'
     status = TextField()                    # historical | stable | preview | devel
@@ -92,7 +92,7 @@ class FuncVersion(models.Model):            # db_table = 'wiki_func_version'，�
     position = IntegerField(default=0)
     class Meta: ordering = ('position',)
 
-class PgFunction(models.Model):             # db_table = 'wiki_func'
+class PgFunction(models.Model):             # db_table = 'func'
     slug = CharField(max_length=80, primary_key=True)   # 'to-char'、'pg-relation-size'
     name = TextField()                      # 'to_char'（手册里的写法，大小写原样）
     name_key = CharField(max_length=80, db_index=True)  # 小写，跨版本对齐用
@@ -322,3 +322,6 @@ CSP 禁内联样式与脚本；站内 legacy CSS（`.btn` 宽度、`code` 的 `!
 
 发布顺序：拉代码 → `migrate wiki` → 导入快照 → `index_docs --func` → `systemctl restart pgsql.cc`。
 手册重灌后重导一次。测试：`PGWEB_TEST_DB=test_pgweb_func manage.py test pgweb.wiki.test_func pgweb.wiki.test_func_importer`。
+
+
+2026-09-25 模型整理：实体表增加 `content_hash`，按实际落库内容判断是否更新；`source_rev` 和导出时间不参与内容比较，未变更的实体保留 `imported_at`。表名与版本表已去掉 `wiki_` 前缀，Python 模型、应用标签、命令、URL 和检索身份保持原约定。全局契约与回退步骤见 [百科模型](encyclopedia-design.md) 和 [模型整理实施记录](reference-model-rollout.md)。

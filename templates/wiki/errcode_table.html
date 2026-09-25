@@ -29,7 +29,7 @@
       <td class="wiki-coderow__cond"><a href="{{ row.url }}">{{ row.condition_name }}</a></td>
       <td class="wiki-coderow__macro"><code>{{ row.macro }}</code></td>
       <td class="wiki-coderow__sev"><span class="wiki-sev wiki-sev--{{ row.severity }}">{{ row.severity_label }}</span></td>
-      <td class="wiki-coderow__ver">{{ row.since }}</td>
+      <td class="wiki-coderow__ver" title="{{ row.since_label }}">{{ row.since }}{% if row.since_label == '最早已知存在' %} 起已知{% endif %}</td>
     </tr>
     <tr class="wiki-coderow wiki-coderow--more{% if row.sqlstate == current %} is-current{% endif %}" data-href="{{ row.url }}" data-class="{{ row.class_code }}" data-severity="{{ row.severity }}"
         data-depth="{{ row.depth }}"

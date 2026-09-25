@@ -17,12 +17,14 @@ from datetime import datetime, timezone
 from django.db import transaction
 
 from . import markup
-from .models import (ErrorCode, ErrorCodeCase, ErrorCodeClaim, ErrorCodeClass, ErrorCodeMessage,
-                     ErrorCodePresence, ErrorCodeRelease, ErrorCodeRuntime, ErrorCodeSource,
-                     ErrorCodeTemplate, ErrorCodeText, TIER_ORDER)
+from .models import ErrorCode, ErrorCodeClass, ErrorCodeRelease, TIER_ORDER
+from .documents import (ROW_DEFAULTS, TEXT_DEFAULTS, TEMPLATE_DEFAULTS, derive,
+                        pack_legacy, reference_gaps)
+from .snapshot import model_hash
+from copy import deepcopy
 
 
-FORMAT = 1
+FORMAT = 2
 DEFAULT_ROOT = os.path.expanduser('~/pg.center/err')
 
 CODE_FILE = re.compile(r'^[0-9A-Z]{5}$')
@@ -35,7 +37,7 @@ BULK_KEYS = ('observed_rows', 'observed_in_releases', 'evidence_refs',
 
 
 def trim_facts(facts):
-    """留底用的事实：去掉巨型审计数组与已经拆表的证据块。"""
+    """留底用的事实：去掉巨型审计数组与独立的证据块。"""
     out = {k: v for k, v in facts.items() if k not in BULK_KEYS}
     boundary = out.get('history_boundary')
     if isinstance(boundary, dict):
@@ -444,19 +446,24 @@ def export_snapshot(root=DEFAULT_ROOT):
             } for position, r in enumerate(evidence.get('runtime') or ())],
         })
 
+    # Apply site editorial summaries before freezing the self-contained snapshot.
+    overrides = summary_overrides()
     for code in codes:
+        for text in code['texts']:
+            if text['lang'] == 'zh' and code['sqlstate'] in overrides:
+                text['summary'] = overrides[code['sqlstate']]
         code['source_rev'] = hashlib.sha256(
             json.dumps(code, ensure_ascii=False, sort_keys=True, default=str).encode()
         ).hexdigest()
 
-    return {
-        'format': FORMAT,
+    return prepare({
+        'format': 1,
         'generated_at': datetime.now(timezone.utc).isoformat(),
         'root': root,
         'classes': classes,
         'releases': releases,
         'codes': codes,
-    }
+    })
 
 
 # ------------------------------------------------------------------ 导入
@@ -466,44 +473,8 @@ CODE_FIELDS = ('condition_name', 'condition_names', 'aliases', 'macros', 'primar
                'present_in', 'preview_in', 'depth', 'editorial_review', 'runtime_verification',
                'evidence_tier', 'case_count', 'snippet_count', 'facts', 'source_rev')
 
-CHILDREN = (
-    ('texts', ErrorCodeText), ('presence', ErrorCodePresence), ('sources', ErrorCodeSource),
-    ('claims', ErrorCodeClaim), ('runtimes', ErrorCodeRuntime), ('cases', ErrorCodeCase),
-)
-
-
-def validate(snapshot):
-    if not isinstance(snapshot, dict):
-        raise ValueError('快照不是一个对象')
-    if snapshot.get('format') != FORMAT:
-        raise ValueError('快照格式为 {}，期望 {}'.format(snapshot.get('format'), FORMAT))
-    for key in ('classes', 'releases', 'codes'):
-        if not isinstance(snapshot.get(key), list) or not snapshot[key]:
-            raise ValueError('快照缺少 {}'.format(key))
-    for code in snapshot['codes']:
-        if not CODE_FILE.match(code.get('sqlstate', '')):
-            raise ValueError('错误码格式不对：{!r}'.format(code.get('sqlstate')))
-    return True
-
-
-def preview(snapshot):
-    """不写库，只报告这次导入会改动什么。"""
-    validate(snapshot)
-    existing = dict(ErrorCode.objects.values_list('sqlstate', 'source_rev'))
-    incoming = {c['sqlstate'] for c in snapshot['codes']}
-    unchanged = sum(1 for c in snapshot['codes'] if existing.get(c['sqlstate']) == c['source_rev'])
-    added = sorted(incoming - set(existing))
-    return {
-        'classes': len(snapshot['classes']), 'releases': len(snapshot['releases']),
-        'codes': len(incoming), 'added': added,
-        'unchanged': unchanged, 'changed': len(incoming) - unchanged - len(added),
-        'missing': sorted(set(existing) - incoming),
-        'texts': sum(len(c['texts']) for c in snapshot['codes']),
-        'messages': sum(len(c['messages']) for c in snapshot['codes']),
-        'templates': sum(len(m['templates']) for c in snapshot['codes'] for m in c['messages']),
-        'claims': sum(len(c['claims']) for c in snapshot['codes']),
-        'cases': sum(len(c['cases']) for c in snapshot['codes']),
-    }
+# v2 stores the whole document in one entity row.
+CODE_FIELDS += ('name_zh', 'summary_zh', 'texts', 'evidence', 'content_hash')
 
 
 SUMMARY_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
@@ -511,7 +482,6 @@ SUMMARY_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.p
 
 
 def summary_overrides(path=SUMMARY_FILE):
-    """索引页的一句话说明。源仓库的「速览」首句太长，站点自己维护一份 ≤ 36 字的版本。"""
     try:
         with open(path, encoding='utf-8') as handle:
             return json.load(handle)
@@ -519,70 +489,136 @@ def summary_overrides(path=SUMMARY_FILE):
         return {}
 
 
-def apply_summaries(overrides):
-    """把一句话说明写进中文正文行；与源码版本无关，每次导入都核对一遍。"""
-    changed = 0
-    for text in ErrorCodeText.objects.filter(lang='zh', errcode_id__in=list(overrides)):
-        wanted = overrides[text.errcode_id]
-        if text.summary != wanted:
-            text.summary = wanted
-            text.save(update_fields=['summary'])
-            changed += 1
-    return changed
+def prepare(snapshot):
+    """Upgrade and validate without modifying the caller's snapshot or reading local overrides."""
+    if not isinstance(snapshot, dict) or snapshot.get('format') not in (1, FORMAT):
+        raise ValueError('SQLSTATE 快照格式必须为 1 或 2')
+    out = deepcopy(snapshot)
+    for key in ('classes', 'releases', 'codes'):
+        if not isinstance(out.get(key), list) or not out[key]:
+            raise ValueError('快照缺少 {}'.format(key))
+    for key, field in [('classes', 'code'), ('releases', 'major'), ('codes', 'sqlstate')]:
+        values = [row.get(field) for row in out[key]]
+        if not all(values) or len(set(values)) != len(values):
+            raise ValueError('{} 的 {} 缺失或重复'.format(key, field))
+    classes = {row['code'] for row in out['classes']}
+    result = []
+    for original in out['codes']:
+        item = pack_legacy(original) if out['format'] == 1 else original
+        state = item.get('sqlstate', '')
+        if not CODE_FILE.fullmatch(state):
+            raise ValueError('错误码格式不对：{!r}'.format(state))
+        if item.get('class_code') != state[:2] or item['class_code'] not in classes:
+            raise ValueError('{} 类别不一致或缺失'.format(state))
+        for field in ('facts', 'texts', 'evidence'):
+            if not isinstance(item.get(field), dict):
+                raise ValueError('{} 的 {} 必须为对象'.format(state, field))
+        for lang, text in item['texts'].items():
+            if not isinstance(lang, str) or not lang or not isinstance(text, dict):
+                raise ValueError('{} 正文语言无效'.format(state))
+            if set(TEXT_DEFAULTS) - text.keys() or not isinstance(text['sections'], list):
+                raise ValueError('{} {} 正文缺少字段'.format(state, lang))
+        for key in ROW_DEFAULTS:
+            rows = item['evidence'].get(key)
+            if not isinstance(rows, list):
+                raise ValueError('{} evidence.{} 必须为数组'.format(state, key))
+            seen = set()
+            for row in rows:
+                field = key[:-1] + '_id'
+                if not isinstance(row, dict) or set(ROW_DEFAULTS[key]) - row.keys():
+                    raise ValueError('{} {} 记录缺少字段'.format(state, key))
+                identity = row[field]
+                if not isinstance(identity, str) or not identity or identity in seen:
+                    raise ValueError('{} {} ID 缺失或重复'.format(state, key))
+                seen.add(identity)
+                if not isinstance(row.get('position'), int):
+                    raise ValueError('{} {} position 无效'.format(state, key))
+                for name, default in ROW_DEFAULTS[key].items():
+                    if not isinstance(row[name], type(default)):
+                        raise ValueError('{} {}.{} 类型无效'.format(state, key, name))
+                    if isinstance(default, list) and any(not isinstance(v, str) for v in row[name]):
+                        raise ValueError('{} {}.{} 必须是字符串数组'.format(state, key, name))
+                if key == 'messages':
+                    if not isinstance(row.get('templates'), list):
+                        raise ValueError('{} 报文缺少模板数组'.format(state))
+                    for template in row['templates']:
+                        if set(TEMPLATE_DEFAULTS) - template.keys() or not isinstance(template.get('position'), int):
+                            raise ValueError('{} 报文模板缺少字段'.format(state))
+                        if template['kind'] not in ('primary', 'detail', 'hint', 'context'):
+                            raise ValueError('{} 报文模板 kind 无效'.format(state))
+        for gap in reference_gaps(item):
+            if gap['field'] != 'sources':
+                raise ValueError('{} 未找到引用 {}'.format(state, gap['ref']))
+        # Also validate the interval shapes used by reversible migrations.
+        for key in ('presence_intervals', 'pre9_presence_intervals'):
+            if key in item['facts'] and not isinstance(item['facts'][key], list):
+                raise ValueError('{} {} 必须为数组'.format(state, key))
+        item = derive(item)
+        row = ErrorCode(sqlstate=state, klass_id=item['class_code'],
+                        **{field: item[field] for field in CODE_FIELDS if field in item})
+        calculated = model_hash(row)
+        if item.get('content_hash') and item['content_hash'] != calculated:
+            raise ValueError('{} content_hash 不匹配'.format(state))
+        item.update({field: getattr(row, field) for field in CODE_FIELDS})
+        item['content_hash'] = calculated
+        result.append(item)
+    out.update(format=FORMAT, codes=result)
+    return out
+
+
+def validate(snapshot):
+    prepare(snapshot)
+    return True
+
+
+def preview(snapshot):
+    snapshot = prepare(snapshot)
+    existing = dict(ErrorCode.objects.values_list('sqlstate', 'content_hash'))
+    incoming = {c['sqlstate'] for c in snapshot['codes']}
+    unchanged = sum(existing.get(c['sqlstate']) == c['content_hash'] for c in snapshot['codes'])
+    added = sorted(incoming - set(existing))
+    return {
+        'classes': len(snapshot['classes']), 'releases': len(snapshot['releases']),
+        'codes': len(incoming), 'added': added,
+        'unchanged': unchanged, 'changed': len(incoming) - unchanged - len(added),
+        'missing': sorted(set(existing) - incoming),
+        'texts': sum(len(c['texts']) for c in snapshot['codes']),
+        'messages': sum(len(c['evidence']['messages']) for c in snapshot['codes']),
+        'templates': sum(len(m['templates']) for c in snapshot['codes'] for m in c['evidence']['messages']),
+        'claims': sum(len(c['evidence']['claims']) for c in snapshot['codes']),
+        'cases': sum(len(c['evidence']['cases']) for c in snapshot['codes']),
+        'unresolved_references': [gap for c in snapshot['codes'] for gap in reference_gaps(c)],
+    }
 
 
 @transaction.atomic
 def import_snapshot(snapshot, prune=False):
-    """按 sqlstate 原位更新。无变化的码整条跳过，不重写子表。"""
-    validate(snapshot)
+    snapshot = prepare(snapshot)
     report = {'classes': 0, 'releases': 0, 'added': 0, 'updated': 0, 'unchanged': 0,
-              'removed': 0, 'texts': 0, 'messages': 0, 'templates': 0}
-
-    for item in snapshot['classes']:
-        ErrorCodeClass.objects.update_or_create(
-            code=item['code'],
-            defaults={k: v for k, v in item.items() if k != 'code'})
-        report['classes'] += 1
-
-    for item in snapshot['releases']:
-        ErrorCodeRelease.objects.update_or_create(
-            major=item['major'],
-            defaults={k: v for k, v in item.items() if k != 'major'})
-        report['releases'] += 1
-
-    existing = dict(ErrorCode.objects.values_list('sqlstate', 'source_rev'))
+              'removed': 0, 'texts': 0, 'messages': 0, 'templates': 0,
+              'unresolved_references': [gap for c in snapshot['codes'] for gap in reference_gaps(c)]}
+    for key, model, pk in [('classes', ErrorCodeClass, 'code'), ('releases', ErrorCodeRelease, 'major')]:
+        for item in snapshot[key]:
+            model.objects.update_or_create(**{pk: item[pk]},
+                                           defaults={k: v for k, v in item.items() if k != pk})
+            report[key] += 1
+    existing = dict(ErrorCode.objects.values_list('sqlstate', 'content_hash'))
     for item in snapshot['codes']:
-        sqlstate = item['sqlstate']
-        if existing.get(sqlstate) == item['source_rev']:
+        state = item['sqlstate']
+        if existing.get(state) == item['content_hash']:
             report['unchanged'] += 1
             continue
-
         defaults = {field: item[field] for field in CODE_FIELDS}
         defaults['klass_id'] = item['class_code']
-        code, created = ErrorCode.objects.update_or_create(sqlstate=sqlstate, defaults=defaults)
+        _, created = ErrorCode.objects.update_or_create(sqlstate=state, defaults=defaults)
         report['added' if created else 'updated'] += 1
-
-        for key, model in CHILDREN:
-            model.objects.filter(errcode=code).delete()
-            model.objects.bulk_create([model(errcode=code, **row) for row in item[key]])
         report['texts'] += len(item['texts'])
-
-        ErrorCodeMessage.objects.filter(errcode=code).delete()
-        for message in item['messages']:
-            templates = message.pop('templates')
-            row = ErrorCodeMessage.objects.create(errcode=code, **message)
-            ErrorCodeTemplate.objects.bulk_create([
-                ErrorCodeTemplate(message=row, errcode=code, position=position, **template)
-                for position, template in enumerate(templates)])
-            report['messages'] += 1
-            report['templates'] += len(templates)
-
+        report['messages'] += len(item['evidence']['messages'])
+        report['templates'] += sum(len(m['templates']) for m in item['evidence']['messages'])
     if prune:
-        incoming = {c['sqlstate'] for c in snapshot['codes']}
-        stale = ErrorCode.objects.exclude(sqlstate__in=incoming)
+        stale = ErrorCode.objects.exclude(sqlstate__in=[c['sqlstate'] for c in snapshot['codes']])
         report['removed'] = stale.count()
         stale.delete()
-
-    report['summaries'] = apply_summaries(summary_overrides())
-
+    from .errcode import forget
+    transaction.on_commit(forget)
     return report

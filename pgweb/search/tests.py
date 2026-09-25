@@ -400,3 +400,15 @@ class CatalogSearchTests(TestCase):
     def test_the_scope_includes_the_column(self):
         self.assertIn('catalog', parse_query('pg_demo', 'pg', '', [18], 18)['sources'])
         self.assertIn('catalog', parse_query('pg_demo', 'pg18', '', [18], 18)['sources'])
+
+
+class CatalogIdentityTests(TestCase):
+    def test_null_document_entries_are_unique_within_source(self):
+        from django.db import IntegrityError, transaction
+        from .models import SearchEntry
+        values = dict(source='errcode', key='one', entity_key='error:23505', kind='error',
+                      subtype='', name='23505', name_key='23505', heading='', body='', preview='')
+        SearchEntry.objects.create(**values)
+        with self.assertRaises(IntegrityError), transaction.atomic():
+            SearchEntry.objects.create(**values)
+        SearchEntry.objects.create(**dict(values, source='ext'))

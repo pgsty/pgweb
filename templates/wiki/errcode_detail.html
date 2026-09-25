@@ -27,7 +27,7 @@
       <dt>宏名称</dt><dd><code class="wiki-facts__mono">{{ card.macro }}</code>{% for alias in card.aliases %} <code class="wiki-facts__mono wiki-facts__alias">{{ alias }}</code>{% endfor %}</dd>
     </div>
     <div class="wiki-facts__col">
-      <dt>启用版本</dt><dd>{{ card.since }}</dd>
+      <dt>{{ card.since_label }}</dt><dd>{{ card.since }}</dd>
       <dt>状态</dt><dd>{{ card.status_text }}</dd>
     </div>
   </dl>
@@ -39,13 +39,14 @@
       {% for group in version_groups %}
       <ol class="wiki-verbar wiki-verbar--{{ group.kind }}">
         {% for v in group.items %}
-        <li>{% if v.present %}<a href="{{ v.url }}" title="PostgreSQL {{ v.label }} 手册 · 附录 A 错误代码">{{ v.label }}</a>{% else %}<span title="PostgreSQL {{ v.label }} 未定义此代码">{{ v.label }}</span>{% endif %}</li>
+        <li>{% if v.present %}<a href="{{ v.url }}" title="PostgreSQL {{ v.label }} 手册 · {{ v.note }}">{{ v.label }}</a>{% else %}<span class="wiki-version--{{ v.state }}" title="PostgreSQL {{ v.label }} · {{ v.note }}">{{ v.label }}</span>{% endif %}</li>
         {% endfor %}
       </ol>
       {% endfor %}
     </div>
   </div>
   {% endif %}
+  <p class="wiki-panel__lead">版本条依据已采样构建显示；灰色版本可能尚未采样，悬停可查看。手册链接随版本选择，源码和运行证据保持原核验构建。</p>
 </section>
 
 {% if toc|length > 1 %}
@@ -68,7 +69,7 @@
     <h2>{{ block.section.heading|default:"来源" }}</h2>
     <ul class="wiki-srclist">
       {% for s in source_rows %}
-      <li class="wiki-src{% if not s.upstream %} wiki-src--local{% endif %}">
+      <li id="{{ s.anchor }}" class="wiki-src{% if not s.upstream %} wiki-src--local{% endif %}">
         <span class="wiki-src__kind">{% if s.upstream %}上游源码{% else %}核验材料{% endif %}</span>
         <span class="wiki-src__main">
           {% if s.url %}<a class="wiki-src__path" href="{{ s.url }}" target="_blank" rel="noopener">{{ s.path }}</a>{% else %}<span class="wiki-src__path">{{ s.path }}</span>{% endif %}
@@ -89,16 +90,14 @@
     <h2>报文模板</h2>
     <p class="wiki-panel__lead">源码里的格式串，不是某一次运行的输出。<code>%s</code> 之类是占位符，实际报文会填入对象名与取值。适用范围一栏是核验时留下的原始英文记录，未经翻译。</p>
     {% for message in messages %}
-    <div class="wiki-msg">
+    <div class="wiki-msg" id="{{ message.anchor }}">
       {% for tpl in message.templates %}
       <div class="wiki-msg__row">
-        <span class="wiki-msg__kind wiki-msg__kind--{{ tpl.kind }}">{{ tpl.get_kind_display }}{% if tpl.role %} · {{ tpl.role }}{% endif %}</span>
+        <span class="wiki-msg__kind wiki-msg__kind--{{ tpl.kind }}">{{ tpl.kind_label }}{% if tpl.role %} · {{ tpl.role }}{% endif %}</span>
         <code class="wiki-msg__tpl">{{ tpl.template }}</code>
       </div>
       {% endfor %}
-      {% if message.sources %}
-      <p class="wiki-msg__src">来源：{% for s in message.sources %}{% if not forloop.first %} · {% endif %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.path }}{% if s.location %}（{{ s.location }}）{% endif %}{% if s.tag %} @ {{ s.tag }}{% endif %}</a>{% endfor %}</p>
-      {% endif %}
+      {% if message.references %}<p class="wiki-msg__src">来源：{% include "wiki/errcode_references.html" with references=message.references %}</p>{% endif %}
       {% if message.limits %}<p class="wiki-msg__limit">适用范围：{{ message.limits }}</p>{% endif %}
     </div>
     {% endfor %}
@@ -109,7 +108,7 @@
     <h2>可复现案例</h2>
     <p class="wiki-panel__lead">在一次性实例上执行过的场景。{% if code.snippet_count %}其中 {{ code.snippet_count }} 个附有可执行 SQL，正文相应小节里给出。{% endif %}</p>
     {% for case in cases %}
-    <details class="wiki-case">
+    <details class="wiki-case" id="{{ case.anchor }}">
       <summary>
         <span class="wiki-case__id">{{ case.case_id }}</span>
         {% if case.versions %}<span class="wiki-case__ver">PG {{ case.versions|join:" / " }}</span>{% endif %}
@@ -133,11 +132,11 @@
     <p class="wiki-panel__lead">每条断言都写明了是怎么核实的，以及它不覆盖什么。这一层是核验时留下的原始英文记录，照原样呈现，未经翻译。</p>
     <ul class="wiki-claims">
       {% for claim in claims %}
-      <li class="wiki-claim">
+      <li class="wiki-claim" id="{{ claim.anchor }}">
         <p class="wiki-claim__statement">{{ claim.statement }}</p>
         {% if claim.method %}<p class="wiki-claim__meta"><span>核实方式</span>{{ claim.method }}</p>{% endif %}
         {% if claim.limits %}<p class="wiki-claim__meta"><span>不覆盖</span>{{ claim.limits }}</p>{% endif %}
-        {% if claim.sources %}<p class="wiki-claim__meta"><span>来源</span>{% for s in claim.sources %}{% if not forloop.first %} · {% endif %}<a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.path }}{% if s.location %}（{{ s.location }}）{% endif %}</a>{% endfor %}</p>{% endif %}
+        {% if claim.references %}<p class="wiki-claim__meta"><span>来源</span>{% include "wiki/errcode_references.html" with references=claim.references %}</p>{% endif %}
       </li>
       {% endfor %}
     </ul>
@@ -150,11 +149,11 @@
       <thead><tr><th>目标</th><th>服务器版本</th><th>结果</th><th>覆盖案例</th></tr></thead>
       <tbody>
       {% for run in runtimes %}
-      <tr>
-        <td>{{ run.target }}</td>
+      <tr id="{{ run.anchor }}">
+        <td>{{ run.target }}{% if run.limits %}<p class="wiki-msg__limit">{{ run.limits }}</p>{% endif %}</td>
         <td>{{ run.server_version }}</td>
         <td><span class="wiki-run wiki-run--{{ run.status }}">{{ run.status }}</span></td>
-        <td>{{ run.cases|join:"、" }}</td>
+        <td>{% include "wiki/errcode_references.html" with references=run.references %}</td>
       </tr>
       {% endfor %}
       </tbody>

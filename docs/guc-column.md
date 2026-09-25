@@ -37,7 +37,7 @@ introduction_commit{status, hash, authored_at, subject, url, discussion[]} 或 n
 字典顺序即子分类显示顺序）、`GUC_CATEGORY_ORDER`、`guc_group_of(category)`。这些表是唯一定义，页面与导入都从这里取。
 
 ```python
-class GucVersion:                 # db_table 'wiki_guc_version'，18 行
+class GucVersion:                 # db_table 'guc_version'，18 行
     major                         # '9.0' … '18', '19', '20'（guc 的 '19beta3' 归一成 '19'）
     label                         # '18' / '19 beta 3' / '20 devel'
     status                        # historical(≤17) | stable(18) | preview(19) | devel(20)
@@ -50,7 +50,7 @@ class GucVersion:                 # db_table 'wiki_guc_version'，18 行
     transition                    # 见下；9.0 为 {}
     position                      # 9.0 → 0 … 20 → 17
 
-class GucParameter:               # db_table 'wiki_guc'，447 + 20 新增
+class GucParameter:               # db_table 'guc'，447 + 20 新增
     name (pk, 规范大小写), key (小写, unique)
     group, group_slug, category, category_zh          # 按最新存在版本的 category
     vartype, context, unit, boot_val(可 NULL), boot_human, short_desc, short_desc_zh, enumvals[], min_val, max_val   # 最新存在版本
@@ -298,3 +298,6 @@ baseline_groups: 索引页 groups 形状，只含 9.0 存在的参数
 页面缓存 5 分钟，导入后命令主动清缓存（`guc.forget()`）。guc 出新版本时更新 `~/pg.center/guc`，重新导出导入；20 推导层跟着本站 devel 手册走，手册重灌后重导一次。
 
 测试：`PGWEB_TEST_DB=test_pgweb_guc .venv/bin/python manage.py test pgweb.wiki pgweb.search --noinput`（测试库名走环境变量，避免与并行会话相撞）。
+
+
+2026-09-25 模型整理：实体表增加 `content_hash`，按实际落库内容判断是否更新；`source_rev` 和导出时间不参与内容比较，未变更的实体保留 `imported_at`。表名与版本表已去掉 `wiki_` 前缀，Python 模型、应用标签、命令、URL 和检索身份保持原约定。全局契约与回退步骤见 [百科模型](encyclopedia-design.md) 和 [模型整理实施记录](reference-model-rollout.md)。

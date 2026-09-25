@@ -162,11 +162,11 @@ def errcode_entry(code, text, card):
         aliases.add(normalize_name(macro))
     if '_' in code.condition_name:
         aliases.add(normalize_name(code.condition_name).replace('_', ''))
-    zh_name = text.name if text else ''
-    summary = (text.summary if text else '') or ''
+    zh_name = text.get('name', '') if text else ''
+    summary = (text.get('summary', '') if text else '') or ''
     klass = '{} {}'.format(code.klass.code, code.klass.label)
     names = [('条件名', code.condition_name), ('宏名称', card['macro'])]
-    facts = [('类别', klass), ('严重等级', code.severity_label), ('启用版本', card['since']), ('状态', card['status_text'])]
+    facts = [('类别', klass), ('严重等级', code.severity_label), (card['since_label'], card['since']), ('状态', card['status_text'])]
 
     def dl(rows, extra=''):
         return '<dl class="ds-ext-facts{}">'.format(extra) + ''.join(
@@ -177,10 +177,10 @@ def errcode_entry(code, text, card):
         parts.append('<p class="ds-ext-desc">' + escape(summary) + '</p>')
     # Identifiers get a full row each (macros run to 60 characters); the rest share a grid.
     parts.append(dl(names, ' ds-ext-facts--stack ds-ext-facts--mono') + dl(facts))
-    glance = next((sec.get('html', '') for sec in (text.sections if text else []) if sec.get('anchor') == 'at-a-glance'), '')
+    glance = next((sec.get('html', '') for sec in (text.get('sections', []) if text else []) if sec.get('anchor') == 'at-a-glance'), '')
     if glance:
         parts.append('<h3>速览</h3>' + glance)
-    body = '\n'.join(v for v in (summary, zh_name, text.description if text else '', klass, code.severity_label) if v)
+    body = '\n'.join(v for v in (summary, zh_name, text.get('description', '') if text else '', klass, code.severity_label) if v)
     return {
         'key': digest('errcode\0' + code.sqlstate), 'entity_key': 'error:' + name_key, 'kind': 'error',
         'subtype': code.klass.code, 'name': code.sqlstate, 'name_key': name_key,
@@ -193,10 +193,9 @@ def errcode_entry(code, text, card):
 def rebuild_errcodes(dry_run=False):
     """Replace the search entries of the SQL 状态码 column (source 'errcode')."""
     from pgweb.wiki import errcode as errcode_payload
-    from pgweb.wiki.models import ErrorCode, ErrorCodeText
-    texts = {t.errcode_id: t for t in ErrorCodeText.objects.filter(lang='zh')}
-    codes = list(ErrorCode.objects.select_related('klass').all())
-    entries = [errcode_entry(code, texts.get(code.sqlstate), errcode_payload.card(code)) for code in codes]
+    from pgweb.wiki.models import ErrorCode
+    codes = list(ErrorCode.objects.select_related('klass').defer('facts', 'evidence'))
+    entries = [errcode_entry(code, code.texts.get('zh') or code.texts.get('en'), errcode_payload.card(code)) for code in codes]
     if dry_run:
         return {'errcodes': len(entries)}
     objects = []
@@ -235,7 +234,7 @@ def catalog_entry(relation):
     columns = [column['name'] for column in latest.get('columns') or ()]
     description = ' '.join((latest.get('description_zh') or latest.get('description') or '').split())
     facts = [('类别', relation.kind_label), ('字段数', relation.column_count),
-             ('引入版本', relation.first_version),
+             ('最早收录', relation.first_version),
              ('版本覆盖', '{} – {}'.format(relation.first_version, relation.last_version)),
              ('结构变更', '{} 次'.format(len(relation.changed_in)) if relation.changed_in else ''),
              ('关系 OID', relation.relation_oid or '')]
@@ -311,7 +310,7 @@ def guc_entry(parameter):
     context = GUC_CONTEXT_LABEL.get(parameter.context, parameter.context)
     first = parameter.first_version + ('（基线）' if parameter.baseline else '')
     facts = [('类型', vartype), ('上下文', context), ('默认值', parameter.boot_human),
-             ('引入版本', first), ('分类', parameter.category_zh),
+             ('最早收录', first), ('分类', parameter.category_zh),
              ('版本覆盖', '{} – {}'.format(parameter.first_version, parameter.last_version)
               if parameter.first_version else '')]
     parts = []
@@ -464,7 +463,7 @@ def sqlcmd_entry(command):
     order = versions()
     baseline = bool(order and command.first_version == order[0]['major'])
     facts = [('动词', command.verb), ('对象', command.object), ('分组', command.group_label),
-             ('引入版本', command.first_version + ('（基线）' if baseline else '')),
+             ('最早收录', command.first_version + ('（基线）' if baseline else '')),
              ('版本覆盖', '{} – {}'.format(command.first_version, command.last_version)),
              ('语法变化', '{} 次'.format(len(command.changed_in)))]
     preview = '<p class="ds-ext-desc">{}</p>'.format(escape(purpose))
@@ -537,7 +536,7 @@ def func_entry(function, texts=None):
     group_label = function.group_label
     signature = texts[0] if texts else ' '.join((function.signature or '').split())
     facts = [('分组', group_label), ('签名数', len(texts) or function.signature_count),
-             ('引入版本', function.first_version),
+             ('最早收录', function.first_version),
              ('版本覆盖', '{} – {}'.format(function.first_version, function.last_version)
               if function.first_version else ''),
              ('签名变更', '{} 次'.format(len(function.changed_in)) if function.changed_in else '')]

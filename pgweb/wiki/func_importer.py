@@ -46,6 +46,7 @@ from pgweb.docs.versions import DEVEL_MAJOR_VERSION
 
 from .catalog_importer import text_of
 from .guc_importer import collapse
+from .snapshot import item_hash, hashed_defaults
 from .models import (FUNC_GROUPS, FUNC_GROUP_LABEL, FUNC_GROUP_ORDER, FuncVersion, PgFunction,
                      func_group_of, func_page_order, func_slug)
 
@@ -1135,7 +1136,7 @@ def manual_pages(major):
 def export_snapshot(offline=False, cache_dir=CACHE_DIR):
     """上游英文原页读成事实，本站手册叠中文，产出一份自包含快照。"""
     generated = datetime.now(timezone.utc).isoformat()
-    source_rev = '{}@{}'.format(generated, repo_head())
+    source_rev = repo_head()
     report = {'versions': {}, 'pages_without_functions': [], 'multi_group': [],
               'upstream': {'majors': [], 'failures': []}, 'zh': {}, 'doc_overhaul_at': []}
     fetched = upstream_pages(upstream_majors(), cache_dir, offline, report['upstream'])
@@ -1342,18 +1343,21 @@ def validate(snapshot):
         actual = sum(version['major'] in item['versions'] for item in snapshot['functions'])
         if version['function_count'] != actual:
             raise ValueError('{} 函数数不一致'.format(version['major']))
+    for item in snapshot['functions']:
+        item_hash(PgFunction, item, FUNCTION_FIELDS)
     return True
 
 
 # ------------------------------------------------------------------ 写库
 
 def changed_slugs(snapshot):
-    stored = {row.slug: row for row in PgFunction.objects.all()}
+    stored = {row.slug: row for row in PgFunction.objects.only('slug', 'content_hash')}
     added, updated, unchanged = [], [], []
     for item in snapshot['functions']:
+        calculated = item_hash(PgFunction, item, FUNCTION_FIELDS)
         row = stored.get(item['slug'])
         bucket = (added if row is None else
-                  updated if any(getattr(row, field) != item[field] for field in FUNCTION_FIELDS)
+                  updated if row.content_hash != calculated
                   else unchanged)
         bucket.append(item['slug'])
     incoming = {item['slug'] for item in snapshot['functions']}
@@ -1407,7 +1411,7 @@ def import_snapshot(snapshot, prune=False):
     for item in snapshot['functions']:
         if item['slug'] in write:
             PgFunction.objects.update_or_create(
-                slug=item['slug'], defaults={field: item[field] for field in FUNCTION_FIELDS})
+                slug=item['slug'], defaults=hashed_defaults(PgFunction, item, FUNCTION_FIELDS))
     report['pruned'] = bool(prune)
     if prune:
         stale = PgFunction.objects.filter(slug__in=missing['functions'])
@@ -1415,7 +1419,7 @@ def import_snapshot(snapshot, prune=False):
         stale.delete()
         FuncVersion.objects.filter(major__in=missing['versions']).delete()
         report['note'] = ''
-    forget()
+    transaction.on_commit(forget)
     return report
 
 

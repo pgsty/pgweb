@@ -869,7 +869,7 @@ class GucSearchEntryTests(GucFixture):
         self.assertIn('设置写入 WAL 的信息量。', preview)
         self.assertIn('<dt>默认值</dt><dd>replica</dd>', preview)
         self.assertIn('<dt>上下文</dt><dd>重启生效</dd>', preview)
-        self.assertIn('<dt>引入版本</dt><dd>9.0（基线）</dd>', preview)
+        self.assertIn('<dt>最早收录</dt><dd>9.0（基线）</dd>', preview)
         self.assertIn('默认值变迁', preview)
         self.assertIn('9.0 – 9.6', preview)
         # 默认值从未变过就不画变迁。

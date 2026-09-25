@@ -23,7 +23,8 @@ class SearchEntry(models.Model):
 
     # `source` 是 varchar(8)：等待事件的来源写作 'wait'，kind 才是完整的 'waitevent'。
     SOURCES = (('pg', 'PostgreSQL 手册'), ('ext', '扩展目录'), ('errcode', 'SQL 状态码'),
-               ('catalog', '系统目录'), ('wait', '等待事件'))
+               ('catalog', '系统目录'), ('wait', '等待事件'), ('guc', '配置参数'),
+               ('sqlcmd', 'SQL 命令'), ('func', '函数'))
 
     source = models.CharField(max_length=8, default='pg')
     document = models.ForeignKey(IndexedPage, related_name='entries', null=True, blank=True, on_delete=models.CASCADE)
@@ -47,7 +48,11 @@ class SearchEntry(models.Model):
     vector = SearchVectorField(null=True)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=('document', 'key'), name='docsearch_entry_key')]
+        constraints = [
+            models.UniqueConstraint(fields=('document', 'key'), name='docsearch_entry_key'),
+            models.UniqueConstraint(fields=('source', 'key'), condition=models.Q(document__isnull=True),
+                                    name='docsearch_catalog_key'),
+        ]
         indexes = [
             models.Index(fields=('version', 'kind', 'name_key'), name='docsearch_scope_kind'),
             models.Index(fields=('name_key',), name='docsearch_name_prefix', opclasses=('text_pattern_ops',)),

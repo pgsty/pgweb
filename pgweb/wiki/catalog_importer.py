@@ -24,6 +24,7 @@ from django.db import transaction
 
 from pgweb.docs.versions import DEVEL_MAJOR_VERSION
 
+from .snapshot import item_hash, hashed_defaults
 from .models import CATALOG_KIND_ORDER, CatalogRelation, CatalogVersion
 
 
@@ -1027,18 +1028,21 @@ def validate(snapshot):
         unknown = set(relation['versions']) - majors
         if unknown:
             raise ValueError('{} 引用了未知版本：{}'.format(name, sorted(unknown)))
+    for item in snapshot['relations']:
+        item_hash(CatalogRelation, item, RELATION_FIELDS)
     return True
 
 
 def changed_names(snapshot):
-    """这次导入会改动哪些关系。JSON 列整份比对，无变化的整条跳过。"""
-    stored = {row.pk: row for row in CatalogRelation.objects.all()}
+    """这次导入会改动哪些关系。按稳定内容指纹比对，无变化的整条跳过。"""
+    stored = {row.pk: row for row in CatalogRelation.objects.only('name', 'content_hash')}
     added, updated, unchanged = [], [], []
     for item in snapshot['relations']:
+        calculated = item_hash(CatalogRelation, item, RELATION_FIELDS)
         row = stored.get(item['name'])
         if row is None:
             added.append(item['name'])
-        elif any(getattr(row, field) != item[field] for field in RELATION_FIELDS):
+        elif row.content_hash != calculated:
             updated.append(item['name'])
         else:
             unchanged.append(item['name'])
@@ -1110,7 +1114,7 @@ def import_snapshot(snapshot, prune=False):
         if item['name'] not in write:
             continue
         CatalogRelation.objects.update_or_create(
-            name=item['name'], defaults={field: item[field] for field in RELATION_FIELDS})
+            name=item['name'], defaults=hashed_defaults(CatalogRelation, item, RELATION_FIELDS))
     report.update({'added': len(added), 'updated': len(updated), 'unchanged': len(unchanged)})
 
     report['pruned'] = bool(prune)
@@ -1128,6 +1132,8 @@ def import_snapshot(snapshot, prune=False):
     report['harvest'] = {k: v for k, v in (snapshot.get('harvest') or {}).items()
                          if k != 'unlocated'}
     report['unlocated'] = len((snapshot.get('harvest') or {}).get('unlocated') or ())
+    from . import catalog
+    transaction.on_commit(catalog.forget)
     return report
 
 

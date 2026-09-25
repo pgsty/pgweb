@@ -32,6 +32,7 @@ class Command(BaseCommand):
         except (OSError, ValueError) as error:
             raise CommandError(str(error))
 
+        snapshot = importer.prepare(snapshot)
         if options['export']:
             path = options['export']
             opener = gzip.open if path.endswith('.gz') else open

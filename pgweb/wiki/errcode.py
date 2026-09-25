@@ -1,22 +1,20 @@
 """错误码大全的取数与组装。视图只负责拼上下文，这里负责形状。"""
 
 import re
+from base64 import urlsafe_b64encode
+from copy import deepcopy
 
 from django.core.cache import cache
 
-from .models import (DEPTHS, ErrorCode, ErrorCodeRelease, ErrorCodeText,
+from .models import (DEPTHS, ErrorCode, ErrorCodeRelease,
                      EVIDENCE_TIERS, SEVERITY_LABEL, TIER_LABEL)
 
 
-CACHE_KEY = 'pgweb:wiki:errcode-index'
+CACHE_KEY = 'pgweb:wiki:errcode-index:v2'
 CACHE_SECONDS = 300
 
-# 手册附录只给码和条件名；这里再给宏名称、严重等级与启停版本，说明另起一行。
+# 手册附录只给码和条件名；这里再给宏名称、严重等级与已知版本范围，说明另起一行。
 COLUMNS = ('状态码', '条件名', '宏名称', '严重等级', '版本')
-
-# 现行错误码的「弃用版本」列显示当前开发版：2026-09-11 与 master 的
-# src/backend/utils/errcodes.txt 核对，262 个现行码全部在列，没有新增。
-LATEST_MAJOR = '20'
 
 
 def major_of(version):
@@ -28,45 +26,29 @@ def major_of(version):
 
 
 def since_of(code):
-    """启用版本：源码定义可追溯到的最早版本（追溯下限 7.4）。"""
-    if code.introduced and (code.introduced or {}).get('release'):
-        return major_of(code.introduced['release'])
-    return major_of(code.known_present_by) or (code.present_in[0] if code.present_in else '')
+    """Preserve exact patch boundaries; known_present_by is only an observed lower bound."""
+    return (code.introduced or {}).get('release') or code.known_present_by or (
+        code.present_in[0] if code.present_in else '')
 
 
-def until_of(code, majors):
-    """弃用版本：已移除的码给出移除版本；现行码给出当前开发版。"""
+def since_label(code):
+    return '引入版本' if (code.introduced or {}).get('release') else '最早已知存在'
+
+
+def until_of(code, majors=()):
+    return (code.removed or {}).get('release', '')
+
+
+def status_text(code, majors=()):
     if code.status != 'removed':
-        return LATEST_MAJOR
-    if code.removed and (code.removed or {}).get('release'):
-        return major_of(code.removed['release'])
-    present = code.formal_present_in
-    if present and present[-1] in majors:
-        index = majors.index(present[-1])
-        if index + 1 < len(majors):
-            return majors[index + 1]
-    return ''
-
-
-def summaries():
-    """每个码的中文一句话与短名。263 行，一次查完。"""
-    rows = {}
-    for text in ErrorCodeText.objects.filter(lang='zh').only('errcode_id', 'name', 'summary'):
-        rows[text.errcode_id] = {'name': text.name, 'summary': text.summary}
-    return rows
-
-
-def status_text(code, majors):
-    """活跃，或「于 17 弃用」。"""
-    if code.status != 'removed':
-        return '活跃'
-    until = until_of(code, majors)
-    return '于 {} 弃用'.format(until) if until else '已弃用'
+        return '预发行' if code.status == 'preview' else '有效'
+    until = until_of(code)
+    return '于 {} 移除'.format(until) if until else '已移除（边界未取证）'
 
 
 def row_of(code, text, majors=()):
     return {
-        'status_text': status_text(code, majors),
+        'status_text': status_text(code),
         'sqlstate': code.sqlstate,
         'url': code.url,
         'condition_name': code.condition_name,
@@ -80,6 +62,7 @@ def row_of(code, text, majors=()):
         'depth': code.depth,
         'status': code.status,
         'since': since_of(code),
+        'since_label': since_label(code),
         'until': until_of(code, majors),
         'version_range': code.version_range,
         'versions': code.formal_present_in,
@@ -90,11 +73,10 @@ def row_of(code, text, majors=()):
 
 def index_payload():
     """导航索引 + 按类分组的大表格。"""
-    text_of = summaries()
     releases = list(ErrorCodeRelease.objects.all())
-    majors = [r.major for r in releases if not r.is_preview] + [LATEST_MAJOR]
+    majors = [r.major for r in releases]
     groups, current = [], None
-    for code in ErrorCode.objects.select_related('klass').all():
+    for code in ErrorCode.objects.select_related('klass').defer('facts', 'texts', 'evidence'):
         if current is None or current['code'] != code.klass_id:
             current = {
                 'code': code.klass.code,
@@ -106,7 +88,7 @@ def index_payload():
                 'rows': [],
             }
             groups.append(current)
-        current['rows'].append(row_of(code, text_of.get(code.sqlstate, {}), majors))
+        current['rows'].append(row_of(code, {'name': code.name_zh, 'summary': code.summary_zh}, majors))
     for group in groups:
         group['count'] = len(group['rows'])
 
@@ -115,7 +97,8 @@ def index_payload():
         'columns': COLUMNS,
         'total': sum(group['count'] for group in groups),
         'class_count': len(groups),
-        'latest_major': LATEST_MAJOR,
+        'latest_major': releases[-1].major if releases else '',
+        'latest_release': releases[-1].release if releases else '',
         'earliest_major': min((row['since'] for g in groups for row in g['rows'] if row['since']),
                               key=lambda v: [int(p) for p in v.split('.')], default=''),
         'releases': releases,
@@ -178,7 +161,7 @@ def sibling_groups(class_code):
 
 
 def forget():
-    cache.delete(CACHE_KEY)
+    cache.delete_many([CACHE_KEY, DOC_CACHE_KEY, 'pgweb:wiki:errcode-index'])
 
 
 # ---------------------------------------------------------------- 详情页
@@ -223,12 +206,12 @@ def pick_version(code, wanted):
 
 def card(code):
     """详情页顶部的事实卡：类别与严重等级 / 条件名与宏名称 / 起始版本与状态。"""
-    majors = [r.major for r in ErrorCodeRelease.objects.all() if not r.is_preview] + [LATEST_MAJOR]
     return {
         'macro': code.primary_macro or (code.macros[0] if code.macros else ''),
         'aliases': [m for m in code.macros if m != code.primary_macro] + list(code.aliases),
         'since': since_of(code),
-        'status_text': status_text(code, majors),
+        'since_label': since_label(code),
+        'status_text': status_text(code),
     }
 
 
@@ -241,13 +224,17 @@ def version_groups(code):
     available = set(doc_majors())
     groups = manual_groups()
     present = set(code.present_in)
+    sampled = {r.major: r for r in ErrorCodeRelease.objects.all()}
 
     def entry(major, label, tree):
         if str(tree) not in available:
             return None
         major = str(major)
-        is_present = major in present or (major == LATEST_MAJOR and code.status != 'removed')
-        return {'major': major, 'label': label, 'present': is_present,
+        is_present = major in present
+        release = sampled.get(major)
+        state = 'present' if is_present else 'absent' if release else 'unknown'
+        note = ('已收录：' if is_present else '未定义于已采样构建：') + release.release if release else '尚未采样'
+        return {'major': major, 'label': label, 'present': is_present, 'state': state, 'note': note,
                 'url': '/docs/{}/{}'.format('devel' if tree == 0 else major, DOC_FILE)}
 
     supported = [entry(m, str(m), m) for m in groups['supported']]
@@ -262,7 +249,6 @@ def version_groups(code):
 
 def fact_rows(code):
     """事实卡。留空的字段照实留空，不要编一个值出来。"""
-    majors = [r.major for r in ErrorCodeRelease.objects.all() if not r.is_preview] + [LATEST_MAJOR]
     rows = [
         ('条件名', code.condition_name, ''),
         ('宏名称', '、'.join(code.macros), ''),
@@ -272,8 +258,8 @@ def fact_rows(code):
     ]
     if code.aliases:
         rows.append(('别名宏', '、'.join(code.aliases), ''))
-    rows.append(('启用版本', since_of(code), ''))
-    rows.append(('弃用版本', until_of(code, majors), ''))
+    rows.append((since_label(code), since_of(code), ''))
+    rows.append(('移除版本', until_of(code), ''))
     rows.append(('版本覆盖', code.version_range, ''))
     return [{'label': label, 'value': value, 'url': url} for label, value, url in rows if value]
 
@@ -292,8 +278,6 @@ def version_bar(code):
     return bar
 
 
-def source_index(code):
-    return {source.source_id: source for source in code.sources.all()}
 
 
 REPO_BLOB = 'https://github.com/pgsty/err.pg.center/blob/main/'
@@ -303,24 +287,25 @@ LINES_RE = re.compile(r'#L(\d+)(?:-L(\d+))?$')
 def source_rows(code):
     """「来源」一节的结构化渲染：上游源码在前，本仓库的核验材料在后。"""
     rows = []
-    for source in code.sources.all():
-        upstream = source.kind == 'upstream_source'
-        match = LINES_RE.search(source.url or '')
+    for source in code.evidence.get('sources', []):
+        upstream = source['kind'] == 'upstream_source'
+        match = LINES_RE.search(source['url'] or '')
         lines = ''
         if match:
             lines = match.group(1) if not match.group(2) or match.group(2) == match.group(1) \
                 else '{}–{}'.format(match.group(1), match.group(2))
         rows.append({
-            'id': source.source_id,
+            'id': source['source_id'],
+            'anchor': evidence_anchor('sources', source['source_id']),
             'upstream': upstream,
-            'path': source.path,
-            'url': source.url or (REPO_BLOB + source.path if source.path else ''),
+            'path': source['path'],
+            'url': source['url'] or (REPO_BLOB + source['path'] if source['path'] else ''),
             'lines': lines,
-            'tag': source.tag,
-            'commit': source.commit[:9],
-            'sha': source.sha256,
-            'sha_short': source.sha256[:8],
-            'docs_url': source.docs_url,
+            'tag': source['tag'],
+            'commit': source['commit'][:9],
+            'sha': source['sha256'],
+            'sha_short': source['sha256'][:8],
+            'docs_url': source['docs_url'],
         })
     rows.sort(key=lambda r: (not r['upstream'], r['id']))
     return rows
@@ -365,65 +350,69 @@ def blocks(sections, messages, cases, claims, sources, runtimes):
     return out
 
 
+KIND_LABELS = {'primary': '主消息', 'detail': 'DETAIL', 'hint': 'HINT', 'context': 'CONTEXT'}
+EVIDENCE_LABELS = {'sources': '来源', 'claims': '断言', 'messages': '报文',
+                   'runtimes': '运行记录', 'cases': '案例'}
+
+
+def evidence_anchor(kind, identity):
+    return 'evidence-' + kind + '-' + urlsafe_b64encode(identity.encode()).decode().rstrip('=')
+
+
+def evidence_records(code):
+    records = deepcopy(code.evidence)
+    targets = {}
+    for kind, label in EVIDENCE_LABELS.items():
+        for row in records.get(kind, []):
+            identity = row[kind[:-1] + '_id']
+            row['anchor'] = evidence_anchor(kind, identity)
+            url = row.get('url') or (REPO_BLOB + row['path'] if kind == 'sources' and row.get('path') else '')
+            target = dict(kind=kind, label=label, id=identity,
+                          url=url or '#' + row['anchor'], external=bool(url),
+                          text=row.get('path') or identity, location=row.get('location', ''),
+                          tag=row.get('tag', ''), unresolved=False)
+            targets.setdefault(identity, []).append(target)
+
+    def resolve(ids, kind=None):
+        result = []
+        for identity in ids:
+            matches = [t for t in targets.get(identity, []) if kind is None or t['kind'] == kind]
+            result.extend(matches or [dict(id=identity, text=identity, unresolved=True)])
+        return result
+
+    for claim in records.get('claims', []):
+        claim['references'] = resolve(claim['sources']) + resolve(claim['runtime'], 'runtimes')
+    for message in records.get('messages', []):
+        message['references'] = resolve(message['sources'])
+        for template in message['templates']:
+            template['kind_label'] = KIND_LABELS.get(template['kind'], template['kind'])
+    for run in records.get('runtimes', []):
+        run['references'] = resolve(run['cases'], 'cases')
+    return records
+
+
 def detail_payload(sqlstate, wanted_version=''):
-    code = (ErrorCode.objects.select_related('klass')
-            .prefetch_related('texts', 'sources', 'claims', 'cases', 'runtimes',
-                              'messages__templates', 'presence')
-            .get(sqlstate=sqlstate))
-    texts = {text.lang: text for text in code.texts.all()}
-    text = texts.get('zh') or texts.get('en')
-
-    sources = source_index(code)
-    claims = []
-    for claim in code.claims.all():
-        claims.append({
-            'statement': claim.statement, 'method': claim.method, 'limits': claim.limits,
-            'sources': [sources[s] for s in claim.sources if s in sources],
-        })
-
-    messages = []
-    for message in code.messages.all():
-        messages.append({
-            'id': message.message_id,
-            'severity': message.severity,
-            'limits': message.limits,
-            'path': message.path,
-            'templates': list(message.templates.all()),
-            'sources': [sources[s] for s in message.sources if s in sources],
-        })
-
+    code = ErrorCode.objects.select_related('klass').get(sqlstate=sqlstate)
+    text = code.texts.get('zh') or code.texts.get('en') or {}
+    evidence = evidence_records(code)
+    sources, claims, cases, runtimes, messages = [evidence.get(key, [])
+                                                for key in ('sources', 'claims', 'cases', 'runtimes', 'messages')]
     gaps = ((code.facts.get('history_boundary') or {}).get('gaps')) or []
     version = pick_version(code, wanted_version)
-
-    siblings = [c for c in ErrorCode.objects.filter(klass=code.klass).exclude(sqlstate=sqlstate)]
-
-    # 少数源文件在小节之前多一行「# <code>」，页面自己有标题，不再重复。
-    sections = [s for s in (text.sections if text else [])
+    sections = [s for s in text.get('sections', [])
                 if s.get('heading') or not re.match(r'^\s*(<|&lt;)h1', s.get('html', ''))]
+    if sources and not any(s.get('anchor') == 'sources' for s in sections):
+        sections.append({'anchor': 'sources', 'heading': '来源', 'html': ''})
     return {
-        'code': code,
-        'klass': code.klass,
-        'text': text,
-        'name': texts['zh'].name if 'zh' in texts else '',
+        'code': code, 'klass': code.klass, 'text': text, 'name': code.name_zh,
         'sections': sections,
         'toc': [s for s in sections if s.get('anchor') and s.get('heading')],
-        'blocks': blocks(sections, messages, list(code.cases.all()), claims,
-                         list(code.sources.all()), list(code.runtimes.all())),
-        'facts': fact_rows(code),
-        'card': card(code),
-        'version_groups': version_groups(code),
-        'version_bar': version_bar(code),
-        'versions': version_options(code),
-        'version': version,
+        'blocks': blocks(sections, messages, cases, claims, sources, runtimes),
+        'facts': fact_rows(code), 'card': card(code),
+        'version_groups': version_groups(code), 'version_bar': version_bar(code),
+        'versions': version_options(code), 'version': version,
         'doc_url': '/docs/{}/{}'.format(version['value'], DOC_FILE) if version else '',
-        'messages': messages,
-        'claims': claims,
-        'sources': list(code.sources.all()),
-        'source_rows': source_rows(code),
-        'cases': list(code.cases.all()),
-        'runtimes': list(code.runtimes.all()),
-        'siblings': siblings,
-        'sibling_groups': sibling_groups(code.klass_id),
-        'gaps': gaps,
-        'removed_without_evidence': code.status == 'removed' and not code.removed,
+        'messages': messages, 'claims': claims, 'sources': sources, 'source_rows': source_rows(code),
+        'cases': cases, 'runtimes': runtimes, 'sibling_groups': sibling_groups(code.klass_id),
+        'gaps': gaps, 'removed_without_evidence': code.status == 'removed' and not code.removed,
     }

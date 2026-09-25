@@ -1,6 +1,6 @@
 \set ON_ERROR_STOP on
 
--- Read-only deployment acceptance for the PG10-20 encyclopedia data and search.
+-- Read-only acceptance for all six reference domains and their derived search.
 BEGIN READ ONLY;
 SET LOCAL statement_timeout = '30s';
 
@@ -13,17 +13,40 @@ DECLARE
     expected_urls text[];
     indexed_urls text[];
 BEGIN
+    SELECT count(*) INTO total FROM sqlstate;
+    IF total = 0 THEN RAISE EXCEPTION 'SQLSTATE 主表为空'; END IF;
+    SELECT count(*) INTO inconsistent FROM sqlstate s
+        WHERE s.name_zh IS DISTINCT FROM coalesce(s.texts #>> '{zh,name}', '')
+           OR s.summary_zh IS DISTINCT FROM coalesce(s.texts #>> '{zh,summary}', '')
+           OR s.case_count <> jsonb_array_length(s.evidence->'cases')
+           OR s.snippet_count <> (SELECT count(*) FROM jsonb_array_elements(s.evidence->'cases') c
+                                   WHERE (c->>'has_snippet')::boolean)
+           OR s.content_hash !~ '^[0-9a-f]{64}$'
+           OR EXISTS (SELECT 1 FROM unnest(s.present_in) v
+                      WHERE NOT EXISTS (SELECT 1 FROM sqlstate_version WHERE major=v));
+    IF inconsistent <> 0 THEN RAISE EXCEPTION 'SQLSTATE % 条派生字段或版本身份不一致', inconsistent; END IF;
+    SELECT array_agg('/docs/sqlstate/' || sqlstate || '/' ORDER BY sqlstate) INTO expected_urls FROM sqlstate;
+    SELECT array_agg(url ORDER BY url) INTO indexed_urls FROM search_searchentry WHERE source='errcode';
+    IF expected_urls IS DISTINCT FROM indexed_urls THEN RAISE EXCEPTION 'SQLSTATE 检索条目不一致'; END IF;
+    SELECT count(*) INTO inconsistent FROM sqlstate_class c
+        WHERE c.sqlstate_count <> (SELECT count(*) FROM sqlstate s WHERE s.class_code=c.code);
+    IF inconsistent <> 0 THEN RAISE EXCEPTION 'SQLSTATE 类别计数不一致'; END IF;
+    SELECT count(*) INTO inconsistent FROM sqlstate_version v
+        WHERE v.code_count <> (SELECT count(*) FROM sqlstate s WHERE v.major=ANY(s.present_in));
+    IF inconsistent <> 0 THEN RAISE EXCEPTION 'SQLSTATE 已采样版本计数不一致'; END IF;
+    RAISE NOTICE 'SQLSTATE：% 条；正文摘要、证据计数、已采样版本、类别与检索通过。', total;
+
     FOR item IN
         SELECT * FROM (VALUES
-            ('SQL 命令', 'wiki_sqlcmd', NULL, NULL, 'sqlcmd',
+            ('SQL 命令', 'sqlcmd', NULL, NULL, 'sqlcmd',
              $url$'/docs/sql/' || slug || '/'$url$),
-            ('系统目录', 'wiki_catalog', 'wiki_catalog_version', 'relation_count', 'catalog',
+            ('系统目录', 'catalog', 'catalog_version', 'relation_count', 'catalog',
              $url$'/docs/catalog/' || name || '/'$url$),
-            ('等待事件', 'wiki_waitevent', 'wiki_waitevent_version', 'event_count', 'wait',
+            ('等待事件', 'waitevent', 'waitevent_version', 'event_count', 'wait',
              $url$'/docs/waitevent/' || type_slug || '/' || name || '/'$url$),
-            ('函数百科', 'wiki_func', 'wiki_func_version', 'function_count', 'func',
+            ('函数百科', 'func', 'func_version', 'function_count', 'func',
              $url$'/docs/func/' || slug || '/'$url$),
-            ('配置参数', 'wiki_guc', 'wiki_guc_version', 'parameter_count', 'guc',
+            ('配置参数', 'guc', 'guc_version', 'parameter_count', 'guc',
              $url$'/docs/guc/' || name || '/'$url$)
         ) AS columns(label, data_table, version_table, count_field, source_name, url_expr)
     LOOP
@@ -34,6 +57,9 @@ BEGIN
             RAISE EXCEPTION '%：数据表 % 为空；建表迁移不等于数据导入完成。',
                 item.label, item.data_table;
         END IF;
+
+        EXECUTE format('SELECT count(*) FROM %I WHERE content_hash !~ ''^[0-9a-f]{64}$''', item.data_table) INTO inconsistent;
+        IF inconsistent <> 0 THEN RAISE EXCEPTION '%：缺少有效内容指纹', item.label; END IF;
 
         EXECUTE format(
             'SELECT array_agg(v::text ORDER BY v) FROM generate_series(10, 20) AS v

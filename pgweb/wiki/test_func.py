@@ -979,7 +979,7 @@ class FuncSearchEntryTests(FuncFixture):
         self.assertIn('提取子串。', preview)
         self.assertIn('<dt>分组</dt><dd>字符串函数和操作符</dd>', preview)
         self.assertIn('<dt>签名数</dt><dd>3</dd>', preview)
-        self.assertIn('<dt>引入版本</dt><dd>9.0</dd>', preview)
+        self.assertIn('<dt>最早收录</dt><dd>9.0</dd>', preview)
         self.assertIn('<dt>版本覆盖</dt><dd>9.0 – 20</dd>', preview)
         self.assertIn('签名（最新收录版本）', preview)
 
