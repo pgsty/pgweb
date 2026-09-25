@@ -80,6 +80,7 @@ urlpatterns = [
     re_path(r'^docs/(current|devel|\d+(?:\.\d)?)/(static|interactive)/(([^/]+).html?)?$', pgweb.docs.views.docspermanentredirect),
     re_path(r'^docs/(current|devel|\d+(?:\.\d)?)/([^/]+).html?$', pgweb.docs.views.docpage),
     re_path(r'^docs/(current|devel|\d+(?:\.\d)?)/([^/]+).svg$', pgweb.docs.views.docsvg),
+    re_path(r'^docs/(\d+(?:\.\d)?)/((?:[\w-]+/)*[\w-]+\.(?:gif|png|jpg|jpeg))$', pgweb.docs.views.docimage),
     re_path(r'^docs/(current|devel|\d+(?:\.\d)?)/$', pgweb.docs.views.docsrootpage),
     re_path(r'^docs/(current|devel|\d+(?:\.\d)?)/$', pgweb.docs.views.redirect_root),
 

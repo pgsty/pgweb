@@ -425,6 +425,12 @@ def docpage(request, version, filename):
         return HttpResponsePermanentRedirect("/docs/{0}/{1}.html".format(int(ver), filename))
 
     fullname = "%s.%s" % (filename, extension)
+    # Rebuilt legacy manuals use the modern XHTML filenames.
+    if 0 < ver < Decimal('7.2') and DocPage.objects.filter(version=ver, file='index.html').exists():
+        indexname = 'index.html'
+        fullname = '{}.html'.format(filename)
+        if filename in ('postgres', 'book01'):
+            return HttpResponsePermanentRedirect('/docs/{}/index.html'.format(version))
 
     # Before looking up the documentation, we need to make a check for release
     # notes. Based on a change, from PostgreSQL 9.4 and up, release notes are
@@ -616,6 +622,14 @@ def docsrootpage(request, version):
     return docpage(request, version, 'index')
 
 
+def docimage(request, version, filename):
+    """Serve raster figures shipped with rebuilt historical manuals."""
+    path = os.path.join(settings.STATIC_CHECKOUT, 'documentation', 'html', version, filename)
+    if not os.path.isfile(path):
+        raise Http404('Manual image not found')
+    return HttpResponseRedirect('/files/documentation/html/{}/{}'.format(version, filename))
+
+
 def redirect_root(request, version):
     return HttpResponsePermanentRedirect("/docs/%s/" % version)
 
@@ -692,6 +706,8 @@ def _find_devel_pdf(pagetype):
 
 
 def _doc_index_filename(tree):
+    if 0 < tree < Decimal('7.2') and DocPage.objects.filter(version=tree, file='index.html').exists():
+        return 'index.html'
     if tree < Decimal('6.4'):
         return 'book01.htm'
     if tree < Decimal('7.0'):
