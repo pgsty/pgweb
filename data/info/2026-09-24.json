@@ -1,0 +1,416 @@
+{
+  "date": "2026-09-24",
+  "origin": "PGSQL.CC independent editorial collection; cutoff 2026-09-24T23:33:20Z; official sources, Planet, pgnexus #266-279, vendor feeds, HN and web search; 14-day supplementary window",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 Beta 4 发布，多项特性延期",
+      "summary": "PostgreSQL 19 发布第四个测试版，进入正式发布前的收尾阶段。SQL/PGQ 图查询、在线启停数据校验和、时态数据分段修改，以及分区合并与拆分均已撤出本版；同时继续修复在线重整、外键检查和逻辑复制等功能的问题。项目组计划于 10 月初推出候选发布版，正式版可能在 10 月发布。测试环境应按大版本升级方式迁移并重新验证应用兼容性，依赖这些延期特性的项目也需要调整上线安排。",
+      "url": "https://www.postgresql.org/about/news/postgresql-19-beta-4-released-3386/",
+      "author": "PostgreSQL 全球开发组",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "发布",
+        "PostgreSQL 19"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复逻辑解码快照的数据损坏隐患",
+      "summary": "PostgreSQL 为此前披露的逻辑解码初始快照竞态合入修复：事务的提交记录已写入 WAL，但提交状态尚未更新时，快照可能把该事务误判为中止，并留下错误的行可见性标志，导致数据损坏。修复会等待事务退出活动进程数组，再完成可见性判断。问题在 PostgreSQL 19 在线重整的压力测试中暴露，实际影响更早版本；补丁已合入 14 至 19 的维护分支，交付仍需等待后续版本，不能将其视为 Beta 4 已包含的修复。",
+      "url": "https://github.com/postgres/postgres/commit/46024c573bcb10b323874651702581cc312f4425",
+      "author": "Antonin Houska、Rui Zhao",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "数据完整性",
+        "逻辑复制"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "预备事务为何能在连接消失后持续阻塞数据库",
+      "summary": "Christophe Pettus 解释预备事务与普通事务的运维差异：两阶段提交进入预备状态后，即使连接断开、后端终止或数据库重启，也会继续持锁并拖住垃圾回收，只能通过提交或回滚预备事务结束。默认关闭这项能力可以避免意外遗留事务；确需启用时，应监控预备事务的年龄，并预算对应的共享内存槽位。备库的容量设置必须不低于主库，提高上限时应先调整并重启备库，不能依赖普通会话超时机制清理这些事务。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_prepared_transactions/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务",
+        "运维"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "一次 INSERT 背后的 WAL 放大应按实测预算",
+      "summary": "Tiger Data 用 PostgreSQL 16 拆解插入的写入成本：数据行之外，每个索引还要维护自己的页面，并产生额外 WAL；检查点之后的首次页面修改又会增加全页镜像。厂商称，实验中三个索引让约 3.8 MB 的输入生成约 33 MB 日志。文章用日志位置和 WAL 统计测量放大倍数，同时提醒这些计数属于整个实例，需在安静窗口采样。优化应结合索引用途、批量导入和全页镜像压缩，不能把新增硬件当成降低写入放大的替代方案。",
+      "url": "https://www.tigerdata.com/blog/real-cost-of-single-insert-in-postgres",
+      "author": "John Shi",
+      "source": "Tiger Data",
+      "source_date": "2026-09-11",
+      "image": "https://assets.tigerdata.com/blog/2026/09/real-cost-of-single-insert-in-postgres-1.png",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "WAL",
+        "索引"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Delivery Hero 用 Flink 重建广告计费数据流",
+      "summary": "Delivery Hero 将广告事件处理迁至 Apache Flink，用异步查询补全维度信息，再通过有状态去重和跨天关联处理点击与转化。状态保存在 RocksDB，并把增量检查点写入对象存储；原始事件另行归档，支持故障恢复和重放。厂商称处理延迟由约 61 分钟降至 1.2 秒、成本下降 57%。这里的计费准确性依靠重复事件识别，不能直接等同于全链路恰好一次；报表汇总仍按批次写入，设计需要分别界定事件处理、计费和查询的新鲜度。",
+      "url": "https://aws.amazon.com/blogs/big-data/how-delivery-hero-rebuilt-real-time-ad-measurement-with-apache-flink/",
+      "author": "Kirill Tishenkov、Alexandru Pisarenco、Francisco Morillo、Joseph Idicula Watasseril、Sabariesh Ganesan、Upendra Kambhampati",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Flink",
+        "流处理",
+        "数据工程"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 披露容器磁盘残留数据跨租户泄露",
+      "summary": "Cloudflare 披露并修复容器存储隔离漏洞：薄置备磁盘复用空间时跳过清零，新的容器可能读到同一宿主机上旧容器留下的数据。漏洞涉及已释放空间中的残留内容，并非直接读取其他正在运行容器的磁盘。修复不仅重新启用清零，还需更换运行中的磁盘和缓存镜像层，才能消除已有映射中的残留；清理已于 9 月 19 日完成。公司称现存遥测未发现研究者和内部测试之外的利用记录，事件凸显共享存储回收路径同样属于租户隔离边界。",
+      "url": "https://blog.cloudflare.com/containers-cross-tenant-vulnerability/",
+      "author": "Avishek Sarkar",
+      "source": "Cloudflare",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "容器",
+        "存储"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG19 外键快速检查补回安全扩展权限钩子",
+      "summary": "继此前权限检查修复后，本次补回安全扩展钩子调用，避免 sepgsql 等扩展漏检被引用表；修复已合入 19 分支。",
+      "url": "https://github.com/postgres/postgres/commit/2cdd1950f28cf1567ebf1c747422691b09041b30",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PG19 修复并行自动清理反复追赶 GIN 待处理项",
+      "summary": "并行工作进程现可识别自动清理模式，按既定边界处理待合并条目，避免持续追赶并发插入；修复已合入 19 分支。",
+      "url": "https://github.com/postgres/postgres/commit/8be38b238a61d58b6c0f21d4c1d8e9c1d26d8b58",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "运维"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "开发分支撤回 JSON_TABLE 错误处理继承规则",
+      "summary": "此前合入的顶层错误处理继承规则因备份恢复与升级问题撤回，这是对近期已报道特性的实质回退，尚未作为正式版发布。",
+      "url": "https://github.com/postgres/postgres/commit/2c6f2c5e1778e243f5300ec45d0f4b0be15e6325",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "JSON"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "开发分支修复统计项分配失败后的集群崩溃风险",
+      "summary": "统计项先完成共享内存分配再登记，避免失败后遗留半成品、拖垮后续访问进程；改动目前仅在开发分支。",
+      "url": "https://github.com/postgres/postgres/commit/d9de60c5e47a7f7a5dcee050d119bda08ea85d55",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "稳定性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "R2 数据目录可查看表维护记录并手动排队压缩",
+      "summary": "控制台展示压缩、快照过期和清单重写的状态与耗时；手动请求进入正常调度队列，仍受权限、冲突和每日限额约束。",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-16-table-maintenance-dashboard/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Iceberg",
+        "运维"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "GKE 预览无需边车的四层服务网格",
+      "summary": "首版限定单集群，提供双向 TLS、服务发现、四层流量管理和遥测；配置使用 Gateway API，不支持 Istio API。",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/concepts/ambient-overview",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "网络"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 预览敏感操作前的身份再验证",
+      "summary": "首批面向使用 Entra ID 的企业托管用户，可在创建令牌、修改钩子等操作前要求重新认证或多因素验证；合并请求尚未纳入。",
+      "url": "https://github.blog/changelog/2026-09-24-require-proof-of-presence-for-high-impact-actions/",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "身份认证"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AlloyDB 预览面向智能体的隔离只读实例",
+      "summary": "新实例复用底层存储读取新鲜生产数据，将智能体查询计算与生产负载隔离，按需创建并可缩容至零；目前处于预览阶段。",
+      "url": "https://cloud.google.com/blog/products/databases/announcing-postgresql-for-agents-in-alloydb",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "PostgreSQL",
+        "查询隔离"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG19 序列同步为发布端索引增加越界检查",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/7a7f60616136a599153bfacf87ebe32e7c2b0a6a",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PG19 禁止在备库读取不准确的多事务统计",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/4545cee303c257e58195e3d033c05bf38e2cd4d6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PG19 修复从 PostgreSQL 9.2 升级的回归",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/2ae589741df0fa626386aa10b679f7ffb67b0b09",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "OTel 0.161 补齐 PostgreSQL 非关系锁指标",
+      "summary": "",
+      "url": "https://github.com/open-telemetry/opentelemetry-collector-contrib/releases/tag/v0.161.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Memorystore 正式支持 Valkey 9.1",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/memorystore/docs/valkey/supported-versions",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Valkey"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Data Studio 将停用 MySQL 5.6/5.7 连接",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/data-studio/connect-to-mysql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "兼容性"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Compute Engine 预览标准快照的三天回收站",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/disks/retain-deleted-resources",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "备份"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cloud EKM 预览外部密钥的公网与 VPC 迁移",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kms/docs/migrate-external-keys",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "密钥管理"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "R2 新增存储桶上传与下载带宽指标",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-24-r2-bandwidth-metrics/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "对象存储",
+        "监控"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "1.1.1.1 新增 DNSSEC 根密钥信任探测",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-24-root-key-trust-anchor-sentinel/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 网关可按流量目的地类型制定策略",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-23-traffic-destination-selector/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 规则 API 支持仅校验而不发布",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-17-rulesets-dry-run-validation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}
