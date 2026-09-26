@@ -281,7 +281,10 @@ def _inherited_security_fix(cve, release, releases):
     initial_date = initial.get('date')
     if not initial_date:
         return None
-    for branch, version in fixed_branches.items():
+    # JSON object order is not significant and JSONB does not preserve it.
+    # Choose the same valid evidence for file and database snapshots.
+    for branch in sorted(fixed_branches, key=version_key, reverse=True):
+        version = fixed_branches[branch]
         fixed_date = cve.get('published', {}).get(branch) or releases.get(version, {}).get('date')
         if fixed_date and fixed_date <= initial_date:
             return {

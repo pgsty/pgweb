@@ -382,6 +382,15 @@ class VersionComparisonSecurityTests(SimpleTestCase):
         later_cve = advisory(fixed={'18': '18.6'}, published={'18': '2026-08-13'})
         self.assertEqual(engine._security_state(later_cve, data['9.1.24'], data), 'unknown')
 
+    def test_historical_evidence_does_not_depend_on_json_object_key_order(self):
+        target = release('9.2.0', '2012-09-10', supported=False)
+        dates = {'9.0': '2011-09-26', '9.1': '2011-09-26'}
+        first = advisory(fixed={'9.0': '9.0.5', '9.1': '9.1.1'}, published=dates)
+        second = advisory(fixed={'9.1': '9.1.1', '9.0': '9.0.5'}, published=dates)
+        expected = engine._inherited_security_fix(first, target, {})
+        self.assertEqual(engine._inherited_security_fix(second, target, {}), expected)
+        self.assertEqual(expected['fixed_version'], '9.1.1')
+
     def test_historical_inheritance_needs_fix_date_and_respects_explicit_cna_ranges(self):
         target = release('9.1.0', '2011-09-12', supported=False)
         cve = advisory(fixed={'9.0': '9.0.1'})
