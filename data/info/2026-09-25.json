@@ -1,0 +1,417 @@
+{
+  "date": "2026-09-25",
+  "origin": "PostgreSQL.org / Planet; primary-source searches and vendor feeds; HN; pgnexus #267–280; cutoff 2026-09-26T00:22:31Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "并发 REPACK 修复新增列默认值丢失",
+      "summary": "PostgreSQL 已提交并发 REPACK 的正确性修复：表通过免重写方式增加列后，部分旧元组不含新属性，解码时误用临时表的描述信息，会把默认值还原成 NULL，甚至破坏非空约束。若该列属于副本标识，还可能找不到待更新行或触发比较函数崩溃。补丁改用源表描述信息，并增加隔离测试，已回补至 19 分支。这个修复针对并发变更的旧元组处理，与此前的 TOAST 解码及索引检查问题不同。",
+      "url": "https://github.com/postgres/postgres/commit/45da2c1d75663d7a692f967b77df42a84fdd6b4d",
+      "author": "Sami Imseih、Álvaro Herrera",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "数据完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pgwrh 首个 Alpha 用逻辑副本分散读取",
+      "summary": "pgwrh 发布首个 1.0 Alpha，面向 PostgreSQL 18，将分区叶子表按加权哈希分布到逻辑副本，并用自带的 FDW 路由查询。放置规则支持可用区与副本数量约束，拓扑切换可检查就绪状态并回滚；独立等待扩展能先等到指定 LSN，再取得读取快照。写入仍集中在控制节点，逻辑复制仍是异步的，放置冗余不替代控制节点高可用。该版本供测试，暂不提供协调式模式变更或自动选主，部署前需明确读扩展与故障恢复的边界。",
+      "url": "https://github.com/mkleczek/pgwrh/releases/tag/v1.0.0-alpha1",
+      "author": "pgwrh 项目组",
+      "source": "pgwrh",
+      "source_date": "2026-09-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "分片",
+        "逻辑复制"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "工业时序表容量估算必须计入行与索引开销",
+      "summary": "工业传感器的字段字节数不能直接充当数据库容量预算。Tiger Data 用 PostgreSQL 16 的样表说明，原始字段合计 20 字节，算上堆存储与写入时建立的索引，实测平均每行约 95.6 字节。厂商称，按每秒一万条、保留两年外推，未压缩存储需求约为 60 TB。差距来自元组头、对齐、页面与索引，而非业务字段增长。文章建议用真实模式、计划中的索引和批量载入样本测量每行成本，再估算留存与后续压缩空间。",
+      "url": "https://www.tigerdata.com/blog/sizing-your-iiot-table-before-you-deploy",
+      "author": "John Shi",
+      "source": "Tiger Data",
+      "source_date": "2026-09-25",
+      "image": "https://assets.tigerdata.com/blog/2026/09/sizing-iiot-table.png",
+      "domain": "pg",
+      "tags": [
+        "容量规划",
+        "时序数据"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Azure 磁盘缓存失效可让 PostgreSQL 突然变慢",
+      "summary": "PostgreSQL 的存储等待不一定能靠调整数据库参数解决。Stormatics 总结 Azure 虚拟机上的四类磁盘陷阱：磁盘跨过主机缓存容量阈值、虚拟机先于磁盘触及吞吐上限、容量档位限制 IOPS，以及数据与 WAL 共用磁盘。对支持主机缓存的磁盘，扩容到 4 TiB 及以上将失去原有缓存收益。排查应同时对照等待事件、系统 I/O 与云端限额，并把数据文件和 WAL 的读写特征分开考虑；提高磁盘 IOPS，无法解除虚拟机瓶颈。",
+      "url": "https://stormatics.tech/blogs/postgresql-storage-bottleneck-azure-disk-caching",
+      "author": "Umair Shahid",
+      "source": "Stormatics",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Azure",
+        "存储",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "用 Fargate 将 PostgreSQL 变更送入 S3",
+      "summary": "AWS 给出一条由托管组件组成的 PostgreSQL 变更采集链路：Fargate 任务通过 wal2json 读取逻辑复制流，将事件交给 EventBridge，再经 SQS 与 Lambda 写入 S3。方案省去自建消息集群，适合将行级变化留作分析输入，同时把采集、缓冲与落盘拆开扩缩。运维重点仍包括复制槽滞后和 WAL 保留上限、队列死信与重试，以及下游幂等处理；队列采用至少一次投递，不能把组件托管等同于端到端恰好一次。",
+      "url": "https://aws.amazon.com/blogs/database/how-to-stream-postgresql-changes-to-amazon-s3-with-aws-fargate/",
+      "author": "Ramdas Gutlapalli、Rishika Kasani、Lokesh Chauhan",
+      "source": "AWS Database Blog",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "对象存储",
+        "AWS"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "KEDA 2.21 强制限定服务账号令牌受众",
+      "summary": "KEDA 2.21 默认要求服务账号令牌显式绑定受众，阻止认证配置把可访问 Kubernetes API 的令牌转发给租户控制的端点。这项安全修复会影响 Vault 的 Kubernetes 认证和各类绑定服务账号令牌认证：升级前需配置接收方、令牌受众及账号映射，不能只确认控制器启动成功。新版还加入 ClickHouse、Spanner 与 Cosmos DB 变更流伸缩器，并调整部分伸缩器的兼容行为。升级后应验证实际触发器与伸缩流程。",
+      "url": "https://github.com/kedacore/keda/releases/tag/v2.21.0",
+      "author": "KEDA 项目组",
+      "source": "KEDA",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "Kubernetes",
+        "自动伸缩"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "复制槽上限要为备份与故障转移预留余量",
+      "summary": "max_replication_slots 同时容纳临时备份槽、表初始同步槽与失效槽；备库上限不足还会阻止故障转移槽持久化。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_replication_slots/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "配置"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Charmed PostgreSQL 将切换默认版本轨道",
+      "summary": "秋季稳定更新包含 PostgreSQL 14.24/16.15 与新版 Raft 库；10 月 1 日默认轨道将从 14 改为 16。",
+      "url": "https://discourse.charmhub.io/t/charmed-postgresql-stable-autumn-refresh/20904",
+      "author": "Alex Lutay",
+      "source": "Canonical",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "发布",
+        "运维"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "浏览器内可查询 pg_dump 备份并检查结构",
+      "summary": "工具在浏览器本地重放备份并执行 SQL，支持多种压缩格式；自定义和目录格式需先转换，内存上限限制了可检查的备份规模。",
+      "url": "https://streams.dbconvert.com/blog/inspect-pgdump-without-restoring/",
+      "author": "Dmitry Narizhnykh",
+      "source": "DBConvert",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "工具"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "湖仓历史快照时间不能当作源库提交时间",
+      "summary": "Streambed 说明 CDC 落地批次与 PostgreSQL 事务边界并不一一对应，湖仓快照标识反映接收端提交，审计需另存源端位置。",
+      "url": "https://streambed.dev/blog/time-travel-lakehouse-snapshots/",
+      "author": "",
+      "source": "Streambed",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "湖仓"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "etcd 3.7.2 补正接收快照的目录刷盘",
+      "summary": "更新修复保存远端快照数据库时目录未 fsync 的问题，并改进 WAL 快照版本读取，升级依赖以修复安全漏洞。",
+      "url": "https://github.com/etcd-io/etcd/releases/tag/v3.7.2",
+      "author": "",
+      "source": "etcd",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "持久性",
+        "安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Apigee hybrid 1.15.8 修复令牌与响应处理",
+      "summary": "修复 JWT 刷新令牌撤销和 HTTP 103 响应失同步问题，JSON 防护可拒绝重复键，并加强 AI 防护策略的 SSRF 校验。",
+      "url": "https://docs.cloud.google.com/apigee/docs/hybrid/release-notes#September_24_2026",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "API 网关"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 分享从运行时样式迁往 CSS 模块的实践",
+      "summary": "团队通过兼容封装与特性开关逐步迁移 Primer，减少运行时生成样式的成本；文章复盘的是此前已完成的迁移。",
+      "url": "https://github.blog/engineering/architecture-optimization/improving-site-performance-by-shipping-more-css/",
+      "author": "Josh Black、Marie Lucca",
+      "source": "GitHub",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "前端",
+        "性能"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Taskflow 将模糊测试接入智能体迭代",
+      "summary": "智能体可围绕构建、测试入口、覆盖率和崩溃分析迭代 AFL++ 测试；工具本身不提供沙箱，执行环境需要独立隔离。",
+      "url": "https://github.blog/security/application-security/ai-powered-fuzzing-with-the-github-security-lab-taskflow-agent/",
+      "author": "Antonio Morales",
+      "source": "GitHub Security Lab",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "安全测试",
+        "开发工具"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Data Studio 逐步开放 Cloud SQL PG 私网连接",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/data-studio/connect-to-postgresql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Compute Engine X5 正式提供 48 TB 内存实例",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/release-notes#September_25_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "基础设施"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "GKE Standard 每节点 Pod 上限增至 512",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/release-notes#September_25_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "GCP 将于 2027 年 8 月 1 日停用 T4 GPU",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/eol/t4-eos",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "基础设施"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Workers 追踪 API 支持记录异常与访问当前跨度",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-25-custom-span-apis/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Workers 指标图可关联版本发布与灰度流量",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-25-release-flows-workers-metrics/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Browser Run 可将爬取状态事件投递至队列",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-25-crawl-event-subscriptions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 紧急规则拦截 Artifactory 认证绕过",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-25-emergency-waf-release/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 统一路由加入托管防火墙规则集",
+      "summary": "",
+      "url": "https://developers.cloudflare.com/changelog/post/2026-09-25-unified-routing-managed-rulesets/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "CodeQL 2.27.1 扩充 Go 数据库接口的数据流模型",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-25-codeql-2-27-1-adds-c-and-c-query-and-kotlin-2-4-20-support/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "开发工具"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Actions 查询超过 2500 条时不再返回精确总数",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-25-changes-to-query-results-in-the-github-actions-api-and-ui/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI/CD"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Turnstile Spin 帮助编程智能体接通服务端校验",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/turnstile-spin/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具",
+        "安全"
+      ],
+      "position": 26
+    }
+  ]
+}
