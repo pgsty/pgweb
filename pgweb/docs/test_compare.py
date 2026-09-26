@@ -245,14 +245,32 @@ class VersionComparisonTests(SimpleTestCase):
         data = snapshot(release('17.0', '2025-09-25', old), release('18.0', '2025-09-25', new))
         self.assertEqual(engine.build_report(data, registry(), '17.0', '18.0')['total'], 0)
 
-    def test_same_branch_followups_cannot_both_merge_into_one_old_branch_record(self):
+    def test_multi_statement_commit_cannot_merge_distinct_followups(self):
         data = snapshot(release('16.0', '2023-09-14'),
                         release('16.1', '2024-01-01', entry('old', commits=['aaaaaaa12'])),
                         release('17.1', '2024-09-26', entry('new', commits=['aaaaaaa12']),
                                 entry('second-section', commits=['aaaaaaa12'])))
         report = engine.build_report(data, registry(), '16.0', '17.1')
-        self.assertCountEqual(ids(report), ['old', 'second-section'])
-        self.assertEqual(report['duplicate_count'], 1)
+        self.assertCountEqual(ids(report), ['old', 'new', 'second-section'])
+        self.assertEqual(report['duplicate_count'], 0)
+
+    def test_shared_commit_with_two_fixes_matches_only_the_same_full_statement(self):
+        data = snapshot(release('15.6', '2024-02-08', entry('old-shared', 'Report ownership changes', commits=['aaaaaaa12'])),
+                        release('16.0', '2023-09-14'),
+                        release('16.2', '2024-02-08',
+                                entry('new-only', 'Fix ownership checks in the new version', commits=['aaaaaaa12']),
+                                entry('new-shared', 'Report ownership changes', commits=['aaaaaaa12'])))
+        report = engine.build_report(data, registry(), '15.6', '16.2')
+        self.assertEqual(ids(report), ['new-only'])
+        self.assertEqual([item['id'] for item in report['exclusions']], ['new-shared'])
+
+    def test_security_category_does_not_hide_a_migration_statement(self):
+        old = entry('ordinary', 'Fix security issue', commits=['aaaaaaa12'], category='security')
+        new = entry('migration', 'Fix security issue', commits=['aaaaaaa12'], category='security')
+        old['source_entry_id'] = '14.1/changes/001'
+        new['source_entry_id'] = '15.1/migration/001'
+        data = snapshot(release('14.1', '2022-02-08', old), release('15.1', '2023-02-08', new))
+        self.assertEqual(ids(engine.build_report(data, registry(), '14.1', '15.1')), ['migration'])
 
     def test_mixed_known_and_reported_commits_adds_variant_without_double_counting(self):
         data = snapshot(release('16.1', '2023-09-14', entry('known', commits=['aaaaaaa12'])),
@@ -284,6 +302,14 @@ class VersionComparisonTests(SimpleTestCase):
 
 class ComparisonNativeSourceRegressions(SimpleTestCase):
     """Real upstream Author blocks link related, not necessarily equal changes."""
+
+    def test_bundled_ownership_commit_keeps_the_version_specific_fix(self):
+        data = engine.load_snapshot('releases.json.gz')
+        report = engine.build_report(data, registry(), '15.6', '16.2')
+        kept = {item['source_entry_id'] for group in report['groups'] for item in group['entries']}
+        excluded = {item['source_entry_id'] for item in report['exclusions']}
+        self.assertIn('16.2/changes/033', kept)
+        self.assertIn('16.2/changes/034', excluded)
 
     def test_partial_backports_do_not_hide_distinct_major_release_features(self):
         data = engine.load_snapshot('releases.json.gz')

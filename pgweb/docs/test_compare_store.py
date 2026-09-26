@@ -153,6 +153,39 @@ class CompareStorageTests(TestCase):
         store.import_snapshot(source)
         self.assertTrue(all(row.relations[0]['type'] == 'related' for row in CompareEntry.objects.all()))
 
+    def test_large_object_16_2_commit_contains_two_distinct_fixes(self):
+        # Actual 16.2/changes/033 and /034 share this commit correspondence;
+        # 12.18/changes/021 contains only the PostAlterHook reporting fix.
+        group = [['152bfc0af', '55b5c67da', '59bd34c2f', '7a99fb6e1', 'ba66f2533', 'f552f2be2']]
+        ownership = ('Fix ownership tests for large objects (Tom Lane) Operations on large objects that require '
+                     'ownership privilege failed with unrecognized class ID: 2613, unless run by a superuser.')
+        reporting = ('Fix ownership change reporting for large objects (Tom Lane) A no-op ALTER LARGE OBJECT OWNER '
+                     'command (that is, one selecting the existing owner) passed the wrong class ID to the '
+                     'PostAlterHook, probably confusing any extension using that hook.')
+        a, b, c = (change('ownership', ownership, groups=group), change('reporting', reporting, groups=group),
+                   change('backport', reporting, groups=group))
+        for entry, source_id in zip((a, b, c), ('16.2/changes/033', '16.2/changes/034', '12.18/changes/021')):
+            entry['source_entry_id'] = source_id
+        source = snapshot(release('16.2', a, b, released='2024-02-08'), release('12.18', c, released='2024-02-08'))
+        store.import_snapshot(source)
+        rows = {row.payloads['zh']['id']: row for row in CompareEntry.objects.all()}
+        links = {link['target']: link for link in rows['backport'].relations}
+        self.assertEqual(links[rows['ownership'].id]['type'], 'related')
+        self.assertEqual(links[rows['reporting'].id]['type'], 'equivalent')
+        self.assertEqual(links[rows['ownership'].id]['evidence']['ambiguous_patch_ids'], rows['ownership'].patch_ids)
+        self.assertEqual(links[rows['ownership'].id]['rule'], 2)
+        self.assertEqual(store.export_database_snapshot(), source)
+
+    def test_partial_patch_overlap_within_release_marks_shared_patch_ambiguous(self):
+        source = snapshot(release('16.1', change('a', groups=[['aaaaaaa11'], ['bbbbbbb22']]),
+                                  change('b', groups=[['aaaaaaa11']])),
+                          release('17.1', change('c', groups=[['aaaaaaa11'], ['bbbbbbb22']])))
+        store.import_snapshot(source)
+        rows = {row.payloads['zh']['id']: row for row in CompareEntry.objects.all()}
+        links = {link['target']: link for link in rows['a'].relations}
+        self.assertEqual(links[rows['c'].id]['type'], 'related')
+        self.assertEqual(links[rows['c'].id]['evidence']['ambiguous_patch_ids'], rows['b'].patch_ids)
+
     def test_missing_commit_same_day_full_prose_can_be_equivalent(self):
         source = snapshot(release('17.1', change('a', 'Same entire statement')),
                           release('18.1', change('b', 'Same entire statement')))

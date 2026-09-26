@@ -177,10 +177,14 @@ class _ReleaseIndex:
                 union([commit, longer[-1]])
         self.identities = {}
         self.row_contexts = {}
+        statements_by_release_commit = defaultdict(set)
         for release in releases:
             for position, entry in enumerate(release['entries']):
                 groups, known = raw[(release['version'], position)]
-                namespace = 'compatibility' if entry['category'] == 'compatibility' else 'change'
+                source_id = entry.get('source_entry_id', '')
+                source_part = re.search(r'/(migration|changes)/', source_id)
+                migration = (source_part[1] == 'migration' if source_part else entry['category'] == 'compatibility')
+                namespace = 'compatibility' if migration else 'change'
                 required = frozenset((namespace, root(group[0])) for group in groups)
                 supplied = frozenset((namespace, root(commit)) for commit in known)
                 # Exact full prose on the same release day is a conservative
@@ -191,7 +195,14 @@ class _ReleaseIndex:
                 prose = re.sub(r'\s+', ' ', entry.get('identity_text', entry.get('text', entry['title']))).strip()
                 fingerprint = (namespace, release.get('date', ''), hashlib.sha256(prose.encode()).hexdigest())
                 self.identities[(release['version'], position)] = (required, supplied, fingerprint)
-                self.row_contexts[(release['version'], entry['id'])] = (release['minor'] == 0, fingerprint[-1])
+                scope = required | supplied
+                self.row_contexts[(release['version'], entry['id'])] = (release['minor'] == 0, fingerprint[-1], scope)
+                for commit in scope:
+                    statements_by_release_commit[(release['version'], commit)].add(fingerprint[-1])
+        # Upstream sometimes combines independent fixes in one source commit.
+        # Preserve the commit evidence, but distinguish its separate statements.
+        self.multi_statement_commits = {commit[1] for (_, commit), statements in statements_by_release_commit.items()
+                                        if len(statements) > 1}
 
 
 def _release_index(snapshot):
@@ -229,11 +240,14 @@ def _same_commit_scope(index, release, entry, reference):
     For example, the Snowball update adds Estonian in 18, whereas its 17.5
     backport only fixes out-of-memory handling. The upstream Author block links
     these commits but does not make the release-note statements equivalent.
-    Keep initial-major statements unless their complete upstream prose agrees.
+    A single maintenance commit can also cover independent statements (for
+    example, CVE-2014-0065 and CVE-2014-0066). Such shared groups require the same
+    full-prose check as initial-major statements.
     """
-    initial, prose = index.row_contexts[(release['version'], entry['id'])]
-    other_initial, other_prose = index.row_contexts[(reference['version'], reference['id'])]
-    return not (initial or other_initial) or prose == other_prose
+    initial, prose, commits = index.row_contexts[(release['version'], entry['id'])]
+    other_initial, other_prose, other_commits = index.row_contexts[(reference['version'], reference['id'])]
+    multi_statement = any(commit[1] in index.multi_statement_commits for commit in commits & other_commits)
+    return not (initial or other_initial or multi_statement) or prose == other_prose
 
 
 def _release_summary(release):

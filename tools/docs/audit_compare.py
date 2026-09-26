@@ -69,10 +69,29 @@ def audit_single_releases(snapshot, security):
     return {'single_release_count': len(records), 'single_release_digest': digest(records)}
 
 
+def ambiguous_patches(snapshot, index):
+    """Find a source commit used for distinct statements within one release part."""
+    statements = defaultdict(set)
+    for release in snapshot['releases']:
+        for position, entry in enumerate(release['entries']):
+            source_id = entry.get('source_entry_id', '')
+            part = source_id.split('/')[1] if '/' in source_id else (
+                'migration' if entry['category'] == 'compatibility' else 'changes')
+            required, _, fingerprint = index.identities[(release['version'], position)]
+            namespace = 'compatibility' if part == 'migration' else 'change'
+            assert fingerprint[0] == namespace and all(scope == namespace for scope, _ in required), (
+                source_id, 'comparison namespace differs from original release part')
+            for _, patch in required:
+                statements[(release['version'], part, patch)].add(fingerprint[-1])
+    return frozenset(patch for (_, _, patch), prose in statements.items() if len(prose) > 1)
+
+
 def audit_relations(snapshot):
     """Check DB relationships against fresh source identities, not patch IDs."""
     rows, by_patch, by_statement = {}, defaultdict(set), defaultdict(set)
+    stored_patch_statements = defaultdict(set)
     index = compare._release_index(snapshot)
+    ambiguous = ambiguous_patches(snapshot, index)
     for release in snapshot['releases']:
         for position, entry in enumerate(release['entries']):
             assert all(field in entry for field in ('db_id', 'patch_ids', 'statement_hash', 'relations')), (
@@ -92,8 +111,12 @@ def audit_relations(snapshot):
             rows[identifier] = row
             for patch in patches:
                 by_patch[patch].add(identifier)
+            for patch in entry['patch_ids']:
+                stored_patch_statements[(release['version'], part, patch)].add(fingerprint[-1])
             by_statement[(part, fingerprint[-1], release.get('date'))].add(identifier)
 
+    stored_ambiguous = {patch for (_, _, patch), prose in stored_patch_statements.items() if len(prose) > 1}
+    assert len(stored_ambiguous) == len(ambiguous), 'Persisted multi-statement patch count differs from source'
     records, types = [], Counter()
     for identifier, row in rows.items():
         release, entry = row['release'], row['entry']
@@ -115,6 +138,8 @@ def audit_relations(snapshot):
             if row['patches'] and other['patches']:
                 equivalent = (scope and row['patches'] == other['patches'] and
                               ((release['minor'] > 0 and other['release']['minor'] > 0) or same_prose))
+                if (row['patches'] | other['patches']) & ambiguous and not same_prose:
+                    equivalent = False
             else:
                 equivalent = scope and same_day and same_prose
             expected[target] = 'equivalent' if equivalent else 'related'
@@ -122,9 +147,12 @@ def audit_relations(snapshot):
         assert len(actual) == len(entry['relations']), (identifier, 'repeated relationship')
         assert actual == expected, (entry.get('source_entry_id'), 'persisted relationships differ from source', actual, expected)
         for relation in entry['relations']:
+            assert relation['rule'] == 2, (identifier, 'obsolete relationship rule')
             target = rows[relation['target']]
             overlap = sorted(set(entry['patch_ids']) & set(target['entry']['patch_ids']))
             assert relation['evidence']['patch_ids'] == overlap
+            ambiguous_ids = sorted((set(entry['patch_ids']) | set(target['entry']['patch_ids'])) & stored_ambiguous)
+            assert relation['evidence'].get('ambiguous_patch_ids', []) == ambiguous_ids
             assert relation['evidence']['same_day'] == bool(
                 release.get('date') and release['date'] == target['release'].get('date'))
             if 'statement_hash' in relation['evidence']:
@@ -134,7 +162,8 @@ def audit_relations(snapshot):
             types[relation['type']] += 1
             records.append([entry.get('source_entry_id', entry['id']),
                             target['entry'].get('source_entry_id', target['entry']['id']), relation['type']])
-    return {'relation_count': len(records), 'relation_types': dict(types), 'relation_digest': digest(sorted(records))}
+    return {'relation_count': len(records), 'relation_types': dict(types), 'relation_digest': digest(sorted(records)),
+            'ambiguous_patch_count': len(ambiguous), 'relation_rule': 2}
 
 
 def audit(snapshot, security, start_numbers=None):
@@ -144,19 +173,28 @@ def audit(snapshot, security, start_numbers=None):
     index = compare._release_index(snapshot)
     identities = {(r['version'], e['id']): index.identities[(r['version'], p)]
                   for r in releases.values() for p, e in enumerate(r['entries'])}
+    ambiguous = ambiguous_patches(snapshot, index)
     decisions = {}
     pairs = []
     examples = []
     same_branch = cross_branch = 0
     selected_examples = {('9.0.0', '9.1.0'), ('9.0.0', '18.6'), ('9.6.0', '9.6.24'),
                          ('9.6.24', '10.0'), ('17.0', '18.0'), ('17.0', '18.6'),
-                         ('17.11', '18.6'), ('18.0', '18.6'), ('10.0', '18.6')}
+                         ('17.11', '18.6'), ('18.0', '18.6'), ('10.0', '18.6'), ('15.6', '16.2')}
 
     def source_id(key):
         return originals[key].get('source_entry_id', key[1])
 
     def note_key(item):
         return item['version'], item['id']
+
+    def same_scope(left, right):
+        left_required, left_supplied, left_fingerprint = identities[left]
+        right_required, right_supplied, right_fingerprint = identities[right]
+        shared = (left_required | left_supplied) & (right_required | right_supplied)
+        protected = (releases[left[0]]['minor'] == 0 or releases[right[0]]['minor'] == 0 or
+                     any(patch in ambiguous for _, patch in shared))
+        return not protected or left_fingerprint[-1] == right_fingerprint[-1]
 
     for number, start in enumerate(versions):
         if start_numbers is not None and number not in start_numbers:
@@ -206,12 +244,10 @@ def audit(snapshot, security, start_numbers=None):
                     supplied = set().union(*(identities[ref][1] for ref in matches))
                     if reason == 'backport_duplicate':
                         supplied.update(commit for ref in source_keys for commit in identities[ref][1]
-                                        if compare._same_commit_scope(index, releases[key[0]], originals[key],
-                                                                      {'version': ref[0], 'id': ref[1]}))
+                                        if same_scope(key, ref))
                     assert required and required <= supplied, (start, finish, key, 'incomplete commit evidence')
                     for ref in matches:
-                        if releases[key[0]]['minor'] == 0 or releases[ref[0]]['minor'] == 0:
-                            assert identities[ref][-1][-1] == fingerprint[-1], (key, ref, 'partial major backport')
+                        assert same_scope(key, ref), (key, ref, 'major feature or multi-statement commit aspect lost')
                 else:
                     assert all(identities[ref][-1] == fingerprint for ref in matches)
                     assert not required or all(not identities[ref][0] for ref in matches)
@@ -231,6 +267,11 @@ def audit(snapshot, security, start_numbers=None):
             else:
                 cross_branch += 1
 
+            if (start, finish) == ('15.6', '16.2'):
+                shown_ids = {source_id(key) for key in shown}
+                assert '16.2/changes/033' in shown_ids, '16-only ownership-test fix was hidden by the shared reporting fix'
+                assert '16.2/changes/034' not in shown_ids, 'Known ownership-reporting fix was counted again'
+
             row = {'from': start, 'to': finish, 'count': report['total'],
                    'source_known': report['already_in_source_count'], 'duplicates': report['duplicate_count'],
                    'digest': digest([report['history'], [source_id(key) for key in shown], pair_decisions]),
@@ -249,7 +290,8 @@ def audit(snapshot, security, start_numbers=None):
     return {'format': 1, 'snapshot_generated_at': snapshot['generated_at'],
             'release_count': len(versions), 'same_branch_pairs': same_branch, 'cross_branch_pairs': cross_branch,
             'pair_count': len(pairs), 'pair_digest': digest(pairs), 'examples': examples,
-            'decision_count': len(decisions), 'decisions': list(decisions.values()), 'pairs': pairs}
+            'decision_count': len(decisions), 'decisions': list(decisions.values()), 'pairs': pairs,
+            'ambiguous_patch_count': len(ambiguous)}
 
 
 def audit_chunk(data_and_numbers):

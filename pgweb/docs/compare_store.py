@@ -20,7 +20,7 @@ from django.utils import timezone
 from .models import CompareDataset, CompareEntry, ComparePatch, CompareRelease
 
 
-RELATION_RULE = 1
+RELATION_RULE = 2
 IMPORT_LOCK = 7071636
 LANGUAGES = frozenset({'zh', 'en'})
 HASH = re.compile(r'[0-9a-f]{7,40}', re.I)
@@ -279,11 +279,17 @@ def _patch_registry(incoming, existing, dataset_key, now, using, counters):
 def _relations(entries, releases):
     """Persistent facts across occurrences, independent of a comparison pair."""
     by_patch, by_statement = defaultdict(list), defaultdict(list)
+    patch_statements = defaultdict(set)
     active = {key: row for key, row in entries.items() if row.active_languages}
     for row in active.values():
         for patch in row.patch_ids:
             by_patch[patch].append(row.id)
+            patch_statements[(row.release_id, row.part, patch)].add(row.statement_hash)
         by_statement[row.statement_hash].append(row.id)
+    # One commit may fix several independently documented problems. A patch
+    # used for different statements within one release cannot establish prose
+    # equivalence across branches, even when complete patch sets match.
+    ambiguous_patches = {key[2] for key, statements in patch_statements.items() if len(statements) > 1}
     result = {}
     for row in active.values():
         candidates = set(by_statement[row.statement_hash])
@@ -307,7 +313,12 @@ def _relations(entries, releases):
                               ((left.minor > 0 and right.minor > 0) or same_statement))
             else:
                 equivalent = same_scope and same_day and same_statement
+            ambiguous = sorted((set(row.patch_ids) | set(other.patch_ids)) & ambiguous_patches)
+            if ambiguous and not same_statement:
+                equivalent = False
             evidence = {'patch_ids': overlap, 'same_day': same_day}
+            if ambiguous:
+                evidence['ambiguous_patch_ids'] = ambiguous
             if same_statement:
                 evidence['statement_hash'] = row.statement_hash
             relations.append({'target': key, 'type': 'equivalent' if equivalent else 'related',

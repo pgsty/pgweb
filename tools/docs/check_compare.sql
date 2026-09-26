@@ -45,3 +45,18 @@ FROM release_dataset d WHERE d.kind = 'releases' AND (
   d.release_count != jsonb_array_length(d.members) OR
   d.entry_count != (SELECT coalesce(sum(jsonb_array_length(m->'entries')), 0)
                    FROM jsonb_array_elements(d.members) m));
+
+-- A shared commit can contain independently documented fixes. Rule 2 requires
+-- identical full statements for equivalence involving such ambiguous patches.
+WITH ambiguous AS (
+  SELECT DISTINCT patch.id
+  FROM release_entry e CROSS JOIN LATERAL unnest(e.patch_ids) patch(id)
+  WHERE cardinality(e.active_languages) > 0
+  GROUP BY e.release_id, e.part, patch.id
+  HAVING count(DISTINCT e.statement_hash) > 1
+)
+SELECT 'ambiguous_patch_false_equivalent' AS violation, count(*) AS count
+FROM release_entry e CROSS JOIN LATERAL jsonb_array_elements(e.relations) rel
+JOIN release_entry other ON other.id = rel->>'target'
+WHERE rel->>'type' = 'equivalent' AND e.statement_hash != other.statement_hash
+  AND (e.patch_ids || other.patch_ids) && ARRAY(SELECT id FROM ambiguous);

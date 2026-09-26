@@ -135,7 +135,7 @@
                   <span class="compare-relation-kind">{% if relation.kind == 'equivalent' %}同一变更{% else %}相关提交{% endif %}</span>
                   <a href="{{ relation.url }}">PostgreSQL {{ relation.label }} · {{ relation.title }}</a>
                 </li>{% endfor %}</ul>
-                <p class="compare-relation-note">“同一变更”有完整对应证据；“相关提交”可能只是部分回补或后续调整，各版本说明分别保留。</p>
+                <p class="compare-relation-note">“同一变更”有完整对应证据；“相关提交”可能包含多个独立事项、部分回补或后续调整，各版本说明分别保留。</p>
               </details>{% endif %}
               {% if entry.variants %}<details class="compare-variants">
                 <summary>其他分支的原始说明（{{ entry.variants|length }}）</summary>
