@@ -76,8 +76,7 @@
           <div id="docComments" class="pg-docfeedback">
             <h2>提交更正</h2>
             <p>
-              译文有误、术语不当或页面显示问题，请到译文仓库 <a href="{{issue_url}}" target="_blank" rel="noopener" data-pg-issue>pgsty/pgdoc 报告译文问题</a>。
-              {% if version_state == 'supported' %}英文原文本身的问题请通过<a href="{{upstream_form_url}}" target="_blank" rel="noopener">上游文档表单</a>反馈给 PostgreSQL 文档维护者。{% else %}英文原文本身的问题，请在<a href="{{current_page_url}}">当前版本的对应页面</a>向上游反馈；{% if version_state == 'eol' %}上游不再修订已结束维护的版本{% else %}上游会在正式发布前持续修订{% endif %}。{% endif %}
+              译文有误、术语不当或页面显示问题，请到译文仓库 <a href="{{issue_url}}" target="_blank" rel="noopener" data-pg-issue>pgsty/pgdoc 报告译文问题</a>。{% if version_state == 'supported' %}英文原文本身的问题请通过<a href="{{upstream_form_url}}" target="_blank" rel="noopener">上游文档表单</a>反馈给 PostgreSQL 文档维护者。{% else %}英文原文本身的问题，请在<a href="{{current_page_url}}">当前版本的对应页面</a>向上游反馈；{% if version_state == 'eol' %}上游不再修订已结束维护的版本{% else %}上游会在正式发布前持续修订{% endif %}。{% endif %}
             </p>
           </div>
         </div> <!-- pgContentWrap -->
