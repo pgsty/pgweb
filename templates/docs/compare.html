@@ -1,0 +1,160 @@
+{% extends "base/page.html" %}
+{% block title %}版本对比{% endblock %}
+{% block extrahead %}<link rel="stylesheet" href="/media/css/compare.css?{{ gitrev }}">{% endblock %}
+{% block contents %}
+<div id="pg-compare" class="compare" data-share-url="{{ share_url }}">
+  <header class="compare-hero">
+    <p class="compare-crumb"><a href="/docs/">文档</a><span aria-hidden="true">/</span>版本对比</p>
+    <p class="compare-eyebrow">POSTGRESQL · VERSION COMPARE</p>
+    <h1>PostgreSQL 版本对比</h1>
+    <p class="compare-lead">对比两个 PostgreSQL 大版本或小版本，查看沿途新增的功能、修复的问题与 CVE 安全记录。</p>
+    <form class="compare-form" method="get" action="/docs/compare/">
+      <div class="compare-select">
+        <label for="compare-from">起始版本 <span>当前使用</span></label>
+        <select id="compare-from" name="from" required>
+          {% for group in release_groups %}<optgroup label="{{ group.label }}">{% for option in group.options %}<option value="{{ option.value }}"{% if option.value == from_version %} selected{% endif %}>{{ option.label }}</option>{% endfor %}</optgroup>{% endfor %}
+        </select>
+      </div>
+      <span class="compare-direction" aria-hidden="true">→</span>
+      <div class="compare-select">
+        <label for="compare-to">目标版本 <span>准备升级</span></label>
+        <select id="compare-to" name="to" required>
+          {% for group in release_groups %}<optgroup label="{{ group.label }}">{% for option in group.options %}<option value="{{ option.value }}"{% if option.value == to_version %} selected{% endif %}>{{ option.label }}</option>{% endfor %}</optgroup>{% endfor %}
+        </select>
+      </div>
+      <button class="compare-submit" type="submit"{% if not release_groups %} disabled{% endif %}>对比版本 <span aria-hidden="true">↗</span></button>
+    </form>
+    <p class="compare-form-note">从起始版本之后，看到目标版本为止。大版本名称代表该系列首个正式版本。</p>
+    <details class="compare-paste" id="compare-paste" hidden>
+      <summary>从数据库版本字符串识别起始版本</summary>
+      <label for="compare-version-text">粘贴 <code>SELECT version();</code> 的结果或版本号</label>
+      <div class="compare-paste-row"><input id="compare-version-text" type="text" placeholder="PostgreSQL 16.3 on x86_64-pc-linux-gnu…" maxlength="1000" autocomplete="off"><button class="compare-button" type="button" id="compare-detect">识别版本</button></div>
+      <p id="compare-detect-status" role="status"></p>
+    </details>
+    {% if examples %}<nav class="compare-examples" aria-label="版本对比示例"><span>试试看</span>{% for example in examples %}<a href="{{ example.url }}">{{ example.label }} <span aria-hidden="true">↗</span></a>{% endfor %}</nav>{% endif %}
+    {% if dataset_summary %}<p class="compare-dataset">{{ dataset_summary }}</p>{% endif %}
+  </header>
+
+  {% if error %}<div class="compare-notice compare-notice--error" role="alert"><strong>暂时无法对比</strong><p>{{ error }}</p></div>{% endif %}
+  {% if message %}<div class="compare-notice"><p>{{ message }}</p></div>{% endif %}
+  {% if not release_groups and not error and not message %}<div class="compare-empty"><h2>版本资料准备中</h2><p>发行说明数据加载后，即可在这里对比版本。</p></div>{% endif %}
+
+  {% if report %}
+  {% for warning in report.warnings %}<div class="compare-notice compare-notice--warning"><p>{{ warning }}</p></div>{% endfor %}
+  <section class="compare-result" aria-labelledby="compare-result-title">
+    <div class="compare-result-heading">
+      <div>
+        <p class="compare-eyebrow">{% if report.cross_major %}跨大版本升级{% else %}小版本更新{% endif %}</p>
+        <h2 id="compare-result-title"><span>{{ report.from_release.label|default:report.from_release.version }}</span><span class="compare-result-arrow" aria-label="至">→</span><span>{{ report.to_release.label|default:report.to_release.version }}</span></h2>
+        <p class="compare-result-date">{% if report.from_release.date %}{{ report.from_release.date }}{% else %}快照 {{ report.from_release.source_as_of }}{% endif %} <span aria-hidden="true">—</span> {% if report.to_release.date %}{{ report.to_release.date }}{% else %}快照 {{ report.to_release.source_as_of }}{% endif %}</p>
+      </div>
+      <div class="compare-actions">
+        <button id="compare-share" class="compare-button" type="button" hidden>复制分享链接</button>
+        {% if export_url %}<a class="compare-button" href="{{ export_url }}" download>导出 JSON <span aria-hidden="true">↓</span></a>{% endif %}
+      </div>
+    </div>
+    <p id="compare-share-status" class="compare-status" role="status" hidden></p>
+    <input id="compare-share-fallback" class="compare-share-fallback" type="text" aria-label="分享链接，请复制" readonly hidden>
+    <div class="compare-stats" aria-label="对比概览">
+      <div class="compare-stat"><span class="compare-stat-number">{{ report.total }}</span><span>项变更</span><small>功能、修复与改进</small></div>
+      <div class="compare-stat"><span class="compare-stat-number">{{ report.release_count }}</span><span>次版本发布</span><small>按发行版本归档</small></div>
+      <div class="compare-stat compare-stat--security"><span class="compare-stat-number">{{ report.cve_count|default_if_none:"—" }}</span><span>个 CVE</span><small>{% if report.cve_available %}按漏洞编号去重{% else %}所选分支尚无公告覆盖{% endif %}</small></div>
+    </div>
+    {% if report.from_release.status_label or report.to_release.status_label %}
+    <div class="compare-support" aria-label="版本支持状态">
+      <p><strong>{{ report.from_release.version }}</strong> {{ report.from_release.status_label }}{% if report.from_release.eol %}<span>维护截止 {{ report.from_release.eol }}</span>{% endif %}</p>
+      <p><strong>{{ report.to_release.version }}</strong> {{ report.to_release.status_label }}{% if report.to_release.eol %}<span>维护截止 {{ report.to_release.eol }}</span>{% endif %}</p>
+    </div>
+    {% endif %}
+
+    {% if report.security_regressions %}<div class="compare-notice compare-notice--warning"><strong>目标版本需要更新的安全补丁</strong><p>以下问题不影响起始版本，目标版本仍需升级到对应修复版本：</p><ul>{% for cve in report.security_regressions %}<li><a href="{{ cve.url }}">{{ cve.id }}</a> · 修复版本 {{ cve.fixed_version|default:"该分支未提供" }}{% if cve.title %} · {{ cve.title }}{% endif %}</li>{% endfor %}</ul></div>{% endif %}
+    {% if not report.cve_available %}<p class="compare-noscript">官方安全公告尚未覆盖所选版本分支，暂不计算 CVE 差异。发行说明中的安全变更仍完整保留。</p>{% endif %}
+
+    {% if report.cves %}
+    <details class="compare-cves">
+      <summary><span class="compare-security-mark" aria-hidden="true">●</span> 安全修复索引 <span class="compare-cve-total">{{ report.cve_count }} 个 CVE</span></summary>
+      <div class="compare-cve-table-wrap">
+        <table class="compare-cve-table">
+          <caption class="sr-only">版本区间内的 CVE 安全记录，按评分从高到低排列</caption>
+          <thead><tr><th scope="col">CVE / 问题</th><th scope="col">严重程度</th><th scope="col">修复版本</th></tr></thead>
+          <tbody>{% for cve in report.cves %}<tr><td><a href="{{ cve.url }}" target="_blank" rel="noopener">{{ cve.id }} <span aria-hidden="true">↗</span></a>{% if cve.title %}<p>{{ cve.title }}</p>{% endif %}{% if cve.status_label %}<small>{{ cve.status_label }}</small>{% endif %}</td><td><span class="compare-cve-score">{{ cve.score|default_if_none:"—" }}</span>{% if cve.severity %}<small>{{ cve.severity }}</small>{% endif %}</td><td>{% if cve.fixed_version %}{{ cve.fixed_version }}{% else %}{{ cve.versions|join:"、" }}{% endif %}</td></tr>{% endfor %}</tbody>
+        </table>
+      </div>
+    </details>
+    {% endif %}
+
+    {% if report.remaining_cves %}
+    <details class="compare-cves" id="compare-remaining">
+      <summary><span class="compare-security-mark" aria-hidden="true">●</span> 目标版本仍有 {{ report.remaining_cves|length }} 个已知漏洞</summary>
+      <div class="compare-cve-table-wrap"><table class="compare-cve-table">
+        <caption class="sr-only">目标版本仍受影响的 CVE，按评分从高到低排列</caption>
+        <thead><tr><th scope="col">CVE / 问题</th><th scope="col">严重程度</th><th scope="col">修复版本</th></tr></thead>
+        <tbody>{% for cve in report.remaining_cves %}<tr><td><a href="{{ cve.url }}" target="_blank" rel="noopener">{{ cve.id }} <span aria-hidden="true">↗</span></a>{% if cve.title %}<p>{{ cve.title }}</p>{% endif %}</td><td><span class="compare-cve-score">{{ cve.score|default_if_none:"—" }}</span>{% if cve.severity %}<small>{{ cve.severity }}</small>{% endif %}</td><td>{{ cve.fixed_version|default:"该分支未提供" }}</td></tr>{% endfor %}</tbody>
+      </table></div>
+    </details>
+    {% endif %}
+
+    {% if report.total %}
+    <div class="compare-tools" id="compare-tools" hidden>
+      <div class="compare-tool-top">
+        <label class="compare-search" for="compare-query"><span class="sr-only">搜索变更内容</span><span aria-hidden="true">⌕</span><input id="compare-query" type="search" value="{{ query }}" placeholder="搜索功能、问题、CVE 编号…" maxlength="200" autocomplete="off"></label>
+        <div class="compare-expand-actions"><button class="compare-text-button" id="compare-expand" type="button">展开本页</button><span aria-hidden="true">/</span><button class="compare-text-button" id="compare-collapse" type="button">收起本页</button></div>
+      </div>
+      <div class="compare-filters" role="group" aria-label="按变更类型筛选">
+        {% for stat in report.stats %}<button class="compare-filter{% if stat.key == category %} is-active{% endif %}" type="button" data-category="{{ stat.key }}" aria-pressed="{% if stat.key == category %}true{% else %}false{% endif %}">{{ stat.label }} <span>{{ stat.count }}</span></button>{% endfor %}
+      </div>
+      <p class="compare-filter-status" id="compare-filter-status" role="status" aria-live="polite"></p>
+      <nav class="compare-pagination" aria-label="变更分页">
+        <label for="compare-page-size">每页 <select id="compare-page-size"><option value="25">25 条</option><option value="50" selected>50 条</option><option value="100">100 条</option><option value="all">全部</option></select></label>
+        <div><button class="compare-button" id="compare-prev" type="button" aria-label="上一页">←</button><span id="compare-page-status" role="status" aria-live="polite"></span><button class="compare-button" id="compare-next" type="button" aria-label="下一页">→</button></div>
+      </nav>
+    </div>
+    <noscript><p class="compare-noscript">以下为完整变更清单。点击条目展开正文；启用 JavaScript 后可即时搜索、按类型筛选和复制分享链接。</p></noscript>
+    {% endif %}
+
+    <div class="compare-timeline">
+      {% for group in report.groups %}
+      <section class="compare-release" data-release="{{ group.version }}" aria-labelledby="compare-release-{{ forloop.counter }}">
+        <header class="compare-release-heading">
+          <div><span class="compare-timeline-dot" aria-hidden="true"></span><h3 id="compare-release-{{ forloop.counter }}">PostgreSQL {{ group.label|default:group.version }}</h3><time>{% if group.date %}{{ group.date }}{% else %}快照 {{ group.source_as_of }}{% endif %}</time></div>
+          <a href="{{ group.source_url }}">完整发行说明 <span aria-hidden="true">↗</span></a>
+        </header>
+        {% if group.migration_html %}<details class="compare-migration"><summary>升级与兼容性说明</summary><div class="compare-prose">{{ group.migration_html|safe }}</div></details>{% endif %}
+        <div class="compare-entries">
+          {% for entry in group.entries %}
+          <details class="compare-entry" id="{{ entry.id }}" data-kind="{{ entry.category }}">
+            <summary><span class="compare-kind compare-kind--{{ entry.category }}">{{ entry.category_label }}</span><span class="compare-entry-title">{{ entry.title }}</span><span class="compare-entry-toggle" aria-hidden="true">+</span></summary>
+            <div class="compare-entry-body">
+              {% if entry.section %}<p class="compare-entry-section">{{ entry.section }}</p>{% endif %}
+              <div class="compare-prose">{{ entry.html|safe }}</div>
+              <div class="compare-entry-meta">
+                {% for cve in entry.cves %}<a class="compare-cve-badge" href="https://www.postgresql.org/support/security/{{ cve }}/" target="_blank" rel="noopener">{{ cve }}</a>{% endfor %}
+                <a href="{{ entry.source_url }}">查看原始条目 <span aria-hidden="true">↗</span></a>
+                <a class="compare-entry-permalink" href="#{{ entry.id }}" aria-label="此变更的永久链接">#</a>
+              </div>
+            </div>
+          </details>
+          {% endfor %}
+        </div>
+      </section>
+      {% endfor %}
+    </div>
+    <div class="compare-empty" id="compare-no-matches" hidden><h3>没有匹配的变更</h3><p>试试其他关键词，或<button class="compare-text-button" type="button" id="compare-reset">清除筛选</button>。</p></div>
+    {% if not report.total %}<div class="compare-empty"><h3>{% if report.from_release.version == report.to_release.version %}两个版本相同{% else %}这个区间没有新增变更{% endif %}</h3><p>选择不同的起始版本与目标版本，查看升级包含的变化。</p></div>{% endif %}
+  </section>
+  {% endif %}
+
+  <details class="compare-method">
+    <summary>这份对比如何生成？</summary>
+    <div class="compare-prose">
+      <p>对比以 PostgreSQL 发行说明为依据，汇总起始版本之后、目标版本及之前的变更，支持同一大版本内的小版本更新，以及跨大版本升级。跨大版本时，旧分支的维护记录只纳入到下一大版本首次发布之日，所有记录均不晚于目标版本的发布日期。大版本名称（如 18）指首个正式版本（18.0）；测试版与开发快照会单独标注。</p>
+      <p>每条变更保留完整说明与原文链接；有本站译文时优先使用中文，缺少译文时保留英文。分类用于辅助浏览，具体影响、适用条件与升级操作请阅读条目正文和各版本的升级说明。</p>
+      <p>同一修复可能回补到多个版本分支。对比会保守合并可确认相同的条目，已知由起始版本包含的修复会排除；文字不同的相似条目仍可能分别列出。这是发行说明的累计差异，不能覆盖二进制程序之间的每一处代码变化。</p>
+      <p>CVE 独立依据 PostgreSQL 官方安全公告与漏洞记录计算：起始版本受影响、目标版本已修复或不受影响的漏洞才计入，按编号去重。目标版本仍受影响的漏洞另行提示；安全变更条数与 CVE 数量分别统计。</p>
+      {% if report.excluded_count %}<p>本次对比排除了 {{ report.excluded_count }} 条已包含或重复的变更。</p>{% endif %}
+      <p>交互参考 <a href="https://pgversions.com/" target="_blank" rel="noopener">pgversions.com</a> 与 <a href="https://github.com/neondatabase/pgversionreport" target="_blank" rel="noopener">pgversionreport</a>，内容来自 PostgreSQL 发行说明。更多历史资料见<a href="/docs/release/">发行说明归档</a>。</p>
+    </div>
+  </details>
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/compare.js?{{ gitrev }}" defer></script>{% endblock %}

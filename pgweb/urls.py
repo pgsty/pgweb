@@ -18,6 +18,7 @@ import pgweb.pugs.views
 import pgweb.search.views
 import pgweb.search.docviews
 import pgweb.security.views
+import pgweb.docs.compare
 import pgweb.sponsors.views
 import pgweb.survey.views
 
@@ -75,6 +76,7 @@ urlpatterns = [
     re_path(r'^docs/manuals/$', pgweb.docs.views.manuals),
     re_path(r'^docs/manuals/archive/$', pgweb.docs.views.manualarchive),
     re_path(r'^docs/release/$', pgweb.docs.views.release_notes_list),
+    path('docs/compare/', pgweb.docs.compare.compare, name='docs-compare'),
     re_path(r'^docs/release/(\d+(?:\.\d+){0,2})/$', pgweb.docs.views.release_notes),
     # Legacy URLs for accessing the docs page; provides a permanent redirect
     re_path(r'^docs/(current|devel|\d+(?:\.\d)?)/(static|interactive)/(([^/]+).html?)?$', pgweb.docs.views.docspermanentredirect),

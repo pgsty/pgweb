@@ -4,6 +4,7 @@ from pgweb.core.models import Version
 
 def get_struct():
     yield ('docs/third-party/', 0.5, None)
+    yield ('docs/compare/', 0.7, None)
     currentversion = Version.objects.get(current=True)
 
     # Can't use a model here, because we don't (for some reason) have a
