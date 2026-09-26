@@ -2,6 +2,8 @@
 
 中文源文在 `../pgdoc/zh/<大版本>/`。导入前先查最新交付报告和产物哈希；`zh/<版本>/html/`、`tmp/pdf/zh/` 可能仍是旧构建，不能仅凭路径选取。核对产物对应的源文件清单与当前源码，再固定本次 HTML/PDF 快照。
 
+> 2026-09-26 全量重导：pgdoc 侧完成全角字符间假空格源头清理（`../pgdoc/bin/fix_cjk_spacing.py`，31 版共删约 33.9 万处，tag `pre-cjk-despace-20260926`），31 版 HTML 全量重建后按本文流程重导两端 docs 表并 `index_docs`；`pgweb/search/extract.py` 同步升级 body 全角相邻直连（PIPELINE_VERSION 4）。pgdoc 源改动后须先过 `fix_cjk_spacing.py --check zh/<版本>`（退出 0）再构建导入。
+
 ## 版本与位置
 
 - PG10–19 使用同名的 `core_version.tree` / `docs.version`。
