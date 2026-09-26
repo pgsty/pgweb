@@ -1,0 +1,2523 @@
+{
+  "format": 1,
+  "checked_at": "2026-09-26T11:05:53+00:00",
+  "inventory_url": "https://www.postgresql.org/docs/release/",
+  "inventory_sha256": "0e18f785f478b5fcca5b5300ed8615de32b9b141824a8f8c2713db54c9b406fa",
+  "snapshot_sha256": "5fbeee46354b0b480125b60c8a333f8ee198f962c496c8418b4bd025f4144e96",
+  "minimum_major": 10,
+  "language": "zh",
+  "stable_release_count": 173,
+  "stable_versions": [
+    "10.0",
+    "10.1",
+    "10.2",
+    "10.3",
+    "10.4",
+    "10.5",
+    "10.6",
+    "10.7",
+    "10.8",
+    "10.9",
+    "10.10",
+    "10.11",
+    "10.12",
+    "10.13",
+    "10.14",
+    "10.15",
+    "10.16",
+    "10.17",
+    "10.18",
+    "10.19",
+    "10.20",
+    "10.21",
+    "10.22",
+    "10.23",
+    "11.0",
+    "11.1",
+    "11.2",
+    "11.3",
+    "11.4",
+    "11.5",
+    "11.6",
+    "11.7",
+    "11.8",
+    "11.9",
+    "11.10",
+    "11.11",
+    "11.12",
+    "11.13",
+    "11.14",
+    "11.15",
+    "11.16",
+    "11.17",
+    "11.18",
+    "11.19",
+    "11.20",
+    "11.21",
+    "11.22",
+    "12.0",
+    "12.1",
+    "12.2",
+    "12.3",
+    "12.4",
+    "12.5",
+    "12.6",
+    "12.7",
+    "12.8",
+    "12.9",
+    "12.10",
+    "12.11",
+    "12.12",
+    "12.13",
+    "12.14",
+    "12.15",
+    "12.16",
+    "12.17",
+    "12.18",
+    "12.19",
+    "12.20",
+    "12.21",
+    "12.22",
+    "13.0",
+    "13.1",
+    "13.2",
+    "13.3",
+    "13.4",
+    "13.5",
+    "13.6",
+    "13.7",
+    "13.8",
+    "13.9",
+    "13.10",
+    "13.11",
+    "13.12",
+    "13.13",
+    "13.14",
+    "13.15",
+    "13.16",
+    "13.17",
+    "13.18",
+    "13.19",
+    "13.20",
+    "13.21",
+    "13.22",
+    "13.23",
+    "14.0",
+    "14.1",
+    "14.2",
+    "14.3",
+    "14.4",
+    "14.5",
+    "14.6",
+    "14.7",
+    "14.8",
+    "14.9",
+    "14.10",
+    "14.11",
+    "14.12",
+    "14.13",
+    "14.14",
+    "14.15",
+    "14.16",
+    "14.17",
+    "14.18",
+    "14.19",
+    "14.20",
+    "14.21",
+    "14.22",
+    "14.23",
+    "14.24",
+    "15.0",
+    "15.1",
+    "15.2",
+    "15.3",
+    "15.4",
+    "15.5",
+    "15.6",
+    "15.7",
+    "15.8",
+    "15.9",
+    "15.10",
+    "15.11",
+    "15.12",
+    "15.13",
+    "15.14",
+    "15.15",
+    "15.16",
+    "15.17",
+    "15.18",
+    "15.19",
+    "16.0",
+    "16.1",
+    "16.2",
+    "16.3",
+    "16.4",
+    "16.5",
+    "16.6",
+    "16.7",
+    "16.8",
+    "16.9",
+    "16.10",
+    "16.11",
+    "16.12",
+    "16.13",
+    "16.14",
+    "16.15",
+    "17.0",
+    "17.1",
+    "17.2",
+    "17.3",
+    "17.4",
+    "17.5",
+    "17.6",
+    "17.7",
+    "17.8",
+    "17.9",
+    "17.10",
+    "17.11",
+    "18.0",
+    "18.1",
+    "18.2",
+    "18.3",
+    "18.4",
+    "18.6"
+  ],
+  "unreleased_skips": [
+    "18.5"
+  ],
+  "preview_builds": [
+    "19beta4"
+  ],
+  "sources": [
+    {
+      "major": "10",
+      "build": "10.23",
+      "file": "en/10.23/release-10.sgml",
+      "sha256": "ac17cfb8ebce2f68be7d070c07dc4d0428b3fc25315bd913a4dbd1603b001da8",
+      "url": "https://ftp.postgresql.org/pub/source/v10.23/postgresql-10.23.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v10.23/postgresql-10.23.tar.bz2.sha256",
+      "archive_sha256": "94a4b2528372458e5662c18d406629266667c437198160a18cdfd2c4a4d6eee9",
+      "verified": true
+    },
+    {
+      "major": "11",
+      "build": "11.22",
+      "file": "en/11.22/release-11.sgml",
+      "sha256": "4449cd66cf494ec1aedacde4eebf361c32dc398872cd675beb1b8942b8267db8",
+      "url": "https://ftp.postgresql.org/pub/source/v11.22/postgresql-11.22.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v11.22/postgresql-11.22.tar.bz2.sha256",
+      "archive_sha256": "2cb7c97d7a0d7278851bbc9c61f467b69c094c72b81740b751108e7892ebe1f0",
+      "verified": true
+    },
+    {
+      "major": "12",
+      "build": "12.22",
+      "file": "en/12.22/release-12.sgml",
+      "sha256": "755d0641ae125fd49686690674394c401b33ee11bb6551255151f77c639b956e",
+      "url": "https://ftp.postgresql.org/pub/source/v12.22/postgresql-12.22.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v12.22/postgresql-12.22.tar.bz2.sha256",
+      "archive_sha256": "8df3c0474782589d3c6f374b5133b1bd14d168086edbc13c6e72e67dd4527a3b",
+      "verified": true
+    },
+    {
+      "major": "13",
+      "build": "13.23",
+      "file": "en/13.23/release-13.sgml",
+      "sha256": "ab491eaf1f783b101c9dc69538e573eb56ddd4744a662d32c6e1c7887198f628",
+      "url": "https://ftp.postgresql.org/pub/source/v13.23/postgresql-13.23.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v13.23/postgresql-13.23.tar.bz2.sha256",
+      "archive_sha256": "6ec3c82726af92b7dec873fa1cdf881eca92a4219787dfad05acb6b10e041fd6",
+      "verified": true
+    },
+    {
+      "major": "14",
+      "build": "14.24",
+      "file": "en/14.24/release-14.sgml",
+      "sha256": "45e0f9fffad7230283f7c47bcf54bf0a94b6fc44f7404aeefa7ae2a1a3c15684",
+      "url": "https://ftp.postgresql.org/pub/source/v14.24/postgresql-14.24.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v14.24/postgresql-14.24.tar.bz2.sha256",
+      "archive_sha256": "a7fa7ed3d558172355f51406097a7bd4f6b473be80f311ef7cda96bf383d8897",
+      "verified": true
+    },
+    {
+      "major": "15",
+      "build": "15.19",
+      "file": "en/15.19/release-15.sgml",
+      "sha256": "98990cf1671e9e431f5af9f396a58fbc09d258668256c15910a880113c819db7",
+      "url": "https://ftp.postgresql.org/pub/source/v15.19/postgresql-15.19.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v15.19/postgresql-15.19.tar.bz2.sha256",
+      "archive_sha256": "e1a64a87a46b825b88c082e4518161a47aab53c45694964f8ba1df28f7859f89",
+      "verified": true
+    },
+    {
+      "major": "16",
+      "build": "16.15",
+      "file": "en/16.15/release-16.sgml",
+      "sha256": "d1f685a082733a121fac3ac9c5a2e2127e8ffe1c30567d6b1055cecf6ff37cf1",
+      "url": "https://ftp.postgresql.org/pub/source/v16.15/postgresql-16.15.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v16.15/postgresql-16.15.tar.bz2.sha256",
+      "archive_sha256": "c1575341fa7bd40f5274ea465b34390f4dc64cdd0770af327005caaeb9f6b7ed",
+      "verified": true
+    },
+    {
+      "major": "17",
+      "build": "17.11",
+      "file": "en/17.11/release-17.sgml",
+      "sha256": "6fe26f84c6cd02e2f2e9de4940338267294282dfd06aaddec2ace03eff3d7287",
+      "url": "https://ftp.postgresql.org/pub/source/v17.11/postgresql-17.11.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v17.11/postgresql-17.11.tar.bz2.sha256",
+      "archive_sha256": "dd27f2b3c59e73ed14aa3324901242bf69a032a6347805f274e6260322d42979",
+      "verified": true
+    },
+    {
+      "major": "18",
+      "build": "18.6",
+      "file": "en/18.6/release-18.sgml",
+      "sha256": "2e1df40494a407da98cb6838ae50138f9df123c364ef816ae1a08a1810a3f710",
+      "url": "https://ftp.postgresql.org/pub/source/v18.6/postgresql-18.6.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v18.6/postgresql-18.6.tar.bz2.sha256",
+      "archive_sha256": "555610c24d53e4316da5b7d3fc25c279d96856d5e0e23ee308c328c5fa881d9f",
+      "verified": true
+    },
+    {
+      "major": "19",
+      "build": "19beta4",
+      "file": "en/19beta4/release-19.sgml",
+      "sha256": "39a639044014bcb8a067e10b64d5717d8e9bc4333c8e31e21f9f4b958cf86250",
+      "url": "https://raw.githubusercontent.com/postgres/postgres/b73d13c32c834a2c8e1c60cb92f79530376cedf1/doc/src/sgml/release-19.sgml",
+      "git_commit": "b73d13c32c834a2c8e1c60cb92f79530376cedf1",
+      "verified": true
+    }
+  ],
+  "translated_sources": [
+    {
+      "major": "10",
+      "sha256": "703cc6a274ce5c1aef51dab6ac1722920af3c23cbc5cfbbe97defdf787fcc2d8"
+    },
+    {
+      "major": "11",
+      "sha256": "da73d417629887a412dbce8b2d6eedb25604bfba5f9ad23548b11d1a64d74894"
+    },
+    {
+      "major": "12",
+      "sha256": "443f0d28eb4d4c89f21ca405201ecaf7eb819ddeca5bd776b9ff32fbbf124e2a"
+    },
+    {
+      "major": "13",
+      "sha256": "cc2b4728c461bae2575ed55e849869890beb3f1520d7a4adf30a9585b6aced14"
+    },
+    {
+      "major": "14",
+      "sha256": "6fb116c1a320136f662c2be500d87f6788cacdbc03ac3e9c74299b2eacf4cb75"
+    },
+    {
+      "major": "15",
+      "sha256": "7e0f1dc792a88ccc0d5bc3be87cf867b387c8f2a2640e9513c3f689313c9397c"
+    },
+    {
+      "major": "16",
+      "sha256": "bb3c1fd87b153cd25c6f0e84e678b452056e69d39a214e6e589b62b12f9136b6"
+    },
+    {
+      "major": "17",
+      "sha256": "3fc2654b80fa3592a20458be06c7e2043a3f6defb67106cedf2ef3c4c99697ad"
+    },
+    {
+      "major": "18",
+      "sha256": "4cc299563e631680b2a423719d160a96cbd488895b7a5d7f45a258aa029928c0"
+    },
+    {
+      "major": "19",
+      "sha256": "9031432cac8287ede45238f6c492484a7f24f0555f41715db872c3071191a7f4"
+    }
+  ],
+  "totals": {
+    "bilingual_entries_with_matching_commits": 9235,
+    "entries": 9294,
+    "entries_with_source_commits": 9235,
+    "entries_without_source_commits": 59,
+    "paragraphs": 16385,
+    "examples": 32,
+    "nested_items": 0,
+    "bilingual_entries_without_commit_evidence": 59
+  },
+  "releases": [
+    {
+      "version": "10.0",
+      "status": "stable",
+      "date": "2017-10-05",
+      "changes": 162,
+      "migration": 27,
+      "cves": [],
+      "entries_verified": 189
+    },
+    {
+      "version": "10.1",
+      "status": "stable",
+      "date": "2017-11-09",
+      "changes": 37,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-12172",
+        "CVE-2017-15098",
+        "CVE-2017-15099"
+      ],
+      "entries_verified": 37
+    },
+    {
+      "version": "10.2",
+      "status": "stable",
+      "date": "2018-02-08",
+      "changes": 65,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1052",
+        "CVE-2018-1053"
+      ],
+      "entries_verified": 65
+    },
+    {
+      "version": "10.3",
+      "status": "stable",
+      "date": "2018-03-01",
+      "changes": 11,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058"
+      ],
+      "entries_verified": 11
+    },
+    {
+      "version": "10.4",
+      "status": "stable",
+      "date": "2018-05-10",
+      "changes": 53,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1115"
+      ],
+      "entries_verified": 53
+    },
+    {
+      "version": "10.5",
+      "status": "stable",
+      "date": "2018-08-09",
+      "changes": 47,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-10915",
+        "CVE-2018-10925"
+      ],
+      "entries_verified": 47
+    },
+    {
+      "version": "10.6",
+      "status": "stable",
+      "date": "2018-11-08",
+      "changes": 71,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-16850"
+      ],
+      "entries_verified": 71
+    },
+    {
+      "version": "10.7",
+      "status": "stable",
+      "date": "2019-02-14",
+      "changes": 54,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 54
+    },
+    {
+      "version": "10.8",
+      "status": "stable",
+      "date": "2019-05-09",
+      "changes": 43,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2019-10130"
+      ],
+      "entries_verified": 43
+    },
+    {
+      "version": "10.9",
+      "status": "stable",
+      "date": "2019-06-20",
+      "changes": 22,
+      "migration": 0,
+      "cves": [
+        "CVE-2019-10164"
+      ],
+      "entries_verified": 22
+    },
+    {
+      "version": "10.10",
+      "status": "stable",
+      "date": "2019-08-08",
+      "changes": 31,
+      "migration": 0,
+      "cves": [
+        "CVE-2007-2138",
+        "CVE-2019-10208"
+      ],
+      "entries_verified": 31
+    },
+    {
+      "version": "10.11",
+      "status": "stable",
+      "date": "2019-11-14",
+      "changes": 59,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 59
+    },
+    {
+      "version": "10.12",
+      "status": "stable",
+      "date": "2020-02-13",
+      "changes": 46,
+      "migration": 0,
+      "cves": [
+        "CVE-2020-1720"
+      ],
+      "entries_verified": 46
+    },
+    {
+      "version": "10.13",
+      "status": "stable",
+      "date": "2020-05-14",
+      "changes": 45,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 45
+    },
+    {
+      "version": "10.14",
+      "status": "stable",
+      "date": "2020-08-13",
+      "changes": 35,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058",
+        "CVE-2020-14349",
+        "CVE-2020-14350"
+      ],
+      "entries_verified": 35
+    },
+    {
+      "version": "10.15",
+      "status": "stable",
+      "date": "2020-11-12",
+      "changes": 40,
+      "migration": 0,
+      "cves": [
+        "CVE-2020-25694",
+        "CVE-2020-25695",
+        "CVE-2020-25696"
+      ],
+      "entries_verified": 40
+    },
+    {
+      "version": "10.16",
+      "status": "stable",
+      "date": "2021-02-11",
+      "changes": 40,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 40
+    },
+    {
+      "version": "10.17",
+      "status": "stable",
+      "date": "2021-05-13",
+      "changes": 30,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-32027",
+        "CVE-2021-32028"
+      ],
+      "entries_verified": 30
+    },
+    {
+      "version": "10.18",
+      "status": "stable",
+      "date": "2021-08-12",
+      "changes": 52,
+      "migration": 0,
+      "cves": [
+        "CVE-2006-2313",
+        "CVE-2021-3449"
+      ],
+      "entries_verified": 52
+    },
+    {
+      "version": "10.19",
+      "status": "stable",
+      "date": "2021-11-11",
+      "changes": 50,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-23214",
+        "CVE-2021-23222"
+      ],
+      "entries_verified": 50
+    },
+    {
+      "version": "10.20",
+      "status": "stable",
+      "date": "2022-02-10",
+      "changes": 28,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 28
+    },
+    {
+      "version": "10.21",
+      "status": "stable",
+      "date": "2022-05-12",
+      "changes": 29,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552"
+      ],
+      "entries_verified": 29
+    },
+    {
+      "version": "10.22",
+      "status": "stable",
+      "date": "2022-08-11",
+      "changes": 34,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552",
+        "CVE-2022-2625"
+      ],
+      "entries_verified": 34
+    },
+    {
+      "version": "10.23",
+      "status": "stable",
+      "date": "2022-11-10",
+      "changes": 29,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 29
+    },
+    {
+      "version": "11.0",
+      "status": "stable",
+      "date": "2018-10-18",
+      "changes": 150,
+      "migration": 20,
+      "cves": [],
+      "entries_verified": 170
+    },
+    {
+      "version": "11.1",
+      "status": "stable",
+      "date": "2018-11-08",
+      "changes": 22,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-16850"
+      ],
+      "entries_verified": 22
+    },
+    {
+      "version": "11.2",
+      "status": "stable",
+      "date": "2019-02-14",
+      "changes": 73,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 73
+    },
+    {
+      "version": "11.3",
+      "status": "stable",
+      "date": "2019-05-09",
+      "changes": 63,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2019-10129",
+        "CVE-2019-10130"
+      ],
+      "entries_verified": 63
+    },
+    {
+      "version": "11.4",
+      "status": "stable",
+      "date": "2019-06-20",
+      "changes": 26,
+      "migration": 0,
+      "cves": [
+        "CVE-2019-10164"
+      ],
+      "entries_verified": 26
+    },
+    {
+      "version": "11.5",
+      "status": "stable",
+      "date": "2019-08-08",
+      "changes": 47,
+      "migration": 0,
+      "cves": [
+        "CVE-2007-2138",
+        "CVE-2019-10208",
+        "CVE-2019-10209"
+      ],
+      "entries_verified": 47
+    },
+    {
+      "version": "11.6",
+      "status": "stable",
+      "date": "2019-11-14",
+      "changes": 67,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 67
+    },
+    {
+      "version": "11.7",
+      "status": "stable",
+      "date": "2020-02-13",
+      "changes": 56,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2020-1720"
+      ],
+      "entries_verified": 56
+    },
+    {
+      "version": "11.8",
+      "status": "stable",
+      "date": "2020-05-14",
+      "changes": 55,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 55
+    },
+    {
+      "version": "11.9",
+      "status": "stable",
+      "date": "2020-08-13",
+      "changes": 43,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058",
+        "CVE-2020-14349",
+        "CVE-2020-14350"
+      ],
+      "entries_verified": 43
+    },
+    {
+      "version": "11.10",
+      "status": "stable",
+      "date": "2020-11-12",
+      "changes": 46,
+      "migration": 0,
+      "cves": [
+        "CVE-2020-25694",
+        "CVE-2020-25695",
+        "CVE-2020-25696"
+      ],
+      "entries_verified": 46
+    },
+    {
+      "version": "11.11",
+      "status": "stable",
+      "date": "2021-02-11",
+      "changes": 56,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-3393"
+      ],
+      "entries_verified": 56
+    },
+    {
+      "version": "11.12",
+      "status": "stable",
+      "date": "2021-05-13",
+      "changes": 33,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-32027",
+        "CVE-2021-32028",
+        "CVE-2021-32029"
+      ],
+      "entries_verified": 33
+    },
+    {
+      "version": "11.13",
+      "status": "stable",
+      "date": "2021-08-12",
+      "changes": 63,
+      "migration": 0,
+      "cves": [
+        "CVE-2006-2313",
+        "CVE-2021-3449",
+        "CVE-2021-3677"
+      ],
+      "entries_verified": 63
+    },
+    {
+      "version": "11.14",
+      "status": "stable",
+      "date": "2021-11-11",
+      "changes": 58,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-23214",
+        "CVE-2021-23222"
+      ],
+      "entries_verified": 58
+    },
+    {
+      "version": "11.15",
+      "status": "stable",
+      "date": "2022-02-10",
+      "changes": 29,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 29
+    },
+    {
+      "version": "11.16",
+      "status": "stable",
+      "date": "2022-05-12",
+      "changes": 32,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552"
+      ],
+      "entries_verified": 32
+    },
+    {
+      "version": "11.17",
+      "status": "stable",
+      "date": "2022-08-11",
+      "changes": 37,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552",
+        "CVE-2022-2625"
+      ],
+      "entries_verified": 37
+    },
+    {
+      "version": "11.18",
+      "status": "stable",
+      "date": "2022-11-10",
+      "changes": 32,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 32
+    },
+    {
+      "version": "11.19",
+      "status": "stable",
+      "date": "2023-02-09",
+      "changes": 29,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 29
+    },
+    {
+      "version": "11.20",
+      "status": "stable",
+      "date": "2023-05-11",
+      "changes": 44,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-2454",
+        "CVE-2023-2455"
+      ],
+      "entries_verified": 44
+    },
+    {
+      "version": "11.21",
+      "status": "stable",
+      "date": "2023-08-10",
+      "changes": 29,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-39417"
+      ],
+      "entries_verified": 29
+    },
+    {
+      "version": "11.22",
+      "status": "stable",
+      "date": "2023-11-09",
+      "changes": 31,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5868",
+        "CVE-2023-5869",
+        "CVE-2023-5870"
+      ],
+      "entries_verified": 31
+    },
+    {
+      "version": "12.0",
+      "status": "stable",
+      "date": "2019-10-03",
+      "changes": 157,
+      "migration": 23,
+      "cves": [],
+      "entries_verified": 180
+    },
+    {
+      "version": "12.1",
+      "status": "stable",
+      "date": "2019-11-14",
+      "changes": 51,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 51
+    },
+    {
+      "version": "12.2",
+      "status": "stable",
+      "date": "2020-02-13",
+      "changes": 75,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2020-1720"
+      ],
+      "entries_verified": 75
+    },
+    {
+      "version": "12.3",
+      "status": "stable",
+      "date": "2020-05-14",
+      "changes": 76,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 76
+    },
+    {
+      "version": "12.4",
+      "status": "stable",
+      "date": "2020-08-13",
+      "changes": 52,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058",
+        "CVE-2020-14349",
+        "CVE-2020-14350"
+      ],
+      "entries_verified": 52
+    },
+    {
+      "version": "12.5",
+      "status": "stable",
+      "date": "2020-11-12",
+      "changes": 58,
+      "migration": 0,
+      "cves": [
+        "CVE-2020-25694",
+        "CVE-2020-25695",
+        "CVE-2020-25696"
+      ],
+      "entries_verified": 58
+    },
+    {
+      "version": "12.6",
+      "status": "stable",
+      "date": "2021-02-11",
+      "changes": 67,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-3393"
+      ],
+      "entries_verified": 67
+    },
+    {
+      "version": "12.7",
+      "status": "stable",
+      "date": "2021-05-13",
+      "changes": 41,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-32027",
+        "CVE-2021-32028",
+        "CVE-2021-32029"
+      ],
+      "entries_verified": 41
+    },
+    {
+      "version": "12.8",
+      "status": "stable",
+      "date": "2021-08-12",
+      "changes": 68,
+      "migration": 0,
+      "cves": [
+        "CVE-2006-2313",
+        "CVE-2021-3449",
+        "CVE-2021-3677"
+      ],
+      "entries_verified": 68
+    },
+    {
+      "version": "12.9",
+      "status": "stable",
+      "date": "2021-11-11",
+      "changes": 63,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-23214",
+        "CVE-2021-23222"
+      ],
+      "entries_verified": 63
+    },
+    {
+      "version": "12.10",
+      "status": "stable",
+      "date": "2022-02-10",
+      "changes": 33,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 33
+    },
+    {
+      "version": "12.11",
+      "status": "stable",
+      "date": "2022-05-12",
+      "changes": 36,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552"
+      ],
+      "entries_verified": 36
+    },
+    {
+      "version": "12.12",
+      "status": "stable",
+      "date": "2022-08-11",
+      "changes": 39,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552",
+        "CVE-2022-2625"
+      ],
+      "entries_verified": 39
+    },
+    {
+      "version": "12.13",
+      "status": "stable",
+      "date": "2022-11-10",
+      "changes": 38,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 38
+    },
+    {
+      "version": "12.14",
+      "status": "stable",
+      "date": "2023-02-09",
+      "changes": 36,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-41862"
+      ],
+      "entries_verified": 36
+    },
+    {
+      "version": "12.15",
+      "status": "stable",
+      "date": "2023-05-11",
+      "changes": 50,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-2454",
+        "CVE-2023-2455"
+      ],
+      "entries_verified": 50
+    },
+    {
+      "version": "12.16",
+      "status": "stable",
+      "date": "2023-08-10",
+      "changes": 32,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-39417"
+      ],
+      "entries_verified": 32
+    },
+    {
+      "version": "12.17",
+      "status": "stable",
+      "date": "2023-11-09",
+      "changes": 43,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5868",
+        "CVE-2023-5869",
+        "CVE-2023-5870"
+      ],
+      "entries_verified": 43
+    },
+    {
+      "version": "12.18",
+      "status": "stable",
+      "date": "2024-02-08",
+      "changes": 39,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-0985"
+      ],
+      "entries_verified": 39
+    },
+    {
+      "version": "12.19",
+      "status": "stable",
+      "date": "2024-05-09",
+      "changes": 35,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 35
+    },
+    {
+      "version": "12.20",
+      "status": "stable",
+      "date": "2024-08-08",
+      "changes": 34,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5869",
+        "CVE-2024-7348"
+      ],
+      "entries_verified": 34
+    },
+    {
+      "version": "12.21",
+      "status": "stable",
+      "date": "2024-11-14",
+      "changes": 34,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10976",
+        "CVE-2024-10977",
+        "CVE-2024-10978",
+        "CVE-2024-10979"
+      ],
+      "entries_verified": 34
+    },
+    {
+      "version": "12.22",
+      "status": "stable",
+      "date": "2024-11-21",
+      "changes": 1,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10978"
+      ],
+      "entries_verified": 1
+    },
+    {
+      "version": "13.0",
+      "status": "stable",
+      "date": "2020-09-24",
+      "changes": 163,
+      "migration": 15,
+      "cves": [],
+      "entries_verified": 178
+    },
+    {
+      "version": "13.1",
+      "status": "stable",
+      "date": "2020-11-12",
+      "changes": 49,
+      "migration": 0,
+      "cves": [
+        "CVE-2020-25694",
+        "CVE-2020-25695",
+        "CVE-2020-25696"
+      ],
+      "entries_verified": 49
+    },
+    {
+      "version": "13.2",
+      "status": "stable",
+      "date": "2021-02-11",
+      "changes": 80,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-20229",
+        "CVE-2021-3393"
+      ],
+      "entries_verified": 80
+    },
+    {
+      "version": "13.3",
+      "status": "stable",
+      "date": "2021-05-13",
+      "changes": 48,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-32027",
+        "CVE-2021-32028",
+        "CVE-2021-32029"
+      ],
+      "entries_verified": 48
+    },
+    {
+      "version": "13.4",
+      "status": "stable",
+      "date": "2021-08-12",
+      "changes": 77,
+      "migration": 0,
+      "cves": [
+        "CVE-2006-2313",
+        "CVE-2021-3449",
+        "CVE-2021-3677"
+      ],
+      "entries_verified": 77
+    },
+    {
+      "version": "13.5",
+      "status": "stable",
+      "date": "2021-11-11",
+      "changes": 77,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-23214",
+        "CVE-2021-23222"
+      ],
+      "entries_verified": 77
+    },
+    {
+      "version": "13.6",
+      "status": "stable",
+      "date": "2022-02-10",
+      "changes": 41,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 41
+    },
+    {
+      "version": "13.7",
+      "status": "stable",
+      "date": "2022-05-12",
+      "changes": 38,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552"
+      ],
+      "entries_verified": 38
+    },
+    {
+      "version": "13.8",
+      "status": "stable",
+      "date": "2022-08-11",
+      "changes": 43,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552",
+        "CVE-2022-2625"
+      ],
+      "entries_verified": 43
+    },
+    {
+      "version": "13.9",
+      "status": "stable",
+      "date": "2022-11-10",
+      "changes": 41,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 41
+    },
+    {
+      "version": "13.10",
+      "status": "stable",
+      "date": "2023-02-09",
+      "changes": 38,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-41862"
+      ],
+      "entries_verified": 38
+    },
+    {
+      "version": "13.11",
+      "status": "stable",
+      "date": "2023-05-11",
+      "changes": 55,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-2454",
+        "CVE-2023-2455"
+      ],
+      "entries_verified": 55
+    },
+    {
+      "version": "13.12",
+      "status": "stable",
+      "date": "2023-08-10",
+      "changes": 36,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-39417"
+      ],
+      "entries_verified": 36
+    },
+    {
+      "version": "13.13",
+      "status": "stable",
+      "date": "2023-11-09",
+      "changes": 48,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5868",
+        "CVE-2023-5869",
+        "CVE-2023-5870"
+      ],
+      "entries_verified": 48
+    },
+    {
+      "version": "13.14",
+      "status": "stable",
+      "date": "2024-02-08",
+      "changes": 40,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-0985"
+      ],
+      "entries_verified": 40
+    },
+    {
+      "version": "13.15",
+      "status": "stable",
+      "date": "2024-05-09",
+      "changes": 35,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 35
+    },
+    {
+      "version": "13.16",
+      "status": "stable",
+      "date": "2024-08-08",
+      "changes": 36,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5869",
+        "CVE-2024-7348"
+      ],
+      "entries_verified": 36
+    },
+    {
+      "version": "13.17",
+      "status": "stable",
+      "date": "2024-11-14",
+      "changes": 38,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10976",
+        "CVE-2024-10977",
+        "CVE-2024-10978",
+        "CVE-2024-10979"
+      ],
+      "entries_verified": 38
+    },
+    {
+      "version": "13.18",
+      "status": "stable",
+      "date": "2024-11-21",
+      "changes": 4,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10978"
+      ],
+      "entries_verified": 4
+    },
+    {
+      "version": "13.19",
+      "status": "stable",
+      "date": "2025-02-13",
+      "changes": 45,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 45
+    },
+    {
+      "version": "13.20",
+      "status": "stable",
+      "date": "2025-02-20",
+      "changes": 2,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 2
+    },
+    {
+      "version": "13.21",
+      "status": "stable",
+      "date": "2025-05-08",
+      "changes": 28,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-4207"
+      ],
+      "entries_verified": 28
+    },
+    {
+      "version": "13.22",
+      "status": "stable",
+      "date": "2025-08-14",
+      "changes": 44,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-0868",
+        "CVE-2017-7484",
+        "CVE-2025-8713",
+        "CVE-2025-8714",
+        "CVE-2025-8715"
+      ],
+      "entries_verified": 44
+    },
+    {
+      "version": "13.23",
+      "status": "stable",
+      "date": "2025-11-13",
+      "changes": 43,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-12817",
+        "CVE-2025-12818"
+      ],
+      "entries_verified": 43
+    },
+    {
+      "version": "14.0",
+      "status": "stable",
+      "date": "2021-09-30",
+      "changes": 193,
+      "migration": 27,
+      "cves": [],
+      "entries_verified": 220
+    },
+    {
+      "version": "14.1",
+      "status": "stable",
+      "date": "2021-11-11",
+      "changes": 46,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-23214",
+        "CVE-2021-23222"
+      ],
+      "entries_verified": 46
+    },
+    {
+      "version": "14.2",
+      "status": "stable",
+      "date": "2022-02-10",
+      "changes": 57,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 57
+    },
+    {
+      "version": "14.3",
+      "status": "stable",
+      "date": "2022-05-12",
+      "changes": 52,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552"
+      ],
+      "entries_verified": 52
+    },
+    {
+      "version": "14.4",
+      "status": "stable",
+      "date": "2022-06-16",
+      "changes": 19,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 19
+    },
+    {
+      "version": "14.5",
+      "status": "stable",
+      "date": "2022-08-11",
+      "changes": 39,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-1552",
+        "CVE-2022-2625"
+      ],
+      "entries_verified": 39
+    },
+    {
+      "version": "14.6",
+      "status": "stable",
+      "date": "2022-11-10",
+      "changes": 41,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 41
+    },
+    {
+      "version": "14.7",
+      "status": "stable",
+      "date": "2023-02-09",
+      "changes": 47,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-41862"
+      ],
+      "entries_verified": 47
+    },
+    {
+      "version": "14.8",
+      "status": "stable",
+      "date": "2023-05-11",
+      "changes": 67,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-2454",
+        "CVE-2023-2455"
+      ],
+      "entries_verified": 67
+    },
+    {
+      "version": "14.9",
+      "status": "stable",
+      "date": "2023-08-10",
+      "changes": 39,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-39417"
+      ],
+      "entries_verified": 39
+    },
+    {
+      "version": "14.10",
+      "status": "stable",
+      "date": "2023-11-09",
+      "changes": 56,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5868",
+        "CVE-2023-5869",
+        "CVE-2023-5870"
+      ],
+      "entries_verified": 56
+    },
+    {
+      "version": "14.11",
+      "status": "stable",
+      "date": "2024-02-08",
+      "changes": 49,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-0985"
+      ],
+      "entries_verified": 49
+    },
+    {
+      "version": "14.12",
+      "status": "stable",
+      "date": "2024-05-09",
+      "changes": 42,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-4317"
+      ],
+      "entries_verified": 42
+    },
+    {
+      "version": "14.13",
+      "status": "stable",
+      "date": "2024-08-08",
+      "changes": 42,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5869",
+        "CVE-2024-7348"
+      ],
+      "entries_verified": 42
+    },
+    {
+      "version": "14.14",
+      "status": "stable",
+      "date": "2024-11-14",
+      "changes": 44,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10976",
+        "CVE-2024-10977",
+        "CVE-2024-10978",
+        "CVE-2024-10979"
+      ],
+      "entries_verified": 44
+    },
+    {
+      "version": "14.15",
+      "status": "stable",
+      "date": "2024-11-21",
+      "changes": 7,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10978"
+      ],
+      "entries_verified": 7
+    },
+    {
+      "version": "14.16",
+      "status": "stable",
+      "date": "2025-02-13",
+      "changes": 46,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 46
+    },
+    {
+      "version": "14.17",
+      "status": "stable",
+      "date": "2025-02-20",
+      "changes": 2,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 2
+    },
+    {
+      "version": "14.18",
+      "status": "stable",
+      "date": "2025-05-08",
+      "changes": 35,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-4207"
+      ],
+      "entries_verified": 35
+    },
+    {
+      "version": "14.19",
+      "status": "stable",
+      "date": "2025-08-14",
+      "changes": 47,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-0868",
+        "CVE-2017-7484",
+        "CVE-2025-8713",
+        "CVE-2025-8714",
+        "CVE-2025-8715"
+      ],
+      "entries_verified": 47
+    },
+    {
+      "version": "14.20",
+      "status": "stable",
+      "date": "2025-11-13",
+      "changes": 46,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-12817",
+        "CVE-2025-12818"
+      ],
+      "entries_verified": 46
+    },
+    {
+      "version": "14.21",
+      "status": "stable",
+      "date": "2026-02-12",
+      "changes": 37,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2003",
+        "CVE-2026-2004",
+        "CVE-2026-2005",
+        "CVE-2026-2006"
+      ],
+      "entries_verified": 37
+    },
+    {
+      "version": "14.22",
+      "status": "stable",
+      "date": "2026-02-26",
+      "changes": 5,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2006"
+      ],
+      "entries_verified": 5
+    },
+    {
+      "version": "14.23",
+      "status": "stable",
+      "date": "2026-05-14",
+      "changes": 38,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-6472",
+        "CVE-2026-6473",
+        "CVE-2026-6474",
+        "CVE-2026-6475",
+        "CVE-2026-6477",
+        "CVE-2026-6478",
+        "CVE-2026-6479",
+        "CVE-2026-6637"
+      ],
+      "entries_verified": 38
+    },
+    {
+      "version": "14.24",
+      "status": "stable",
+      "date": "2026-08-13",
+      "changes": 83,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-8714",
+        "CVE-2026-14662",
+        "CVE-2026-14663",
+        "CVE-2026-14664",
+        "CVE-2026-14666",
+        "CVE-2026-14668",
+        "CVE-2026-14669",
+        "CVE-2026-14670",
+        "CVE-2026-14671",
+        "CVE-2026-14672",
+        "CVE-2026-14673",
+        "CVE-2026-14676",
+        "CVE-2026-14677",
+        "CVE-2026-14678",
+        "CVE-2026-14679",
+        "CVE-2026-14680",
+        "CVE-2026-14681",
+        "CVE-2026-15741",
+        "CVE-2026-15742",
+        "CVE-2026-16238",
+        "CVE-2026-16239",
+        "CVE-2026-16241",
+        "CVE-2026-18024",
+        "CVE-2026-18408",
+        "CVE-2026-19385",
+        "CVE-2026-6464",
+        "CVE-2026-6469",
+        "CVE-2026-6470",
+        "CVE-2026-6471",
+        "CVE-2026-6473",
+        "CVE-2026-6637"
+      ],
+      "entries_verified": 83
+    },
+    {
+      "version": "15.0",
+      "status": "stable",
+      "date": "2022-10-13",
+      "changes": 153,
+      "migration": 31,
+      "cves": [
+        "CVE-2018-1058"
+      ],
+      "entries_verified": 184
+    },
+    {
+      "version": "15.1",
+      "status": "stable",
+      "date": "2022-11-10",
+      "changes": 26,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 26
+    },
+    {
+      "version": "15.2",
+      "status": "stable",
+      "date": "2023-02-09",
+      "changes": 58,
+      "migration": 0,
+      "cves": [
+        "CVE-2022-41862"
+      ],
+      "entries_verified": 58
+    },
+    {
+      "version": "15.3",
+      "status": "stable",
+      "date": "2023-05-11",
+      "changes": 83,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-2454",
+        "CVE-2023-2455"
+      ],
+      "entries_verified": 83
+    },
+    {
+      "version": "15.4",
+      "status": "stable",
+      "date": "2023-08-10",
+      "changes": 47,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-39417",
+        "CVE-2023-39418"
+      ],
+      "entries_verified": 47
+    },
+    {
+      "version": "15.5",
+      "status": "stable",
+      "date": "2023-11-09",
+      "changes": 60,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5868",
+        "CVE-2023-5869",
+        "CVE-2023-5870"
+      ],
+      "entries_verified": 60
+    },
+    {
+      "version": "15.6",
+      "status": "stable",
+      "date": "2024-02-08",
+      "changes": 60,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-0985"
+      ],
+      "entries_verified": 60
+    },
+    {
+      "version": "15.7",
+      "status": "stable",
+      "date": "2024-05-09",
+      "changes": 52,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-4317"
+      ],
+      "entries_verified": 52
+    },
+    {
+      "version": "15.8",
+      "status": "stable",
+      "date": "2024-08-08",
+      "changes": 49,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5869",
+        "CVE-2024-7348"
+      ],
+      "entries_verified": 49
+    },
+    {
+      "version": "15.9",
+      "status": "stable",
+      "date": "2024-11-14",
+      "changes": 46,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10976",
+        "CVE-2024-10977",
+        "CVE-2024-10978",
+        "CVE-2024-10979"
+      ],
+      "entries_verified": 46
+    },
+    {
+      "version": "15.10",
+      "status": "stable",
+      "date": "2024-11-21",
+      "changes": 8,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10978"
+      ],
+      "entries_verified": 8
+    },
+    {
+      "version": "15.11",
+      "status": "stable",
+      "date": "2025-02-13",
+      "changes": 48,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 48
+    },
+    {
+      "version": "15.12",
+      "status": "stable",
+      "date": "2025-02-20",
+      "changes": 1,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 1
+    },
+    {
+      "version": "15.13",
+      "status": "stable",
+      "date": "2025-05-08",
+      "changes": 38,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-4207"
+      ],
+      "entries_verified": 38
+    },
+    {
+      "version": "15.14",
+      "status": "stable",
+      "date": "2025-08-14",
+      "changes": 54,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-0868",
+        "CVE-2017-7484",
+        "CVE-2025-8713",
+        "CVE-2025-8714",
+        "CVE-2025-8715"
+      ],
+      "entries_verified": 54
+    },
+    {
+      "version": "15.15",
+      "status": "stable",
+      "date": "2025-11-13",
+      "changes": 54,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-12817",
+        "CVE-2025-12818"
+      ],
+      "entries_verified": 54
+    },
+    {
+      "version": "15.16",
+      "status": "stable",
+      "date": "2026-02-12",
+      "changes": 40,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2003",
+        "CVE-2026-2004",
+        "CVE-2026-2005",
+        "CVE-2026-2006"
+      ],
+      "entries_verified": 40
+    },
+    {
+      "version": "15.17",
+      "status": "stable",
+      "date": "2026-02-26",
+      "changes": 5,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2006"
+      ],
+      "entries_verified": 5
+    },
+    {
+      "version": "15.18",
+      "status": "stable",
+      "date": "2026-05-14",
+      "changes": 43,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-6472",
+        "CVE-2026-6473",
+        "CVE-2026-6474",
+        "CVE-2026-6475",
+        "CVE-2026-6477",
+        "CVE-2026-6478",
+        "CVE-2026-6479",
+        "CVE-2026-6637"
+      ],
+      "entries_verified": 43
+    },
+    {
+      "version": "15.19",
+      "status": "stable",
+      "date": "2026-08-13",
+      "changes": 90,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-8714",
+        "CVE-2026-14662",
+        "CVE-2026-14663",
+        "CVE-2026-14664",
+        "CVE-2026-14666",
+        "CVE-2026-14668",
+        "CVE-2026-14669",
+        "CVE-2026-14670",
+        "CVE-2026-14671",
+        "CVE-2026-14672",
+        "CVE-2026-14673",
+        "CVE-2026-14676",
+        "CVE-2026-14677",
+        "CVE-2026-14678",
+        "CVE-2026-14679",
+        "CVE-2026-14680",
+        "CVE-2026-14681",
+        "CVE-2026-15741",
+        "CVE-2026-15742",
+        "CVE-2026-16238",
+        "CVE-2026-16239",
+        "CVE-2026-16241",
+        "CVE-2026-18024",
+        "CVE-2026-18408",
+        "CVE-2026-19385",
+        "CVE-2026-6464",
+        "CVE-2026-6469",
+        "CVE-2026-6470",
+        "CVE-2026-6471",
+        "CVE-2026-6473",
+        "CVE-2026-6637"
+      ],
+      "entries_verified": 90
+    },
+    {
+      "version": "16.0",
+      "status": "stable",
+      "date": "2023-09-14",
+      "changes": 193,
+      "migration": 13,
+      "cves": [],
+      "entries_verified": 206
+    },
+    {
+      "version": "16.1",
+      "status": "stable",
+      "date": "2023-11-09",
+      "changes": 59,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5868",
+        "CVE-2023-5869",
+        "CVE-2023-5870"
+      ],
+      "entries_verified": 59
+    },
+    {
+      "version": "16.2",
+      "status": "stable",
+      "date": "2024-02-08",
+      "changes": 70,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-0985"
+      ],
+      "entries_verified": 70
+    },
+    {
+      "version": "16.3",
+      "status": "stable",
+      "date": "2024-05-09",
+      "changes": 57,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-4317"
+      ],
+      "entries_verified": 57
+    },
+    {
+      "version": "16.4",
+      "status": "stable",
+      "date": "2024-08-08",
+      "changes": 54,
+      "migration": 0,
+      "cves": [
+        "CVE-2023-5869",
+        "CVE-2024-7348"
+      ],
+      "entries_verified": 54
+    },
+    {
+      "version": "16.5",
+      "status": "stable",
+      "date": "2024-11-14",
+      "changes": 54,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10976",
+        "CVE-2024-10977",
+        "CVE-2024-10978",
+        "CVE-2024-10979"
+      ],
+      "entries_verified": 54
+    },
+    {
+      "version": "16.6",
+      "status": "stable",
+      "date": "2024-11-21",
+      "changes": 8,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10978"
+      ],
+      "entries_verified": 8
+    },
+    {
+      "version": "16.7",
+      "status": "stable",
+      "date": "2025-02-13",
+      "changes": 55,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 55
+    },
+    {
+      "version": "16.8",
+      "status": "stable",
+      "date": "2025-02-20",
+      "changes": 2,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 2
+    },
+    {
+      "version": "16.9",
+      "status": "stable",
+      "date": "2025-05-08",
+      "changes": 48,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-4207"
+      ],
+      "entries_verified": 48
+    },
+    {
+      "version": "16.10",
+      "status": "stable",
+      "date": "2025-08-14",
+      "changes": 59,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-0868",
+        "CVE-2017-7484",
+        "CVE-2025-8713",
+        "CVE-2025-8714",
+        "CVE-2025-8715"
+      ],
+      "entries_verified": 59
+    },
+    {
+      "version": "16.11",
+      "status": "stable",
+      "date": "2025-11-13",
+      "changes": 59,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-12817",
+        "CVE-2025-12818"
+      ],
+      "entries_verified": 59
+    },
+    {
+      "version": "16.12",
+      "status": "stable",
+      "date": "2026-02-12",
+      "changes": 45,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2003",
+        "CVE-2026-2004",
+        "CVE-2026-2005",
+        "CVE-2026-2006"
+      ],
+      "entries_verified": 45
+    },
+    {
+      "version": "16.13",
+      "status": "stable",
+      "date": "2026-02-26",
+      "changes": 6,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2006"
+      ],
+      "entries_verified": 6
+    },
+    {
+      "version": "16.14",
+      "status": "stable",
+      "date": "2026-05-14",
+      "changes": 50,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-6472",
+        "CVE-2026-6473",
+        "CVE-2026-6474",
+        "CVE-2026-6475",
+        "CVE-2026-6477",
+        "CVE-2026-6478",
+        "CVE-2026-6479",
+        "CVE-2026-6637",
+        "CVE-2026-6638"
+      ],
+      "entries_verified": 50
+    },
+    {
+      "version": "16.15",
+      "status": "stable",
+      "date": "2026-08-13",
+      "changes": 98,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-8714",
+        "CVE-2026-14662",
+        "CVE-2026-14663",
+        "CVE-2026-14664",
+        "CVE-2026-14666",
+        "CVE-2026-14668",
+        "CVE-2026-14669",
+        "CVE-2026-14670",
+        "CVE-2026-14671",
+        "CVE-2026-14672",
+        "CVE-2026-14673",
+        "CVE-2026-14676",
+        "CVE-2026-14677",
+        "CVE-2026-14678",
+        "CVE-2026-14679",
+        "CVE-2026-14680",
+        "CVE-2026-14681",
+        "CVE-2026-15741",
+        "CVE-2026-15742",
+        "CVE-2026-16238",
+        "CVE-2026-16239",
+        "CVE-2026-16241",
+        "CVE-2026-18024",
+        "CVE-2026-18408",
+        "CVE-2026-19385",
+        "CVE-2026-6464",
+        "CVE-2026-6469",
+        "CVE-2026-6470",
+        "CVE-2026-6471",
+        "CVE-2026-6473",
+        "CVE-2026-6637"
+      ],
+      "entries_verified": 98
+    },
+    {
+      "version": "17.0",
+      "status": "stable",
+      "date": "2024-09-26",
+      "changes": 165,
+      "migration": 17,
+      "cves": [],
+      "entries_verified": 182
+    },
+    {
+      "version": "17.1",
+      "status": "stable",
+      "date": "2024-11-14",
+      "changes": 41,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10976",
+        "CVE-2024-10977",
+        "CVE-2024-10978",
+        "CVE-2024-10979"
+      ],
+      "entries_verified": 41
+    },
+    {
+      "version": "17.2",
+      "status": "stable",
+      "date": "2024-11-21",
+      "changes": 8,
+      "migration": 0,
+      "cves": [
+        "CVE-2024-10978"
+      ],
+      "entries_verified": 8
+    },
+    {
+      "version": "17.3",
+      "status": "stable",
+      "date": "2025-02-13",
+      "changes": 71,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 71
+    },
+    {
+      "version": "17.4",
+      "status": "stable",
+      "date": "2025-02-20",
+      "changes": 3,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-1094"
+      ],
+      "entries_verified": 3
+    },
+    {
+      "version": "17.5",
+      "status": "stable",
+      "date": "2025-05-08",
+      "changes": 61,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-4207"
+      ],
+      "entries_verified": 61
+    },
+    {
+      "version": "17.6",
+      "status": "stable",
+      "date": "2025-08-14",
+      "changes": 71,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-0868",
+        "CVE-2017-7484",
+        "CVE-2025-8713",
+        "CVE-2025-8714",
+        "CVE-2025-8715"
+      ],
+      "entries_verified": 71
+    },
+    {
+      "version": "17.7",
+      "status": "stable",
+      "date": "2025-11-13",
+      "changes": 65,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-12817",
+        "CVE-2025-12818"
+      ],
+      "entries_verified": 65
+    },
+    {
+      "version": "17.8",
+      "status": "stable",
+      "date": "2026-02-12",
+      "changes": 52,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2003",
+        "CVE-2026-2004",
+        "CVE-2026-2005",
+        "CVE-2026-2006"
+      ],
+      "entries_verified": 52
+    },
+    {
+      "version": "17.9",
+      "status": "stable",
+      "date": "2026-02-26",
+      "changes": 6,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2006"
+      ],
+      "entries_verified": 6
+    },
+    {
+      "version": "17.10",
+      "status": "stable",
+      "date": "2026-05-14",
+      "changes": 58,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-6472",
+        "CVE-2026-6473",
+        "CVE-2026-6474",
+        "CVE-2026-6475",
+        "CVE-2026-6476",
+        "CVE-2026-6477",
+        "CVE-2026-6478",
+        "CVE-2026-6479",
+        "CVE-2026-6637",
+        "CVE-2026-6638"
+      ],
+      "entries_verified": 58
+    },
+    {
+      "version": "17.11",
+      "status": "stable",
+      "date": "2026-08-13",
+      "changes": 109,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-8714",
+        "CVE-2026-14662",
+        "CVE-2026-14663",
+        "CVE-2026-14664",
+        "CVE-2026-14666",
+        "CVE-2026-14668",
+        "CVE-2026-14669",
+        "CVE-2026-14670",
+        "CVE-2026-14671",
+        "CVE-2026-14672",
+        "CVE-2026-14673",
+        "CVE-2026-14676",
+        "CVE-2026-14677",
+        "CVE-2026-14678",
+        "CVE-2026-14679",
+        "CVE-2026-14680",
+        "CVE-2026-14681",
+        "CVE-2026-15741",
+        "CVE-2026-15742",
+        "CVE-2026-16238",
+        "CVE-2026-16239",
+        "CVE-2026-16241",
+        "CVE-2026-18024",
+        "CVE-2026-18408",
+        "CVE-2026-19385",
+        "CVE-2026-6464",
+        "CVE-2026-6469",
+        "CVE-2026-6470",
+        "CVE-2026-6471",
+        "CVE-2026-6473",
+        "CVE-2026-6637"
+      ],
+      "entries_verified": 109
+    },
+    {
+      "version": "18.0",
+      "status": "stable",
+      "date": "2025-09-25",
+      "changes": 199,
+      "migration": 11,
+      "cves": [],
+      "entries_verified": 210
+    },
+    {
+      "version": "18.1",
+      "status": "stable",
+      "date": "2025-11-13",
+      "changes": 53,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-12817",
+        "CVE-2025-12818"
+      ],
+      "entries_verified": 53
+    },
+    {
+      "version": "18.2",
+      "status": "stable",
+      "date": "2026-02-12",
+      "changes": 75,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2003",
+        "CVE-2026-2004",
+        "CVE-2026-2005",
+        "CVE-2026-2006",
+        "CVE-2026-2007"
+      ],
+      "entries_verified": 75
+    },
+    {
+      "version": "18.3",
+      "status": "stable",
+      "date": "2026-02-26",
+      "changes": 9,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-2006",
+        "CVE-2026-2007"
+      ],
+      "entries_verified": 9
+    },
+    {
+      "version": "18.4",
+      "status": "stable",
+      "date": "2026-05-14",
+      "changes": 74,
+      "migration": 0,
+      "cves": [
+        "CVE-2026-6472",
+        "CVE-2026-6473",
+        "CVE-2026-6474",
+        "CVE-2026-6475",
+        "CVE-2026-6476",
+        "CVE-2026-6477",
+        "CVE-2026-6478",
+        "CVE-2026-6479",
+        "CVE-2026-6575",
+        "CVE-2026-6637",
+        "CVE-2026-6638"
+      ],
+      "entries_verified": 74
+    },
+    {
+      "version": "18.6",
+      "status": "stable",
+      "date": "2026-08-13",
+      "changes": 140,
+      "migration": 0,
+      "cves": [
+        "CVE-2025-8714",
+        "CVE-2026-14662",
+        "CVE-2026-14663",
+        "CVE-2026-14664",
+        "CVE-2026-14666",
+        "CVE-2026-14668",
+        "CVE-2026-14669",
+        "CVE-2026-14670",
+        "CVE-2026-14671",
+        "CVE-2026-14672",
+        "CVE-2026-14673",
+        "CVE-2026-14676",
+        "CVE-2026-14677",
+        "CVE-2026-14678",
+        "CVE-2026-14679",
+        "CVE-2026-14680",
+        "CVE-2026-14681",
+        "CVE-2026-15741",
+        "CVE-2026-15742",
+        "CVE-2026-16238",
+        "CVE-2026-16239",
+        "CVE-2026-16241",
+        "CVE-2026-18024",
+        "CVE-2026-18408",
+        "CVE-2026-19385",
+        "CVE-2026-6464",
+        "CVE-2026-6469",
+        "CVE-2026-6470",
+        "CVE-2026-6471",
+        "CVE-2026-6473",
+        "CVE-2026-6637"
+      ],
+      "entries_verified": 140
+    },
+    {
+      "version": "19.0",
+      "status": "preview",
+      "date": "",
+      "changes": 181,
+      "migration": 17,
+      "cves": [],
+      "entries_verified": 198
+    }
+  ],
+  "structure_differences": [],
+  "errors": [],
+  "body_verification": "Every translated entry is compared in full after removing only whitespace/renderer typography and generated cross-reference labels. Per-entry counts, dates, CVE sets, canonical identities and distinct commit groups are checked independently against English source SGML. Translation semantics are not established by structural checks alone."
+}

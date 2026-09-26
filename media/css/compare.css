@@ -191,3 +191,7 @@
   .compare-release { break-inside: auto; }
   .compare-entry { break-inside: avoid; }
 }
+#pg-compare .compare-variants { margin: 1rem 0; padding: .75rem 1rem; border: 1px solid var(--pg-line); border-radius: .5rem; }
+#pg-compare .compare-variants > summary { cursor: pointer; font-weight: 600; }
+#pg-compare .compare-variants section { margin-top: 1rem; }
+#pg-compare .compare-variants h4 { font-size: 1rem; line-height: 1.6; }

@@ -10,7 +10,7 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.test import SimpleTestCase
 
-from .compare_data import classify, commit_aliases, enrich_source_commits, parse_release, safe_html, sgml_commit_entries
+from .compare_data import calibrate_source_entries, classify, commit_aliases, enrich_source_commits, parse_release, safe_html, sgml_commit_entries
 from .management.commands.build_compare import build_snapshot, write_snapshot
 
 
@@ -127,7 +127,7 @@ class ReleaseComparisonParserTests(SimpleTestCase):
     def test_backport_equivalence_splits_independent_author_blocks(self):
         source = '''<!--
 Author: Jane
-Branch: master [aaaaaaa11] today
+Branch: master Release: REL_19_BR [aaaaaaa11] today
 Branch: REL_18_STABLE [bbbbbbb22] today
 Author: Jane
 Branch: master [ccccccc33] today
@@ -175,6 +175,74 @@ Branch: REL_11_STABLE [ddddddd44]
         counts = enrich_source_commits(wrong_count, records)
         self.assertEqual(counts['section_count_mismatch'], 1)
         self.assertNotIn('source_commits', wrong_count['entries'][0])
+
+    def test_one_author_can_have_several_independent_backport_sequences(self):
+        source = '''<!--
+Author: Tom
+Branch: master [aaaaaaa11]
+Branch: REL_18_STABLE Release: REL_18_0 [bbbbbbb22]
+Branch: master [ccccccc33]
+Branch: REL_18_STABLE [ddddddd44]
+-->'''
+        aliases = commit_aliases([source])
+        self.assertEqual(aliases['aaaaaaa11'], ['aaaaaaa11', 'bbbbbbb22'])
+        self.assertEqual(aliases['ccccccc33'], ['ccccccc33', 'ddddddd44'])
+
+    def test_legacy_empty_xrefs_do_not_swallow_following_prose_or_commits(self):
+        source = '''<sect1 id="release-10"><sect2><title>Changes</title><itemizedlist>
+<listitem><!--
+2017-01-01 [aaaaaaa11] First change.
+--><para>Add <xref linkend="guc-something"> with a safe default.</para>
+<para>Keep the entire explanation after the reference.</para></listitem>
+</itemizedlist></sect2></sect1>'''
+        entry = sgml_commit_entries(source, 10)['10.0']['changes'][0]
+        self.assertIn('with a safe default.', entry['title'])
+        self.assertIn('guc-something', entry['identity_text'])
+        self.assertIn('entire explanation', entry['identity_text'])
+        self.assertEqual(entry['commits'], ['aaaaaaa11'])
+
+    def test_preceding_major_comments_and_unlinked_independent_commits_are_preserved(self):
+        source = '''<sect1 id="release-18"><sect2><title>Changes</title><itemizedlist>
+<!--
+Author: Jane
+2025-01-01 [aaaaaaa11] One implementation.
+2025-01-02 [bbbbbbb22] Another implementation.
+-->
+<listitem><para>Add functionality. <ulink url="&commit_baseurl;aaaaaaa11">&sect;</ulink></para></listitem>
+<listitem><para>A separate functionality.</para></listitem>
+</itemizedlist></sect2></sect1>'''
+        entries = sgml_commit_entries(source, 18)['18.0']['changes']
+        self.assertEqual(entries[0]['commits'], ['aaaaaaa11', 'bbbbbbb22'])
+        self.assertEqual(entries[1]['commits'], [])
+        self.assertEqual(entries[0]['source_entry_id'], '18.0/changes/001')
+
+    def test_calibration_preserves_translation_and_uses_canonical_independent_groups(self):
+        source = '''<sect1 id="release-18-1"><sect2><title>Changes</title><itemizedlist>
+<listitem><!--
+Author: Jane
+Branch: master [aaaaaaa11]
+Branch: REL_18_STABLE [bbbbbbb22]
+Author: John
+Branch: master [ccccccc33]
+Branch: REL_18_STABLE [ddddddd44]
+--><para>Fix a failure.</para></listitem></itemizedlist></sect2></sect1>'''
+        html = '<div class="sect2" id="RELEASE-18-1-CHANGES"><h3>变更</h3><ul><li><p>避免操作失败。</p></li></ul></div>'
+        release = parse_release(html, '18.1', '18')
+        before = release['entries'][0]['html']
+        stats = calibrate_source_entries(release, sgml_commit_entries(source, 18), commit_aliases([source]))
+        entry = release['entries'][0]
+        self.assertEqual(stats['entries'], 1)
+        self.assertEqual(entry['html'], before)
+        self.assertEqual(entry['category'], 'bugfix')
+        self.assertEqual(entry['identity_text'], 'Fix a failure.')
+        self.assertEqual(entry['commit_groups'], [['aaaaaaa11', 'bbbbbbb22'], ['ccccccc33', 'ddddddd44']])
+
+    def test_calibration_refuses_missing_or_shifted_source_records(self):
+        release = parse_release(MAJOR_HTML, '18.0', '18')
+        with self.assertRaisesMessage(ValueError, 'Missing canonical release source'):
+            calibrate_source_entries(release, {}, {})
+        with self.assertRaisesMessage(ValueError, 'Canonical entry count mismatch'):
+            calibrate_source_entries(release, {'18.0': {'migration': [], 'changes': []}}, {})
 
 
 class ReleaseComparisonSnapshotTests(SimpleTestCase):

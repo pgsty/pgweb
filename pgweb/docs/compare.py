@@ -161,6 +161,7 @@ class _ReleaseIndex:
             if longer and all(longer[-1].startswith(candidate) for candidate in longer):
                 union([commit, longer[-1]])
         self.identities = {}
+        self.row_contexts = {}
         for release in releases:
             for position, entry in enumerate(release['entries']):
                 groups, known = raw[(release['version'], position)]
@@ -170,9 +171,12 @@ class _ReleaseIndex:
                 # Exact full prose on the same release day is a conservative
                 # fallback for older release notes without commit references.
                 # Preserve SQL operators, punctuation and meaningful qualifiers.
-                prose = re.sub(r'\s+', ' ', entry.get('text', entry['title'])).strip()
+                # The independently aligned upstream English prose makes this
+                # fallback identical for the Chinese and English sites.
+                prose = re.sub(r'\s+', ' ', entry.get('identity_text', entry.get('text', entry['title']))).strip()
                 fingerprint = (namespace, release.get('date', ''), hashlib.sha256(prose.encode()).hexdigest())
                 self.identities[(release['version'], position)] = (required, supplied, fingerprint)
+                self.row_contexts[(release['version'], entry['id'])] = (release['minor'] == 0, fingerprint[-1])
 
 
 def _release_index(snapshot):
@@ -182,6 +186,39 @@ def _release_index(snapshot):
         if isinstance(snapshot, _Snapshot):
             snapshot._comparison_index = index
     return index
+
+
+def _entry_reference(release, entry):
+    """Small, language-independent references for an explainable comparison."""
+    return {
+        'id': entry['id'], 'source_entry_id': entry.get('source_entry_id', entry['id']),
+        'version': release['version'], 'source_url': entry.get('source_url', release.get('source_url', '')),
+        'title': entry['title'],
+    }
+
+
+def _unique_references(references):
+    return list({(ref['version'], ref['id']): ref for ref in references}.values())
+
+
+def _prose_matches(records, required):
+    # Identical prose is useful when references are absent; it cannot override
+    # known, different commits. Short repeated release-note text occurs in the
+    # real sources, so it is not an unconditional identity.
+    return [ref for candidate_required, ref in records if not required or not candidate_required]
+
+
+def _same_commit_scope(index, release, entry, reference):
+    """A maintenance backport can be just part of a major-release feature.
+
+    For example, the Snowball update adds Estonian in 18, whereas its 17.5
+    backport only fixes out-of-memory handling. The upstream Author block links
+    these commits but does not make the release-note statements equivalent.
+    Keep initial-major statements unless their complete upstream prose agrees.
+    """
+    initial, prose = index.row_contexts[(release['version'], entry['id'])]
+    other_initial, other_prose = index.row_contexts[(reference['version'], reference['id'])]
+    return not (initial or other_initial) or prose == other_prose
 
 
 def _release_summary(release):
@@ -260,15 +297,19 @@ def build_report(snapshot, security, from_version, to_version):
     source_history = release_history(releases, source, snapshot['generated_at'])
     target_history = release_history(releases, target, snapshot['generated_at'])
     index = _release_index(snapshot)
-    known_commits, known_texts = set(), set()
+    known_commits, known_texts = defaultdict(list), defaultdict(list)
     for release in source_history:
-        for position, _ in enumerate(release['entries']):
-            _, supplied, fingerprint = index.identities[(release['version'], position)]
-            known_commits.update(supplied)
-            known_texts.add(fingerprint)
+        for position, entry in enumerate(release['entries']):
+            required, supplied, fingerprint = index.identities[(release['version'], position)]
+            reference = _entry_reference(release, entry)
+            for commit in supplied:
+                known_commits[commit].append(reference)
+            known_texts[fingerprint].append((required, reference))
     seen_commits, seen_texts = defaultdict(list), defaultdict(list)
     groups = []
-    excluded = 0
+    exclusions = []
+    already_in_source_count, duplicate_count, candidate_count = 0, 0, 0
+    represented_majors = {}
     source_versions = {r['version'] for r in source_history}
     cross_major = source['major'] != target['major']
     counts = Counter()
@@ -277,33 +318,77 @@ def build_report(snapshot, security, from_version, to_version):
             continue
         entries = []
         for position, entry in enumerate(release['entries']):
+            candidate_count += 1
             required, supplied, fingerprint = index.identities[(release['version'], position)]
             if cross_major:
                 # One entry can describe multiple independent commits. Retain it
                 # unless every concrete change is already known in the source.
-                if release['major'] != source['major'] and ((required and required <= known_commits) or fingerprint in known_texts):
-                    excluded += 1
+                source_matches = []
+                method = ''
+                applicable_known = {
+                    commit: [ref for ref in known_commits[commit] if _same_commit_scope(index, release, entry, ref)]
+                    for commit in required
+                }
+                if required and all(applicable_known.values()):
+                    source_matches = [ref for commit in sorted(required) for ref in applicable_known[commit]]
+                    method = 'commits'
+                if not source_matches:
+                    source_matches = _prose_matches(known_texts[fingerprint], required)
+                    method = 'exact_prose'
+                if release['major'] != source['major'] and source_matches:
+                    exclusions.append(dict(
+                        _entry_reference(release, entry), reason='already_in_source', method=method,
+                        matches=_unique_references(source_matches),
+                        entry=dict(entry),
+                    ))
+                    already_in_source_count += 1
                     continue
-                matches = [item for major, item in seen_texts[fingerprint] if major != release['major']]
-                if not matches and required:
-                    per_commit = [[item for major, item in seen_commits[commit] if major != release['major']]
-                                  for commit in required]
+                # A multi-commit note can mix work known in the source with
+                # newly gained work. Only the latter needs another report row.
+                remaining = frozenset(commit for commit in required if not applicable_known[commit])
+                matches = []
+                if remaining:
+                    per_commit = [[item for item in seen_commits[commit]
+                                   if release['major'] not in represented_majors[item['id']] and
+                                   _same_commit_scope(index, release, entry, item)]
+                                  for commit in sorted(remaining)]
                     if all(per_commit):
                         matches = [items[0] for items in per_commit]
+                        method = 'commits'
+                if not matches:
+                    matches = [item for item in _prose_matches(seen_texts[fingerprint], required)
+                               if release['major'] not in represented_majors[item['id']]]
+                    method = 'exact_prose'
                 if matches:
+                    matches = list({item['id']: item for item in matches}.values())
+                    references = [_entry_reference(by_version[item['version']], item) for item in matches]
+                    # Keep the entire other-branch note, including branch-
+                    # specific instructions, even when it adds no extra fix.
+                    # Attach it once; an aggregate note can cover several rows.
+                    variant = dict(entry, version=release['version'],
+                                   category_label=CATEGORY_LABELS[entry['category']],
+                                   merge_method=method, covers=references)
+                    matches[0]['variants'].append(variant)
                     for item in matches:
                         if release['version'] not in item['also_in']:
                             item['also_in'].append(release['version'])
-                    excluded += 1
+                        represented_majors[item['id']].add(release['major'])
+                    exclusions.append(dict(
+                        _entry_reference(release, entry), reason='backport_duplicate', method=method,
+                        matches=references,
+                    ))
+                    duplicate_count += 1
                     continue
             # Within one branch, every published entry is retained, including
             # repeated headings, follow-up fixes and multiple uses of a commit.
-            item = dict(entry, category_label=CATEGORY_LABELS[entry['category']], also_in=[])
+            item = dict(entry, version=release['version'],
+                        category_label=CATEGORY_LABELS[entry['category']], also_in=[], variants=[])
             entries.append(item)
+            represented_majors[item['id']] = {release['major']}
             counts[item['category']] += 1
             for commit in supplied:
-                seen_commits[commit].append((release['major'], item))
-            seen_texts[fingerprint].append((release['major'], item))
+                seen_commits[commit].append(item)
+            seen_texts[fingerprint].append((required, item))
         migration = release.get('migration_html', '')
         if entries or migration:
             groups.append(dict(_release_summary(release), entries=entries, migration_html=migration))
@@ -330,7 +415,12 @@ def build_report(snapshot, security, from_version, to_version):
         'total': total, 'cve_count': len(cves) if cve_available else None, 'cves': cves,
         'cve_available': cve_available,
         'security_regressions': regressions, 'remaining_cves': remaining, 'cross_major': cross_major,
-        'excluded_count': excluded, 'release_count': len(groups), 'warnings': warnings,
+        'excluded_count': len(exclusions), 'already_in_source_count': already_in_source_count,
+        'duplicate_count': duplicate_count, 'candidate_count': candidate_count, 'exclusions': exclusions,
+        'history': {'source': [r['version'] for r in source_history],
+                    'target': [r['version'] for r in target_history],
+                    'candidates': [r['version'] for r in target_history if r['version'] not in source_versions]},
+        'release_count': len(groups), 'warnings': warnings,
         'source_as_of': snapshot['generated_at'][:10],
         'security_as_of': security.get('fetched_at', '')[:10],
     }
@@ -405,7 +495,7 @@ def compare(request):
     context['seo'] = {
         'title': ('PostgreSQL {} → {} 版本对比'.format(
             context['report']['from_release']['label'], context['report']['to_release']['label'])
-                  if context['report'] else 'PostgreSQL 版本对比'),
+            if context['report'] else 'PostgreSQL 版本对比'),
         'description': '对比 PostgreSQL 大版本与小版本，查看新增功能、BUG 修复、性能改进、兼容性变化和 CVE 修复记录。',
         'canonical': context.get('canonical_url', '/docs/compare/'), 'lang': 'zh',
     }

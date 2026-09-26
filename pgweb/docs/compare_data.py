@@ -19,7 +19,7 @@ from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
 
 FORMAT_VERSION = 1
-PARSER_VERSION = 1
+PARSER_VERSION = 2
 # This patch number was skipped upstream, not omitted by the importer.
 UNRELEASED_VERSIONS = frozenset({'18.5'})
 CATEGORIES = frozenset({
@@ -163,6 +163,23 @@ def _commits(item):
     return sorted(result)
 
 
+def _comment_branch_groups(comment):
+    """An author may list multiple commits without repeating the Author line."""
+    groups, current, branches = [], [], set()
+    for line in str(comment).splitlines():
+        match = re.match(r'^Branch:\s+(\S+)(?:\s+Release:\s+\S+)?\s+\[([0-9a-f]{7,40})\]', line, re.I)
+        if line.startswith('Author:') or match and match[1] in branches:
+            if current:
+                groups.append(current)
+            current, branches = [], set()
+        if match:
+            current.append((match[1], match[2].lower()))
+            branches.add(match[1])
+    if current:
+        groups.append(current)
+    return groups
+
+
 def commit_aliases(sources):
     """Read upstream's explicit backport equivalences from SGML comments.
 
@@ -181,8 +198,8 @@ def commit_aliases(sources):
 
     for source in sources:
         for comment in re.findall(r'<!--(.*?)-->', source, re.S):
-            for block in re.split(r'^Author:', comment, flags=re.M)[1:]:
-                commits = re.findall(r'^Branch:\s+\S+\s+\[([0-9a-f]{7,40})\]', block, re.M | re.I)
+            for block in _comment_branch_groups(comment):
+                commits = [commit for branch, commit in block]
                 if not commits:
                     continue
                 canonical = root(commits[0].lower())
@@ -201,6 +218,9 @@ def sgml_commit_entries(source, major):
     the upstream identifiers. The caller requires matching section, position,
     count and title before enriching a rendered entry from these comments.
     """
+    # These are EMPTY elements in legacy SGML. Treating an unclosed xref as
+    # ordinary HTML swallows the following prose (and sometimes comments).
+    source = re.sub(r'<(xref|anchor)\b([^>]*?)/?>', r'<\1\2/>', source)
     soup = BeautifulSoup(source, 'html.parser')
     records = {}
     for release in soup.find_all('sect1'):
@@ -225,16 +245,84 @@ def sgml_commit_entries(source, major):
                     continue
                 paragraph = item.find('para')
                 comments = item.find_all(string=lambda node: isinstance(node, Comment))
+                # Major-release authors commonly place their commit comment
+                # immediately BEFORE the listitem, whereas patch notes put it
+                # inside. Both belong to this record.
+                for sibling in item.previous_siblings:
+                    if isinstance(sibling, Comment):
+                        comments.append(sibling)
+                    elif isinstance(sibling, Tag) or str(sibling).strip():
+                        break
                 commits = set()
                 for comment in comments:
-                    for block in re.split(r'^Author:', str(comment), flags=re.M):
-                        branches = re.findall(r'^Branch:\s+(\S+)\s+\[([0-9a-f]{7,40})\]', block, re.M | re.I)
+                    for branches in _comment_branch_groups(comment):
                         if branches:
                             commits.add(next((commit for branch, commit in branches if branch == 'REL_{}_STABLE'.format(major)), branches[0][1]).lower())
-                        commits.update(commit.lower() for commit in re.findall(r'^\d{4}-\d{2}-\d{2}\s+\[([0-9a-f]{7,40})\]', block, re.M | re.I))
-                parts[part].append({'title': _text(paragraph) if paragraph else '', 'commits': sorted(commits)})
+                    commits.update(commit.lower() for commit in re.findall(r'^\d{4}-\d{2}-\d{2}\s+\[([0-9a-f]{7,40})\]', str(comment), re.M | re.I))
+                for link in item.find_all('ulink', url=True):
+                    found = re.search(r'(?:&commit_baseurl;|postgr\.es/c/)([0-9a-f]{7,40})', link['url'], re.I)
+                    if found:
+                        commits.add(found.group(1).lower())
+                identity = copy(item)
+                for link in identity.find_all('ulink'):
+                    if '&commit_baseurl;' in link.get('url', '') or _text(link) == '§':
+                        link.decompose()
+                # Retain the actual cross-reference identifier, never an
+                # unstable generated chapter number or translated label.
+                for reference in identity.find_all('xref'):
+                    reference.replace_with(' ' + reference.get('linkend', '') + ' ')
+                path = [
+                    _text(ancestor.find('title', recursive=False))
+                    for ancestor in reversed(list(item.parents))
+                    if isinstance(ancestor, Tag) and ancestor.name in {'sect3', 'sect4', 'sect5'} and
+                    ancestor.find('title', recursive=False)
+                ]
+                parts[part].append({
+                    'title': _text(paragraph) if paragraph else '',
+                    'commits': sorted(commits),
+                    'identity_text': _text(identity),
+                    'cves': sorted(set(cve.upper() for cve in _CVES.findall(_text(identity)))),
+                    'section': ' / '.join(path),
+                    'source_entry_id': '{}/{}/{:03d}'.format(version, part, len(parts[part]) + 1),
+                    'source_hash': hashlib.sha256(str(item).encode()).hexdigest(),
+                })
         records[version] = parts
     return records
+
+
+def calibrate_source_entries(release, source_records, aliases):
+    """Attach language-independent provenance from the original English SGML.
+
+    The separate source audit establishes positional bilingual correspondence
+    and complete rendered prose before publication. Counts and exact CVE sets
+    also fail closed here, so a missing entry cannot silently shift identities.
+    """
+    parts = source_records.get(release['version'])
+    if parts is None:
+        raise ValueError('Missing canonical release source: ' + release['version'])
+    counts = Counter()
+    for part, entries in [
+        ('migration', release['entries'][:release['compatibility_count']]),
+        ('changes', release['entries'][release['compatibility_count']:]),
+    ]:
+        originals = parts.get(part, [])
+        if len(originals) != len(entries):
+            raise ValueError('Canonical entry count mismatch: {}/{}'.format(release['version'], part))
+        for entry, original in zip(entries, originals):
+            if entry['cves'] != original['cves']:
+                raise ValueError('Canonical CVE mismatch: ' + original['source_entry_id'])
+            old_groups = {tuple(group) for group in entry.get('commit_groups', [])}
+            entry.update({key: original[key] for key in ['identity_text', 'source_entry_id', 'source_hash']})
+            entry['source_commits'] = original['commits']
+            groups = {tuple(aliases.get(commit, [commit])) for commit in original['commits']}
+            entry['commit_groups'] = [list(group) for group in sorted(groups)]
+            entry['commit_aliases'] = sorted({commit for group in groups for commit in group})
+            category = classify(original['title'], original['section'], original['cves'], release['minor'], part == 'migration')
+            counts['category_adjusted'] += category != entry['category']
+            entry['category'] = category
+            counts['commit_groups_adjusted'] += groups != old_groups
+            counts['entries'] += 1
+    return dict(counts)
 
 
 def enrich_source_commits(release, source_records):
@@ -258,7 +346,9 @@ def enrich_source_commits(release, source_records):
             paragraph = BeautifulSoup(entry['html'], 'html.parser').find('p')
             # DocBook quote markup supplies curly quotation marks at render
             # time. Ignore these formatting marks and source whitespace only.
-            normalize = lambda value: re.sub(r'[\s§“”‘’]+', '', value)
+
+            def normalize(value):
+                return re.sub(r'[\s§“”‘’]+', '', value)
             if paragraph is None or normalize(_text(paragraph)) != normalize(source['title']):
                 counts['title_mismatch'] += 1
                 continue

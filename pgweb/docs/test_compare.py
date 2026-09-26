@@ -105,42 +105,42 @@ class VersionComparisonTests(SimpleTestCase):
     def test_source_backport_alias_excludes_known_target_change(self):
         data = snapshot(release('17.0', '2024-09-26'),
                         release('17.1', '2025-02-01', entry('source', '旧分支修复', commits=['aaaaaaa12'])),
-                        release('18.0', '2025-09-25', entry('target', '新分支不同译文', commits=['bbbbbbb12'],
+                        release('18.1', '2025-09-25', entry('target', '新分支不同译文', commits=['bbbbbbb12'],
                                 aliases=['aaaaaaa12', 'bbbbbbb12'])))
-        report = engine.build_report(data, registry(), '17.1', '18.0')
+        report = engine.build_report(data, registry(), '17.1', '18.1')
         self.assertEqual(ids(report), [])
         self.assertEqual(report['excluded_count'], 1)
 
     def test_entry_with_one_known_and_one_new_commit_keeps_new_work(self):
         data = snapshot(release('17.0', '2024-09-26'),
                         release('17.1', '2025-02-01', entry('source', commits=['aaaaaaa12'])),
-                        release('18.0', '2025-09-25', entry('two-fixes', commits=['bbbbbbb12', 'ccccccc12'],
+                        release('18.1', '2025-09-25', entry('two-fixes', commits=['bbbbbbb12', 'ccccccc12'],
                                 groups=[['aaaaaaa12', 'bbbbbbb12'], ['ccccccc12', 'ddddddd12']]),
                                 entry('new-fix-alone', commits=['ccccccc12'])))
-        report = engine.build_report(data, registry(), '17.1', '18.0')
+        report = engine.build_report(data, registry(), '17.1', '18.1')
         self.assertCountEqual(ids(report), ['two-fixes', 'new-fix-alone'])
 
     def test_multicommit_source_covers_each_backport_without_merging_independent_groups(self):
-        data = snapshot(release('17.0', '2024-09-26', entry('source', commits=['aaaaaaa12', 'ccccccc12'],
+        data = snapshot(release('17.1', '2024-09-26', entry('source', commits=['aaaaaaa12', 'ccccccc12'],
                                 groups=[['aaaaaaa12', 'bbbbbbb12'], ['ccccccc12', 'ddddddd12']])),
-                        release('18.0', '2025-09-25', entry('first', commits=['bbbbbbb12']),
+                        release('18.1', '2025-09-25', entry('first', commits=['bbbbbbb12']),
                                 entry('second', commits=['ddddddd12']), entry('new', commits=['eeeeeee12'])))
-        report = engine.build_report(data, registry(), '17.0', '18.0')
+        report = engine.build_report(data, registry(), '17.1', '18.1')
         self.assertEqual(ids(report), ['new'])
 
     def test_commit_groups_from_sgml_work_when_old_html_has_no_commit_links(self):
-        data = snapshot(release('17.0', '2024-09-26', entry('source', groups=[['aaaaaaa12', 'bbbbbbb12']])),
-                        release('18.0', '2025-09-25', entry('target', commits=['bbbbbbb12'])))
-        self.assertEqual(engine.build_report(data, registry(), '17.0', '18.0')['total'], 0)
+        data = snapshot(release('17.1', '2024-09-26', entry('source', groups=[['aaaaaaa12', 'bbbbbbb12']])),
+                        release('18.1', '2025-09-25', entry('target', commits=['bbbbbbb12'])))
+        self.assertEqual(engine.build_report(data, registry(), '17.1', '18.1')['total'], 0)
 
     def test_matching_hash_prefixes_require_no_collision(self):
         for target_hash, expected in [('abcdef012', 0), ('abcdef099', 1)]:
-            data = snapshot(release('17.0', '2024-09-26', entry('source', commits=['abcdef012'])),
-                            release('18.0', '2025-09-25', entry('target', commits=[target_hash])))
-            self.assertEqual(engine.build_report(data, registry(), '17.0', '18.0')['total'], expected)
-        data = snapshot(release('17.0', '2024-09-26', entry('source', commits=['abcdef012'])),
-                        release('18.0', '2025-09-25', entry('target', commits=['abcdef01234567890'])))
-        self.assertEqual(engine.build_report(data, registry(), '17.0', '18.0')['total'], 0)
+            data = snapshot(release('17.1', '2024-09-26', entry('source', commits=['abcdef012'])),
+                            release('18.1', '2025-09-25', entry('target', commits=[target_hash])))
+            self.assertEqual(engine.build_report(data, registry(), '17.1', '18.1')['total'], expected)
+        data = snapshot(release('17.1', '2024-09-26', entry('source', commits=['abcdef012'])),
+                        release('18.1', '2025-09-25', entry('target', commits=['abcdef01234567890'])))
+        self.assertEqual(engine.build_report(data, registry(), '17.1', '18.1')['total'], 0)
 
     def test_sql_operators_and_parenthetical_qualifiers_are_not_fuzzy_deduplicated(self):
         data = snapshot(release('17.0', '2025-09-25', entry('old', '优化 x < y（排序）')),
@@ -159,12 +159,115 @@ class VersionComparisonTests(SimpleTestCase):
         report = engine.build_report(data, registry(), '16.0', '17.0')
         self.assertEqual(ids(report), ['oldbranch'])
         self.assertEqual(report['groups'][0]['entries'][0]['also_in'], ['17.0'])
+        self.assertEqual(report['duplicate_count'], 1)
+        self.assertEqual(report['already_in_source_count'], 0)
+        self.assertEqual(report['groups'][0]['entries'][0]['variants'][0]['html'], '<p>修复共同问题</p>')
+
+    def test_crossbranch_merge_retains_full_different_prose_and_commit_evidence(self):
+        first = entry('oldbranch', '修复共同问题', text='旧分支：使用旧命令。', commits=['aaaaaaa12'])
+        newer = entry('newbranch', '修复同一问题', text='新分支：必须先重建索引。', commits=['bbbbbbb12'],
+                      groups=[['aaaaaaa12', 'bbbbbbb12']])
+        data = snapshot(release('17.0', '2024-09-26'), release('17.1', '2025-02-01', first),
+                        release('18.1', '2025-09-25', newer))
+        report = engine.build_report(data, registry(), '17.0', '18.1')
+        self.assertEqual(report['total'], 1)
+        item = report['groups'][0]['entries'][0]
+        self.assertEqual(item['html'], first['html'])
+        self.assertEqual(item['variants'][0]['html'], newer['html'])
+        self.assertEqual(item['variants'][0]['version'], '18.1')
+        self.assertEqual(report['exclusions'][0]['method'], 'commits')
+        self.assertEqual(report['candidate_count'], report['total'] + report['excluded_count'])
+
+    def test_same_day_identical_prose_cannot_override_distinct_known_commits(self):
+        data = snapshot(release('17.0', '2025-09-25', entry('source', '更新数据文件', commits=['aaaaaaa12'])),
+                        release('18.0', '2025-09-25', entry('target', '更新数据文件', commits=['bbbbbbb12'])))
+        self.assertEqual(ids(engine.build_report(data, registry(), '17.0', '18.0')), ['target'])
+        data['releases'].insert(0, release('16.0', '2023-09-14'))
+        self.assertCountEqual(ids(engine.build_report(data, registry(), '16.0', '18.0')), ['source', 'target'])
+
+    def test_identical_upstream_prose_makes_fallback_independent_of_translation(self):
+        old = entry('source', '旧译文')
+        new = entry('target', '重新翻译')
+        old['identity_text'] = new['identity_text'] = 'Fix the same bug.'
+        data = snapshot(release('17.0', '2025-09-25', old), release('18.0', '2025-09-25', new))
+        self.assertEqual(engine.build_report(data, registry(), '17.0', '18.0')['total'], 0)
+
+    def test_same_branch_followups_cannot_both_merge_into_one_old_branch_record(self):
+        data = snapshot(release('16.0', '2023-09-14'),
+                        release('16.1', '2024-01-01', entry('old', commits=['aaaaaaa12'])),
+                        release('17.1', '2024-09-26', entry('new', commits=['aaaaaaa12']),
+                                entry('second-section', commits=['aaaaaaa12'])))
+        report = engine.build_report(data, registry(), '16.0', '17.1')
+        self.assertCountEqual(ids(report), ['old', 'second-section'])
+        self.assertEqual(report['duplicate_count'], 1)
+
+    def test_mixed_known_and_reported_commits_adds_variant_without_double_counting(self):
+        data = snapshot(release('16.1', '2023-09-14', entry('known', commits=['aaaaaaa12'])),
+                        release('16.2', '2024-01-01', entry('new-fix', commits=['bbbbbbb12'])),
+                        release('17.1', '2024-09-26', entry('both', commits=['aaaaaaa12', 'bbbbbbb12'])))
+        report = engine.build_report(data, registry(), '16.1', '17.1')
+        self.assertEqual(ids(report), ['new-fix'])
+        self.assertEqual(report['groups'][0]['entries'][0]['variants'][0]['id'], 'both')
+
+    def test_known_source_exclusions_preserve_note_and_exact_source_references(self):
+        data = snapshot(release('17.1', '2024-09-26', entry('known', commits=['aaaaaaa12'])),
+                        release('18.1', '2025-09-25', entry('backport', commits=['bbbbbbb12'],
+                                groups=[['aaaaaaa12', 'bbbbbbb12']])))
+        report = engine.build_report(data, registry(), '17.1', '18.1')
+        self.assertEqual(report['total'], 0)
+        self.assertEqual(report['already_in_source_count'], 1)
+        excluded = report['exclusions'][0]
+        self.assertEqual(excluded['entry']['html'], '<p>backport</p>')
+        self.assertEqual(excluded['matches'][0]['id'], 'known')
+        self.assertEqual(excluded['matches'][0]['version'], '17.1')
+        self.assertEqual(report['history']['candidates'], ['18.1'])
 
     def test_compatibility_record_does_not_disappear_behind_feature_using_same_commit(self):
         data = snapshot(release('17.0', '2024-09-26', entry('old', category='feature', commits=['aaaaaaa12'])),
                         release('18.0', '2025-09-25', entry('compat', category='compatibility', commits=['aaaaaaa12']),
                                 entry('compat-second', category='compatibility', commits=['aaaaaaa12'])))
         self.assertCountEqual(ids(engine.build_report(data, registry(), '17.0', '18.0')), ['compat', 'compat-second'])
+
+
+class ComparisonNativeSourceRegressions(SimpleTestCase):
+    """Real upstream Author blocks link related, not necessarily equal changes."""
+
+    def test_partial_backports_do_not_hide_distinct_major_release_features(self):
+        data = engine.load_snapshot('releases.json.gz')
+        by_version = {r['version']: r for r in data['releases']}
+        cases = (
+            ('17.5', '18.0', '17.5/changes/033', '18.0/changes/105'),
+            ('15.4', '16.0', '15.4/changes/022', '16.0/changes/067'),
+            ('12.3', '13.0', '12.3/changes/021', '13.0/changes/094'),
+        )
+        for older, newer, old_id, new_id in cases:
+            with self.subTest(older=older, newer=newer):
+                old = next(x for x in by_version[older]['entries'] if x.get('source_entry_id') == old_id)
+                new = next(x for x in by_version[newer]['entries'] if x.get('source_entry_id') == new_id)
+                # The shared upstream commit is the regression trigger. The
+                # assertions concern different release-note statements, not
+                # merely a self-consistent hash calculated by the comparator.
+                old_hashes = {h for group in old['commit_groups'] for h in group}
+                new_hashes = {h for group in new['commit_groups'] for h in group}
+                self.assertTrue(old_hashes & new_hashes)
+                self.assertNotEqual(old.get('identity_text', old['text']), new.get('identity_text', new['text']))
+                report = engine.build_report(data, registry(), older, newer)
+                self.assertIn(new['id'], ids(report))
+
+    def test_current_source_patch_already_includes_shared_output_plugin_cve_fix(self):
+        data = engine.load_snapshot('releases.json.gz')
+        report = engine.build_report(data, registry(), '17.11', '18.6')
+        duplicate = next(x for x in report['exclusions']
+                         if x['version'] == '18.6' and 'output_plugin_libraries' in x['title'])
+        self.assertEqual(duplicate['reason'], 'already_in_source')
+        self.assertEqual(duplicate['method'], 'commits')
+        self.assertTrue(all(x['version'] == '17.11' for x in duplicate['matches']))
+        self.assertIn('CVE-2026-6471', duplicate['entry']['cves'])
+        self.assertNotIn(duplicate['id'], ids(report))
+        buffercache = next(x for x in report['exclusions'] if x['source_entry_id'] == '18.1/changes/048')
+        self.assertEqual(buffercache['reason'], 'already_in_source')
+        self.assertTrue(any(x['source_entry_id'] == '17.7/changes/059' for x in buffercache['matches']))
+        self.assertEqual(report['history']['candidates'], ['18.0', '18.1', '18.2', '18.3', '18.4', '18.6'])
 
 
 class VersionComparisonSecurityTests(SimpleTestCase):

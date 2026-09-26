@@ -61,8 +61,7 @@ def parse_index(html, source_url=SOURCE_URL):
     """Return the advisory URLs and linked branch archives from an index."""
     soup = BeautifulSoup(html, 'html.parser')
     tables = [table for table in soup.select('table')
-              if [text(th) for th in table.select('thead th')][:3]
-              == ['Reference', 'Affected', 'Fixed']]
+              if [text(th) for th in table.select('thead th')][:3] == ['Reference', 'Affected', 'Fixed']]
     if len(tables) != 1:
         raise ValueError('Expected one security registry table at {}'.format(source_url))
     advisories = {}
@@ -123,8 +122,7 @@ def parse_detail(html, source_url):
         'published': {},
     }
     version_tables = [table for table in content.select('table')
-                      if [text(th) for th in table.select('thead th')][:2]
-                      == ['Affected Version', 'Fixed In']]
+                      if [text(th) for th in table.select('thead th')][:2] == ['Affected Version', 'Fixed In']]
     if len(version_tables) != 1:
         raise ValueError('Missing version information at {}'.format(source_url))
     for row in version_tables[0].select('tbody tr'):
@@ -195,8 +193,8 @@ def add_cna_ranges(record, payload):
             if item.get('status') != 'affected':
                 continue
             start, end = item.get('version', ''), item.get('lessThan', '')
-            if (item.get('changes') or not VERSION_RE.fullmatch(start)
-                    or not VERSION_RE.fullmatch(end) or version_key(start) >= version_key(end)):
+            if (item.get('changes') or not VERSION_RE.fullmatch(start) or
+                    not VERSION_RE.fullmatch(end) or version_key(start) >= version_key(end)):
                 return
             ranges.append({'from': start, 'until': end})
     if not ranges:

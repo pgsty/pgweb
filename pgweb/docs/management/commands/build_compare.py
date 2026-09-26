@@ -16,7 +16,7 @@ from django.core.management.base import BaseCommand, CommandError
 from pgweb.core.models import Version
 from pgweb.docs.compare_data import (
     FORMAT_VERSION, PARSER_VERSION, UNRELEASED_VERSIONS, commit_aliases,
-    enrich_source_commits, parse_release, sgml_commit_entries,
+    calibrate_source_entries, enrich_source_commits, parse_release, sgml_commit_entries,
 )
 from pgweb.docs.models import DocPage
 
@@ -84,6 +84,7 @@ def build_snapshot(pgdoc_root=None):
     if errors:
         raise CommandError('\n'.join(errors))
     source_records, source_texts, source_entries = [], [], {}
+    canonical_records, canonical_texts, canonical_entries = [], [], {}
     if pgdoc_root is not None:
         root = Path(pgdoc_root)
         for major in sorted({release['major'] for release in releases}, key=int):
@@ -94,8 +95,21 @@ def build_snapshot(pgdoc_root=None):
                 source_texts.append(body.decode('utf-8'))
                 source_entries.update(sgml_commit_entries(source_texts[-1], major))
                 source_records.append({'file': str(relative), 'sha256': hashlib.sha256(body).hexdigest()})
-    aliases = commit_aliases(source_texts)
+            candidates = list((root / 'en').glob(major + '*/release-' + major + '.sgml'))
+            candidates = [candidate for candidate in candidates if re.match(r'^' + major + r'(?:\.|beta|rc|devel|$)', candidate.parent.name)]
+            # The exact native manual build is preferred; devel and preview
+            # are pinned snapshots, never silently replaced by a nearby major.
+            build = next(release['manual_build'] for release in releases if release['major'] == major)
+            source = next((candidate for candidate in candidates if candidate.parent.name == build), None)
+            if source is None:
+                raise CommandError('Missing canonical English SGML for manual build: ' + build)
+            body = source.read_bytes()
+            canonical_texts.append(body.decode('utf-8'))
+            canonical_entries.update(sgml_commit_entries(canonical_texts[-1], major))
+            canonical_records.append({'file': str(source.relative_to(root)), 'sha256': hashlib.sha256(body).hexdigest()})
+    aliases = commit_aliases(canonical_texts or source_texts)
     source_commit_counts = Counter()
+    calibration_counts = Counter()
     for release in releases:
         if source_entries:
             source_commit_counts.update(enrich_source_commits(release, source_entries))
@@ -103,6 +117,11 @@ def build_snapshot(pgdoc_root=None):
             commits = entry['commits'] or entry.get('source_commits', [])
             entry['commit_groups'] = [aliases.get(commit, [commit]) for commit in commits]
             entry['commit_aliases'] = sorted({alias for commit in commits for alias in aliases.get(commit, [commit])})
+        if canonical_entries:
+            try:
+                calibration_counts.update(calibrate_source_entries(release, canonical_entries, aliases))
+            except ValueError as error:
+                raise CommandError(str(error)) from error
         release['content_hash'] = hashlib.sha256(json.dumps(
             {key: value for key, value in release.items() if key not in {'content_hash', 'doc_loaded_at', 'doc_git'}},
             ensure_ascii=False, sort_keys=True,
@@ -117,6 +136,8 @@ def build_snapshot(pgdoc_root=None):
         'backport_sources': source_records,
         'backport_commit_count': len(aliases),
         'source_commit_enrichment': dict(source_commit_counts),
+        'canonical_sources': canonical_records,
+        'source_calibration': dict(calibration_counts),
         'releases': releases,
         'release_count': len(releases),
         'entry_count': sum(release['entry_count'] for release in releases),

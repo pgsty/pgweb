@@ -127,6 +127,13 @@
             <div class="compare-entry-body">
               {% if entry.section %}<p class="compare-entry-section">{{ entry.section }}</p>{% endif %}
               <div class="compare-prose">{{ entry.html|safe }}</div>
+              {% if entry.variants %}<details class="compare-variants">
+                <summary>其他分支的原始说明（{{ entry.variants|length }}）</summary>
+                {% for variant in entry.variants %}<section>
+                  <h4><a href="{{ variant.source_url }}">PostgreSQL {{ variant.version }} · {{ variant.title }}</a></h4>
+                  <div class="compare-prose">{{ variant.html|safe }}</div>
+                </section>{% endfor %}
+              </details>{% endif %}
               <div class="compare-entry-meta">
                 {% for cve in entry.cves %}<a class="compare-cve-badge" href="https://www.postgresql.org/support/security/{{ cve }}/" target="_blank" rel="noopener">{{ cve }}</a>{% endfor %}
                 <a href="{{ entry.source_url }}">查看原始条目 <span aria-hidden="true">↗</span></a>
@@ -148,10 +155,10 @@
     <summary>这份对比如何生成？</summary>
     <div class="compare-prose">
       <p>对比以 PostgreSQL 发行说明为依据，汇总起始版本之后、目标版本及之前的变更，支持同一大版本内的小版本更新，以及跨大版本升级。跨大版本时，旧分支的维护记录只纳入到下一大版本首次发布之日，所有记录均不晚于目标版本的发布日期。大版本名称（如 18）指首个正式版本（18.0）；测试版与开发快照会单独标注。</p>
-      <p>每条变更保留完整说明与原文链接；有本站译文时优先使用中文，缺少译文时保留英文。分类用于辅助浏览，具体影响、适用条件与升级操作请阅读条目正文和各版本的升级说明。</p>
-      <p>同一修复可能回补到多个版本分支。对比会保守合并可确认相同的条目，已知由起始版本包含的修复会排除；文字不同的相似条目仍可能分别列出。这是发行说明的累计差异，不能覆盖二进制程序之间的每一处代码变化。</p>
+      <p>条目正文来自本站中文手册，版本清单、条目覆盖与提交依据逐一核对上游英文原文。每条变更保留完整说明与原文链接；分类用于辅助浏览，具体影响、适用条件与升级操作请阅读条目正文和各版本的升级说明。</p>
+      <p>同一修复可能回补到多个版本分支。对比会保守合并可确认相同的条目，并保留各分支完整说明；已知由起始版本包含的修复会排除。一条说明包含多个独立修复时，只有全部已包含才排除。大版本新功能不因与旧版补丁存在提交关联而合并，不能确认相同的条目继续保留。这是发行说明的累计差异，不能覆盖二进制程序之间的每一处代码变化。</p>
       <p>CVE 独立依据 PostgreSQL 官方安全公告与漏洞记录计算：起始版本受影响、目标版本已修复或不受影响的漏洞才计入，按编号去重。目标版本仍受影响的漏洞另行提示；安全变更条数与 CVE 数量分别统计。</p>
-      {% if report.excluded_count %}<p>本次对比排除了 {{ report.excluded_count }} 条已包含或重复的变更。</p>{% endif %}
+      {% if report.excluded_count %}<p>本次对比有 {{ report.already_in_source_count }} 条已由起始版本包含；另有 {{ report.duplicate_count }} 条跨分支重复说明并入相应条目，可展开查看完整分支原文。JSON 导出包含逐条合并与排除依据。</p>{% endif %}
       <p>交互参考 <a href="https://pgversions.com/" target="_blank" rel="noopener">pgversions.com</a> 与 <a href="https://github.com/neondatabase/pgversionreport" target="_blank" rel="noopener">pgversionreport</a>，内容来自 PostgreSQL 发行说明。更多历史资料见<a href="/docs/release/">发行说明归档</a>。</p>
     </div>
   </details>
