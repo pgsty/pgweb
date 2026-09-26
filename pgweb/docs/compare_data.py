@@ -19,15 +19,15 @@ from bs4 import BeautifulSoup, Comment, NavigableString, Tag
 
 
 FORMAT_VERSION = 1
-PARSER_VERSION = 2
+PARSER_VERSION = 3
 # This patch number was skipped upstream, not omitted by the importer.
 UNRELEASED_VERSIONS = frozenset({'18.5'})
 CATEGORIES = frozenset({
     'security', 'bugfix', 'performance', 'feature', 'compatibility', 'improvement',
 })
-_RELEASE_VERSION = re.compile(r'^(\d+)\.(\d+)$')
+_RELEASE_VERSION = re.compile(r'^(9\.[0-6]|[1-9]\d+)\.(\d+)$')
 _CVES = re.compile(r'\bCVE-\d{4}-\d{4,}\b', re.I)
-_DATE_LABEL = re.compile(r'(?:发布日期|Release date|Date of release|Released)\s*[:：.]*\s*', re.I)
+_DATE_LABEL = re.compile(r'(?:发布日期|发行日期|Release date|Date of release|Released)\s*[:：.]*\s*', re.I)
 _ISO_DATE = re.compile(r'^(\d{4})-(\d{1,2})-(\d{1,2})(?!\d)')
 _CN_DATE = re.compile(r'^(\d{4})\s*年\s*(\d{1,2})\s*月\s*(\d{1,2})\s*日')
 _BUGFIX = re.compile(
@@ -53,6 +53,56 @@ _SAFE_ATTRS = {
 }
 
 
+def branch_key(major):
+    return tuple(int(part) for part in str(major).split('.'))
+
+
+def release_parts(version):
+    match = _RELEASE_VERSION.fullmatch(version)
+    if not match:
+        raise ValueError('Comparison requires PostgreSQL >= 9.0, using 9.x.patch or major.patch')
+    return match[1], int(match[2])
+
+
+def release_filename(version):
+    major, minor = release_parts(version)
+    return 'release-{}{}.html'.format(major.replace('.', '-'), '-' + str(minor) if minor else '')
+
+
+def normalize_sgml(source):
+    """Expand historical EMPTY elements and SGML SHORTTAG end tags.
+
+    Original source files remain untouched. A lexical stack suffices for the
+    release-note fragments: they have explicit structural end tags, while
+    inline elements can use </>. Comments must not affect the stack.
+    """
+    stack = []
+    empty = {'xref', 'anchor', 'co', 'sbr', 'area', 'colspec', 'spanspec', 'imagedata', 'graphic', 'inlinegraphic'}
+
+    def replace(match):
+        token = match[0]
+        if token.startswith('<!--'):
+            return token
+        if token == '</>':
+            if not stack:
+                raise ValueError('SGML SHORTTAG has no open element')
+            return '</{}>'.format(stack.pop())
+        found = re.match(r'<(/?)([A-Za-z][\w:.-]*)\b', token)
+        if not found:
+            return token
+        closing, name = found[1], found[2].lower()
+        if closing:
+            if name in stack:
+                del stack[len(stack) - 1 - stack[::-1].index(name):]
+        elif name in empty:
+            return token.rstrip('>').rstrip('/') + '/>'
+        elif not token.endswith('/>'):
+            stack.append(name)
+        return token
+
+    return re.sub(r'<!--[\s\S]*?-->|</>|</?[A-Za-z][^>]*>', replace, source)
+
+
 def _text(node):
     """Respect source spacing around inline tags and paragraph boundaries."""
     parts = []
@@ -67,18 +117,32 @@ def _text(node):
 
 
 def _heading(section):
-    heading = section.find(re.compile(r'^h[2-6]$'))
+    heading = section.find(re.compile(r'^h[1-6]$'))
     if not heading:
         return ''
     title = re.sub(r'\s*[#§]\s*$', '', _text(heading))
     return re.sub(r'^[A-Z]?\.?\d+(?:\.\d+)*\.?\s*', '', title).strip()
 
 
+def _normalize_classes(soup):
+    # The original 9.x HTML uses DSSSL's uppercase CLASS values. HTML tag
+    # names are normalized by BeautifulSoup, but class values are not.
+    for node in soup.find_all(class_=True):
+        node['class'] = [value.lower() for value in node.get('class', [])]
+
+
+def _section_container(node):
+    for candidate in [node] + list(node.parents):
+        if isinstance(candidate, Tag) and candidate.name in {'div', 'section'} and any(re.fullmatch(r'sect\d', value, re.I) for value in candidate.get('class', [])):
+            return candidate
+    return node
+
+
 def _section(root, suffix, heading_pattern):
     # PG 10–12 use generated section IDs; more recent manuals use semantic IDs.
     found = root.find(id=re.compile(r'-' + suffix + r'$', re.I))
     if found:
-        return found
+        return _section_container(found)
     for candidate in root.find_all(['div', 'section']):
         if ('sect2' in candidate.get('class', []) or candidate.name == 'section') and re.search(heading_pattern, _heading(candidate), re.I):
             return candidate
@@ -95,6 +159,7 @@ def top_level_items(section):
 def safe_html(fragment, base_url):
     """Keep technical markup while preventing active HTML and unsafe links."""
     soup = BeautifulSoup(str(fragment), 'html.parser')
+    _normalize_classes(soup)
     for node in soup.find_all(['script', 'style', 'iframe', 'object', 'embed', 'svg', 'math', 'form']):
         node.decompose()
     for node in soup.select('.id_link, .titlepage, .toc, .navheader, .navfooter'):
@@ -124,6 +189,9 @@ def safe_html(fragment, base_url):
 def _date_info(root):
     for paragraph in root.find_all('p'):
         raw = _text(paragraph)
+        note = paragraph.find_parent(class_='note')
+        if note and note.find(['h3', 'h4']):
+            raw = _text(note.find(['h3', 'h4'])) + ': ' + raw
         label = _DATE_LABEL.search(raw)
         if not label:
             continue
@@ -220,12 +288,12 @@ def sgml_commit_entries(source, major):
     """
     # These are EMPTY elements in legacy SGML. Treating an unclosed xref as
     # ordinary HTML swallows the following prose (and sometimes comments).
-    source = re.sub(r'<(xref|anchor)\b([^>]*?)/?>', r'<\1\2/>', source)
+    source = normalize_sgml(source)
     soup = BeautifulSoup(source, 'html.parser')
     records = {}
     for release in soup.find_all('sect1'):
-        match = re.fullmatch(r'release-(\d+)(?:-(\d+))?', release.get('id', ''), re.I)
-        if not match or match.group(1) != str(major):
+        match = re.fullmatch(r'release-(' + re.escape(str(major).replace('.', '-')) + r')(?:-(\d+))?', release.get('id', ''), re.I)
+        if not match:
             continue
         version = '{}.{}'.format(major, match.group(2) or '0')
         parts = {'migration': [], 'changes': []}
@@ -257,7 +325,8 @@ def sgml_commit_entries(source, major):
                 for comment in comments:
                     for branches in _comment_branch_groups(comment):
                         if branches:
-                            commits.add(next((commit for branch, commit in branches if branch == 'REL_{}_STABLE'.format(major)), branches[0][1]).lower())
+                            native_branch = ('REL{}_STABLE' if str(major).startswith('9.') else 'REL_{}_STABLE').format(str(major).replace('.', '_'))
+                            commits.add(next((commit for branch, commit in branches if branch == native_branch), branches[0][1]).lower())
                     commits.update(commit.lower() for commit in re.findall(r'^\d{4}-\d{2}-\d{2}\s+\[([0-9a-f]{7,40})\]', str(comment), re.M | re.I))
                 for link in item.find_all('ulink', url=True):
                     found = re.search(r'(?:&commit_baseurl;|postgr\.es/c/)([0-9a-f]{7,40})', link['url'], re.I)
@@ -376,11 +445,12 @@ def _entry(item, release, section, compatibility=False):
     ancestors = [ancestor for ancestor in item.parents if isinstance(ancestor, Tag)]
     path = []
     for ancestor in reversed(ancestors[:ancestors.index(section)]):
-        if any(re.fullmatch(r'sect\d', cls) for cls in ancestor.get('class', [])):
+        if any(re.fullmatch(r'sect\d', cls, re.I) for cls in ancestor.get('class', [])):
             label = _heading(ancestor)
             if label:
                 path.append(label)
-    if not path:
+    fallback_path = not path
+    if fallback_path:
         path = ['兼容性' if compatibility else '变更']
     section_label = ' / '.join(path)
     first = copy(item.find('p') or item)
@@ -397,7 +467,19 @@ def _entry(item, release, section, compatibility=False):
     native_id = item.get('id', '')
     stable_key = native_id if native_id and not native_id.startswith('id-') else ((commits[0] if commits else title) + '|' + section_label)
     entry_id = release['version'] + '-' + hashlib.sha256(stable_key.encode()).hexdigest()[:16]
+    # Preserve existing public anchors, whose fallback key used Chinese labels,
+    # while presenting untranslated source notes entirely in their own language.
+    if fallback_path and not re.search(r'[\u3400-\u9fff]', _heading(section)):
+        path = ['Compatibility' if compatibility else 'Changes']
+        section_label = path[0]
     anchor = native_id or next((a.get('id') for a in ancestors if a.get('id')), '')
+    if not anchor:
+        for ancestor in ancestors:
+            heading = ancestor.find(re.compile(r'^h[1-6]$'), recursive=False)
+            heading_anchor = heading.find('a', attrs={'name': True}) if heading else None
+            if heading_anchor:
+                anchor = heading_anchor.get('id') or heading_anchor['name']
+                break
     return {
         'id': entry_id,
         'title': title,
@@ -414,13 +496,10 @@ def _entry(item, release, section, compatibility=False):
 
 def parse_release(content, version, manual, status='stable', *, build='', supported=False):
     """Parse one native release note into the versioned snapshot contract."""
-    match = _RELEASE_VERSION.fullmatch(version)
-    if not match or int(match.group(1)) < 10:
-        raise ValueError('Comparison requires a PostgreSQL version >= 10 as major.minor')
+    major, minor = release_parts(version)
     if status not in {'stable', 'preview', 'devel'}:
         raise ValueError('Unknown release status: ' + status)
-    major, minor = match.group(1), int(match.group(2))
-    filename = 'release-{}{}.html'.format(major, '-' + str(minor) if minor else '')
+    filename = release_filename(version)
     manual_url = '/docs/{}/{}'.format(manual, filename)
     release = {
         'version': version, 'major': major, 'minor': minor, 'status': status,
@@ -429,9 +508,12 @@ def parse_release(content, version, manual, status='stable', *, build='', suppor
         'manual': str(manual), 'manual_url': manual_url,
     }
     soup = BeautifulSoup(content or '', 'html.parser')
+    _normalize_classes(soup)
     for excluded in soup.select('.toc, .navheader, .navfooter'):
         excluded.decompose()
-    root = soup.find(id='RELEASE-' + major + ('-' + str(minor) if minor else '')) or soup
+    release_anchor = 'RELEASE-' + major.replace('.', '-') + ('-' + str(minor) if minor else '')
+    root = soup.find(id=release_anchor) or soup.find('a', attrs={'name': release_anchor})
+    root = _section_container(root) if root else soup
     release['date'], release['source_as_of'], release['date_text'] = _date_info(root)
     changes = _section(root, 'CHANGES', r'^(?:变更|更改|变化|Changes)$')
     migration = _section(root, 'MIGRATION', r'迁移|Migration')
@@ -463,6 +545,8 @@ def parse_release(content, version, manual, status='stable', *, build='', suppor
             continue
         fragment = copy(section)
         for node in fragment.select('.titlepage, ul, ol'):
+            node.decompose()
+        for node in fragment.find_all(re.compile(r'^h[1-6]$'), recursive=False):
             node.decompose()
         migration_parts.append(safe_html(fragment.decode_contents(), manual_url))
     release.update({

@@ -1,13 +1,22 @@
-# 版本比较的数据快照
+# 版本比较的数据来源与校准
 
-`/docs/compare/` 使用 PostgreSQL 官方发布说明作为事实来源。中文正文来自本站原生 `DocPage`，英文正文来自 PG.CENTER 独立 `center` 数据库中的原生英文手册。两端使用同一份上游英文 SGML 提供与语言无关的条目身份、分类和提交关系，分别生成 `data/compare/releases.json.gz`；请求不联网，不重新解析手册，不新增数据库表。
+`/docs/compare/` 的事实来源是 PostgreSQL 官方发布说明。中文正文取自 PGSQL.CC 的原生 `DocPage`，英文正文取自 PG.CENTER 独立 `center` 数据库中的英文手册；统一的条目身份、分类与提交关系取自固定版本的上游英文 SGML。
 
-## 来源与完整覆盖
+数据库保存每份发行版的原始记录、独立语言正文与提交关系；同一修复在不同版本出现的记录全部保留，比较时再选择并合并。`data/compare/releases.json.gz` 是可审核的传输与导出格式，请求读取已启用的数据库数据集。表结构、幂等导入、版本记录和恢复流程见 [version-compare-storage.md](version-compare-storage.md)。
 
-已发布版本的独立清单取自 [PostgreSQL 官方发布说明归档](https://www.postgresql.org/docs/release/)，而不是从本站数据库的最大版本号推断。2026-09-26 校准覆盖 PostgreSQL 10–18 的全部 **173 个正式发布版本**：
+## 覆盖范围
+
+完整版本清单独立取自 [PostgreSQL 官方发布说明归档](https://www.postgresql.org/docs/release/)，不从本站数据库中的最大版本推断。2026-09-26 校准覆盖 PostgreSQL **9.0–18 的全部 351 个正式版本**：
 
 | 分支 | 完整范围 | 版本数 |
 | --- | --- | ---: |
+| 9.0 | 9.0.0–9.0.23 | 24 |
+| 9.1 | 9.1.0–9.1.24 | 25 |
+| 9.2 | 9.2.0–9.2.24 | 25 |
+| 9.3 | 9.3.0–9.3.25 | 26 |
+| 9.4 | 9.4.0–9.4.26 | 27 |
+| 9.5 | 9.5.0–9.5.25 | 26 |
+| 9.6 | 9.6.0–9.6.24 | 25 |
 | 10 | 10.0–10.23 | 24 |
 | 11 | 11.0–11.22 | 23 |
 | 12 | 12.0–12.22 | 23 |
@@ -18,13 +27,19 @@
 | 17 | 17.0–17.11 | 12 |
 | 18 | 18.0–18.6，跳过未发布的 18.5 | 6 |
 
-另收录 `19beta4` 预览正文；20 开发占位页无变更，不是可选择的对比目标。每个正式分支的 `release-<major>.sgml` 自带该分支历次小版本记录。原文位于同级 `pgdoc/en/<完整构建号>/`，中文对应 `pgdoc/zh/<大版本>/`。
+再加 `19beta4` 预览和不提供对比的 20 开发占位页，共 **353 份快照、16,113 条原始变更**。9.x 使用三段规范版本：`9.6.0` 的 `major='9.6'`、`minor=0`，界面显示 `9.6`；`9.6.24` 的补丁号为 24。10 起沿用 `18.0`、`18.6` 等两段版本。排序按整数元组，不按浮点数或字符串顺序。
 
-`tools/docs/audit_compare_sources.py` 独立验证原文的可信链：重新获取官方归档版本清单和源码包 SHA256，校验缓存的 9 个正式版本源码包，再将其中的发布说明文件与英文 SGML 逐字节比较。PG19 预览取固定提交 `b73d13c32c834a2c8e1c60cb92f79530376cedf1`（`REL_19_BETA4`）的官方仓库原文。源码包和构建位置记录于 `pgdoc/en/SOURCES.json`，但审计会实际验证文件，不把已有记录视为验证结果。
+## 原始来源与可信链
 
-## 重建与独立审计
+每个正式分支的 `release-<major>.sgml` 包含该分支历次小版本记录。英文源位于同级 `pgdoc/en/<完整构建号>/`，通常中文源位于 `pgdoc/zh/<大版本>/`。9.x 的 SGML 文件名含点，如 `release-9.6.sgml`；HTML 名使用短横线，如 `release-9-6.html`、`release-9-6-24.html`。
 
-先更新对应语言手册和 `core_version` 元数据，并准备同级 `pgdoc` 中匹配 `manual_build` 的英文 SGML：
+**9.2 的中文来源是一个明确例外：** 原生 `zh/9.2/release-9.2.sgml` 保留英文，而 `zh/9.3/release-9.2.sgml` 已有完整中文。构建器使用后者，经逐版数量、全文、结构与 CVE 核对后恢复到本站原生 9.2 页面。快照与审计报告均保留真实的译文源路径，不借用 9.3 的新功能记录。
+
+`tools/docs/audit_compare_sources.py` 重新获取官方归档和源码包 SHA256，实际校验缓存中的 **16 个正式分支源码包**，再将包内发布说明与英文 SGML 逐字节比较。PG19 取固定提交 `b73d13c32c834a2c8e1c60cb92f79530376cedf1`（`REL_19_BETA4`）的官方仓库文件。构建位置见 `pgdoc/en/SOURCES.json`，已有清单不会替代本轮实际文件校验。
+
+## 构建、审计与导入
+
+先更新对应语言的原生手册和版本元数据，并准备匹配 `manual_build` 的英文 SGML：
 
 ```sh
 .venv/bin/python manage.py build_compare --check
@@ -33,57 +48,71 @@
 .venv/bin/python manage.py test pgweb.docs.test_compare_data --noinput
 ```
 
-首次抓取的证据缓存位于 `tmp/compare-source-audit/`。完全离线重放：
+证据缓存位于 `tmp/compare-source-audit/`；离线重放及英文快照校验：
 
 ```sh
 .venv/bin/python tools/docs/audit_compare_sources.py --offline
-# 也可以校验英文站的独立快照
 .venv/bin/python tools/docs/audit_compare_sources.py \
   --language en --snapshot ../pg.center/data/compare/releases.json.gz \
   --output /tmp/compare-source-audit-en.json --offline
 ```
 
-默认输出 `data/compare/source-audit.json`，包含本次快照 SHA256、来源 URL/校验值、逐版本日期/条目数/CVE 集合、验证计数和全部差异。`--refresh` 与 `--offline` 互斥。版本清单、条目数、日期、正文、CVE、提交、身份或段落结构存在未解释差异时审计返回非零，发布前必须解决。两份快照和各自审计结果应随代码提交；生产读取已审核快照，不需要复制源码 checkout。
+审计默认输出 `data/compare/source-audit.json`，记录快照 SHA256、来源 URL 与哈希、逐版本日期/条目数/CVE、验证计数和全部差异。`--refresh` 与 `--offline` 互斥。遗漏版本或条目、正文不符、CVE 不符、提交解析不符、相互矛盾的中英提交证据或结构差异均返回非零。只有一侧或两侧都没有提交证据时如实计数，不伪造对应关系。
 
-`build_compare --check` 重新构建并验证但不写文件；`--output PATH` 可先生成候选快照；`--pgdoc-root PATH` 可指定源码目录。实际源码构建缺少精确构建版本的英文 SGML 会拒绝，不借用相邻版本。数据库覆盖检查仍保留，作为独立归档审计之外的第二道检查。
+`build_compare --check` 重新提取但不写文件；`--output PATH` 生成候选；`--pgdoc-root PATH` 指定源码目录。缺少精确构建版本的英文 SGML 会拒绝，不能借用相邻版本。数据库完整性检查仍保留，作为独立归档审计之外的检查。
+
+验证后按数据库存储文档备份、迁移和导入。例如中文发行数据：
+
+```sh
+.venv/bin/python manage.py migrate docs
+.venv/bin/python manage.py import_compare data/compare/releases.json.gz --language zh --check
+.venv/bin/python manage.py import_compare data/compare/releases.json.gz --language zh --complete --write
+```
+
+安全数据独立导入；两种语言分别导入，保留统一身份。生产导入已审核数据，不需要复制 SGML checkout。提交传输快照与审计报告，并复核数据库导出和页面实际使用的数据集。
 
 ## 提取与身份契约
 
-实现位于 `pgweb/docs/compare_data.py` 与 `pgweb/docs/management/commands/build_compare.py`。快照保持 `format=1`，本轮 `parser_version=2`。每份发布说明保留完整 Changes 与迁移/不兼容列表，跳过重复 Overview 和致谢。条目内部代码、嵌套步骤、链接和解释全部保留；迁移正文另外保留。分类是浏览辅助，不是上游的正式分类。
+实现位于 `pgweb/docs/compare_data.py` 与 `pgweb/docs/management/commands/build_compare.py`，传输格式保持 `format=1`，当前 `parser_version=3`。完整保留 Changes、迁移/不兼容列表及其内部代码、嵌套步骤和解释；跳过重复 Overview 与致谢。迁移正文另外保留，分类只是浏览辅助。
 
 | 层级 | 字段 | 含义 |
 | --- | --- | --- |
 | 快照 | `generated_at`、`parser_version` | 生成时间与规则版本 |
-| 快照 | `canonical_sources`、`backport_sources` | 英文权威源与中文源的相对路径、SHA256 |
-| 快照 | `source_calibration` | 按英文重新校准的条目、分类与提交组统计 |
-| 发布 | `version`、`major`、`minor` | 版本坐标，首发为 `.0` |
-| 发布 | `status`、`build`、`supported`、`eol_date` | 正式版、预览、开发占位及维护状态 |
-| 发布 | `date`、`source_as_of`、`date_text` | 发布日期、预览截止日期与原文日期措辞 |
-| 发布 | `manual_build`、`manual_url`、`source_url` | 原生手册构建与来源链接 |
-| 发布 | `entries`、`migration_html`、`placeholder` | 完整条目、迁移正文及占位状态 |
-| 条目 | `id`、`title`、`html`、`text` | 页面原有稳定锚点、标题、完整安全 HTML 与检索正文 |
-| 条目 | `source_entry_id` | 与语言无关的 `版本/部分/三位序号`，用于对应固定源快照内的同一条记录 |
-| 条目 | `identity_text`、`source_hash` | 英文完整规范正文、原始英文条目 SHA256 |
-| 条目 | `section`、`section_path`、`category` | 本地语言主题路径，以及统一按英文判断的分类 |
-| 条目 | `commits` | 渲染正文中原有的提交链接，保留原样 |
-| 条目 | `source_commits` | 完整英文 SGML 的独立提交，含注释中未显示为链接的部分 |
-| 条目 | `commit_groups`、`commit_aliases` | 每个提交的跨分支对应组，以及这些组的并集 |
-| 条目 | `cves` | 全文提及的 CVE 编号，不等于本次新修复漏洞清单 |
+| 快照 | `canonical_sources`、`backport_sources` | 英文权威源与中文源路径、SHA256 |
+| 快照 | `source_calibration` | 按英文校准的条目、分类与提交组统计 |
+| 发布 | `version`、`major`、`minor` | 规范版本、分支与补丁号 |
+| 发布 | `status`、`build`、`supported`、`eol_date` | 正式、预览、开发占位及维护状态 |
+| 发布 | `date`、`source_as_of`、`date_text` | 发布日期、预览截止日期与原文措辞 |
+| 发布 | `manual_build`、`manual_url`、`source_url` | 精确手册构建与来源链接 |
+| 发布 | `entries`、`migration_html`、`placeholder` | 原始记录、迁移正文与占位状态 |
+| 条目 | `id`、`title`、`html`、`text` | 页面锚点、标题、完整安全 HTML 与检索正文 |
+| 条目 | `source_entry_id` | 固定源快照中的 `版本/部分/三位序号` |
+| 条目 | `identity_text`、`source_hash` | 英文规范正文与源条目哈希 |
+| 条目 | `section`、`section_path`、`category` | 本地语言主题路径与统一英文分类 |
+| 条目 | `commits`、`source_commits` | 原有 HTML 提交链接、英文 SGML 完整独立提交 |
+| 条目 | `commit_groups`、`commit_aliases` | 各提交的跨分支组及其并集 |
+| 条目 | `cves` | 正文提及的编号，不等于新增修复漏洞清单 |
 
-两种语言对相同英文 `source_entry_id` 的 `identity_text`、CVE、分类和提交组必须一致。页面旧锚点 `id` 不因这次校准而重写。位置标识针对已固定并校验的源快照，不宣称源码插入条目后序号永不变化。
+同一 `source_entry_id` 的英文规范正文、CVE、分类和提交组在两种语言中必须相同。原有页面锚点保留；位置身份只针对固定源快照，不承诺未来源码插入条目后序号不变。
 
-SGML 提交关系必须处理四种实际格式：条目内注释、紧邻条目之前的注释、`Branch: ... Release: ... [hash]` 标记、同一 Author 下重复出现分支名的新提交序列。不能把一个 Author 名下的多个独立提交合并。中文历史注释与原文存在删节时以英文为准；HTML 中只显示部分提交时不丢弃其余独立提交。
+历史格式需要分别处理：SGML 的 `</>` 短结束标签与 EMPTY 元素、9.x 的 `REL9_6_STABLE` 分支名、DSSSL 大写 class 和标题中的 `a[name]` 锚点、独立 Note 中的发布日期。提交信息包括条目内/条目前注释、可选 `Release:` 标记和同一 Author 下的多个提交序列。分支名再次出现即开始新的提交组，不能把同一作者所有提交合并。
 
-**提交对应不等于发布说明语义相同。** 同一源码提交在开发分支与稳定分支可能只应用其中一部分：例如 Snowball 的完整升级支持爱沙尼亚语，稳定分支只回补内存不足崩溃修复。比较器不得仅凭相同提交关系删除大版本新增功能。跨版本的具体继承和保留规则见 [version-compare.md](version-compare.md)。
+**提交关系不等于条目语义完全相同。** 例如开发分支完整升级 Snowball 并增加爱沙尼亚语，稳定分支只回补内存不足修复。不能仅凭对应提交删除大版本新增功能；比较规则见 [version-compare.md](version-compare.md)。
 
-## 本轮校准结果与边界
+## 当前验证结果与原生页面修复
 
-独立审计核对了 **9,294 条变更、16,385 段正文、32 份代码示例**；中英文原文的逐条 Changes/Migration 数量、段落与示例结构一致。每条中文渲染正文与其 SGML 完整正文比较，忽略 DocBook 生成的交叉引用标签、排版引号及空白等差异；正文中的其他文本、CVE 与标点仍参与比较。提交关系使用独立逐行解析器核对，避免用构建器自己的结果重复证明自己。
+全量核对 **16,113 条记录、27,219 段正文、66 份代码示例和 6 个内嵌列表项**，逐条 Changes/Migration 数量、结构、日期和 CVE 一致。完整渲染正文与相应语言 SGML 比较，只规范化空白、DocBook 引号、生成的交叉引用/警告标题及空链接所显示的 URL。正文中的其他文本仍参与比较。
 
-其中 **9,235 条**在原始中英文 SGML 中均有相符的提交证据，可独立确认逐条对应关系；另外 **59 条**两种原文都没有提交编号，保留完整正文与对应顺序，不虚构提交关系。此次保持所有中文正文原样，按英文统一调整 385 条分类，并纠正 2,283 条记录的提交组。
+提交证据分三类：**11,056 条**中英源具有相符提交；**276 条**只有英文源有提交，来自中文 9.5 的注释删节；**4,781 条**两侧都没有编号。独立逐行解析器核对上游分支注释，避免仅用构建器自身重复证明其结果。没有证据的旧条目仍完整保留。
 
-修复了旧 SGML `xref` 作为 HTML 非空元素时吞入后文、漏读条目前置提交注释、只采集 HTML 中部分提交、漏读 `Release:` 注释及同一作者多组提交误合并等问题。英文对应审计另发现 PostgreSQL 10.22 贡献者姓名 `Mannsåker` 的一处编码错误，已校正原生英文页面。
+中文本地和生产各修复 **48 份原生页面**，事先核对原文哈希和标题、备份原行及缺失项，再事务写入并复核：
 
-结构和全文保留检查能证明没有丢弃已有译文，不能单独证明每句话的翻译语义正确；中文翻译仍沿用经维护的本站手册。本页比较的是发布说明所记录的变更，不从记录推断未记载的二进制行为。CVE 受影响范围及修复状态由单独的官方安全矩阵与 CNA 数据校准，详见 [version-compare.md](version-compare.md)。
+- 新增每个 9.x 分支缺少的最后一个小版本，共 7 页。
+- 将原生 9.2 的 24 份英文页恢复为已有中文；加上新增的 9.2.24，25 份发布说明全部中文。
+- 对 17 份原生 9.3 页面精确还原 67 处 OpenSP SDATA 占位符，包括贡献者姓名和 `Bokmål` 区域名；其余内容字节保持不变。
 
-`html` 经过标签和属性白名单清理，拒绝脚本、事件属性、内联样式与非 HTTP(S) 链接；相对手册链接转换到当前站点对应版本。日期只认发布字段中的有效完整日期，不使用 beta 时间替代正式发布日期。预览中的“截至”日期单独记录。
+41 个已有页面 ID 和 `core_version` 元数据保持不变。两端 `tmp/compare-nine/maintenance/` 保存导入前完整行、缺失项、导入结果与复核记录；候选及来源清单为 `tmp/compare-nine/candidate-pages.json`、`candidate-manifest.json`。9.x 的 `IndexedPage` 和 `SearchEntry` 均为零，因此本批没有需要重建的文档定义索引。
+
+历史首次实现只覆盖 PG10–18：175 份快照、9,294 条记录；随后一轮校正了 2,283 条提交组、385 条分类及英文 10.22 的一处姓名编码。它们是历史批次，当前范围和数量以本页前述 9.0+ 全量结果为准。
+
+结构与正文检查证明原有内容完整保留，不能单独证明每句话的翻译语义。比较对象是发布说明所记载的变化；CVE 的实际受影响范围和修复状态使用独立官方安全矩阵及 CNA 数据。HTML 经过标签/属性白名单，拒绝脚本、事件属性、内联样式和非 HTTP(S) 链接。正式日期只取有效发布字段，预览“截至”日期另外记录。

@@ -10,7 +10,7 @@ from django.core.management import call_command
 from django.core.management.base import CommandError
 from django.test import SimpleTestCase
 
-from .compare_data import calibrate_source_entries, classify, commit_aliases, enrich_source_commits, parse_release, safe_html, sgml_commit_entries
+from .compare_data import branch_key, calibrate_source_entries, classify, commit_aliases, enrich_source_commits, normalize_sgml, parse_release, release_filename, release_parts, safe_html, sgml_commit_entries
 from .management.commands.build_compare import build_snapshot, write_snapshot
 
 
@@ -200,6 +200,65 @@ Branch: REL_18_STABLE [ddddddd44]
         self.assertIn('guc-something', entry['identity_text'])
         self.assertIn('entire explanation', entry['identity_text'])
         self.assertEqual(entry['commits'], ['aaaaaaa11'])
+
+    def test_nine_branch_coordinates_and_filenames_are_not_decimal_patch_numbers(self):
+        self.assertEqual(release_parts('9.6.0'), ('9.6', 0))
+        self.assertEqual(release_parts('9.0.23'), ('9.0', 23))
+        self.assertEqual(release_filename('9.6.0'), 'release-9-6.html')
+        self.assertEqual(release_filename('9.6.24'), 'release-9-6-24.html')
+        self.assertEqual(release_filename('10.0'), 'release-10.html')
+        self.assertEqual(sorted(['10', '9.6', '9.0', '19'], key=branch_key), ['9.0', '9.6', '10', '19'])
+        for invalid in ['9.6', '9.7.0', '8.4.22', '10.0.1']:
+            with self.assertRaises(ValueError):
+                release_parts(invalid)
+
+    def test_nine_release_date_can_be_a_note_heading_before_the_date_paragraph(self):
+        html = '''<div id="RELEASE-9-0"><div class="note"><h3>发行日期</h3><p>2010-09-20</p></div>
+<div class="sect2"><h3>变更</h3><ul><li><p>添加流复制。</p></li></ul></div></div>'''
+        release = parse_release(html, '9.0.0', '9.0')
+        self.assertEqual(release['date'], '2010-09-20')
+        self.assertEqual(release['major'], '9.0')
+        self.assertEqual(release['manual_url'], '/docs/9.0/release-9-0.html')
+        self.assertEqual(release['entries'][0]['category'], 'feature')
+
+    def test_shorttag_closes_only_the_current_inline_element(self):
+        source = '''<sect1 id="release-9-6-1"><sect2><title>Changes</title><itemizedlist><listitem>
+<!--
+Author: Jane
+Branch: master [aaaaaaa11]
+Branch: REL9_6_STABLE [bbbbbbb22]
+--><para>Fix <function>example()</> when <literal>strict</> is disabled.</para>
+<para>See <xref linkend="functions-admin"> for more information.</para>
+</listitem></itemizedlist></sect2></sect1>'''
+        normalized = normalize_sgml(source)
+        self.assertIn('<function>example()</function>', normalized)
+        self.assertIn('<literal>strict</literal> is disabled.', normalized)
+        record = sgml_commit_entries(source, '9.6')['9.6.1']['changes'][0]
+        self.assertEqual(record['commits'], ['bbbbbbb22'])
+        self.assertIn('when strict is disabled.', record['title'])
+        self.assertIn('functions-admin', record['identity_text'])
+
+    def test_original_dsssl_classes_and_heading_anchors_select_the_release_container(self):
+        html = '''<div class="NAVHEADER">Previous release</div><div class="SECT1">
+<h1 class="SECT1"><a name="RELEASE-9-6-24" id="RELEASE-9-6-24">E.1. Release 9.6.24</a></h1>
+<div class="FORMALPARA"><p><b>Release date:</b> 2021-11-11</p></div>
+<div class="SECT2"><h2 class="SECT2"><a name="AEN131864" id="AEN131864">E.1.1. Migration to Version 9.6.24</a></h2>
+<p>Update standby servers first.</p></div>
+<div class="SECT2"><h2 class="SECT2"><a name="AEN131871" id="AEN131871">E.1.2. Changes</a></h2><ul><li>
+<p>Make the server reject extraneous data after an SSL handshake.</p><p>CVE-2021-23214</p></li></ul></div>
+</div><div class="NAVFOOTER">Next release</div>'''
+        release = parse_release(html, '9.6.24', '9.6')
+        self.assertEqual(release['date'], '2021-11-11')
+        self.assertEqual(release['entry_count'], 1)
+        self.assertEqual(release['entries'][0]['cves'], ['CVE-2021-23214'])
+        self.assertEqual(release['entries'][0]['source_url'], '/docs/release/9.6.24/#AEN131871')
+        self.assertEqual(release['entries'][0]['section'], 'Changes')
+        self.assertEqual(release['entries'][0]['section_path'], ['Changes'])
+        self.assertIn('Update standby servers first.', release['migration_html'])
+        self.assertNotIn('Migration to Version', release['migration_html'])
+        self.assertNotIn('Previous release', str(release))
+        self.assertNotIn('Next release', str(release))
+        self.assertNotIn('Previous release', safe_html(html, '/docs/9.6/release-9-6-24.html'))
 
     def test_preceding_major_comments_and_unlinked_independent_commits_are_preserved(self):
         source = '''<sect1 id="release-18"><sect2><title>Changes</title><itemizedlist>

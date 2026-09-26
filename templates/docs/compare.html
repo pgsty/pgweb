@@ -6,14 +6,15 @@
   <header class="compare-hero">
     <p class="compare-crumb"><a href="/docs/">文档</a><span aria-hidden="true">/</span>版本对比</p>
     <p class="compare-eyebrow">POSTGRESQL · VERSION COMPARE</p>
-    <h1>PostgreSQL 版本对比</h1>
-    <p class="compare-lead">对比两个 PostgreSQL 大版本或小版本，查看沿途新增的功能、修复的问题与 CVE 安全记录。</p>
+    <h1>{% if single_release and report %}PostgreSQL {{ report.to_release.label }} 的版本变更{% else %}PostgreSQL 版本对比{% endif %}</h1>
+    <p class="compare-lead">{% if single_release %}本次发布的完整功能、修复与兼容性说明，以及它们在其他版本中的关联记录。{% else %}对比两个 PostgreSQL 大版本或小版本，查看沿途新增的功能、修复的问题与 CVE 安全记录。{% endif %}</p>
     <form class="compare-form" method="get" action="/docs/compare/">
       <div class="compare-select">
         <label for="compare-from">起始版本 <span>当前使用</span></label>
         <select id="compare-from" name="from" required>
           {% for group in release_groups %}<optgroup label="{{ group.label }}">{% for option in group.options %}<option value="{{ option.value }}"{% if option.value == from_version %} selected{% endif %}>{{ option.label }}</option>{% endfor %}</optgroup>{% endfor %}
         </select>
+        <a class="compare-release-open" data-version-select="compare-from" href="/docs/compare/?release={{ from_version }}">查看该版本全部变更</a>
       </div>
       <span class="compare-direction" aria-hidden="true">→</span>
       <div class="compare-select">
@@ -21,6 +22,7 @@
         <select id="compare-to" name="to" required>
           {% for group in release_groups %}<optgroup label="{{ group.label }}">{% for option in group.options %}<option value="{{ option.value }}"{% if option.value == to_version %} selected{% endif %}>{{ option.label }}</option>{% endfor %}</optgroup>{% endfor %}
         </select>
+        <a class="compare-release-open" data-version-select="compare-to" href="/docs/compare/?release={{ to_version }}">查看该版本全部变更</a>
       </div>
       <button class="compare-submit" type="submit"{% if not release_groups %} disabled{% endif %}>对比版本 <span aria-hidden="true">↗</span></button>
     </form>
@@ -44,9 +46,9 @@
   <section class="compare-result" aria-labelledby="compare-result-title">
     <div class="compare-result-heading">
       <div>
-        <p class="compare-eyebrow">{% if report.cross_major %}跨大版本升级{% else %}小版本更新{% endif %}</p>
-        <h2 id="compare-result-title"><span>{{ report.from_release.label|default:report.from_release.version }}</span><span class="compare-result-arrow" aria-label="至">→</span><span>{{ report.to_release.label|default:report.to_release.version }}</span></h2>
-        <p class="compare-result-date">{% if report.from_release.date %}{{ report.from_release.date }}{% else %}快照 {{ report.from_release.source_as_of }}{% endif %} <span aria-hidden="true">—</span> {% if report.to_release.date %}{{ report.to_release.date }}{% else %}快照 {{ report.to_release.source_as_of }}{% endif %}</p>
+        <p class="compare-eyebrow">{% if single_release %}本次发布的全部变更{% elif report.cross_major %}跨大版本升级{% else %}小版本更新{% endif %}</p>
+        <h2 id="compare-result-title">{% if not single_release %}<span>{{ report.from_release.label|default:report.from_release.version }}</span><span class="compare-result-arrow" aria-label="至">→</span>{% endif %}<span>{{ report.to_release.label|default:report.to_release.version }}</span></h2>
+        <p class="compare-result-date">{% if not single_release %}{% if report.from_release.date %}{{ report.from_release.date }}{% else %}快照 {{ report.from_release.source_as_of }}{% endif %} <span aria-hidden="true">—</span> {% endif %}{% if report.to_release.date %}{{ report.to_release.date }}{% else %}快照 {{ report.to_release.source_as_of }}{% endif %}</p>
       </div>
       <div class="compare-actions">
         <button id="compare-share" class="compare-button" type="button" hidden>复制分享链接</button>
@@ -58,11 +60,11 @@
     <div class="compare-stats" aria-label="对比概览">
       <div class="compare-stat"><span class="compare-stat-number">{{ report.total }}</span><span>项变更</span><small>功能、修复与改进</small></div>
       <div class="compare-stat"><span class="compare-stat-number">{{ report.release_count }}</span><span>次版本发布</span><small>按发行版本归档</small></div>
-      <div class="compare-stat compare-stat--security"><span class="compare-stat-number">{{ report.cve_count|default_if_none:"—" }}</span><span>个 CVE</span><small>{% if report.cve_available %}按漏洞编号去重{% else %}所选分支尚无公告覆盖{% endif %}</small></div>
+      <div class="compare-stat compare-stat--security"><span class="compare-stat-number">{{ report.cve_count|default_if_none:"—" }}</span><span>个 CVE</span><small>{% if single_release %}本版说明中提及的漏洞编号{% elif report.cve_available %}按漏洞编号去重{% else %}所选分支尚无公告覆盖{% endif %}</small></div>
     </div>
     {% if report.from_release.status_label or report.to_release.status_label %}
     <div class="compare-support" aria-label="版本支持状态">
-      <p><strong>{{ report.from_release.version }}</strong> {{ report.from_release.status_label }}{% if report.from_release.eol %}<span>维护截止 {{ report.from_release.eol }}</span>{% endif %}</p>
+      {% if not single_release %}<p><strong>{{ report.from_release.version }}</strong> {{ report.from_release.status_label }}{% if report.from_release.eol %}<span>维护截止 {{ report.from_release.eol }}</span>{% endif %}</p>{% endif %}
       <p><strong>{{ report.to_release.version }}</strong> {{ report.to_release.status_label }}{% if report.to_release.eol %}<span>维护截止 {{ report.to_release.eol }}</span>{% endif %}</p>
     </div>
     {% endif %}
@@ -72,10 +74,10 @@
 
     {% if report.cves %}
     <details class="compare-cves">
-      <summary><span class="compare-security-mark" aria-hidden="true">●</span> 安全修复索引 <span class="compare-cve-total">{{ report.cve_count }} 个 CVE</span></summary>
+      <summary><span class="compare-security-mark" aria-hidden="true">●</span> {% if single_release %}本版提及的安全记录{% else %}安全修复索引{% endif %} <span class="compare-cve-total">{{ report.cve_count }} 个 CVE</span></summary>
       <div class="compare-cve-table-wrap">
         <table class="compare-cve-table">
-          <caption class="sr-only">版本区间内的 CVE 安全记录，按评分从高到低排列</caption>
+          <caption class="sr-only">{% if single_release %}本版发布说明提及的 CVE，可能包含已有漏洞的后续修复{% else %}版本区间内的 CVE 安全记录，按评分从高到低排列{% endif %}</caption>
           <thead><tr><th scope="col">CVE / 问题</th><th scope="col">严重程度</th><th scope="col">修复版本</th></tr></thead>
           <tbody>{% for cve in report.cves %}<tr><td><a href="{{ cve.url }}" target="_blank" rel="noopener">{{ cve.id }} <span aria-hidden="true">↗</span></a>{% if cve.title %}<p>{{ cve.title }}</p>{% endif %}{% if cve.status_label %}<small>{{ cve.status_label }}</small>{% endif %}</td><td><span class="compare-cve-score">{{ cve.score|default_if_none:"—" }}</span>{% if cve.severity %}<small>{{ cve.severity }}</small>{% endif %}</td><td>{% if cve.fixed_version %}{{ cve.fixed_version }}{% else %}{{ cve.versions|join:"、" }}{% endif %}</td></tr>{% endfor %}</tbody>
         </table>
@@ -117,7 +119,7 @@
       <section class="compare-release" data-release="{{ group.version }}" aria-labelledby="compare-release-{{ forloop.counter }}">
         <header class="compare-release-heading">
           <div><span class="compare-timeline-dot" aria-hidden="true"></span><h3 id="compare-release-{{ forloop.counter }}">PostgreSQL {{ group.label|default:group.version }}</h3><time>{% if group.date %}{{ group.date }}{% else %}快照 {{ group.source_as_of }}{% endif %}</time></div>
-          <a href="{{ group.source_url }}">完整发行说明 <span aria-hidden="true">↗</span></a>
+          <div class="compare-release-links">{% if not single_release %}<a href="/docs/compare/?release={{ group.version }}">本版全部变更</a>{% endif %}<a href="{{ group.source_url }}">完整发行说明 <span aria-hidden="true">↗</span></a></div>
         </header>
         {% if group.migration_html %}<details class="compare-migration"><summary>升级与兼容性说明</summary><div class="compare-prose">{{ group.migration_html|safe }}</div></details>{% endif %}
         <div class="compare-entries">
@@ -127,6 +129,14 @@
             <div class="compare-entry-body">
               {% if entry.section %}<p class="compare-entry-section">{{ entry.section }}</p>{% endif %}
               <div class="compare-prose">{{ entry.html|safe }}</div>
+              {% if entry.related_changes %}<details class="compare-relations">
+                <summary>关联记录（{{ entry.related_changes|length }}）</summary>
+                <ul>{% for relation in entry.related_changes %}<li>
+                  <span class="compare-relation-kind">{% if relation.kind == 'equivalent' %}同一变更{% else %}相关提交{% endif %}</span>
+                  <a href="{{ relation.url }}">PostgreSQL {{ relation.label }} · {{ relation.title }}</a>
+                </li>{% endfor %}</ul>
+                <p class="compare-relation-note">“同一变更”有完整对应证据；“相关提交”可能只是部分回补或后续调整，各版本说明分别保留。</p>
+              </details>{% endif %}
               {% if entry.variants %}<details class="compare-variants">
                 <summary>其他分支的原始说明（{{ entry.variants|length }}）</summary>
                 {% for variant in entry.variants %}<section>

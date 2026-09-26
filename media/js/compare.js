@@ -21,6 +21,14 @@
   }
   if (query && params.has('q')) query.value = params.get('q').slice(0, 200);
 
+  root.querySelectorAll('[data-version-select]').forEach(link => {
+    const select = document.getElementById(link.dataset.versionSelect);
+    if (!select) return;
+    const update = () => { link.href = `/docs/compare/?release=${encodeURIComponent(select.value)}`; };
+    select.addEventListener('change', update);
+    update();
+  });
+
   function shareURL() {
     const url = new URL(root.dataset.shareUrl || window.location.href, window.location.href);
     url.hash = window.location.hash;
@@ -107,7 +115,8 @@
         status.textContent = '未识别到 PostgreSQL 版本号，请粘贴 SELECT version(); 的结果或输入版本号。';
         return;
       }
-      const value = /^\d+$/.test(match[1]) ? `${match[1]}.0` : match[1].toLowerCase();
+      const rawVersion = match[1].toLowerCase();
+      const value = /^\d+$/.test(rawVersion) || /^9\.[0-6]$/.test(rawVersion) ? `${rawVersion}.0` : rawVersion;
       const source = document.getElementById('compare-from');
       const option = Array.from(source.options).find(item => {
         const label = item.label.toLowerCase();
@@ -119,6 +128,7 @@
         return;
       }
       source.value = option.value;
+      source.dispatchEvent(new Event('change'));
       status.textContent = `已将起始版本设为 PostgreSQL ${option.label}。选择目标版本后，点击“对比版本”。`;
     };
     document.getElementById('compare-detect').addEventListener('click', detect);

@@ -24,7 +24,7 @@ from bs4 import BeautifulSoup, Comment, Tag
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
-from pgweb.docs.compare_data import sgml_commit_entries  # noqa: E402
+from pgweb.docs.compare_data import branch_key, normalize_sgml, sgml_commit_entries  # noqa: E402
 
 ARCHIVE_URL = 'https://www.postgresql.org/docs/release/'
 
@@ -47,7 +47,7 @@ def fetch(url, cache, offline, refresh):
 
 def parse_source(data):
     # xref and anchor are declared EMPTY in old SGML, even without '/>'.
-    data = re.sub(r'<(xref|anchor)\b([^>]*?)/?>', r'<\1\2/>', data)
+    data = normalize_sgml(data)
     # DocBook link is NOT the void HTML <link> metadata element.
     data = re.sub(r'<(/?)link\b', r'<\1sgmllink', data)
     return BeautifulSoup(data, 'html.parser')
@@ -56,10 +56,10 @@ def parse_source(data):
 def inventory(soup):
     result = {}
     for release in soup.find_all('sect1'):
-        match = re.fullmatch(r'release-(\d+)(?:-(\d+))?', release.get('id', ''), re.I)
+        match = re.fullmatch(r'release-(9-[0-6]|[1-9]\d+)(?:-(\d+))?', release.get('id', ''), re.I)
         if not match:
             continue
-        version = '{}.{}'.format(match[1], match[2] or 0)
+        version = '{}.{}'.format(match[1].replace('-', '.'), match[2] or 0)
         parts = {'migration': [], 'changes': []}
         for section in release.find_all('sect2'):
             heading = section.find('title', recursive=False)
@@ -68,7 +68,7 @@ def inventory(soup):
             if kind:
                 parts[kind].extend(item for item in section.find_all('listitem') if not item.find_parent('listitem'))
         # Formalpara date must come before Changes, not a date quoted in prose.
-        formal = release.find('formalpara')
+        formal = release.find('formalpara') or release.find('note')
         text = formal.get_text(' ', strip=True) if formal else ''
         date = re.search(r'\b(\d{4}-\d{2}-\d{2})\b', text)
         parts['date'] = date[1] if date else ''
@@ -88,6 +88,13 @@ def comparable_body(raw, html):
     outputs = []
     for source, native in [(raw, True), (html, False)]:
         node = BeautifulSoup(str(source), 'html.parser')
+        if native:
+            for link in node.find_all('ulink', url=True):
+                if not link.get_text().strip():
+                    link.append(link['url'])
+            for warning in node.find_all('warning'):
+                if not warning.find('title', recursive=False):
+                    warning.insert(0, '警告' if re.search(r'[\u4e00-\u9fff]', raw.get_text()) else 'Warning')
         for comment in node.find_all(string=lambda n: isinstance(n, Comment)):
             comment.extract()
         for link in list(node.find_all(['a', 'ulink', 'xref', 'sgmllink'])):
@@ -181,7 +188,8 @@ def entry_commits(item, major):
                 elif found and re.match(r'^\d{4}-\d{2}-\d{2}\s', line):
                     commits.add(found[1])
             if branches:
-                matching = [commit for branch, commit in branches if branch == 'REL_{}_STABLE'.format(major)]
+                branch_name = ('REL{}_STABLE' if str(major).startswith('9.') else 'REL_{}_STABLE').format(str(major).replace('.', '_'))
+                matching = [commit for branch, commit in branches if branch == branch_name]
                 commits.add(matching[0] if matching else branches[0][1])
     for link in item.find_all('ulink', url=True):
         url = link['url']
@@ -206,9 +214,9 @@ def main():
         parser.error('--offline and --refresh are mutually exclusive')
     args.cache.mkdir(parents=True, exist_ok=True)
     archive = fetch(ARCHIVE_URL, args.cache, args.offline, args.refresh)
-    official = sorted({a.get_text(strip=True) for a in BeautifulSoup(archive, 'html.parser').find_all('a') if re.fullmatch(r'\d+\.\d+', a.get_text(strip=True)) and int(a.get_text(strip=True).split('.')[0]) >= 10}, key=lambda value: tuple(map(int, value.split('.'))))
-    if not official or official[0] != '10.0':
-        raise ValueError('Official archive did not yield the expected PostgreSQL 10+ inventory')
+    official = sorted({a.get_text(strip=True) for a in BeautifulSoup(archive, 'html.parser').find_all('a') if re.fullmatch(r'(?:9\.[0-6]\.\d+|[1-9]\d+\.\d+)', a.get_text(strip=True))}, key=lambda value: tuple(map(int, value.split('.'))))
+    if not official or official[0] != '9.0.0':
+        raise ValueError('Official archive did not yield the expected PostgreSQL 9.0+ inventory')
     snapshot_bytes = args.snapshot.read_bytes()
     snapshot = json.loads(gzip.decompress(snapshot_bytes))
     actual = [r['version'] for r in snapshot['releases'] if r['status'] == 'stable']
@@ -254,8 +262,10 @@ def main():
             provenance.append(row)
             if not row['verified']:
                 errors.append({'kind': 'source_authenticity', 'major': major})
-            zh = (args.pgdoc_root / 'zh' / major / ('release-' + major + '.sgml')).read_text()
+            zh_path = Path('zh') / ('9.3' if major == '9.2' else major) / ('release-' + major + '.sgml')
+            zh = (args.pgdoc_root / zh_path).read_text()
             sources[major] = {'en': inventory(parse_source(text)), 'zh': inventory(parse_source(zh)), 'canonical': sgml_commit_entries(text, major), 'text': text, 'zh_sha256': digest(zh.encode())}
+            sources[major]['zh_file'] = str(zh_path)
     aliases = branch_groups([source['text'] for source in sources.values()])
     reports = []
     totals = Counter()
@@ -295,11 +305,13 @@ def main():
                 translated_commits = entry_commits(translated, release['major'])
                 original_ids = {alias for commit in commits for alias in aliases.get(commit, [commit])}
                 translated_ids = {alias for commit in translated_commits for alias in aliases.get(commit, [commit])}
-                if original_ids or translated_ids:
+                if original_ids and translated_ids:
                     if not original_ids.intersection(translated_ids):
                         errors.append({'kind': 'bilingual_entry_alignment', 'entry': key, 'en': commits, 'zh': translated_commits})
                     else:
                         totals['bilingual_entries_with_matching_commits'] += 1
+                elif original_ids or translated_ids:
+                    totals['bilingual_entries_with_one_sided_commit_evidence'] += 1
                 else:
                     totals['bilingual_entries_without_commit_evidence'] += 1
                 if commits != canonical['commits']:
@@ -321,11 +333,11 @@ def main():
     report = {
         'format': 1, 'checked_at': datetime.now(timezone.utc).isoformat(timespec='seconds'),
         'inventory_url': ARCHIVE_URL, 'inventory_sha256': digest(archive),
-        'snapshot_sha256': digest(snapshot_bytes), 'minimum_major': 10, 'language': args.language,
+        'snapshot_sha256': digest(snapshot_bytes), 'minimum_major': '9.0', 'language': args.language,
         'stable_release_count': len(official), 'stable_versions': official,
         'unreleased_skips': ['18.5'], 'preview_builds': [r['build'] for r in snapshot['releases'] if r['status'] == 'preview'],
-        'sources': sorted(provenance, key=lambda row: int(row['major'])),
-        'translated_sources': [{'major': major, 'sha256': source['zh_sha256']} for major, source in sorted(sources.items(), key=lambda item: int(item[0]))],
+        'sources': sorted(provenance, key=lambda row: branch_key(row['major'])),
+        'translated_sources': [{'major': major, 'file': source['zh_file'], 'sha256': source['zh_sha256']} for major, source in sorted(sources.items(), key=lambda item: branch_key(item[0]))],
         'totals': dict(totals), 'releases': reports,
         'structure_differences': structure_differences, 'errors': errors,
         'body_verification': 'Every translated entry is compared in full after removing only whitespace/renderer typography and generated cross-reference labels. Per-entry counts, dates, CVE sets, canonical identities and distinct commit groups are checked independently against English source SGML. Translation semantics are not established by structural checks alone.',

@@ -22,7 +22,7 @@ def entry(key, title=None, *, category='bugfix', text=None, commits=(), aliases=
 
 
 def release(version, released, *entries, status='stable', **extra):
-    major, minor = version.split('.')
+    major, minor = version.rsplit('.', 1)
     result = {'version': version, 'major': major, 'minor': int(minor), 'date': released,
               'status': status, 'supported': True, 'entries': list(entries), 'migration_html': ''}
     result.update(extra)
@@ -60,6 +60,59 @@ class VersionComparisonTests(SimpleTestCase):
                 engine.resolve_version(raw, versions)
         with self.assertRaises(ValueError):
             engine.resolve_version('20', {'20.0': {'placeholder': True}})
+
+    def test_pre_ten_major_and_patch_versions_are_distinct(self):
+        versions = {'9.0.0': {}, '9.6.0': {}, '9.6.24': {}, '10.0': {}, '10.23': {}}
+        for raw, expected in [('9.0', '9.0.0'), ('9.6', '9.6.0'), ('9.6.0', '9.6.0'),
+                              ('009.06.024', '9.6.24'), ('10', '10.0'),
+                              ('PostgreSQL 9.6.24 on x86_64-pc-linux-gnu, compiled by gcc', '9.6.24')]:
+            with self.subTest(raw=raw):
+                self.assertEqual(engine.resolve_version(raw, versions), expected)
+        for raw in ['9', '9.7', '9.6.24.1', '10.0.0', '8.4.22', 'PostgreSQL 9.6.24beta1']:
+            with self.subTest(raw=raw), self.assertRaises(ValueError):
+                engine.resolve_version(raw, versions)
+
+    def test_pre_ten_initial_release_has_canonical_id_and_historical_display(self):
+        initial = release('9.6.0', '2016-09-29', supported=False)
+        summary = engine._release_summary(initial)
+        self.assertEqual(summary['version'], '9.6.0')
+        self.assertEqual(summary['label'], '9.6')
+        self.assertEqual(engine._release_summary(release('9.6.24', '2021-11-11'))['label'], '9.6.24')
+        self.assertEqual(engine._release_summary(release('10.0', '2017-10-05'))['label'], '10.0')
+
+    def test_pre_ten_patch_interval_and_numeric_patch_order(self):
+        data = snapshot(release('9.6.8', '2018-03-01', entry('before')),
+                        release('9.6.9', '2018-05-10', entry('patch-nine')),
+                        release('9.6.10', '2018-08-09', entry('patch-ten')))
+        report = engine.build_report(data, registry(covered=['9.6']), '9.6.8', '9.6.10')
+        self.assertEqual(ids(report), ['patch-ten', 'patch-nine'])
+        self.assertFalse(report['cross_major'])
+        self.assertEqual(report['excluded_count'], 0)
+
+    def test_each_pre_ten_major_has_its_own_inheritance_cutoff(self):
+        data = snapshot(release('9.0.0', '2010-09-20'),
+                        release('9.0.1', '2010-10-04', entry('early90')),
+                        release('9.0.5', '2011-09-26', entry('late90')),
+                        release('9.1.0', '2011-09-12', entry('major91')),
+                        release('9.1.1', '2011-09-26', entry('early91')),
+                        release('9.1.6', '2012-09-24', entry('late91')),
+                        release('9.2.0', '2012-09-10', entry('major92')))
+        report = engine.build_report(data, registry(covered=['9.0', '9.1', '9.2']), '9.0.0', '9.2.0')
+        self.assertEqual(ids(report), ['major92', 'early91', 'major91', 'early90'])
+        self.assertTrue(report['cross_major'])
+        self.assertEqual(report['history']['candidates'], ['9.0.1', '9.1.0', '9.1.1', '9.2.0'])
+
+    def test_pre_ten_to_ten_uses_major_order_and_target_date(self):
+        data = snapshot(release('9.6.0', '2016-09-29'),
+                        release('9.6.5', '2017-08-31', entry('early')),
+                        release('9.6.24', '2021-11-11', entry('late')),
+                        release('10.0', '2017-10-05', entry('major10')))
+        report = engine.build_report(data, registry(covered=['9.6', '10']), '9.6.24', '10.0')
+        self.assertEqual(ids(report), ['major10'])
+        self.assertTrue(report['cross_major'])
+        self.assertTrue(any('发布日期早于' in warning for warning in report['warnings']))
+        with self.assertRaises(ValueError):
+            engine.build_report(data, registry(), '10.0', '9.6.24')
 
     def test_minor_interval_is_open_then_closed_and_keeps_all_published_entries(self):
         repeated = entry('before', '修复查询问题', commits=['aaaaaaa12'])
@@ -271,6 +324,56 @@ class ComparisonNativeSourceRegressions(SimpleTestCase):
 
 
 class VersionComparisonSecurityTests(SimpleTestCase):
+    def test_pre_ten_security_patch_comparison_uses_three_numeric_components(self):
+        cve = advisory(fixed={'9.6': '9.6.9'})
+        self.assertEqual(engine._security_state(cve, release('9.6.8', '2018-03-01', supported=False)), 'vulnerable')
+        self.assertEqual(engine._security_state(cve, release('9.6.10', '2018-08-09', supported=False)), 'fixed')
+        self.assertEqual(engine._security_state(cve, release('9.5.25', '2021-02-11', supported=False)), 'unknown')
+
+    def test_historical_major_inherits_dated_prior_security_fix(self):
+        cve = advisory('CVE-2010-3433', fixed={'9.0': '9.0.1'}, published={})
+        data = snapshot(release('9.0.0', '2010-09-20', supported=False),
+                        release('9.0.1', '2010-10-04', supported=False),
+                        release('9.1.0', '2011-09-12', supported=False))
+        report = engine.build_report(data, registry(cve, covered=['9.0', '9.1']), '9.0.0', '9.1.0')
+        self.assertEqual(report['cve_count'], 1)
+        evidence = report['cves'][0]['target_state_evidence']
+        self.assertEqual(evidence['kind'], 'major_inherits_prior_security_fixes')
+        self.assertEqual(evidence['fixed_version'], '9.0.1')
+        self.assertEqual(evidence['fixed_date'], '2010-10-04')
+        self.assertEqual(evidence['target_initial_version'], '9.1.0')
+        self.assertEqual(evidence['target_initial_date'], '2011-09-12')
+        self.assertEqual(evidence['policy_url'], 'https://www.postgresql.org/support/security/')
+
+    def test_historical_omission_after_initial_release_is_not_inferred_safe(self):
+        cve = advisory(fixed={'9.0': '9.0.20'}, published={'9.0': '2014-04-03'})
+        data = {r['version']: r for r in [
+            release('9.1.0', '2011-09-12', supported=False),
+            release('9.1.24', '2016-10-27', supported=False),
+        ]}
+        self.assertEqual(engine._security_state(cve, data['9.1.0'], data), 'unknown')
+        self.assertEqual(engine._security_state(cve, data['9.1.24'], data), 'unknown')
+        later_cve = advisory(fixed={'18': '18.6'}, published={'18': '2026-08-13'})
+        self.assertEqual(engine._security_state(later_cve, data['9.1.24'], data), 'unknown')
+
+    def test_historical_inheritance_needs_fix_date_and_respects_explicit_cna_ranges(self):
+        target = release('9.1.0', '2011-09-12', supported=False)
+        cve = advisory(fixed={'9.0': '9.0.1'})
+        self.assertEqual(engine._security_state(cve, target), 'unknown')
+        cve['published'] = {'9.0': '2010-10-04'}
+        self.assertEqual(engine._security_state(cve, target), 'unaffected')
+        cve['affected_ranges'] = [{'from': '9.0', 'until': '9.2'}]
+        self.assertEqual(engine._security_state(cve, target), 'vulnerable')
+
+    def test_old_patch_to_ten_initial_does_not_hide_security_regression(self):
+        cve = advisory('CVE-2018-1058', fixed={'9.6': '9.6.8', '10': '10.3'})
+        data = snapshot(release('9.6.24', '2021-11-11', supported=False),
+                        release('10.0', '2017-10-05', supported=False))
+        report = engine.build_report(data, registry(cve, covered=['9.6', '10']), '9.6.24', '10.0')
+        self.assertEqual(report['cve_count'], 0)
+        self.assertEqual(report['security_regressions'][0]['id'], 'CVE-2018-1058')
+        self.assertEqual(report['security_regressions'][0]['fixed_version'], '10.3')
+
     def test_cna_explicit_introduction_not_assumed_at_major_zero(self):
         cve = advisory(fixed={'17': '17.5'}, affected_ranges=[{'from': '17.3', 'until': '17.5'}])
         data = snapshot(release('17.2', '2025-01-01'), release('17.3', '2025-02-01'), release('17.5', '2025-05-01'))
@@ -335,7 +438,7 @@ class ComparisonViewTests(SimpleTestCase):
                              release('18.0', '2025-09-25', entry('major18')),
                              release('18.1', '2025-11-01', entry('patch18')),
                              release('19.0', '', entry('preview'), status='preview', build='19beta4'))
-        self.loader = patch.object(engine, 'load_snapshot', side_effect=lambda name: self.data if name.startswith('releases') else registry())
+        self.loader = patch.object(engine, 'load_active_snapshot', side_effect=lambda name: self.data if name.startswith('releases') else registry())
         self.loader.start()
         self.addCleanup(self.loader.stop)
 
@@ -347,6 +450,49 @@ class ComparisonViewTests(SimpleTestCase):
         self.assertEqual(body['to_release']['version'], '17.1')
         self.assertEqual(body['total'], 1)
         self.assertIn('postgresql-17.0-to-17.1.json', response['Content-Disposition'])
+
+    def test_single_release_includes_initial_release_and_persisted_relationships(self):
+        initial = self.data['releases'][0]
+        initial['entries'] = [dict(entry('initial', '初始功能', category='feature'), db_id='original',
+                                   relations=[{'target': 'backport', 'type': 'related', 'evidence': {'patch_ids': ['p1']}}])]
+        self.data['releases'][1]['entries'][0].update(db_id='backport')
+        response = self.client.get('/docs/compare/', {'release': '17', 'format': 'json'})
+        self.assertEqual(response.status_code, 200)
+        report = response.json()
+        self.assertEqual(report['mode'], 'release')
+        self.assertIsNone(report['from_release'])
+        self.assertEqual(report['total'], 1)
+        shown = report['groups'][0]['entries'][0]
+        self.assertEqual(shown['id'], 'initial')
+        self.assertEqual(shown['related_changes'][0]['kind'], 'related')
+        self.assertEqual(shown['related_changes'][0]['url'], '/docs/compare/?release=17.1#fix')
+        self.assertIn('postgresql-17.0-changes.json', response['Content-Disposition'])
+
+    @patch.object(engine, 'render_pgweb', return_value=HttpResponse('Rendered'))
+    def test_single_release_has_own_canonical_and_filtered_share_url(self, render):
+        response = self.client.get('/docs/compare/', {'release': '17.1', 'q': '修复', 'kind': 'bugfix'})
+        self.assertEqual(response.status_code, 200)
+        context = render.call_args.args[3]
+        self.assertTrue(context['single_release'])
+        self.assertEqual(context['canonical_url'], '/docs/compare/?release=17.1')
+        self.assertIn('kind=bugfix', context['share_url'])
+        self.assertEqual(context['seo']['title'], 'PostgreSQL 17.1 的版本变更')
+
+    @patch.object(engine, 'render_pgweb', return_value=HttpResponse('Rendered'))
+    def test_pre_ten_versions_appear_with_canonical_values_and_branch_labels(self, render):
+        self.data['releases'].extend([release('9.0.0', '2010-09-20', supported=False),
+                                      release('9.6.0', '2016-09-29', entry('major96'), supported=False)])
+        response = self.client.get('/docs/compare/', {'from': '9.0', 'to': '9.6'})
+        self.assertEqual(response.status_code, 200)
+        context = render.call_args.args[3]
+        self.assertEqual(context['from_version'], '9.0.0')
+        self.assertEqual(context['to_version'], '9.6.0')
+        self.assertIn('PostgreSQL 9.0 起', context['dataset_summary'])
+        self.assertEqual(context['seo']['canonical'], '/docs/compare/?from=9.0.0&to=9.6.0')
+        self.assertEqual(context['report']['from_release']['label'], '9.0')
+        self.assertEqual(context['report']['to_release']['label'], '9.6')
+        self.assertIn({'value': '9.6.0', 'label': '9.6（历史版本）'},
+                      [option for group in context['release_groups'] for option in group['options']])
 
     @patch.object(engine, 'render_pgweb', return_value=HttpResponse('Rendered'))
     def test_filters_preserved_in_share_url_and_context_with_stable_canonical(self, render):
@@ -376,7 +522,7 @@ class ComparisonViewTests(SimpleTestCase):
             response = self.client.get('/docs/compare/', dict(parameters, format='json'))
             self.assertEqual(response.status_code, 400)
             self.assertTrue(response.json()['error'])
-        with patch.object(engine, 'load_snapshot', side_effect=FileNotFoundError()):
+        with patch.object(engine, 'load_active_snapshot', side_effect=FileNotFoundError()):
             response = self.client.get('/docs/compare/?format=json')
         self.assertEqual(response.status_code, 503)
         self.assertTrue(response.json()['error'])

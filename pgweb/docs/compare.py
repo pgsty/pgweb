@@ -48,9 +48,21 @@ def _read_snapshot(path, mtime, size):
 
 
 def load_snapshot(filename):
+    """Read a transport snapshot for offline build/audit tools, not page views."""
     path = DATA_DIR / filename
     stat = path.stat()
     return _read_snapshot(str(path), stat.st_mtime_ns, stat.st_size)
+
+
+def load_active_snapshot(filename):
+    """Read the activated database collection without a file fallback."""
+    from .compare_store import ComparisonDataUnavailable, load_database_snapshot
+
+    kind = 'releases' if filename == 'releases.json.gz' else 'security'
+    try:
+        return load_database_snapshot(kind, language='zh')
+    except ComparisonDataUnavailable as error:
+        raise OSError(str(error)) from error
 
 
 def version_key(value):
@@ -60,12 +72,15 @@ def version_key(value):
 def resolve_version(value, releases):
     value = (value or '').strip()
     # Accept both a version and the unmodified result of SELECT version().
-    match = re.fullmatch(r'(\d{2,})(?:\.(\d+))?', value)
+    match = re.fullmatch(r'(\d+)(?:\.(\d+))?(?:\.(\d+))?', value)
     if not match:
-        match = re.match(r'^PostgreSQL\s+(\d{2,})(?:\.(\d+))?(?:\s|$)', value, re.I)
-    if not match:
-        raise ValueError('请输入已收录的 PostgreSQL 版本，例如 17、17.11 或 SELECT version() 的结果。')
-    canonical = '{}.{}'.format(int(match[1]), int(match[2] or 0))
+        match = re.match(r'^PostgreSQL\s+(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:\s|$)', value, re.I)
+    if not match or int(match[1]) < 9 or (int(match[1]) == 9 and match[2] is None) or (int(match[1]) >= 10 and match[3] is not None):
+        raise ValueError('请输入已收录的 PostgreSQL 版本，例如 9.6.24、17、17.11 或 SELECT version() 的结果。')
+    if int(match[1]) == 9:
+        canonical = '9.{}.{}'.format(int(match[2]), int(match[3] or 0))
+    else:
+        canonical = '{}.{}'.format(int(match[1]), int(match[2] or 0))
     if canonical not in releases:
         raise ValueError('未收录 PostgreSQL {} 的发布说明，请从列表中选择。'.format(canonical))
     if releases[canonical].get('placeholder'):
@@ -80,15 +95,15 @@ def _effective_date(release, as_of):
 def release_history(releases, selected, as_of):
     """Follow branch inheritance, stopping before later maintenance releases."""
     selected_key = version_key(selected['version'])
-    initial = {int(r['major']): r for r in releases if r['minor'] == 0}
+    initial = {version_key(r['major']): r for r in releases if r['minor'] == 0}
     end = _effective_date(selected, as_of)
     history = []
     for release in releases:
         key = version_key(release['version'])
         if key > selected_key:
             continue
-        major = int(release['major'])
-        if major < int(selected['major']):
+        major = version_key(release['major'])
+        if major < version_key(selected['major']):
             following = next((initial[m] for m in sorted(initial) if m > major), None)
             cutoff = min(end, _effective_date(following, as_of)) if following else end
         else:
@@ -183,7 +198,7 @@ def _release_index(snapshot):
     index = getattr(snapshot, '_comparison_index', None)
     if index is None:
         index = _ReleaseIndex(snapshot['releases'])
-        if isinstance(snapshot, _Snapshot):
+        if hasattr(snapshot, '__dict__'):
             snapshot._comparison_index = index
     return index
 
@@ -223,7 +238,10 @@ def _same_commit_scope(index, release, entry, reference):
 
 def _release_summary(release):
     summary = {key: value for key, value in release.items() if key != 'entries'}
-    summary['label'] = (release.get('build') or release['version']) if release['status'] != 'stable' else release['version']
+    if release['status'] != 'stable':
+        summary['label'] = release.get('build') or release['version']
+    else:
+        summary['label'] = release['major'] if release['minor'] == 0 and '.' in release['major'] else release['version']
     summary['status_label'] = {'preview': '尚未正式发布', 'devel': '开发快照'}.get(
         release['status'], '受支持版本' if release.get('supported', True) else '历史版本')
     summary['eol'] = release.get('eol_date') or release.get('eol', '')
@@ -239,7 +257,29 @@ def _release_summary(release):
     return summary
 
 
-def _security_state(cve, release):
+def _inherited_security_fix(cve, release, releases):
+    """Return dated evidence of a later major inheriting an earlier CVE fix."""
+    fixed_branches = cve.get('fixed', {})
+    if not fixed_branches or version_key(release['major']) <= max(version_key(branch) for branch in fixed_branches):
+        return None
+    initial_version = release['major'] + '.0'
+    initial = release if release['minor'] == 0 else releases.get(initial_version, {})
+    initial_date = initial.get('date')
+    if not initial_date:
+        return None
+    for branch, version in fixed_branches.items():
+        fixed_date = cve.get('published', {}).get(branch) or releases.get(version, {}).get('date')
+        if fixed_date and fixed_date <= initial_date:
+            return {
+                'kind': 'major_inherits_prior_security_fixes',
+                'policy_url': 'https://www.postgresql.org/support/security/',
+                'target_initial_version': initial_version, 'target_initial_date': initial_date,
+                'fixed_version': version, 'fixed_date': fixed_date,
+            }
+    return None
+
+
+def _security_state(cve, release, releases=None):
     major = str(release['major'])
     version = version_key(release['version'])
     if cve.get('affected_ranges'):
@@ -249,7 +289,15 @@ def _security_state(cve, release):
         return 'fixed' if fixed and version >= version_key(fixed) else 'unaffected'
     fixed = cve.get('fixed', {}).get(major)
     if not fixed:
-        return 'unknown' if not release.get('supported', True) else 'unaffected'
+        if release.get('supported', True):
+            return 'unaffected'
+        # Historical branches are no longer investigated for new CVEs. Their
+        # omission cannot generally mean "unaffected". A later major's initial
+        # release does, however, include all prior security fixes (the official
+        # security policy), when both the branch ordering and dates prove it.
+        if _inherited_security_fix(cve, release, releases or {}):
+            return 'unaffected'
+        return 'unknown'
     introduced = cve.get('introduced', {}).get(major, major + '.0')
     if version < version_key(introduced):
         return 'unaffected'
@@ -258,6 +306,7 @@ def _security_state(cve, release):
 
 def compare_security(security, source, target, releases, titles=None):
     gained, regressions, remaining = [], [], []
+    by_version = {release['version']: release for release in releases}
     if titles is None:
         titles = _ReleaseIndex(releases).titles
 
@@ -273,11 +322,15 @@ def compare_security(security, source, target, releases, titles=None):
         return item
 
     for cve in security.get('cves', []):
-        source_state = _security_state(cve, source)
-        target_state = _security_state(cve, target)
+        source_state = _security_state(cve, source, by_version)
+        target_state = _security_state(cve, target, by_version)
         if source_state == 'vulnerable' and target_state in ('fixed', 'unaffected'):
             item = item_for(cve)
             item['status_label'] = '目标版本已修复' if target_state == 'fixed' else '目标版本不受影响'
+            if target_state == 'unaffected' and not cve.get('affected_ranges'):
+                evidence = _inherited_security_fix(cve, target, by_version)
+                if evidence:
+                    item['target_state_evidence'] = evidence
             gained.append(item)
         elif target_state == 'vulnerable' and source_state in ('fixed', 'unaffected'):
             regressions.append(item_for(cve))
@@ -426,13 +479,15 @@ def build_report(snapshot, security, from_version, to_version):
     }
 
 
-@queryparams('from', 'to', 'version', 'format', 'q', 'kind')
+@queryparams('from', 'to', 'version', 'release', 'format', 'q', 'kind')
 def compare(request):
+    from .compare_presenter import attach_entry_relations, release_report
+
     context = {'error': '', 'message': '', 'report': None, 'release_groups': [], 'examples': []}
     status = 200
     try:
-        snapshot = load_snapshot('releases.json.gz')
-        security = load_snapshot('security.json')
+        snapshot = load_active_snapshot('releases.json.gz')
+        security = load_active_snapshot('security.json')
         releases = {r['version']: r for r in snapshot['releases']}
         stable = sorted((r for r in releases.values() if r['status'] == 'stable'),
                         key=lambda r: version_key(r['version']), reverse=True)
@@ -441,7 +496,9 @@ def compare(request):
         latest = stable[0]
         previous = next((r for r in stable if r['major'] != latest['major']), latest)
         source_input = request.GET.get('from', request.GET.get('version', previous['version']))
-        target_input = request.GET.get('to', latest['version'])
+        single_release = request.GET.get('release')
+        target_input = single_release if single_release is not None else request.GET.get('to', latest['version'])
+        context['single_release'] = single_release is not None
         grouped = defaultdict(list)
         for release in sorted(releases.values(), key=lambda r: version_key(r['version']), reverse=True):
             if release.get('placeholder'):
@@ -452,14 +509,20 @@ def compare(request):
         context['release_groups'] = [{'major': major, 'label': 'PostgreSQL ' + major, 'options': options}
                                      for major, options in grouped.items()]
         context['coverage'] = {'releases': len(releases), 'majors': len(grouped), 'as_of': snapshot['generated_at'][:10]}
-        context['dataset_summary'] = '收录 PostgreSQL 10 起的 {} 个大版本、{} 份发布说明；数据更新于 {}。'.format(
-            len(grouped), sum(not r.get('placeholder', False) for r in releases.values()), snapshot['generated_at'][:10])
+        context['dataset_summary'] = '收录 PostgreSQL {} 起的 {} 个大版本、{} 份发布说明；数据更新于 {}。'.format(
+            min(grouped, key=version_key), len(grouped),
+            sum(not r.get('placeholder', False) for r in releases.values()), snapshot['generated_at'][:10])
         context['from_version'], context['to_version'] = source_input, target_input
-        from_version = resolve_version(source_input, releases)
+        from_version = resolve_version(target_input if single_release is not None else source_input, releases)
         to_version = resolve_version(target_input, releases)
         context['from_version'], context['to_version'] = from_version, to_version
-        context['report'] = build_report(snapshot, security, from_version, to_version)
-        params = {'from': from_version, 'to': to_version}
+        if single_release is not None:
+            context['report'] = release_report(snapshot, security, to_version)
+            params = {'release': to_version}
+        else:
+            context['report'] = build_report(snapshot, security, from_version, to_version)
+            params = {'from': from_version, 'to': to_version}
+        attach_entry_relations(snapshot, context['report'])
         context['canonical_url'] = '/docs/compare/?' + urlencode(params)
         query = request.GET.get('q', '')[:200]
         category = request.GET.get('kind', 'all')
@@ -477,7 +540,9 @@ def compare(request):
         ]
         if request.GET.get('format') == 'json':
             response = JsonResponse(dict(format=1, **context['report']), json_dumps_params={'ensure_ascii': False})
-            response['Content-Disposition'] = 'attachment; filename="postgresql-{}-to-{}.json"'.format(from_version, to_version)
+            filename = ('postgresql-{}-changes.json'.format(to_version) if single_release is not None else
+                        'postgresql-{}-to-{}.json'.format(from_version, to_version))
+            response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
             response['Cache-Control'] = 'public, max-age=300'
             return response
     except (FileNotFoundError, OSError, json.JSONDecodeError):
@@ -492,10 +557,13 @@ def compare(request):
     context['category'] = request.GET.get('kind', 'all')
     if context['category'] not in CATEGORY_LABELS:
         context['category'] = 'all'
+    title = 'PostgreSQL 版本对比'
+    if context['report']:
+        title = ('PostgreSQL {} 的版本变更'.format(context['report']['to_release']['label']) if context['single_release'] else
+                 'PostgreSQL {} → {} 版本对比'.format(
+                     context['report']['from_release']['label'], context['report']['to_release']['label']))
     context['seo'] = {
-        'title': ('PostgreSQL {} → {} 版本对比'.format(
-            context['report']['from_release']['label'], context['report']['to_release']['label'])
-            if context['report'] else 'PostgreSQL 版本对比'),
+        'title': title,
         'description': '对比 PostgreSQL 大版本与小版本，查看新增功能、BUG 修复、性能改进、兼容性变化和 CVE 修复记录。',
         'canonical': context.get('canonical_url', '/docs/compare/'), 'lang': 'zh',
     }

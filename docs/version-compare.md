@@ -2,17 +2,21 @@
 
 入口 `/docs/compare/`，`/docs/compare` 由 Django 规范化到带斜杠地址。入口位于文档导航的“发行说明”之后，发布说明归档也提供链接。
 
-这是 PGSQL.CC 原生 Django 页面，交互参考 pgversions.com / neondatabase/pgversionreport，独立实现，没有复制其 React 代码或过时的数据集。本站支持指定起始与目标两个版本，覆盖 PostgreSQL 10 起全部已发布小版本；预览版本独立标注，没有变更正文的开发占位版本不提供对比。
+这是 PGSQL.CC 原生 Django 页面。本站支持指定起始与目标两个版本，也可阅读某次发布的完整清单；覆盖 PostgreSQL 9.0 起全部已发布小版本。预览版本独立标注，没有变更正文的开发占位版本不提供对比。发布、原始条目、提交关联组与数据集元信息存入四张数据库表，数据模型和无损导入导出见 [version-compare-storage.md](version-compare-storage.md)。
 
 ## 使用与接口
 
 - `/docs/compare/?from=17.0&to=18.6`：跨大版本比较。
 - `/docs/compare/?from=18.0&to=18.6`：同分支补丁比较。
-- 裸大版本（例如 `17`）归一化为 `17.0`；`from` 也接受完整 `SELECT version()` 输出。两个版本相同时返回空比较；目标更早、未知版本和未发布的 `18.5` 返回可读的 400 错误。
+- `/docs/compare/?release=9.6.24`：该次发布的全部原始变更，包括兼容性说明；首发版本也可独立阅读。
+- `/docs/compare/?from=9.0&to=18.6`：从 9.0 首发开始的累计差异。
+- 裸大版本 `17` 归一化为 `17.0`，`9.6` 归一化为 `9.6.0`；`from` 也接受完整 `SELECT version()` 输出。9.x 使用三段版本号，9.6.10 排在 9.6.9 之后。两个版本相同时返回空比较；目标更早、未知版本和未发布的 `18.5` 返回可读的 400 错误。
 - `q`、`kind` 保存前端全文关键词与分类筛选，分享链接同时保留版本、筛选和条目锚点。分页只影响显示，服务端返回完整清单，关闭 JS 仍可浏览、提交版本和展开正文。
 - 相同参数增加 `format=json` 下载完整报告。JSON 与页面使用同一比较器，不因前端分页和筛选而丢失条目。
 
 每条记录包括完整中文正文、代码、嵌套步骤、主题路径和原始说明链接。迁移与兼容性操作单独保留。分类用于浏览，分为新功能、BUG 修复、性能改进、安全相关、兼容性变化和其他改进。
+
+条目展开后提供其他版本的关联记录及跳转锚点。`equivalent`（同一变更）需要完整对应证据；`related`（相关提交）表示部分共享、后续修正或首发功能与维护补丁的提交关联，不能直接视作重复。原始条目始终按发布版本独立保留。JSON 提供稳定数据库 ID、提交组 ID、关系类型及证据；数据库保存原始字段和历史修订，合并只影响对比报告的呈现。
 
 ## 比较语义
 
@@ -38,6 +42,8 @@ JSON 报告公开 `history.source/target/candidates` 与逐条 `exclusions`。`a
 
 页面的 CVE 修复清单只列“起始版本受影响、目标版本已修复或不受影响”的漏洞，和发布说明全文中提到的 CVE 编号分别处理。回归修复提及旧 CVE 不增加修复数。目标版本重新暴露起始版本没有的已知漏洞时，另列风险及修复版本。官方矩阵未覆盖的测试分支显示“—”，不推断安全状态。
 
+单版本清单展示本版说明提到的 CVE，标题明确为“提及”，不当作新增修复数。历史漏洞仅在官方首发日期晚于已有修复发布日期等明确证据下标记新分支继承修复，并公开 `target_state_evidence`；官方 CNA 精确区间优先。结束维护后的未知漏洞状态保持未知。
+
 ```sh
 .venv/bin/python tools/docs/fetch_compare_security.py --refresh
 # 完全使用前一次抓取的缓存重放
@@ -57,13 +63,26 @@ JSON 报告公开 `history.source/target/candidates` 与逐条 `exclusions`。`a
 .venv/bin/python manage.py test pgweb.docs.test_compare pgweb.docs.test_compare_data pgweb.docs.test_compare_security --noinput
 node --check media/js/compare.js
 .venv/bin/python tools/docs/audit_compare.py --output tmp/compare-recalibration/engine-audit.json
+.venv/bin/python manage.py migrate docs
+.venv/bin/python manage.py import_compare data/compare/releases.json.gz --language zh --check
+.venv/bin/python manage.py import_compare data/compare/releases.json.gz --language zh --write
+.venv/bin/python manage.py import_compare data/compare/security.json --kind security --write
+.venv/bin/python tools/docs/audit_compare.py --jobs 4 --database --language zh \
+  --reference data/compare/releases.json.gz --security-reference data/compare/security.json \
+  --output data/compare/comparison-audit.json
 ```
 
-同时提交两份快照及代码。生产使用 `/data/app/pgsql.cc` 的 `main`，拉取后执行 Django 检查和测试，再重启 `pgsql.cc`；不需迁移、不新增数据库表。普通数据更新使用已审核快照，生产不用复制 pgdoc checkout。若另外导入了手册页面，须对涉及版本增量运行 `index_docs --versions ...`。
+同时提交快照、审计报告及代码。生产使用 `/data/app/pgsql.cc` 的 `main`；备份后拉取代码，执行 `migrate docs`，导入已审核发布与安全数据，核验后重启 `pgsql.cc`。英文独立项目对应 `--language en`、`center` 数据库和 `pg.center` 服务。生产不用复制 pgdoc checkout。若另外导入了手册页面，须对检索支持的涉及版本增量运行 `index_docs --versions ...`；当前定义检索不收录 9.x。
 
-`audit_compare.py` 穷举所有可选版本对：逐项核对小版本区间的 ID 与顺序、候选条目的唯一归属、合并及排除的完整正文、所有排除的提交/英文正文证据，以及首发条目不能被部分回补掩盖的约束。输出中 `pair_digest` 基于上游 `source_entry_id` 和比较决策，不包含中文/英文展示文字，可用于两站结果一致性核验。它不替代 SGML 抽取覆盖审计或 CVE 来源审计。
+`audit_compare.py` 穷举所有可选版本对：逐项核对小版本区间的 ID 与顺序、候选条目的唯一归属、合并及排除的完整正文、所有排除的提交/英文正文证据，以及首发条目不能被部分回补掩盖的约束。输出中 `pair_digest` 基于上游 `source_entry_id`、比较决策及 CVE 获得/遗留/回归集合与继承证据，不包含中文/英文展示文字，可用于两站结果一致性核验。它不替代 SGML 抽取覆盖审计或 CVE 来源审计。
 
-访问页面、版本对比 JSON、小版本/CVE 示例、预览和错误边界，并检查桌面与手机的明暗主题、键盘操作、分类/搜索/分页、分享链接、条目锚点与禁用 JS 情形。快照加载以文件修改时间和大小为缓存键，更换后立即读取新内容。
+访问页面、单版本清单与关联链接、版本对比 JSON、小版本/CVE 示例、预览和错误边界，并检查桌面与手机的明暗主题、键盘操作、分类/搜索/分页、分享链接、条目锚点与禁用 JS 情形。请求只读取当前数据库中已激活的数据集，以数据集修订号缓存；导入事务提交后各工作进程自动更新。文件仅用于构建、运输和独立审计，不作为运行时回退。未导入或损坏的数据返回 503。
+
+## 9.x 与数据库扩展
+
+当前收录 353 份发布快照：9.0–18 的 351 个正式版本、19beta4 与 20 开发占位；352 个可选版本，共 16,113 条原始记录。9.0–9.6 新增 178 份正式发布说明、6,819 条记录。完整来源和全部 62,128 个版本对的审计结果以已提交的 `data/compare/source-audit.json` 和 `comparison-audit.json` 为准。
+
+原始字段、完整正文和未识别扩展字段均保留；源更正保存之前的修订。默认导入保留缺失实体，仅在显式 `--complete --prune` 时撤下缺项而保留历史。重复导入相同内容不重写实体。`export_compare --archive` 可导出四张表、历史与停用记录，普通导出可精确还原导入的源 JSON。
 
 ## 2026-09-26 首次数据补齐
 
@@ -77,4 +96,4 @@ node --check media/js/compare.js
 
 浏览器验证包括 18.0 → 18.6（351 条记录、46 个修复 CVE）、17.11 → 18.6（297 条记录、0 个新增修复 CVE）、10.0 → 18.6（3,749 条记录、79 个修复 CVE）、19beta4 预览、重复及倒序输入、未修复和新增风险提示。320/390 px、桌面明暗主题均无横向溢出；筛选、分页、条目直达、分享、JSON 和无 JavaScript 浏览通过，无 CSP 或 JavaScript 错误。
 
-回退时使用发布提交的反向提交并重启 `pgsql.cc`；六份补齐的中文手册页面是独立内容，可以保留。无需撤销数据库结构。
+上述首次实施的回退不涉及数据库结构。当前数据库版本回退应先导出完整存储归档、保留四张表，再恢复兼容的应用代码；不要直接删除变更条目或修订历史。补齐的中文手册是独立内容，可以保留。

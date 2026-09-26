@@ -1,13 +1,191 @@
 {
   "format": 1,
-  "checked_at": "2026-09-26T11:05:53+00:00",
+  "checked_at": "2026-09-26T11:30:51+00:00",
   "inventory_url": "https://www.postgresql.org/docs/release/",
   "inventory_sha256": "0e18f785f478b5fcca5b5300ed8615de32b9b141824a8f8c2713db54c9b406fa",
-  "snapshot_sha256": "5fbeee46354b0b480125b60c8a333f8ee198f962c496c8418b4bd025f4144e96",
-  "minimum_major": 10,
+  "snapshot_sha256": "f64e0af41ee40bd3ce9ece860074185b0517f3b44e5dadd87a408af90752ebd6",
+  "minimum_major": "9.0",
   "language": "zh",
-  "stable_release_count": 173,
+  "stable_release_count": 351,
   "stable_versions": [
+    "9.0.0",
+    "9.0.1",
+    "9.0.2",
+    "9.0.3",
+    "9.0.4",
+    "9.0.5",
+    "9.0.6",
+    "9.0.7",
+    "9.0.8",
+    "9.0.9",
+    "9.0.10",
+    "9.0.11",
+    "9.0.12",
+    "9.0.13",
+    "9.0.14",
+    "9.0.15",
+    "9.0.16",
+    "9.0.17",
+    "9.0.18",
+    "9.0.19",
+    "9.0.20",
+    "9.0.21",
+    "9.0.22",
+    "9.0.23",
+    "9.1.0",
+    "9.1.1",
+    "9.1.2",
+    "9.1.3",
+    "9.1.4",
+    "9.1.5",
+    "9.1.6",
+    "9.1.7",
+    "9.1.8",
+    "9.1.9",
+    "9.1.10",
+    "9.1.11",
+    "9.1.12",
+    "9.1.13",
+    "9.1.14",
+    "9.1.15",
+    "9.1.16",
+    "9.1.17",
+    "9.1.18",
+    "9.1.19",
+    "9.1.20",
+    "9.1.21",
+    "9.1.22",
+    "9.1.23",
+    "9.1.24",
+    "9.2.0",
+    "9.2.1",
+    "9.2.2",
+    "9.2.3",
+    "9.2.4",
+    "9.2.5",
+    "9.2.6",
+    "9.2.7",
+    "9.2.8",
+    "9.2.9",
+    "9.2.10",
+    "9.2.11",
+    "9.2.12",
+    "9.2.13",
+    "9.2.14",
+    "9.2.15",
+    "9.2.16",
+    "9.2.17",
+    "9.2.18",
+    "9.2.19",
+    "9.2.20",
+    "9.2.21",
+    "9.2.22",
+    "9.2.23",
+    "9.2.24",
+    "9.3.0",
+    "9.3.1",
+    "9.3.2",
+    "9.3.3",
+    "9.3.4",
+    "9.3.5",
+    "9.3.6",
+    "9.3.7",
+    "9.3.8",
+    "9.3.9",
+    "9.3.10",
+    "9.3.11",
+    "9.3.12",
+    "9.3.13",
+    "9.3.14",
+    "9.3.15",
+    "9.3.16",
+    "9.3.17",
+    "9.3.18",
+    "9.3.19",
+    "9.3.20",
+    "9.3.21",
+    "9.3.22",
+    "9.3.23",
+    "9.3.24",
+    "9.3.25",
+    "9.4.0",
+    "9.4.1",
+    "9.4.2",
+    "9.4.3",
+    "9.4.4",
+    "9.4.5",
+    "9.4.6",
+    "9.4.7",
+    "9.4.8",
+    "9.4.9",
+    "9.4.10",
+    "9.4.11",
+    "9.4.12",
+    "9.4.13",
+    "9.4.14",
+    "9.4.15",
+    "9.4.16",
+    "9.4.17",
+    "9.4.18",
+    "9.4.19",
+    "9.4.20",
+    "9.4.21",
+    "9.4.22",
+    "9.4.23",
+    "9.4.24",
+    "9.4.25",
+    "9.4.26",
+    "9.5.0",
+    "9.5.1",
+    "9.5.2",
+    "9.5.3",
+    "9.5.4",
+    "9.5.5",
+    "9.5.6",
+    "9.5.7",
+    "9.5.8",
+    "9.5.9",
+    "9.5.10",
+    "9.5.11",
+    "9.5.12",
+    "9.5.13",
+    "9.5.14",
+    "9.5.15",
+    "9.5.16",
+    "9.5.17",
+    "9.5.18",
+    "9.5.19",
+    "9.5.20",
+    "9.5.21",
+    "9.5.22",
+    "9.5.23",
+    "9.5.24",
+    "9.5.25",
+    "9.6.0",
+    "9.6.1",
+    "9.6.2",
+    "9.6.3",
+    "9.6.4",
+    "9.6.5",
+    "9.6.6",
+    "9.6.7",
+    "9.6.8",
+    "9.6.9",
+    "9.6.10",
+    "9.6.11",
+    "9.6.12",
+    "9.6.13",
+    "9.6.14",
+    "9.6.15",
+    "9.6.16",
+    "9.6.17",
+    "9.6.18",
+    "9.6.19",
+    "9.6.20",
+    "9.6.21",
+    "9.6.22",
+    "9.6.23",
+    "9.6.24",
     "10.0",
     "10.1",
     "10.2",
@@ -190,6 +368,76 @@
   ],
   "sources": [
     {
+      "major": "9.0",
+      "build": "9.0.23",
+      "file": "en/9.0.23/release-9.0.sgml",
+      "sha256": "f31f47e1a3100bc06733a626edcade6b70eaf8e1fd9280ff27896c1bbf2f2abe",
+      "url": "https://ftp.postgresql.org/pub/source/v9.0.23/postgresql-9.0.23.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v9.0.23/postgresql-9.0.23.tar.bz2.sha256",
+      "archive_sha256": "3dbcbe19c814139a3f4be8bc6b49db804753cbc49979f345083e835c52b4d7de",
+      "verified": true
+    },
+    {
+      "major": "9.1",
+      "build": "9.1.24",
+      "file": "en/9.1.24/release-9.1.sgml",
+      "sha256": "f5db681bc8d9b97d5c91dddbf27a96fd3171eaa88d78249e12c361280ef0ec60",
+      "url": "https://ftp.postgresql.org/pub/source/v9.1.24/postgresql-9.1.24.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v9.1.24/postgresql-9.1.24.tar.bz2.sha256",
+      "archive_sha256": "de0d84e9f32af145fcd66d8d324f6ef1a0b17944ea344b7bbe9d99fff68ae5d3",
+      "verified": true
+    },
+    {
+      "major": "9.2",
+      "build": "9.2.24",
+      "file": "en/9.2.24/release-9.2.sgml",
+      "sha256": "c5116ebfbb39cececdf8240f7dab9ed5d41f04c810623d8da1c51a3e1dfef12a",
+      "url": "https://ftp.postgresql.org/pub/source/v9.2.24/postgresql-9.2.24.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v9.2.24/postgresql-9.2.24.tar.bz2.sha256",
+      "archive_sha256": "a754c02f7051c2f21e52f8669a421b50485afcde9a581674d6106326b189d126",
+      "verified": true
+    },
+    {
+      "major": "9.3",
+      "build": "9.3.25",
+      "file": "en/9.3.25/release-9.3.sgml",
+      "sha256": "babec601ef8f3888fad222978ac51b1d3f757523621e426684f86c5539f79958",
+      "url": "https://ftp.postgresql.org/pub/source/v9.3.25/postgresql-9.3.25.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v9.3.25/postgresql-9.3.25.tar.bz2.sha256",
+      "archive_sha256": "e4953e80415d039ccd33d34be74526a090fd585cf93f296cd9c593972504b6db",
+      "verified": true
+    },
+    {
+      "major": "9.4",
+      "build": "9.4.26",
+      "file": "en/9.4.26/release-9.4.sgml",
+      "sha256": "c8c363f3ed78065ab68b56feaa8a87b8c4ea3812e95d7895e879bc5429e4e015",
+      "url": "https://ftp.postgresql.org/pub/source/v9.4.26/postgresql-9.4.26.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v9.4.26/postgresql-9.4.26.tar.bz2.sha256",
+      "archive_sha256": "f5c014fc4a5c94e8cf11314cbadcade4d84213cfcc82081c9123e1b8847a20b9",
+      "verified": true
+    },
+    {
+      "major": "9.5",
+      "build": "9.5.25",
+      "file": "en/9.5.25/release-9.5.sgml",
+      "sha256": "f7aa0371cf4ff7e35cfc49f34f996435e39d3b50a03eb4614030e1a029891b0b",
+      "url": "https://ftp.postgresql.org/pub/source/v9.5.25/postgresql-9.5.25.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v9.5.25/postgresql-9.5.25.tar.bz2.sha256",
+      "archive_sha256": "7628c55eb23768a2c799c018988d8f2ab48ee3d80f5e11259938f7a935f0d603",
+      "verified": true
+    },
+    {
+      "major": "9.6",
+      "build": "9.6.24",
+      "file": "en/9.6.24/release-9.6.sgml",
+      "sha256": "f7b77f26732f590530fa5a95d90ff0dac07095d72485f94630e070b561222401",
+      "url": "https://ftp.postgresql.org/pub/source/v9.6.24/postgresql-9.6.24.tar.bz2",
+      "checksum_url": "https://ftp.postgresql.org/pub/source/v9.6.24/postgresql-9.6.24.tar.bz2.sha256",
+      "archive_sha256": "aeb7a196be3ebed1a7476ef565f39722187c108dd47da7489be9c4fcae982ace",
+      "verified": true
+    },
+    {
       "major": "10",
       "build": "10.23",
       "file": "en/10.23/release-10.sgml",
@@ -291,57 +539,2031 @@
   ],
   "translated_sources": [
     {
+      "major": "9.0",
+      "file": "zh/9.0/release-9.0.sgml",
+      "sha256": "fe3a4055994389d5c3825e88bf8a66eeb458f47b1801308724a630f9b47f0d95"
+    },
+    {
+      "major": "9.1",
+      "file": "zh/9.1/release-9.1.sgml",
+      "sha256": "98991610021400e9b0eb4bf8f5daa36191a4c9c158e2cb2f4b96a7776207fc9b"
+    },
+    {
+      "major": "9.2",
+      "file": "zh/9.3/release-9.2.sgml",
+      "sha256": "26d6973ec5267363d2d74a91e518bdd69649e48656252515d45c0beb98b12161"
+    },
+    {
+      "major": "9.3",
+      "file": "zh/9.3/release-9.3.sgml",
+      "sha256": "19dc410614e8ea1473af4370e9a2513bca901d15161cc465e2072abf56493f13"
+    },
+    {
+      "major": "9.4",
+      "file": "zh/9.4/release-9.4.sgml",
+      "sha256": "7c37f7f2e4270746cd097ac4547c9fe6dfa63baf98951899a2621a731b8f9e16"
+    },
+    {
+      "major": "9.5",
+      "file": "zh/9.5/release-9.5.sgml",
+      "sha256": "2570dd0672a6d9c8bd0dd1ce96caad453ce66b9ba9e360446e0731bf62c1d081"
+    },
+    {
+      "major": "9.6",
+      "file": "zh/9.6/release-9.6.sgml",
+      "sha256": "04b20f8ab5a4ed283f2df4f6c82854d894176ab41dbb7a7473d8dfc06ca47742"
+    },
+    {
       "major": "10",
+      "file": "zh/10/release-10.sgml",
       "sha256": "703cc6a274ce5c1aef51dab6ac1722920af3c23cbc5cfbbe97defdf787fcc2d8"
     },
     {
       "major": "11",
+      "file": "zh/11/release-11.sgml",
       "sha256": "da73d417629887a412dbce8b2d6eedb25604bfba5f9ad23548b11d1a64d74894"
     },
     {
       "major": "12",
+      "file": "zh/12/release-12.sgml",
       "sha256": "443f0d28eb4d4c89f21ca405201ecaf7eb819ddeca5bd776b9ff32fbbf124e2a"
     },
     {
       "major": "13",
+      "file": "zh/13/release-13.sgml",
       "sha256": "cc2b4728c461bae2575ed55e849869890beb3f1520d7a4adf30a9585b6aced14"
     },
     {
       "major": "14",
+      "file": "zh/14/release-14.sgml",
       "sha256": "6fb116c1a320136f662c2be500d87f6788cacdbc03ac3e9c74299b2eacf4cb75"
     },
     {
       "major": "15",
+      "file": "zh/15/release-15.sgml",
       "sha256": "7e0f1dc792a88ccc0d5bc3be87cf867b387c8f2a2640e9513c3f689313c9397c"
     },
     {
       "major": "16",
+      "file": "zh/16/release-16.sgml",
       "sha256": "bb3c1fd87b153cd25c6f0e84e678b452056e69d39a214e6e589b62b12f9136b6"
     },
     {
       "major": "17",
+      "file": "zh/17/release-17.sgml",
       "sha256": "3fc2654b80fa3592a20458be06c7e2043a3f6defb67106cedf2ef3c4c99697ad"
     },
     {
       "major": "18",
+      "file": "zh/18/release-18.sgml",
       "sha256": "4cc299563e631680b2a423719d160a96cbd488895b7a5d7f45a258aa029928c0"
     },
     {
       "major": "19",
+      "file": "zh/19/release-19.sgml",
       "sha256": "9031432cac8287ede45238f6c492484a7f24f0555f41715db872c3071191a7f4"
     }
   ],
   "totals": {
-    "bilingual_entries_with_matching_commits": 9235,
-    "entries": 9294,
-    "entries_with_source_commits": 9235,
-    "entries_without_source_commits": 59,
-    "paragraphs": 16385,
-    "examples": 32,
-    "nested_items": 0,
-    "bilingual_entries_without_commit_evidence": 59
+    "bilingual_entries_without_commit_evidence": 4781,
+    "entries": 16113,
+    "entries_with_source_commits": 11332,
+    "entries_without_source_commits": 4781,
+    "paragraphs": 27219,
+    "examples": 66,
+    "nested_items": 6,
+    "bilingual_entries_with_matching_commits": 11056,
+    "bilingual_entries_with_one_sided_commit_evidence": 276
   },
   "releases": [
+    {
+      "version": "9.0.0",
+      "status": "stable",
+      "date": "2010-09-20",
+      "changes": 217,
+      "migration": 20,
+      "cves": [],
+      "entries_verified": 237
+    },
+    {
+      "version": "9.0.1",
+      "status": "stable",
+      "date": "2010-10-04",
+      "changes": 10,
+      "migration": 0,
+      "cves": [
+        "CVE-2010-3433"
+      ],
+      "entries_verified": 10
+    },
+    {
+      "version": "9.0.2",
+      "status": "stable",
+      "date": "2010-12-16",
+      "changes": 42,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 42
+    },
+    {
+      "version": "9.0.3",
+      "status": "stable",
+      "date": "2011-01-31",
+      "changes": 12,
+      "migration": 0,
+      "cves": [
+        "CVE-2010-4015"
+      ],
+      "entries_verified": 12
+    },
+    {
+      "version": "9.0.4",
+      "status": "stable",
+      "date": "2011-04-18",
+      "changes": 29,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 29
+    },
+    {
+      "version": "9.0.5",
+      "status": "stable",
+      "date": "2011-09-26",
+      "changes": 64,
+      "migration": 0,
+      "cves": [
+        "CVE-2011-2483"
+      ],
+      "entries_verified": 64
+    },
+    {
+      "version": "9.0.6",
+      "status": "stable",
+      "date": "2011-12-05",
+      "changes": 29,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 29
+    },
+    {
+      "version": "9.0.7",
+      "status": "stable",
+      "date": "2012-02-27",
+      "changes": 35,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-0866",
+        "CVE-2012-0867",
+        "CVE-2012-0868"
+      ],
+      "entries_verified": 35
+    },
+    {
+      "version": "9.0.8",
+      "status": "stable",
+      "date": "2012-06-04",
+      "changes": 27,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-2143",
+        "CVE-2012-2655"
+      ],
+      "entries_verified": 27
+    },
+    {
+      "version": "9.0.9",
+      "status": "stable",
+      "date": "2012-08-17",
+      "changes": 23,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-3488",
+        "CVE-2012-3489"
+      ],
+      "entries_verified": 23
+    },
+    {
+      "version": "9.0.10",
+      "status": "stable",
+      "date": "2012-09-24",
+      "changes": 10,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 10
+    },
+    {
+      "version": "9.0.11",
+      "status": "stable",
+      "date": "2012-12-06",
+      "changes": 32,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 32
+    },
+    {
+      "version": "9.0.12",
+      "status": "stable",
+      "date": "2013-02-07",
+      "changes": 23,
+      "migration": 0,
+      "cves": [
+        "CVE-2013-0255"
+      ],
+      "entries_verified": 23
+    },
+    {
+      "version": "9.0.13",
+      "status": "stable",
+      "date": "2013-04-04",
+      "changes": 21,
+      "migration": 0,
+      "cves": [
+        "CVE-2013-1899",
+        "CVE-2013-1900"
+      ],
+      "entries_verified": 21
+    },
+    {
+      "version": "9.0.14",
+      "status": "stable",
+      "date": "2013-10-10",
+      "changes": 26,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 26
+    },
+    {
+      "version": "9.0.15",
+      "status": "stable",
+      "date": "2013-12-05",
+      "changes": 16,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 16
+    },
+    {
+      "version": "9.0.16",
+      "status": "stable",
+      "date": "2014-02-20",
+      "changes": 37,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0060",
+        "CVE-2014-0061",
+        "CVE-2014-0062",
+        "CVE-2014-0063",
+        "CVE-2014-0064",
+        "CVE-2014-0065",
+        "CVE-2014-0066",
+        "CVE-2014-0067"
+      ],
+      "entries_verified": 37
+    },
+    {
+      "version": "9.0.17",
+      "status": "stable",
+      "date": "2014-03-20",
+      "changes": 10,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 10
+    },
+    {
+      "version": "9.0.18",
+      "status": "stable",
+      "date": "2014-07-24",
+      "changes": 28,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0067"
+      ],
+      "entries_verified": 28
+    },
+    {
+      "version": "9.0.19",
+      "status": "stable",
+      "date": "2015-02-05",
+      "changes": 52,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0067",
+        "CVE-2014-8161",
+        "CVE-2015-0241",
+        "CVE-2015-0242",
+        "CVE-2015-0243",
+        "CVE-2015-0244"
+      ],
+      "entries_verified": 52
+    },
+    {
+      "version": "9.0.20",
+      "status": "stable",
+      "date": "2015-05-22",
+      "changes": 35,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-3165",
+        "CVE-2015-3166",
+        "CVE-2015-3167"
+      ],
+      "entries_verified": 35
+    },
+    {
+      "version": "9.0.21",
+      "status": "stable",
+      "date": "2015-06-04",
+      "changes": 3,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 3
+    },
+    {
+      "version": "9.0.22",
+      "status": "stable",
+      "date": "2015-06-12",
+      "changes": 2,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 2
+    },
+    {
+      "version": "9.0.23",
+      "status": "stable",
+      "date": "2015-10-08",
+      "changes": 47,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-5288"
+      ],
+      "entries_verified": 47
+    },
+    {
+      "version": "9.1.0",
+      "status": "stable",
+      "date": "2011-09-12",
+      "changes": 186,
+      "migration": 17,
+      "cves": [],
+      "entries_verified": 203
+    },
+    {
+      "version": "9.1.1",
+      "status": "stable",
+      "date": "2011-09-26",
+      "changes": 3,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 3
+    },
+    {
+      "version": "9.1.2",
+      "status": "stable",
+      "date": "2011-12-05",
+      "changes": 52,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 52
+    },
+    {
+      "version": "9.1.3",
+      "status": "stable",
+      "date": "2012-02-27",
+      "changes": 46,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-0866",
+        "CVE-2012-0867",
+        "CVE-2012-0868"
+      ],
+      "entries_verified": 46
+    },
+    {
+      "version": "9.1.4",
+      "status": "stable",
+      "date": "2012-06-04",
+      "changes": 42,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-2143",
+        "CVE-2012-2655"
+      ],
+      "entries_verified": 42
+    },
+    {
+      "version": "9.1.5",
+      "status": "stable",
+      "date": "2012-08-17",
+      "changes": 30,
+      "migration": 0,
+      "cves": [
+        "CVE-2012-3488",
+        "CVE-2012-3489"
+      ],
+      "entries_verified": 30
+    },
+    {
+      "version": "9.1.6",
+      "status": "stable",
+      "date": "2012-09-24",
+      "changes": 17,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 17
+    },
+    {
+      "version": "9.1.7",
+      "status": "stable",
+      "date": "2012-12-06",
+      "changes": 40,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 40
+    },
+    {
+      "version": "9.1.8",
+      "status": "stable",
+      "date": "2013-02-07",
+      "changes": 30,
+      "migration": 0,
+      "cves": [
+        "CVE-2013-0255"
+      ],
+      "entries_verified": 30
+    },
+    {
+      "version": "9.1.9",
+      "status": "stable",
+      "date": "2013-04-04",
+      "changes": 25,
+      "migration": 0,
+      "cves": [
+        "CVE-2013-1899",
+        "CVE-2013-1900",
+        "CVE-2013-1901"
+      ],
+      "entries_verified": 25
+    },
+    {
+      "version": "9.1.10",
+      "status": "stable",
+      "date": "2013-10-10",
+      "changes": 34,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 34
+    },
+    {
+      "version": "9.1.11",
+      "status": "stable",
+      "date": "2013-12-05",
+      "changes": 18,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 18
+    },
+    {
+      "version": "9.1.12",
+      "status": "stable",
+      "date": "2014-02-20",
+      "changes": 43,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0060",
+        "CVE-2014-0061",
+        "CVE-2014-0062",
+        "CVE-2014-0063",
+        "CVE-2014-0064",
+        "CVE-2014-0065",
+        "CVE-2014-0066",
+        "CVE-2014-0067"
+      ],
+      "entries_verified": 43
+    },
+    {
+      "version": "9.1.13",
+      "status": "stable",
+      "date": "2014-03-20",
+      "changes": 12,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 12
+    },
+    {
+      "version": "9.1.14",
+      "status": "stable",
+      "date": "2014-07-24",
+      "changes": 32,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0067"
+      ],
+      "entries_verified": 32
+    },
+    {
+      "version": "9.1.15",
+      "status": "stable",
+      "date": "2015-02-05",
+      "changes": 60,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0067",
+        "CVE-2014-8161",
+        "CVE-2015-0241",
+        "CVE-2015-0242",
+        "CVE-2015-0243",
+        "CVE-2015-0244"
+      ],
+      "entries_verified": 60
+    },
+    {
+      "version": "9.1.16",
+      "status": "stable",
+      "date": "2015-05-22",
+      "changes": 41,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-3165",
+        "CVE-2015-3166",
+        "CVE-2015-3167"
+      ],
+      "entries_verified": 41
+    },
+    {
+      "version": "9.1.17",
+      "status": "stable",
+      "date": "2015-06-04",
+      "changes": 3,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 3
+    },
+    {
+      "version": "9.1.18",
+      "status": "stable",
+      "date": "2015-06-12",
+      "changes": 2,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 2
+    },
+    {
+      "version": "9.1.19",
+      "status": "stable",
+      "date": "2015-10-08",
+      "changes": 54,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-5288"
+      ],
+      "entries_verified": 54
+    },
+    {
+      "version": "9.1.20",
+      "status": "stable",
+      "date": "2016-02-11",
+      "changes": 45,
+      "migration": 0,
+      "cves": [
+        "CVE-2007-4772",
+        "CVE-2015-7499",
+        "CVE-2016-0766",
+        "CVE-2016-0773"
+      ],
+      "entries_verified": 45
+    },
+    {
+      "version": "9.1.21",
+      "status": "stable",
+      "date": "2016-03-31",
+      "changes": 17,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 17
+    },
+    {
+      "version": "9.1.22",
+      "status": "stable",
+      "date": "2016-05-12",
+      "changes": 11,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 11
+    },
+    {
+      "version": "9.1.23",
+      "status": "stable",
+      "date": "2016-08-11",
+      "changes": 22,
+      "migration": 0,
+      "cves": [
+        "CVE-2016-5423",
+        "CVE-2016-5424"
+      ],
+      "entries_verified": 22
+    },
+    {
+      "version": "9.1.24",
+      "status": "stable",
+      "date": "2016-10-27",
+      "changes": 13,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 13
+    },
+    {
+      "version": "9.2.0",
+      "status": "stable",
+      "date": "2012-09-10",
+      "changes": 215,
+      "migration": 23,
+      "cves": [],
+      "entries_verified": 238
+    },
+    {
+      "version": "9.2.1",
+      "status": "stable",
+      "date": "2012-09-24",
+      "changes": 12,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 12
+    },
+    {
+      "version": "9.2.2",
+      "status": "stable",
+      "date": "2012-12-06",
+      "changes": 60,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 60
+    },
+    {
+      "version": "9.2.3",
+      "status": "stable",
+      "date": "2013-02-07",
+      "changes": 43,
+      "migration": 0,
+      "cves": [
+        "CVE-2013-0255"
+      ],
+      "entries_verified": 43
+    },
+    {
+      "version": "9.2.4",
+      "status": "stable",
+      "date": "2013-04-04",
+      "changes": 32,
+      "migration": 0,
+      "cves": [
+        "CVE-2013-1899",
+        "CVE-2013-1900",
+        "CVE-2013-1901"
+      ],
+      "entries_verified": 32
+    },
+    {
+      "version": "9.2.5",
+      "status": "stable",
+      "date": "2013-10-10",
+      "changes": 45,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 45
+    },
+    {
+      "version": "9.2.6",
+      "status": "stable",
+      "date": "2013-12-05",
+      "changes": 26,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 26
+    },
+    {
+      "version": "9.2.7",
+      "status": "stable",
+      "date": "2014-02-20",
+      "changes": 49,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0060",
+        "CVE-2014-0061",
+        "CVE-2014-0062",
+        "CVE-2014-0063",
+        "CVE-2014-0064",
+        "CVE-2014-0065",
+        "CVE-2014-0066",
+        "CVE-2014-0067"
+      ],
+      "entries_verified": 49
+    },
+    {
+      "version": "9.2.8",
+      "status": "stable",
+      "date": "2014-03-20",
+      "changes": 14,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 14
+    },
+    {
+      "version": "9.2.9",
+      "status": "stable",
+      "date": "2014-07-24",
+      "changes": 41,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0067"
+      ],
+      "entries_verified": 41
+    },
+    {
+      "version": "9.2.10",
+      "status": "stable",
+      "date": "2015-02-05",
+      "changes": 69,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0067",
+        "CVE-2014-8161",
+        "CVE-2015-0241",
+        "CVE-2015-0242",
+        "CVE-2015-0243",
+        "CVE-2015-0244"
+      ],
+      "entries_verified": 69
+    },
+    {
+      "version": "9.2.11",
+      "status": "stable",
+      "date": "2015-05-22",
+      "changes": 45,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-3165",
+        "CVE-2015-3166",
+        "CVE-2015-3167"
+      ],
+      "entries_verified": 45
+    },
+    {
+      "version": "9.2.12",
+      "status": "stable",
+      "date": "2015-06-04",
+      "changes": 4,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 4
+    },
+    {
+      "version": "9.2.13",
+      "status": "stable",
+      "date": "2015-06-12",
+      "changes": 2,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 2
+    },
+    {
+      "version": "9.2.14",
+      "status": "stable",
+      "date": "2015-10-08",
+      "changes": 58,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-5288"
+      ],
+      "entries_verified": 58
+    },
+    {
+      "version": "9.2.15",
+      "status": "stable",
+      "date": "2016-02-11",
+      "changes": 48,
+      "migration": 0,
+      "cves": [
+        "CVE-2007-4772",
+        "CVE-2015-7499",
+        "CVE-2016-0766",
+        "CVE-2016-0773"
+      ],
+      "entries_verified": 48
+    },
+    {
+      "version": "9.2.16",
+      "status": "stable",
+      "date": "2016-03-31",
+      "changes": 17,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 17
+    },
+    {
+      "version": "9.2.17",
+      "status": "stable",
+      "date": "2016-05-12",
+      "changes": 14,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 14
+    },
+    {
+      "version": "9.2.18",
+      "status": "stable",
+      "date": "2016-08-11",
+      "changes": 24,
+      "migration": 0,
+      "cves": [
+        "CVE-2016-5423",
+        "CVE-2016-5424"
+      ],
+      "entries_verified": 24
+    },
+    {
+      "version": "9.2.19",
+      "status": "stable",
+      "date": "2016-10-27",
+      "changes": 18,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 18
+    },
+    {
+      "version": "9.2.20",
+      "status": "stable",
+      "date": "2017-02-09",
+      "changes": 33,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 33
+    },
+    {
+      "version": "9.2.21",
+      "status": "stable",
+      "date": "2017-05-11",
+      "changes": 25,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2017-7486",
+        "CVE-2017-7547"
+      ],
+      "entries_verified": 25
+    },
+    {
+      "version": "9.2.22",
+      "status": "stable",
+      "date": "2017-08-10",
+      "changes": 32,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7486",
+        "CVE-2017-7546",
+        "CVE-2017-7547"
+      ],
+      "entries_verified": 32
+    },
+    {
+      "version": "9.2.23",
+      "status": "stable",
+      "date": "2017-08-31",
+      "changes": 6,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 6
+    },
+    {
+      "version": "9.2.24",
+      "status": "stable",
+      "date": "2017-11-09",
+      "changes": 13,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-12172"
+      ],
+      "entries_verified": 13
+    },
+    {
+      "version": "9.3.0",
+      "status": "stable",
+      "date": "2013-09-09",
+      "changes": 167,
+      "migration": 10,
+      "cves": [],
+      "entries_verified": 177
+    },
+    {
+      "version": "9.3.1",
+      "status": "stable",
+      "date": "2013-10-10",
+      "changes": 8,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 8
+    },
+    {
+      "version": "9.3.2",
+      "status": "stable",
+      "date": "2013-12-05",
+      "changes": 38,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 38
+    },
+    {
+      "version": "9.3.3",
+      "status": "stable",
+      "date": "2014-02-20",
+      "changes": 71,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0060",
+        "CVE-2014-0061",
+        "CVE-2014-0062",
+        "CVE-2014-0063",
+        "CVE-2014-0064",
+        "CVE-2014-0065",
+        "CVE-2014-0066",
+        "CVE-2014-0067"
+      ],
+      "entries_verified": 71
+    },
+    {
+      "version": "9.3.4",
+      "status": "stable",
+      "date": "2014-03-20",
+      "changes": 21,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 21
+    },
+    {
+      "version": "9.3.5",
+      "status": "stable",
+      "date": "2014-07-24",
+      "changes": 54,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0067"
+      ],
+      "entries_verified": 54
+    },
+    {
+      "version": "9.3.6",
+      "status": "stable",
+      "date": "2015-02-05",
+      "changes": 90,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0067",
+        "CVE-2014-8161",
+        "CVE-2015-0241",
+        "CVE-2015-0242",
+        "CVE-2015-0243",
+        "CVE-2015-0244"
+      ],
+      "entries_verified": 90
+    },
+    {
+      "version": "9.3.7",
+      "status": "stable",
+      "date": "2015-05-22",
+      "changes": 47,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-3165",
+        "CVE-2015-3166",
+        "CVE-2015-3167"
+      ],
+      "entries_verified": 47
+    },
+    {
+      "version": "9.3.8",
+      "status": "stable",
+      "date": "2015-06-04",
+      "changes": 4,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 4
+    },
+    {
+      "version": "9.3.9",
+      "status": "stable",
+      "date": "2015-06-12",
+      "changes": 4,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 4
+    },
+    {
+      "version": "9.3.10",
+      "status": "stable",
+      "date": "2015-10-08",
+      "changes": 62,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-5288",
+        "CVE-2015-5289"
+      ],
+      "entries_verified": 62
+    },
+    {
+      "version": "9.3.11",
+      "status": "stable",
+      "date": "2016-02-11",
+      "changes": 56,
+      "migration": 0,
+      "cves": [
+        "CVE-2007-4772",
+        "CVE-2015-7499",
+        "CVE-2016-0766",
+        "CVE-2016-0773"
+      ],
+      "entries_verified": 56
+    },
+    {
+      "version": "9.3.12",
+      "status": "stable",
+      "date": "2016-03-31",
+      "changes": 18,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 18
+    },
+    {
+      "version": "9.3.13",
+      "status": "stable",
+      "date": "2016-05-12",
+      "changes": 16,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 16
+    },
+    {
+      "version": "9.3.14",
+      "status": "stable",
+      "date": "2016-08-11",
+      "changes": 36,
+      "migration": 0,
+      "cves": [
+        "CVE-2016-5423",
+        "CVE-2016-5424"
+      ],
+      "entries_verified": 36
+    },
+    {
+      "version": "9.3.15",
+      "status": "stable",
+      "date": "2016-10-27",
+      "changes": 22,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 22
+    },
+    {
+      "version": "9.3.16",
+      "status": "stable",
+      "date": "2017-02-09",
+      "changes": 37,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 37
+    },
+    {
+      "version": "9.3.17",
+      "status": "stable",
+      "date": "2017-05-11",
+      "changes": 28,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2017-7485",
+        "CVE-2017-7486",
+        "CVE-2017-7547"
+      ],
+      "entries_verified": 28
+    },
+    {
+      "version": "9.3.18",
+      "status": "stable",
+      "date": "2017-08-10",
+      "changes": 41,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7486",
+        "CVE-2017-7546",
+        "CVE-2017-7547"
+      ],
+      "entries_verified": 41
+    },
+    {
+      "version": "9.3.19",
+      "status": "stable",
+      "date": "2017-08-31",
+      "changes": 7,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 7
+    },
+    {
+      "version": "9.3.20",
+      "status": "stable",
+      "date": "2017-11-09",
+      "changes": 17,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-12172",
+        "CVE-2017-15098"
+      ],
+      "entries_verified": 17
+    },
+    {
+      "version": "9.3.21",
+      "status": "stable",
+      "date": "2018-02-08",
+      "changes": 24,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1053"
+      ],
+      "entries_verified": 24
+    },
+    {
+      "version": "9.3.22",
+      "status": "stable",
+      "date": "2018-03-01",
+      "changes": 7,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058"
+      ],
+      "entries_verified": 7
+    },
+    {
+      "version": "9.3.23",
+      "status": "stable",
+      "date": "2018-05-10",
+      "changes": 27,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 27
+    },
+    {
+      "version": "9.3.24",
+      "status": "stable",
+      "date": "2018-08-09",
+      "changes": 21,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-10915"
+      ],
+      "entries_verified": 21
+    },
+    {
+      "version": "9.3.25",
+      "status": "stable",
+      "date": "2018-11-08",
+      "changes": 35,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 35
+    },
+    {
+      "version": "9.4.0",
+      "status": "stable",
+      "date": "2014-12-18",
+      "changes": 189,
+      "migration": 22,
+      "cves": [],
+      "entries_verified": 211
+    },
+    {
+      "version": "9.4.1",
+      "status": "stable",
+      "date": "2015-02-05",
+      "changes": 32,
+      "migration": 0,
+      "cves": [
+        "CVE-2014-0067",
+        "CVE-2014-8161",
+        "CVE-2015-0241",
+        "CVE-2015-0242",
+        "CVE-2015-0243",
+        "CVE-2015-0244"
+      ],
+      "entries_verified": 32
+    },
+    {
+      "version": "9.4.2",
+      "status": "stable",
+      "date": "2015-05-22",
+      "changes": 59,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-3165",
+        "CVE-2015-3166",
+        "CVE-2015-3167"
+      ],
+      "entries_verified": 59
+    },
+    {
+      "version": "9.4.3",
+      "status": "stable",
+      "date": "2015-06-04",
+      "changes": 4,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 4
+    },
+    {
+      "version": "9.4.4",
+      "status": "stable",
+      "date": "2015-06-12",
+      "changes": 4,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 4
+    },
+    {
+      "version": "9.4.5",
+      "status": "stable",
+      "date": "2015-10-08",
+      "changes": 70,
+      "migration": 0,
+      "cves": [
+        "CVE-2015-5288",
+        "CVE-2015-5289"
+      ],
+      "entries_verified": 70
+    },
+    {
+      "version": "9.4.6",
+      "status": "stable",
+      "date": "2016-02-11",
+      "changes": 59,
+      "migration": 0,
+      "cves": [
+        "CVE-2007-4772",
+        "CVE-2015-7499",
+        "CVE-2016-0766",
+        "CVE-2016-0773"
+      ],
+      "entries_verified": 59
+    },
+    {
+      "version": "9.4.7",
+      "status": "stable",
+      "date": "2016-03-31",
+      "changes": 23,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 23
+    },
+    {
+      "version": "9.4.8",
+      "status": "stable",
+      "date": "2016-05-12",
+      "changes": 21,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 21
+    },
+    {
+      "version": "9.4.9",
+      "status": "stable",
+      "date": "2016-08-11",
+      "changes": 39,
+      "migration": 0,
+      "cves": [
+        "CVE-2016-5423",
+        "CVE-2016-5424"
+      ],
+      "entries_verified": 39
+    },
+    {
+      "version": "9.4.10",
+      "status": "stable",
+      "date": "2016-10-27",
+      "changes": 34,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 34
+    },
+    {
+      "version": "9.4.11",
+      "status": "stable",
+      "date": "2017-02-09",
+      "changes": 44,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 44
+    },
+    {
+      "version": "9.4.12",
+      "status": "stable",
+      "date": "2017-05-11",
+      "changes": 34,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2017-7485",
+        "CVE-2017-7486",
+        "CVE-2017-7547"
+      ],
+      "entries_verified": 34
+    },
+    {
+      "version": "9.4.13",
+      "status": "stable",
+      "date": "2017-08-10",
+      "changes": 53,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7486",
+        "CVE-2017-7546",
+        "CVE-2017-7547",
+        "CVE-2017-7548"
+      ],
+      "entries_verified": 53
+    },
+    {
+      "version": "9.4.14",
+      "status": "stable",
+      "date": "2017-08-31",
+      "changes": 8,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 8
+    },
+    {
+      "version": "9.4.15",
+      "status": "stable",
+      "date": "2017-11-09",
+      "changes": 22,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-12172",
+        "CVE-2017-15098"
+      ],
+      "entries_verified": 22
+    },
+    {
+      "version": "9.4.16",
+      "status": "stable",
+      "date": "2018-02-08",
+      "changes": 28,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1053"
+      ],
+      "entries_verified": 28
+    },
+    {
+      "version": "9.4.17",
+      "status": "stable",
+      "date": "2018-03-01",
+      "changes": 7,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058"
+      ],
+      "entries_verified": 7
+    },
+    {
+      "version": "9.4.18",
+      "status": "stable",
+      "date": "2018-05-10",
+      "changes": 32,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 32
+    },
+    {
+      "version": "9.4.19",
+      "status": "stable",
+      "date": "2018-08-09",
+      "changes": 26,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-10915"
+      ],
+      "entries_verified": 26
+    },
+    {
+      "version": "9.4.20",
+      "status": "stable",
+      "date": "2018-11-08",
+      "changes": 42,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 42
+    },
+    {
+      "version": "9.4.21",
+      "status": "stable",
+      "date": "2019-02-14",
+      "changes": 35,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 35
+    },
+    {
+      "version": "9.4.22",
+      "status": "stable",
+      "date": "2019-05-09",
+      "changes": 25,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 25
+    },
+    {
+      "version": "9.4.23",
+      "status": "stable",
+      "date": "2019-06-20",
+      "changes": 10,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 10
+    },
+    {
+      "version": "9.4.24",
+      "status": "stable",
+      "date": "2019-08-08",
+      "changes": 18,
+      "migration": 0,
+      "cves": [
+        "CVE-2007-2138",
+        "CVE-2019-10208"
+      ],
+      "entries_verified": 18
+    },
+    {
+      "version": "9.4.25",
+      "status": "stable",
+      "date": "2019-11-14",
+      "changes": 39,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 39
+    },
+    {
+      "version": "9.4.26",
+      "status": "stable",
+      "date": "2020-02-13",
+      "changes": 28,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 28
+    },
+    {
+      "version": "9.5.0",
+      "status": "stable",
+      "date": "2016-01-07",
+      "changes": 181,
+      "migration": 12,
+      "cves": [],
+      "entries_verified": 193
+    },
+    {
+      "version": "9.5.1",
+      "status": "stable",
+      "date": "2016-02-11",
+      "changes": 23,
+      "migration": 0,
+      "cves": [
+        "CVE-2016-0766",
+        "CVE-2016-0773"
+      ],
+      "entries_verified": 23
+    },
+    {
+      "version": "9.5.2",
+      "status": "stable",
+      "date": "2016-03-31",
+      "changes": 33,
+      "migration": 0,
+      "cves": [
+        "CVE-2016-2193",
+        "CVE-2016-3065"
+      ],
+      "entries_verified": 33
+    },
+    {
+      "version": "9.5.3",
+      "status": "stable",
+      "date": "2016-05-12",
+      "changes": 25,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 25
+    },
+    {
+      "version": "9.5.4",
+      "status": "stable",
+      "date": "2016-08-11",
+      "changes": 51,
+      "migration": 0,
+      "cves": [
+        "CVE-2016-5423",
+        "CVE-2016-5424"
+      ],
+      "entries_verified": 51
+    },
+    {
+      "version": "9.5.5",
+      "status": "stable",
+      "date": "2016-10-27",
+      "changes": 47,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 47
+    },
+    {
+      "version": "9.5.6",
+      "status": "stable",
+      "date": "2017-02-09",
+      "changes": 56,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 56
+    },
+    {
+      "version": "9.5.7",
+      "status": "stable",
+      "date": "2017-05-11",
+      "changes": 40,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2017-7485",
+        "CVE-2017-7486",
+        "CVE-2017-7547"
+      ],
+      "entries_verified": 40
+    },
+    {
+      "version": "9.5.8",
+      "status": "stable",
+      "date": "2017-08-10",
+      "changes": 56,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7486",
+        "CVE-2017-7546",
+        "CVE-2017-7547",
+        "CVE-2017-7548"
+      ],
+      "entries_verified": 56
+    },
+    {
+      "version": "9.5.9",
+      "status": "stable",
+      "date": "2017-08-31",
+      "changes": 8,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 8
+    },
+    {
+      "version": "9.5.10",
+      "status": "stable",
+      "date": "2017-11-09",
+      "changes": 28,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-12172",
+        "CVE-2017-15098",
+        "CVE-2017-15099"
+      ],
+      "entries_verified": 28
+    },
+    {
+      "version": "9.5.11",
+      "status": "stable",
+      "date": "2018-02-08",
+      "changes": 32,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1053"
+      ],
+      "entries_verified": 32
+    },
+    {
+      "version": "9.5.12",
+      "status": "stable",
+      "date": "2018-03-01",
+      "changes": 7,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058"
+      ],
+      "entries_verified": 7
+    },
+    {
+      "version": "9.5.13",
+      "status": "stable",
+      "date": "2018-05-10",
+      "changes": 38,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 38
+    },
+    {
+      "version": "9.5.14",
+      "status": "stable",
+      "date": "2018-08-09",
+      "changes": 30,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-10915",
+        "CVE-2018-10925"
+      ],
+      "entries_verified": 30
+    },
+    {
+      "version": "9.5.15",
+      "status": "stable",
+      "date": "2018-11-08",
+      "changes": 52,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 52
+    },
+    {
+      "version": "9.5.16",
+      "status": "stable",
+      "date": "2019-02-14",
+      "changes": 39,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 39
+    },
+    {
+      "version": "9.5.17",
+      "status": "stable",
+      "date": "2019-05-09",
+      "changes": 31,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2019-10130"
+      ],
+      "entries_verified": 31
+    },
+    {
+      "version": "9.5.18",
+      "status": "stable",
+      "date": "2019-06-20",
+      "changes": 14,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 14
+    },
+    {
+      "version": "9.5.19",
+      "status": "stable",
+      "date": "2019-08-08",
+      "changes": 20,
+      "migration": 0,
+      "cves": [
+        "CVE-2007-2138",
+        "CVE-2019-10208"
+      ],
+      "entries_verified": 20
+    },
+    {
+      "version": "9.5.20",
+      "status": "stable",
+      "date": "2019-11-14",
+      "changes": 50,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 50
+    },
+    {
+      "version": "9.5.21",
+      "status": "stable",
+      "date": "2020-02-13",
+      "changes": 29,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 29
+    },
+    {
+      "version": "9.5.22",
+      "status": "stable",
+      "date": "2020-05-14",
+      "changes": 33,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 33
+    },
+    {
+      "version": "9.5.23",
+      "status": "stable",
+      "date": "2020-08-13",
+      "changes": 25,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058",
+        "CVE-2020-14350"
+      ],
+      "entries_verified": 25
+    },
+    {
+      "version": "9.5.24",
+      "status": "stable",
+      "date": "2020-11-12",
+      "changes": 34,
+      "migration": 0,
+      "cves": [
+        "CVE-2020-25694",
+        "CVE-2020-25695",
+        "CVE-2020-25696"
+      ],
+      "entries_verified": 34
+    },
+    {
+      "version": "9.5.25",
+      "status": "stable",
+      "date": "2021-02-11",
+      "changes": 32,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 32
+    },
+    {
+      "version": "9.6.0",
+      "status": "stable",
+      "date": "2016-09-29",
+      "changes": 201,
+      "migration": 13,
+      "cves": [],
+      "entries_verified": 214
+    },
+    {
+      "version": "9.6.1",
+      "status": "stable",
+      "date": "2016-10-27",
+      "changes": 28,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 28
+    },
+    {
+      "version": "9.6.2",
+      "status": "stable",
+      "date": "2017-02-09",
+      "changes": 76,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 76
+    },
+    {
+      "version": "9.6.3",
+      "status": "stable",
+      "date": "2017-05-11",
+      "changes": 48,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2017-7485",
+        "CVE-2017-7486",
+        "CVE-2017-7547"
+      ],
+      "entries_verified": 48
+    },
+    {
+      "version": "9.6.4",
+      "status": "stable",
+      "date": "2017-08-10",
+      "changes": 60,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7486",
+        "CVE-2017-7546",
+        "CVE-2017-7547",
+        "CVE-2017-7548"
+      ],
+      "entries_verified": 60
+    },
+    {
+      "version": "9.6.5",
+      "status": "stable",
+      "date": "2017-08-31",
+      "changes": 10,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 10
+    },
+    {
+      "version": "9.6.6",
+      "status": "stable",
+      "date": "2017-11-09",
+      "changes": 38,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-12172",
+        "CVE-2017-15098",
+        "CVE-2017-15099"
+      ],
+      "entries_verified": 38
+    },
+    {
+      "version": "9.6.7",
+      "status": "stable",
+      "date": "2018-02-08",
+      "changes": 37,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1053"
+      ],
+      "entries_verified": 37
+    },
+    {
+      "version": "9.6.8",
+      "status": "stable",
+      "date": "2018-03-01",
+      "changes": 8,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058"
+      ],
+      "entries_verified": 8
+    },
+    {
+      "version": "9.6.9",
+      "status": "stable",
+      "date": "2018-05-10",
+      "changes": 43,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1115"
+      ],
+      "entries_verified": 43
+    },
+    {
+      "version": "9.6.10",
+      "status": "stable",
+      "date": "2018-08-09",
+      "changes": 33,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-10915",
+        "CVE-2018-10925"
+      ],
+      "entries_verified": 33
+    },
+    {
+      "version": "9.6.11",
+      "status": "stable",
+      "date": "2018-11-08",
+      "changes": 57,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 57
+    },
+    {
+      "version": "9.6.12",
+      "status": "stable",
+      "date": "2019-02-14",
+      "changes": 44,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 44
+    },
+    {
+      "version": "9.6.13",
+      "status": "stable",
+      "date": "2019-05-09",
+      "changes": 33,
+      "migration": 0,
+      "cves": [
+        "CVE-2017-7484",
+        "CVE-2019-10130"
+      ],
+      "entries_verified": 33
+    },
+    {
+      "version": "9.6.14",
+      "status": "stable",
+      "date": "2019-06-20",
+      "changes": 17,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 17
+    },
+    {
+      "version": "9.6.15",
+      "status": "stable",
+      "date": "2019-08-08",
+      "changes": 26,
+      "migration": 0,
+      "cves": [
+        "CVE-2007-2138",
+        "CVE-2019-10208"
+      ],
+      "entries_verified": 26
+    },
+    {
+      "version": "9.6.16",
+      "status": "stable",
+      "date": "2019-11-14",
+      "changes": 53,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 53
+    },
+    {
+      "version": "9.6.17",
+      "status": "stable",
+      "date": "2020-02-13",
+      "changes": 33,
+      "migration": 0,
+      "cves": [
+        "CVE-2020-1720"
+      ],
+      "entries_verified": 33
+    },
+    {
+      "version": "9.6.18",
+      "status": "stable",
+      "date": "2020-05-14",
+      "changes": 38,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 38
+    },
+    {
+      "version": "9.6.19",
+      "status": "stable",
+      "date": "2020-08-13",
+      "changes": 27,
+      "migration": 0,
+      "cves": [
+        "CVE-2018-1058",
+        "CVE-2020-14350"
+      ],
+      "entries_verified": 27
+    },
+    {
+      "version": "9.6.20",
+      "status": "stable",
+      "date": "2020-11-12",
+      "changes": 36,
+      "migration": 0,
+      "cves": [
+        "CVE-2020-25694",
+        "CVE-2020-25695",
+        "CVE-2020-25696"
+      ],
+      "entries_verified": 36
+    },
+    {
+      "version": "9.6.21",
+      "status": "stable",
+      "date": "2021-02-11",
+      "changes": 36,
+      "migration": 0,
+      "cves": [],
+      "entries_verified": 36
+    },
+    {
+      "version": "9.6.22",
+      "status": "stable",
+      "date": "2021-05-13",
+      "changes": 23,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-32027",
+        "CVE-2021-32028"
+      ],
+      "entries_verified": 23
+    },
+    {
+      "version": "9.6.23",
+      "status": "stable",
+      "date": "2021-08-12",
+      "changes": 47,
+      "migration": 0,
+      "cves": [
+        "CVE-2006-2313",
+        "CVE-2021-3449"
+      ],
+      "entries_verified": 47
+    },
+    {
+      "version": "9.6.24",
+      "status": "stable",
+      "date": "2021-11-11",
+      "changes": 40,
+      "migration": 0,
+      "cves": [
+        "CVE-2021-23214",
+        "CVE-2021-23222"
+      ],
+      "entries_verified": 40
+    },
     {
       "version": "10.0",
       "status": "stable",

@@ -16,36 +16,42 @@ from django.core.management.base import BaseCommand, CommandError
 from pgweb.core.models import Version
 from pgweb.docs.compare_data import (
     FORMAT_VERSION, PARSER_VERSION, UNRELEASED_VERSIONS, commit_aliases,
-    calibrate_source_entries, enrich_source_commits, parse_release, sgml_commit_entries,
+    branch_key, calibrate_source_entries, enrich_source_commits, parse_release, sgml_commit_entries,
 )
 from pgweb.docs.models import DocPage
 
 
-RELEASE_FILE = re.compile(r'^release-(\d+)(?:-(\d+))?\.html$')
+RELEASE_FILE = re.compile(r'^release-(9-[0-6]|[1-9]\d+)(?:-(\d+))?\.html$')
+
+
+def major_string(tree):
+    return str(int(tree)) if tree >= 10 else str(tree)
 
 
 def build_snapshot(pgdoc_root=None):
-    versions = {int(version.tree): version for version in Version.objects.filter(tree__gte=10)}
+    versions = {major_string(version.tree): version for version in Version.objects.filter(tree__gte=9)}
     if not versions:
-        raise CommandError('No PostgreSQL >= 10 version metadata is loaded')
+        raise CommandError('No PostgreSQL >= 9.0 version metadata is loaded')
     devel = Version.objects.filter(tree=0).first()
     documents = {}
     for page in DocPage.objects.filter(file__startswith='release-').exclude(content__isnull=True).iterator():
         match = RELEASE_FILE.fullmatch(page.file)
-        if not match or int(match.group(1)) < 10:
+        if not match:
             continue
-        major, minor = int(match.group(1)), int(match.group(2) or 0)
+        major, minor = match.group(1).replace('-', '.'), int(match.group(2) or 0)
         version = '{}.{}'.format(major, minor)
         if version in UNRELEASED_VERSIONS:
             continue
-        native = int(page.version_id) == major
+        native = major_string(page.version_id) == major
         dev_page = page.version_id == 0 and major not in versions
         if not native and not dev_page:
             continue
         documents[version] = (page, major, minor, dev_page)
+    highest = max(versions, key=branch_key)
+    expected_majors = ['9.' + str(part) for part in range(7)] + [str(major) for major in range(10, int(highest.split('.')[0]) + 1)]
     errors = [
         'Missing version metadata: ' + str(major)
-        for major in range(10, max(versions) + 1) if major not in versions
+        for major in expected_majors if branch_key(major) <= branch_key(highest) and major not in versions
     ]
     for major, metadata in versions.items():
         expected = [0] if metadata.testing else range(metadata.latestminor + 1)
@@ -54,7 +60,7 @@ def build_snapshot(pgdoc_root=None):
             if version not in documents and version not in UNRELEASED_VERSIONS:
                 errors.append('Missing Chinese release note: ' + version)
     releases = []
-    for version, (page, major, minor, dev_page) in sorted(documents.items(), key=lambda row: (row[1][1], row[1][2])):
+    for version, (page, major, minor, dev_page) in sorted(documents.items(), key=lambda row: (branch_key(row[1][1]), row[1][2])):
         metadata = devel if dev_page else versions.get(major)
         if metadata is None:
             errors.append('Missing version metadata: ' + version)
@@ -87,8 +93,11 @@ def build_snapshot(pgdoc_root=None):
     canonical_records, canonical_texts, canonical_entries = [], [], {}
     if pgdoc_root is not None:
         root = Path(pgdoc_root)
-        for major in sorted({release['major'] for release in releases}, key=int):
-            relative = Path('zh') / major / ('release-' + major + '.sgml')
+        for major in sorted({release['major'] for release in releases}, key=branch_key):
+            # The native 9.2 tree retains English release notes; the later
+            # 9.3 manual carries the complete translation of the same source.
+            translation_tree = '9.3' if major == '9.2' else major
+            relative = Path('zh') / translation_tree / ('release-' + major + '.sgml')
             source = root / relative
             if source.is_file():
                 body = source.read_bytes()
@@ -131,7 +140,7 @@ def build_snapshot(pgdoc_root=None):
         'generated_at': datetime.now(timezone.utc).isoformat(timespec='seconds'),
         'source': 'PGSQL.CC PostgreSQL 中文手册发布说明',
         'source_url': '/docs/release/',
-        'minimum_major': 10,
+        'minimum_major': '9.0',
         'excluded_unreleased': sorted(UNRELEASED_VERSIONS),
         'backport_sources': source_records,
         'backport_commit_count': len(aliases),

@@ -22,14 +22,15 @@
 .compare .compare-eyebrow { color: var(--compare-blue); font-size: .67rem; font-weight: 700; letter-spacing: .13em; margin: 0 0 .75rem; }
 #pg-compare .compare-hero h1 { font-size: clamp(1.6rem, 2.6vw, 2.25rem); line-height: 1.35; font-weight: 750; letter-spacing: -.035em; margin: 0 0 .75rem; border: 0; }
 .compare .compare-lead { color: var(--pg-muted); font-size: .93rem; line-height: 1.9; margin-bottom: 1.25rem; }
-.compare-form { display: grid; grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr) auto; align-items: end; gap: 1rem; padding: 1.3rem; border: 1px solid var(--pg-line); border-radius: 12px; background: var(--pg-surface); box-shadow: 0 5px 20px rgba(30, 75, 105, .035); }
+.compare-form { display: grid; grid-template-columns: minmax(0, 1fr) 32px minmax(0, 1fr) auto; align-items: start; gap: 1rem; padding: 1.3rem; border: 1px solid var(--pg-line); border-radius: 12px; background: var(--pg-surface); box-shadow: 0 5px 20px rgba(30, 75, 105, .035); }
 .compare-select { min-width: 0; }
-.compare-select label { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .6rem; font-size: .8rem; font-weight: 650; }
+.compare-select label { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .6rem; font-size: .8rem; font-weight: 650; line-height: 1.25rem; }
 .compare-select label span { color: var(--pg-muted); font-size: .68rem; font-weight: 400; }
 .compare-select select { width: 100%; height: 46px; padding: 0 .75rem; border: 1px solid var(--pg-line-strong, var(--pg-line)); border-radius: 6px; background: var(--pg-bg, var(--pg-surface)); color: var(--pg-ink); font-size: .98rem; cursor: pointer; }
-.compare-direction { align-self: end; line-height: 46px; text-align: center; color: var(--pg-muted); font-size: 1.35rem; }
+.compare-direction { margin-top: 1.85rem; line-height: 46px; text-align: center; color: var(--pg-muted); font-size: 1.35rem; }
 .compare-submit { display: flex; align-items: center; justify-content: center; gap: 1.3rem; height: 46px; padding: 0 1.25rem; border: 1px solid #336791; border-radius: 6px; background: #336791; color: #fff; font: inherit; font-size: .83rem; font-weight: 600; cursor: pointer; }
 .compare-submit:hover { background: #275677; }
+.compare-submit { margin-top: 1.85rem; }
 .compare-submit:disabled { cursor: default; opacity: .5; }
 .compare .compare-form-note { color: var(--pg-muted); font-size: .72rem; margin: .8rem 0 0; line-height: 1.7; }
 .compare-paste { margin-top: .8rem; font-size: .73rem; color: var(--pg-muted); }
@@ -195,3 +196,11 @@
 #pg-compare .compare-variants > summary { cursor: pointer; font-weight: 600; }
 #pg-compare .compare-variants section { margin-top: 1rem; }
 #pg-compare .compare-variants h4 { font-size: 1rem; line-height: 1.6; }
+#pg-compare .compare-release-open { display: inline-block; margin-top: .5rem; font-size: .72rem; }
+#pg-compare .compare-release-links { display: flex; flex-wrap: wrap; gap: .5rem 1rem; }
+#pg-compare .compare-relations { margin: 1rem 0; border-top: 1px solid var(--pg-line); padding-top: .75rem; }
+#pg-compare .compare-relations > summary { cursor: pointer; font-weight: 600; }
+#pg-compare .compare-relations ul { margin: .75rem 0; padding-left: 1.2rem; }
+#pg-compare .compare-relations li { margin: .5rem 0; line-height: 1.7; }
+#pg-compare .compare-relation-kind { display: inline-block; color: var(--pg-muted); font-size: .72rem; margin-right: .5rem; }
+#pg-compare .compare-relation-note { color: var(--pg-muted); font-size: .75rem; }
