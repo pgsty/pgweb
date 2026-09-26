@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup, Tag
 
 from .taxonomy import normalize_name
 
-PIPELINE_VERSION = '3'
+PIPELINE_VERSION = '4'
 SECTIONS = ('chapter', 'sect1', 'sect2', 'sect3', 'sect4', 'sect5', 'refentry',
             'refsect1', 'refsect2', 'refsect3', 'appendix', 'part', 'preface')
 TAGS = frozenset(('a', 'p', 'div', 'span', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'code', 'pre',
@@ -38,6 +38,42 @@ GUC_ALIASES = {
 def text(node):
     # Do not insert spaces at every inline tag in Chinese prose.
     return SPACE.sub(' ', node.get_text() if isinstance(node, Tag) else str(node)).strip().strip('#').strip()
+
+
+# Full-width neighbour rule, mirroring the canonical core in
+# ~/pgsty/pgdoc/bin/cjk_spacing.py: a separator space must not render
+# between two full-width characters (Han, CJK punctuation, curly quotes);
+# full-width punctuation never takes an adjacent space; Han<->Latin keeps
+# its separator (盘古之白); em dash and ellipsis keep theirs.
+_FW = re.compile('[\u3400-\u9fff\uf900-\ufaff\u3001-\u303f\uff01-\uff60\uffe0-\uffe5\u201c\u201d\u2018\u2019\u301d\u301e]')
+_STRICT = re.compile('[\u3001\u3002\u3008\u3009\u300a\u300b\u3010\u3011\u3014\u3015\u3017-\u301c\u301f\u3030\u3031\u303b-\u303f\uff01-\uff0f\uff1a-\uff1f\uff3b-\uff40\uff5b-\uff60\uffe0-\uffe5]')
+
+
+def _cjk_glue(left, right):
+    """True when joining two text segments without a separator: the two
+    edge characters would otherwise render a spurious CJK space."""
+    if not left or not right:
+        return False
+    if _STRICT.match(left) or _STRICT.match(right):
+        return True
+    return bool(_FW.match(left) and _FW.match(right))
+
+
+def _join_body(texts):
+    """Join extracted text segments, gluing full-width neighbours directly
+    so snippets never show a spurious space at segment boundaries."""
+    body = ''
+    for t in texts:
+        if not t:
+            continue
+        f = next((c for c in t if not c.isspace()), None)
+        if body and f is not None:
+            l = next((c for c in reversed(body) if not c.isspace()), None)
+            body += '' if _cjk_glue(l, f) else '\n'
+        elif body:
+            body += '\n'
+        body += t
+    return body
 
 
 def title_text(node):
@@ -149,7 +185,7 @@ def extract_page(filename, title, content, version):
             return
         anchor = anchor_for(node)
         nodes = nodes or [node]
-        body = '\n'.join(text(n) for n in nodes)
+        body = _join_body(text(n) for n in nodes)
         if not body:
             return
         name_key = normalize_name(name)
