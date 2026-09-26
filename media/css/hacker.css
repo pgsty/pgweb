@@ -1,0 +1,42 @@
+#hacker { color: var(--pg-ink); }
+#hacker .hacker-lead { max-width: 58rem; color: var(--pg-muted); line-height: 1.8; }
+#hacker .hacker-filters { display: flex; flex-wrap: wrap; gap: .8rem; align-items: end; margin: 1.8rem 0 1rem; padding: 1rem 0; border-block: 1px solid var(--pg-line); }
+#hacker .hacker-filters > div { flex: 1 1 10rem; min-width: 0; }
+#hacker .hacker-filters .hacker-search { flex: 2 1 16rem; }
+#hacker label { display: block; font-size: .8rem; color: var(--pg-muted); margin-bottom: .3rem; }
+#hacker input, #hacker select, #hacker button { height: 2.6rem; border: 1px solid var(--pg-line-strong); border-radius: var(--pg-radius-sm); background: var(--pg-surface); color: var(--pg-ink); padding: .4rem .65rem; }
+#hacker input, #hacker select { width: 100%; }
+#hacker button { cursor: pointer; padding-inline: 1.2rem; color: var(--pg-link); }
+#hacker :focus-visible { outline: 2px solid var(--pg-link); outline-offset: 3px; }
+#hacker .hacker-count, #hacker .hacker-meta, #hacker .hacker-source { color: var(--pg-muted); font-size: .84rem; }
+#hacker .hacker-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+#hacker .hacker-card { display: flex; flex-direction: column; padding: 1.25rem; border: 1px solid var(--pg-line); border-radius: var(--pg-radius); background: var(--pg-surface); min-width: 0; }
+#hacker .hacker-card-head { display: flex; align-items: center; gap: .85rem; color: var(--pg-heading); text-decoration: none; }
+#hacker .hacker-card h2 { font-size: 1.05rem; margin: 0 0 .3rem; line-height: 1.4; overflow-wrap: anywhere; }
+#hacker .hacker-avatar { width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%; object-fit: cover; background: var(--pg-wash); border: 1px solid var(--pg-line); }
+#hacker .hacker-initial { display: inline-flex; align-items: center; justify-content: center; color: var(--pg-link); font-size: 1.7rem; }
+#hacker .hacker-excerpt { color: var(--pg-ink-2); font-size: .88rem; line-height: 1.65; margin: 1rem 0; overflow-wrap: anywhere; }
+#hacker .hacker-more { margin-top: auto; font-size: .84rem; }
+#hacker .hacker-pager { display: flex; flex-wrap: wrap; gap: .45rem; justify-content: center; padding: 1.8rem 0; }
+#hacker .hacker-pager a, #hacker .hacker-pager span { padding: .35rem .75rem; border: 1px solid var(--pg-line); border-radius: var(--pg-radius-sm); }
+#hacker .hacker-pager [aria-current] { background: var(--pg-wash); color: var(--pg-heading); font-weight: 600; }
+#hacker .hacker-profile-head { display: flex; gap: 1.5rem; align-items: center; margin: 1.5rem 0 2rem; }
+#hacker .hacker-profile-head h1 { margin: 0 0 .6rem; }
+#hacker .hacker-avatar-large { width: 128px; height: 128px; font-size: 3rem; }
+#hacker .hacker-profile-identity { min-width: 0; }
+#hacker .hacker-profile-head p { margin: .45rem 0 0; }
+#hacker .hacker-social { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .7rem; }
+#hacker .hacker-social a { display: inline-flex; align-items: center; justify-content: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--pg-line); border-radius: 50%; color: var(--pg-link); text-decoration: none; }
+#hacker .hacker-social a:hover { background: var(--pg-wash); border-color: var(--pg-link); }
+#hacker .hacker-role { color: var(--pg-ink-2); font-size: .9rem; }
+#hacker .hacker-profile-body { max-width: 54rem; padding-top: 1.5rem; border-top: 1px solid var(--pg-line); }
+#hacker .hacker-review-notes { border-left: 3px solid var(--pg-line-strong); padding: .6rem 1rem; margin-bottom: 1.5rem; color: var(--pg-muted); background: var(--pg-wash); font-size: .9rem; }
+#hacker .hacker-prose { line-height: 1.9; overflow-wrap: anywhere; }
+#hacker .hacker-profile-body .hacker-source { margin-top: 2rem; line-height: 1.8; }
+@media (max-width: 1150px) { #hacker .hacker-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 760px) {
+  #hacker .hacker-grid { grid-template-columns: 1fr; }
+  #hacker .hacker-profile-head { gap: 1rem; }
+  #hacker .hacker-avatar-large { width: 80px; height: 80px; }
+  #hacker .hacker-profile-head h1 { font-size: 1.6rem; }
+}

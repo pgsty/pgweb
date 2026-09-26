@@ -1,0 +1,22 @@
+{% extends "hacker/base.html" %}
+{% block hacker_content %}
+<p class="hacker-back"><a href="/developer/hacker/">← 开发者大全</a></p>
+<header class="hacker-profile-head">
+  {% if profile.avatar_sha256 %}<img class="hacker-avatar hacker-avatar-large" src="{{ profile.get_absolute_url }}avatar/?v={{ profile.avatar_sha256|slice:':12' }}" width="128" height="128" alt="{{ profile.name }} 的头像">{% else %}<span class="hacker-avatar hacker-avatar-large hacker-initial" aria-hidden="true">{{ profile.name|first }}</span>{% endif %}
+  <div class="hacker-profile-identity">
+    <h1>{{ profile.name }}</h1>
+    {% if emails or links %}<div class="hacker-social">
+      {% for entry in emails %}<a href="mailto:{{ entry.email }}" title="{{ entry.email }}" aria-label="邮箱：{{ entry.email }}"><i class="fas fa-envelope" aria-hidden="true"></i></a>{% endfor %}
+      {% for link in links %}<a href="{{ link.url }}" title="{{ link.label }}" aria-label="{{ link.label }}" rel="noopener noreferrer"><i class="{{ link.icon }}" aria-hidden="true"></i></a>{% endfor %}
+    </div>{% endif %}
+    {% if profile.zh.position %}<p class="hacker-position">{{ profile.zh.position }}</p>{% endif %}
+    {% if organization or country or profile.zh.location %}<p class="hacker-meta">{% if organization_url %}<a href="{{ organization_url }}">{{ organization }}</a>{% else %}{{ organization }}{% endif %}{% if organization and country or organization and profile.zh.location %} · {% endif %}{% if profile.zh.location %}{{ profile.zh.location }}{% else %}{{ country }}{% endif %}</p>{% endif %}
+    {% if roles %}<p class="hacker-role">{% for role in roles %}{% if not forloop.first %} · {% endif %}{{ role }}{% endfor %}</p>{% endif %}
+  </div>
+</header>
+{% if profile.zh.review_note %}<p class="hacker-review-notes">{{ profile.zh.review_note }}</p>{% endif %}
+<div class="hacker-profile-body">
+  {% if profile.zh.bio %}<div class="hacker-prose">{{ profile.zh.bio|linebreaks }}</div>{% endif %}
+  {% if sources %}<p class="hacker-source">来源：{% for source in sources %}{% if not forloop.first %} · {% endif %}<a href="{{ source.url }}" rel="noopener noreferrer">{{ source.label }}</a>{% endfor %}</p>{% endif %}
+</div>
+{% endblock %}

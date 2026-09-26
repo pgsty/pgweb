@@ -124,6 +124,7 @@ sitenav = {
         {'title': '开发者', 'link': '/developer/'},
         {'title': '核心团队', 'link': '/developer/core/'},
         {'title': '提交者', 'link': '/developer/committers/'},
+        {'title': '开发者大全', 'link': '/developer/hacker/'},
         {'title': '路线图', 'link': '/developer/roadmap/'},
         {'title': '编码', 'link': '/developer/coding/'},
         {'title': 'CommitFest', 'link': 'https://commitfest.postgresql.org'},
@@ -267,7 +268,7 @@ def _get_doc_majors():
 
 # 本站独有的栏目，上游没有对应页面。给它们拼一个 postgresql.org 地址只会得到 404。
 LOCAL_ONLY_SECTIONS = ('/docs/sqlstate/', '/docs/catalog/', '/docs/guc/', '/docs/waitevent/',
-                       '/docs/sql/', '/docs/func/', '/docs/compare/', '/info/', '/ext/', '/e/', '/nls/')
+                       '/docs/sql/', '/docs/func/', '/docs/compare/', '/info/', '/ext/', '/e/', '/nls/', '/developer/hacker/')
 
 
 def _source_url(path):

@@ -1,0 +1,32 @@
+{% extends "hacker/base.html" %}
+{% block hacker_content %}
+<h1>PostgreSQL 开发者大全</h1>
+<p class="hacker-lead">认识 PostgreSQL 背后的开发者与贡献者。已收录 {{ total }} 位，涵盖人物简介、技术贡献与公开链接。</p>
+<form class="hacker-filters" method="get" action="/developer/hacker/" role="search">
+  <div class="hacker-search"><label for="hacker-q">搜索开发者</label><input id="hacker-q" type="search" name="q" value="{{ query }}" maxlength="200" placeholder="姓名、简介、组织或公开邮箱" data-pg-slash-target></div>
+  <div><label for="hacker-organization">组织</label><select id="hacker-organization" name="organization"><option value="">全部组织</option>{% for name in organizations %}<option value="{{ name }}"{% if selected.organization == name %} selected{% endif %}>{{ name }}</option>{% endfor %}</select></div>
+  <div><label for="hacker-country">国家 / 地区</label><select id="hacker-country" name="country"><option value="">全部国家 / 地区</option>{% for item in countries %}<option value="{{ item.code }}"{% if selected.country == item.code %} selected{% endif %}>{{ item.label }}</option>{% endfor %}</select></div>
+  <button type="submit">筛选</button>
+  {% if query or selected.organization or selected.country %}<a href="/developer/hacker/">重置</a>{% endif %}
+</form>
+<p class="hacker-count">{{ result_count }} 位开发者{% if page.paginator.num_pages > 1 %} · 第 {{ page.number }} / {{ page.paginator.num_pages }} 页{% endif %}</p>
+<div class="hacker-grid">
+{% for profile in page %}
+  <article class="hacker-card">
+    <a class="hacker-card-head" href="{{ profile.get_absolute_url }}">
+      {% if profile.avatar_sha256 %}<img class="hacker-avatar" src="{{ profile.get_absolute_url }}avatar/?v={{ profile.avatar_sha256|slice:':12' }}" width="64" height="64" alt="{{ profile.name }} 的头像" loading="lazy">{% else %}<span class="hacker-avatar hacker-initial" aria-hidden="true">{{ profile.name|first }}</span>{% endif %}
+      <div><h2>{{ profile.name }}</h2><span class="hacker-meta">{{ profile.organization_label }}{% if profile.organization_label and profile.country_label %} · {% endif %}{{ profile.country_label }}</span></div>
+    </a>
+    <p class="hacker-excerpt">{% if profile.zh.bio %}{{ profile.zh.bio|truncatechars:220 }}{% else %}查看人物档案与公开链接。{% endif %}</p>
+    <a class="hacker-more" href="{{ profile.get_absolute_url }}">查看档案 <span aria-hidden="true">→</span></a>
+  </article>
+{% empty %}<p class="hacker-empty">没有找到匹配的开发者。试试其他关键词或清除筛选。</p>{% endfor %}
+</div>
+{% if page.paginator.num_pages > 1 %}
+<nav class="hacker-pager" aria-label="开发者大全分页">
+{% if previous_url %}<a href="{{ previous_url }}" rel="prev">上一页</a>{% endif %}
+{% for item in pagination %}{% if item.url %}<a href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.label }}</a>{% else %}<span>{{ item.label }}</span>{% endif %}{% endfor %}
+{% if next_url %}<a href="{{ next_url }}" rel="next">下一页</a>{% endif %}
+</nav>
+{% endif %}
+{% endblock %}

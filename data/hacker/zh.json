@@ -1,0 +1,888 @@
+{
+  "format": 1,
+  "language": "zh",
+  "profiles": [
+    {
+      "source_id": "4",
+      "name": "Amit Kapila",
+      "bio": "PostgreSQL 提交者与主要贡献者，专注于数据库内部实现，包括 SQL 引擎、存储引擎和复制。擅长从零组建研发团队，在数据库内核、公开演讲、项目管理和产品开发方面具有专长。\n\n参与了逻辑复制的缺陷修复与功能增强、并行查询、具备持久性保障的哈希索引以及性能测试。",
+      "position": "",
+      "organization": "Apple",
+      "location": "印度班加罗尔",
+      "review_note": ""
+    },
+    {
+      "source_id": "33",
+      "name": "Andres Freund",
+      "bio": "PostgreSQL 开发者，主要关注可扩展性、复制与可靠性。他从事数据库软件本身的开发，而非数据库管理工作。\n\n作为 PostgreSQL 核心团队成员和提交者，参与了异步 I/O（AIO）、可插拔表访问方法、即时编译（JIT）、逻辑解码和复制等功能的开发，以及性能与可扩展性改进、缺陷修复和代码审查。",
+      "position": "",
+      "organization": "Microsoft",
+      "location": "美国马萨诸塞州西部",
+      "review_note": ""
+    },
+    {
+      "source_id": "3",
+      "name": "Bruce Momjian",
+      "bio": "PostgreSQL 核心团队成员和提交者，负责维护 TODO 列表、编写代码、合入补丁，并经常在技术会议上演讲。\n\n他偏好通过电子邮件沟通，也使用 LinkedIn 方便他人联系。",
+      "position": "",
+      "organization": "EDB",
+      "location": "美国宾夕法尼亚州纽敦斯奎尔",
+      "review_note": ""
+    },
+    {
+      "source_id": "19",
+      "name": "David Rowley",
+      "bio": "PostgreSQL 主要贡献者和提交者，参与了 Memoize、部分聚合、并行聚合、运行时分区裁剪等功能的开发，并改进了分区性能、查询规划器和内存分配器。",
+      "position": "",
+      "organization": "Microsoft",
+      "location": "新西兰基督城",
+      "review_note": ""
+    },
+    {
+      "source_id": "12",
+      "name": "Heikki Linnakangas",
+      "bio": "PostgreSQL 主要贡献者和提交者，参与了两阶段提交支持、空闲空间映射（FSM）与可见性映射（VM）的重构，以及复制、事务、索引等诸多领域的开发。",
+      "position": "",
+      "organization": "Neon",
+      "location": "芬兰赫尔辛基",
+      "review_note": ""
+    },
+    {
+      "source_id": "14",
+      "name": "Lukas Fittl",
+      "bio": "",
+      "position": "",
+      "organization": "pganalyze",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "29",
+      "name": "Michael Paquier",
+      "bio": "PostgreSQL 提交者，参与上游开源项目的开发，也从事 PostgreSQL 相关外部项目的工作。能够使用日语、英语和法语交流技术想法。\n\n主要贡献包括代码审查、缺陷修复、TAP 测试以及 CommitFest 的组织管理。",
+      "position": "",
+      "organization": "Amazon Web Services",
+      "location": "日本东京",
+      "review_note": ""
+    },
+    {
+      "source_id": "17",
+      "name": "Nathan Bossart",
+      "bio": "软件工程师，关注如何扩展并简化复杂的技术环境，以标准化、高效的方式连接现实世界。他尤其感兴趣的是让更多人能够获得实用计算资源的新平台。\n\n作为 PostgreSQL 主要贡献者和提交者，参与了归档、文档、编译器内建函数支持、角色与权限、安全、服务端与客户端程序、共享内存、信号处理及 VACUUM 等领域的改进。",
+      "position": "",
+      "organization": "Amazon Web Services",
+      "location": "美国伊利诺伊州圣路易斯都会区东部",
+      "review_note": ""
+    },
+    {
+      "source_id": "35",
+      "name": "Peter Eisentraut",
+      "bio": "PostgreSQL 专家、开源开发者，也是 PostgreSQL 核心团队成员和提交者。主要从事构建系统、平台移植、文档和国际化工作，并参与了许多其他功能改进。",
+      "position": "",
+      "organization": "EDB",
+      "location": "德国德累斯顿",
+      "review_note": ""
+    },
+    {
+      "source_id": "21",
+      "name": "Robert Haas",
+      "bio": "PostgreSQL 主要贡献者和提交者，是并行查询功能的主要作者，也独立或合作实现了不写 WAL 的表（unlogged table）、快速路径锁、仅索引扫描、增量备份和服务端备份压缩等功能。他还审查并合入了分区、逻辑解码、事件触发器、外部表等功能，创建了 PostgreSQL CommitFest 网站的最初版本。\n\n在 EnterpriseDB（EDB）担任副总裁兼首席数据库架构师，带领团队负责公司的旗舰数据库产品 Advanced Server，以及公司持续向 PostgreSQL 提交的社区贡献。",
+      "position": "",
+      "organization": "EDB",
+      "location": "美国",
+      "review_note": ""
+    },
+    {
+      "source_id": "41",
+      "name": "Thomas Munro",
+      "bio": "专长为软件设计与实现。作为 PostgreSQL 主要贡献者和提交者，参与了并行查询、可串行化事务隔离（SERIALIZABLE）、触发器、恢复与复制、LLVM/JIT、存储与 I/O、操作系统接口和可移植性等领域的功能开发与持续维护，也参与持续集成和 cfbot 的工作。",
+      "position": "",
+      "organization": "Microsoft",
+      "location": "新西兰惠灵顿",
+      "review_note": ""
+    },
+    {
+      "source_id": "16",
+      "name": "Tom Lane",
+      "bio": "PostgreSQL 核心团队的资深成员和提交者，参与数据库开发的各个方面，包括缺陷分析与修复、性能改进，以及模式（schema）等重要新功能的实现。他还负责查询优化器的开发与维护。",
+      "position": "",
+      "organization": "Snowflake Inc",
+      "location": "美国宾夕法尼亚州匹兹堡",
+      "review_note": ""
+    },
+    {
+      "source_id": "30",
+      "name": "Adrien Nayrat",
+      "bio": "2014 年开始接触 PostgreSQL，此后一直从事与这款开源数据库管理系统相关的工作。",
+      "position": "",
+      "organization": "Adrien Nayrat — PostgreSQL 自由职业专家",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "38",
+      "name": "Ahmed Et-tanany",
+      "bio": "全栈软件工程师，拥有十余年 Web 应用和 RESTful API 的设计、开发、部署与维护经验。重视简洁、易维护的代码和高质量测试，致力于解决实际业务问题。\n\n具有较强的责任心和适应能力，热爱学习，乐于在不断变化的环境中攻克复杂问题，推动工作取得实际成效。",
+      "position": "",
+      "organization": "Aiven",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "25",
+      "name": "Aleksander Alekseev",
+      "bio": "2007 年在小型公司 Vitovt 担任系统管理员，开始职业生涯；此后曾在 RuCenter 和 Mail.ru Group（现为 VK Company）担任软件工程师。",
+      "position": "",
+      "organization": "Timescale",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "37",
+      "name": "Alexandra Wang",
+      "bio": "从事数据库内核多个领域的开发，包括查询优化器、查询执行器、存储、分布式事务管理器和性能测试。热衷于为不同工作负载构建高性能数据库。",
+      "position": "",
+      "organization": "EDB",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "11",
+      "name": "Alvaro Herrera",
+      "bio": "PostgreSQL 贡献者和提交者，开发了自动清理（autovacuum）、后台工作进程、BRIN 索引、提交时间戳、保存点、共享行锁和部分分区功能，并合作实现了 DDL 事件触发器、MERGE、XMLTABLE 和 \\crosstabview。还修复了 CLUSTER、增加了共享依赖跟踪、将 autovacuum 整合到服务端、实现了部分表分区 DDL 和 libpq 流水线模式，推动 MERGE 与 REPACK 完成开发，并协助维护项目的在线基础设施。\n\n其个人简介记录了连续 16 年开发 PostgreSQL 新功能的经历，代码进入了当时所有受支持的大版本，运行在全球数百万台服务器上。他也擅长处理数据库损坏问题。",
+      "position": "",
+      "organization": "2ndQuadrant（EDB 旗下公司）",
+      "location": "德国布赖斯高",
+      "review_note": ""
+    },
+    {
+      "source_id": "47",
+      "name": "Amit Langote",
+      "bio": "PostgreSQL 提交者和软件开发者，拥有丰富的数据库内核开发经验。参与实现了声明式表分区，并持续改进分区裁剪、分区性能与可扩展性，也参与了 pg_stat_progress_vacuum 的开发。\n\n目前重点关注执行器与查询性能。自 PostgreSQL 9.6 起，每个大版本都包含他的贡献，季度小版本中也包含他提交的缺陷修复。",
+      "position": "",
+      "organization": "Microsoft",
+      "location": "日本东京",
+      "review_note": ""
+    },
+    {
+      "source_id": "39",
+      "name": "Ashutosh Bapat",
+      "bio": "长期从事数据库服务端内核开发，涉及存储、缓冲区管理、查询处理与优化，在分布式数据库方面有丰富经验。能够适应 Sybase 等大型企业和 EnterpriseDB 等初创公司的不同工作方式，也具有面向各类客户沟通、代表公司参加会议、技术演讲和市场活动的经验。\n\n对 PostgreSQL 的贡献包括基础的分区级连接、高级分区匹配、postgres_fdw 的连接与聚合及排序下推、元组表槽抽象，以及逻辑复制的修复与改进。他还审查了分区、外部数据包装器（FDW）、查询优化和逻辑复制等领域的功能补丁，并参与缺陷修复。",
+      "position": "",
+      "organization": "Microsoft",
+      "location": "印度浦那",
+      "review_note": ""
+    },
+    {
+      "source_id": "10",
+      "name": "Bertrand Drouvot",
+      "bio": "自 1999 年起从事数据库相关工作，也关注容器、云计算与自动化。\n\n作为 PostgreSQL 主要贡献者，参与了多项可观测性改进，包括按后端进程统计 I/O 和 WAL、pg_stat_lock 与 pg_wait_events；还参与了备库逻辑解码、SYSTEM_USER 和 pg_hba.conf 正则表达式支持等功能的开发，以及代码审查和缺陷修复。",
+      "position": "",
+      "organization": "Amazon Web Services",
+      "location": "法国",
+      "review_note": ""
+    },
+    {
+      "source_id": "128",
+      "name": "Chao Li",
+      "bio": "瀚高软件（HighGo）首席研究员，专注于 PostgreSQL。",
+      "position": "",
+      "organization": "Highgo Software",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "8",
+      "name": "Corey Huinker",
+      "bio": "数据库程序员，拥有跨多个行业的十五年以上经验，熟悉 Oracle、PostgreSQL、Snowflake、MySQL、Redshift、SQL Server、Sybase、Db2 和 Informix 等数据库产品。\n\n编写过多个 PostgreSQL 扩展，也向 PostgreSQL 本身贡献过代码。其个人简介还记载了在 AWS 全职参与 PostgreSQL 社区贡献的工作经历。",
+      "position": "",
+      "organization": "Apple",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "28",
+      "name": "Daniel Gustafsson",
+      "bio": "专长包括数据库设计与开发、软件架构与开发、Linux/UNIX、技术文档和开源技术。作为 PostgreSQL 主要贡献者和提交者，参与代码开发及社区推广工作。",
+      "position": "",
+      "organization": "Microsoft",
+      "location": "瑞典斯德哥尔摩",
+      "review_note": ""
+    },
+    {
+      "source_id": "48",
+      "name": "Dave Cramer",
+      "bio": "具有广泛的计算机科学背景，早年在 6802 处理器上学习汇编语言。自 1999 年起维护 PostgreSQL JDBC 驱动，也维护 ODBC 驱动，并向 PL/R 项目贡献代码。",
+      "position": "",
+      "organization": "Amazon Web Services（RDS 开源数据库）",
+      "location": "美国佛罗里达州克莱蒙",
+      "review_note": ""
+    },
+    {
+      "source_id": "40",
+      "name": "David Wheeler",
+      "bio": "具有丰富跨团队架构工作经验的技术专家，注重与产品团队密切协作。",
+      "position": "",
+      "organization": "ClickHouse",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "5",
+      "name": "Dharin Shaht",
+      "bio": "在 GetYourGuide 担任资深软件工程师（Staff Software Engineer），运用 Java、C++ 和 JavaScript 构建可扩展、高效的软件系统，与不同职能的团队合作，改进平台的性能与可靠性。\n\n在 GetYourGuide 的三年多工作中，积累了软件设计与架构经验，支持开发符合业务目标的稳健应用。他重视工程设计与团队协作，希望以此改善用户体验。",
+      "position": "",
+      "organization": "",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "9",
+      "name": "Dmitry Dolgov",
+      "bio": "资深软件工程师，具有扎实的技术和数学背景，在大型系统的设计、开发、部署及性能分析方面有丰富经验。曾向 PostgreSQL、Linux 内核和 GHC 等多个开源项目贡献代码，是活跃的 PostgreSQL 社区成员，也是 Haskell 爱好者。",
+      "position": "",
+      "organization": "Red Hat",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "51",
+      "name": "Etsuro Fujita",
+      "bio": "PostgreSQL 主要贡献者和提交者，为 postgres_fdw 带来了诸多改进。其个人简介记载的工作经历包括担任 NTT 经理。",
+      "position": "",
+      "organization": "Amazon Web Services",
+      "location": "日本",
+      "review_note": ""
+    },
+    {
+      "source_id": "1",
+      "name": "Euler Taveira",
+      "bio": "EDB 软件开发工程师、PostgreSQL 贡献者，经常在技术会议上演讲。",
+      "position": "",
+      "organization": "EDB",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "7",
+      "name": "Florents Tselai",
+      "bio": "构建数据与人工智能工具，通常以 PostgreSQL 为基础。工作横跨数据库工程、人工智能、网络爬取和数据新闻等领域，结合研究、工程实践与团队领导工作，也在 PostgreSQL 内核和扩展开发方面拥有深入的实战经验。\n\n他创建了一个追踪希腊政府支出的公共工具，面向记者、政治人士及关心公共事务的公民。",
+      "position": "",
+      "organization": "自由职业",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "34",
+      "name": "Fujii Masao",
+      "bio": "拥有二十余年经验的数据库工程师，为多个项目提供过技术支持与咨询，包括从商业数据库迁移到 PostgreSQL，以及对可靠性要求极高的银行核心系统。\n\n作为 PostgreSQL 提交者和主要贡献者，参与了流复制、同步复制等功能的开发与增强，希望继续运用经验，推动数据库工程的创新与效率提升。",
+      "position": "",
+      "organization": "NTT Data",
+      "location": "日本",
+      "review_note": ""
+    },
+    {
+      "source_id": "18",
+      "name": "Gilles Darold",
+      "bio": "PostgreSQL 数据库管理员与开发者。",
+      "position": "",
+      "organization": "HexaCluster",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "20",
+      "name": "Gregory Burd",
+      "bio": "拥有 30 年经验的资深软件工程师，专注后端开发。主要研究和工作领域包括关系型、文档型和键值型等数据库，Berkeley DB、LMDB、Bitcask、LevelDB 等核心存储引擎，以及 Riak、Dynamo 等分布式系统。\n\n曾为 Berkeley DB、OpenLDAP、FreeBSD 等开源项目作出贡献，了解知识产权法律、开源许可和社区建设。也喜爱 DevOps，使用 Terraform 等工具，并关注软件以产品或服务形式交付时的商业问题；既能带领团队，也能作为独立贡献者开展工作。",
+      "position": "",
+      "organization": "Amazon Web Services (AWS)",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "26",
+      "name": "Harinath Kanchu",
+      "bio": "拥有丰富的软件开发经验，涉及 Web 应用、移动应用、大型软件系统，以及 Unix/Linux 环境下的开发。熟悉分布式与并行系统、信息检索、网络、数据流水线、微服务架构、REST API、缓存、负载均衡、系统扩展与部署，也具备数据库、索引、MVC 设计模式、ORM 和作业调度方面的经验。",
+      "position": "",
+      "organization": "Apple",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "6",
+      "name": "Hayato Kuroda",
+      "bio": "PostgreSQL 贡献者，拥有七年以上 PostgreSQL 工程经验，参与过多项功能改进，目前重点关注逻辑复制。其贡献见于 PostgreSQL 提交记录与发行说明，也曾在国际会议上发表技术演讲。擅长 C 语言编程、调试、系统性能分析、数据库及研发工作。",
+      "position": "",
+      "organization": "PostgreSQL 全球开发组",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "36",
+      "name": "Ibrar Ahmed",
+      "bio": "pgEdge 首席工程师，在 PostgreSQL 领域拥有 19 年以上经验。",
+      "position": "",
+      "organization": "pgEdge",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "43",
+      "name": "Ilia Evdokimov",
+      "bio": "高级软件工程师，专长为系统级开发与数据库内部实现，主要关注 PostgreSQL 查询规划器的行为、性能优化和底层工具。已有多项补丁被 PostgreSQL 核心代码接纳，也经常审阅社区补丁、撰写技术提案，并在 PgDay、PgBootcamp 等 PostgreSQL 活动上演讲。\n\n拥有计算机科学硕士学位和六年以上工作经验，是 IEEE 高级会员。通过深入研究规划器内部机制与代价估算，优化复杂数据库系统；热衷开源开发和系统性能研究，目前也在深入探索不同数据库管理系统的查询优化。",
+      "position": "",
+      "organization": "Tantor Labs",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "50",
+      "name": "Jacob Champion",
+      "bio": "软件工程师，拥有十余年的软件开发与维护经验。",
+      "position": "",
+      "organization": "EDB",
+      "location": "美国",
+      "review_note": ""
+    },
+    {
+      "source_id": "46",
+      "name": "Jakub Wartak",
+      "bio": "持有 Oracle Certified Master 12c 和 Oracle Certified Master 11g 认证。",
+      "position": "",
+      "organization": "EDB",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "24",
+      "name": "Joao Foltran",
+      "bio": "注重成果与客户需求，持续探索任务自动化的方法。",
+      "position": "",
+      "organization": "PlanetScale",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "31",
+      "name": "Jonathan Katz",
+      "bio": "商业技术领域的管理者、连续创业者和团队建设者，也是 PostgreSQL 爱好者、社区贡献者与开源倡导者。关注 PostgreSQL 与 Kubernetes，担任非营利组织董事，使用 Python、Go，也会一些 JavaScript。\n\n参与 PostgreSQL 项目治理，包括董事会与委员会工作；通过新闻稿、活动组织和网站内容开展项目推广，也参与补丁开发与审阅，是 pgvector 的贡献者。",
+      "position": "",
+      "organization": "Databricks",
+      "location": "纽约州纽约市",
+      "review_note": ""
+    },
+    {
+      "source_id": "15",
+      "name": "Kai Wagner",
+      "bio": "信奉“完成比完美更重要”。",
+      "position": "",
+      "organization": "Percona",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "44",
+      "name": "Laurenz Albe",
+      "bio": "CYBERTEC 高级顾问与支持工程师，自 2006 年起使用 PostgreSQL 并向项目贡献代码。开发了 oracle_fdw，现维护 oracle_fdw 与 pgreplay；对 PostgreSQL 核心的贡献包括通过 LDAP 查询连接参数，以及 passwordcheck 扩展模块。他也活跃于 Stack Overflow 和邮件列表。\n\n拥有维也纳大学数学硕士学位和维也纳工业大学计算机科学硕士学位。闲暇时喜欢给孩子们读书，并思考语言的起源。",
+      "position": "",
+      "organization": "Cybertec",
+      "location": "奥地利",
+      "review_note": ""
+    },
+    {
+      "source_id": "49",
+      "name": "Masahiko Sawada",
+      "bio": "参与 PostgreSQL 可见性映射改进（又称冻结映射）、并行 VACUUM、VACUUM 故障保护机制、TidStore 及逻辑复制改进，也从事缺陷修复和补丁审阅。",
+      "position": "",
+      "organization": "Amazon Web Services",
+      "location": "美国华盛顿州",
+      "review_note": ""
+    },
+    {
+      "source_id": "27",
+      "name": "Matthias van de Meent",
+      "bio": "",
+      "position": "",
+      "organization": "Databricks",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "2",
+      "name": "Melanie Plageman",
+      "bio": "热衷于解决有趣的技术问题，编写易于维护的代码与测试，帮助新贡献者参与开发。近期主要改进 PostgreSQL 的 VACUUM，也在会议上讲解数据库内部机制，并举办开源贡献工作坊。\n\n主要贡献包括 pg_stat_io、VACUUM 性能优化、并行哈希全外连接与右外连接，以及缺陷修复、补丁审阅和代码重构；也参与 PGConf.dev 的组织工作。",
+      "position": "",
+      "organization": "Microsoft",
+      "location": "美国费城",
+      "review_note": ""
+    },
+    {
+      "source_id": "78",
+      "name": "Peter Geoghegan",
+      "bio": "参与 PostgreSQL 多项功能的开发与审阅，近期重点关注标准 B-tree 索引访问方法和 VACUUM。在并发控制、日志与恢复、元组排序等方面，也完成了多项改进与缺陷修复。\n\n主要贡献包括多项 B-tree 改进、排序性能优化、amcheck 模块，以及 INSERT ... ON CONFLICT DO UPDATE；同时持续参与补丁审阅。",
+      "position": "",
+      "organization": "Amazon Web Services",
+      "location": "美国纽约州纽约市",
+      "review_note": ""
+    },
+    {
+      "source_id": "45",
+      "name": "Richard Guo",
+      "bio": "主要参与 PostgreSQL 查询规划器与执行器的开发，包括补丁审阅、缺陷修复和新功能实现。",
+      "position": "",
+      "organization": "Microsoft",
+      "location": "日本",
+      "review_note": ""
+    },
+    {
+      "source_id": "42",
+      "name": "Tomas Vondra",
+      "bio": "长期参与 PostgreSQL 开发，是项目贡献者与代码提交者。独立或合作实现了优化器扩展统计信息（CREATE STATISTICS）、多项优化器改进、哈希连接优化、专用内存分配器及其他性能优化，也改进了 pageinspect、ANALYZE 和不同值数量估算。\n\n曾在 EDB 担任 PostgreSQL 工程师，参与内部项目并持续向 PostgreSQL 社区贡献。主要使用 C、Python、Bash、SQL 和 PL/pgSQL，也曾使用 (X)HTML、CSS、JavaScript、PL/SQL（OCP）、Java 等技术。\n\n担任捷克和斯洛伐克 PostgreSQL 用户组（CSPUG）执行委员会主席，负责组织 Prague PostgreSQL Developers Day，并参与其他 PostgreSQL 活动的组织工作，经常在相关活动中演讲。",
+      "position": "",
+      "organization": "Microsoft",
+      "location": "捷克布拉格",
+      "review_note": ""
+    },
+    {
+      "source_id": "23",
+      "name": "Tristan Partin",
+      "bio": "系统软件工程师，主要从事数据库与存储引擎开发，参与过异构内存存储引擎 HSE、PostgreSQL 和 Neon 等项目。在 Micron 工作期间积累了存储设备及 POSIX/Linux 存储接口方面的经验，并据此参与设计和实现了 HSE 的新日志结构合并树（LSM-tree）。随后加入 Neon，主要开发 PostgreSQL 和 Neon，并参与 PostgreSQL 上游社区的补丁开发、审阅与合入工作。",
+      "position": "",
+      "organization": "Databricks",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "22",
+      "name": "Zhijie Hou",
+      "bio": "主要参与 PostgreSQL 逻辑复制改进，包括发布行过滤、并行流式传输模式、故障转移复制槽和冲突检测，也从事缺陷修复与补丁审阅。",
+      "position": "",
+      "organization": "Fujitsu",
+      "location": "中国南京",
+      "review_note": ""
+    },
+    {
+      "source_id": "1341",
+      "name": "Alvaro Hernandez Tortosa",
+      "bio": "OnGres 首席执行官、AWS Data Hero，拥有 20 年 PostgreSQL 经验。作为连续创业者与开源倡导者，创办了 Fundación PostgreSQL，并在世界各地发表过 100 多场数据库研发主题演讲。",
+      "position": "",
+      "organization": "OnGres",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "246",
+      "name": "Antonin Houska",
+      "bio": "",
+      "position": "",
+      "organization": "Cybertec",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "770",
+      "name": "Ajay Pal",
+      "bio": "拥有 15 年以上数据库与数据仓库领域经验，专长为 PostgreSQL 和 Oracle 数据库，也熟悉 Unix 与 Shell 脚本。",
+      "position": "",
+      "organization": "EDB",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "94",
+      "name": "Akshay Joshi",
+      "bio": "拥有 19 年以上软件行业经验，其中包括在 EDB 工作的 14 年，以及八年领导与团队管理经验。拥有六年全栈开发经验，擅长敏捷开发方法。早期在 Persistent 工作时，主要积累了 C++ 和设计模式方面的经验。",
+      "position": "",
+      "organization": "EDB",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "213",
+      "name": "Alastair Turner",
+      "bio": "数据库早已不只有结构清晰的关系表，还要处理地图、图结构和大量文本。社交媒体中的语言甚至未必那么“自然”；AI 模型或许能帮助理解文本的含义，于是嵌入与向量也成为数据库需要处理的数据。",
+      "position": "",
+      "organization": "Percona",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "206",
+      "name": "Alena Rybakina",
+      "bio": "Yandex Cloud 软件工程师。",
+      "position": "",
+      "organization": "Yandex Cloud",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "93",
+      "name": "Alexander Korotkov",
+      "bio": "主要贡献包括可插拔索引访问方法、SQL/JSON 实现、GiST 与 GIN 索引改进、空间搜索与模糊字符串搜索算法优化，以及多核系统优化等。",
+      "position": "",
+      "organization": "Supabase Inc.",
+      "location": "立陶宛维尔纽斯",
+      "review_note": ""
+    },
+    {
+      "source_id": "53",
+      "name": "Alexander Kuzmenkov",
+      "bio": "",
+      "position": "",
+      "organization": "Timescale",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "155",
+      "name": "Amul Sul",
+      "bio": "经验丰富的软件工程师，熟悉 PostgreSQL、SQL、C、数据库和 Linux。毕业于 VJTI，获得计算机应用硕士（MCA）学位，研究方向为计算机工程。",
+      "position": "",
+      "organization": "EDB",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "55",
+      "name": "Anders Åstrand",
+      "bio": "",
+      "position": "",
+      "organization": "Percona",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "71",
+      "name": "Andrei Lepikhov",
+      "bio": "计算机科学博士，从事数据库管理系统多个领域的软件开发，目前主要关注 PostgreSQL，也是 PostgreSQL 社区贡献者，并少量参与 SQLancer。拥有六年 PostgreSQL 核心功能与扩展开发经验。\n\n此前在航空航天行业工作八年，涉及高焓流动的计算机辅助工程（CAE）建模与热分析、热防护设计，以及 CAE 部门的团队管理；另有八年高校计算机科学教学经验，累计拥有 15 年团队管理经验。\n\n曾两次因发明成果获得俄罗斯联邦总统表彰，分别为 2009 年的计算机科学领域成果和 2017 年的航空航天领域成果。",
+      "position": "",
+      "organization": "pgEdge",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "99",
+      "name": "Andrew Dunstan",
+      "bio": "拥有 35 年信息技术从业经验，是 PostgreSQL 专家和主要贡献者。贡献涉及配置与日志功能改进、美元符号引用、CSV 导入导出、PL/Perl 升级、Win32 移植、并行 pg_restore 和 JSON 功能等多个领域，并维护 PostgreSQL Buildfarm 项目。\n\n不接受招聘人员通过 LinkedIn 发起的联系请求；招聘事宜可直接发送电子邮件，与其技能无关的泛泛邀约不会得到回复。",
+      "position": "",
+      "organization": "EDB",
+      "location": "美国北卡罗来纳州埃佩克斯（罗利附近）",
+      "review_note": ""
+    },
+    {
+      "source_id": "163",
+      "name": "Andrey Borodin",
+      "bio": "参与 PostgreSQL 补丁审阅与缺陷修复，指导初入核心开发领域的开发者，并改进 GiST 及相关索引。维护 WAL-G、Odyssey、SPQR 和其他 PostgreSQL 相关项目。",
+      "position": "",
+      "organization": "Yandex Cloud",
+      "location": "叶卡捷琳堡",
+      "review_note": ""
+    },
+    {
+      "source_id": "58",
+      "name": "Ashutosh Sharma",
+      "bio": "",
+      "position": "",
+      "organization": "Google Summer of Code",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "103",
+      "name": "Ayush Tiwari",
+      "bio": "公开资料中存在同名人物，现有职业简介与 PostgreSQL 贡献者身份尚未确认对应，暂无法据此整理个人经历。",
+      "position": "",
+      "organization": "",
+      "location": "",
+      "review_note": "现有职业资料指向 ConveGenius.AI 员工；另有同名 Microsoft 员工被列为 PostgreSQL 18 核心代码贡献者。两者的教育与任职信息不同，尚不能确认本条资料与贡献者为同一人。"
+    },
+    {
+      "source_id": "61",
+      "name": "Bharath Rupireddy",
+      "bio": "数据库专家、PostgreSQL 贡献者，拥有超过 12 年的软件开发经验，专注于数据库内部机制与内核开发。位列全球主要 PostgreSQL 贡献者之列，在核心功能与性能改进方面作出了重要贡献。",
+      "position": "",
+      "organization": "PostgreSQL 全球开发组",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "1339",
+      "name": "Cary Huang",
+      "bio": "经验多元的软件开发团队负责人、PostgreSQL 重要贡献者及 AI 智能体专家。",
+      "position": "软件开发工程师",
+      "organization": "Hornetlabs Technologies",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "109",
+      "name": "Daniel Verite",
+      "bio": "专长包括 PostgreSQL、Linux，以及数据库相关的软件开发、维护和技术支持。",
+      "position": "",
+      "organization": "自由职业者",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "66",
+      "name": "Dilip Kumar",
+      "bio": "PostgreSQL 贡献者，从事数据库内核开发，工作涉及执行器、优化器、存储、并行查询，以及性能与可扩展性。",
+      "position": "",
+      "organization": "Google",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "120",
+      "name": "Greg Sabino Mullane",
+      "bio": "专注于 Perl 与 PostgreSQL 的数据库管理员和开发者，擅长 Perl、C、PostgreSQL、DBI、DBD::Pg、PGP 和测试驱动开发（TDD）。\n\n维护 DBD::Pg、Bucardo、check_postgres.pl 和 tail_n_mail，并参与 PostgreSQL 的推广工作。",
+      "position": "",
+      "organization": "Snowflake",
+      "location": "美国宾夕法尼亚州费城",
+      "review_note": ""
+    },
+    {
+      "source_id": "102",
+      "name": "Henson Choi",
+      "bio": "PostgreSQL 核心开发者、数据库引擎架构师，拥有超过 26 年的数据库管理系统开发经验。",
+      "position": "",
+      "organization": "(주)인젠트",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "59",
+      "name": "Ian Lawrence Barwick",
+      "bio": "专长包括 PostgreSQL、关系数据库、系统集成、外包管理、中小企业系统开发、数据库迁移和 SQL。",
+      "position": "",
+      "organization": "EDB",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "140",
+      "name": "Jeff Davis",
+      "bio": "参与实现哈希聚合溢出写盘支持、排除约束、范围类型、校验和与排序规则等功能，并参与代码审查。",
+      "position": "",
+      "organization": "DataBricks",
+      "location": "美国",
+      "review_note": ""
+    },
+    {
+      "source_id": "221",
+      "name": "Jelte Fennema-Nio",
+      "bio": "参与 libpq、通信协议与可扩展性相关开发。维护 PgBouncer、pg_duckdb、Commitfest 应用和 CFBot。",
+      "position": "",
+      "organization": "MotherDuck",
+      "location": "阿姆斯特丹",
+      "review_note": ""
+    },
+    {
+      "source_id": "150",
+      "name": "Jeremy Schneider",
+      "bio": "热爱工程实践，在大规模数据处理和运维自动化方面经验丰富。拥有超过 10 年的高性能、高可靠数据平台建设经验，持续探索软件工程方法超过 20 年，并具备良好的沟通与协作能力。\n\n通过学术研究、职业工作和志愿服务参与计算机科学领域，曾与大小不同的组织合作，涉及金融、媒体、制造、汽车、能源、生物技术、医疗、保险、教育、公共部门和非营利组织等领域。",
+      "position": "",
+      "organization": "GEICO",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "199",
+      "name": "Jian He",
+      "bio": "PostgreSQL 贡献者。",
+      "position": "",
+      "organization": "EDB",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "202",
+      "name": "Jim Nasby",
+      "bio": "热爱数据技术，大约从 13 岁起就开始使用各种形式的数据库。目前首选 PostgreSQL，也使用过“三大”数据库及许多其他数据库系统。除了数据库，还热衷于 distributed.net 和 FreeBSD。专长包括数据架构、数据库设计与开发，以及 PostgreSQL。",
+      "position": "",
+      "organization": "Amazon Web Services",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "342",
+      "name": "Joe Conway",
+      "bio": "PostgreSQL 数据库专家，在数据库逻辑与物理模型架构、查询优化、应用开发、自定义扩展（SQL、PL/pgSQL 和 C 函数）及内核开发方面拥有丰富的实践经验，涉及语法、解析器、优化器和执行引擎。\n\n贡献包括返回集合的函数、PL/R、dblink、tablefunc（crosstab）、bytea 与数组类型改进、多态参数、多行 VALUES、generate_series、pg_settings 及相关函数、has_*_privilege 函数、shared_preload_libraries 等功能。参与 PGDG 系统管理团队和 PostgreSQL 资金管理小组，曾任 PostgreSQL.US 董事会成员。",
+      "position": "",
+      "organization": "Amazon（RDS Open Source Databases）",
+      "location": "美国佛罗里达州棕榈海岸",
+      "review_note": ""
+    },
+    {
+      "source_id": "209",
+      "name": "Marcos Pegoraro",
+      "bio": "",
+      "position": "",
+      "organization": "",
+      "location": "",
+      "review_note": "现有姓名、职业资料与 PostgreSQL 贡献记录之间的身份关联尚无法核实，暂不合并同名或近似姓名人物的简介。"
+    },
+    {
+      "source_id": "344",
+      "name": "Mark Wong",
+      "bio": "从事数据库系统性能分析，参与 pg_top、pg_systat 和 pg_proctab 等工具的开发，也制作钩织大象玩偶、版本发布宣传画和纪念币。\n\n担任 Google Summer of Code 导师、波特兰 PostgreSQL 用户组联合组织者、PostgreSQL 筹款小组成员，以及 PostgreSQL.US 董事和财务负责人，并参与会议组织工作。",
+      "position": "",
+      "organization": "pgEdge",
+      "location": "俄勒冈州波特兰",
+      "review_note": ""
+    },
+    {
+      "source_id": "63",
+      "name": "Nazir Bilal Yavuz",
+      "bio": "",
+      "position": "",
+      "organization": "PostgreSQL 全球开发组",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "75",
+      "name": "Nisha Moond",
+      "bio": "",
+      "position": "",
+      "organization": "Apple",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "77",
+      "name": "Pavel Stehule",
+      "bio": "从事 PostgreSQL 开发、PostgreSQL 与 SQL 培训，熟悉 C、C# 和 VB.NET。在 PostgreSQL，尤其是 PL/pgSQL 方面具有深入的专业知识，并为 PL/pgSQL 贡献了大量功能改进。",
+      "position": "",
+      "organization": "自由职业者",
+      "location": "捷克共和国布拉格",
+      "review_note": ""
+    },
+    {
+      "source_id": "84",
+      "name": "Peter Smith",
+      "bio": "",
+      "position": "",
+      "organization": "PostgreSQL 全球开发组",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "143",
+      "name": "Rafia Sabih",
+      "bio": "数据库开发者，擅长 PostgreSQL 开发，并拥有联机分析处理（OLAP）相关经验。",
+      "position": "",
+      "organization": "CYBERTEC PostgreSQL Services and Support",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "145",
+      "name": "Robert Treat",
+      "bio": "拥有超过 20 年的技术职业经历，从一线技术支持到规模达数百万美元的科技公司首席执行官，曾创业、参与董事会工作并经历企业收购；也经历过被裁员和裁员的艰难决定，对成功、挫折及其中的取舍有切身体会。\n\n担任 PostgreSQL 资金管理小组的 SPI 联络人、PostgreSQL Slack 团队管理员及赞助委员会成员。参与 PostgreSQL、pagila、pgtreats、phpPgAdmin、OmniPITR、pg_jobmon、pg_partman、mysqlcompat 等开源项目。\n\n曾任 PostgreSQL.US 主席、PostgreSQL 网站团队成员和 techdocs/pgwiki 管理员，创办 Postgres Weekly News，并参与多个会议组织委员会和讲者委员会。提出了 #PostgresFriends 这一称呼。",
+      "position": "",
+      "organization": "Amazon Web Services",
+      "location": "现实以南（South Of Reality）",
+      "review_note": ""
+    },
+    {
+      "source_id": "147",
+      "name": "Ronan Dunklau",
+      "bio": "",
+      "position": "",
+      "organization": "Aiven",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "148",
+      "name": "Sami Imseih",
+      "bio": "",
+      "position": "",
+      "organization": "Amazon Web Services (AWS)",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "240",
+      "name": "shihao zhong",
+      "bio": "喜欢分布式数据库。",
+      "position": "",
+      "organization": "Google",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "82",
+      "name": "Shlok Kyal",
+      "bio": "软件工程师，对 PostgreSQL 内部机制感兴趣，并参与相关开发。",
+      "position": "",
+      "organization": "Fujitsu",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "83",
+      "name": "shveta malik",
+      "bio": "Fujitsu 软件开发工程师（Principal Software Developer），主要参与 PostgreSQL 逻辑复制开发，工作涉及复制槽同步和故障切换可靠性。曾获 Postgres Women India 月度人物表彰。",
+      "position": "",
+      "organization": "Fujitsu",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "137",
+      "name": "Takamichi Osumi (Fujitsu)",
+      "bio": "Fujitsu 软件工程师，从事开源 PostgreSQL 开发，主要关注逻辑复制领域。持有 OSS-DB Gold 工程师认证。",
+      "position": "",
+      "organization": "Fujitsu",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "88",
+      "name": "vignesh C",
+      "bio": "带领团队开展功能设计、开发与缺陷修复工作。",
+      "position": "",
+      "organization": "PostgreSQL 全球开发组",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "160",
+      "name": "Vitaly Davydov",
+      "bio": "信息技术专业人士，具备扎实的软件工程与分析能力。",
+      "position": "",
+      "organization": "Postgres Professional",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "164",
+      "name": "Xuneng Zhou",
+      "bio": "数据系统工程师，对数据库、开源软件以及软硬件协同设计等领域有广泛兴趣。",
+      "position": "",
+      "organization": "PostgreSQL 全球开发组",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "239",
+      "name": "Yura Sokolov",
+      "bio": "技术领域包括 C、Go、异步与并发编程，以及底层编程。",
+      "position": "",
+      "organization": "Postgres Professional",
+      "location": "",
+      "review_note": ""
+    },
+    {
+      "source_id": "165",
+      "name": "Zsolt Parragi",
+      "bio": "经验丰富的软件开发者。",
+      "position": "",
+      "organization": "Percona",
+      "location": "",
+      "review_note": ""
+    }
+  ]
+}

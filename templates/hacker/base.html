@@ -1,0 +1,7 @@
+{% extends "base/page.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block extrahead %}
+<link rel="stylesheet" href="/media/css/hacker.css?{{gitrev}}">
+{% if noindex %}<meta name="robots" content="noindex,follow">{% endif %}
+{% endblock %}
+{% block contents %}<div id="hacker">{% block hacker_content %}{% endblock %}</div>{% endblock %}

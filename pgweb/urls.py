@@ -34,6 +34,9 @@ admin.autodiscover()
 urlpatterns = [
     path('ext/', include('pgweb.ext.urls')),
     path('info/', include('pgweb.info.urls')),
+    path('developer/hacker/', include('pgweb.hacker.urls')),
+    re_path(r'^hacker/(?P<rest>.*)$', RedirectView.as_view(
+        url='/developer/hacker/%(rest)s', permanent=True, query_string=True)),
     path('docs/', include('pgweb.wiki.urls')),  # /docs/sqlstate/ 等百科栏目
     re_path(r'^(?:wiki|docs)/errcode/(?P<rest>.*)$', RedirectView.as_view(url='/docs/sqlstate/%(rest)s', permanent=True)),
     re_path(r'^wiki/.*$', RedirectView.as_view(url='/docs/', permanent=True)),
