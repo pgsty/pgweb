@@ -13,7 +13,7 @@ from pgweb.docs.models import DocPage
 
 from .models import SQLCMD_GROUPS, SQLCMD_GROUP_LABEL, SqlCommand
 from .ruler import mark_ticks
-from .sqlcmd_common import (STATUS_LABEL, compare, line_changes, major_of, sections_at,
+from .sqlcmd_common import (STATUS_LABEL, compare, synopsis_changes, major_of, sections_at,
                             version_rows)
 from .sqlcmd_railroad import context as railroad_context
 
@@ -252,7 +252,7 @@ def synopsis_of(snapshot, previous, major):
     lines = html_lines(raw)
     text = BeautifulSoup(raw, 'html.parser').get_text()
     plain = text.splitlines()
-    _, added = line_changes(previous['synopsis_text'], snapshot['synopsis_text']) if previous else (None, set())
+    _, added = synopsis_changes(previous, snapshot) if previous else (None, set())
     rendered = []
     for index, line in enumerate(lines):
         cls = 'cmd-synopsis__line' + (' is-added' if index in added else '')

@@ -78,9 +78,9 @@ def parse_query(raw, scope='pg', kind='', available=(), current=None):
     if scope in EXTENSION_SCOPES:
         scope, sources, version = 'ex', ('ext',), current
     elif scope == 'pg':
-        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func'), current
+        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid'), current
     elif re.fullmatch(r'pg\d+', scope):
-        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func'), int(scope[2:])
+        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid'), int(scope[2:])
     else:
         raise ValueError('未知的文档作用域。请使用 pg:、pg17: 或 ex:。')
     if 'pg' in sources and version not in available:
@@ -160,7 +160,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
         'filtered': bool(kinds), 'kinds': kinds, 'offset': offset, 'limit': limit,
         'popular': [normalize_name(n) for n in POPULAR],
     }
-    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func'))"
+    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid'))"
               if 'pg' in state['sources'] else "e.source = 'ext'")
     if not name:
         where = 'true'
@@ -191,7 +191,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
             FROM search_searchentry e CROSS JOIN q
             WHERE {source} AND {where}
         ), grouped AS (
-            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source NOT IN ('errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func')), (source = 'ext'), relevance DESC, id) AS choice,
+            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source NOT IN ('errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid')), (source = 'ext'), relevance DESC, id) AS choice,
                    count(*) OVER (PARTITION BY entity_key) AS variants FROM matched
         ), chosen AS (SELECT * FROM grouped WHERE choice = 1),
         facet AS (SELECT kind, count(*) AS n FROM chosen GROUP BY kind),
@@ -227,6 +227,9 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
                .select_related('document__page').defer('vector', 'preview', 'document__page__content')}
     # A row can vanish between ranking and fetching while the catalogue is being rebuilt.
     result['results'] = [entry_data(entries[h['id']], state['term'], h['tier'], h['variants']) for h in hits if h['id'] in entries]
+    for item in result['results']:
+        if item['source'] in ('lock', 'hook', 'relopts', 'role', 'oid') and state['version']:
+            item['url'] += '?v=' + str(int(state['version']))
     groups = {}
     for key, n in counts.items():
         groups[GROUP_OF.get(key, 'guide')] = groups.get(GROUP_OF.get(key, 'guide'), 0) + n
@@ -285,6 +288,41 @@ def sqlcmd_preview(entry, wanted_major=''):
 
 
 def preview(entry, wanted_major=''):
+    if entry.source in ('hook', 'relopts', 'role', 'oid'):
+        from pgweb.wiki import topics
+        wanted_text = str(wanted_major)
+        wanted = wanted_text.split('.')[0] if re.fullmatch(r'\d{1,2}(?:\.0)?', wanted_text) else ''
+        spec = topics.TOPICS[entry.source]
+        slug = entry.url.rstrip('/').rsplit('/', 1)[-1]
+        try:
+            payload = topics.detail(entry.source, slug, wanted)
+        except (spec['model'].DoesNotExist, ValueError):
+            payload = None
+        if payload:
+            data = entry_data(entry)
+            data.update(url=entry.url + '?v=' + payload['major'], version=int(payload['major']),
+                        html=render_to_string('wiki/topic_preview.html', payload),
+                        versions=[{'version': int(v['major']), 'label': v['label'], 'url': v['url'],
+                                   'id': entry.id, 'current': v['is_current']} for v in payload['versions']],
+                        other_versions=[], definitions=[], catalog=None)
+            return data
+    if entry.source == 'lock':
+        from pgweb.wiki import lock
+        wanted_text = str(wanted_major)
+        wanted = wanted_text.split('.')[0] if re.fullmatch(r'\d{1,2}(?:\.0)?', wanted_text) else ''
+        try:
+            payload = lock.detail(entry.entity_key.removeprefix('lock:'), wanted)
+        except lock.LockMode.DoesNotExist:
+            payload = None
+        if payload:
+            mode = payload['mode']
+            data = entry_data(entry)
+            data.update(url=mode['url'], version=int(payload['major']),
+                        html=render_to_string('wiki/lock_preview.html', payload),
+                        versions=[{'version': int(v['major']), 'label': v['label'], 'url': v['url'], 'id': entry.id,
+                                   'current': v['is_current']} for v in payload['versions']],
+                        other_versions=[], definitions=[], catalog=None)
+            return data
     if entry.source == 'pg' and entry.kind == 'sql':
         command_entry = SearchEntry.objects.filter(source='sqlcmd', entity_key=entry.entity_key).first()
         if command_entry is not None:

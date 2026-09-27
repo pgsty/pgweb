@@ -1,0 +1,24 @@
+<div class="cloud-results-bar">
+  <p><strong>{{ result_count }}</strong> 个条目{% if rows %}<span class="cloud-results-range"> · 第 {{ page.number }} / {{ page.paginator.num_pages }} 页</span>{% endif %}<a href="{{ reset_url }}" data-cloud-filter>重置筛选</a></p>
+  <div class="cloud-table-actions">{% if export_url %}<a href="{{ export_url }}">导出 CSV</a>{% endif %}<span class="cloud-scroll-controls" data-cloud-enhance hidden><button type="button" data-cloud-scroll="-1" aria-label="向左查看服务列">←</button><button type="button" data-cloud-scroll="1" aria-label="向右查看服务列">→</button></span></div>
+</div>
+<div class="cloud-legend" aria-label="支持状态图例">{% for item in legend %}<span class="cloud-state-{{ item.status }}"><i aria-hidden="true"></i>{{ item.label }}</span>{% endfor %}<span class="cloud-legend__hint">点击单元格查看依据</span></div>
+{% if rows %}
+<div class="cloud-table-frame">
+  <div class="cloud-table-scroll" id="cloud-table-scroll" tabindex="0" role="region" aria-label="扩展支持矩阵，可横向滚动" data-mode="{{ mode }}">
+    <table class="cloud-table">
+      <caption class="sr-only">{{ title }}{% if mode == 'compare' %}，PostgreSQL {{ selected_pg }}{% endif %}。支持状态及版本号，可展开查看来源。</caption>
+      <thead><tr><th scope="col" class="cloud-name-column">扩展<span class="cloud-column-sub">名称 / 功能分类</span></th>{% for column in columns %}<th scope="col"{% if column.anchor %} class="cloud-anchor"{% endif %}>{% if column.url %}<a href="{{ column.url }}">{{ column.label }}</a>{% else %}<span>{{ column.label }}</span>{% endif %}{% if column.subtitle %}<span class="cloud-column-sub">{{ column.subtitle }}</span>{% endif %}{% if column.engine_label %}<span class="cloud-engine-label">{{ column.engine_label }}</span>{% endif %}{% if column.coverage_label %}<span class="cloud-column-sub">{{ column.coverage_label }}</span>{% endif %}</th>{% endfor %}</tr></thead>
+      <tbody>{% for row in rows %}<tr class="{{ row.color }}">
+        <th scope="row" class="cloud-name-column"><div class="cloud-extension-name">{% if row.href %}<a href="{{ row.href }}" title="{{ row.description }}">{{ row.name }}</a>{% else %}<span title="{{ row.description }}">{{ row.name }}</span>{% endif %}</div><div class="cloud-row-meta">{% if row.category_label %}<span class="cloud-category"><i aria-hidden="true"></i>{{ row.category_label }}</span>{% endif %}{% if row.unresolved %}<span>原始名称{% if row.origin_label %} · {{ row.origin_label }}{% endif %}</span>{% elif row.packaged %}<span class="cloud-packaged" title="Pigsty 已打包">已打包</span>{% endif %}</div></th>
+        {% for cell in row.cells %}<td class="cloud-state-{{ cell.status }}{% if mode == 'compare' and forloop.first %} cloud-anchor{% endif %}">
+          <div class="cloud-cell"><a href="{{ cell.evidence_url }}" data-cloud-evidence data-title="{{ row.name }} · {{ cell.column_label }}" aria-label="{{ row.name }}，{{ cell.column_label }}：{{ cell.status_label }}{% if cell.version %}，{{ cell.version }}{% endif %}，查看依据"><span class="cloud-cell-value" title="{{ cell.display }}">{{ cell.display }}</span>{% if cell.version %}<span class="cloud-cell-status">{{ cell.status_label }}</span>{% endif %}</a></div>
+        </td>{% endfor %}
+      </tr>{% endfor %}</tbody>
+    </table>
+  </div>
+</div>
+{% if page.paginator.num_pages > 1 %}
+<nav class="ext-pager cloud-pager" aria-label="云扩展矩阵分页">{% if previous_url %}<a href="{{ previous_url }}" rel="prev" data-cloud-filter>上一页</a>{% endif %}{% for item in pagination %}{% if item.url %}<a href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %} data-cloud-filter>{{ item.label }}</a>{% else %}<span>{{ item.label }}</span>{% endif %}{% endfor %}{% if next_url %}<a href="{{ next_url }}" rel="next" data-cloud-filter>下一页</a>{% endif %}</nav>
+{% endif %}
+{% else %}<div class="cloud-empty">{% if empty_evidence %}<strong>尚无可核验的扩展支持清单</strong><p>这不代表该服务不支持扩展。可切换至 Pigsty 打包范围查看各 PG 版本的资料缺口。</p><a href="{{ packaged_url }}" data-cloud-filter>查看 Pigsty 打包范围</a>{% else %}<strong>没有匹配的扩展</strong><p>请调整关键词、扩展范围或支持状态。</p><a href="{{ reset_url }}" data-cloud-filter>重置筛选</a>{% endif %}</div>{% endif %}

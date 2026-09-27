@@ -8,7 +8,7 @@ from django.views.decorators.http import require_safe
 from pgweb.util.contexts import get_nav_menu
 from pgweb.util.decorators import queryparams
 
-from . import catalog, errcode, func, guc, waitevent, sqlcmd
+from . import catalog, errcode, func, guc, lock, waitevent, sqlcmd
 from .columns import BY_SLUG
 from .models import (CatalogRelation, CatalogVersion, ErrorCode, FuncVersion, GucParameter,
                      GucVersion, PgFunction, WaitEvent, WaitEventVersion)
@@ -302,9 +302,36 @@ def sqlcmd_detail(request, slug):
     if slug != command.slug:
         wanted = request.GET.get('v', '')
         return HttpResponsePermanentRedirect(command.url + ('?v=' + quote(wanted) if wanted else ''))
+    payload['lock_modes'] = lock.for_command(command.slug, payload['version']['major'])
     return render(request, 'wiki/sqlcmd_detail.html', shell(dict(payload, column=BY_SLUG['sql']),
         command.name + ' · SQL 命令', payload['snapshot']['purpose_zh'],
         command.url, section=SQLCMD_ROOT))
+
+
+# ---------------------------------------------------------------- 锁百科
+
+@require_safe
+@queryparams('v', 'q')
+def lock_index(request):
+    try:
+        payload = lock.index(request.GET.get('v', ''))
+    except lock.LockMode.DoesNotExist:
+        raise Http404()
+    return render(request, 'wiki/lock_index.html', shell(dict(payload, column=BY_SLUG['lock']),
+        'PostgreSQL 锁百科', '8 种表级锁与 4 种行级锁的冲突矩阵、命令映射和逐版本事实。',
+        lock.ROOT, section=lock.ROOT))
+
+
+@require_safe
+@queryparams('v')
+def lock_detail(request, slug):
+    try:
+        payload = lock.detail(slug, request.GET.get('v', ''))
+    except lock.LockMode.DoesNotExist:
+        raise Http404()
+    mode = payload['mode']
+    return render(request, 'wiki/lock_detail.html', shell(dict(payload, column=BY_SLUG['lock']),
+        mode['name'] + ' · 锁百科', mode['summary'], lock.ROOT + slug + '/', section=lock.ROOT))
 
 
 @require_safe

@@ -711,6 +711,28 @@ class FuncDetailTests(FuncFixture):
         self.assertEqual([item['major'] for item in payload['doc_versions']],
                          ['10', '12', '18', '20'])
 
+    def test_nine_x_manual_links_keep_minor_and_separate_official_coordinates(self):
+        from pgweb.core.models import Version
+        from pgweb.docs.models import DocPage
+        Version.objects.bulk_create([
+            Version(tree=major, reldate=date(2016, 1, 1),
+                    firstreldate=date(2016, 1, 1), eoldate=date(2021, 1, 1))
+            for major in ('9.0', '9.6')])
+        for major in ('9.0', '9.6'):
+            DocPage.objects.create(version_id=major, file='functions-string.html',
+                                   title='9.4. 字符串函数', content='<p id="LOCAL">译文</p>')
+        pages = func.doc_pages()
+        self.assertIn(('9.0', 'functions-string.html'), pages)
+        self.assertIn(('9.6', 'functions-string.html'), pages)
+        self.assertNotIn(('9', 'functions-string.html'), pages)
+        snapshot = {
+            'doc': {'slug': '9.6', 'file': 'functions-string.html', 'anchor': 'LOCAL'},
+            'upstream_doc': {'slug': '9.6', 'file': 'functions-string.html', 'anchor': 'AEN123'},
+        }
+        self.assertEqual(func.doc_url(snapshot, pages), '/docs/9.6/functions-string.html#LOCAL')
+        self.assertEqual(func.official_url(snapshot, {'major': '9.6'}),
+                         'https://www.postgresql.org/docs/9.6/functions-string.html#AEN123')
+
     def test_related_are_the_neighbours_of_the_same_group(self):
         # 夹具里每组只有一个函数，相邻为空；同组多一个就出现。
         self.assertEqual(func.detail('substring', '18')['related'], [])

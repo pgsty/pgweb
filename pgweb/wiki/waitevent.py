@@ -21,13 +21,14 @@ from django.utils.safestring import mark_safe
 
 from .models import (WAITEVENT_SOURCE_STATUS_LABEL, WAITEVENT_TYPES, GucParameter, WaitEvent,
                      WaitEventVersion)
+from .manuals import manual_slug
 from .ruler import mark_ticks
 from .waitevent_common import compare_snapshots, normal_text
 
 
 CACHE_KEY = 'pgweb:wiki:waitevent-index'
 VERSION_CACHE_KEY = 'pgweb:wiki:waitevent-versions2'
-DOC_CACHE_KEY = 'pgweb:wiki:waitevent-docpages'
+DOC_CACHE_KEY = 'pgweb:wiki:waitevent-docpages-v2'
 CHANGES_CACHE_KEY = 'pgweb:wiki:waitevent-changes:{}'
 GUC_CACHE_KEY = 'pgweb:wiki:waitevent-guc:{}'
 CACHE_SECONDS = 300
@@ -140,7 +141,7 @@ def doc_pages():
         from pgweb.docs.models import DocPage
         pairs = set()
         for tree, filename in DocPage.objects.values_list('version', 'file'):
-            slug = 'devel' if int(tree) == 0 else str(int(tree))
+            slug = manual_slug(tree)
             pairs.add((slug, filename))
         cache.set(DOC_CACHE_KEY, pairs, CACHE_SECONDS)
     return pairs

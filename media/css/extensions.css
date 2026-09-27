@@ -38,6 +38,9 @@
 
 #pgSideNav a[aria-current] { color: var(--pg-link); font-weight: 600; }
 .ext-catalog { min-width: 0; }
+.ext-section-nav { display: flex; gap: 20px; border-bottom: 1px solid var(--pg-line); margin: 0 0 22px; font-size: 14px; }
+.ext-section-nav a { padding: 9px 0; border-bottom: 2px solid transparent; }
+.ext-section-nav a[aria-current] { border-color: var(--pg-link); color: var(--pg-ink); font-weight: 600; }
 .ext-filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 14px 0; }
 .ext-filters label { margin: 0; font-size: 13px; font-weight: 500; }
 .ext-filters select { display: block; width: 100%; margin-top: 5px; font-size: 13px; }

@@ -1,0 +1,9 @@
+<form class="lock-version" method="get">
+  <label for="lock-version">PostgreSQL 版本</label>
+  <select class="form-control" id="lock-version" name="v" data-lock-version>
+    {% for item in versions %}<option value="{{ item.major }}" data-url="{{ item.url }}"{% if item.is_current %} selected{% endif %}>{{ item.label }} · {{ item.status_label }}</option>{% endfor %}
+  </select>
+  <button class="lock-button lock-version-submit" type="submit">查看</button>
+  <span class="lock-version__status is-{{ version.tone }}">{{ version.status_label }}</span>
+</form>
+{% if notice %}<p class="wiki-note lock-notice">{{ notice }}</p>{% endif %}

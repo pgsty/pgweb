@@ -268,7 +268,8 @@ def _get_doc_majors():
 
 # 本站独有的栏目，上游没有对应页面。给它们拼一个 postgresql.org 地址只会得到 404。
 LOCAL_ONLY_SECTIONS = ('/docs/sqlstate/', '/docs/catalog/', '/docs/guc/', '/docs/waitevent/',
-                       '/docs/sql/', '/docs/func/', '/docs/compare/', '/info/', '/ext/', '/e/', '/nls/', '/developer/hacker/')
+                       '/docs/hook/', '/docs/relopts/', '/docs/role/', '/docs/oid/',
+                       '/docs/sql/', '/docs/func/', '/docs/lock/', '/docs/compare/', '/info/', '/ext/', '/e/', '/nls/', '/developer/hacker/')
 
 
 def _source_url(path):

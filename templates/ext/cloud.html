@@ -1,0 +1,57 @@
+{% extends "ext/base.html" %}
+{% block extrahead %}{{ block.super }}
+<link rel="stylesheet" href="/media/css/ext-cloud.css?{{gitrev}}">
+{% endblock %}
+{% block ext_content %}
+<div class="cloud-catalog" id="cloud-catalog" data-mode="{{ mode }}">
+  <nav class="cloud-breadcrumb" aria-label="当前位置"><a href="/ext/">扩展目录</a><span aria-hidden="true">/</span>{% if mode == 'service' %}<a href="/ext/cloud/">云厂商对比</a><span aria-hidden="true">/</span><span>{{ service.name }}</span>{% else %}<span>云厂商对比</span>{% endif %}</nav>
+  <div class="cloud-heading">
+    <div><h1>{{ title }}</h1><p class="cloud-intro">{{ intro }}</p></div>
+    {% if mode == 'service' %}<a class="cloud-back" href="/ext/cloud/">跨厂商对比 <span aria-hidden="true">→</span></a>{% endif %}
+  </div>
+  <div class="cloud-snapshot"><span class="cloud-snapshot__mark" aria-hidden="true"></span>{% if snapshot_label %}<span>资料快照 {{ snapshot_label }}</span>{% else %}<span>尚未导入云扩展资料</span>{% endif %}<span>{{ total_services }} 个云服务</span><a href="#cloud-method">数据口径</a></div>
+
+  <form id="cloud-form" class="cloud-form" action="{{ form_action }}" method="get" role="search">
+    <div id="cloud-controls">
+      <div class="cloud-filter-row">
+        <label class="cloud-search" for="cloud-query"><span>搜索扩展</span><input class="form-control" id="cloud-query" type="search" name="q" value="{{ query }}" maxlength="255" placeholder="名称、功能或关键词…" autocomplete="off"></label>
+        {% if mode == 'compare' %}<label for="cloud-pg">PostgreSQL<select id="cloud-pg" class="form-control" name="pg">{% for option in pg_options %}<option value="{{ option.value }}"{% if option.current %} selected{% endif %}>{{ option.label }}</option>{% endfor %}</select></label>{% endif %}
+        {% for dd in dropdowns %}<label for="cloud-{{ dd.param }}">{{ dd.label }}<select class="form-control" id="cloud-{{ dd.param }}" name="{{ dd.param }}">{% for option in dd.options %}<option value="{{ option.value }}"{% if option.current %} selected{% endif %}>{{ option.label }}</option>{% endfor %}</select></label>{% endfor %}
+      </div>
+      <details class="cloud-services" id="cloud-services">
+        <summary>{% if mode == 'compare' %}选择对比服务 <span class="cloud-services__hint">Pigsty 固定在首列</span>{% else %}切换云服务 <span class="cloud-services__hint">查看各 PostgreSQL 版本支持情况</span>{% endif %}</summary>
+        {% if mode == 'compare' %}
+        <input type="hidden" name="selection" value="1">
+        <div class="cloud-selection-actions" data-cloud-enhance hidden><button type="button" data-cloud-select="all">全选</button><button type="button" data-cloud-select="none">仅看 Pigsty</button></div>
+        <div class="cloud-service-options">{% for item in services %}<div class="cloud-service-option"><label for="cloud-service-{{ item.id }}"><input type="checkbox" id="cloud-service-{{ item.id }}" name="service" value="{{ item.id }}"{% if item.current %} checked{% endif %}><span><strong>{{ item.name }}</strong><small>{{ item.provider }}</small></span></label><a class="cloud-service-detail" href="{{ item.url }}" aria-label="查看 {{ item.name }} 的 PG 版本矩阵">详情</a></div>{% endfor %}</div>
+        {% else %}
+        <div class="cloud-service-links">{% for item in services %}<a href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.name }}<small>{{ item.provider }}</small></a>{% endfor %}</div>
+        {% endif %}
+      </details>
+      <noscript><button class="btn btn-primary" type="submit">应用筛选</button></noscript>
+    </div>
+  </form>
+
+  <section id="cloud-results" aria-label="扩展支持矩阵" aria-live="polite">
+    {% include "ext/cloud_results.html" %}
+  </section>
+  <p id="cloud-announcement" class="sr-only" role="status" aria-live="polite"></p>
+
+  <details id="cloud-method" class="cloud-method">
+    <summary>如何阅读这张表</summary>
+    <p>单元格显示厂商公布的扩展版本或支持状态，点击可查看适用范围、核验日期和官方来源。资料反映上述快照时间的情况。</p>
+    <ul>
+      <li><strong>支持</strong>但没有版本号，表示资料确认支持，未公布具体版本。<strong>条件支持</strong>需要结合单元格说明阅读。</li>
+      <li><strong>不支持</strong>来自明确声明，或该 PG 版本完整清单中没有此扩展；<strong>资料不足</strong>表示现有资料无法确认，不能据此判断不支持。</li>
+      <li><strong>未提供</strong>表示该服务没有提供对应的 PG 大版本。预览版、仅存量实例等引擎限制在列头或单元格详情中标注。</li>
+      <li>Pigsty 主扩展显示该 PG 大版本各平台实际可用的软件包版本；同发行包的子扩展只标注支持，软件包版本与平台覆盖见单元格详情。</li>
+      <li>默认对比范围包含 Pigsty 已打包扩展及云服务独有条目；标为“原始名称”的条目尚未映射到扩展目录，保留厂商原文。</li>
+    </ul>
+  </details>
+</div>
+<dialog class="cloud-dialog" id="cloud-dialog" aria-labelledby="cloud-dialog-title">
+  <div class="cloud-dialog__bar"><h2 id="cloud-dialog-title">支持详情</h2><button type="button" class="cloud-dialog__close" aria-label="关闭详情" data-cloud-close>×</button></div>
+  <div id="cloud-dialog-content"></div>
+</dialog>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/ext-cloud.js?{{gitrev}}" defer></script>{% endblock %}

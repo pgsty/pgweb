@@ -1,0 +1,73 @@
+{% extends "wiki/base.html" %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/lock.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<div id="locks" class="wiki-tone-wait">
+  <p class="wiki-crumb"><a href="/docs/">文档</a> / 锁百科</p>
+  <h1>PostgreSQL 锁百科</h1>
+  <p class="wiki-lead">一条 SQL 会取得哪些锁，又会与谁互相阻塞？这里汇集 {{ table_modes|length }} 种表级锁模式与 {{ row_modes|length }} 种行级锁模式，按版本查看冲突关系，并关联取得这些锁的 SQL 命令。锁模式与 <a href="/docs/waitevent/">等待事件</a> 是理解同一次等待的不同视角。</p>
+
+  {% include "wiki/lock_version.html" %}
+  <nav class="lock-jump" aria-label="本页目录"><a href="#table-locks">表级锁矩阵</a><a href="#all-locks">组合矩阵</a><a href="#modes">{{ total }} 种锁模式</a><a href="#commands">命令与锁</a><a href="#diagnose">排查等待</a><a href="#sources">数据来源</a></nav>
+
+  <div class="lock-explorer" data-lock-explorer hidden>
+    <label for="lock-command-choice">在矩阵中查看命令</label>
+    <select class="form-control" id="lock-command-choice" data-lock-command-choice>
+      <option value="">选择一条命令，突出显示关联锁模式</option>
+      {% for command in command_choices %}<option value="{{ command.key }}" data-lock-command-label="{{ command.label }}" data-note="{{ command.note }}" data-lock-modes="{% for item in command.modes %}{{ item.slug }} {% endfor %}">{{ command.label }}</option>{% endfor %}
+    </select>
+    <button class="lock-button" type="button" data-lock-clear>清除</button>
+    <p class="lock-explorer__note" data-lock-selection aria-live="polite">选择命令后，矩阵边缘和模式列表会标出它关联的锁；实际取得的锁仍取决于命令选项与执行阶段。</p>
+  </div>
+
+  <section class="wiki-section" id="table-locks">
+    <h2>表级锁冲突矩阵 <span class="lock-heading-count">8 × 8</span></h2>
+    <p class="lock-sectionlead">纵轴是<strong>请求的锁</strong>，横轴是另一事务<strong>已经持有的锁</strong>。只比较同一个表上的锁模式；名称中的 <span class="lock-mono">ROW</span> 并不表示它是行级锁。</p>
+    <ul class="lock-legend" aria-label="表级锁矩阵图例"><li><span class="lock-legend__mark lock-cell--conflict">×</span>冲突</li><li><span class="lock-legend__mark lock-cell--compatible">·</span>兼容</li></ul>
+    {% include "wiki/lock_matrix.html" with matrix=table_matrix %}
+  </section>
+
+  <section class="wiki-section" id="all-locks">
+    <h2>按表锁展开的组合矩阵 <span class="lock-heading-count">{{ full_matrix.size }} × {{ full_matrix.size }}</span></h2>
+    <p class="lock-sectionlead">按操作同时取得的表锁，对行锁组合分组：<span class="lock-mono">ROW SHARE</span> 下展开四种 <span class="lock-mono">SELECT … FOR</span> 组合，<span class="lock-mono">ROW EXCLUSIVE</span> 下展开修改行的两种组合。共 {{ full_matrix.size }} 个比较项，包含 8 个「仅表锁」项和 6 个「表锁 + 行锁」组合，仍然只有 {{ total }} 种锁模式。</p>
+    <ul class="lock-legend" aria-label="组合矩阵图例"><li><span class="lock-legend__mark lock-cell--conflict">×</span>表锁冲突，不同行也冲突</li><li><span class="lock-legend__mark lock-cell--row-conflict">●</span>同一行时冲突</li><li><span class="lock-legend__mark lock-cell--compatible">·</span>锁模式兼容</li></ul>
+    {% include "wiki/lock_matrix.html" with matrix=full_matrix %}
+    <p class="lock-sectionlead">缩进子项表示同时取得组头的表锁与所列行锁。分组表示常见的共同取得方式，不是锁强度的线性排序；<span class="lock-mono">SHARE UPDATE EXCLUSIVE</span> 是独立的表锁模式。</p>
+    <p class="wiki-note lock-scope-note">矩阵假设两边操作同一张表。红色 × 表示表锁冲突，即使命中不同行也不能共存；琥珀色 ● 仅在命中同一行时冲突，命中不同行时这些锁模式可以共存。</p>
+    <p class="lock-sectionlead">缩写：{% for item in modes %}<a class="lock-abbrev" href="{{ item.url }}"><strong>{{ item.abbrev }}</strong> {{ item.name }}</a>{% if not forloop.last %}<span class="lock-abbrev-sep"> · </span>{% endif %}{% endfor %}</p>
+  </section>
+
+  <section class="wiki-section" id="modes">
+    <h2>{{ total }} 种锁模式</h2>
+    <p class="lock-sectionlead">表级锁保护整个关系；行级锁协调对同一行的修改和锁定。下表中的命令是常见取得方式，具体条件见「命令与锁」。</p>
+    <div class="lock-mode-list">
+      {% for item in modes %}
+      <article class="lock-mode" id="mode-{{ item.slug }}" data-lock-mode="{{ item.slug }}">
+        <div class="lock-mode__identity"><span class="lock-scope lock-scope-{{ item.scope }}">{{ item.scope_label }}</span><h3><a href="{{ item.url }}" class="lock-mono">{{ item.name }}</a></h3><p>{{ item.name_zh }}</p></div>
+        <div class="lock-mode__body"><p>{{ item.summary }}</p><p class="lock-mode__commands">{% for command in item.commands %}<a href="{{ command.url }}" title="{{ command.note }}">{{ command.label }}</a>{% if not forloop.last %}<span aria-hidden="true"> · </span>{% endif %}{% endfor %}</p></div>
+        <a class="lock-mode__more" href="{{ item.url }}" aria-label="查看 {{ item.name }} 的冲突与命令">详情 <span aria-hidden="true">→</span></a>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  <section class="wiki-section" id="commands">
+    <h2>命令与锁</h2>
+    <p class="lock-sectionlead">同一命令可能因选项、对象或执行阶段取得不同模式。表中保留这些条件；点击命令可查看 PostgreSQL {{ version.label }} 的完整语法。</p>
+    <div class="lock-command-filter" data-lock-filter-wrap hidden><label for="lock-command-search" class="sr-only">筛选命令及其锁模式</label><input class="form-control" id="lock-command-search" type="search" placeholder="筛选命令、锁模式或条件，如 ALTER TABLE、CONCURRENTLY" maxlength="120" autocomplete="off" data-lock-search><p class="lock-muted" data-lock-count aria-live="polite">共 {{ commands|length }} 条命令及变体</p></div>
+    <div class="lock-command-table"><table><thead><tr><th scope="col">SQL 命令</th><th scope="col">关联的锁模式</th><th scope="col">取得条件与说明</th></tr></thead><tbody>
+    {% for command in commands %}
+    <tr data-lock-command-row data-lock-command-key="{{ command.key }}" data-lock-choice-key="{{ command.choice_key }}" data-lock-search-text="{{ command.search_text }} {{ command.label }} {{ command.note }} {% for item in command.modes %}{{ item.name }} {% endfor %}">
+      <th scope="row"><a href="{{ command.url }}" class="lock-mono">{{ command.label }}</a><button class="lock-command-show" type="button" data-lock-show-command="{{ command.choice_key }}" hidden>在矩阵中查看 ↑</button></th>
+      <td><ul class="lock-command-modes">{% for item in command.modes %}<li><a href="{{ item.url }}" class="lock-mono">{{ item.name }}</a></li>{% endfor %}</ul></td>
+      <td>{{ command.note }}</td>
+    </tr>
+    {% endfor %}
+    </tbody></table></div>
+    <p class="wiki-empty" data-lock-empty hidden>没有匹配的命令。试试更短的关键词。</p>
+  </section>
+
+  {% include "wiki/lock_notes.html" %}
+  {% include "wiki/lock_sources.html" %}
+</div>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/lock.js?{{gitrev}}" defer></script>{% endblock %}

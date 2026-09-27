@@ -1,0 +1,31 @@
+{% extends "wiki/base.html" %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<div class="wiki-topic wiki-tone-{{ topic.tone }}" data-pg-doc-version="{{ major }}">
+  <p class="wiki-crumb"><a href="/docs/">文档</a> / {{ topic.name }}</p>
+  <h1>PostgreSQL {{ topic.name }}</h1>
+  <p class="wiki-lead">{{ topic.lead }}</p>
+  {% include "wiki/topic_versions.html" %}
+  <form class="topic-filter" method="get" action="{{ root }}" role="search">
+    <input type="hidden" name="v" value="{{ major }}">
+    <label class="topic-search-label" for="topic-q">搜索{{ topic.name }}<input class="form-control" id="topic-q" type="search" name="q" value="{{ query }}" maxlength="120" placeholder="{{ topic.hint }}"></label>
+    <label for="topic-category">分类<select class="form-control" id="topic-category" name="category"><option value="">全部分类</option>{% for c in categories %}<option value="{{ c.name }}"{% if category == c.name %} selected{% endif %}>{{ c.name }}（{{ c.count }}）</option>{% endfor %}</select></label>
+    <button type="submit" class="btn btn-primary">筛选</button>
+    {% if query or category %}<a href="{{ root }}?v={{ major }}">清除筛选</a>{% endif %}
+  </form>
+  <p class="topic-count">共 {{ total }} 个条目，PostgreSQL {{ version.label }} 收录 {{ present }} 个。{% if query or category %}当前匹配 {{ found }} 个。{% endif %}</p>
+  <div class="wiki-table"><div class="wiki-table__scroll">
+    <table class="topic-table">
+      <thead><tr><th scope="col">名称与用途</th><th scope="col">分类</th><th scope="col">版本记录<span class="wiki-ruler" aria-hidden="true">{% for v in versions %}<span class="wiki-ruler__slot is-{{ v.tone }}"><i>{{ v.major }}</i></span>{% endfor %}</span></th></tr></thead>
+      <tbody>{% for row in rows %}<tr>
+        <th scope="row"><a class="topic-name" href="{{ row.url }}">{{ row.name }}</a><span class="topic-name-zh">{{ row.name_zh }}</span><p class="topic-summary">{{ row.summary }}</p></th>
+        <td class="topic-category">{{ row.category }}{% if not row.present %}<span class="topic-unavailable">此版未收录</span>{% endif %}</td>
+        <td><span class="wiki-strip">{% for cell in row.cells %}<a class="wiki-cell wiki-cell--{{ cell.state }}" href="{{ cell.url }}" title="{{ cell.title }}" aria-label="{{ row.name }} · {{ cell.title }}"></a>{% endfor %}</span></td>
+      </tr>{% empty %}<tr><td colspan="3">没有匹配的条目。<a href="{{ root }}?v={{ major }}">查看全部{{ topic.name }}</a></td></tr>{% endfor %}</tbody>
+    </table>
+  </div></div>
+  <p class="wiki-striplegend"><span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--present"></span>已收录</span><span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--added"></span>首次出现</span><span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--changed"></span>接口或属性变化</span><span class="wiki-striplegend__item"><span class="wiki-cell wiki-cell--removed"></span>不再收录</span></p>
+  <p class="topic-footnote">版本方格表示本次采样中的记录；最早收录版本不一定是实际引入版本。点击方格查看对应版本的说明与来源。</p>
+  <section class="wiki-section"><h2>使用说明</h2><p>{{ topic.note }}</p></section>
+</div>
+{% endblock %}

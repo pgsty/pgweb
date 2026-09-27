@@ -3,11 +3,13 @@
 from django.urls import path, re_path
 from django.views.generic import RedirectView
 
-from . import views
+from . import topic_views, views
 from .columns import COLUMNS
 
 app_name = 'wiki'
 urlpatterns = [
+    path('lock/', views.lock_index, name='lock'),
+    path('lock/<slug:slug>/', views.lock_detail, name='lock_detail'),
     path('sql/', views.sqlcmd_index, name='sqlcmd'),
     path('sql/changes/', views.sqlcmd_changes_root, name='sqlcmd_changes_root'),
     re_path(r'^sql/changes/(?P<major>\d+(?:\.\d+)?)/$', views.sqlcmd_changes, name='sqlcmd_changes'),
@@ -42,6 +44,13 @@ urlpatterns = [
     # 规范地址是小写连字符（to-char）；函数名本身（to_char、TO_CHAR）也接受，
     # 随后由视图 301 到规范地址。
     re_path(r'^func/(?P<slug>(?i:[a-z][a-z0-9_-]*))/$', views.func_detail, name='func_detail'),
+] + [
+    route
+    for kind in ('hook', 'relopts', 'role', 'oid')
+    for route in (
+        path(kind + '/', topic_views.index, {'kind': kind}, name=kind),
+        path(kind + '/<slug:slug>/', topic_views.detail, {'kind': kind}, name=kind + '_detail'),
+    )
 ] + [
     path('{}/'.format(column['slug']), RedirectView.as_view(url=column['origin'], permanent=False),
          name=column['slug'])

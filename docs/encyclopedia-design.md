@@ -1,6 +1,6 @@
 # PostgreSQL 参考资料模型
 
-PGSQL.CC 在 `/docs/` 下提供 SQL 命令、SQLSTATE、系统目录、配置参数、等待事件和函数六类参考资料。模型按领域保存实体，每个实体一行；公开 URL、Python 模型和 `wiki` 应用标签保留，数据库表使用领域名称。
+PGSQL.CC 在 `/docs/` 下提供 SQL 命令、SQLSTATE、系统目录、配置参数、等待事件、函数、锁模式、扩展钩子、存储参数、预定义角色与对象标识符类型十一类参考资料。模型按领域保存实体，每个实体一行；公开 URL、Python 模型和 `wiki` 应用标签保留，数据库表使用领域名称。
 
 2026-09-25 的模型整理将原 20 张业务表收敛为 12 张，检索另有两张派生表。实施范围见 [整理计划](reference-model-plan.md)，备份、执行证据与回退见 [实施记录](reference-model-rollout.md)。本文件描述当前实现，不再沿用早期抽象基类、独立正文表及报文反查的设想。
 
@@ -14,6 +14,13 @@ PGSQL.CC 在 `/docs/` 下提供 SQL 命令、SQLSTATE、系统目录、配置参
 | 等待事件 | `waitevent` | `waitevent_version` | 归一化身份 key；`/docs/waitevent/<type>/<name>/` |
 | SQL 命令 | `sqlcmd` | 从快照与 `core.Version` 组装 | slug；`/docs/sql/<slug>/` |
 | 函数 | `func` | `func_version` | 函数名归一化 slug；`/docs/func/<slug>/` |
+| 锁模式 | `lock_mode` | 复用 `core.Version`，来源构建保留在快照中 | 锁模式 slug；`/docs/lock/<slug>/` |
+| 扩展钩子 | `hook` | 复用 `core.Version`，来源构建保留在快照中 | slug；`/docs/hook/<slug>/` |
+| 存储参数 | `relopt` | 同上 | 对象类型与参数名构成的 slug；`/docs/relopts/<slug>/` |
+| 预定义角色 | `predefined_role` | 同上 | 角色名；`/docs/role/<slug>/` |
+| 对象标识符类型 | `oid_type` | 同上 | 类型名；`/docs/oid/<slug>/` |
+
+锁百科和四个参考栏目在原 12 张业务表之外各新增一张，共 17 张；不增加独立版本或关系表。详见 [锁百科](lock-column.md) 与 [四个参考栏目](reference-topics.md)。
 
 版本资料描述实际采样构建及汇总，不是每实体每版本一行的快照表。实体自己的 `versions`、`changes` 等 JSON 保存完整版本记录。各领域保持自己的身份与比较规则，未引入通用节点、边或图查询框架。
 
@@ -51,6 +58,10 @@ SQLSTATE 读取 `~/pg.center/err` 的 `data/errcodes/*.json`、`evidence/*.json`
 其余来源和校验规则分别见 [catalog](catalog-column.md)、[GUC](guc-column.md)、[等待事件](waitevent-column.md)、[SQL 命令](sqlcmd-column.md)、[函数](func-column.md)。函数存在性以英文原页为准，本站译文用于中文叠加。每个领域仍有独立导入器，不用一个通用框架抹平来源差异。
 
 SQLSTATE 快照格式是 `format=2`：`classes[]`、`releases[]`、`codes[]`；每条 code 包含完整三块 JSON。`importer.prepare()` 纯转换兼容 `format=1`，不修改调用者输入。本站 `data/wiki/errcode-summaries.json` 在源导出阶段覆盖正文摘要，固定快照已经自包含；`--input` 不读取另一台机器的摘要覆盖。
+
+中文手册重译后的对齐仍在导出阶段完成：SQLSTATE 类别中文标题取最新已有附录 A，历史类别取最后含该类的手册；附录并没有作者诊断正文的同义文本，所以不覆盖 `texts.zh` 正文或本站摘要。正文中的已核实手册坐标修正须限定原版本且验证目标锚点，再生成 Markdown 对应的 HTML；不修改 `evidence` 中锁定的来源链接、源码或运行证据。阅读器保留 9.0–9.6 的完整版本段，不能用 `int(tree)` 合并为 9。
+
+全量只读引用、指纹、内部覆盖和检索校验可运行 `.venv/bin/python tools/wiki/audit_alignment.py --output tmp/wiki-alignment-RUN`。输出逐条引用失败、明确未文档化的引用、12 表完整行快照、手册内容指纹及 SQLSTATE 事实差异；集合提取和译文语义还需按领域校对，不能仅凭这份结构检查重灌数据。等待事件另有 `tools/wiki/audit_wait_alignment.py` 全量集合与译文审计。2026-09-26 校对先形成 `tmp/wiki-alignment-20260926/REPORT-before.md`，再经固定快照修复本地；生产仍须单独确认。
 
 六张主表都有稳定 `content_hash`，按落库业务字段计算 SHA-256：对象键排序、数组顺序保留，排除 `source_rev/imported_at/content_hash`。含指纹的输入会重新计算核验。无内容变化的实体完全跳过，保留 `imported_at` 和最近一次内容写入时的来源身份；新导出的 SQL 命令和函数 `source_rev` 使用来源提交，不再拼运行时间。
 

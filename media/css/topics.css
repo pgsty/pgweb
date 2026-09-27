@@ -1,0 +1,40 @@
+/* Small additions to the shared wiki layout; all colours follow site themes. */
+.wiki-topic { min-width: 0; }
+.wiki-topic .topic-title { overflow-wrap: anywhere; }
+.topic-versions { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 10px; }
+.topic-pill { display: inline-flex; justify-content: center; min-width: 36px; padding: 4px 9px; border: 1px solid; border-radius: 5px; font: 13px var(--pg-font-mono); }
+.topic-version-note, .topic-count, .topic-footnote { color: var(--pg-muted); font-size: 13px; }
+.topic-filter { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 12px; padding: 18px 0; }
+.topic-filter label { display: flex; flex-direction: column; gap: 7px; margin: 0; font-size: 13px; color: var(--pg-ink-2); }
+.topic-search-label { flex: 1 1 270px; }
+.topic-filter select { min-width: 150px; }
+.topic-table { width: 100%; min-width: 690px; }
+.topic-table thead th { vertical-align: top; }
+.topic-table tbody th { font-weight: 400; width: 58%; }
+.topic-table td, .topic-table th { padding: 14px 16px; vertical-align: top; }
+.topic-table tbody tr + tr { border-top: 1px solid var(--pg-line); }
+.topic-table .topic-name { font-family: var(--pg-font-mono); font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.topic-name-zh { display: block; margin-top: 4px; color: var(--pg-ink-2); font-size: 13px; }
+.topic-summary { font-size: 13px; color: var(--pg-muted); margin: 6px 0 0; line-height: 1.6; }
+.topic-category { min-width: 95px; font-size: 13px; }
+.topic-unavailable { display: block; font-size: 11px; margin-top: 6px; color: var(--pg-muted); }
+.topic-jump { display: flex; gap: 10px 20px; flex-wrap: wrap; padding: 12px 0; border-bottom: 1px solid var(--pg-line); font-size: 13px; }
+.topic-facts { margin: 20px 0; border-top: 1px solid var(--pg-line); }
+.topic-facts > div { display: grid; grid-template-columns: 130px minmax(0, 1fr); gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--pg-line); }
+.topic-facts dt { color: var(--pg-muted); font-weight: 400; }
+.topic-facts dd { margin: 0; overflow-wrap: anywhere; }
+.wiki-topic pre { max-width: 100%; overflow-x: auto; font-size: 13px; }
+.topic-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+.topic-provenance { color: var(--pg-muted); font-size: 13px; margin-top: 20px; }
+.topic-provenance summary { cursor: pointer; }
+.topic-provenance dl { margin-top: 12px; }
+.topic-provenance dd { overflow-wrap: anywhere; }
+.topic-neighbours { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; }
+.topic-neighbours li { overflow-wrap: anywhere; }
+.topic-neighbours span { display: block; color: var(--pg-muted); font-size: 12px; }
+.topic-absence { border-left: 3px solid var(--seg); padding-left: 18px; }
+@media (max-width: 640px) {
+  .topic-facts > div { grid-template-columns: 1fr; gap: 3px; }
+  .topic-neighbours { grid-template-columns: 1fr; }
+  .topic-filter > label { width: 100%; }
+}

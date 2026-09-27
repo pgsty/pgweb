@@ -6,7 +6,7 @@
 
 本站在 cat 之上叠两层：
 1. 中文：从本站手册（`docs` 表）里采集关系说明段、逐字段描述与总览表的一句话；
-2. PostgreSQL 20 开发版快照：cat 只到 19 beta 3，20 由本站 devel 手册推导。
+2. PostgreSQL 20 开发版快照：20 由本站 devel 手册推导，英文读取同构建的固定归档。
 
 回退规则严格：某版某字段没有译文时，只在英文描述**完全相同**的另一份快照里借用译文
 （`zh_from='inherited'`），否则留空让页面显示英文。不做近似匹配。
@@ -18,6 +18,8 @@ import os
 import re
 import subprocess
 from datetime import datetime, timezone
+from decimal import Decimal
+from pathlib import Path
 
 from bs4 import BeautifulSoup, Tag
 from django.db import transaction
@@ -285,6 +287,99 @@ class Manual:
                     if NAME_RE.match(name) and name not in out:
                         out[name] = clean_cell(cells[1])
         return out
+
+
+class ArchivedEnglishManual(Manual):
+    """Matching English build archived with the catalog source, never fetched at import time."""
+
+    def __init__(self, root, slug):
+        super().__init__(slug)
+        self.root = Path(root) / 'sources' / 'postgresql' / slug
+        path = self.root / 'build.json'
+        self.build = json.loads(path.read_text()) if path.exists() else {}
+
+    def loaded(self):
+        return bool(self.build)
+
+    def soup(self, filename):
+        if filename not in self._soups:
+            path = self.root / filename
+            raw = path.read_bytes() if path.exists() else None
+            expected = self.build.get('files', {}).get(filename)
+            if (expected and raw is None) or (raw is not None and (
+                    not expected or hashlib.sha256(raw).hexdigest() != expected)):
+                raise ValueError('英文手册归档指纹不匹配：{}'.format(path))
+            self._soups[filename] = BeautifulSoup(raw, 'html.parser') if raw else None
+        return self._soups[filename]
+
+
+def require_matching_preview(version):
+    """A major alone is not an identity for a moving beta manual."""
+    if version.get('status') != 'preview':
+        return
+    from pgweb.core.models import Version
+    current = Version.objects.filter(tree=Decimal(version['major'])).first()
+    if current and current.versionstring != version['documentation_version']:
+        raise ValueError('系统目录 {} 来源为 {}，本地手册为 {}；请先刷新同构建事实源'.format(
+            version['major'], version['documentation_version'], current.versionstring))
+
+
+def harvest_english(manual, relations, major, report):
+    """Read each column's English from this build, including documented slot names."""
+    if not manual.loaded():
+        # A missing English archive cannot justify borrowing another build's
+        # explanation: translated enum values may already have changed.
+        for relation in relations:
+            snapshot = relation['versions'].get(major)
+            if snapshot is not None:
+                snapshot['description'] = ''
+                for column in snapshot.get('columns') or ():
+                    column['description'] = ''
+        report['devel']['english'] = {'available': False}
+        return
+    mapped = {r['name']: r for r in relations}
+    overview = manual.overview()
+    refreshed = 0
+    for relation in relations:
+        snapshot = relation['versions'].get(major)
+        if snapshot is None:
+            continue
+        doc = snapshot['doc']
+        name = relation['name']
+        div = manual.table(doc['file'], doc.get('anchor', ''), name)
+        direct = div is not None
+        base, seen = snapshot, {name}
+        while div is None:
+            base_name = base.get('derived_from') or base.get('alias_of')
+            if not base_name or base_name in seen:
+                break
+            seen.add(base_name)
+            base = mapped.get(base_name, {}).get('versions', {}).get(major, {})
+            base_doc = base.get('doc', doc)
+            div = manual.table(base_doc['file'], base_doc.get('anchor', ''), base_name)
+        if div is None:
+            raise ValueError('同构建英文手册缺少目录表：{} @ {}'.format(name, major))
+        rows = {row['name']: row for row in parse_columns(div, name)}
+        snapshot['description'] = relation_description(div) if direct else overview.get(name, '')
+        for column in snapshot.get('columns') or ():
+            row = rows.get(column['name']) or rows.get(column.get('documented_name', ''))
+            # pg_statistic's physical slots are documented as stakindN etc.
+            if row is None:
+                row = rows.get(re.sub(r'\d+$', 'N', column['name']))
+            if row is None:
+                column['description'] = ''
+                continue  # A runtime-only column keeps its explicit schema_note.
+            description = row['description_zh']  # The HTML parser is language-neutral.
+            if name.startswith('pg_stat_xact_') and not direct and column['name'] not in (
+                    'relid', 'schemaname', 'relname', 'funcid', 'funcname'):
+                description = re.sub(r'(?:since the last statistics reset|since last reset)',
+                                     'in the current transaction', description, flags=re.I)
+                description += ' This view reports counters for the current transaction.'
+            column['description'] = description
+            refreshed += 1
+        snapshot['english_build'] = {k: v for k, v in manual.build.items() if k != 'files'}
+    report['devel']['english'] = {'available': True, 'columns': refreshed,
+                                'build': {k: v for k, v in manual.build.items() if k != 'files'}}
 
 
 def doc_ref(snapshot, slug):
@@ -879,20 +974,21 @@ def export_snapshot(root=DEFAULT_ROOT):
             'changes': [dict(change) for change in item.get('changes') or ()],
         })
 
-    # 中文采集：本站只有 10 及以后的手册。
+    # 中文采集：9.0 起每一版手册都读（2026-09 重译后 9.x 也有本地树；没有树的版本自动跳过）。
     overviews = {}
     for version in versions:
-        if version['major'].startswith('9.'):
-            continue
-        manual = Manual(int(version['major']))
+        major = version['major']
+        manual = Manual(Decimal(major) if '.' in major else int(major))
         if not manual.loaded():
             continue
+        require_matching_preview(version)
         harvest_version(manual, relations, version['major'], report)
         overviews[version['major']] = manual.overview()
         del manual
 
     devel_transition = derive_devel(relations, report, order[-1])
     if devel_transition is not None:
+        harvest_english(ArchivedEnglishManual(root, 'devel'), relations, DEVEL_MAJOR, report)
         devel = Manual(DEVEL_TREE)
         overviews[DEVEL_MAJOR] = devel.overview()
         del devel
@@ -960,6 +1056,8 @@ def export_snapshot(root=DEFAULT_ROOT):
     stats['relation_snapshots'] = sum(len(r['versions']) for r in relations)
     stats['column_snapshots'] = sum(len(s.get('columns') or ())
                                     for r in relations for s in r['versions'].values())
+    stats['system_column_snapshots'] = sum(len(s.get('system_columns') or ())
+                                           for r in relations for s in r['versions'].values())
     stats['structural_changes'] = sum(1 for r in relations for c in r['changes']
                                       if c.get('structural'))
     stats['adjacent_change_records'] = sum(len(r['changes']) for r in relations)

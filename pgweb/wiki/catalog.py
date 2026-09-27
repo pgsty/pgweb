@@ -7,6 +7,7 @@
 from django.core.cache import cache
 
 from .catalog_importer import compare_snapshots
+from .manuals import manual_slug
 from .ruler import mark_ticks
 from .models import (CATALOG_KINDS, CATALOG_KIND_EYEBROW, CATALOG_KIND_LABEL, CatalogRelation,
                      CatalogVersion, RELKIND_LABEL)
@@ -14,7 +15,7 @@ from .models import (CATALOG_KINDS, CATALOG_KIND_EYEBROW, CATALOG_KIND_LABEL, Ca
 
 CACHE_KEY = 'pgweb:wiki:catalog-index'
 VERSION_CACHE_KEY = 'pgweb:wiki:catalog-versions2'
-DOC_CACHE_KEY = 'pgweb:wiki:catalog-docpages'
+DOC_CACHE_KEY = 'pgweb:wiki:catalog-docpages-v2'
 CHANGES_CACHE_KEY = 'pgweb:wiki:catalog-changes:{}'
 CACHE_SECONDS = 300
 
@@ -24,7 +25,7 @@ EYEBROW = CATALOG_KIND_EYEBROW
 
 # 最早收录的版本是基线，不代表这些关系首次于那一版引入。所有「引入」字样照此措辞。
 BASELINE_TEMPLATE = '{0} 是本数据集的收录基线，不代表该关系首次于 {0} 引入。'
-PREVIEW_NOTICE = '19 beta 3 为预发行快照，正式发布前仍可能变化。'
+PREVIEW_NOTICE = '{} 为预发行快照，正式发布前仍可能变化。'
 DEVEL_NOTICE = '20 开发版快照来自本站 devel 手册，只比较字段名与类型，描述与属性变化不作比较。'
 
 
@@ -104,7 +105,7 @@ def doc_pages():
         from pgweb.docs.models import DocPage
         pairs = set()
         for tree, filename in DocPage.objects.values_list('version', 'file'):
-            slug = 'devel' if int(tree) == 0 else str(int(tree))
+            slug = manual_slug(tree)
             pairs.add((slug, filename))
         cache.set(DOC_CACHE_KEY, pairs, CACHE_SECONDS)
     return pairs
@@ -433,7 +434,7 @@ def matrix_of(relation, order):
 
 def notice_of(version):
     if version and version['preview']:
-        return PREVIEW_NOTICE
+        return PREVIEW_NOTICE.format(version['label'])
     if version and version['devel']:
         return DEVEL_NOTICE
     return ''

@@ -167,7 +167,7 @@ def forget():
 # ---------------------------------------------------------------- 详情页
 
 DOC_FILE = 'errcodes-appendix.html'
-DOC_CACHE_KEY = 'pgweb:wiki:errcode-docmajors'
+DOC_CACHE_KEY = 'pgweb:wiki:errcode-docmajors-v2'
 
 
 def doc_majors():
@@ -175,7 +175,8 @@ def doc_majors():
     majors = cache.get(DOC_CACHE_KEY)
     if majors is None:
         from pgweb.docs.models import DocPage
-        majors = sorted({str(v).split('.')[0]
+        from .manuals import manual_slug
+        majors = sorted({'0' if v == 0 else manual_slug(v)
                          for v in DocPage.objects.filter(file=DOC_FILE).values_list('version', flat=True)})
         cache.set(DOC_CACHE_KEY, majors, CACHE_SECONDS)
     return majors
@@ -239,6 +240,10 @@ def version_groups(code):
 
     supported = [entry(m, str(m), m) for m in groups['supported']]
     historical = [entry(m, str(m), m) for m in groups['historical']]
+    # Shared site navigation lists historical manuals from PG10 onward. The
+    # SQLSTATE source samples also cover 9.x, which have their own loaded trees.
+    historical += [entry(m, m, m) for m in sorted(sampled, reverse=True)
+                   if m.startswith('9.') and m in available]
     special = [entry(t['major'], '{} {}'.format(t['major'], t['label']), t['major']) for t in groups['testing']]
     if groups['devel']:
         special.append(entry(groups['devel'], '{} dev'.format(groups['devel']), 0))

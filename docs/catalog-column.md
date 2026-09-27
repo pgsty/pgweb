@@ -12,10 +12,10 @@
 | 项 | 值 |
 | --- | --- |
 | 权威源 | `~/pg.center/cat/data/catalog.json`（`static/data/catalog.json` 是同一份） |
-| 版本 | 9.0 – 9.6、10 – 18、19 beta 3（cat）+ 20 devel（本站推导） |
-| 关系 | cat 157 个：`catalog` 70、`view` 39、`statistics` 40、`progress` 8；`pg_pltemplate` 于 13 移除。本站再多一个 `pg_stat_kind_info`（20 推导层），库里共 158 个 |
-| 记录 | cat 2032 份关系快照、19171 条字段记录、732 条相邻版本变化（其中 335 条结构变化）；加上 20 一层，库里 2184 份快照、20709 条字段记录 |
-| 中文 | 本站手册 10 – 19 与 devel 的译文：总览表一句话、关系说明段、逐字段描述 |
+| 版本 | 9.0 – 9.6、10 – 18、19 beta 4（cat）+ 20 devel（本站推导） |
+| 关系 | cat 151 个：`catalog` 65、`view` 39、`statistics` 40、`progress` 7；`pg_pltemplate` 于 13 移除。本站另有 20 的 `pg_stat_kind_info` 与 `pg_stat_progress_data_checksums`，共 153 个 |
+| 记录 | cat 2026 份关系快照、19131 条字段记录、728 条相邻版本变化（其中 329 条结构变化）；加上 20 一层，共 2178 份快照、20669 条字段记录 |
+| 中文 | 本站手册 9.0 – 19 与 devel 的译文：总览表一句话、关系说明段、逐字段描述（9.x 重译树 2026-09-25 起纳入；9.0/9.1 的统计视图手册里只有总览表、没有逐字段表，如实 unlocated） |
 
 cat 的 `relations[]` 每项：`name / kind / summary / first_version / last_version / versions{major: snapshot} / changes[]`。
 快照：`description / columns[] / system_columns[] / source_url / definition_source_url / schema_source / relation_oid / relkind / shared / runtime_validation …`。
@@ -38,7 +38,7 @@ cat 的 `relations[]` 每项：`name / kind / summary / first_version / last_ver
 ```python
 class CatalogVersion(models.Model):            # db_table = 'catalog_version'，18 行
     major = CharField(max_length=8, primary_key=True)   # '9.0' … '19', '20'
-    label = TextField()                       # '18' / '19 beta 3' / '20 devel'
+    label = TextField()                       # '18' / '19 beta 4' / '20 devel'
     status = TextField()                      # historical | stable | preview | devel
     support_status = TextField()              # end-of-life | supported | preview | devel
     source_tag = TextField(blank=True)        # 'REL_18_6'；devel 为 'master'
@@ -54,7 +54,7 @@ class CatalogVersion(models.Model):            # db_table = 'catalog_version'，
     position = IntegerField(default=0)        # 9.0 → 0 … 20 → 17
     class Meta: ordering = ('position',)
 
-class CatalogRelation(models.Model):           # db_table = 'catalog'，158 行
+class CatalogRelation(models.Model):           # db_table = 'catalog'，153 行
     name = CharField(max_length=64, primary_key=True)
     kind = CharField(max_length=12)           # catalog | view | statistics | progress
     summary = TextField(blank=True)           # cat 的英文一句话
@@ -100,7 +100,7 @@ class CatalogRelation(models.Model):           # db_table = 'catalog'，158 行
 
 ### 3.1 中文采集
 
-只读本站 `DocPage`（`file`, `version`），版本 10 – 19 与 0（devel）。定位规则：快照 `source_url` 的文件名与锚点 →
+只读本站 `DocPage`（`file`, `version`），版本 9.0 – 19 与 0（devel；没有树的版本自动跳过）。定位规则：快照 `source_url` 的文件名与锚点 →
 `DocPage(file=文件, version=版本)`；有锚点先找 `id=锚点` 的元素，再找它后面第一张标题里含关系名的 `table.table`；无锚点取页面里第一张标题含关系名的表。
 
 两种表格式都要认：
@@ -126,9 +126,9 @@ class CatalogRelation(models.Model):           # db_table = 'catalog'，158 行
 
 ### 3.2 PostgreSQL 20 开发版推导
 
-cat 到 19 beta 3 为止；20 由本站 devel 手册（`DocPage.version=0`）推出，规则：
+cat 到 19 beta 4 为止；20 由本站 devel 手册（`DocPage.version=0`）推出，规则：
 
-- 遍历 19 里的每个关系：按同样的定位规则在 devel 手册里找表，解析字段名、类型（用 cat 的 `TYPE_ALIASES` 规范化：int4→integer、bool→boolean、timestamptz→timestamp with time zone 等）、中文描述、引用。英文描述沿用 19 同名字段的，20 新增字段英文留空。
+- 遍历 19 里的每个关系：按同样的定位规则在 devel 手册里找表，解析字段名、类型（用 cat 的 `TYPE_ALIASES` 规范化：int4→integer、bool→boolean、timestamptz→timestamp with time zone 等）、中文描述、引用。英文描述从 cat 来源缓存 `sources/postgresql/devel/` 的同构建英文 HTML 读取，`build.json` 固定源归档 SHA256、文档源指纹与各页指纹；不再借用 19 英文。没有英文归档时清空开发版英文说明，报告 `harvest.devel.english.available=false`，仍保留中文与明确推导的结构；已有归档指纹不符则中止导出。变体逐层追溯到基表，`pg_statistic` 的物理槽位映射回手册占位符；英文来源构建写进快照 `english_build`。
 - devel 手册里新出现的 `catalog-*.html` / `view-*.html` 页面（页名即关系名，且页内有同名的表），以及 `monitoring-stats.html` / `progress-reporting.html` 里新出现的 `structname` 表，作为 20 新增关系（`status='added'`）。早先移除、devel 手册里又有了的关系挂回原来那条记录，不另建一条——否则 `validate()` 会以"关系重复"中止。
 - 19 快照带 `derived_from` 或 `alias_of`（`pg_stat_xact_*`、`pg_statio_*` 等只在源码里定义的变体）在 devel 手册里找不到表时，原样沿用 19 的字段，快照加 `carried_from: '19'` 与 `carry_reason`（`'手册没有这张表'`）。
 - 手册把字段名写成占位符时同样整份沿用，`carry_reason='手册用占位符字段名'`：`pg_statistic` 的槽位在手册里是 `stakindN / staopN / stacollN / stanumbersN / stavaluesN`，cat 从源码头文件把它们摊成 1 – 5，照手册推会说 20 删了 25 个字段又加了 5 个。判据是字段名不全小写（`COLUMN_NAME_RE`）。
@@ -161,8 +161,8 @@ cat 到 19 beta 3 为止；20 由本站 devel 手册（`DocPage.version=0`）推
 
 `<name>` 匹配 `^pg_[a-z0-9_]+$`；`changes/` 路由排在 `<name>/` 之前。无效 `?v=` 落回默认版本；无效 name 404。
 `shell()` 给"文档"侧栏把 `/docs/catalog/` 标为 active；`LOCAL_ONLY_SECTIONS` 加 `/docs/catalog/`；`struct.py` 把索引、每个关系、每个版本变更页都写进 sitemap。
-`columns.py` 里 `catalog` 置 `live: True`，规模写"158 个关系 · 4 类"（cat 的 157 加上 20 推导层的
-`pg_stat_kind_info`），覆盖写"PostgreSQL 9.0 – 20 devel"。
+`columns.py` 里 `catalog` 置 `live: True`，规模写"153 个关系 · 4 类"（cat 的 151 加上 20 推导层的
+`pg_stat_kind_info` 和 `pg_stat_progress_data_checksums`），覆盖写"PostgreSQL 9.0 – 20 devel"。
 三个视图都要挂 `@queryparams`（索引 `q / kind / present / first`、详情 `v`、变更页 `from`）：
 `PgMiddleware.process_view` 会把没声明的查询参数整个删掉，不挂就等于 `?v=` 永远收不到。
 
@@ -217,7 +217,7 @@ matrix: {versions: [ver], rows: [{name, cells: [{major, state, type, url}]}]}   
 system_columns: [{name, type, attnum}]
 doc_versions: [{major, label, url}]   # 本站手册收录了该关系的版本
 sibling_groups: [索引页 groups 里本类别那一组，供页尾复用索引表；current=name]
-notice: '' | '19 beta 3 为预发行快照…' | '20 开发版快照来自本站 devel 手册，只比较字段名与类型…'
+notice: '' | '19 beta 4 为预发行快照…' | '20 开发版快照来自本站 devel 手册，只比较字段名与类型…'
 versions: [ver]                 # 整条版本条，模板要判"最新一版是哪个"时用
 ```
 
@@ -290,7 +290,7 @@ CSP 禁内联样式，状态一律走 class。亮暗两套。脚本追加到 `me
 不给 `--write` 就只预览（`preview()`），什么都不写。迁移是 `wiki.0002_catalog`。
 
 发布顺序：拉代码 → `manage.py migrate wiki` → `sync_catalog.py --input … --write` → `index_docs --catalog` → `systemctl restart pgsql.cc`。
-页面缓存 5 分钟，导入后命令主动清缓存（`catalog.forget()`）。cat 出新版本（例如 19 正式发布、20 进入 beta）时：更新 `~/pg.center/cat`，重新导出导入即可；20 推导层跟着本站 devel 手册走，手册重灌后重导一次。
+页面缓存 5 分钟，导入后命令主动清缓存（`catalog.forget()`）。cat 出新版本（例如 19 正式发布、20 进入 beta）时：更新 `~/pg.center/cat`，重新导出导入即可；20 推导层跟着本站 devel 手册走，手册重灌后同步归档对应 pgdoc 英文构建与 `build.json`，再重导。预发行事实源的 `documentation_version` 必须与本站 `Version.versionstring` 相同，否则导出拒绝混合构建。
 
 导入报告的形状：
 
@@ -315,7 +315,7 @@ unlocated                                       # 定位不到字段表的「关
 .venv/bin/python manage.py migrate wiki
 .venv/bin/python tools/wiki/sync_catalog.py --export /tmp/catalog-snapshot.json.gz
 .venv/bin/python tools/wiki/sync_catalog.py --input /tmp/catalog-snapshot.json.gz --write
-.venv/bin/python manage.py index_docs --catalog          # → {"catalog": 158}
+.venv/bin/python manage.py index_docs --catalog          # → {"catalog": 153}
 .venv/bin/python manage.py test pgweb.wiki pgweb.search --noinput
 ```
 
@@ -325,3 +325,8 @@ unlocated                                       # 定位不到字段表的「关
 
 
 2026-09-25 模型整理：实体表增加 `content_hash`，按实际落库内容判断是否更新；`source_rev` 和导出时间不参与内容比较，未变更的实体保留 `imported_at`。表名与版本表已去掉 `wiki_` 前缀，Python 模型、应用标签、命令、URL 和检索身份保持原约定。全局契约与回退步骤见 [百科模型](encyclopedia-design.md) 和 [模型整理实施记录](reference-model-rollout.md)。
+
+
+2026-09-27 构建对齐：PG19 已重新采集官方 `postgres:19beta4` x86_64 镜像（镜像摘要 `sha256:5b87ea8650be6db1308cf8e99b7e4bd909c40bdbeefe6e347772943f955f76d9`），真实运行结构为 150 个关系、1521 个字段；英文使用最新 pgdoc `en/19beta4` 构建。原 beta3 来源保存在 `tmp/catalog-update-20260927/catalog/cat-before-complete.tar.gz`，cat 的 `scripts/refresh_version.py` 复用原解析器与运行时校准，按大版本更新固定源，保留其他版本快照。PG20 英文构建使用 pgdoc `en/20devel` 与固定源包 SHA256 `97c64fe3d54d9cdf570c9dab054463881695c388e6b77ceab889709ba6f025cb`；开发版仍是手册推导，不宣称运行时采样。PG19/20 中文均读取本站 DocPage，已与 pgdoc 最新最终产物的 224 个目录相关页逐字核对。
+
+本次完整快照须用 `--prune` 导入：删除只在旧 beta3 样本出现的五个 `pg_propgraph_*` 实体；`pg_stat_progress_data_checksums` 首次采样改为 20，不是 19。`pg_class.relkind` 的中英文均不再残留 beta3 的 `g = property graph`。同一大版本的 beta3→beta4 是固定样本修正，不把撤回的 beta 特性记成下一个大版本移除。

@@ -6,6 +6,10 @@
 {% endblock %}
 {% block contents %}
 <div class="ext-catalog" lang="zh">
+  <nav class="ext-section-nav" aria-label="扩展目录栏目">
+    <a href="/ext/"{% if not ext_cloud_active %} aria-current="page"{% endif %}>扩展目录</a>
+    <a href="/ext/cloud/"{% if ext_cloud_active %} aria-current="page"{% endif %}>云厂商支持</a>
+  </nav>
   {% block ext_content %}{% endblock %}
 </div>
 {% endblock %}

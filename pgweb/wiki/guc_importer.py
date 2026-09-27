@@ -7,7 +7,7 @@
 本站在 guc.pg.center 之上叠两层：
 
 1. 手册译文：每个参数、每个版本在本站手册 `runtime-config-*.html` 里的 `<dd>` 说明段，
-   清洗、改写链接后存进快照（10 – 19 与 devel）；
+   清洗、改写链接后存进快照（9.0 – 19 与 devel；本地没有那一版手册时自动跳过）；
 2. PostgreSQL 20 开发版快照：guc 到 19 beta 3 为止，20 从本站 devel 手册推导。
 
 Pigsty 相关内容一律不进本站：`pigsty` 块与 `pigsty_rationale_pending_review` 整个丢掉，
@@ -55,7 +55,7 @@ RUNTIME_FILE_RE = r'^runtime-config(?:-[a-z0-9-]+)?\.html$'
 OFFICIAL_URL = 'https://www.postgresql.org/docs/{}/{}'
 
 # 手册里写的类型名 → pg_settings.vartype；其它（pg_lsn、timestamp）归 string。
-DOC_VARTYPES = {'boolean': 'bool', 'floating point': 'real', 'integer': 'integer',
+DOC_VARTYPES = {'boolean': 'bool', 'bool': 'bool', 'floating point': 'real', 'integer': 'integer',
                 'string': 'string', 'enum': 'enum'}
 
 # devel 手册新参数推不出子分类时的兜底：按页名归到一级分类。
@@ -267,7 +267,7 @@ class DocEntry:
 class RuntimeIndex:
     """一个版本手册里 `runtime-config-*.html` 的参数条目索引。
 
-    锚点与参数名两条路都建：10 – 13 的手册 `<dt>` 根本没有 id，只能按
+    锚点与参数名两条路都建：按当前手册的真实 id 定位，没有 id 时按
     `<code class="varname">` 认；一个 `<dt>` 也可能同时是几个参数的说明
     （`debug_print_parse, debug_print_rewritten, debug_print_plan`）。
     """
@@ -657,7 +657,7 @@ def new_devel_parameter(name, entry, category):
                 'short_desc': '', 'extra_desc': '', 'context': '',
                 'vartype': entry.vartype or '', 'min_val': '', 'max_val': '', 'enumvals': [],
                 'doc': doc, 'doc_html': '', 'doc_same_as': '',
-                'carried_from': '', 'carry_reason': ''}
+                'carried_from': '', 'carry_reason': '', 'facts_source': 'documentation'}
     return {
         'name': name, 'key': name.lower(),
         'versions': {DEVEL_MAJOR: snapshot}, 'default_history': [], 'changes': [],
@@ -677,7 +677,7 @@ def derive_devel(parameters, indexes, base_major, report):
     documented = base_index.names() if base_index.loaded() else set()
 
     by_name = {item['name']: item for item in parameters}
-    carried, undocumented, removed, added = [], [], [], []
+    carried, undocumented, removed, added, type_conflicts = [], [], [], [], []
     for item in parameters:
         previous = item['versions'].get(base_major)
         if previous is None:
@@ -693,6 +693,15 @@ def derive_devel(parameters, indexes, base_major, report):
             reason = CARRY_UNDOCUMENTED.format(base_major)
             undocumented.append(item['name'])
         else:
+            if entry.vartype and previous.get('vartype') and entry.vartype != previous['vartype']:
+                # A prerelease may revert a feature retained by the devel manual.
+                # Keep its documented type without borrowing incompatible facts.
+                built = new_devel_parameter(item['name'], entry, previous.get('category', ''))
+                item['versions'][DEVEL_MAJOR] = built['versions'][DEVEL_MAJOR]
+                item['docs'].update(built['docs'])
+                type_conflicts.append({'name': item['name'], 'base': base_major,
+                                       'base_type': previous['vartype'], 'manual_type': entry.vartype})
+                continue
             doc = {'file': entry.file, 'anchor': entry.anchor, 'slug': DEVEL_SLUG,
                    'url': devel_url(entry.file, entry.anchor)}
             reason = CARRY_DOCUMENTED.format(base_major)
@@ -727,13 +736,15 @@ def derive_devel(parameters, indexes, base_major, report):
     for item in parameters:
         if DEVEL_MAJOR not in item['versions'] or not item['default_history']:
             continue
-        if item['default_history'][-1]['to'] == base_major:
+        if (item['versions'][DEVEL_MAJOR].get('carried_from') == base_major
+                and item['default_history'][-1]['to'] == base_major):
             item['default_history'][-1]['to'] = DEVEL_MAJOR
 
     report['devel'] = {
         'derived': True, 'base': base_major, 'manual_parameters': len(index.names()),
         'carried': len(carried), 'undocumented': sorted(undocumented),
         'added': sorted(added), 'removed': sorted(removed),
+        'type_conflicts': type_conflicts,
     }
     return True
 
@@ -759,6 +770,10 @@ def harvest_version(index, parameters, major, report):
             doc['file'] = entry.file
         if entry.anchor:
             doc['anchor'] = entry.anchor
+        elif doc.get('anchor'):
+            # 分组说明的 <dt> 可能没有独立锚点。源仓库按命名规则合成的锚点
+            # 在当前条目不存在时清掉，不能按历史版本范围预设锚点有无。
+            doc['anchor'] = ''
         if not doc.get('url') and doc.get('file'):
             doc['url'] = OFFICIAL_URL.format(
                 doc['slug'], doc['file'] + ('#' + doc['anchor'] if doc.get('anchor') else ''))
@@ -861,7 +876,7 @@ def export_snapshot(root=DEFAULT_ROOT):
     transitions = build_transitions(parameters, order)
     report['diffs'] = check_diffs(transitions, diffs, source_keys)
 
-    # 手册译文：本站只有 10 及以后的手册，9.x 留空。
+    # 手册译文：9.0 起每一版手册都采（2026-09 重译后 9.x 也有本地树；没有树的版本自动跳过）。
     for major in order:
         index = indexes.get(major) or RuntimeIndex(manual_tree(major), doc_slug(major))
         if not index.loaded():

@@ -1,0 +1,5635 @@
+{
+  "format": 1,
+  "kind": "role",
+  "releases": [
+    {
+      "major": "10",
+      "label": "10.23",
+      "revision": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7",
+      "ref": "PostgreSQL 10.23 手册",
+      "channel": "historical"
+    },
+    {
+      "major": "11",
+      "label": "11.22",
+      "revision": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7",
+      "ref": "PostgreSQL 11.22 手册",
+      "channel": "historical"
+    },
+    {
+      "major": "12",
+      "label": "12.22",
+      "revision": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1",
+      "ref": "PostgreSQL 12.22 手册",
+      "channel": "historical"
+    },
+    {
+      "major": "13",
+      "label": "13.23",
+      "revision": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345",
+      "ref": "PostgreSQL 13.23 手册",
+      "channel": "historical"
+    },
+    {
+      "major": "14",
+      "label": "14.24",
+      "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+      "ref": "PostgreSQL 14.24 手册",
+      "channel": "stable"
+    },
+    {
+      "major": "15",
+      "label": "15.19",
+      "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+      "ref": "PostgreSQL 15.19 手册",
+      "channel": "stable"
+    },
+    {
+      "major": "16",
+      "label": "16.15",
+      "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+      "ref": "PostgreSQL 16.15 手册",
+      "channel": "stable"
+    },
+    {
+      "major": "17",
+      "label": "17.11",
+      "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+      "ref": "PostgreSQL 17.11 手册",
+      "channel": "stable"
+    },
+    {
+      "major": "18",
+      "label": "18.6",
+      "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+      "ref": "PostgreSQL 18.6 手册",
+      "channel": "stable"
+    },
+    {
+      "major": "19",
+      "label": "19beta4",
+      "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+      "ref": "PostgreSQL 19beta4 手册",
+      "channel": "preview"
+    },
+    {
+      "major": "20",
+      "label": "20devel",
+      "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+      "ref": "PostgreSQL 20devel 手册",
+      "channel": "devel"
+    }
+  ],
+  "items": [
+    {
+      "slug": "pg_checkpoint",
+      "name": "pg_checkpoint",
+      "name_zh": "执行检查点",
+      "category": "数据库维护",
+      "summary": "允许执行 CHECKPOINT 命令。",
+      "aliases": [],
+      "versions": {
+        "15": {
+          "description": [
+            "允许执行 CHECKPOINT 命令。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_checkpoint"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "CHECKPOINT",
+              "url": "/docs/15/sql-checkpoint.html"
+            }
+          ],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "允许执行 CHECKPOINT 命令。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_checkpoint"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "CHECKPOINT",
+              "url": "/docs/16/sql-checkpoint.html"
+            }
+          ],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "允许执行 CHECKPOINT 命令。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_checkpoint"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "CHECKPOINT",
+              "url": "/docs/17/sql-checkpoint.html"
+            }
+          ],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_checkpoint 允许执行 CHECKPOINT 命令。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_checkpoint"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-CHECKPOINT",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-CHECKPOINT"
+            }
+          ],
+          "related": [
+            {
+              "label": "CHECKPOINT",
+              "url": "/docs/18/sql-checkpoint.html"
+            }
+          ],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_checkpoint 允许执行 CHECKPOINT 命令。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_checkpoint"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-CHECKPOINT",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-CHECKPOINT"
+            }
+          ],
+          "related": [
+            {
+              "label": "CHECKPOINT",
+              "url": "/docs/19/sql-checkpoint.html"
+            }
+          ],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_checkpoint 允许执行 CHECKPOINT 命令。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_checkpoint"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-CHECKPOINT",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-CHECKPOINT"
+            }
+          ],
+          "related": [
+            {
+              "label": "CHECKPOINT",
+              "url": "/docs/devel/sql-checkpoint.html"
+            }
+          ],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_create_subscription",
+      "name": "pg_create_subscription",
+      "name_zh": "创建订阅",
+      "category": "数据库管理",
+      "summary": "允许在具有 CREATE 权限的数据库中创建订阅。",
+      "aliases": [],
+      "versions": {
+        "16": {
+          "description": [
+            "允许在数据库上具有 CREATE 权限的用户执行 CREATE SUBSCRIPTION。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_create_subscription"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "CREATE SUBSCRIPTION",
+              "url": "/docs/16/sql-createsubscription.html"
+            }
+          ],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "允许在数据库上具有 CREATE 权限的用户执行 CREATE SUBSCRIPTION。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_create_subscription"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "CREATE SUBSCRIPTION",
+              "url": "/docs/17/sql-createsubscription.html"
+            }
+          ],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_create_subscription 允许在数据库上具有 CREATE 权限的用户执行 CREATE SUBSCRIPTION。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_create_subscription"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-CREATE-SUBSCRIPTION",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-CREATE-SUBSCRIPTION"
+            }
+          ],
+          "related": [
+            {
+              "label": "CREATE SUBSCRIPTION",
+              "url": "/docs/18/sql-createsubscription.html"
+            }
+          ],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_create_subscription 允许在数据库上具有 CREATE 权限的用户执行 CREATE SUBSCRIPTION。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_create_subscription"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-CREATE-SUBSCRIPTION",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-CREATE-SUBSCRIPTION"
+            }
+          ],
+          "related": [
+            {
+              "label": "CREATE SUBSCRIPTION",
+              "url": "/docs/19/sql-createsubscription.html"
+            }
+          ],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_create_subscription 允许在数据库上具有 CREATE 权限的用户执行 CREATE SUBSCRIPTION。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_create_subscription"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-CREATE-SUBSCRIPTION",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-CREATE-SUBSCRIPTION"
+            }
+          ],
+          "related": [
+            {
+              "label": "CREATE SUBSCRIPTION",
+              "url": "/docs/devel/sql-createsubscription.html"
+            }
+          ],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_database_owner",
+      "name": "pg_database_owner",
+      "name_zh": "当前数据库拥有者",
+      "category": "数据库管理",
+      "summary": "以当前数据库拥有者作为唯一隐式成员，用于承载随数据库拥有者生效的权限。",
+      "aliases": [],
+      "versions": {
+        "14": {
+          "description": [
+            "无。其成员隐式地由当前数据库拥有者组成。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_database_owner"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_database_owner 角色有一个隐式的、取决于具体情况的成员，即当前数据库的拥有者。这个角色起初并不赋予任何权限。像任何角色一样，它可以拥有对象或获得访问权限授权。因此，一旦 pg_database_owner 在某个模板数据库中拥有权限，由该模板实例化的每个数据库的拥有者都将行使这些权限。 pg_database_owner 不能成为任何角色的成员，也不能拥有非隐式成员。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "无。其成员隐式地由当前数据库拥有者组成。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_database_owner"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_database_owner 角色有一个隐式的、取决于具体情况的成员，即当前数据库的拥有者。像任何角色一样，它可以拥有对象或获得访问权限授权。因此，一旦 pg_database_owner 在模板数据库中拥有权限，由该模板实例化的每个数据库的拥有者都将行使这些权限。 pg_database_owner 不能成为任何角色的成员，也不能拥有非隐式成员。最初，这个角色拥有 public 模式，因此每个数据库拥有者都管理该模式在本数据库中的使用。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "无。其成员隐式地由当前数据库拥有者组成。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_database_owner"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_database_owner 角色有一个隐式的、取决于具体情况的成员，即当前数据库的拥有者。像任何角色一样，它可以拥有对象或获得访问权限授权。因此，一旦 pg_database_owner 在模板数据库中拥有权限，由该模板实例化的每个数据库的拥有者都将行使这些权限。 pg_database_owner 不能成为任何角色的成员，也不能拥有非隐式成员。最初，这个角色拥有 public 模式，因此每个数据库拥有者都管理该模式在本数据库中的使用。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "无。其成员隐式地由当前数据库拥有者组成。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_database_owner"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_database_owner 角色有一个隐式的、取决于具体情况的成员，即当前数据库的拥有者。像任何角色一样，它可以拥有对象或获得访问权限授权。因此，一旦 pg_database_owner 在模板数据库中拥有权限，由该模板实例化的每个数据库的拥有者都将行使这些权限。 pg_database_owner 不能成为任何角色的成员，也不能拥有非隐式成员。最初，这个角色拥有 public 模式，因此每个数据库拥有者都管理该模式在本数据库中的使用。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_database_owner 始终恰好有一个隐式成员：当前数据库的拥有者。它不能被授予任何角色中的成员资格，也不能有任何角色被授予 pg_database_owner 中的成员资格。不过，和其他角色一样，它可以拥有对象并获得访问权限授权。因此，一旦 pg_database_owner 在某个模板数据库中拥有权限，由该模板实例化的每个数据库的拥有者都将拥有这些权限。最初，这个角色拥有 public 模式，因此每个数据库拥有者都管理该模式在本数据库中的使用。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_database_owner"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-DATABASE-OWNER",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-DATABASE-OWNER"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_database_owner 始终恰好有一个隐式成员：当前数据库的拥有者。它不能被授予任何角色中的成员资格，也不能有任何角色被授予 pg_database_owner 中的成员资格。不过，和其他角色一样，它可以拥有对象并获得访问权限授权。因此，一旦 pg_database_owner 在某个模板数据库中拥有权限，由该模板实例化的每个数据库的拥有者都将拥有这些权限。最初，这个角色拥有 public 模式，因此每个数据库拥有者都管理该模式在本数据库中的使用。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_database_owner"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-DATABASE-OWNER",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-DATABASE-OWNER"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_database_owner 始终恰好有一个隐式成员：当前数据库的拥有者。它不能被授予任何角色中的成员资格，也不能有任何角色被授予 pg_database_owner 中的成员资格。不过，和其他角色一样，它可以拥有对象并获得访问权限授权。因此，一旦 pg_database_owner 在某个模板数据库中拥有权限，由该模板实例化的每个数据库的拥有者都将拥有这些权限。最初，这个角色拥有 public 模式，因此每个数据库拥有者都管理该模式在本数据库中的使用。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_database_owner"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-DATABASE-OWNER",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-DATABASE-OWNER"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_execute_server_program",
+      "name": "pg_execute_server_program",
+      "name_zh": "执行服务器程序",
+      "category": "服务器文件与程序",
+      "summary": "允许以数据库进程所用操作系统用户的身份执行服务器端程序。",
+      "aliases": [],
+      "versions": {
+        "11": {
+          "description": [
+            "允许使用COPY和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 11.22 手册",
+              "url": "/docs/11/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7"
+            },
+            {
+              "label": "PostgreSQL 11 英文原文",
+              "url": "https://www.postgresql.org/docs/11/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "11",
+            "label": "11.22",
+            "revision": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7",
+            "ref": "PostgreSQL 11.22 手册",
+            "channel": "historical"
+          }
+        },
+        "12": {
+          "description": [
+            "允许使用COPY和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 12.22 手册",
+              "url": "/docs/12/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1"
+            },
+            {
+              "label": "PostgreSQL 12 英文原文",
+              "url": "https://www.postgresql.org/docs/12/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "12",
+            "label": "12.22",
+            "revision": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1",
+            "ref": "PostgreSQL 12.22 手册",
+            "channel": "historical"
+          }
+        },
+        "13": {
+          "description": [
+            "允许使用COPY和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 13.23 手册",
+              "url": "/docs/13/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345"
+            },
+            {
+              "label": "PostgreSQL 13 英文原文",
+              "url": "https://www.postgresql.org/docs/13/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "13",
+            "label": "13.23",
+            "revision": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345",
+            "ref": "PostgreSQL 13.23 手册",
+            "channel": "historical"
+          }
+        },
+        "14": {
+          "description": [
+            "允许使用COPY和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "允许使用COPY和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "允许使用COPY和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "允许使用COPY和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_execute_server_program 允许使用 COPY 和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用操作系统用户的身份访问文件并在数据库服务器上运行程序。它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力。因此，向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_execute_server_program 允许使用 COPY 和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用操作系统用户的身份访问文件并在数据库服务器上运行程序。它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力。因此，向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_execute_server_program 允许使用 COPY 和其他允许执行服务器端程序的函数，以数据库运行所用用户的身份在数据库服务器上执行程序。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_execute_server_program"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用操作系统用户的身份访问文件并在数据库服务器上运行程序。它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力。因此，向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_maintain",
+      "name": "pg_maintain",
+      "name_zh": "关系维护",
+      "category": "数据库维护",
+      "summary": "允许对所有关系执行 MAINTAIN 权限涵盖的维护操作。",
+      "aliases": [],
+      "versions": {
+        "17": {
+          "description": [
+            "允许在所有关系上执行 VACUUM、 ANALYZE、 CLUSTER、 REFRESH MATERIALIZED VIEW、 REINDEX 以及 LOCK TABLE，其效果就像对这些对象拥有 MAINTAIN 权限一样，即使没有被显式授予。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_maintain"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "VACUUM",
+              "url": "/docs/17/sql-vacuum.html"
+            },
+            {
+              "label": "ANALYZE",
+              "url": "/docs/17/sql-analyze.html"
+            },
+            {
+              "label": "CLUSTER",
+              "url": "/docs/17/sql-cluster.html"
+            },
+            {
+              "label": "REFRESH MATERIALIZED VIEW",
+              "url": "/docs/17/sql-refreshmaterializedview.html"
+            },
+            {
+              "label": "REINDEX",
+              "url": "/docs/17/sql-reindex.html"
+            },
+            {
+              "label": "LOCK TABLE",
+              "url": "/docs/17/sql-lock.html"
+            }
+          ],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_maintain 允许在所有关系上执行 VACUUM、 ANALYZE、 CLUSTER、 REFRESH MATERIALIZED VIEW、 REINDEX 以及 LOCK TABLE，其效果就像对这些对象拥有 MAINTAIN 权限一样。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_maintain"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MAINTAIN",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MAINTAIN"
+            }
+          ],
+          "related": [
+            {
+              "label": "VACUUM",
+              "url": "/docs/18/sql-vacuum.html"
+            },
+            {
+              "label": "ANALYZE",
+              "url": "/docs/18/sql-analyze.html"
+            },
+            {
+              "label": "CLUSTER",
+              "url": "/docs/18/sql-cluster.html"
+            },
+            {
+              "label": "REFRESH MATERIALIZED VIEW",
+              "url": "/docs/18/sql-refreshmaterializedview.html"
+            },
+            {
+              "label": "REINDEX",
+              "url": "/docs/18/sql-reindex.html"
+            },
+            {
+              "label": "LOCK TABLE",
+              "url": "/docs/18/sql-lock.html"
+            }
+          ],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_maintain 允许在所有关系上执行 VACUUM、 ANALYZE、 CLUSTER、 REPACK、 REFRESH MATERIALIZED VIEW、 REINDEX 以及 LOCK TABLE，其效果就像对这些对象拥有 MAINTAIN 权限一样。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_maintain"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MAINTAIN",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MAINTAIN"
+            }
+          ],
+          "related": [
+            {
+              "label": "VACUUM",
+              "url": "/docs/19/sql-vacuum.html"
+            },
+            {
+              "label": "ANALYZE",
+              "url": "/docs/19/sql-analyze.html"
+            },
+            {
+              "label": "CLUSTER",
+              "url": "/docs/19/sql-cluster.html"
+            },
+            {
+              "label": "REPACK",
+              "url": "/docs/19/sql-repack.html"
+            },
+            {
+              "label": "REFRESH MATERIALIZED VIEW",
+              "url": "/docs/19/sql-refreshmaterializedview.html"
+            },
+            {
+              "label": "REINDEX",
+              "url": "/docs/19/sql-reindex.html"
+            },
+            {
+              "label": "LOCK TABLE",
+              "url": "/docs/19/sql-lock.html"
+            }
+          ],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_maintain 允许在所有关系上执行 VACUUM、 ANALYZE、 CLUSTER、 REPACK、 REFRESH MATERIALIZED VIEW、 REINDEX 以及 LOCK TABLE，其效果就像对这些对象拥有 MAINTAIN 权限一样。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_maintain"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MAINTAIN",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MAINTAIN"
+            }
+          ],
+          "related": [
+            {
+              "label": "VACUUM",
+              "url": "/docs/devel/sql-vacuum.html"
+            },
+            {
+              "label": "ANALYZE",
+              "url": "/docs/devel/sql-analyze.html"
+            },
+            {
+              "label": "CLUSTER",
+              "url": "/docs/devel/sql-cluster.html"
+            },
+            {
+              "label": "REPACK",
+              "url": "/docs/devel/sql-repack.html"
+            },
+            {
+              "label": "REFRESH MATERIALIZED VIEW",
+              "url": "/docs/devel/sql-refreshmaterializedview.html"
+            },
+            {
+              "label": "REINDEX",
+              "url": "/docs/devel/sql-reindex.html"
+            },
+            {
+              "label": "LOCK TABLE",
+              "url": "/docs/devel/sql-lock.html"
+            }
+          ],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_monitor",
+      "name": "pg_monitor",
+      "name_zh": "数据库监控",
+      "category": "监控与统计",
+      "summary": "读取或执行监控视图和函数，并包含三个监控子角色的权限。",
+      "aliases": [],
+      "versions": {
+        "10": {
+          "description": [
+            "读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 10.23 手册",
+              "url": "/docs/10/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7"
+            },
+            {
+              "label": "PostgreSQL 10 英文原文",
+              "url": "https://www.postgresql.org/docs/10/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "10",
+            "label": "10.23",
+            "revision": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7",
+            "ref": "PostgreSQL 10.23 手册",
+            "channel": "historical"
+          }
+        },
+        "11": {
+          "description": [
+            "读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 11.22 手册",
+              "url": "/docs/11/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7"
+            },
+            {
+              "label": "PostgreSQL 11 英文原文",
+              "url": "https://www.postgresql.org/docs/11/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "11",
+            "label": "11.22",
+            "revision": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7",
+            "ref": "PostgreSQL 11.22 手册",
+            "channel": "historical"
+          }
+        },
+        "12": {
+          "description": [
+            "读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 12.22 手册",
+              "url": "/docs/12/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1"
+            },
+            {
+              "label": "PostgreSQL 12 英文原文",
+              "url": "https://www.postgresql.org/docs/12/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "12",
+            "label": "12.22",
+            "revision": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1",
+            "ref": "PostgreSQL 12.22 手册",
+            "channel": "historical"
+          }
+        },
+        "13": {
+          "description": [
+            "读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 13.23 手册",
+              "url": "/docs/13/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345"
+            },
+            {
+              "label": "PostgreSQL 13 英文原文",
+              "url": "https://www.postgresql.org/docs/13/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "13",
+            "label": "13.23",
+            "revision": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345",
+            "ref": "PostgreSQL 13.23 手册",
+            "channel": "historical"
+          }
+        },
+        "14": {
+          "description": [
+            "读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_monitor 允许读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_monitor 允许读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_monitor 允许读取或执行各种监控视图和函数。该角色是 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 的成员。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_monitor"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_read_all_data",
+      "name": "pg_read_all_data",
+      "name_zh": "读取全部数据",
+      "category": "数据访问",
+      "summary": "提供所有表、视图和序列的读取权限以及模式使用权限，但不绕过行级安全策略。",
+      "aliases": [],
+      "versions": {
+        "14": {
+          "description": [
+            "读取所有数据（表、视图、序列），其效果就像对这些对象拥有 SELECT 权限并对所有模式拥有 USAGE 权限一样，即使没有被显式授予。该角色没有设置角色属性 BYPASSRLS。如果正在使用 RLS，管理员可能希望对被 GRANT 此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "读取所有数据（表、视图、序列），其效果就像对这些对象拥有 SELECT 权限并对所有模式拥有 USAGE 权限一样，即使没有被显式授予。该角色没有设置角色属性 BYPASSRLS。如果正在使用 RLS，管理员可能希望对被 GRANT 此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "读取所有数据（表、视图、序列），其效果就像对这些对象拥有 SELECT 权限并对所有模式拥有 USAGE 权限一样，即使没有被显式授予。该角色没有设置角色属性 BYPASSRLS。如果正在使用 RLS，管理员可能希望对被 GRANT 此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "读取所有数据（表、视图、序列），其效果就像对这些对象拥有 SELECT 权限并对所有模式拥有 USAGE 权限一样，即使没有被显式授予。该角色没有设置角色属性 BYPASSRLS。如果正在使用 RLS，管理员可能希望对被 GRANT 此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_read_all_data 允许读取所有数据（表、视图、序列），其效果就像对这些对象拥有 SELECT 权限并对所有模式拥有 USAGE 权限一样。该角色不会绕过行级安全（RLS）策略。如果正在使用 RLS，管理员可能希望对被授予此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_read_all_data 允许读取所有数据（表、视图、序列、大对象），其效果就像对这些对象拥有 SELECT 权限并对所有模式拥有 USAGE 权限一样。该角色不会绕过行级安全（RLS）策略。如果正在使用 RLS，管理员可能希望对被授予此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_read_all_data 允许读取所有数据（表、视图、序列、大对象），其效果就像对这些对象拥有 SELECT 权限并对所有模式拥有 USAGE 权限一样。该角色不会绕过行级安全（RLS）策略。如果正在使用 RLS，管理员可能希望对被授予此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_read_all_settings",
+      "name": "pg_read_all_settings",
+      "name_zh": "读取全部配置",
+      "category": "监控与统计",
+      "summary": "允许读取所有配置变量，包括通常仅对超级用户可见的变量。",
+      "aliases": [],
+      "versions": {
+        "10": {
+          "description": [
+            "读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 10.23 手册",
+              "url": "/docs/10/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7"
+            },
+            {
+              "label": "PostgreSQL 10 英文原文",
+              "url": "https://www.postgresql.org/docs/10/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "10",
+            "label": "10.23",
+            "revision": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7",
+            "ref": "PostgreSQL 10.23 手册",
+            "channel": "historical"
+          }
+        },
+        "11": {
+          "description": [
+            "读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 11.22 手册",
+              "url": "/docs/11/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7"
+            },
+            {
+              "label": "PostgreSQL 11 英文原文",
+              "url": "https://www.postgresql.org/docs/11/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "11",
+            "label": "11.22",
+            "revision": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7",
+            "ref": "PostgreSQL 11.22 手册",
+            "channel": "historical"
+          }
+        },
+        "12": {
+          "description": [
+            "读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 12.22 手册",
+              "url": "/docs/12/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1"
+            },
+            {
+              "label": "PostgreSQL 12 英文原文",
+              "url": "https://www.postgresql.org/docs/12/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "12",
+            "label": "12.22",
+            "revision": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1",
+            "ref": "PostgreSQL 12.22 手册",
+            "channel": "historical"
+          }
+        },
+        "13": {
+          "description": [
+            "读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 13.23 手册",
+              "url": "/docs/13/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345"
+            },
+            {
+              "label": "PostgreSQL 13 英文原文",
+              "url": "https://www.postgresql.org/docs/13/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "13",
+            "label": "13.23",
+            "revision": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345",
+            "ref": "PostgreSQL 13.23 手册",
+            "channel": "historical"
+          }
+        },
+        "14": {
+          "description": [
+            "读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_read_all_settings 允许读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_read_all_settings 允许读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_read_all_settings 允许读取所有配置变量，即使是那些通常仅对超级用户可见的变量。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_settings"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_read_all_stats",
+      "name": "pg_read_all_stats",
+      "name_zh": "读取全部统计",
+      "category": "监控与统计",
+      "summary": "允许读取所有 pg_stat_* 视图及通常受限的统计信息。",
+      "aliases": [],
+      "versions": {
+        "10": {
+          "description": [
+            "读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 10.23 手册",
+              "url": "/docs/10/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7"
+            },
+            {
+              "label": "PostgreSQL 10 英文原文",
+              "url": "https://www.postgresql.org/docs/10/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "10",
+            "label": "10.23",
+            "revision": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7",
+            "ref": "PostgreSQL 10.23 手册",
+            "channel": "historical"
+          }
+        },
+        "11": {
+          "description": [
+            "读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 11.22 手册",
+              "url": "/docs/11/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7"
+            },
+            {
+              "label": "PostgreSQL 11 英文原文",
+              "url": "https://www.postgresql.org/docs/11/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "11",
+            "label": "11.22",
+            "revision": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7",
+            "ref": "PostgreSQL 11.22 手册",
+            "channel": "historical"
+          }
+        },
+        "12": {
+          "description": [
+            "读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 12.22 手册",
+              "url": "/docs/12/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1"
+            },
+            {
+              "label": "PostgreSQL 12 英文原文",
+              "url": "https://www.postgresql.org/docs/12/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "12",
+            "label": "12.22",
+            "revision": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1",
+            "ref": "PostgreSQL 12.22 手册",
+            "channel": "historical"
+          }
+        },
+        "13": {
+          "description": [
+            "读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 13.23 手册",
+              "url": "/docs/13/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345"
+            },
+            {
+              "label": "PostgreSQL 13 英文原文",
+              "url": "https://www.postgresql.org/docs/13/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "13",
+            "label": "13.23",
+            "revision": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345",
+            "ref": "PostgreSQL 13.23 手册",
+            "channel": "historical"
+          }
+        },
+        "14": {
+          "description": [
+            "读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_read_all_stats 允许读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_read_all_stats 允许读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_read_all_stats 允许读取所有 pg_stat_* 视图，并使用各种与统计信息相关的扩展，包括通常仅对超级用户可见的内容。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_all_stats"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_read_server_files",
+      "name": "pg_read_server_files",
+      "name_zh": "读取服务器文件",
+      "category": "服务器文件与程序",
+      "summary": "允许读取数据库服务器进程可访问的文件。",
+      "aliases": [],
+      "versions": {
+        "11": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 11.22 手册",
+              "url": "/docs/11/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7"
+            },
+            {
+              "label": "PostgreSQL 11 英文原文",
+              "url": "https://www.postgresql.org/docs/11/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "11",
+            "label": "11.22",
+            "revision": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7",
+            "ref": "PostgreSQL 11.22 手册",
+            "channel": "historical"
+          }
+        },
+        "12": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 12.22 手册",
+              "url": "/docs/12/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1"
+            },
+            {
+              "label": "PostgreSQL 12 英文原文",
+              "url": "https://www.postgresql.org/docs/12/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "12",
+            "label": "12.22",
+            "revision": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1",
+            "ref": "PostgreSQL 12.22 手册",
+            "channel": "historical"
+          }
+        },
+        "13": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 13.23 手册",
+              "url": "/docs/13/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345"
+            },
+            {
+              "label": "PostgreSQL 13 英文原文",
+              "url": "https://www.postgresql.org/docs/13/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "13",
+            "label": "13.23",
+            "revision": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345",
+            "ref": "PostgreSQL 13.23 手册",
+            "channel": "historical"
+          }
+        },
+        "14": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_read_server_files 允许使用 COPY 和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用操作系统用户的身份访问文件并在数据库服务器上运行程序。它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力。因此，向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_read_server_files 允许使用 COPY 和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用操作系统用户的身份访问文件并在数据库服务器上运行程序。它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力。因此，向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_read_server_files 允许使用 COPY 和其他文件访问函数，从服务器上数据库可访问的任何位置读取文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_read_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用操作系统用户的身份访问文件并在数据库服务器上运行程序。它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力。因此，向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_signal_autovacuum_worker",
+      "name": "pg_signal_autovacuum_worker",
+      "name_zh": "通知自动清理进程",
+      "category": "进程与连接",
+      "summary": "允许向自动清理工作进程发送信号，取消当前表的清理操作或终止其会话。",
+      "aliases": [],
+      "versions": {
+        "18": {
+          "description": [
+            "pg_signal_autovacuum_worker 允许向自动清理工作进程发送信号，以取消当前表的清理操作或终止其会话。见 第 9.28.2 节。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_autovacuum_worker"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-AUTOVACUUM-WORKER",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-AUTOVACUUM-WORKER"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.28.2 节",
+              "url": "/docs/18/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_signal_autovacuum_worker 允许向自动清理工作进程发送信号，以取消当前表的清理操作或终止其会话。见 第 9.29.2 节。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_autovacuum_worker"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-AUTOVACUUM-WORKER",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-AUTOVACUUM-WORKER"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.29.2 节",
+              "url": "/docs/19/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_signal_autovacuum_worker 允许向自动清理工作进程发送信号，以取消当前表的清理操作或终止其会话。见 第 9.29.2 节。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_autovacuum_worker"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-AUTOVACUUM-WORKER",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-AUTOVACUUM-WORKER"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.29.2 节",
+              "url": "/docs/devel/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_signal_backend",
+      "name": "pg_signal_backend",
+      "name_zh": "通知后端进程",
+      "category": "进程与连接",
+      "summary": "允许取消其他后端的查询或终止其会话，但不能向超级用户拥有的后端发送信号。",
+      "aliases": [],
+      "versions": {
+        "10": {
+          "description": [
+            "向另一个后端发送信号，以取消查询或终止其会话。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_signal_backend 角色旨在让管理员能够允许受信任但非超级用户的角色向其他后端发送信号。目前这个角色允许发送信号来取消另一个后端上的查询或终止其会话。不过，被授予此角色的用户不能向由超级用户拥有的后端发送信号。见 第 9.26.2 节。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 10.23 手册",
+              "url": "/docs/10/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7"
+            },
+            {
+              "label": "PostgreSQL 10 英文原文",
+              "url": "https://www.postgresql.org/docs/10/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.26.2 节",
+              "url": "/docs/10/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "10",
+            "label": "10.23",
+            "revision": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7",
+            "ref": "PostgreSQL 10.23 手册",
+            "channel": "historical"
+          }
+        },
+        "11": {
+          "description": [
+            "向另一个后端发送信号，以取消查询或终止其会话。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_signal_backend 角色旨在让管理员能够允许受信任但非超级用户的角色向其他后端发送信号。目前这个角色允许发送信号来取消另一个后端上的查询或终止其会话。不过，被授予此角色的用户不能向由超级用户拥有的后端发送信号。见 第 9.26.2 节。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 11.22 手册",
+              "url": "/docs/11/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7"
+            },
+            {
+              "label": "PostgreSQL 11 英文原文",
+              "url": "https://www.postgresql.org/docs/11/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.26.2 节",
+              "url": "/docs/11/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "11",
+            "label": "11.22",
+            "revision": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7",
+            "ref": "PostgreSQL 11.22 手册",
+            "channel": "historical"
+          }
+        },
+        "12": {
+          "description": [
+            "向另一个后端发送信号，以取消查询或终止其会话。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_signal_backend 角色旨在让管理员能够允许受信任但非超级用户的角色向其他后端发送信号。目前这个角色允许发送信号来取消另一个后端上的查询或终止其会话。不过，被授予此角色的用户不能向由超级用户拥有的后端发送信号。见 第 9.26.2 节。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 12.22 手册",
+              "url": "/docs/12/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1"
+            },
+            {
+              "label": "PostgreSQL 12 英文原文",
+              "url": "https://www.postgresql.org/docs/12/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.26.2 节",
+              "url": "/docs/12/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "12",
+            "label": "12.22",
+            "revision": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1",
+            "ref": "PostgreSQL 12.22 手册",
+            "channel": "historical"
+          }
+        },
+        "13": {
+          "description": [
+            "向另一个后端发送信号，以取消查询或终止其会话。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_signal_backend 角色旨在让管理员能够允许受信任但非超级用户的角色向其他后端发送信号。目前这个角色允许发送信号来取消另一个后端上的查询或终止其会话。不过，被授予此角色的用户不能向由超级用户拥有的后端发送信号。见 第 9.27.2 节。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 13.23 手册",
+              "url": "/docs/13/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345"
+            },
+            {
+              "label": "PostgreSQL 13 英文原文",
+              "url": "https://www.postgresql.org/docs/13/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.27.2 节",
+              "url": "/docs/13/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "13",
+            "label": "13.23",
+            "revision": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345",
+            "ref": "PostgreSQL 13.23 手册",
+            "channel": "historical"
+          }
+        },
+        "14": {
+          "description": [
+            "向另一个后端发送信号，以取消查询或终止其会话。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_signal_backend 角色旨在让管理员能够允许受信任但非超级用户的角色向其他后端发送信号。目前这个角色允许发送信号来取消另一个后端上的查询或终止其会话。不过，被授予此角色的用户不能向由超级用户拥有的后端发送信号。见 第 9.27.2 节。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.27.2 节",
+              "url": "/docs/14/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "向另一个后端发送信号，以取消查询或终止其会话。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_signal_backend 角色旨在让管理员能够允许受信任但非超级用户的角色向其他后端发送信号。目前这个角色允许发送信号来取消另一个后端上的查询或终止其会话。不过，被授予此角色的用户不能向由超级用户拥有的后端发送信号。见 第 9.27.2 节。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.27.2 节",
+              "url": "/docs/15/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "向另一个后端发送信号，以取消查询或终止其会话。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_signal_backend 角色旨在让管理员能够允许受信任但非超级用户的角色向其他后端发送信号。目前这个角色允许发送信号来取消另一个后端上的查询或终止其会话。不过，被授予此角色的用户不能向由超级用户拥有的后端发送信号。见 第 9.27.2 节。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.27.2 节",
+              "url": "/docs/16/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "向另一个后端发送信号，以取消查询或终止其会话。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_signal_backend 角色旨在让管理员能够允许受信任但非超级用户的角色向其他后端发送信号。目前这个角色允许发送信号来取消另一个后端上的查询或终止其会话。不过，被授予此角色的用户不能向由超级用户拥有的后端发送信号。见 第 9.28.2 节。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.28.2 节",
+              "url": "/docs/17/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_signal_backend 允许向另一个后端发送信号，以取消查询或终止其会话。注意，这个角色不允许向由超级用户拥有的后端发送信号。见 第 9.28.2 节。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-BACKEND",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-BACKEND"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.28.2 节",
+              "url": "/docs/18/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_signal_backend 允许向另一个后端发送信号，以取消查询或终止其会话。注意，这个角色不允许向由超级用户拥有的后端发送信号。见 第 9.29.2 节。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-BACKEND",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-BACKEND"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.29.2 节",
+              "url": "/docs/19/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_signal_backend 允许向另一个后端发送信号，以取消查询或终止其会话。注意，这个角色不允许向由超级用户拥有的后端发送信号。见 第 9.29.2 节。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_signal_backend"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-BACKEND",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-SIGNAL-BACKEND"
+            }
+          ],
+          "related": [
+            {
+              "label": "第 9.29.2 节",
+              "url": "/docs/devel/functions-admin.html#FUNCTIONS-ADMIN-SIGNAL"
+            }
+          ],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_stat_scan_tables",
+      "name": "pg_stat_scan_tables",
+      "name_zh": "扫描表的监控",
+      "category": "监控与统计",
+      "summary": "允许执行可能长时间持有 ACCESS SHARE 锁的监控函数。",
+      "aliases": [],
+      "versions": {
+        "10": {
+          "description": [
+            "执行可能在表上持有 ACCESS SHARE 锁并且持续较长时间的监控函数。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 10.23 手册",
+              "url": "/docs/10/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7"
+            },
+            {
+              "label": "PostgreSQL 10 英文原文",
+              "url": "https://www.postgresql.org/docs/10/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "10",
+            "label": "10.23",
+            "revision": "18fee70bca56abc6fd1e55bda74c4baa539afe50a1036b9f1acfa863d56187a7",
+            "ref": "PostgreSQL 10.23 手册",
+            "channel": "historical"
+          }
+        },
+        "11": {
+          "description": [
+            "执行可能在表上持有 ACCESS SHARE 锁并且持续较长时间的监控函数。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 11.22 手册",
+              "url": "/docs/11/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7"
+            },
+            {
+              "label": "PostgreSQL 11 英文原文",
+              "url": "https://www.postgresql.org/docs/11/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "11",
+            "label": "11.22",
+            "revision": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7",
+            "ref": "PostgreSQL 11.22 手册",
+            "channel": "historical"
+          }
+        },
+        "12": {
+          "description": [
+            "执行可能在表上持有 ACCESS SHARE 锁并且持续较长时间的监控函数。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 12.22 手册",
+              "url": "/docs/12/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1"
+            },
+            {
+              "label": "PostgreSQL 12 英文原文",
+              "url": "https://www.postgresql.org/docs/12/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "12",
+            "label": "12.22",
+            "revision": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1",
+            "ref": "PostgreSQL 12.22 手册",
+            "channel": "historical"
+          }
+        },
+        "13": {
+          "description": [
+            "执行可能在表上持有 ACCESS SHARE 锁并且持续较长时间的监控函数。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 13.23 手册",
+              "url": "/docs/13/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345"
+            },
+            {
+              "label": "PostgreSQL 13 英文原文",
+              "url": "https://www.postgresql.org/docs/13/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "13",
+            "label": "13.23",
+            "revision": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345",
+            "ref": "PostgreSQL 13.23 手册",
+            "channel": "historical"
+          }
+        },
+        "14": {
+          "description": [
+            "执行可能在表上持有 ACCESS SHARE 锁并且持续较长时间的监控函数。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "执行可能在表上持有 ACCESS SHARE 锁并且持续较长时间的监控函数。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "执行可能在表上持有 ACCESS SHARE 锁并且持续较长时间的监控函数。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "执行可能在表上持有 ACCESS SHARE 锁并且持续较长时间的监控函数。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_monitor、 pg_read_all_settings、 pg_read_all_stats 和 pg_stat_scan_tables 角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_stat_scan_tables 允许执行可能在表上持有 ACCESS SHARE 锁并持续较长时间的监控函数（例如 pgrowlocks(text)，见 pgrowlocks 扩展）。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [
+            {
+              "label": "pgrowlocks",
+              "url": "/docs/18/pgrowlocks.html"
+            }
+          ],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_stat_scan_tables 允许执行可能在表上持有 ACCESS SHARE 锁并持续较长时间的监控函数（例如 pgrowlocks(text)，见 pgrowlocks 扩展）。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [
+            {
+              "label": "pgrowlocks",
+              "url": "/docs/19/pgrowlocks.html"
+            }
+          ],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_stat_scan_tables 允许执行可能在表上持有 ACCESS SHARE 锁并持续较长时间的监控函数（例如 pgrowlocks(text)，见 pgrowlocks 扩展）。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_stat_scan_tables"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够方便地为监控数据库服务器配置一个角色。它们授予一组常见权限，使该角色能够读取各种有用的配置设置、统计信息以及其他通常仅限超级用户查看的系统信息。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-MONITOR"
+            }
+          ],
+          "related": [
+            {
+              "label": "pgrowlocks",
+              "url": "/docs/devel/pgrowlocks.html"
+            }
+          ],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_use_reserved_connections",
+      "name": "pg_use_reserved_connections",
+      "name_zh": "使用预留连接",
+      "category": "进程与连接",
+      "summary": "允许使用 reserved_connections 所保留的连接槽。",
+      "aliases": [],
+      "versions": {
+        "16": {
+          "description": [
+            "允许使用通过 reserved_connections 保留的连接槽。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_use_reserved_connections"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "reserved_connections",
+              "url": "/docs/16/runtime-config-connection.html#GUC-RESERVED-CONNECTIONS"
+            }
+          ],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "允许使用通过 reserved_connections 保留的连接槽。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_use_reserved_connections"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [
+            {
+              "label": "reserved_connections",
+              "url": "/docs/17/runtime-config-connection.html#GUC-RESERVED-CONNECTIONS"
+            }
+          ],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_use_reserved_connections 允许使用通过 reserved_connections 保留的连接槽。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_use_reserved_connections"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-USE-RESERVED-CONNECTIONS",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-USE-RESERVED-CONNECTIONS"
+            }
+          ],
+          "related": [
+            {
+              "label": "reserved_connections",
+              "url": "/docs/18/runtime-config-connection.html#GUC-RESERVED-CONNECTIONS"
+            }
+          ],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_use_reserved_connections 允许使用通过 reserved_connections 保留的连接槽。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_use_reserved_connections"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-USE-RESERVED-CONNECTIONS",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-USE-RESERVED-CONNECTIONS"
+            }
+          ],
+          "related": [
+            {
+              "label": "reserved_connections",
+              "url": "/docs/19/runtime-config-connection.html#GUC-RESERVED-CONNECTIONS"
+            }
+          ],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_use_reserved_connections 允许使用通过 reserved_connections 保留的连接槽。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_use_reserved_connections"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-USE-RESERVED-CONNECTIONS",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-USE-RESERVED-CONNECTIONS"
+            }
+          ],
+          "related": [
+            {
+              "label": "reserved_connections",
+              "url": "/docs/devel/runtime-config-connection.html#GUC-RESERVED-CONNECTIONS"
+            }
+          ],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_write_all_data",
+      "name": "pg_write_all_data",
+      "name_zh": "写入全部数据",
+      "category": "数据访问",
+      "summary": "提供全部数据的写入权限以及模式使用权限，但不绕过行级安全策略。",
+      "aliases": [],
+      "versions": {
+        "14": {
+          "description": [
+            "写入所有数据（表、视图、序列），其效果就像对这些对象拥有 INSERT、 UPDATE 和 DELETE 权限并对所有模式拥有 USAGE 权限一样，即使没有被显式授予。该角色没有设置角色属性 BYPASSRLS。如果正在使用 RLS，管理员可能希望对被 GRANT 此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "写入所有数据（表、视图、序列），其效果就像对这些对象拥有 INSERT、 UPDATE 和 DELETE 权限并对所有模式拥有 USAGE 权限一样，即使没有被显式授予。该角色没有设置角色属性 BYPASSRLS。如果正在使用 RLS，管理员可能希望对被 GRANT 此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "写入所有数据（表、视图、序列），其效果就像对这些对象拥有 INSERT、 UPDATE 和 DELETE 权限并对所有模式拥有 USAGE 权限一样，即使没有被显式授予。该角色没有设置角色属性 BYPASSRLS。如果正在使用 RLS，管理员可能希望对被 GRANT 此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "写入所有数据（表、视图、序列），其效果就像对这些对象拥有 INSERT、 UPDATE 和 DELETE 权限并对所有模式拥有 USAGE 权限一样，即使没有被显式授予。该角色没有设置角色属性 BYPASSRLS。如果正在使用 RLS，管理员可能希望对被 GRANT 此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_write_all_data 允许写入所有数据（表、视图、序列），其效果就像对这些对象拥有 INSERT、 UPDATE 和 DELETE 权限并对所有模式拥有 USAGE 权限一样。该角色不会绕过行级安全（RLS）策略。如果正在使用 RLS，管理员可能希望对被授予此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_write_all_data 允许写入所有数据（表、视图、序列、大对象），其效果就像对这些对象拥有 INSERT、 UPDATE 和 DELETE 权限并对所有模式拥有 USAGE 权限一样。该角色不会绕过行级安全（RLS）策略。如果正在使用 RLS，管理员可能希望对被授予此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_write_all_data 允许写入所有数据（表、视图、序列、大对象），其效果就像对这些对象拥有 INSERT、 UPDATE 和 DELETE 权限并对所有模式拥有 USAGE 权限一样。该角色不会绕过行级安全（RLS）策略。如果正在使用 RLS，管理员可能希望对被授予此角色的角色设置 BYPASSRLS。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_all_data"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-ALL-DATA"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    },
+    {
+      "slug": "pg_write_server_files",
+      "name": "pg_write_server_files",
+      "name_zh": "写入服务器文件",
+      "category": "服务器文件与程序",
+      "summary": "允许向数据库服务器进程可访问的位置写入文件。",
+      "aliases": [],
+      "versions": {
+        "11": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 11.22 手册",
+              "url": "/docs/11/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7"
+            },
+            {
+              "label": "PostgreSQL 11 英文原文",
+              "url": "https://www.postgresql.org/docs/11/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "11",
+            "label": "11.22",
+            "revision": "07a5b8fd0ddcd1e79b9c24226c5f2a7948fd11d8bbf889f134e2db4923bc65c7",
+            "ref": "PostgreSQL 11.22 手册",
+            "channel": "historical"
+          }
+        },
+        "12": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 12.22 手册",
+              "url": "/docs/12/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1"
+            },
+            {
+              "label": "PostgreSQL 12 英文原文",
+              "url": "https://www.postgresql.org/docs/12/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "12",
+            "label": "12.22",
+            "revision": "4ea4e406b47297fc94dccae259b24c5071387058bb33cc14f153e20a5a6835d1",
+            "ref": "PostgreSQL 12.22 手册",
+            "channel": "historical"
+          }
+        },
+        "13": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "默认角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 13.23 手册",
+              "url": "/docs/13/default-roles.html#DEFAULT-ROLES-TABLE",
+              "sha256": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345"
+            },
+            {
+              "label": "PostgreSQL 13 英文原文",
+              "url": "https://www.postgresql.org/docs/13/default-roles.html#DEFAULT-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "13",
+            "label": "13.23",
+            "revision": "24fc69c54c61a09017c8dcdcf60b7de7a593c7a0c6f7173e4bc7ff2404fab345",
+            "ref": "PostgreSQL 13.23 手册",
+            "channel": "historical"
+          }
+        },
+        "14": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 14.24 手册",
+              "url": "/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51"
+            },
+            {
+              "label": "PostgreSQL 14 英文原文",
+              "url": "https://www.postgresql.org/docs/14/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "14",
+            "label": "14.24",
+            "revision": "3b332856887403865b78e4686025ea7ea002270c6c70a61f109d881e0f8e6b51",
+            "ref": "PostgreSQL 14.24 手册",
+            "channel": "stable"
+          }
+        },
+        "15": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 15.19 手册",
+              "url": "/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b"
+            },
+            {
+              "label": "PostgreSQL 15 英文原文",
+              "url": "https://www.postgresql.org/docs/15/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "15",
+            "label": "15.19",
+            "revision": "15fe01f285f1c256c5066f8da6a92e748f010f3a4e429488e22f997b73682b1b",
+            "ref": "PostgreSQL 15.19 手册",
+            "channel": "stable"
+          }
+        },
+        "16": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 16.15 手册",
+              "url": "/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598"
+            },
+            {
+              "label": "PostgreSQL 16 英文原文",
+              "url": "https://www.postgresql.org/docs/16/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "16",
+            "label": "16.15",
+            "revision": "ff86d2333937e1e9441014f4ff24a92bbc49d48576ab0f5cec1f165a808e6598",
+            "ref": "PostgreSQL 16.15 手册",
+            "channel": "stable"
+          }
+        },
+        "17": {
+          "description": [
+            "允许使用COPY和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "pg_read_server_files、 pg_write_server_files 和 pg_execute_server_program 角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用用户的身份访问文件并在数据库服务器上运行程序。由于这些角色能够访问服务器文件系统上的任意文件，它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力，因此向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 17.11 手册",
+              "url": "/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE",
+              "sha256": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa"
+            },
+            {
+              "label": "PostgreSQL 17 英文原文",
+              "url": "https://www.postgresql.org/docs/17/predefined-roles.html#PREDEFINED-ROLES-TABLE"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "17",
+            "label": "17.11",
+            "revision": "19042e8306c6d47487a81d9935dd3ad384cb71c6a75e13bd7edb7f0f869b18aa",
+            "ref": "PostgreSQL 17.11 手册",
+            "channel": "stable"
+          }
+        },
+        "18": {
+          "description": [
+            "pg_write_server_files 允许使用 COPY 和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用操作系统用户的身份访问文件并在数据库服务器上运行程序。它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力。因此，向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 18.6 手册",
+              "url": "/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES",
+              "sha256": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad"
+            },
+            {
+              "label": "PostgreSQL 18 英文原文",
+              "url": "https://www.postgresql.org/docs/18/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "18",
+            "label": "18.6",
+            "revision": "9882a90580687c28ebca6e5da62beca7518ed19914a607249637a51427b1aaad",
+            "ref": "PostgreSQL 18.6 手册",
+            "channel": "stable"
+          }
+        },
+        "19": {
+          "description": [
+            "pg_write_server_files 允许使用 COPY 和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用操作系统用户的身份访问文件并在数据库服务器上运行程序。它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力。因此，向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 19beta4 手册",
+              "url": "/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES",
+              "sha256": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77"
+            },
+            {
+              "label": "PostgreSQL 19 英文原文",
+              "url": "https://www.postgresql.org/docs/19/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "19",
+            "label": "19beta4",
+            "revision": "55b2017c95f380ae1f0dd0792f4b095f6d831ae2eb7a2d71f374796fab56fc77",
+            "ref": "PostgreSQL 19beta4 手册",
+            "channel": "preview"
+          }
+        },
+        "20": {
+          "description": [
+            "pg_write_server_files 允许使用 COPY 和其他文件访问函数，向服务器上数据库可访问的任何位置写入文件。"
+          ],
+          "facts": [
+            {
+              "label": "本版名称",
+              "value": "pg_write_server_files"
+            },
+            {
+              "label": "手册称谓",
+              "value": "预定义角色"
+            }
+          ],
+          "sections": [
+            {
+              "title": "作用与权限边界",
+              "paragraphs": [
+                "这些角色旨在让管理员能够使受信任但非超级用户的角色能够以数据库运行所用操作系统用户的身份访问文件并在数据库服务器上运行程序。它们在直接访问文件时会绕过所有数据库级权限检查，并且可被用来获得超级用户级别的访问能力。因此，向用户授予这些角色时必须极其谨慎。"
+              ]
+            }
+          ],
+          "sources": [
+            {
+              "label": "PostgreSQL 20devel 手册",
+              "url": "/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES",
+              "sha256": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da"
+            },
+            {
+              "label": "PostgreSQL devel 英文原文",
+              "url": "https://www.postgresql.org/docs/devel/predefined-roles.html#PREDEFINED-ROLE-PG-READ-SERVER-FILES"
+            }
+          ],
+          "related": [],
+          "release": {
+            "major": "20",
+            "label": "20devel",
+            "revision": "608923383f354d3c0cb144fc07c73fef8301ca0122c081e47ae42800a9cf02da",
+            "ref": "PostgreSQL 20devel 手册",
+            "channel": "devel"
+          }
+        }
+      }
+    }
+  ]
+}

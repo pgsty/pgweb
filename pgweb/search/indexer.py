@@ -588,3 +588,75 @@ def rebuild_func(dry_run=False):
         SearchEntry.objects.bulk_create(objects, batch_size=200)
     service.forget_catalog()
     return {'func': len(objects)}
+
+
+def rebuild_locks(dry_run=False):
+    """Twelve lock-mode definitions; command details stay versioned in the encyclopedia."""
+    from pgweb.wiki.models import LockMode
+    modes = list(LockMode.objects.all())
+    if dry_run:
+        return {'locks': len(modes)}
+    objects = []
+    for mode in modes:
+        scope = '表级锁' if mode.scope == 'table' else '行级锁'
+        name_key = normalize_name(mode.name)
+        aliases = sorted({name_key, normalize_name(mode.slug), mode.name_zh, mode.abbrev.lower()})
+        body = '{}\n{}\n{}'.format(mode.name_zh, scope, mode.summary)
+        preview = '<p>{}</p><p>{} · {}</p><p><a href="{}">查看逐版本命令与冲突矩阵</a></p>'.format(
+            escape(mode.summary), escape(scope), escape(mode.name_zh), escape(mode.url))
+        vector = (SearchVector(Value(index_text(' '.join([mode.name, *aliases]))), config='simple', weight='A') +
+                  SearchVector(Value(index_text(body)), config='simple', weight='B'))
+        objects.append(SearchEntry(source='lock', document=None, version=None,
+            key=digest('lock\0' + mode.slug), entity_key='lock:' + mode.slug, kind='lock',
+            subtype=mode.scope, name=mode.name, name_key=name_key, aliases=aliases, anchor='',
+            heading='锁模式 · ' + scope, signature=mode.name_zh, body=body, preview=preview,
+            url=mode.url, weight=0.5, vector=vector))
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
+        SearchEntry.objects.filter(source='lock').delete()
+        SearchEntry.objects.bulk_create(objects)
+    service.forget_catalog()
+    return {'locks': len(objects)}
+
+
+def rebuild_topics(dry_run=False):
+    """Index the four versioned reference columns, folding OID types with the manual."""
+    from pgweb.wiki import topics
+    objects, report = [], {}
+    for kind, spec in topics.TOPICS.items():
+        rows = list(spec['model'].objects.all().values())
+        report[kind] = len(rows)
+        for row in rows:
+            aliases = sorted({normalize_name(value) for value in
+                              [row['name'], row['slug'], row['name_zh'], *row['aliases']] if value})
+            texts = [row['summary'], row['name_zh'], row['category']]
+            for snapshot in row['versions'].values():
+                texts.extend(snapshot['description'])
+                texts.append(snapshot.get('signature', ''))
+                texts.extend(fact['label'] + ' ' + fact['value'] for fact in snapshot.get('facts', []))
+                for section in snapshot.get('sections', []):
+                    texts.extend([section['title'], section.get('code', ''), *section.get('paragraphs', [])])
+                    for block in section.get('blocks', []):
+                        texts.extend([block.get('code', ''), *block.get('paragraphs', [])])
+            body = '\n'.join(dict.fromkeys(texts))
+            title = index_text(' '.join([row['name'], *aliases]))
+            vector = (SearchVector(Value(title), config='simple', weight='A') +
+                      SearchVector(Value(index_text(body)), config='simple', weight='B'))
+            url = topics.row_url(kind, row)
+            preview = '<p>{}</p><p><a href="{}">查看逐版本说明与来源</a></p>'.format(
+                escape(row['summary']), escape(url))
+            objects.append(SearchEntry(source=kind, document=None, version=None,
+                key=digest(kind + '\0' + row['slug']), entity_key=topics.entity_key(kind, row),
+                kind=spec['kind'], subtype='', name=row['name'], name_key=normalize_name(row['name']),
+                aliases=aliases, anchor='', heading=spec['name'] + ' · ' + row['category'],
+                signature=row['name_zh'], body=body, preview=preview, url=url, weight=0.5, vector=vector))
+    if dry_run:
+        return report
+    with transaction.atomic():
+        with connection.cursor() as cursor:
+            cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
+        SearchEntry.objects.filter(source__in=list(topics.TOPICS)).delete()
+        SearchEntry.objects.bulk_create(objects, batch_size=100)
+    service.forget_catalog()
+    return report

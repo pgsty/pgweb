@@ -1,7 +1,7 @@
 """等待事件栏目的页面侧：索引、详情、变更页的上下文形状，以及查找与 sitemap。
 
 样本用 ORM 直接造：导入器有自己的一份测试，这里只关心 `waitevent.py` 给出的形状。
-版本谱是 9.5（尚无机制）、9.6、12、13、17、18（当前稳定版）、19 beta 3、20 devel。
+版本谱是 9.5（尚无机制）、9.6、12、13、17、18（当前稳定版）、19 beta 4、20 devel。
 """
 
 import os
@@ -26,7 +26,7 @@ VERSIONS = [
     ('13', '13', 'historical', 'end-of-life', '13', True, 'atlas'),
     ('17', '17', 'historical', 'supported', '17', True, 'atlas'),
     ('18', '18', 'stable', 'supported', '18', True, 'atlas'),
-    ('19', '19 beta 3', 'preview', 'preview', '19', True, 'manual+upstream'),
+    ('19', '19 beta 4', 'preview', 'preview', '19', True, 'manual+upstream'),
     ('20', '20 devel', 'devel', 'devel', 'devel', True, 'manual'),
 ]
 LIVE = [major for major, _, _, _, _, live, _ in VERSIONS if live]
@@ -410,6 +410,22 @@ class WaitEventDetailTests(TestCase):
         # 本站没有 13 的手册，不给死链。
         self.assertEqual(ribbon['13']['doc_url'], '')
         self.assertEqual(ribbon['9.5']['state'], 'na')
+
+    def test_retranslated_9_6_manual_is_linked_without_truncating_the_version(self):
+        from datetime import date
+        from pgweb.core.models import Version
+        from pgweb.docs.models import DocPage
+        version = Version(tree='9.6', reldate=date(2016, 9, 29),
+                          firstreldate=date(2016, 9, 29), eoldate=date(2021, 11, 11))
+        Version.objects.bulk_create([version])
+        DocPage.objects.create(version=version, file='monitoring-stats.html', title='统计视图',
+                               content='<div id="WAIT-EVENT-TABLE">等待事件</div>')
+        payload = waitevent.detail('lwlock', 'BufferContent', '9.6')
+        expected = '/docs/9.6/monitoring-stats.html#WAIT-EVENT-TABLE'
+        self.assertEqual(payload['links']['doc'], expected)
+        self.assertEqual(next(row['doc_url'] for row in payload['ribbon']
+                              if row['major'] == '9.6'), expected)
+        self.assertIn('9.6', [row['major'] for row in payload['doc_versions']])
 
     def test_links_point_at_the_manual_upstream_and_the_source(self):
         links = waitevent.detail('lwlock', 'BufferContent', '18')['links']

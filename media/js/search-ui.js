@@ -11,7 +11,8 @@ export const PREVIEW_API = '/search/preview/';
 export const GROUP_ICON = {
   all: 'layers', guc: 'sliders', sql: 'terminal-square', function: 'sigma', type: 'braces',
   relation: 'table', error: 'alert', waitevent: 'layers', tool: 'terminal', psql: 'backslash',
-  extension: 'blocks', guide: 'book',
+  extension: 'blocks', guide: 'book', lock: 'layers',
+  hook: 'braces', relopt: 'sliders', role: 'layers',
 };
 
 export function el(tag, className, text) {

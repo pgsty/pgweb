@@ -1,14 +1,13 @@
-"""百科的六个栏目。
+"""百科栏目。
 
 这里是栏目本身的唯一定义：名称、地址、规模、上线状态、上游来源。文档导航末尾的
-六个入口和 sitemap 都从这份列表生成，栏目上线时只改这里的 `live`。
+入口和 sitemap 都从这份列表生成，栏目上线时只改这里的 `live`。
 
 `origin` 是这批数据的上游双语站点，`repo` 是它的仓库；两者都由 Pigsty 维护，
 本站的百科是它们的中文渲染。SQL 命令与函数百科直接来自本站手册，没有独立上游仓库。
 
-条目数是各数据仓库当前的实际规模，不是站点已导入的行数；已上线栏目的页面
-自己按库里的真实数量显示。系统目录是个例外：cat 收到 19 beta 3 的 157 个关系，
-本站在此之上从 devel 手册推出 PostgreSQL 20 一层，多出 pg_stat_kind_info 一个。
+条目数是当前固定快照的实体并集；已上线栏目的页面按数据库中的真实数量显示。
+系统目录采样至 19 beta 4，开发版另外从本站同构建手册推导。
 """
 
 COLUMNS = (
@@ -18,7 +17,7 @@ COLUMNS = (
         'short': 'SQL 命令',
         'tone': 'sql',
         'lead': '每条 SQL 命令的语法、参数与逐版本的语法演化。',
-        'scale': '183 条命令 · 17 组',
+        'scale': '186 条命令 · 17 组',
         'coverage': 'PostgreSQL 10 – 20 devel',
         'repo': '',
         'origin': '',
@@ -42,7 +41,7 @@ COLUMNS = (
         'short': '系统目录',
         'tone': 'cat',
         'lead': '系统目录与视图的字段构成，以及逐版本的结构变化。',
-        'scale': '158 个关系 · 4 类',
+        'scale': '153 个关系 · 4 类',
         'coverage': 'PostgreSQL 9.0 – 20 devel',
         'repo': 'pgsty/cat.pg.center',
         'origin': 'https://cat.pg.center',
@@ -73,12 +72,24 @@ COLUMNS = (
         'live': True,
     },
     {
+        'slug': 'lock',
+        'name': '锁百科',
+        'short': '锁百科',
+        'tone': 'wait',
+        'lead': '表级锁与行级锁的冲突矩阵、对应命令与逐版本规则。',
+        'scale': '12 种锁模式 · 2 个层级',
+        'coverage': 'PostgreSQL 10 – 20 devel',
+        'repo': '',
+        'origin': '',
+        'live': True,
+    },
+    {
         'slug': 'func',
         'name': '函数百科',
         'short': '函数百科',
         'tone': 'func',
         'lead': '每个内置函数的签名、说明、示例与逐版本的签名演化。',
-        'scale': '708 个函数 · 27 组',
+        'scale': '707 个函数 · 27 组',
         'coverage': 'PostgreSQL 9.0 – 20 devel',
         # 数据不来自独立的上游仓库：本站手册第 9 章就是来源。
         'repo': '',
@@ -86,6 +97,14 @@ COLUMNS = (
         'live': True,
     },
 )
+
+from .topic_specs import TOPIC_SPECS
+
+COLUMNS += tuple({
+    'slug': slug, 'name': spec['name'], 'short': spec['name'], 'tone': spec['tone'],
+    'lead': spec['lead'], 'scale': spec['scale'], 'coverage': 'PostgreSQL 10 – 20 devel',
+    'repo': '', 'origin': '', 'live': True,
+} for slug, spec in TOPIC_SPECS.items())
 
 BY_SLUG = {column['slug']: column for column in COLUMNS}
 
@@ -110,5 +129,5 @@ def live_columns():
 
 
 def nav_items():
-    """The six columns as entries at the end of the 文档 navigation."""
+    """The encyclopedia columns at the end of the 文档 navigation."""
     return [{'title': column['name'], 'link': url(column)} for column in COLUMNS if url(column)]

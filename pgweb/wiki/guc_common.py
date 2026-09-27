@@ -20,6 +20,11 @@ def diff_fields(left, right):
     left, right = left or {}, right or {}
     out = {}
     for field, _ in GUC_FIELDS:
+        # Documentation-only snapshots establish the type, not runtime defaults
+        # or bounds. Empty placeholders must not become historical changes.
+        if field != 'vartype' and any(
+                item.get('facts_source') == 'documentation' for item in (left, right)):
+            continue
         if normal(left.get(field)) != normal(right.get(field)):
             out[field] = {'from': left.get(field), 'to': right.get(field)}
     return out

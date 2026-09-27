@@ -13,11 +13,11 @@
 | 项 | 值 |
 | --- | --- |
 | 权威源 | `~/pg.center/guc/data/guc.json`（447 个参数的完整记录）、`data/diffs.json`（相邻版本差异）、`data/catalog.json`（规模）、`raw/manifest.json`（每版实测的服务器版本） |
-| 版本 | 9.0 – 9.6、10 – 18、19 beta 3（guc，键为 `19beta3`）+ 20 devel（本站推导） |
-| 参数 | guc 447 个（19 beta 3 在档 419 个，期间移除 28 个）；本站再加 20 devel 手册新出现的参数（2026-09-11 核验为 `enable_groupagg`、`log_statement_max_length` 两个） |
+| 版本 | 9.0 – 9.6、10 – 18、19 beta 4（guc，键为 `19beta4`）+ 20 devel（本站推导） |
+| 参数 | guc 447 个（19 beta 4 在档 419 个，期间移除 28 个）；本站再加 20 devel 手册新出现的参数（2026-09-27 核验仍为 `enable_groupagg`、`log_statement_max_length` 两个） |
 | 事实 | 每版 `pg_settings` 的 `setting / unit / category / short_desc / extra_desc / context / vartype / min_val / max_val / enumvals / boot_val`；引入提交（240 个参数有）；官方文档锚点 |
 | 编辑分析 | guc 的 `editorial.zh / en`：机制、按负载的建议、常见问题、关联参数、参考资料 |
-| 中文 | 本站手册 10 – 19 与 devel 的 `runtime-config-*.html`：每个参数 `<dt id="GUC-…">` 后的 `<dd>` 说明段落 |
+| 中文 | 本站手册 9.0 – 19 与 devel 的 `runtime-config-*.html`：每个参数 `<dt id="GUC-…">` 后的 `<dd>` 说明段落（2026-09-25 起含 9.x 重译树；本地没有那一版树的版本自动跳过） |
 
 guc.json 每项：`name / slug / identity（最新快照）/ lifecycle{first_seen, first_seen_is_scope_boundary, last_seen, removed_in, present_in[], gaps[]} /
 default_history[{from, to, boot_val, unit, human}] / changed_fields{字段: [{from, to, value}]} / official_docs{版本: {status, anchor, url}} /
@@ -27,6 +27,12 @@ introduction_commit{status, hash, authored_at, subject, url, discussion[]} 或 n
 其余编辑文字里提到 Pigsty 的句子也要清掉（§3.3），本站页面上不出现 Pigsty 取值。
 
 9.0 是收录基线：`lifecycle.first_seen_is_scope_boundary` 为真的参数不能说"首次于 9.0 引入"，页面措辞与系统目录一致。
+
+2026-09-27 的 PG19 beta4 实测使用官方 Debian x86_64 镜像
+`postgres@sha256:5b87ea8650be6db1308cf8e99b7e4bd909c40bdbeefe6e347772943f955f76d9`，
+完整构建、镜像 ID、架构及提取宿主记录在源库 `raw/manifest.json`。beta3 原始数据、锚点及 manifest 历史记录仍保留；
+beta4 的 18 个官方运行配置页面重新采集，并校验首页构建确为 `19beta4`。`setting` 是该容器的运行实测值，
+机器相关的 `timing_clock_source = auto (system)` 不等于版本默认值变化，`boot_val` 仍为 `auto`。
 
 ## 2. 数据建模：两张表，非规范化
 
@@ -38,12 +44,12 @@ introduction_commit{status, hash, authored_at, subject, url, discussion[]} 或 n
 
 ```python
 class GucVersion:                 # db_table 'guc_version'，18 行
-    major                         # '9.0' … '18', '19', '20'（guc 的 '19beta3' 归一成 '19'）
-    label                         # '18' / '19 beta 3' / '20 devel'
+    major                         # '9.0' … '18', '19', '20'（guc 的 '19beta4' 归一成 '19'）
+    label                         # '18' / '19 beta 4' / '20 devel'
     status                        # historical(≤17) | stable(18) | preview(19) | devel(20)
     support_status                # end-of-life | supported | preview | devel（查 pgweb.core.models.Version 的 supported，查不到按 end-of-life）
-    source_key                    # guc 的版本键：'19beta3'；20 为 ''
-    server_version                # 实测服务器版本，去掉括号：'18.6'、'19beta3'；20 为 ''
+    source_key                    # guc 的版本键：'19beta4'；20 为 ''
+    server_version                # 实测服务器版本，去掉括号：'18.6'、'19beta4'；20 为 ''
     doc_slug                      # '9.0' … '19'，20 为 'devel'
     parameter_count, added_count, removed_count, default_changed_count, changed_count, reworded_count
     schema_source                 # 'runtime' | 'documentation'(20)
@@ -60,6 +66,7 @@ class GucParameter:               # db_table 'guc'，447 + 20 新增
 ```
 
 - 热字段取**最新存在版本**的快照（现存参数是 20，20 沿用 19 的事实）。`short_desc_zh` 取 guc `editorial.zh.official_short_desc_translation`；20 新增参数取 devel 手册说明的第一句。
+- devel 手册类型与沿用源冲突时，仅保留手册确认的类型和说明，标记 `facts_source = documentation`；其他运行时事实尚未采样，留空且页面明确提示，不显示为「未设置」。例如当前 20 的 `data_checksums` 为 `enum`，19 beta4 为 `bool`，不能互相代用。默认值区间停在 19；比较与矩阵只比较已知类型，导出报告的 `type_conflicts` 留存差异。
 - `position = 一级分类序 × 10000 + 子分类序（GUC_CATEGORY_ORDER）× 100 + 子分类内按 name 小写排序的序号`。
 - `changed_in`：落地了实质变化（`GUC_SUBSTANTIVE_FIELDS` 任一）的版本；`default_changed_in`：其中 `boot_val` 或 `unit` 变了的版本，与 guc `diffs.json` 的 `default_changed` 同口径。
 - 索引页查询必须 `defer('versions', 'changes', 'default_history', 'docs', 'editorial', 'intro_commit')`：447 行乘上逐版本手册译文不小。
@@ -69,7 +76,7 @@ class GucParameter:               # db_table 'guc'，447 + 20 新增
 ```
 {setting, boot_val, unit, human, category, category_zh, short_desc, extra_desc, context, vartype, min_val, max_val, enumvals,
  doc: {file: 'runtime-config-wal.html', anchor: 'GUC-WAL-LEVEL', slug: '18', url: 官方文档 URL},
- doc_html: '<p>…</p>',            # 本站手册译文（10 – 20），已清洗、链接已改写；9.x 为 ''
+ doc_html: '<p>…</p>',            # 本站手册译文（9.0 – 20），已清洗、链接已改写
  doc_same_as: '',                 # 译文与更早某版完全一致时只记那一版的 major，doc_html 留空（去重）
  carried_from: '', carry_reason: ''}   # 20 沿用 19 的事实时：'19' / '手册不含 pg_settings 事实，沿用 19'
 ```
@@ -127,7 +134,7 @@ class GucParameter:               # db_table 'guc'，447 + 20 新增
 
 ### 3.1 手册译文采集
 
-版本 10 – 19 与 0（devel）。定位：`DocPage(file=doc.file, version=树)` → `dt#<anchor>` → 紧随的 `dd`。取 `dd` 的内部 HTML，清洗后存 `doc_html`：
+版本 9.0 – 19 与 0（devel；没有树的版本自动跳过）。定位：`DocPage(file=doc.file, version=树)` → `dt#<anchor>` → 紧随的 `dd`。取 `dd` 的内部 HTML，清洗后存 `doc_html`：
 
 - bleach 白名单：`p, br, code, a, em, strong, b, i, ul, ol, li, dl, dt, dd, table, thead, tbody, tr, td, th, pre, span, div, sub, sup, kbd, samp, blockquote, h4, h5`；
   属性：`a[href, title]`、`code / span / div / table / p[class]`、`td / th[colspan, rowspan]`。所有 `id` 去掉（同一页面渲染多版会撞）。
@@ -141,7 +148,7 @@ class GucParameter:               # db_table 'guc'，447 + 20 新增
 
 ### 3.2 PostgreSQL 20 开发版推导
 
-guc 到 19 beta 3 为止；20 由本站 devel 手册（`DocPage.version=0`）推出：
+guc 到 19 beta 4 为止；20 由本站 devel 手册（`DocPage.version=0`）推出：
 
 - 遍历 devel 的全部 `runtime-config-*.html`，收集 `dt[id^=GUC-]`：参数名（`code.varname`）、类型（`code.type`：`boolean → bool`、`floating point → real`、`integer / string / enum` 照旧；其它如 `pg_lsn / timestamp` 归 `string`）、所在页与 `sect2` 锚点、说明 HTML。
 - 19 存在且 devel 手册有：20 快照 = 19 快照的事实 + devel 的 `doc / doc_html`，`carried_from='19'`、`carry_reason='手册不含 pg_settings 事实，沿用 19'`。
@@ -214,7 +221,7 @@ default_track: [{from, to, span, boot_val, unit, human, current(bool)}]   # 默�
 ribbon: [{major, label, state, url, current, preview, devel, doc_url, status}]   # state 同 strip（逐版本，不合段）
 change, change_note, notice     # 落在本版的记录 / 一句话 / 预发行与开发版提示
 doc: {html, major(译文实际来自哪一版), borrowed(bool 本站没有该版手册时借最近的可用版), local_url, official_url, label('PostgreSQL 18 手册 · 19.5.1 设置')}
-                                # 9.x：borrowed=True，取 10 的译文；官方链接仍指该版
+                                # 9.x 有本版手册时照常读取；只在本版缺译文时借用其它版本
 editorial: {mechanism: [], advice: {oltp, olap, small}, pitfalls: [],
             related: [{name, url, short_desc_zh, exists(bool)}], references: [{title, url}]}   # 均取 zh，无则空
 timeline: [{to, from, status, url('?v=<to>'), substantive, default_changed, carried,
@@ -296,6 +303,10 @@ baseline_groups: 索引页 groups 形状，只含 9.0 存在的参数
 
 不给 `--write` 就只预览。发布顺序：拉代码 → `manage.py migrate wiki` → `sync_guc.py --input … --write` → `index_docs --guc` → `systemctl restart pgsql.cc`。
 页面缓存 5 分钟，导入后命令主动清缓存（`guc.forget()`）。guc 出新版本时更新 `~/pg.center/guc`，重新导出导入；20 推导层跟着本站 devel 手册走，手册重灌后重导一次。
+
+源库只需刷新实测派生摘要与官方引用时，先重建 catalog，再运行
+`python3 scripts/refresh_editorial.py --facts-only`，最后重新运行 `build_catalog.py`。
+这个模式保留机制、建议、注意事项等人工编辑段落，不重新生成网站页面。
 
 测试：`PGWEB_TEST_DB=test_pgweb_guc .venv/bin/python manage.py test pgweb.wiki pgweb.search --noinput`（测试库名走环境变量，避免与并行会话相撞）。
 

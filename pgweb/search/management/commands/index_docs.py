@@ -8,7 +8,7 @@ from pgweb.core.models import Version
 from pgweb.docs.versions import manual_major
 from pgweb.search.indexer import (rebuild_catalog, rebuild_errcodes, rebuild_extensions,
                                   rebuild_func, rebuild_guc, rebuild_version, rebuild_waitevents,
-                                  rebuild_sqlcmd)
+                                  rebuild_sqlcmd, rebuild_locks, rebuild_topics)
 
 
 class Command(BaseCommand):
@@ -25,6 +25,8 @@ class Command(BaseCommand):
         parser.add_argument('--waitevents', action='store_true', help='Rebuild the 等待事件 entries')
         parser.add_argument('--sqlcmd', action='store_true', help='Rebuild the SQL 命令 entries')
         parser.add_argument('--func', action='store_true', help='Rebuild the 函数百科 entries')
+        parser.add_argument('--locks', action='store_true', help='Rebuild the 锁百科 entries')
+        parser.add_argument('--topics', action='store_true', help='Rebuild hooks, reloptions, roles and OID types')
         parser.add_argument('--force', action='store_true', help='Rebuild unchanged manual pages too')
         parser.add_argument('--dry-run', action='store_true', help='Extract and report without writing')
 
@@ -33,7 +35,7 @@ class Command(BaseCommand):
             Q(tree__gte=10) | Q(tree=0), docpage__isnull=False).values_list('tree', flat=True).distinct()]
         everything = not any((options['versions'], options['extensions'], options['errcodes'],
                               options['catalog'], options['guc'], options['waitevents'],
-                              options['sqlcmd'], options['func']))
+                              options['sqlcmd'], options['func'], options['locks'], options['topics']))
         versions = options['versions'] or (sorted(available, reverse=True) if everything else [])
         if any(v not in available for v in versions):
             raise CommandError('Requested version has no locally loaded PG10+ or development manual')
@@ -56,6 +58,10 @@ class Command(BaseCommand):
             self.stdout.write(json.dumps(rebuild_sqlcmd(dry_run=options['dry_run']), ensure_ascii=False))
         if options['func'] or everything:
             self.stdout.write(json.dumps(rebuild_func(dry_run=options['dry_run']), ensure_ascii=False))
+        if options['locks'] or everything:
+            self.stdout.write(json.dumps(rebuild_locks(dry_run=options['dry_run']), ensure_ascii=False))
+        if options['topics'] or everything:
+            self.stdout.write(json.dumps(rebuild_topics(dry_run=options['dry_run']), ensure_ascii=False))
         if not options['dry_run']:
             with connection.cursor() as cursor:
                 cursor.execute('ANALYZE search_searchentry')

@@ -10,10 +10,12 @@ from .models import (CatalogRelation, CatalogVersion, ErrorCode, ErrorCodeClass,
 
 
 class ColumnTests(SimpleTestCase):
-    def test_six_columns_in_reading_order(self):
+    def test_columns_in_reading_order(self):
         self.assertEqual([c['slug'] for c in COLUMNS],
-                         ['sql', 'sqlstate', 'catalog', 'guc', 'waitevent', 'func'])
-        self.assertEqual(set(BY_SLUG), {'sqlstate', 'guc', 'waitevent', 'catalog', 'sql', 'func'})
+                         ['sql', 'sqlstate', 'catalog', 'guc', 'waitevent', 'lock', 'func',
+                          'hook', 'relopts', 'role', 'oid'])
+        self.assertEqual(set(BY_SLUG), {'sqlstate', 'guc', 'waitevent', 'catalog', 'sql', 'func', 'lock',
+                                       'hook', 'relopts', 'role', 'oid'})
 
     def test_a_column_in_preparation_links_to_its_origin_site(self):
         """Navigation must never point at a route that does not exist yet."""
@@ -665,7 +667,7 @@ class CatalogExportTests(TestCase):
         self.assertEqual(added['description'], '')          # 20 新增字段英文留空
         self.assertEqual(added['description_zh'], '开发版新增的标志位')
         carried = next(c for c in devel['columns'] if c['name'] == 'demoname')
-        self.assertEqual(carried['description'], 'Name of the demo object')
+        self.assertEqual(carried['description'], '')  # 没有同构建英文归档时不沿用旧版正文
         self.assertEqual(devel['schema_source'], 'documentation')
         self.assertIsNone(devel['relation_oid'])
         self.assertFalse(devel['runtime_verified'])
@@ -1181,7 +1183,7 @@ class CatalogDocArtifactTests(TestCase):
         change = next(c for c in self.relation['changes'] if c['to'] == '20')
         self.assertEqual(change['removed_columns'], [])
         carried = next(c for c in devel['columns'] if c['name'] == 'demoextra')
-        self.assertEqual(carried['description'], 'Added in 12')
+        self.assertEqual(carried['description'], '')  # 没有本版英文说明，不把旧版正文当成本版
 
     def test_both_kinds_of_artifact_are_reported(self):
         artifacts = self.snapshot['harvest']['devel']['doc_artifacts']
@@ -1338,4 +1340,4 @@ class CatalogDefaultVersionTests(TestCase):
             self.assertEqual(catalog.pick_major('', []), '')
 
     def test_the_scale_string_matches_what_the_pages_count(self):
-        self.assertEqual(BY_SLUG['catalog']['scale'], '158 个关系 · 4 类')
+        self.assertEqual(BY_SLUG['catalog']['scale'], '153 个关系 · 4 类')

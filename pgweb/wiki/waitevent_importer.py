@@ -7,9 +7,9 @@
 三层来源叠在一起（契约见 docs/waitevent-column.md §1）：
 
 1. 图谱 `~/pg.center/wait`：13 – 18 的逐版本英文描述、中文官方描述与整份档案；
-2. 本站手册 `docs` 表的 `monitoring-stats.html`：10 – 19 与 devel 的中文描述；
-3. 上游：9.6 – 12 的英文总表（本站没有 9.6 手册，9.6 的事件身份也只有这一来源），
-   以及 `wait_event_names.txt` 在 `REL_19_BETA3` 与 `master` 的内容（19、20 的英文描述）。
+2. 本站手册 `docs` 表的 `monitoring-stats.html`：9.6 – 19 与 devel 的中文描述；
+3. 上游：9.6 – 12 的英文总表（9.6 的事件身份只有这一来源；重译后的 9.6 手册只叠中文），
+   以及 `wait_event_names.txt` 在 `REL_19_BETA4` 与 `master` 的内容（19、20 的英文描述）。
 
 9.0 – 9.5 没有 `wait_event` 列，这六个版本在快照里存在、事件数为 0、`has_wait_events=False`。
 身份归一与快照比较的规则只在 `waitevent_common.py` 一处，导入与页面共用。
@@ -23,6 +23,7 @@ import subprocess
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
+from decimal import Decimal
 
 from bs4 import BeautifulSoup, Tag
 from django.db import transaction
@@ -62,12 +63,14 @@ VERSION_SPEC = (
     ('16', '16', 'historical', 'supported', '16', True),
     ('17', '17', 'historical', 'supported', '17', True),
     ('18', '18', 'stable', 'supported', '18', True),
-    ('19', '19 beta 3', 'preview', 'preview', '19', True),
+    # 19 的英文清单锚定 wait_event_names.txt 的 beta 快照；2026-09-25 起本地手册
+    # 已是 19beta4（beta3 后上游移除了 PROPERTY GRAPH 与 data checksums 系列）。
+    ('19', '19 beta 4', 'preview', 'preview', '19', True),
     (DEVEL_MAJOR, DEVEL_MAJOR + ' devel', 'devel', 'devel', 'devel', True),
 )
 VERSION_ORDER = [major for major, _, _, _, _, _ in VERSION_SPEC]
 LIVE_ORDER = [major for major, _, _, _, _, live in VERSION_SPEC if live]
-# 大版本 → 本站手册地址段。9.6 本站没有手册，`slug` 仍写 9.6，由页面判断有没有那一版。
+# 大版本 → 本站手册地址段，9.x 保留小版本，开发树使用 devel。
 DOC_SLUG = {major: slug for major, _, _, _, slug, _ in VERSION_SPEC}
 
 # 12 → 13 那批机械对不上的更名（契约 §2 预留的 CURATED_RENAMES），'旧 Type/Name' → '13 的 Type/Name'。
@@ -130,8 +133,8 @@ CURATED_RENAMES = {
 ATLAS_MAJORS = ('13', '14', '15', '16', '17', '18')
 # 上游英文总表：9.6 只有这一来源，10 – 12 用它补英文（中文取本站手册）。
 UPSTREAM_HTML_MAJORS = ('9.6', '10', '11', '12')
-# 19 与开发版的英文来自源码里的事件清单文件。
-NAMES_TXT_TAGS = {'19': 'REL_19_BETA3', DEVEL_MAJOR: 'master'}
+# 19 与开发版的英文来自源码里的事件清单文件。19 跟随当前 beta 快照（与本地 19 手册树对齐）。
+NAMES_TXT_TAGS = {'19': 'REL_19_BETA4', DEVEL_MAJOR: 'master'}
 NAMES_TXT_URL = ('https://raw.githubusercontent.com/postgres/postgres/{}'
                  '/src/backend/utils/activity/wait_event_names.txt')
 UPSTREAM_HTML_URL = 'https://www.postgresql.org/docs/{}/monitoring-stats.html'
@@ -333,12 +336,10 @@ class Manual:
 
 
 def manual_rows(major):
-    """某个大版本的本站手册行。20 读 devel 那棵树，9.x 本站没有手册。"""
+    """某个大版本的本站手册行。20 读 devel 那棵树；9.6 起重译后也有本地树。"""
     if major == DEVEL_MAJOR:
         return Manual(DEVEL_TREE).rows()
-    if major.startswith('9.'):
-        return []
-    return Manual(int(major)).rows()
+    return Manual(Decimal(major) if '.' in major else int(major)).rows()
 
 
 # ------------------------------------------------------------------ 上游抓取
@@ -494,8 +495,8 @@ def doc_translations(major, canonical_map):
 def attach_zh(inventory, major, canonical_map, report):
     """把本站手册的译文按身份挂到清单上；手册里有、清单里没有的行记进报告。
 
-    本站 14 – 18 的手册译文其实是 15 那张表的旧稿，19 的也是拼盘：归一后对得上就用，
-    对不上的不硬塞，只记进 `doc_only`。
+    归一后匹配该版的事件身份；手册里有而事实清单没有的事件只记入 `doc_only`，
+    不用译文覆盖事实来源的存在性。
     """
     doc_rows = doc_translations(major, canonical_map)
     if not doc_rows:
@@ -695,7 +696,9 @@ def assemble(inventories, atlas, report):
                                if change['status'] == 'changed']
         latest_zh = next((versions[major]['description_zh'] for major in reversed(present)
                           if versions[major]['description_zh']), '')
-        event['summary_zh'] = (record or {}).get('official_description_zh') or latest_zh
+        # 中文摘要随最新已收录版本的译文更新；图谱旧译文只作为缺译时的后备。
+        # 逐版借译仍由 fill_atlas_zh / inherit_zh 的英文一致性规则约束。
+        event['summary_zh'] = latest_zh or (record or {}).get('official_description_zh') or ''
         events.append(event)
 
     ranks = {}

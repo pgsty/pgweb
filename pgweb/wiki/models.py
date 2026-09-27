@@ -1,4 +1,4 @@
-"""六类 PostgreSQL 参考资料的领域实体与版本元数据。
+"""PostgreSQL 参考资料的领域实体与版本元数据。
 
 SQLSTATE 是 pgsty/err.pg.center 仓库的投影，导入工具可以随时整体重建。权威三层在那边：
 `evidence/<CODE>.json`（人工证据）、`data/errcodes/<CODE>.json`（规范事实）、
@@ -13,6 +13,60 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models.functions import Left
 from django.db.models.lookups import Exact
+
+
+class ReferenceTopic(models.Model):
+    """Shared storage shape; the four reference domains keep separate tables."""
+
+    slug = models.CharField(max_length=96, primary_key=True)
+    name = models.TextField()
+    name_zh = models.TextField()
+    category = models.TextField()
+    summary = models.TextField()
+    aliases = ArrayField(models.TextField(), default=list, blank=True)
+    versions = models.JSONField(default=dict)
+    content_hash = models.CharField(max_length=64)
+    imported_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+        ordering = ('category', 'name', 'slug')
+
+    @property
+    def url(self):
+        return '/docs/{}/{}/'.format(self.column, self.slug)
+
+
+class ExtensionHook(ReferenceTopic):
+    column = 'hook'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'hook'
+
+
+class StorageParameter(ReferenceTopic):
+    column = 'relopts'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'relopt'
+
+
+class PredefinedRole(ReferenceTopic):
+    column = 'role'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'predefined_role'
+
+
+class ObjectIdentifierType(ReferenceTopic):
+    column = 'oid'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'oid_type'
 
 
 # 证据强度由弱到强。源数据把状态挂在单条证据上，一个码可以同时有好几档；
@@ -1052,3 +1106,40 @@ class PgFunction(models.Model):
     @property
     def group_eyebrow(self):
         return FUNC_GROUP_EYEBROW.get(self.group, '')
+
+
+# ------------------------------------------------------------------ 锁模式
+
+class LockMode(models.Model):
+    """八种表锁与四种行锁；每个模式一行，版本事实和采集证据放 JSON。"""
+
+    slug = models.CharField(max_length=40, primary_key=True)
+    name = models.TextField()
+    name_zh = models.TextField()
+    abbrev = models.CharField(max_length=8)
+    scope = models.CharField(max_length=8, choices=(('table', '表级锁'), ('row', '行级锁')))
+    summary = models.TextField(blank=True, default='')
+    position = models.PositiveSmallIntegerField()
+    versions = models.JSONField(default=dict)
+    content_hash = models.CharField(max_length=64, blank=True, default='')
+    source_rev = models.TextField(blank=True, default='')
+    imported_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = 'lock_mode'
+        ordering = ('position',)
+        constraints = [
+            models.CheckConstraint(condition=models.Q(scope__in=('table', 'row')),
+                                   name='lock_mode_scope'),
+            models.CheckConstraint(condition=Exact(
+                models.Func(models.F('versions'), function='jsonb_typeof',
+                            output_field=models.CharField()), models.Value('object')),
+                name='lock_mode_versions_object'),
+        ]
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def url(self):
+        return '/docs/lock/{}/'.format(self.slug)

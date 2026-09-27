@@ -1,6 +1,6 @@
 \set ON_ERROR_STOP on
 
--- Read-only acceptance for all six reference domains and their derived search.
+-- Read-only acceptance for all eleven reference domains and their derived search.
 BEGIN READ ONLY;
 SET LOCAL statement_timeout = '30s';
 
@@ -103,8 +103,103 @@ BEGIN
         RAISE NOTICE '%：% 条；PG 10–20 数据、版本汇总与检索条目均通过。',
             item.label, total;
     END LOOP;
+
+    -- Lock modes keep version metadata in each row instead of a version table.
+    SELECT count(*) INTO total FROM lock_mode;
+    IF total <> 12 OR (SELECT count(*) FROM lock_mode WHERE scope='table') <> 8
+                   OR (SELECT count(*) FROM lock_mode WHERE scope='row') <> 4 THEN
+        RAISE EXCEPTION '锁百科：必须是八种表级锁与四种行级锁，共十二条。';
+    END IF;
+    SELECT count(*) INTO inconsistent FROM lock_mode
+        WHERE content_hash !~ '^[0-9a-f]{64}$'
+           OR (SELECT array_agg(v ORDER BY v) FROM jsonb_object_keys(versions) AS v)
+              IS DISTINCT FROM
+              (SELECT array_agg(v::text ORDER BY v::text) FROM generate_series(10, 20) AS v);
+    IF inconsistent <> 0 THEN
+        RAISE EXCEPTION '锁百科：% 条记录缺少有效指纹或 PG 10–20 完整版本快照。', inconsistent;
+    END IF;
+    SELECT array_agg(v::text ORDER BY v) INTO missing FROM generate_series(10, 20) AS v
+        WHERE (SELECT count(*) FROM lock_mode WHERE versions ? v::text) <> 12;
+    IF missing IS NOT NULL THEN
+        RAISE EXCEPTION '锁百科：PG % 的模式数不等于十二。', missing;
+    END IF;
+    SELECT count(*) INTO inconsistent FROM lock_mode mode
+        CROSS JOIN LATERAL jsonb_each(mode.versions) version
+        WHERE jsonb_typeof(version.value->'conflicts') IS DISTINCT FROM 'array'
+           OR jsonb_typeof(version.value->'commands') IS DISTINCT FROM 'array'
+           OR jsonb_typeof(version.value->'provenance') IS DISTINCT FROM 'object';
+    IF inconsistent <> 0 THEN RAISE EXCEPTION '锁百科：快照缺少矩阵、命令或来源元数据。'; END IF;
+    SELECT count(*) INTO inconsistent FROM lock_mode mode
+        CROSS JOIN LATERAL jsonb_each(mode.versions) version
+        WHERE jsonb_array_length(version.value->'conflicts') = 0
+           OR jsonb_array_length(version.value->'commands') = 0
+           OR jsonb_array_length(version.value->'conflicts') <>
+              (SELECT count(DISTINCT edge) FROM jsonb_array_elements_text(version.value->'conflicts') edge);
+    IF inconsistent <> 0 THEN RAISE EXCEPTION '锁百科：矩阵或命令为空，或冲突边重复。'; END IF;
+    SELECT count(*) INTO inconsistent FROM lock_mode mode
+        CROSS JOIN LATERAL jsonb_each(mode.versions) version
+        CROSS JOIN LATERAL jsonb_array_elements_text(version.value->'conflicts') edge
+        LEFT JOIN lock_mode other ON other.slug=edge
+        WHERE other.slug IS NULL OR other.scope <> mode.scope
+           OR ((other.versions->version.key->'conflicts') ? mode.slug) IS DISTINCT FROM true;
+    IF inconsistent <> 0 THEN
+        RAISE EXCEPTION '锁百科：% 条冲突边未知、跨作用域或不对称。', inconsistent;
+    END IF;
+    SELECT count(*) INTO inconsistent FROM lock_mode mode
+        CROSS JOIN LATERAL jsonb_each(mode.versions) version
+        CROSS JOIN LATERAL jsonb_array_elements(version.value->'commands') command
+        LEFT JOIN sqlcmd reference ON reference.slug=command->>'slug'
+        WHERE reference.slug IS NULL OR NOT (reference.versions ? version.key);
+    IF inconsistent <> 0 THEN
+        RAISE EXCEPTION '锁百科：% 个命令引用在对应版本的 SQL 命令百科中不存在。', inconsistent;
+    END IF;
+    SELECT array_agg('/docs/lock/' || slug || '/' ORDER BY '/docs/lock/' || slug || '/')
+        INTO expected_urls FROM lock_mode;
+    SELECT array_agg(url ORDER BY url) INTO indexed_urls FROM search_searchentry WHERE source='lock';
+    IF indexed_urls IS DISTINCT FROM expected_urls THEN
+        RAISE EXCEPTION '锁百科：十二个详情页与检索条目不一致，请运行 index_docs --locks。';
+    END IF;
+    RAISE NOTICE '锁百科：12 条；PG 10–20、8+4 模式、冲突矩阵、命令引用与检索通过。';
+
+    -- These four domains embed source builds in each version snapshot.
+    FOR item IN SELECT * FROM (VALUES
+        ('扩展钩子', 'hook', 'hook'),
+        ('存储参数', 'relopt', 'relopts'),
+        ('预定义角色', 'predefined_role', 'role'),
+        ('对象标识符类型', 'oid_type', 'oid')
+    ) AS topics(label, data_table, source_name)
+    LOOP
+        EXECUTE format('SELECT count(*) FROM %I', item.data_table) INTO total;
+        IF total = 0 THEN RAISE EXCEPTION '%：尚未导入数据。', item.label; END IF;
+        EXECUTE format(
+            'SELECT count(*) FROM %I WHERE content_hash !~ ''^[0-9a-f]{64}$''
+               OR jsonb_typeof(versions) IS DISTINCT FROM ''object'' OR versions = ''{}''::jsonb',
+            item.data_table) INTO inconsistent;
+        IF inconsistent <> 0 THEN RAISE EXCEPTION '%：指纹或版本快照无效。', item.label; END IF;
+        EXECUTE format(
+            'SELECT array_agg(v::text ORDER BY v) FROM generate_series(10,20) v
+             WHERE NOT EXISTS (SELECT 1 FROM %I WHERE versions ? v::text)',
+            item.data_table) INTO missing;
+        IF missing IS NOT NULL THEN RAISE EXCEPTION '%：缺少 PG % 的数据。', item.label, missing; END IF;
+        EXECUTE format(
+            'SELECT count(*) FROM %I t CROSS JOIN LATERAL jsonb_each(t.versions) v
+             WHERE v.value->''release''->>''major'' IS DISTINCT FROM v.key
+                OR coalesce(v.value->''release''->>''revision'', '''') = ''''
+                OR jsonb_typeof(v.value->''sources'') IS DISTINCT FROM ''array''
+                OR v.value->''sources'' = ''[]''::jsonb',
+            item.data_table) INTO inconsistent;
+        IF inconsistent <> 0 THEN RAISE EXCEPTION '%：来源或构建身份无效。', item.label; END IF;
+        EXECUTE format('SELECT array_agg(%L || slug || ''/'' ORDER BY %L || slug || ''/'') FROM %I',
+            '/docs/' || item.source_name || '/', '/docs/' || item.source_name || '/', item.data_table)
+            INTO expected_urls;
+        SELECT array_agg(url ORDER BY url) INTO indexed_urls
+            FROM search_searchentry WHERE source=item.source_name;
+        IF indexed_urls IS DISTINCT FROM expected_urls THEN
+            RAISE EXCEPTION '%：检索条目与数据不一致，请运行 index_docs --topics。', item.label;
+        END IF;
+        RAISE NOTICE '%：% 条；PG 10–20、来源身份与检索通过。', item.label, total;
+    END LOOP;
 END
 $check$;
 
 ROLLBACK;
-

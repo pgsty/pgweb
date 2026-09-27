@@ -1,0 +1,28 @@
+{% extends "wiki/base.html" %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/lock.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<article id="locks" class="wiki-entry wiki-tone-wait">
+  <p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/lock/?v={{ major }}">锁百科</a> / {{ mode.scope_label }}</p>
+  <header class="wiki-entry__head lock-head"><p class="lock-eyebrow">{{ mode.scope_label }} · {{ mode.abbrev }}</p><h1 class="lock-title">{{ mode.name }}</h1><p class="wiki-entry__name">{{ mode.name_zh }}</p><p class="wiki-lead">{{ mode.summary }}</p></header>
+  {% include "wiki/lock_version.html" %}
+  <nav class="lock-jump" aria-label="本页目录"><a href="#conflicts">冲突关系</a><a href="#commands">关联命令</a><a href="/docs/lock/?v={{ major }}#all-locks">查看完整矩阵</a><a href="#sources">数据来源</a></nav>
+
+  <section class="wiki-section" id="conflicts"><h2>冲突关系</h2>
+    <p class="lock-sectionlead">以下只比较不同事务在{% if mode.scope == 'row' %}同一行{% else %}同一个表{% endif %}上持有的锁。</p>
+    <div class="lock-relations">
+      <div class="lock-relation lock-relation--conflict"><h3><span aria-hidden="true">×</span> 与这些模式冲突 <span>{{ conflicting_modes|length }}</span></h3><ul>{% for item in conflicting_modes %}<li><a href="{{ item.url }}" class="lock-mono">{{ item.name }}</a></li>{% empty %}<li>没有冲突模式。</li>{% endfor %}</ul></div>
+      <div class="lock-relation lock-relation--compatible"><h3><span aria-hidden="true">·</span> 与这些模式兼容 <span>{{ compatible_modes|length }}</span></h3><ul>{% for item in compatible_modes %}<li><a href="{{ item.url }}" class="lock-mono">{{ item.name }}</a></li>{% empty %}<li>与同一作用域的所有模式冲突。</li>{% endfor %}</ul></div>
+    </div>
+    <p class="wiki-note lock-scope-note">{{ matrix_note }}</p>
+  </section>
+
+  <section class="wiki-section" id="commands"><h2>取得此模式的命令</h2>
+    <div class="lock-command-table lock-command-table--detail"><table><thead><tr><th scope="col">SQL 命令</th><th scope="col">取得条件与说明</th></tr></thead><tbody>{% for command in mode.commands %}<tr><th scope="row"><a href="{{ command.url }}" class="lock-mono">{{ command.label }}</a></th><td>{{ command.note }}</td></tr>{% endfor %}</tbody></table></div>
+    <p class="lock-sectionlead">链接指向本站 PostgreSQL {{ version.label }} 的 SQL 命令百科。命令也可能取得其他锁，查看<a href="/docs/lock/?v={{ major }}#commands">完整命令关联表</a>。</p>
+  </section>
+
+  <section class="wiki-section"><h2>其他锁模式</h2><nav class="lock-mode-nav" aria-label="其他锁模式">{% for item in modes %}<a href="{{ item.url }}"{% if item.slug == mode.slug %} class="is-current" aria-current="page"{% endif %}><span class="lock-scope lock-scope-{{ item.scope }}">{{ item.scope_label }}</span><span class="lock-mono">{{ item.name }}</span></a>{% endfor %}</nav></section>
+  {% include "wiki/lock_sources.html" %}
+</article>
+{% endblock %}
+{% block extrascript %}<script src="/media/js/lock.js?{{gitrev}}" defer></script>{% endblock %}

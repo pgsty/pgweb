@@ -262,5 +262,7 @@ def detail_root(request):
 
 @require_safe
 def sitemap(request):
-    paths = ['/ext/'] + [detail_url(row['name']) for row in catalog()]
+    from .cloud import snapshot
+    paths = ['/ext/', '/ext/cloud/'] + [s['url'] for s in snapshot()['services']]
+    paths += [detail_url(row['name']) for row in catalog()]
     return render(request, 'ext/sitemap.xml', {'paths': paths}, content_type='application/xml')

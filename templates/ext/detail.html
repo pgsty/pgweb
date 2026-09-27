@@ -3,6 +3,7 @@
 <p><a href="/ext/">扩展目录</a> / <a href="{{ breadcrumb_category }}">{{ extension.category_label }}</a></p>
 <h1>{{ extension.name }}</h1>
 <p>{{ extension.description }}</p>
+<p><a href="/ext/cloud/?q={{ extension.name|urlencode }}">比较此扩展的云厂商支持情况 →</a></p>
 <p>{% for link in links %}{% if not forloop.first %} · {% endif %}<a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.label }}</a>{% endfor %}</p>
 
 <h2>概览</h2>

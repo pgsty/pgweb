@@ -3,6 +3,7 @@
 from collections import defaultdict
 from difflib import SequenceMatcher
 from functools import lru_cache
+import re
 
 from bs4 import BeautifulSoup
 
@@ -68,6 +69,48 @@ def line_changes(left, right):
     return ({'added': added, 'removed': removed} if added or removed else None), positions
 
 
+# Compare the manual's notation, not SQL execution trees. Keep quoted values,
+# identifiers and dollar-quoted bodies intact: their whitespace is significant.
+SYNOPSIS_TOKEN = re.compile(
+    r"(?:[eEbBxXnN]|[uU]&)?'(?:''|\\.|[^'\\])*'|(?:[uU]&)?\"(?:\"\"|\\.|[^\"\\])*\"|"
+    r'(?P<dollar>\$(?:[A-Za-z_][A-Za-z_0-9]*)?\$).*?(?P=dollar)|'
+    r'(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d+)?|'
+    r'\w+|[~!@#%^&|`?+*/<>=:\-]+|[^\s]', re.S)
+
+
+def synopsis_parts(snapshot):
+    """Return syntax tokens and original line positions, omitting prose phrases."""
+    html = snapshot.get('synopsis_html')
+    if html:
+        soup = BeautifulSoup(html.strip('\n'), 'html.parser')
+        original = soup.get_text()
+        for phrase in soup.select('.phrase'):
+            # Preserve the display's line coordinates even for multiline prose.
+            phrase.replace_with(' ' + '\n' * phrase.get_text().count('\n'))
+        syntax = soup.get_text()
+    else:
+        original = syntax = snapshot.get('synopsis_text', '').strip('\n')
+    matches = list(SYNOPSIS_TOKEN.finditer(syntax))
+    return ([m.group() for m in matches],
+            [syntax.count('\n', 0, m.start()) for m in matches], original.splitlines())
+
+
+def synopsis_changes(left, right):
+    """Ignore prose/layout changes while retaining real tokens and literal values."""
+    a, left_positions, left_lines = synopsis_parts(left)
+    b, right_positions, right_lines = synopsis_parts(right)
+    removed, added = set(), set()
+    for tag, i, j, k, l in SequenceMatcher(None, a, b, autojunk=False).get_opcodes():
+        if tag in ('replace', 'delete'):
+            removed.update(left_positions[i:j])
+        if tag in ('replace', 'insert'):
+            added.update(right_positions[k:l])
+    diff = ({'added': [right_lines[i].strip() for i in sorted(added)],
+             'removed': [left_lines[i].strip() for i in sorted(removed)]}
+            if added or removed else None)
+    return diff, added
+
+
 def sections_at(snapshots, major):
     """解析 sections_same_as；循环或断链不继续跳转，validate 会拒绝这种快照。"""
     seen = set()
@@ -105,7 +148,7 @@ def compare(left, right, from_major='', to_major=''):
         return record
     if left['file'] != right['file']:
         record['renamed'] = {'from_file': left['file'], 'to_file': right['file']}
-    record['synopsis'], _ = line_changes(left['synopsis_text'], right['synopsis_text'])
+    record['synopsis'], _ = synopsis_changes(left, right)
     a, b = section_map(left['sections']), section_map(right['sections'])
     record['sections'] = {
         'added': [key for key in b if key not in a],

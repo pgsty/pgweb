@@ -22,6 +22,9 @@ from .documents import (ROW_DEFAULTS, TEXT_DEFAULTS, TEMPLATE_DEFAULTS, derive,
                         pack_legacy, reference_gaps)
 from .snapshot import model_hash
 from copy import deepcopy
+from functools import lru_cache
+from bs4 import BeautifulSoup
+from .manuals import manual_slug
 
 
 FORMAT = 2
@@ -100,7 +103,16 @@ REL_CODE = re.compile(r'\]\((?:\.\./)+([0-9a-zA-Z]{5})/\)')
 REL_EVIDENCE = re.compile(r'\]\((?:\.\./)+data/evidence/[0-9a-zA-Z]{5}\.json\)')
 REL_CASES = re.compile(r'\]\((?:\.\./)+data/cases/[0-9a-zA-Z]{5}\.json\)')
 REL_GUIDES = re.compile(r'\[([^\]]*)\]\((?:\.\./)+guides/\)')
-PG_DOCS = re.compile(r'https://www\.postgresql\.org/docs/(?P<version>[0-9]+(?:\.[0-9]+)?)/(?P<file>[A-Za-z0-9_.-]+\.html)(?P<anchor>#[A-Za-z0-9_.-]+)?')
+PG_DOCS = re.compile(r'https://www\.postgresql\.org/docs/(?P<version>[0-9]+(?:\.[0-9]+)?|devel)/(?P<file>[A-Za-z0-9_.-]+\.html)(?P<anchor>#[A-Za-z0-9_.-]+)?')
+
+# Source prose has these two incorrect PG18 manual coordinates. Only apply a
+# correction when its exact same-version target exists; evidence URLs are untouched.
+MANUAL_LINK_CORRECTIONS = {
+    ('18', 'plpgsql-control-structures.html', 'PLPGSQL-GET-DIAGNOSTICS'):
+        ('plpgsql-control-structures.html', 'PLPGSQL-EXCEPTION-DIAGNOSTICS'),
+    ('18', 'fdwhandler.html', 'FDW-CALLBACKS-SCAN'):
+        ('fdw-callbacks.html', 'FDW-CALLBACKS-SCAN'),
+}
 
 
 def rewrite_links(body, local_doc):
@@ -116,6 +128,12 @@ def rewrite_links(body, local_doc):
 
     def doc(match):
         version, filename = match.group('version'), match.group('file')
+        if hasattr(local_doc, 'resolve'):
+            target = local_doc.resolve(version, filename, (match.group('anchor') or '').lstrip('#'))
+            if target:
+                filename, anchor = target
+                return '/docs/{}/{}{}'.format(version, filename, '#' + anchor if anchor else '')
+            return match.group(0)
         if local_doc(version, filename):
             return '/docs/{}/{}{}'.format(version, filename, match.group('anchor') or '')
         return match.group(0)
@@ -127,14 +145,56 @@ def doc_checker():
     """本站有译文的手册页集合，用来判断 postgresql.org 链接能不能换成站内地址。"""
     try:
         from pgweb.docs.models import DocPage
-        pairs = set()
+        pairs = {}
         for version, filename in DocPage.objects.values_list('version', 'file'):
-            major = str(version).split('.')[0]
-            pairs.add((major, filename))
-            pairs.add((str(version), filename))
+            pairs[(manual_slug(version), filename)] = version
     except Exception:
         return lambda version, filename: False
-    return lambda version, filename: (version, filename) in pairs
+
+    @lru_cache(maxsize=None)
+    def anchors(version, filename):
+        tree = pairs.get((version, filename))
+        if tree is None:
+            return set()
+        content = DocPage.objects.get(version_id=tree, file=filename).content
+        soup = BeautifulSoup(content, 'html.parser')
+        return {node.get('id') or node.get('name') for node in soup.select('[id], a[name]')}
+
+    def exists(version, filename):
+        return (version, filename) in pairs
+
+    def resolve(version, filename, anchor):
+        filename, anchor = MANUAL_LINK_CORRECTIONS.get((version, filename, anchor), (filename, anchor))
+        if exists(version, filename) and (not anchor or anchor in anchors(version, filename)):
+            return filename, anchor
+        return None
+
+    exists.resolve = resolve
+    return exists
+
+
+def manual_class_names():
+    """Chinese display labels from the latest available appendix; keep historical classes.
+
+    The appendix has no equivalent for the authored diagnostic bodies or summaries.
+    Missing labels therefore never clear source prose, class facts or source evidence.
+    """
+    from pgweb.docs.models import DocPage
+    pages = list(DocPage.objects.filter(file='errcodes-appendix.html')
+                 .values_list('version', 'content'))
+    pages.sort(key=lambda p: (p[0] == 0, p[0]), reverse=True)
+    names = {}
+    for _, content in pages:
+        soup = BeautifulSoup(content, 'html.parser')
+        for row in soup.select('tr'):
+            cells = row.find_all('td', recursive=False)
+            if len(cells) != 1:
+                continue
+            match = re.fullmatch(r'(?:类|Class|分类)\s*([0-9A-Z]{2})\s*[—–-]\s*(.+)',
+                                 ' '.join(cells[0].get_text().split()))
+            if match:
+                names.setdefault(match[1], match[2])
+    return names
 
 
 # ------------------------------------------------------------------ 报文模板
@@ -334,13 +394,15 @@ def export_snapshot(root=DEFAULT_ROOT):
 
     local_doc = doc_checker()
     zh_classes = class_pages(root)
+    manual_labels = manual_class_names()
 
     classes = []
     for item in read_json(os.path.join(root, 'data', 'classes.json'))['classes']:
         extra = zh_classes.get(item['code'], {})
         classes.append({
             'code': item['code'], 'name': item.get('name', ''),
-            'name_zh': extra.get('name_zh', ''), 'summary': extra.get('summary', ''),
+            'name_zh': manual_labels.get(item['code'], extra.get('name_zh', '')),
+            'summary': extra.get('summary', ''),
             'sqlstate_count': item.get('sqlstate_count') or len(item.get('sqlstates') or ()),
             'severity_classes': list(item.get('severity_classes') or ()),
         })

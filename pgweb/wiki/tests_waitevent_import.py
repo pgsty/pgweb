@@ -272,7 +272,7 @@ def write_cache(cache, names_txt=True):
             handle.write('<html><body>' + html + '</body></html>')
     if not names_txt:
         return
-    for tag, text in (('REL_19_BETA3', NAMES_TXT), ('master', NAMES_TXT_MASTER)):
+    for tag, text in (('REL_19_BETA4', NAMES_TXT), ('master', NAMES_TXT_MASTER)):
         with open(os.path.join(cache, 'wait_event_names-{}.txt'.format(tag)), 'w',
                   encoding='utf-8') as handle:
             handle.write(text)
@@ -433,7 +433,7 @@ class WaitEventExportTests(TestCase):
         self.assertEqual([v['major'] for v in self.snapshot['versions']], importer.VERSION_ORDER)
         self.assertEqual([v['position'] for v in self.snapshot['versions']], list(range(18)))
         self.assertEqual(self.versions['18']['status'], 'stable')
-        self.assertEqual(self.versions['19']['label'], '19 beta 3')
+        self.assertEqual(self.versions['19']['label'], '19 beta 4')
         self.assertEqual(self.versions['20']['doc_slug'], 'devel')
 
     def test_9_x_rows_say_there_is_no_wait_event_machinery(self):
@@ -522,12 +522,24 @@ class WaitEventExportTests(TestCase):
         self.assertEqual(demo['versions']['14']['description_zh'], '')
         self.assertEqual(demo['versions']['14']['zh_from'], '')
 
-    def test_summary_prefers_the_atlas_chinese_and_the_latest_english(self):
+    def test_summary_uses_the_latest_translation_with_atlas_fallback(self):
         event = self.events['lwlock/buffercontent']
         self.assertEqual(event['summary_zh'], '等待访问内存中的数据页。')
         self.assertEqual(event['summary'], 'Waiting to access a data page in memory.')
         # 没有档案的事件退到最新一版的手册译文。
         self.assertEqual(self.events['ipc/demo']['summary_zh'], '等待一件事。')
+
+    def test_retranslated_manual_summary_overrides_the_old_atlas_translation(self):
+        from pgweb.docs.models import DocPage
+        updated = '等待访问内存中的数据页面。'
+        DocPage.objects.filter(version=18, file='monitoring-stats.html').update(
+            content=typed_tables(DOC_18 + [('LWLock', 'BufferContent', updated)]))
+        event = next(e for e in export()['events'] if e['key'] == 'lwlock/buffercontent')
+        self.assertEqual(event['versions']['18']['description_zh'], updated)
+        self.assertEqual(event['versions']['18']['zh_from'], 'doc')
+        self.assertEqual(event['summary_zh'], updated)
+        self.assertEqual(event['summary'], self.events['lwlock/buffercontent']['summary'])
+        self.assertEqual(event['dossier'], self.events['lwlock/buffercontent']['dossier'])
 
     def test_the_9_6_baseline_events_carry_an_added_record(self):
         event = self.events['lock/relation']

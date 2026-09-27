@@ -1,6 +1,6 @@
 from .columns import live_columns
 from .models import (CatalogRelation, CatalogVersion, ErrorCode, FuncVersion, GucParameter,
-                     GucVersion, PgFunction, WaitEvent, WaitEventVersion)
+                     GucVersion, LockMode, PgFunction, WaitEvent, WaitEventVersion)
 
 
 def get_struct():
@@ -29,3 +29,9 @@ def get_struct():
         yield ('docs/func/{}/'.format(slug), None)
     for major in FuncVersion.objects.values_list('major', flat=True):
         yield ('docs/func/changes/{}/'.format(major), None)
+    for slug in LockMode.objects.values_list('slug', flat=True):
+        yield ('docs/lock/{}/'.format(slug), None)
+    from .topics import TOPICS
+    for kind, spec in TOPICS.items():
+        for slug in spec['model'].objects.values_list('slug', flat=True):
+            yield ('docs/{}/{}/'.format(kind, slug), None)

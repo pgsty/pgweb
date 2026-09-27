@@ -12,7 +12,7 @@ from pgweb.docs.models import DocPage
 from pgweb.wiki import sqlcmd, sqlcmd_importer as importer
 from pgweb.wiki.models import (SECTION_KEYS, SQLCMD_GROUPS, SqlCommand,
                                sqlcmd_group_of, sqlcmd_slug, sqlcmd_split)
-from pgweb.wiki.sqlcmd_common import compare, line_changes, sections_at
+from pgweb.wiki.sqlcmd_common import compare, line_changes, sections_at, synopsis_changes
 
 
 def version(tree, current=False, testing=0):
@@ -94,6 +94,43 @@ class SqlcmdPureTests(SimpleTestCase):
         diff, positions = line_changes('X\nY', 'X\nX\nY')
         self.assertEqual(diff, {'added': ['X'], 'removed': []})
         self.assertEqual(positions, {0})  # SequenceMatcher aligns the final X/Y pair.
+
+    def test_synopsis_ignores_prose_and_token_layout(self):
+        left = {'synopsis_html': 'CREATE SERVER [IF NOT EXISTS] name\n'
+                '<span class="phrase">其中 option 为：</span>\nWITH (x)'}
+        right = {'synopsis_html': 'CREATE SERVER\n [ IF NOT EXISTS ] name\n'
+                 '<span class="phrase">其中\noption 可以是：</span>\nWITH ( x )'}
+        self.assertEqual(synopsis_changes(left, right), (None, set()))
+
+    def test_synopsis_retains_keywords_literals_and_line_coordinates(self):
+        left = {'synopsis_html': 'SELECT a\n<span class="phrase">其中\n参数是：</span>\nWHERE x = 1'}
+        right = {'synopsis_html': 'SELECT a\n<span class="phrase">其中\n参数为：</span>\nWHERE x = 2'}
+        diff, added = synopsis_changes(left, right)
+        self.assertEqual(added, {3})
+        self.assertEqual(diff, {'added': ['WHERE x = 2'], 'removed': ['WHERE x = 1']})
+        for before, after in [('SELECT a', 'SELECT DISTINCT a'),
+                              ("SET x = 'a  b'", "SET x = 'a b'"),
+                              ('SELECT "A B"', 'SELECT "A  B"'),
+                              ("SELECT 'Case'", "SELECT 'case'"),
+                              ("SELECT 'can''t  x'", "SELECT 'can''t x'"),
+                              ("SELECT E'abc'", "SELECT E 'abc'"),
+                              ('SELECT $body$a  b$body$', 'SELECT $body$a b$body$'),
+                              ('SELECT ab', 'SELECT a b'), ('SELECT x >= 1', 'SELECT x > = 1')]:
+            with self.subTest(before=before, after=after):
+                self.assertIsNotNone(synopsis_changes({'synopsis_text': before},
+                                                      {'synopsis_text': after})[0])
+
+    def test_rendered_synopsis_does_not_highlight_prose_changes(self):
+        before = importer.parse_page(reference('SELECT', 'SELECT [ALL] a\n'
+            '<span class="phrase">其中 a 为：</span>'), 'sql-select.html',
+            {'major': '13', 'doc_slug': '13'})
+        after = importer.parse_page(reference('SELECT', 'SELECT [ ALL ] a\n'
+            '<span class="phrase">其中 a 是：</span>'), 'sql-select.html',
+            {'major': '14', 'doc_slug': '14'})
+        self.assertIsNone(compare(before, after))
+        rendered = sqlcmd.synopsis_of(after, before, '14')
+        self.assertNotIn('is-added', rendered['html'])
+        self.assertIn('其中', rendered['html'])
 
     def test_section_keys_and_unknown_title(self):
         titles = list(SECTION_KEYS) + ['文件格式']

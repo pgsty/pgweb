@@ -436,7 +436,7 @@ class GucVartypeTests(SimpleTestCase):
         return guc_importer.vartype_of(BeautifulSoup(markup.format(written), 'html.parser').dt)
 
     def test_every_shape_the_manual_writes(self):
-        for written, expected in (('boolean', 'bool'), ('floating point', 'real'),
+        for written, expected in (('boolean', 'bool'), ('bool', 'bool'), ('floating point', 'real'),
                                   ('integer', 'integer'), ('string', 'string'), ('enum', 'enum'),
                                   ('pg_lsn', 'string'), ('timestamp', 'string')):
             self.assertEqual(self.vartype(written), expected)
@@ -609,6 +609,42 @@ class GucDevelTests(TestCase):
         self.assertEqual(snapshot['carry_reason'], '手册从未收录此参数，沿用 12')
         self.assertEqual(self.devel['undocumented'], ['demo_undocumented'])
         self.assertNotIn('20', self.items['demo_undocumented']['docs'])
+
+    def test_a_devel_type_conflict_keeps_only_documented_facts(self):
+        from pgweb.docs.models import DocPage
+        from pgweb.wiki import guc
+        page = DocPage.objects.get(version=0, file='runtime-config-wal.html')
+        page.content = page.content.replace('<code class="type">enum</code>',
+                                            '<code class="type">bool</code>')
+        page.save()
+        payload = export()
+        item = named(payload)['demo_level']
+        snapshot = item['versions']['20']
+        self.assertEqual(snapshot['vartype'], 'bool')
+        self.assertEqual(snapshot['facts_source'], 'documentation')
+        self.assertEqual((snapshot['boot_val'], snapshot['human'], snapshot['context'],
+                          snapshot['enumvals'], snapshot['carried_from']), (None, '', '', [], ''))
+        self.assertEqual(item['default_history'][-1]['to'], '12')
+        self.assertEqual(payload['harvest']['devel']['type_conflicts'],
+                         [{'name': 'demo_level', 'base': '12', 'base_type': 'enum', 'manual_type': 'bool'}])
+        self.assertEqual(set(item['changes'][-1]['fields']), {'vartype'})
+        self.assertFalse(item['changes'][-1]['default_changed'])
+        # The same unknown-field rule applies to the comparison page and matrix.
+        self.assertEqual(set(guc.diff_fields(snapshot, item['versions']['12'])), {'vartype'})
+        guc_importer.import_snapshot(payload)
+        guc.forget()
+        try:
+            detail = guc.detail('demo_level', '20')
+            self.assertIn('尚未采样', detail['notice'])
+            self.assertNotIn('默认值', [fact['label'] for fact in detail['facts']])
+            cells = {cell['field']: cell for cell in detail['matrix']['rows'][-1]['cells']}
+            self.assertEqual(cells['boot_val']['value'], '')
+            self.assertTrue(all(cell['value'] == '' for field, cell in cells.items() if field != 'vartype'))
+            self.assertEqual([field for field, cell in cells.items() if cell['changed']], ['vartype'])
+            self.assertEqual(guc.human_of({'boot_val': None, 'unit': ''}), '未设置')
+            self.assertEqual(guc.human_of({'boot_val': '', 'unit': ''}), '空字符串')
+        finally:
+            guc.forget()
 
     def test_a_parameter_the_devel_manual_dropped_is_removed_in_20(self):
         self.assertNotIn('20', self.items['demo_dropped']['versions'])

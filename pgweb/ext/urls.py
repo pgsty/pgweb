@@ -2,11 +2,14 @@
 
 from django.urls import path
 
-from . import views
+from . import views, cloud_views
 
 app_name = 'ext'
 urlpatterns = [
     path('', views.browse, name='home'),
+    path('cloud/', cloud_views.matrix, name='cloud'),
+    path('cloud/evidence/', cloud_views.evidence, name='cloud_evidence'),
+    path('cloud/<slug:service_id>/', cloud_views.matrix, name='cloud_service'),
     path('list/', views.index, name='list'),
     path('sitemap.xml', views.sitemap, name='sitemap'),
     # /ext/list/<dimension>/ was the first index URL; keep it as a redirect.

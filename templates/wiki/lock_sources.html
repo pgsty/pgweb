@@ -1,0 +1,7 @@
+<section class="wiki-section lock-sources" id="sources">
+  <h2>数据来源</h2>
+  <p>当前查看 PostgreSQL {{ version.label }}{% if snapshot_label %}，{{ snapshot_label }}{% endif %}。冲突关系与命令行为按该版本的文档和源码整理。命令链接进入本站 SQL 命令百科，并保留所选版本。</p>
+  <p><a href="{{ manual_base }}explicit-locking.html">本站显式锁定手册</a> · <a href="https://www.postgresql.org/docs/{{ version.doc_slug }}/explicit-locking.html" target="_blank" rel="noopener">官方手册</a></p>
+  <details><summary>查看采样源码与构建依据</summary><ul>{% for source in sources %}<li><a href="{{ source.url }}" target="_blank" rel="noopener">{{ source.label }}</a>{% if source.revision %}<span class="lock-source-revision">{{ source.revision }}</span>{% endif %}</li>{% endfor %}</ul></details>
+  {% if source_date %}<p class="lock-muted">资料核验日期：{{ source_date }}。</p>{% endif %}
+</section>

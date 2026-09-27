@@ -6,7 +6,7 @@ from pgweb.nls.importer import BundleError, load
 
 
 class Command(BaseCommand):
-    help = ('Import a pgnls message bundle (review-app/manage.py bundle → *.jsonl.gz) into nls_message. '
+    help = ('Import a pgnls message bundle (bin/pgweb-bundle.py → *.jsonl.gz) into nls_message. '
             'Source fields are refreshed; rows already saved by a reviewer keep their review state.')
 
     def add_arguments(self, parser):

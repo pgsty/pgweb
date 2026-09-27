@@ -1,0 +1,25 @@
+{% extends "wiki/base.html" %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<article class="wiki-topic wiki-entry wiki-tone-{{ topic.tone }}" data-pg-doc-version="{{ major }}">
+  <p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="{{ root }}?v={{ major }}">{{ topic.name }}</a> / {{ item.category }}</p>
+  <header class="wiki-entry__head"><h1 class="topic-title">{{ item.name }}</h1><p class="wiki-entry__name">{{ item.name_zh }}</p><p class="wiki-lead">{{ item.summary }}</p></header>
+  {% include "wiki/topic_versions.html" %}
+  {% if snapshot %}
+  <nav class="topic-jump" aria-label="本页目录"><a href="#description">说明</a>{% if snapshot.signature %}<a href="#signature">{% if kind == 'hook' %}接口签名{% else %}用法{% endif %}</a>{% endif %}{% for section in snapshot.sections %}<a href="#section-{{ forloop.counter }}">{{ section.title }}</a>{% endfor %}<a href="#sources">文档与源码</a></nav>
+  <section class="wiki-section" id="description"><h2>说明</h2>{% for paragraph in snapshot.description %}<p>{{ paragraph }}</p>{% endfor %}
+    {% if snapshot.facts %}<dl class="topic-facts">{% for fact in snapshot.facts %}<div><dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd></div>{% endfor %}</dl>{% endif %}
+  </section>
+  {% if snapshot.signature %}<section class="wiki-section" id="signature"><h2>{% if kind == 'hook' %}接口签名{% else %}用法{% endif %}</h2><pre><code>{{ snapshot.signature }}</code></pre></section>{% endif %}
+  {% for section in snapshot.sections %}<section class="wiki-section" id="section-{{ forloop.counter }}"><h2>{{ section.title }}</h2>{% for paragraph in section.paragraphs %}<p>{{ paragraph }}</p>{% endfor %}{% if section.code %}<pre><code>{{ section.code }}</code></pre>{% endif %}{% for block in section.blocks %}{% for paragraph in block.paragraphs %}<p>{{ paragraph }}</p>{% endfor %}{% if block.code %}<pre><code>{{ block.code }}</code></pre>{% endif %}{% endfor %}</section>{% endfor %}
+  {% if snapshot.related %}<section class="wiki-section"><h2>相关条目</h2><ul class="topic-links">{% for link in snapshot.related %}<li><a href="{{ link.url }}">{{ link.label }}</a></li>{% endfor %}</ul></section>{% endif %}
+  <section class="wiki-section" id="sources"><h2>文档与源码</h2><ul>{% for source in snapshot.sources %}<li><a href="{{ source.url }}">{{ source.label }}</a></li>{% endfor %}</ul>
+    <details class="topic-provenance"><summary>查看来源构建</summary><dl><dt>版本</dt><dd>{{ snapshot.release.label }}</dd><dt>构建</dt><dd>{{ snapshot.release.ref }}</dd><dt>来源指纹</dt><dd><code>{{ snapshot.release.revision }}</code></dd></dl></details>
+  </section>
+  {% else %}
+  <section class="wiki-section topic-absence"><h2>此版本未收录</h2><p>PostgreSQL {{ version.label }} 的本次采样中没有 {{ item.name }} 的条目。以下版本有对应资料：</p><nav class="topic-links">{% for v in available %}<a href="{{ v.url }}">PostgreSQL {{ v.label }}</a>{% endfor %}</nav></section>
+  {% endif %}
+  {% if neighbours %}<section class="wiki-section"><h2>同类条目</h2><ul class="topic-neighbours">{% for row in neighbours %}<li><a href="{{ row.url }}"><code>{{ row.name }}</code></a><span>{{ row.name_zh }}</span></li>{% endfor %}</ul></section>{% endif %}
+  <p class="topic-footnote"><a href="{{ root }}?v={{ major }}">返回{{ topic.name }}</a> · 此条目的收录范围为 PostgreSQL {{ first.major }} 至 {{ last.major }}；起点不一定是实际引入版本。</p>
+</article>
+{% endblock %}

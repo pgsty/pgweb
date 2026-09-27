@@ -1,0 +1,6 @@
+<p>{{ mode.name_zh }} · {{ mode.scope_label }} · PostgreSQL {{ version.label }}</p>
+<p>{{ mode.summary }}</p>
+{% if notice %}<p>{{ notice }}</p>{% endif %}
+<h3>冲突模式</h3><p>{% for item in conflicting_modes %}<a href="{{ item.url }}">{{ item.name }}</a>{% if not forloop.last %}、{% endif %}{% endfor %}</p>
+<h3>关联命令</h3><ul>{% for item in mode.commands %}<li><a href="{{ item.url }}">{{ item.label }}</a>：{{ item.note }}</li>{% endfor %}</ul>
+<p><a href="/docs/lock/?v={{ major }}">查看完整冲突矩阵</a></p>

@@ -12,7 +12,7 @@ from django.db.models import Count, Max, Q
 
 from .models import HISTORY_LIMIT, Message, STATUSES
 from .languages import DEFAULT_LANGUAGE, LANGUAGES, checked_language
-from .validate import MAX_NOTE, ValidationError, check_approval, check_forms
+from .validate import MAX_NOTE, ValidationError, check_approval, check_forms, form_keys
 
 STATUS_KEYS = tuple(key for key, _label in STATUSES)
 # The pseudo component: every message at once, for cross-component search and consistent wording.
@@ -36,7 +36,7 @@ def checked_major(value, language=DEFAULT_LANGUAGE):
     if major not in majors(language):
         raise ValidationError('该 PostgreSQL 大版本尚未导入。')
     return major
-TABLE_FIELDS = ('id', 'language', 'pg_major', 'number', 'component', 'msgid', 'msgid_plural', 'original_forms', 'suggested_forms',
+TABLE_FIELDS = ('id', 'language', 'pg_major', 'number', 'component', 'msgid', 'msgid_plural', 'plural_forms', 'original_forms', 'suggested_forms',
                 'calibration', 'old_assessment', 'assessment_reason', 'plural_issue', 'revision',
                 'status', 'forms', 'note', 'source_revision', 'version', 'updated_at', 'updated_by__username')
 
@@ -87,7 +87,7 @@ def bootstrap(user, major=DEFAULT_MAJOR, language=DEFAULT_LANGUAGE):
             counts[key] += c[key]
     query = Message.objects.filter(language=language, pg_major=major)
     last = query.aggregate(last=Max('updated_at'))['last']
-    forms = sum(len(f) for f in query.values_list('suggested_forms', flat=True)) if components else 0
+    forms = sum(len(f) for f in query.values_list('forms', flat=True)) if components else 0
     return {'total': sum(c['total'] for c in components), 'forms': forms, 'components': components,
             'counts': dict(counts), 'storage': {'kind': 'PostgreSQL', 'table': 'nls_message', 'last_saved': isoformat(last)},
             'major': major, 'majors': majors(language), 'language': language,
@@ -98,10 +98,14 @@ def bootstrap(user, major=DEFAULT_MAJOR, language=DEFAULT_LANGUAGE):
 def record(row):
     """The table row the browser renders. Same shape as the pgnls review-app."""
     calibration = {k: v for k, v in (row['calibration'] or {}).items() if k != 'previous_forms'}
+    # Keep historical recommendations in storage, but adopting one in the UI
+    # must not resurrect plural slots removed from the current PO header.
+    keys = form_keys(row['msgid_plural'], row['plural_forms'])
+    suggested = {key: row['suggested_forms'].get(key, '') for key in sorted(keys)}
     return {'id': row['id'], 'language': row['language'], 'pg_major': row['pg_major'],
             'number': row['number'], 'component': row['component'], 'english': row['msgid'],
             'english_plural': row['msgid_plural'], 'original_forms': row['original_forms'],
-            'suggested_forms': row['suggested_forms'], 'calibration': calibration,
+            'suggested_forms': suggested, 'calibration': calibration,
             'old_assessment': row['old_assessment'], 'assessment_reason': row['assessment_reason'],
             'plural_issue': row['plural_issue'] or None, 'revision': row['revision'],
             'status': display_status(row), 'stored_status': row['status'], 'forms': row['forms'], 'note': row['note'],
@@ -272,7 +276,7 @@ def decide_many(component, decisions, user, submit=False, major=DEFAULT_MAJOR, l
 
 
 def export(major=DEFAULT_MAJOR, language=DEFAULT_LANGUAGE):
-    """pgnls-human-review-v1: what the pgnls review-app imports and the PO writer consumes."""
+    """pgnls-human-review-v1: an archive for reviewed, identity-checked PO backporting."""
     saved = {}
     rows = Message.objects.filter(language=language, pg_major=major, version__gt=0).values(
         'id', 'status', 'forms', 'note', 'source_revision', 'version', 'updated_at', 'updated_by__username')

@@ -1,0 +1,11 @@
+{% extends "ext/base.html" %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/ext-cloud.css?{{gitrev}}">{% endblock %}
+{% block ext_content %}
+<div class="cloud-catalog cloud-evidence-page">
+  <nav class="cloud-breadcrumb" aria-label="当前位置"><a href="/ext/">扩展目录</a><span aria-hidden="true">/</span><a href="/ext/cloud/">云厂商对比</a><span aria-hidden="true">/</span><span>支持详情</span></nav>
+  <h1>{{ row.name }}</h1>
+  <p class="cloud-intro">{{ column.label }}{% if column.pg %} · PostgreSQL {{ column.pg }}{% endif %}</p>
+  {% include "ext/cloud_evidence_content.html" %}
+  <p class="cloud-evidence-back"><a href="{{ back_url|default:'/ext/cloud/' }}">← 返回支持矩阵</a>{% if row.href %} · <a href="{{ row.href }}">扩展详情</a>{% endif %}</p>
+</div>
+{% endblock %}

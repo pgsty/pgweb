@@ -14,7 +14,7 @@
 | --- | --- |
 | 权威源 | 本站 `docs` 表（`DocPage`）的 `sql-*.html`，只认页里有 `div.refentry` 的（`sql-commands.html`、`sql-syntax*.html`、`sql-expressions.html`、`sql-keywords-appendix.html` 不是命令） |
 | 版本 | 10 – 19（`DocPage.version`）与 devel（`version=0` → 20）；二期加 9.0 – 9.6（联网抓英文页，缓存到 `tmp/sqlcmd-sources/<major>/`） |
-| 规模 | 10：176 条，18：183 条，19：188 条（含 3 条 `PROPERTY GRAPH` 与 `WAIT FOR`），devel：185 条（无 `PROPERTY GRAPH`，`sql-wait-for.html` 改名 `sql-waitfor.html`）。2026-09-11 核验 |
+| 规模 | 10：176 条，18：183 条，19beta4：185 条（`PROPERTY GRAPH` 三条已在 beta4 移除，`WAIT FOR` 更名 `WAIT`、页面改 `sql-wait.html`），devel：185 条。2026-09-25 按重译树核验，共 186 条 |
 | 一句话 | `sql-commands.html` 目录里每条的 `span.refpurpose`（"— 定义一个新表"）；参考页 `div.refnamediv` 的 `<p>` 同样有 |
 | 语法概要 | `div.refsynopsisdiv pre.synopsis`（占位符 `em.replaceable code`，译文里仍是英文，可逐版本比较） |
 | 正文小节 | `div.refsect1`：描述 / 参数 / 注解（少数写「注意」）/ 示例 / 兼容性 / 另见（少数写「参见」「又见」）/ 输出（11 条 DML）/ 个别「重载」「文件格式」 |
@@ -77,12 +77,14 @@ HTML 清洗与链接改写照 GUC §3.1：bleach 白名单同一份再加 `pre, 
 ```
 {from, to, status: 'added' | 'removed' | 'changed',
  renamed: {from_file, to_file} | null,      # 文件名变了但命令同名（sql-wait-for → sql-waitfor）
- synopsis: {added: [行…], removed: [行…]} | null,   # 语法概要逐行 diff（difflib，行先折叠空白）；没变为 null
+ synopsis: {added: [行…], removed: [行…]} | null,   # 语法 token 差异映射回原概要行；没变为 null
  sections: {added: [key…], removed: [key…], changed: [key…]}   # 小节增删与正文变化（按纯文本比）
  purpose_changed: bool}
 ```
 
 `changed_in` = `synopsis` 非空的 `to`；`sections` 只改正文不算「语法变化」，索引的版本变动上算 `present`，详情时间线上标「正文更新」。
+
+比较使用 `synopsis_html` 中的语法 token，排除 `span.phrase` 的说明性文字并忽略 token 之间的空格、缩进与折行；字符串、带引号的标识符和 dollar-quoted 内容作为完整 token 保留，内部空白与大小写变化仍算变化。比较结果与详情页新增行高亮共用 `synopsis_changes`，原始概要和中文说明继续完整展示。它用于比较手册语法记法，不构造 SQL AST。没有 HTML 的旧快照退回 `synopsis_text`，不会按中文字符或不确定规则猜测并删除正文。
 `added` 只记非首个收录版本的首次出现；`removed` 记在 `last_version` 的下一版。
 
 ### 2.1 分组、动词与排序
@@ -171,7 +173,7 @@ stats: {commands, versions, snapshots, synopsis_changes, removed}
 command, name, slug, group, group_label, eyebrow('SQL COMMAND'), verb, object
 version: ver, previous_major, snapshot
 facts: [{label, value, mono, url}]     # 动词 / 对象 / 分组（url 指索引锚点）/ 引入版本 / 状态 / 语法变更次数 / 手册小节数
-synopsis: {html, text, lines: [{text, state: 'same' | 'added'}]}   # 本版语法概要；与上一存在版本比，新增行标 added（逐行按折叠后的文本比）
+synopsis: {html, text, lines: [{text, state: 'same' | 'added'}]}   # 本版原始概要；语法 token 比较后，将新增 token 所在行标 added
 synopsis_diff: {added: [...], removed: [...]} | None                # 本版相对上一版的概要差异（来自 changes）
 sections: [{key, title, html, anchor}]                              # 沿 sections_same_as 指针解析；「另见」的 html 里 sql-* 链接已改成本站命令页
 ribbon: [{major, label, state, url, current, preview, devel, doc_url}]

@@ -14,6 +14,7 @@ from django.db.models import JSONField, Q
 from django.db.models.expressions import RawSQL
 
 from .guc_common import diff_fields, human_value, is_default_change, is_substantive
+from .manuals import manual_slug
 from .ruler import mark_ticks
 from .models import (GUC_CATEGORY_ORDER, GUC_CONTEXT_LABEL, GUC_CONTEXT_NOTE, GUC_CONTEXTS,
                      GUC_FIELD_LABEL, GUC_FIELDS, GUC_GROUP_LABEL, GUC_GROUPS,
@@ -22,7 +23,7 @@ from .models import (GUC_CATEGORY_ORDER, GUC_CONTEXT_LABEL, GUC_CONTEXT_NOTE, GU
 
 CACHE_KEY = 'pgweb:wiki:guc-index'
 VERSION_CACHE_KEY = 'pgweb:wiki:guc-versions2'
-DOC_CACHE_KEY = 'pgweb:wiki:guc-docpages'
+DOC_CACHE_KEY = 'pgweb:wiki:guc-docpages-v2'
 CHANGES_CACHE_KEY = 'pgweb:wiki:guc-changes:{}'
 CACHE_SECONDS = 300
 
@@ -39,8 +40,9 @@ MATRIX_FIELDS = ('boot_val', 'unit', 'context', 'vartype', 'min_val', 'max_val',
 
 # 9.0 是收录基线，不代表这些参数首次于那一版引入。所有「引入」字样照此措辞。
 BASELINE_TEMPLATE = '{0} 是本数据集的收录基线，不代表该参数首次于 {0} 引入。'
-PREVIEW_NOTICE = '19 beta 3 为预发行快照，正式发布前仍可能变化。'
-DEVEL_NOTICE = '20 开发版尚未定稿：pg_settings 事实沿用 19，说明取自本站 devel 手册。'
+PREVIEW_NOTICE = '{} 为预发行快照，正式发布前仍可能变化。'
+DEVEL_NOTICE = '20 开发版尚未定稿：说明取自本站 devel 手册，运行时事实的来源在各条目中说明。'
+DOCUMENTED_NOTICE = '20 开发版尚未定稿：类型与说明取自手册，默认值、上下文和运行值尚未采样。'
 CARRIED_TEMPLATE = 'PostgreSQL {} 开发版沿用 {} 的 pg_settings 事实，说明取自 devel 手册。'
 
 STATE_LABEL = {'absent': '不存在', 'present': '存在', 'added': '新增', 'removed': '移除',
@@ -131,7 +133,7 @@ def doc_pages():
         pages = {}
         for tree, filename, title in (DocPage.objects.filter(file__startswith=DOC_FILE_PREFIX)
                                       .values_list('version', 'file', 'title')):
-            slug = 'devel' if int(tree) == 0 else str(int(tree))
+            slug = manual_slug(tree)
             pages[(slug, filename)] = title or ''
         cache.set(DOC_CACHE_KEY, pages, CACHE_SECONDS)
     return pages
@@ -217,6 +219,8 @@ def human_of(snapshot):
 
 def snapshot_value(field, snapshot):
     """矩阵与变更页里一格的显示值：默认值换算成人类可读形式。"""
+    if snapshot.get('facts_source') == 'documentation' and field != 'vartype':
+        return ''
     if field == 'boot_val':
         return human_of(snapshot)
     return render_value(field, snapshot.get(field), snapshot.get('unit') or '')
@@ -472,7 +476,7 @@ def previous_major(parameter, major):
 
 def notice_of(version):
     if version and version['preview']:
-        return PREVIEW_NOTICE
+        return PREVIEW_NOTICE.format(version['label'])
     if version and version['devel']:
         return DEVEL_NOTICE
     return ''
@@ -623,9 +627,10 @@ def matrix_of(parameter, major, order):
     rows, previous = [], None
     for version in present:
         snapshot = parameter.versions.get(version['major']) or {}
+        differences = diff_fields(previous, snapshot) if previous is not None else {}
         cells = []
         for field in MATRIX_FIELDS:
-            changed = previous is not None and _normal(previous.get(field)) != _normal(snapshot.get(field))
+            changed = field in differences
             cells.append({'field': field, 'value': snapshot_value(field, snapshot),
                           'changed': changed})
         rows.append({
@@ -639,10 +644,6 @@ def matrix_of(parameter, major, order):
             'fields': [{'field': field, 'label': GUC_FIELD_LABEL[field]}
                        for field in MATRIX_FIELDS],
             'rows': rows}
-
-
-def _normal(value):
-    return None if value is None or value == '' or value == [] else value
 
 
 def doc_html_at(parameter, major, seen=None):
@@ -659,7 +660,7 @@ def doc_html_at(parameter, major, seen=None):
 
 
 def doc_of(parameter, major, order, pages):
-    """手册说明：本版没有译文时借最近的可用版（9.x 借 10），官方链接仍指本版。"""
+    """手册说明：本版没有译文时借最近的可用版，官方链接仍指本版。"""
     snapshot = parameter.versions.get(major) or {}
     html, source = doc_html_at(parameter, major)
     borrowed = False
@@ -677,7 +678,7 @@ def doc_of(parameter, major, order, pages):
             _, _, _, html, source = candidates[0]
             borrowed = True
     # 链接与标题跟着正在读的这一版走。doc_same_as 只是说译文与更早某版逐字相同，
-    # 本站照样有这一版的手册页；只有本站真的没有这一版手册（9.x）才落到借来的那一版。
+    # 本站照样有这一版的手册页；只有本站真的没有该版页面才落到借来的那一版。
     local, linked = doc_url(snapshot, pages), major
     if not local and source:
         local, linked = doc_url(parameter.versions.get(source), pages), source
@@ -776,7 +777,7 @@ def detail(name, wanted=''):
         'default_track': default_track_of(parameter, major, order),
         'ribbon': ribbon_of(parameter, major, order, pages),
         'change': change, 'change_note': change_note(parameter, major, order, change),
-        'notice': notice_of(version),
+        'notice': DOCUMENTED_NOTICE if snapshot.get('facts_source') == 'documentation' else notice_of(version),
         'doc': document,
         'editorial': editorial_of(parameter),
         'timeline': timeline_of(parameter),

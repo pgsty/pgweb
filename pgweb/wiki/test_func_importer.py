@@ -390,6 +390,30 @@ def change_between(item, from_major, to_major):
 # ------------------------------------------------------------------ 纯函数
 
 class FuncPureTests(SimpleTestCase):
+    def test_partial_signature_matches_use_unique_calls_without_translated_returns(self):
+        entry = {'signatures': {
+            'lower ( string ) → text': ('转为小写。', '转为小写。'),
+            'lower ( anyrange ) → 范围的元素类型': ('范围的下界。', '范围的下界。'),
+        }, 'order': ['转为小写。', '范围的下界。'],
+            'order_html': ['转为小写。', '范围的下界。']}
+        snapshot = {'signatures': [
+            {'text': 'lower ( string ) → text'},
+            {'text': "lower ( anyrange ) → range's element type"},
+        ]}
+        report = {'by_text': 0, 'by_position': 0, 'unmatched': 0}
+        importer.attach_signature_zh(snapshot, entry, 'doc', report)
+        self.assertEqual([s['description_zh'] for s in snapshot['signatures']],
+                         ['转为小写。', '范围的下界。'])
+        self.assertEqual(report['by_call'], 1)
+        self.assertEqual(report['unmatched'], 0)
+        # 同一调用对应多个返回类型时不能凭位置猜测重载。
+        snapshot['signatures'].append({'text': 'lower ( anyrange ) → ambiguous_type'})
+        report = {'by_text': 0, 'by_position': 0, 'unmatched': 0}
+        importer.attach_signature_zh(snapshot, entry, 'doc', report)
+        self.assertEqual([s['description_zh'] for s in snapshot['signatures']],
+                         ['转为小写。', '', ''])
+        self.assertEqual(report['unmatched'], 2)
+
     def test_groups_table(self):
         self.assertEqual(len(FUNC_GROUPS), 32)
         self.assertEqual(len({slug for _, slug, _, _ in FUNC_GROUPS}), 32)
@@ -480,6 +504,52 @@ class FuncExportTests(TestCase):
             actual = sum(version['major'] in item['versions']
                          for item in self.snapshot['functions'])
             self.assertEqual(version['function_count'], actual)
+
+    def test_chinese_bare_synopsis_uses_only_confirmed_function_names(self):
+        DocPage.objects.create(version_id=12, file='functions-xml.html',
+                               content=page('<pre class="synopsis">schema_to_xml(schema name)</pre>'
+                                            '<p>将整个模式映射为 XML。</p>'))
+        self.assertNotIn('schema_to_xml', importer.harvest_manual('12', '12'))
+        translated = importer.harvest_manual('12', '12', known={'schema_to_xml'})
+        self.assertEqual(translated['schema_to_xml']['description'], '将整个模式映射为 XML。')
+
+    def test_chinese_shared_colon_and_list_prose_fill_only_missing_descriptions(self):
+        DocPage.objects.create(version_id=18, file='functions-conditional.html', content=page(
+            '<pre class="synopsis"><code class="function">GREATEST</code>(value)</pre>'
+            '<pre class="synopsis"><code class="function">LEAST</code>(value)</pre>'
+            '<p><code class="function">GREATEST</code>和<code class="function">LEAST</code>'
+            '选取最大值或最小值。</p>'))
+        DocPage.objects.create(version_id=18, file='functions-statistics.html', content=page(
+            '<pre class="synopsis"><code class="function">pg_mcv_list_items</code>(value)</pre>'
+            '<p><code class="function">pg_mcv_list_items</code>返回列表中的项目，包含以下列：</p>'))
+        DocPage.objects.create(version_id=18, file='functions-json.html', content=page(
+            '<table><tr><td class="func_table_entry"><p class="func_signature"></p>'
+            '<pre class="synopsis"><code class="function">JSON_EXISTS</code>(value)</pre>'
+            '<p class="func_signature"></p><div class="itemizedlist"><ul><li>'
+            '<p>路径产生任何项则返回真，否则返回假。</p></li><li><p>错误处理规则。</p>'
+            '</li></ul></div></td></tr><tr><td class="func_table_entry">'
+            '<p class="func_signature"></p><pre class="synopsis">'
+            '<code class="function">JSON_QUERY</code>(value)</pre>'
+            '<p class="func_signature"></p><div class="itemizedlist"><ul><li>'
+            '<p>返回将路径表达式应用于上下文项的结果。</p></li></ul></div></td></tr>'
+            '<tr><td class="func_table_entry"><p class="func_signature"></p>'
+            '<pre class="synopsis"><code class="function">JSON_VALUE</code>(value)</pre>'
+            '<p class="func_signature"></p><div class="itemizedlist"><ul><li>'
+            '<p>提取指定的标量值。</p></li></ul></div>'
+            '<p>只有在预期提取单个标量时才用<code class="function">JSON_VALUE</code>；'
+            '否则应使用<code class="function">JSON_QUERY</code>。</p></td></tr></table>'))
+        translated = importer.harvest_manual('18', '18')
+        self.assertEqual(translated['greatest']['description'],
+                         'GREATEST和LEAST选取最大值或最小值。')
+        self.assertEqual(translated['pg_mcv_list_items']['description'],
+                         'pg_mcv_list_items返回列表中的项目，包含以下列：')
+        self.assertEqual(translated['json_exists']['description'],
+                         '路径产生任何项则返回真，否则返回假。')
+        self.assertEqual(translated['json_exists']['order'],
+                         ['路径产生任何项则返回真，否则返回假。'])
+        self.assertEqual(translated['json_query']['description'],
+                         '返回将路径表达式应用于上下文项的结果。')
+        self.assertEqual(translated['json_value']['description'], '提取指定的标量值。')
 
     def test_signature_table_shape(self):
         snapshot = self.items['substring']['versions']['18']
@@ -726,6 +796,32 @@ class FuncExportTests(TestCase):
         # 英文事实原样保留，中文只是叠加。
         self.assertTrue(snapshot['description'].startswith('Number of bits in string.'))
 
+    def test_same_version_manual_coordinates_and_title_preserve_english_facts(self):
+        """重译的坐标/标题可变，英文事实与官方链接仍用同版上游坐标。"""
+        DocPage.objects.create(version_id=9.6, file='functions.html', content='<p>函数</p>')
+        DocPage.objects.create(
+            version_id=9.6, file='functions-string.html', title='9.4.\u00a0字符串函数',
+            content=page(zh_old_table('LOCAL-STRING-ANCHOR', [
+                zh_row('bit_length(string)', 'int', '字符串中的位数。'),
+            ])))
+        DocPage.objects.filter(version_id=18, file='functions-string.html').update(
+            title='9.4.\u00a0字符串函数和操作符（新译）')
+        items = by_slug(export(self.root.name))
+        item = items['bit-length']
+        snapshot = item['versions']['9.6']
+        self.assertEqual(snapshot['doc'], {
+            'file': 'functions-string.html', 'slug': '9.6', 'anchor': 'LOCAL-STRING-ANCHOR'})
+        original = self.items['bit-length']['versions']['9.6']
+        self.assertEqual(snapshot['upstream_doc'], dict(original['doc'], slug='9.6'))
+        self.assertEqual(snapshot['group_label'], '字符串函数')
+        self.assertEqual(item['group_label'], '字符串函数和操作符（新译）')
+        self.assertEqual(snapshot['zh_from'], 'doc')
+        self.assertEqual(item['present_in'], self.items['bit-length']['present_in'])
+        for field in ('group', 'description', 'prose_only'):
+            self.assertEqual(snapshot[field], original[field])
+        self.assertEqual([s['text'] for s in snapshot['signatures']],
+                         [s['text'] for s in original['signatures']])
+
     def test_chinese_inherited_only_when_english_identical(self):
         """gcd 两版英文一字不差，13 可以借 18 的译文；substring 换了措辞，不许借。"""
         gcd = self.items['gcd']
@@ -733,6 +829,8 @@ class FuncExportTests(TestCase):
         self.assertEqual(gcd['versions']['13']['zh_from'], 'inherited')
         self.assertEqual(gcd['versions']['13']['description_zh'], '最大公约数。')
         self.assertEqual(gcd['versions']['13']['signatures'][0]['zh_from'], 'inherited')
+        self.assertNotIn('upstream_doc', gcd['versions']['13'])
+        self.assertEqual(gcd['versions']['13']['doc']['slug'], '13')
         substring = self.items['substring']
         self.assertEqual(substring['versions']['18']['zh_from'], 'doc')
         self.assertEqual(substring['versions']['13']['zh_from'], '')

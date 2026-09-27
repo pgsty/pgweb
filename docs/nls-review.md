@@ -1,6 +1,6 @@
 # 消息翻译（/nls）实施说明
 
-实现更新：2026-09-20，支持 PostgreSQL 14–19 的 `zh_CN` 与 `zh_TW` 消息，新增语言迁移和导入流程须单独部署。这是 [pgsty/pgnls](https://github.com/pgsty/pgnls) 消息校准工作台的站内版本：让登录且获授权的人一起校对，其他人只读浏览。
+实现更新：2026-09-27，支持 PostgreSQL 14–19 的 `zh_CN` 与 `zh_TW` 消息，新增语言迁移和导入流程须单独部署。这是 [pgsty/pgnls](https://github.com/pgsty/pgnls) 消息校准工作台的站内版本：让登录且获授权的人一起校对，其他人只读浏览。
 
 ## 1. 定义与权限
 
@@ -25,40 +25,62 @@
 | `status`, `forms`, `note`, `source_revision`, `version`, `updated_by`, `updated_at` | 人工状态。`forms` 永远是当前译文（未编辑时等于推荐）；`version` 是乐观锁；`source_revision` 与 `revision` 不同且已决定的行显示为“需重审” |
 | `history` | 最近 40 次保存的状态（版本、状态、译文、备注、审校人、时间），撤销就是把上一状态再保存一次 |
 
-索引：主键、`(language, pg_major, component, status)`、`component`、`(component, status)`、`msgid` 的 `gist_trgm_ops`（相近消息检索）。PG14–18 的部分简体消息使用历史 ID，导入不重算这些 ID；同一语言、版本、组件和英文身份若以另一个 ID 出现，导入会报错，避免重复记录和丢失校对历史。2026-09-20 PO 快照每语种为 162 个目录、67,494 条消息。
+索引：主键、`(language, pg_major, component, status)`、`component`、`(component, status)`、`msgid` 的 `gist_trgm_ops`（相近消息检索）。PG14–18 的部分简体消息使用历史 ID，导入不重算这些 ID；同一语言、版本、组件和英文身份若以另一个 ID 出现，导入会报错，避免重复记录和丢失校对历史。2026-09-27 对齐范围每语种为 162 个目录、67,495 条消息。
 
 ## 3. 数据流
 
+日常校准以 `~/pgsty/pgnls` 当前简繁 PO 为权威。候选导入与权威 PO 对齐是两个不同操作：`nls_import` 保留网站人工稿；`nls_sync_po` 按用户确认的 PO 快照对齐当前译文和 PO 元数据。
+
+### 已有消息与权威 PO 对齐
+
+在 PGWeb 根目录执行；无需恢复旧的 `review-app`，也不依赖 Babel 下载目录：
+
 ```bash
-# pgnls 侧：导出自包含 bundle（含 PO flags、Plural-Forms、两种译文、校准数据、当前人工状态）
-cd ~/pgsty/pgnls && review-app/.venv/bin/python review-app/manage.py bundle outputs/nls-bundle-YYYYMMDD.jsonl.gz
+# 只读本地消息身份和完整 324 个 PO 目录，固定全量目标与源文件 SHA-256
+.venv/bin/python manage.py nls_sync_po /tmp/nls-authority.json.gz --source-root ~/pgsty/pgnls
 
-# pgweb 侧：导入。源字段总是刷新；本地已有人工保存（version > 0）的行只更新源字段，不覆盖人工状态
-.venv/bin/python manage.py migrate nls
-.venv/bin/python manage.py nls_import outputs/nls-bundle-YYYYMMDD.jsonl.gz          # --check 只校验不写
-# 生产：scp bundle 后在 /data/app/pgsql.cc 下执行同一命令，再 systemctl restart pgsql.cc（首次需要迁移）
+# 默认只比较，不写数据库；逐条 before/after 差异另存 JSON
+.venv/bin/python manage.py nls_sync_po /tmp/nls-authority.json.gz --report /tmp/nls-authority-diff.json
 
-# 回流：导出 pgnls-human-review-v1，交给 pgnls 的 manage.py import / results.py 回写 PO
-.venv/bin/python manage.py nls_export /tmp/pgsql-cc-review.json
-cd ~/pgsty/pgnls && review-app/.venv/bin/python review-app/manage.py import /tmp/pgsql-cc-review.json
+# 审阅差异并备份消息表后，在本地应用
+.venv/bin/python manage.py nls_sync_po /tmp/nls-authority.json.gz --write
+
+# 生产先部署命令与代码、拷贝同一快照，再在 /data/app/pgsql.cc 分别比较、应用
+.venv/bin/python manage.py nls_sync_po /tmp/nls-authority.json.gz --report /tmp/nls-authority-production-diff.json
+.venv/bin/python manage.py nls_sync_po /tmp/nls-authority.json.gz --write
 ```
 
-页面右上“导出 JSON”（审校人可见）与 `/nls/api/export/` 输出同一格式。导入按 `id` 幂等，重复导入只刷新源字段。
+快照绑定语言、PG 大版本、组件、英文单复数与上下文、已有稳定 ID、PO 文件哈希和导出时当前内容哈希；当前范围为简繁 PG14–19。源身份新增或缺失会报错，不能在此流程中隐式新增或删除消息。先以候选 bundle 正常导入新身份，再重新导出全量快照。
 
-新增语言可以直接从已校准 PO 和同批 Babel 原译生成候选，不必恢复历史 review-app：
+应用在单一事务内锁定消息并复核当前 `forms` / `plural_forms` / `flags`，导出后有人改过相关内容则整批拒绝；已经与目标一致的行跳过。两端的人工历史与审校版本不必相同，分别保留自己的记录。变化行追加 `authoritative_po_sync` 事件，记录完整前值、目标、源文件及快照哈希，递增乐观锁版本；不改最后人工审校人的身份和时间，不截断已有历史。仅删去中文已不使用的复数形式、且保留的译文未变时保留审批；真正改动译文或增加形式时回到待审，原审批存入此次事件，不把来源更新冒充人工审批。
+
+现有翻译、历史推荐、校准依据与旧审核证据不因对齐而覆盖。保存所需形式由当前 PO `Plural-Forms` 定义；界面采用历史推荐时只取当前仍有效的形式。同步后的再次比较应为零变化。
+
+### 新消息或新校准候选
+
+生成器必须复用本站已有自然身份对应的 ID，尤其简体 PG14–18 仍有历史 ID。先在 PGWeb 导出映射，再传给 pgnls；ID 映射在推荐 `revision` 计算前生效：
 
 ```bash
-# pgnls 中运行；--upstream 指向该语言的 Babel 下载目录，下面有 master / REL_*_STABLE。
-python3 bin/pgweb-bundle.py --language zh_TW \
-  --upstream tmp/babel-snapshot/download/zh_TW --output /tmp/nls-zh_TW.jsonl.gz
-# 可重复 --major 19 --major 18 选择版本，默认 14–19；输出文件不得已经存在。
+.venv/bin/python manage.py nls_export_ids /tmp/nls-identities.json.gz
 
-# pgweb 中运行
-.venv/bin/python manage.py migrate nls
-.venv/bin/python manage.py nls_import /tmp/nls-zh_TW.jsonl.gz --check
-.venv/bin/python manage.py nls_import /tmp/nls-zh_TW.jsonl.gz
+# --upstream 是同语言的 Babel 快照目录，其下有 master / REL_*_STABLE
+python3 ~/pgsty/pgnls/bin/pgweb-bundle.py --language zh_CN \
+  --identity-map /tmp/nls-identities.json.gz \
+  --upstream /path/to/babel/zh_CN --output /tmp/nls-zh_CN.jsonl.gz
+
+.venv/bin/python manage.py nls_import /tmp/nls-zh_CN.jsonl.gz --check
+.venv/bin/python manage.py nls_import /tmp/nls-zh_CN.jsonl.gz
+```
+
+首次增加语言可省略映射；更新已有语言必须提供映射。生成器 `--major` 可重复指定 PG14–19，缺省全部；输出路径必须尚不存在。候选导入不覆盖已有人工稿，不能用它代替上述权威 PO 对齐流程。
+
+审校导出仍可用于留档与后续回写核对：
+
+```bash
 .venv/bin/python manage.py nls_export /tmp/pg19-zh_TW-review.json --language zh_TW --major 19
 ```
+
+页面导出与命令均为 `pgnls-human-review-v1`，包含语言和版本。当前 pgnls 仓库已移除旧 `review-app/manage.py import`，不要再执行历史回流命令；回写权威 PO 时须逐条核对消息身份和现有内容并保留审校证据。
 
 Bundle 头部的 `language` 指定整批语言，条目如另带 `language` 必须一致；无语言字段的旧 bundle 仍视为简体。PO 生成器核对当前 PO 与 Babel 的英文集合，保留原译，使用独立语言 ID，所有候选初始为待审，不会从另一语言复制审批。已有人工稿导入后保留状态、版本和历史；推荐变化仍通过 `source_revision` 标为需重审。审核导出增加顶层 `language`，文件名包含语言与大版本，回写 PO 时须核对这两个范围。
 

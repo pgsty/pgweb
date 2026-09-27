@@ -52,9 +52,19 @@ def placeholders(text):
     return sorted(re.sub(r'^%\d+\$', '%', t) for t in TOKEN.findall(text or '') if t != '%%')
 
 
+def form_keys(plural_message, plural_forms):
+    """The PO header defines active forms; an older recommendation is not a schema."""
+    if not plural_message:
+        return {''}
+    match = re.search(r'\bnplurals\s*=\s*(\d+)\s*;', plural_forms or 'nplurals=1; plural=0;')
+    if not match or not 1 <= int(match[1]) <= 20:
+        raise ValidationError('PO 复数形式元数据无效。')
+    return {str(index) for index in range(int(match[1]))}
+
+
 def check_forms(message, forms):
     """Shape and size checks that every save must pass."""
-    if not isinstance(forms, dict) or set(forms) != set(message.suggested_forms):
+    if not isinstance(forms, dict) or set(forms) != form_keys(message.msgid_plural, message.plural_forms):
         raise ValidationError('必须同时保存此消息的全部译文形式。')
     for value in forms.values():
         if not isinstance(value, str) or len(value) > MAX_FORM:

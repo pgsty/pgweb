@@ -36,7 +36,7 @@ class CatalogTests(TestCase):
     def test_chinese_catalog_uses_standard_page_and_download_navigation(self):
         with connection.cursor() as cursor:
             cursor.execute("SELECT table_name FROM information_schema.tables WHERE table_schema='pgext' ORDER BY table_name")
-            self.assertEqual(cursor.fetchall(), [('universe',)])
+            self.assertEqual(cursor.fetchall(), [('cloud',), ('cloud_fact',), ('universe',)])
         self.assertEqual(self.client.head('/ext/').status_code, 200)
         response = self.client.get('/ext/')
         self.assertContains(response, '<h1>PostgreSQL 扩展目录</h1>', html=True)
@@ -158,7 +158,7 @@ class CatalogTests(TestCase):
         # unrelated apps' fixtures (versions, release notes, and news).
         with override_settings(INSTALLED_APPS=['pgweb.ext']):
             self.assertEqual(list(get_all_pages_struct()), [
-                ('ext/', None), ('e/vector/', None), ('e/tiny/', None),
+                ('ext/', None), ('ext/cloud/', None), ('e/vector/', None), ('e/tiny/', None),
             ])
 
     def test_dropdown_counts_respect_other_filters(self):

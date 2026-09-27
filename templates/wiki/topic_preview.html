@@ -1,0 +1,4 @@
+<div class="docsearch-preview__body">
+  <p><strong>{{ item.name_zh }}</strong> · {{ item.category }} · PostgreSQL {{ version.label }}</p>
+  {% if snapshot %}{% for paragraph in snapshot.description|slice:":2" %}<p>{{ paragraph }}</p>{% endfor %}{% if snapshot.signature %}<pre><code>{{ snapshot.signature }}</code></pre>{% endif %}{% if snapshot.facts %}<dl>{% for fact in snapshot.facts|slice:":3" %}<dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd>{% endfor %}</dl>{% endif %}{% else %}<p>本次采样中没有此版本的条目。请切换版本查看已收录资料。</p>{% endif %}
+</div>

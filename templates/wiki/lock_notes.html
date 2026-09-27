@@ -1,0 +1,28 @@
+<section class="wiki-section lock-notes" id="understand-waits">
+  <h2>从锁冲突到实际等待</h2>
+  <p>这 {{ total }} 种是<strong>锁模式</strong>，由 8 种表级模式和 4 种行级模式组成；它们不是 <a href="{{ manual_base }}view-pg-locks.html"><span class="lock-mono">pg_locks.locktype</span></a> 的全部锁对象类别。锁模式、锁对象和等待事件分别回答「怎样锁」「锁什么」和「正在等什么」。</p>
+  <ul class="lock-reading-notes">
+    <li>普通 <span class="lock-mono">SELECT</span> 通过 MVCC 读取，不取得这里的行级锁，但仍需取得表级 <span class="lock-mono">ACCESS SHARE</span> 锁。</li>
+    <li><span class="lock-mono">SELECT … FOR UPDATE / SHARE</span> 等行锁子句还会取得表级 <span class="lock-mono">ROW SHARE</span> 锁；<span class="lock-mono">UPDATE / DELETE</span> 还会取得表级 <span class="lock-mono">ROW EXCLUSIVE</span> 锁。因此，行操作也可能被表锁挡住。</li>
+    <li>组合矩阵按操作同时取得的表锁，将常见行锁组合分组，再按「表锁冲突，或同一行上的行锁冲突」判断。红色 × 来自表锁，即使操作不同行也会冲突；琥珀色 ● 只在两边锁定同一行时冲突。它列出常见的 14 个比较项，并不表示还有两种额外锁模式。</li>
+    <li>矩阵比较不同事务，同一事务不会因自身持有的模式而按此矩阵阻塞。锁通常持有到事务结束；回滚到保存点会释放该保存点之后取得的锁。行锁、事务和保存点的细节见<a href="{{ manual_base }}explicit-locking.html">显式锁定</a>。</li>
+    <li>矩阵只描述锁模式能否共存。等待队列中的先来请求也可能让后来的请求排队；实际行为还受对象、命令阶段、事务状态及 <span class="lock-mono">NOWAIT / SKIP LOCKED</span> 等选项影响。</li>
+  </ul>
+  <div class="lock-other-kinds">
+    <div><h3>咨询锁</h3><p>应用自行约定键值，可以选择共享或独占、会话级或事务级。参见<a href="{{ manual_base }}explicit-locking.html#ADVISORY-LOCKS">咨询锁</a>。</p></div>
+    <div><h3>谓词锁</h3><p><span class="lock-mono">SIReadLock</span> 用于可串行化快照隔离的依赖检测，不按这里的矩阵阻塞写入。参见<a href="{{ manual_base }}transaction-iso.html#XACT-SERIALIZABLE">可串行化隔离级别</a>。</p></div>
+    <div><h3>内部同步</h3><p>页级锁、轻量锁等还参与数据库内部同步。它们不属于这 12 种 SQL 锁模式；排查时结合<a href="{{ manual_base }}monitoring-stats.html">统计与等待事件</a>。</p></div>
+  </div>
+</section>
+
+<section class="wiki-section lock-notes" id="diagnose">
+  <h2>查看谁在阻塞谁</h2>
+  <p>下面的只读查询列出当前有阻塞者的会话。<a href="{{ manual_base }}functions-info.html#FUNCTIONS-INFO-SESSION-TABLE"><span class="lock-mono">pg_blocking_pids()</span></a> 同时考虑已持有冲突锁的会话和排在前面的冲突请求；进一步检查对象与模式时，结合 <a href="{{ manual_base }}view-pg-locks.html"><span class="lock-mono">pg_locks</span></a>。</p>
+  <pre class="lock-sql"><code class="language-sql">SELECT pid, usename, wait_event_type, wait_event,
+       pg_blocking_pids(pid) AS blocking_pids,
+       query
+FROM pg_stat_activity
+WHERE cardinality(pg_blocking_pids(pid)) &gt; 0
+ORDER BY pid;</code></pre>
+  <p class="lock-sectionlead">会话和查询文本的可见范围取决于当前用户权限。行锁通常不会直接逐行列在 <span class="lock-mono">pg_locks</span> 中，行锁等待常表现为等待持锁事务结束。</p>
+</section>

@@ -1,0 +1,4 @@
+<nav class="topic-versions" aria-label="选择 PostgreSQL 版本">
+  {% for v in versions %}<a class="wiki-vpill topic-pill is-{{ v.tone }}{% if v.is_current %} is-current{% endif %}" href="{{ v.url }}"{% if v.is_current %} aria-current="true"{% endif %} title="PostgreSQL {{ v.label }}">{{ v.major }}</a>{% endfor %}
+</nav>
+{% if version %}<p class="topic-version-note">当前查看 <strong>PostgreSQL {{ version.label }}</strong>。{% if version.source.channel == 'preview' or version.source.channel == 'devel' %}本页依据预发行或开发快照，接口与行为仍可能变化。{% endif %}</p>{% endif %}

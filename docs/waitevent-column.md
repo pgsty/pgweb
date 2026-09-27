@@ -12,8 +12,8 @@
 | 层 | 版本 | 来源 | 内容 |
 | --- | --- | --- | --- |
 | 图谱 | 13 – 18 | `~/pg.center/wait/data/wait_events.jsonl`（282 行：281 个核心事件 + 1 个 Extension 机制页）、`facts/wait_event_matrix.json`（327 个 `(type,name)` 身份，逐版本描述与来源锚点）、`facts/wait_event_canonical_map.json` / `wait_event_aliases.json`（拼写更名与类型迁移）、`facts/translations.zh.json` | 逐版本英文官方描述、中文官方描述、触发机制 / 正常与异常 / 处置 / 事故模式（中英）、三条诊断 SQL（中文标题）、源码位置与状态、相关 GUC 与指标 |
-| 手册 | 10 – 12、13 – 19、20 | 本站 `docs` 表 `monitoring-stats.html`：10 – 12 是一张带 `rowspan` 类型列的总表 `#WAIT-EVENT-TABLE`（类型 / 名称 / 描述）；13 起每类一张 `#WAIT-EVENT-<TYPE>-TABLE`（名称 / 描述）；19 与 devel 把 `BufferPin` 类改成 `Buffer`（锚点 `WAIT-EVENT-BUFFER-TABLE`） | 事件身份（类型 + 名称）与中文描述 |
-| 上游 | 9.6 – 12、19、20 | 可选联网：`https://www.postgresql.org/docs/<v>/monitoring-stats.html`（9.6 – 12 英文总表；本站没有 9.6 手册，9.6 只有这一来源）；`src/backend/utils/activity/wait_event_names.txt` 在 `REL_19_BETA3` 与 `master` 的 raw 文件（19、20 的英文描述） | 英文官方描述；9.6 的事件身份 |
+| 手册 | 9.6 – 19、20 | 本站 `docs` 表 `monitoring-stats.html`：9.6 – 12 是一张带 `rowspan` 类型列的总表 `#WAIT-EVENT-TABLE`（类型 / 名称 / 描述）；13 起每类一张 `#WAIT-EVENT-<TYPE>-TABLE`（名称 / 描述）；19 与 devel 把 `BufferPin` 类改成 `Buffer`（锚点 `WAIT-EVENT-BUFFER-TABLE`） | 事件身份（类型 + 名称）与中文描述 |
+| 上游 | 9.6 – 12、19、20 | 可选联网：`https://www.postgresql.org/docs/<v>/monitoring-stats.html`（9.6 – 12 英文总表；9.6 的事件身份只有这一来源，中文叠自本站 9.6 重译树）；`src/backend/utils/activity/wait_event_names.txt` 在 `REL_19_BETA4` 与 `master` 的 raw 文件（19、20 的英文描述，tag 跟随当前 beta 快照） | 英文官方描述；9.6 的事件身份 |
 
 9.0 – 9.5 没有 `wait_event` 列（9.6 引入），这六个版本在数据里存在、事件数为 0、`has_wait_events=False`，页面上以"不适用"呈现，不当作"缺席"。
 9.6 是收录起点，同时也是机制的起点，措辞可以直接写"9.6 引入"。
@@ -57,7 +57,7 @@ class WaitEvent(models.Model):                # db_table = 'waitevent'
     aliases = ArrayField(TextField())         # 其它版本用过的名字
     type_variants = ArrayField(TextField())   # 其它版本用过的类型标签（'BufferPin'、'LWLockTranche'）
     summary = TextField(blank=True)           # 最新版英文官方描述
-    summary_zh = TextField(blank=True)        # 中文官方描述：图谱优先，其次最新版手册译文
+    summary_zh = TextField(blank=True)        # 中文官方描述：最新已收录版译文优先，图谱中文后备
     first_version = CharField(max_length=8)
     last_version = CharField(max_length=8)
     present_in = ArrayField(TextField())      # 按版本顺序
@@ -90,8 +90,8 @@ class WaitEvent(models.Model):                # db_table = 'waitevent'
 导出流程：
 
 1. 读图谱：`wait_events.jsonl` 给档案与 13 – 18 的逐版本英文描述与中文描述；`wait_event_matrix.json` 给 13 – 18 每个 `(type,name)` 的存在与来源锚点；`canonical_map` 给类型迁移。
-2. 读本站手册 `monitoring-stats.html`（版本 10 – 19 与 0）：解析事件表，得到每版的 `(type, name, description_zh)`；10 – 12 处理 `rowspan` 类型列。
-3. 联网（默认开，`--no-fetch` 关）：抓 9.6 – 12 英文总表得到 9.6 身份与 9.6 – 12 英文描述；抓 `wait_event_names.txt@REL_19_BETA3` 与 `@master` 得到 19、20 英文描述（格式：节标题 `Section: ClassName - "WaitEventXxx"`，行 `NAME<TAB>"description"`；名称在 17 起按驼峰规则生成，13 – 18 图谱里的名字就是它的产物；类型 `Buffer` 在 19 的分节名请以文件为准）。抓取结果缓存到 `cache_dir`，同名文件存在就不再联网。没联网时 9.6 缺席、19/20 只有中文，报告里说明。
+2. 读本站手册 `monitoring-stats.html`（版本 9.6 – 19 与 0）：解析事件表，得到每版的 `(type, name, description_zh)`；9.6 – 12 处理 `rowspan` 类型列。
+3. 联网（默认开，`--no-fetch` 关）：抓 9.6 – 12 英文总表得到 9.6 身份与 9.6 – 12 英文描述；抓 `wait_event_names.txt@REL_19_BETA4` 与 `@master` 得到 19、20 英文描述（格式：节标题 `Section: ClassName - "WaitEventXxx"`，行 `NAME<TAB>"description"`；名称在 17 起按驼峰规则生成，13 – 18 图谱里的名字就是它的产物；类型 `Buffer` 在 19 的分节名请以文件为准）。抓取结果缓存到 `cache_dir`，同名文件存在就不再联网。没联网时 9.6 缺席、19/20 只有中文，报告里说明。
 4. 归一身份、合并各层、算变化记录与版本汇总，输出自包含快照 `{'versions': [...], 'relations' → 'events': [...], 'meta': {...}}`。
 
 版本汇总 `WaitEventVersion.transition`：
@@ -199,7 +199,7 @@ baseline: bool（9.6）, na: bool（9.0 – 9.5，页面只放一段说明并链
 ```
 
 发布顺序：拉代码 → `manage.py migrate wiki` → 导入快照 → `index_docs --waitevents` → `systemctl restart pgsql.cc`。
-图谱更新（覆盖新版本）或本站手册重灌后重新导出导入；19 正式发布后把 `wait_event_names.txt` 的 tag 从 `REL_19_BETA3` 改为正式 tag。测试：`manage.py test pgweb.wiki pgweb.search --noinput`。
+图谱更新（覆盖新版本）或本站手册重灌后重新导出导入；19 正式发布后把 `wait_event_names.txt` 的 tag 从 `REL_19_BETA4` 改为正式 tag（tag 跟随本地 19 手册树的快照）。测试：`manage.py test pgweb.wiki pgweb.search --noinput`。
 
 ## 9. 实施增补（2026-09-11）
 

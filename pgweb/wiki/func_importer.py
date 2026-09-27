@@ -2,11 +2,11 @@
 
 和系统目录、配置参数两个栏目同一套分工：**事实来自权威源，中文来自本站手册**。
 哪些函数、什么签名、什么示例、归哪一组，一律逐版本取自 postgresql.org 的英文原页
-（9.0 – 19 与 devel = 20，缓存在 `tmp/func-sources/<major>/`）；本站中文手册只叠中文描述。
+（9.0 – 19 与 devel = 20，缓存在 `tmp/func-sources/<major>/`）；本站手册叠中文描述、标题与本地坐标。
 
-不用本站手册判断存在性，是因为译文仓库按新版为基底回填：14 版的页面里有 PG 17 才引入的
-`JSON_TABLE`、PG 18 的 `uuidv7`，而 devel 手册反而没有 PG 16 的 `any_value`。拿它算
-「哪一版引入」会得出错误结论（契约 docs/func-column.md §1）。
+2026-09-12 的旧译文曾混入其他版本的函数；2026-09-26 重译后全量复核，中文手册的
+函数存在集合已与英文源一致。仍保留事实与译文分离，防止将来的翻译偏差改变
+「哪一版引入」或签名（契约 docs/func-column.md §1）。
 
 `export_snapshot()` 读源产快照，`import_snapshot()` 把快照写进库。拆开是为了让同一份
 快照分别加载本地与生产——导出要联网、要读本地手册，导入只认快照，生产机上什么源都不需要。
@@ -142,8 +142,11 @@ def layout_of(major):
 
 
 def manual_majors():
-    """本站手册里有第 9 章的版本；只用来叠中文，不决定收录哪些版本。"""
-    trees = (DocPage_objects().filter(Q(version__gte=10) | Q(version=DEVEL_TREE),
+    """本站手册里有第 9 章的版本；只用来叠中文，不决定收录哪些版本。
+
+    2026-09 重译后 9.0 – 9.6 也有本地树，一并纳入中文叠加与本站手册链接。
+    """
+    trees = (DocPage_objects().filter(Q(version__gte=9) | Q(version=DEVEL_TREE),
                                       file='functions.html')
              .values_list('version', flat=True))
     return sorted({major_of(tree) for tree in trees}, key=version_key)
@@ -1027,16 +1030,64 @@ def upstream_pages(majors, cache_dir, offline, report):
 
 # ------------------------------------------------------------------ 中文叠加层
 
-def harvest_manual(major, doc_slug):
-    """本站手册的一版 → {name_key: 中文描述与逐签名译文}；只取中文，不取事实。"""
+def fill_manual_description(entry, text, html):
+    """同一手册小节的共享说明补空位，不覆盖已经匹配到的逐签名说明。"""
+    entry['description'], entry['description_html'] = text, html
+    entry['signatures'] = {key: value if value[0] else (text, html)
+                           for key, value in entry['signatures'].items()}
+    entry['order_html'] = [old_html if old_text else html for old_text, old_html
+                           in zip(entry['order'], entry['order_html'])]
+    entry['order'] = [old_text or text for old_text in entry['order']]
+
+
+def fill_manual_list_descriptions(out, pages, context):
+    """SQL/JSON 的 synopsis 后用列表写说明；仅补同一表格单元内的中文空位。"""
+    missing_files = {entry['doc']['file'] for entry in out.values()
+                     if not entry['description']}
+    for filename in missing_files:
+        soup = BeautifulSoup(pages[filename], 'html.parser')
+        for pre in soup.select('td.func_table_entry > pre.synopsis'):
+            keys = {text_of(node).strip().lower() for node in pre.select('code.function')}
+            keys = {key for key in keys if key in out and not out[key]['description']
+                    and out[key]['doc']['file'] == filename}
+            if not keys:
+                continue
+            for sibling in pre.next_siblings:
+                if isinstance(sibling, NavigableString):
+                    continue
+                if sibling.name == 'p' and not text_of(sibling):
+                    continue
+                if sibling.name == 'div' and 'itemizedlist' in sibling.get('class', ()):
+                    paragraph = sibling.select_one('li > p')
+                    if paragraph:
+                        html = clean_fragment(fragment_of(paragraph), context, filename)
+                        text = prose_text(html)
+                        if text:
+                            for key in keys:
+                                fill_manual_description(out[key], text, html)
+                # 不越过其他正文、表格单元或下一条签名猜测说明。
+                break
+
+
+def harvest_manual(major, doc_slug, known=None):
+    """本站手册的一版 → 中文描述、标题与本地坐标；不改变上游事实。"""
     pages = manual_pages(major)
     if not pages:
         return {}
+    tree = DEVEL_TREE if major == DEVEL_MAJOR else major
+    titles = {}
+    for filename, title in DocPage_objects().filter(version=tree, file__in=pages) \
+            .values_list('file', 'title'):
+        label = re.sub(r'^\s*\d+(?:\.\d+)*\.?\s*', '', title or '').strip()
+        if label and not label.endswith('.html'):
+            titles[filename] = label
     context = parse_context(major, doc_slug, 'zh')
-    collected, mentions = harvest_version(pages, context, {'pages_without_functions': []})
+    collected, mentions = harvest_version(pages, context, {'pages_without_functions': []}, known)
     out = {}
     for key, item in collected.items():
         out[key] = {
+            'doc': item['doc'],
+            'group_label': titles.get(item['doc']['file'], ''),
             'description': item['description_zh'],
             'description_html': item['description_html'],
             'signatures': {signature['text']: (signature['description_zh'],
@@ -1045,12 +1096,23 @@ def harvest_manual(major, doc_slug):
             'order': [signature['description_zh'] for signature in item['signatures']],
             'order_html': [signature['description_html'] for signature in item['signatures']],
         }
+    # 同一表格单元的定义比同一节中顺带提及函数的段落更精确，优先使用。
+    fill_manual_list_descriptions(out, pages, context)
     # 只在正文里提到的函数也要出中文，否则那几版的条目只有英文。
     for mention in mentions:
         key = mention['name'].lower()
-        if key in out or not mention['description']:
+        if not mention['description']:
             continue
-        out[key] = {'description': mention['description'],
+        if key in out:
+            entry = out[key]
+            if (not entry['description'] and mention['file'] == entry['doc']['file']
+                    and mention['anchor'] == entry['doc']['anchor']):
+                fill_manual_description(entry, mention['description'], mention['description_html'])
+            continue
+        out[key] = {'doc': {'file': mention['file'], 'anchor': mention['anchor'],
+                            'slug': doc_slug},
+                    'group_label': titles.get(mention['file'], ''),
+                    'description': mention['description'],
                     'description_html': mention['description_html'],
                     'signatures': {}, 'order': [], 'order_html': []}
     return out
@@ -1072,6 +1134,23 @@ def attach_signature_zh(snapshot, entry, source, report):
         signature['description_zh_html'] = html
         signature['zh_from'] = source if text else ''
     report['by_text'] += matched
+    if matched:
+        # 老表返回类型里的 "same as input" / "range's element type" 可被翻译，
+        # 调用部分却完全相同。只在两边均唯一时配对，避免混淆不同重载。
+        by_call = defaultdict(list)
+        for text, translated in entry['signatures'].items():
+            by_call[text.partition(ARROW)[0].strip()].append(translated)
+        calls = [signature['text'].partition(ARROW)[0].strip() for signature in signatures]
+        for signature, call in zip(signatures, calls):
+            options = by_call.get(call, ())
+            if signature['description_zh'] or calls.count(call) != 1 or len(options) != 1:
+                continue
+            text, html = options[0]
+            if text:
+                signature['description_zh'], signature['description_zh_html'] = text, html
+                signature['zh_from'] = source
+                matched += 1
+                report['by_call'] = report.get('by_call', 0) + 1
     if matched or len(signatures) != len(entry['order']):
         report['unmatched'] += len(signatures) - matched
         return
@@ -1096,6 +1175,14 @@ def apply_chinese(functions, order, manual, report):
         having = [major for major in present if (manual.get(major) or {}).get(key, {}).get('description')]
         for major in present:
             snapshot = item['versions'][major]
+            # 英文原页的自动锚点（如旧版 AEN...）不属于中文重译页。
+            # 坐标和标题只取同版中文；借用译文时不能借用另一版的链接。
+            local = (manual.get(major) or {}).get(key, {})
+            if local.get('doc') and local['doc'] != snapshot['doc']:
+                snapshot['upstream_doc'] = dict(snapshot['doc'])
+                snapshot['doc'] = dict(local['doc'])
+            if local.get('group_label'):
+                snapshot['group_label'] = local['group_label']
             source = major if major in having else ''
             if not source:
                 english = normal_description(snapshot['description'])
@@ -1193,14 +1280,15 @@ def export_snapshot(offline=False, cache_dir=CACHE_DIR):
         if len(groups) > 1:
             report['multi_group'].append([functions[-1]['slug'], groups])
 
-    # 中文叠加层：本站手册按 name_key 对齐，只补描述。
-    translations = {major: harvest_manual(major, doc_slug_of(major, manual))
+    # 中文叠加层：按 name_key 对齐描述、同版标题与坐标，不改英文事实。
+    translations = {major: harvest_manual(major, doc_slug_of(major, manual), known=set(keys))
                     for major in order if doc_slug_of(major, manual)}
-    match = {'by_text': 0, 'by_position': 0, 'unmatched': 0}
+    match = {'by_text': 0, 'by_call': 0, 'by_position': 0, 'unmatched': 0}
     report['zh'] = apply_chinese(functions, order, translations, match)
     report['zh']['signatures'] = match
     for item in functions:
         present = item['present_in']
+        item['group_label'] = item['versions'][present[-1]]['group_label']
         item['summary'] = first_sentence(next(
             (item['versions'][major]['description'] for major in reversed(present)
              if item['versions'][major]['description']), ''))
@@ -1249,7 +1337,10 @@ def export_snapshot(offline=False, cache_dir=CACHE_DIR):
 def strip_snapshot(item):
     """写进快照的版本快照：只留契约里的键加两段描述 HTML，中间产物不留。"""
     keep = SNAPSHOT_FIELDS + ('description_html', 'description_zh_html')
-    return {field: item[field] for field in keep}
+    out = {field: item[field] for field in keep}
+    if item.get('upstream_doc'):
+        out['upstream_doc'] = item['upstream_doc']
+    return out
 
 
 def assign_positions(functions):

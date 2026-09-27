@@ -1,0 +1,32 @@
+<div class="lock-matrix" id="{{ matrix.id }}" data-lock-matrix>
+  <div class="lock-matrix__scroll" tabindex="0" role="region" aria-label="{{ matrix.caption }}，可横向滚动">
+    <table class="lock-matrix__table{% if matrix.expanded %} lock-matrix__table--expanded{% endif %}">
+      <caption class="sr-only">{{ matrix.caption }}。纵轴为请求的锁，横轴为另一事务已持有的锁。× 表示表锁冲突，· 表示兼容{% if matrix.expanded %}，● 表示只有作用于同一行时才发生行锁冲突。组合按操作同时取得的表锁分组，子项表示同时取得表锁与行锁{% endif %}。</caption>
+      <thead>
+        {% if matrix.expanded %}
+        <tr class="lock-matrix__groups">
+          <th class="lock-matrix__corner" scope="col" rowspan="2"><span>已持有 →</span><span>请求 ↓</span></th>
+          {% for group in matrix.groups %}<th class="lock-matrix__group{% if not forloop.first %} lock-matrix__boundary-col{% endif %}" scope="colgroup" colspan="{{ group.span }}"><a href="{{ group.url }}" title="{{ group.name }}{% if group.span > 1 %}：纯表锁与同时取得此表锁的操作组合{% endif %}">{% if group.span > 1 %}{{ group.name }}{% else %}{{ group.abbrev }}{% endif %}</a></th>{% endfor %}
+        </tr>
+        {% endif %}
+        <tr>
+          {% if not matrix.expanded %}<th class="lock-matrix__corner" scope="col"><span>已持有 →</span><span>请求 ↓</span></th>{% endif %}
+          {% for column in matrix.columns %}<th scope="col" class="lock-matrix__col lock-scope-{{ column.scope }}{% if column.is_child %} lock-matrix__col--child{% endif %}{% if matrix.expanded and column.group_start and not forloop.first %} lock-matrix__boundary-col{% endif %}" data-lock-column="{{ column.slug }}" data-lock-mode-slugs="{{ column.mode_slugs|default:column.slug }}"><a href="{{ column.url }}" title="{{ column.name }}{% if column.operation %} · {{ column.operation }}{% endif %}">{% if matrix.expanded and not column.is_child %}<span class="lock-matrix__only">仅表锁</span>{% else %}{{ column.abbrev }}{% endif %}</a></th>{% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in matrix.rows %}
+        <tr class="{% if matrix.expanded and row.mode.group_start and not forloop.first %}lock-matrix__boundary-row{% endif %}{% if row.mode.is_child %} lock-matrix__child-row{% endif %}" data-lock-row="{{ row.mode.slug }}" data-lock-mode-slugs="{{ row.mode.mode_slugs|default:row.mode.slug }}">
+          <th scope="row" class="lock-matrix__rowhead lock-scope-{{ row.mode.scope }}"><a href="{{ row.mode.url }}" title="{{ row.mode.name }}{% if row.mode.operation %} · {{ row.mode.operation }}{% endif %}"><span class="lock-mono">{{ row.mode.display_name|default:row.mode.name }}</span>{% if matrix.expanded and not row.mode.is_child %}<span class="lock-matrix__rowqualifier">仅表锁</span>{% endif %}</a></th>
+          {% for cell in row.cells %}
+          <td class="lock-matrix__cell lock-cell--{{ cell.state }}{% if matrix.expanded and cell.col_group_start and not forloop.first %} lock-matrix__boundary-col{% endif %}" data-lock-row-slug="{{ cell.row_slug }}" data-lock-col-slug="{{ cell.col_slug }}">
+            <button type="button" class="lock-matrix__button" data-lock-cell data-lock-state="{{ cell.state }}" data-lock-label="{{ cell.label }}" aria-label="{{ cell.label }}" title="{{ cell.label }}" tabindex="{% if forloop.parentloop.first and forloop.first %}0{% else %}-1{% endif %}"><span aria-hidden="true">{{ cell.symbol }}</span></button>
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p class="lock-matrix__readout" aria-live="polite" aria-atomic="true" data-lock-readout>选择方格，查看请求的锁与已持有的锁能否共存。键盘方向键可在矩阵中移动。</p>
+</div>

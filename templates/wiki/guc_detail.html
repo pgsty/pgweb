@@ -64,7 +64,7 @@
     <span class="guc-track__mark guc-seg--n{{ seg.span }}"><span class="guc-track__markfrom">{{ seg.from }}</span>{% if forloop.last %}<span class="guc-track__markto">{{ seg.to }}</span>{% endif %}</span>
     {% endfor %}
   </div>
-  <p class="guc-sectionlead">{% if default_track|length == 1 %}默认值自 PostgreSQL {{ default_track.0.from }} 起没有变过。{% else %}默认值一共换过 {{ default_track|length }} 档，每段的宽度按它覆盖的大版本数伸展，深色的一段是当前查看的 PostgreSQL {{ version.label }}。{% endif %}带单位的取值换算成了可读形式，原始的 <code class="guc-mono">boot_val</code> 与单位写在悬浮提示里。</p>
+  <p class="guc-sectionlead">{% if default_track|length == 1 %}{% if default_track.0.from == default_track.0.to %}仅记录了 PostgreSQL {{ default_track.0.from }} 的默认值。{% else %}已记录的默认值在 PostgreSQL {{ default_track.0.from }}–{{ default_track.0.to }} 之间未变。{% endif %}{% else %}默认值一共换过 {{ default_track|length }} 档，每段的宽度按它覆盖的大版本数伸展，深色的一段是当前查看的 PostgreSQL {{ version.label }}。{% endif %}带单位的取值换算成了可读形式，原始的 <code class="guc-mono">boot_val</code> 与单位写在悬浮提示里。</p>
   {% else %}
   <p class="wiki-empty">{% with newest=versions|last %}{{ newest.major }} 开发版尚无 pg_settings 实测，默认值未采集。{% endwith %}</p>
   {% endif %}

@@ -17,6 +17,10 @@ KINDS = (
     ('relation', '系统目录与视图'),
     ('error', 'SQL 状态码'),
     ('waitevent', '等待事件'),
+    ('lock', '锁模式'),
+    ('hook', '扩展钩子'),
+    ('relopt', '存储参数'),
+    ('role', '预定义角色'),
     ('psql', 'psql 命令'),
     ('tool', '命令行工具'),
     ('option', '选项与变量'),
@@ -36,6 +40,10 @@ GROUPS = (
     ('relation', '系统目录与视图', ('relation',), 'pg_class、pg_stat_activity'),
     ('error', 'SQL 状态码', ('error',), 'SQLSTATE 与条件名称'),
     ('waitevent', '等待事件', ('waitevent',), 'BufferMapping、DataFileRead'),
+    ('lock', '锁模式', ('lock',), 'ACCESS EXCLUSIVE、FOR UPDATE、锁冲突'),
+    ('hook', '扩展钩子', ('hook',), 'planner_hook、ExecutorStart_hook'),
+    ('relopt', '存储参数', ('relopt',), 'fillfactor、表级 autovacuum、索引选项'),
+    ('role', '预定义角色', ('role',), 'pg_monitor、pg_read_all_data'),
     ('tool', '命令行工具', ('tool', 'option'), 'pg_dump、pg_basebackup、sslmode、PGHOST'),
     ('psql', 'psql 命令', ('psql',), '\\d+、\\copy、\\watch'),
     ('extension', '扩展与模块', ('extension', 'am', 'language'), 'postgis、pg_trgm、PL/pgSQL'),
@@ -49,7 +57,8 @@ KIND_ALIASES = {'param': 'guc', 'setting': 'guc', 'settings': 'guc', 'func': 'fu
                 'ext': 'extension', 'extensions': 'extension', 'module': 'extension', 'tools': 'tool',
                 'cli': 'tool', 'meta': 'psql', 'backslash': 'psql', 'chapter': 'guide', 'doc': 'guide',
                 'wait': 'waitevent', 'waits': 'waitevent', 'waitevents': 'waitevent',
-                'wait_event': 'waitevent'}
+                'wait_event': 'waitevent', 'locks': 'lock', 'hooks': 'hook',
+                'relopts': 'relopt', 'roles': 'role', 'oid': 'type'}
 
 
 def resolve_group(value):

@@ -16,13 +16,14 @@ from django.db.models import JSONField, Q
 from django.db.models.expressions import RawSQL
 
 from .ruler import mark_ticks
+from .manuals import manual_slug
 from .models import (FUNC_GROUP_EYEBROW, FUNC_GROUP_LABEL, FUNC_GROUP_ORDER,
                      FuncVersion, PgFunction)
 
 
 CACHE_KEY = 'pgweb:wiki:func-index'
 VERSION_CACHE_KEY = 'pgweb:wiki:func-versions'
-DOC_CACHE_KEY = 'pgweb:wiki:func-docpages'
+DOC_CACHE_KEY = 'pgweb:wiki:func-docpages:v2'
 CHANGES_CACHE_KEY = 'pgweb:wiki:func-changes:{}'
 CACHE_SECONDS = 300
 
@@ -189,7 +190,7 @@ def doc_pages():
         pages = {}
         for tree, filename, title in (DocPage.objects.filter(file__startswith=DOC_FILE_PREFIX)
                                       .values_list('version', 'file', 'title')):
-            slug = 'devel' if int(tree) == 0 else str(int(tree))
+            slug = manual_slug(tree)
             pages[(slug, filename)] = title or ''
         cache.set(DOC_CACHE_KEY, pages, CACHE_SECONDS)
     return pages
@@ -217,7 +218,7 @@ def doc_title(snapshot, pages=None):
 
 def official_url(snapshot, version):
     """上游原页。9.x 的版本段就是版本号本身，20 走 devel。"""
-    doc = (snapshot or {}).get('doc') or {}
+    doc = (snapshot or {}).get('upstream_doc') or (snapshot or {}).get('doc') or {}
     filename, anchor = doc.get('file', ''), doc.get('anchor', '')
     slug = (version or {}).get('doc_slug', '') or doc.get('slug', '') or (version or {}).get('major', '')
     if not slug or not filename:

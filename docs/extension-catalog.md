@@ -12,7 +12,10 @@
 | `/ext/` | “PostgreSQL 扩展目录”标题、来源说明、方格阵列、搜索框与四个下拉框、表格；每页 50 条 |
 | `/ext/?q=…&category=…&license=…&language=…&repo=…&page=…` | 搜索、功能分类、许可证、编程语言、仓库来源与分页；筛选始终使用此页面 |
 | `/e/<扩展名>/` | 扩展详情：概览、相关扩展和导航链接；第一个链接为 `https://pgext.cloud/e/<扩展名>` |
-| `/ext/sitemap.xml` | 目录首页及中文扩展详情地址；全站 `/sitemap.xml` 同步收录 |
+| `/ext/cloud/` | 跨云服务矩阵，默认 PG18，Pigsty 在首列；支持筛选、选择服务、分页及 CSV 导出 |
+| `/ext/cloud/<service>/` | 单服务 PG18–14 扩展支持矩阵，服务来自数据库，自动生成页面 |
+| `/ext/cloud/evidence/?service=…&pg=…&entry=…` | 单元格的来源、版本、支持边界；有 JS 时原位打开详情，无 JS 时独立阅读 |
+| `/ext/sitemap.xml` | 目录、云服务矩阵及中文扩展详情地址；全站 `/sitemap.xml` 同步收录 |
 
 来源说明中的总数取自 `pgext.universe`，筛选时仍显示完整目录的收录数；默认不在矩阵下重复展示总数，只在有筛选时显示匹配数量。
 方格阵列展示全部匹配结果，一格一个扩展，颜色表示分类，深色表示已打包，点击进入扩展详情；表格分页不影响阵列的完整性。
@@ -27,19 +30,55 @@
 
 旧 `/ext/gis/`、`/ext/license/<值>/` 等地址 301 到对应查询条件；旧 `/ext/list/`、维度索引地址统一 301 到目录。
 旧 `/ext/<扩展名>/` 跳转到 `/e/<扩展名>/`，`lang`、`sort`、`view` 等旧展示参数移除，`repository` 转为 `repo`。
-搜索与筛选结果标记 `noindex,follow`，站点地图只保留目录和扩展详情，不包含旧索引或英文地址。
+搜索与筛选结果标记 `noindex,follow`，站点地图保留目录、云矩阵和扩展详情，不包含旧索引、单元格详情或英文地址。
 
 **权威输入是 PGEXT 元数据库，默认本地数据库 `data` 的 `pgext.universe`。**
 `~/pgsty/pgext` 负责整理、加载该元数据库。先按 PGEXT 的流程更新源库，再运行本工具。
-`pgext.cloud` 和 `pgext/server/web` 是界面参考，网站页面、其他表及旧的 `extension_all` 视图都不是导入源。
+PGEXT 网站和 `pgext/server/web` 是界面参考，不抓取网站页面作为数据源，也不使用旧的 `extension_all` 视图。
 
-PGWeb 在自己的数据库中仅保存 `pgext.universe` 的副本；运行页面时只查询本地副本，不连接 PGEXT 源库。源库的 `pgext.doc` 保持原样，不再复制到 PGWeb。
+PGWeb 在自己的数据库中保存 `pgext.universe`、`pgext.cloud`、`pgext.cloud_fact`；运行页面时只查询本地副本，不连接 PGEXT 源库。源库的 `pgext.doc` 保持原样，不再复制到 PGWeb。
 功能分类的中文名称和配色是代码中的展示常量，计数来自 `universe`，不需要分类表。
 仓库来源使用 `universe.extra.repo`、`contrib`、`rpm_repo`、`deb_repo` 的已有来源标签。
 这些标签不代表具体平台的安装包可用性；这里没有 PKG 页面或包可用性矩阵。
 
-`ext.0001_catalog` 保留原迁移历史，`ext.0002_remove_doc` 删除 PGWeb 的 `pgext.doc` 副本，最终只留下 `pgext.universe`。应用 `0002` 前先备份并恢复校验正文表，见下方归档说明。
-`universe` 保留源列类型、主键与名称唯一性，不引入对其他 PGEXT 表的外键，也不导入额外表。扩展目录与 PostgreSQL 官方文档保持独立；三方组件文档仅提供外链。
+`ext.0001_catalog` 保留原迁移历史，`ext.0002_remove_doc` 删除 PGWeb 的 `pgext.doc` 副本。应用 `0002` 前先备份并恢复校验正文表，见下方归档说明。`ext.0003_cloud` 新增两张云支持表。
+`universe` 保留源列类型、主键与名称唯一性，不引入对其他 PGEXT 表的外键；云事实通过扩展名称引用本地 Universe。扩展目录与 PostgreSQL 官方文档保持独立；三方组件文档仅提供外链。
+
+## 云服务支持矩阵
+
+云资料继续由 `~/pgsty/pgext/cloud/` 归档和整理，权威数据为源库 `data.pgext.cloud` 与 `data.pgext.cloud_fact`。PGWeb 不增加厂商专用表、矩阵持久表或站内抓取器：
+
+| 表 | 粒度与内容 |
+| --- | --- |
+| `pgext.cloud` | 每个服务 × PG 大版本一行；服务名称、引擎状态、清单完整性、适用范围、官方来源、资料采集时间与来源元数据 |
+| `pgext.cloud_fact` | 每个服务 × PG 大版本 × 原始扩展名称一行；规范名称、支持状态、版本原文、注释与补充信息 |
+
+同步时从源库 `extension` 与 `pkg` 生成 Pigsty 锚点，写入上述同两张表，不复制整张包表。打包基线以 `extension` 为准；锚点汇总 Pigsty/PGDG 仓库各操作系统的包可用性。直接包记录展示包版本；发行包中的子扩展不冒用主扩展版本，只标可用性，并在详情保留发行包版本与各平台证据。缺少兼容性证据时标为资料不足。
+
+对比页面默认列出打包基线与所有云服务正向支持事实的并集，列表不随所选 PG 版本或服务列变化。2026-09-26 初次集成包含 33 个云服务、PG14–18、584 个打包扩展，默认共 689 条（584 个打包扩展、78 个规范名称补充、27 个服务限定的原始名称条目）。不同服务的未归一同名条目不合并。单服务默认显示该服务列明支持的条目，可切换为打包基线、全部收录、待归一条目。
+
+只有完整清单中缺失的规范名称，才推导为不支持；部分或缺失资料显示未知，未提供对应 PG 引擎显示不可用。版本原文、厂商状态与注释保持原样；未知版本不借用目录版本。所有页面显示历史资料日期：首批云资料为 2026-08-24，Pigsty 包锚点另标导出时间，导入不会刷新云资料采集日期。
+
+页面复用下载栏目、扩展分类配色和站点浅色/暗色主题。侧栏仅列目录、对比和当前服务；折叠选择器与表头可进入全部服务页面。支持中文输入法、原位筛选、URL 前进后退、固定扩展名/Pigsty 列、横向滚动、移动端、来源弹窗及普通 GET 回退。CSV 导出当前筛选下的全部结果，包含服务、PG、状态、来源以及 `entry_key`/`raw_name`，不受分页限制。
+
+### 加载与更新云资料
+
+先同步 Universe，再应用 `ext` 迁移。以下命令仅更新 Django 配置的本地目标库；源库只读：
+
+```bash
+.venv/bin/python manage.py migrate ext
+
+# 固定同一份云资料与 Pigsty 包锚点
+.venv/bin/python tools/ext/sync_cloud.py --export data/ext/cloud.json.gz
+
+# 验证后导入；仓库已附带首批固定快照，可直接使用
+.venv/bin/python tools/ext/sync_cloud.py --input data/ext/cloud.json.gz --dry-run
+.venv/bin/python tools/ext/sync_cloud.py --input data/ext/cloud.json.gz
+```
+
+`--source-db` 默认 `host=/tmp port=5432 dbname=data user=postgres`；`--database` 可覆盖目标数据库名用于隔离验证。快照格式为 `pgweb-cloud-v1`，只有两张表，约 328 KiB。源读取使用只读一致性事务，目标按主键逐列比较、事务内仅更新变化行。重复加载同一快照为 no-op，目标独有事实保留并计数；规范名称缺失或原始名称冲突会阻断，要求先整理权威源。同步不改 Universe 或站内全文搜索索引。
+
+新服务通过新增 `cloud`/`cloud_fact` 数据自动进入页面、选择器及站点地图，无需写专用路由或模板。数据缓存最长 60 秒；导入会清除当前进程缓存，无需重启页面服务。新增代码和迁移仍须单独部署，本次本地集成不代表生产发布。
 
 ## 第一次加载
 
@@ -111,4 +150,6 @@ PGWeb 在自己的数据库中仅保存 `pgext.universe` 的副本；运行页�
 - 样式和交互：`media/css/extensions.css` 仅负责方格、筛选框、表格与分类颜色；`media/js/extensions.js` 提供即时筛选。常规排版和正文复用站点公共组件。
 - 分类顺序与中文名称在 `catalog.py`，配色仅维护于 `extensions.css`，颜色通过 `ext-tone-*` 类传递（CSP 禁止内联样式）。新增分类时同步两处定义。
 - 同步入口：`tools/ext/sync_catalog.py`；实现：`pgweb/ext/sync.py`；列清单：`pgweb/ext/columns.json`。
+- 云数据同步：`tools/ext/sync_cloud.py`、`pgweb/ext/cloud_sync.py`；渲染与查询：`pgweb/ext/cloud.py`、`cloud_views.py`；模板：`templates/ext/cloud*.html`；样式/交互：`media/css/ext-cloud.css`、`media/js/ext-cloud.js`。
 - 测试：`pgweb/ext/tests.py`，在独立测试库执行 `manage.py test pgweb.ext`。数据库用户需要建测试库的权限，或由管理员预建后使用 `--keepdb`。
+- 浏览器验收：`tools/ext/check_cloud_browser.py`（需 Playwright），覆盖默认矩阵、筛选/历史、中文输入、CSV、来源详情、无 JS、移动端及暗色主题；截图和报告位于 `tmp/ext-cloud-review/`。
