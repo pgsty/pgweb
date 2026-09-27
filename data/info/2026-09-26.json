@@ -1,0 +1,422 @@
+{
+  "date": "2026-09-26",
+  "origin": "PostgreSQL.org / Planet; primary-source searches and vendor feeds; HN; pgnexus #268–281; cutoff 2026-09-26T23:32:25Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "postgres_fdw 修补统计导入的越权读数",
+      "summary": "PostgreSQL 已提交外部表统计导入的权限修复。此前，ANALYZE 沿用执行者身份从远端获取统计信息；没有远端数据权限的表所有者，可能借高权限用户的分析操作，从高频值等统计字段看到样本数据。补丁改为先切换到外部表所有者身份，使导入与抽样路径的权限一致，并回补至 19 分支。这是尚未正式发布的版本中的修复；它处理的是统计数据泄露风险，与此前导入原子性及旧版本兼容性修补不同。",
+      "url": "https://github.com/postgres/postgres/commit/7d47e41238004b6b8bce076d4bb76d858257b58d",
+      "author": "Noah Misch、Etsuro Fujita",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "权限"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "外键快速路径补齐函数执行权限检查",
+      "summary": "PostgreSQL 外键快速检查路径新增函数执行权限校验。旧路径直接调用等值运算符函数，以及必要的隐式类型转换函数，却漏掉了常规查询路径已有的 EXECUTE 检查。新补丁在被引用表所有者身份下检查两类函数，并用普通表与分区表测试验证行为一致，已回补至 19 分支。此次新增检查针对函数权限，与近期关系访问权限和扩展权限钩子的修复不同；它使这条优化路径继续遵守原有的授权边界。",
+      "url": "https://github.com/postgres/postgres/commit/1a846a555afb0e5f2008f3aefe8f77acbe6ffba6",
+      "author": "Amit Langote",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "权限"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "交错回填提高 HOT 比例，也可能多写 WAL",
+      "summary": "大表回填不能只盯着 HOT 更新比例。Mikhail Shytsko 用百万行表对比顺序分批与交错分批：在预留页空间并逐批清理的实验中，交错方式减少了索引更新；但若每批之间触发检查点，反复修改分散页面会产生更多完整页镜像，WAL 反而从约 1 GB 增至 3 GB。文章还测试了局部交错的折中方案。结论来自特定实验条件，运维时应同时观察检查点、页空间和 WAL，不能把更高的 HOT 比例直接等同于更低写入成本。",
+      "url": "https://seedfa.st/blog/postgres-backfill-large-table",
+      "author": "Mikhail Shytsko",
+      "source": "Seedfast",
+      "source_date": "2026-09-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "WAL"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "复制槽的 WAL 上限为何不是硬磁盘配额",
+      "summary": "复制槽能保护尚未消费的 WAL，也可能让停滞的订阅端拖满主库磁盘。Christophe Pettus 解释了 max_slot_wal_keep_size：默认值 -1 不设上限，有限值则在检查点时约束复制槽需要保留的 WAL 范围，并非实时执行的磁盘配额。超过边界后，槽可能失去所需日志，逻辑复制需要重新初始化。文章建议结合写入峰值、磁盘余量以及槽的 WAL 状态安排监控；设置上限是在存储风险与复制可恢复性之间做取舍。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_slot_wal_keep_size/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "运维"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 26.9 增加增量刷新与去重落盘",
+      "summary": "ClickHouse 26.9 为刷新型物化视图加入 APPEND INCREMENTAL 模式，让适用的追加写入数据只处理新提交记录，不必每次重扫全部来源。面向 Iceberg 的游标状态与快照共同提交，以保持增量边界一致。另一项更新让 DISTINCT 的去重集合在达到阈值后写入临时磁盘，缓解大基数查询的内存压力，但合并过程仍需要内存。两项变化分别面向持续数据加工与大规模查询；采用前仍需核对来源是否符合追加写入约束及临时存储容量。",
+      "url": "https://clickhouse.com/blog/clickhouse-release-26-09",
+      "author": "ClickHouse 团队",
+      "source": "ClickHouse",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分析数据库",
+        "发布"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "containerd 修复拉取镜像阶段的资源耗尽漏洞",
+      "summary": "containerd 披露镜像拉取过程中的拒绝服务漏洞 CVE-2026-53493。恶意 OCI 描述符图可通过过深或过宽的引用结构，让处理过程消耗大量 CPU 与内存；风险发生在拉取镜像时，无须先启动容器。修复为描述符遍历增加边界与去重处理，已进入 2.4.1、2.3.6、2.2.9、2.0.13 和 1.7.36。运行镜像构建、扫描或集群节点的团队应核对实际运行时版本；暂未更新时，应限制从不可信来源拉取镜像。",
+      "url": "https://github.com/containerd/containerd/security/advisories/GHSA-pg57-6jwg-q645",
+      "author": "containerd 项目组",
+      "source": "containerd Security Advisories",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "容器"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "统计恢复修复域类型被误拒绝的问题",
+      "summary": "PostgreSQL 已修复范围、多范围及 tsvector 域类型的统计恢复校验，补丁回补至 18 分支。",
+      "url": "https://github.com/postgres/postgres/commit/142fd8ff13dee8ff6665615027386908e9768d43",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "统计信息"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pgAudit 19 测试版修复事件触发器内存问题",
+      "summary": "19beta4 适配 PostgreSQL 19，并修复事件触发器对象名称与类型的释放后使用问题。",
+      "url": "https://github.com/pgaudit/pgaudit/releases/tag/19beta4",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "审计"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PgDog 0.1.60 修复跨分片结果合并",
+      "summary": "修正跨分片 NULL、时间间隔、无限时间戳和 DISTINCT ON 等处理，减少分片查询的语义偏差。",
+      "url": "https://github.com/pgdogdev/pgdog/releases/tag/v0.1.60",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "正确性"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Grafana 修复插件解压与地图面板漏洞",
+      "summary": "13.2.2 等维护版本修复插件归档越界写入及 Geomap 存储型 XSS；安装插件和展示地图均需核对受影响版本。",
+      "url": "https://github.com/grafana/grafana/releases/tag/v13.2.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "可观测性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Tempo 3.1 候选版调整追踪数据存储格式",
+      "summary": "候选版默认写入 vParquet5，不再写入 vParquet3；旧数据仍可读取但不再压缩合并，升级须规划格式迁移。",
+      "url": "https://github.com/grafana/tempo/releases/tag/v3.1.0-rc.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "升级"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cilium 修复 HTTPRoute 外部鉴权异常放行",
+      "summary": "1.20.2 在 HTTPRoute 外部鉴权后端无效时拒绝请求，并修复 AWS ENI 仍在使用的地址前缀被释放的问题。",
+      "url": "https://github.com/cilium/cilium/releases/tag/v1.20.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "安全"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "runc 1.5.2 绕过内核缺陷导致的随机崩溃",
+      "summary": "新版本为 cgroup v2 设备规则处理加入规避措施，应对部分内核可能破坏用户空间内存并导致崩溃的问题。",
+      "url": "https://github.com/opencontainers/runc/releases/tag/v1.5.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "稳定性"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 分析四类躲避云端扫描的脚本攻击",
+      "summary": "攻击脚本按设备、访问来源和网络条件选择触发时机，隐藏的联盟营销欺诈与统计抑制行为可能逃过集中扫描。",
+      "url": "https://blog.cloudflare.com/client-side-security-finds-4-malicious-campaigns/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "浏览器"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_dump 修复 tar 恢复脚本的空限制标记",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/3c5d9d914fa5b8fb3f371dd97bdece032ca3598d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "dbmate 修复含 @ 的数据库密码脱敏不全",
+      "summary": "",
+      "url": "https://github.com/amacneil/dbmate/releases/tag/v2.36.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "安全"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "YugabyteDB 正式支持写入流水线，需手动启用",
+      "summary": "",
+      "url": "https://docs.yugabyte.com/stable/releases/ybdb-releases/v2026.1/#v2026.1.2.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分布式数据库",
+        "发布"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "rqlite 修复时钟变化导致的快照排序问题",
+      "summary": "",
+      "url": "https://github.com/rqlite/rqlite/releases/tag/v10.3.6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "备份",
+        "正确性"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "TiDB Cloud 可申请通过私有连接接入 IPv6",
+      "summary": "",
+      "url": "https://docs.pingcap.com/tidbcloud/tidb-cloud-release-notes/#september-22-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "云数据库",
+        "网络"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "NiFi 2.12 引入属性加密提供器框架",
+      "summary": "",
+      "url": "https://github.com/apache/nifi/releases/tag/rel/nifi-2.12.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据集成",
+        "加密"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Knowledge Catalog 正式导入 dbt 元数据与血缘",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/knowledge-catalog/docs/dbt-transfer",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据目录",
+        "dbt"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Athena ODBC 让 Power BI 接入项目级数据权限",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/connect-amazon-sagemaker-unified-studio-to-microsoft-power-bi-part-1-iam-identity-center-idc-based-domains/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据治理",
+        "分析"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Parameter Manager 支持 CRC32C 完整性校验",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/secret-manager/parameter-manager/docs/data-integrity",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "配置",
+        "数据完整性"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "ExternalDNS 0.23 升级需指定注册表命名空间",
+      "summary": "",
+      "url": "https://github.com/kubernetes-sigs/external-dns/releases/tag/v0.23.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "升级"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "cert-manager 修复 applyset 标签被误删",
+      "summary": "",
+      "url": "https://github.com/cert-manager/cert-manager/releases/tag/v1.20.4",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "证书",
+        "Kubernetes"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "GCP 预览通过 MCP 管理 API 密钥限制",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/api-keys/docs/reference/mcp",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MCP",
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}
