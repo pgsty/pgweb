@@ -1,0 +1,418 @@
+{
+  "date": "2026-09-27",
+  "origin": "PGSQL.CC independent research; cutoff 2026-09-28T07:30:59+08:00; PostgreSQL.org, Planet, pgnexus #269–282, primary releases and engineering articles",
+  "items": [
+    {
+      "tier": 1,
+      "title": "并发 REPACK 的代价包括旧版本滞留与切换等待",
+      "summary": "PostgreSQL 19 beta 4 的并发表重写可以让业务继续写入，但运行成本并不只在目标表。Radim Marek 的实验显示，逻辑复制槽会延长旧行版本的保留，持续更新还会积累解码所需的内存；最后切换文件时仍须取得排他锁，长事务可能拖住收尾。重写也不保证旧快照继续看到原有行。安排在线整理时，应同时观察复制槽、内存和锁等待，并在接近真实写入强度的环境验证，而不能把“并发”理解为没有停顿或额外空间成本。",
+      "url": "https://boringsql.com/posts/repack-concurrently-costs/",
+      "author": "Radim Marek",
+      "source": "BoringSQL",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "运维",
+        "并发"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "备库冲突延迟是共享预算，并非每条查询的超时",
+      "summary": "备库查询为何刚开始就因恢复冲突被取消？Christophe Pettus 解释，两项 max_standby 延迟参数限制的是 WAL 回放能够等待多久，计时与 WAL 接收有关，并不会为每条查询重新发放完整额度。前面的冲突或已有回放积压可能先耗尽预算，后续查询因而很快被取消。调大参数会容许更大的复制延迟；启用反馈也只能避免部分清理冲突，无法消除锁冲突。运维时应结合冲突统计和回放延迟判断原因，再权衡只读查询与备库追赶速度。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_standby_archive_delay-and-max_standby_streaming_delay/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-09-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "参数",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "多租户索引实验揭示 RLS 通用计划偏差",
+      "summary": "面向租户的列表查询通常同时按租户过滤、按日期排序。Chris van Eijk 用 PostgreSQL 17.10、两百万行和规模不均的千个租户测试，发现租户列在前的复合索引能兼顾过滤与排序。更隐蔽的问题来自通过会话设置取得租户身份的 RLS：无参数预备语句可能复用受首个租户影响的计划，强制自定义计划也不能替它创造参数。保留 RLS 作为权限边界，同时显式传入租户查询参数，有助于规划器适应大小租户；效果仍需用实际分布验证。",
+      "url": "https://now-next.nl/en/insights/multi-tenant-postgresql-indexes-tenant-id-first/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "多租户",
+        "RLS"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "按租户计数器让发票编号随事务一同回滚",
+      "summary": "序列适合产生唯一标识，却不能保证事务回滚后业务编号没有空洞。Chris van Eijk 比较了多租户发票编号方案：为每个租户保留一行计数器，在插入发票的同一事务内更新并返回编号，失败时两者一起回滚。行锁只串行化同一租户的取号，不同租户仍可并行；尽量到事务末尾再分配编号，可缩短持锁时间。实验也说明，直接取最大值再加一存在并发竞争，而可串行化事务需要承受重试。选择方案时要把连续编号与普通技术主键的需求分开。",
+      "url": "https://now-next.nl/en/insights/invoice-numbers-per-tenant-postgresql-without-gaps/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务",
+        "多租户",
+        "并发"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pgBackRest 2.59.2 适配 PG19 beta4 并修复备份缺陷",
+      "summary": "pgBackRest 2.59.2 增加对 PostgreSQL 19 beta 4 的支持，并修复备份文件被截断为空时的块映射处理、S3 对象版本列表翻页及 Azure SAS 请求等问题。此次适配有测试版边界：beta 4 修改了控制文件和 WAL 格式，旧测试版集群及其 WAL 不再受支持，需按新测试版重新准备环境。使用块增量备份或对象存储仓库的团队，应结合修复清单验证备份链与恢复流程，避免把工具能够启动等同于旧测试数据仍然兼容。",
+      "url": "https://pgbackrest.org/news.html#release-2-59-2",
+      "author": "pgBackRest 项目组",
+      "source": "pgBackRest",
+      "source_date": "2026-09-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复",
+        "发布"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "AlloyDB 的 HNSW 列式缓存正式可用",
+      "summary": "Google Cloud 将 AlloyDB 的 HNSW 索引列式缓存转为正式可用：向量索引可加入读取优化的内存表示，让使用该索引的查询自动受益，适用于运行 PostgreSQL 17 及以上的集群。数据更新使部分缓存失效时，引擎会混合读取有效缓存与磁盘数据，保持结果正确；执行计划可显示两类读取的比例。缓存刷新还可能临时占用相当于索引两倍的内存，因此启用前需要预留容量，并用自身读写比例评估收益。ScaNN 的同类加速仍处于预览阶段。",
+      "url": "https://docs.cloud.google.com/alloydb/docs/ai/accelerate-with-ce",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "向量检索",
+        "索引",
+        "云数据库"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修复检查约束计数溢出问题",
+      "summary": "已提交并回补至 PG14：拒绝超过 32767 个检查约束，避免目录计数变负后表无法正常删除。",
+      "url": "https://github.com/postgres/postgres/commit/5e59290402518db5b2876ecd627c7d79f73eaa44",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "修复"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "API hub 预览接入 AWS 与 Azure 网关元数据",
+      "summary": "内置插件默认每 6 小时同步 API 目录，也可由用户部署云函数推送变更，统一跟踪跨云接口。",
+      "url": "https://docs.cloud.google.com/apigee/docs/apihub/release-notes#September_23_2026",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "API",
+        "多云"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "云端数据迁移新增存储类别与通配过滤",
+      "summary": "Storage Transfer 可按 S3 存储类别选对象，也支持以通配模式筛选 S3 和 Azure Blob 来源。",
+      "url": "https://docs.cloud.google.com/storage-transfer/docs/release-notes#September_21_2026",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "对象存储",
+        "迁移"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Ops Agent 可改用 Telemetry API 导出遥测",
+      "summary": "从 2.71.0 起可显式配置统一导出指标、日志和追踪，使用基于 OpenTelemetry 的 Telemetry API。",
+      "url": "https://docs.cloud.google.com/monitoring/agent/ops-agent/use-telemetry-api",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "NetApp Flex File 停止新建并给出迁移期限",
+      "summary": "已有存储池继续受支持至 2027 年 6 月 15 日，用户需将数据迁移到 Flex Unified 服务级别。",
+      "url": "https://docs.cloud.google.com/netapp/volumes/docs/release-notes#September_15_2026",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储",
+        "迁移"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "OpenVPN 2.6.23 修复 TLS 与 Windows 安全问题",
+      "summary": "修复可靠传输超时失效、重复释放及 Windows 命令引用等缺陷，涉及连接资源消耗与本地服务安全。",
+      "url": "https://github.com/OpenVPN/openvpn/releases/tag/v2.6.23",
+      "author": "",
+      "source": "OpenVPN",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "网络"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Vault 2.1.1 修复命名空间移动与吊销列表问题",
+      "summary": "修正带前导斜杠的移动目标可能落入根命名空间，以及企业版本地吊销证书转存后统一 CRL 未重建的问题。",
+      "url": "https://github.com/hashicorp/vault/releases/tag/v2.1.1",
+      "author": "",
+      "source": "HashiCorp",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "密钥管理",
+        "修复"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "OpenTofu 1.13 候选版移除 WinRM provisioner",
+      "summary": "首个 RC 同时试验可复用函数与类型；依赖 WinRM 的配置需调整，1.13 也是最后提供官方 32 位构建的系列。",
+      "url": "https://github.com/opentofu/opentofu/releases/tag/v1.13.0-rc1",
+      "author": "",
+      "source": "OpenTofu",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "基础设施即代码",
+        "兼容性"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 前须为主备装齐目标版扩展库",
+      "summary": "",
+      "url": "https://dbadevops.com/postgresql-pg-upgrade/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "扩展"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 预览在聚合函数内使用 WHERE 过滤",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/release-notes#September_14_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQL"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Bigtable 控制台管理 Protobuf 模式正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigtable/docs/release-notes#September_22_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "模式管理"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Knowledge Catalog 支持数据产品默认权限",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/knowledge-catalog/docs/release-notes#September_24_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据治理"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Looker 增加长轮询并发保护，避免查询拖垮服务",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/looker/docs/release-notes#September_24_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "可用性"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "C4 标准型机密虚拟机的 Intel TDX 支持转正",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/confidential-computing/confidential-vm/docs/release-notes#September_23_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "机密计算"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "区域应用负载均衡正式支持路由与流量插件",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/service-extensions/docs/release-notes#September_23_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Filestore 区域型存储正式支持 100 GiB 起步",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/filestore/docs/release-notes#September_16_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Terraform 可管理可观测性存储桶与数据集链接",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/trace/docs/release-notes#September_22_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "证书资源可在创建时附加标签，功能进入预览",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/certificate-manager/docs/release-notes#September_24_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "证书",
+        "资源管理"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Developer Connect 需单独启用密钥管理 API",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/developer-connect/docs/release-notes#September_22_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Telegraf 1.40.1 修复 AMQP 输出重连配置",
+      "summary": "",
+      "url": "https://github.com/influxdata/telegraf/releases/tag/v1.40.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "监控",
+        "修复"
+      ],
+      "position": 26
+    }
+  ]
+}
