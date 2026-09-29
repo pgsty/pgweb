@@ -1,0 +1,385 @@
+{
+  "date": "2026-09-28",
+  "origin": "PGSQL.CC 主动采编；截稿 2026-09-29 07:32:21 Asia/Shanghai；覆盖 2026-09-15 至截稿；PostgreSQL.org、Planet、pgnexus #270–283、项目原文、RSS、搜索与 HN 线索",
+  "items": [
+    {
+      "tier": 1,
+      "title": "并发 REPACK 修复 TOAST 重写导致的更新丢失",
+      "summary": "PostgreSQL 已提交并回补至 19 分支的一项修复，消除了并发 REPACK 中静默丢失大字段更新的风险。此前解码工作进程会先记住 TOAST 表的文件编号，主进程却要等复制数据时才锁表；若期间 VACUUM FULL 重写了 TOAST 表，后续更新便可能被当作其他关系的变更而跳过。补丁将锁定提前到工作进程启动前。这是继新增列默认值问题之后的另一条数据完整性修复，测试 PG19 并发重整时应关注包含该提交的后续构建。",
+      "url": "https://github.com/postgres/postgres/commit/1813f951cad59ea7f86063831d0222c429989c91",
+      "author": "Shihao Zhong",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "数据完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制修复并发索引 DDL 导致的漏更新",
+      "summary": "PostgreSQL 逻辑复制应用端的一处竞态已修复，提交说明标明回补至引入问题的 16 分支。应用进程按索引查找目标行时，需要区分副本标识或主键索引与普通索引；此前两次检查之间若发生 DROP INDEX 或 REINDEX，索引身份变化可能让查找失败，并把本应应用的更新当成 update_missing 冲突跳过。补丁将身份判定与索引 OID 一并保存在关系映射中，避免使用不一致的判断。订阅端执行索引维护的团队应关注后续维护版。",
+      "url": "https://github.com/postgres/postgres/commit/ad36e3608c8cb6f0848737ec81e548d4d3a0af3c",
+      "author": "Mikhail Nikalayeu、Vignesh C",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "数据完整性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "并行自动清理修复共享内存不足时的崩溃",
+      "summary": "PostgreSQL 已合入并行自动清理的一项崩溃修复，并回补至 19 分支。当系统无法再创建动态共享内存段时，并行框架允许退回零工作进程模式，但相应的内存段指针为空。此前自动清理仍在该指针上注册分离回调，导致工作进程崩溃。补丁仅在实际存在并行工作进程时设置共享成本参数和回调，让资源不足时的回退路径能够正常运行。对于开启该功能的 PG19 测试环境，共享内存容量压力不应再触发这一空指针路径，验证时需使用包含修复的后续构建。",
+      "url": "https://github.com/postgres/postgres/commit/cc053b6e127763e4168f18585ca90a67600c270e",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "自动清理",
+        "稳定性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PGDG 仓库 RPM 修正系统小版本跟随逻辑",
+      "summary": "PGDG 修复了 RHEL、Rocky Linux 和 AlmaLinux 9、10 的仓库配置包可能永久停留在旧系统小版本的问题。此前仓库 URL 会固化在某个小版本；新配置改用 DNF 的主、小版本变量，随系统升级自动切换。公告同时指出，9.6 自带的 DNF 不识别这些变量，42.0-69 会出现 404，42.0-70 增加了兼容处理。运维人员应更新仓库包，并核对保留的本地配置及 rpmnew 文件，避免包来源与系统版本脱节。",
+      "url": "https://yum.postgresql.org/news/repo-rpms-follow-os-minor-version/",
+      "author": "Devrim Gündüz",
+      "source": "PostgreSQL YUM Repository",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "软件仓库",
+        "运维"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "DuckDB 1.5.6 修复错误结果与事务回滚缺陷",
+      "summary": "DuckDB 发布 1.5.6，集中回补多项影响查询正确性和恢复行为的修复。包括超长整数字面量转换为 HUGEINT 时被静默截断、共享连接子树的 UNION ALL 返回错误结果，以及隐式包装的多语句执行失败后未在所有路径自动回滚。窗口 Top-N 消除、含空值的排序表达式和 Parquet 时间类型读写也得到修正，WAL 恢复则调整了覆盖重命名前的文件句柄关闭顺序。使用复杂分析 SQL 或多语句批处理的团队，应以回归样例验证更新。",
+      "url": "https://github.com/duckdb/duckdb/releases/tag/v1.5.6",
+      "author": "DuckDB 维护团队",
+      "source": "DuckDB GitHub Releases",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "发布",
+        "查询正确性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "MySQL 升级后的慢查询需区分计划回退与冷缓存",
+      "summary": "AWS 发布 Aurora 与 RDS MySQL 升级后性能回退的排查指南，强调应用和数据结构未变并不意味着执行计划保持不变。文章从统计信息、优化器成本模型、连接与排序策略、字符排序规则及参数组差异逐层定位，并用执行计划和实际运行指标验证原因。另一个容易混淆的因素是升级后的冷缓冲池：延迟升高可能来自数据尚未预热，而非优化器选错路径。文中建议保留升级前基线，再按具体机制调整统计采样或查询策略，避免把局部回退简单归因于整个新版本。",
+      "url": "https://aws.amazon.com/blogs/database/resolving-query-plan-regressions-after-a-mysql-engine-upgrade/",
+      "author": "CHANDANA DA、Sravan Kumar Gogana",
+      "source": "AWS Database Blog",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "性能",
+        "升级"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "逻辑复制初始同步只在表之间并行",
+      "summary": "增大同步进程数不能加速单张大表；迁移还需预算主库的复制槽、WAL sender 与长快照成本。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_sync_workers_per_subscription/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-09-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pgEdge Starfleet 提供写时复制分支与混合部署",
+      "summary": "平台保留标准 Postgres 存储层，结合 IP 允许名单、只读会话防护和多区域部署选项。",
+      "url": "https://www.pgedge.com/press-releases/pgedge-announces-pgedge-starfleet-a-new-postgres-cloud-platform-to-bridge-the-ai-prototype-to-production-chasm",
+      "author": "pgEdge",
+      "source": "pgEdge",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "VMware DSM 9.1.1 增加跨集群高可用",
+      "summary": "新增 PostgreSQL 18 支持、按需备份 API 及租户网络隔离，数据库生命周期纳入 VCF 服务管理。",
+      "url": "https://blogs.vmware.com/cloud-foundation/2026/09/15/announcing-vmware-data-services-manager-9-1-1/",
+      "author": "Sue Ulintz",
+      "source": "VMware",
+      "source_date": "2026-09-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "运维"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "SereneDB 发布首个生产就绪的搜索分析版本",
+      "summary": "Krummelanke 以 Apache 2.0 开源，组合全文检索、分析和对象存储；多节点计算仍在后续路线图中。",
+      "url": "https://serenedb.com/blog/krummelanke-release",
+      "author": "SereneDB 团队",
+      "source": "SereneDB",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "开源",
+        "搜索"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "OSM 20 长期支持版扩充云资源编排",
+      "summary": "新增 OpenNebula 连接器，完善 OpenStack 高可用网络与 Kubernetes 集群选择，并完成 Python 3.13 迁移。",
+      "url": "https://osm.etsi.org/news/etsi-open-source-mano-announces-osm-release-twenty/",
+      "author": "ETSI OSM",
+      "source": "ETSI",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编排",
+        "发布"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "NATS 候选版修复压缩竞态造成的消息跳过",
+      "summary": "2.15.1-RC.1 同时修补权限刷新窗口中的消息放行问题；当前仍是候选版，应先验证再采用。",
+      "url": "https://github.com/nats-io/nats-server/releases/tag/v2.15.1-RC.1",
+      "author": "NATS 维护团队",
+      "source": "NATS GitHub Releases",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "消息队列",
+        "可靠性"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Workers 试验通过 Emscripten 运行 Tokio",
+      "summary": "wasm-bindgen 新目标打通 Rust 与 Emscripten 绑定层，支持实验性套接字和 Tokio 场景，尚未正式可用。",
+      "url": "https://blog.cloudflare.com/rust-workers-emscripten-target/",
+      "author": "Cloudflare",
+      "source": "Cloudflare",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust",
+        "WebAssembly"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Vinext 1.0 补齐双路由与页面缓存生命周期",
+      "summary": "支持 Next.js 两种路由、预渲染和按需失效，保留 OpenTelemetry 兼容；Cache Components 支持仍有限。",
+      "url": "https://blog.cloudflare.com/vinext-nextjs-on-vite/",
+      "author": "Cloudflare",
+      "source": "Cloudflare",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Web",
+        "发布"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PL/Haskell 6.0 新增 PostgreSQL 范围类型支持",
+      "summary": "",
+      "url": "https://github.com/ed-o-saurus/PLHaskell/releases/tag/6.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PGDG 仓库首页可按系统和版本生成安装命令",
+      "summary": "",
+      "url": "https://people.planetpostgresql.org/devrim/index.php?/archives/130-Using-the-PGDG-RPM-repositories-are-now-way-easier!.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Spanner 自动参数化查询常量以复用执行计划",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/spanner/docs/release-notes#September_18_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-18",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Spanner 事务消息队列正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/spanner/docs/release-notes#September_17_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 管道 SQL 单元测试正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/release-notes#September_17_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Cloud Run 预览无需配置 DNS 的自定义子域名",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/run/docs/release-notes#September_28_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Cloud Armor 预览自动更新签名的托管规则集",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/armor/docs/release-notes#September_17_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "动态网卡可与虚拟机其他网卡共用同一 VPC",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/vpc/docs/release-notes#September_16_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "BEACON 开放可用 SQL 查询的真实网页性能数据",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/how-fast-is-the-web/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "EmDash 1.0 推出分散式插件注册机制",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/emdash-cms-plugin-registry/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Forge 开源生成流水线可在 CI 验证 API 改动",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/forge-open-source-generation-pipeline/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 新 CLI 公测默认输出 JSON",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/cloudflare-cf-cli-launch/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}
