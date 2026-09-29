@@ -1,0 +1,5 @@
+{% extends "wiki/encyclopedia_index.html" %}
+{% block wiki_content %}
+{{ block.super }}
+<section class="wiki-section"><h2>关联百科</h2><p>可查阅 <a href="/wiki/oid/">对象标识符类型</a> 了解对象查找，查阅 <a href="/wiki/indexam/">Index AM</a> 了解查询能力，或查阅 <a href="/wiki/catalog/pg_type/?v={{ major }}">pg_type</a> 了解系统目录字段。每个类型页面关联同一构建中的类型转换、运算符和操作符类记录。</p><p class="topic-footnote">核心源码清单覆盖 PostgreSQL 10–20；更早版本的手册仍可在文档栏目查阅。系统目录事实来自源码初始化记录，不是运行中服务器的测量结果。</p></section>
+{% endblock %}

@@ -1,0 +1,244 @@
+(abstime,abstime), time interval	(abstime,abstime)，时间区间
+(block, offset), physical location of tuple	(block, offset)，元组的物理位置
+1 day	1 天
+1 microsecond	1 微秒
+1 or 4 bytes plus the actual binary string	1 或 4 字节，加上实际二进制串
+15 decimal digits precision	15 位十进制有效数字
+16+16n bytes	16+16n 字节
+294276 AD	公元 294276 年
+4713 BC	公元前 4713 年
+5874897 AD	公元 5874897 年
+6 decimal digits precision	6 位十进制有效数字
+7 or 19 bytes	7 或 19 字节
+A trigger function is declared to return trigger.	触发器函数声明返回 trigger 类型。
+An event trigger function is declared to return event_trigger.	事件触发器函数声明返回 event_trigger 类型。
+BRIN bloom summary	BRIN Bloom 摘要
+BRIN minmax-multi summary	BRIN minmax-multi 摘要
+Base type	基础类型
+Built-in p type table_am_handler.	内置伪类型 table_am_handler。
+Closed path (similar to polygon)	闭合路径（类似多边形）
+GiST index internal text representation for text search	全文检索的 GiST 索引内部文本表示
+IPv4 and IPv6 networks	IPv4 和 IPv6 网络
+IPv4 or IPv6 host address	IPv4 或 IPv6 主机地址
+IPv4 or IPv6 network address	IPv4 或 IPv6 网络地址
+JSON path	JSON 路径
+MAC (Media Access Control) address	MAC（媒体访问控制）地址
+MAC (Media Access Control) address (EUI-64 format)	MAC（媒体访问控制）地址（EUI-64 格式）
+MAC addresses (EUI-64 format)	MAC 地址（EUI-64 格式）
+NAMEDATALEN (build constant)	NAMEDATALEN（构建常量）
+Null-terminated C string	以空字符结尾的 C 字符串
+OID Types topic	OID 类型百科
+Open path	开放路径
+PostgreSQL Log Sequence Number	PostgreSQL 日志序列号
+SIZEOF_POINTER (build constant)	SIZEOF_POINTER（构建常量）
+SQL convenience; no pg_type row	SQL 便捷写法；没有对应的 pg_type 行
+User-defined type family; not a finite list of user objects	用户定义类型族；不代表用户对象的有限清单
+Variable length (varlena)	变长（varlena）
+XML data	XML 数据
+absolute, limited-range date and time (Unix system time)	有限范围的绝对日期和时间（Unix 系统时间）
+access control list	访问控制列表
+array of int2, used in system tables	用于系统表的 int2 数组
+array of oids, used in system tables	用于系统表的 OID 数组
+autoincrementing eight-byte integer	自增八字节整数
+autoincrementing four-byte integer	自增四字节整数
+autoincrementing two-byte integer	自增两字节整数
+binary JSON data, decomposed	分解后的二进制 JSON 数据
+binary data ( “ byte array ” )	二进制数据（“字节数组”）
+calendar date (year, month, day)	日历日期（年、月、日）
+circle on a plane	平面上的圆
+closed geometric path on a plane	平面上的闭合几何路径
+command identifier type, sequence in transaction id	命令标识符类型，表示事务内的序号
+date and time (no time zone conversion)	日期和时间（不进行时区转换）
+date and time (no time zone)	日期和时间（不含时区）
+date and time, including time zone	日期和时间，包含时区
+date and time, including time zone conversion	日期和时间，包含时区转换
+double precision floating-point number (8 bytes)	双精度浮点数（8 字节）
+exact numeric of selectable precision	可指定精度的精确数值
+fixed-length bit string	定长位串
+fixed-length character string	定长字符串
+full transaction id	完整事务 ID
+geometric path on a plane	平面上的几何路径
+geometric point on a plane	平面上的几何点
+infinite line on a plane	平面上的无限直线
+line segment on a plane	平面上的线段
+logical Boolean (true/false)	逻辑布尔值（真/假）
+multirange of bigints	大整数多范围
+multirange of dates	日期多范围
+multirange of integers	整数多范围
+multirange of numerics	数值多范围
+multirange of timestamps with time zone	带时区时间戳多范围
+multirange of timestamps without time zone	不带时区时间戳多范围
+multivariate MCV list	多变量最常见值列表
+multivariate dependencies	多变量依赖关系
+multivariate ndistinct coefficients	多变量不同值数量系数
+object identifier(oid8), 8 bytes	对象标识符（oid8），8 字节
+pseudo-type representing BRIN bloom summary	表示 BRIN Bloom 摘要的伪类型
+pseudo-type representing BRIN minmax-multi summary	表示 BRIN minmax-multi 摘要的伪类型
+range of bigints	大整数范围
+range of dates	日期范围
+range of integers	整数范围
+range of numerics	数值范围
+range of timestamps with time zone	带时区时间戳范围
+range of timestamps without time zone	不带时区时间戳范围
+rectangular box on a plane	平面上的矩形框
+reference to cursor (portal name)	游标引用（入口名称）
+relative, limited-range time interval (Unix delta time)	有限范围的相对时间间隔（Unix 时间差）
+signed eight-byte integer	有符号八字节整数
+signed four-byte integer	有符号四字节整数
+signed two-byte integer	有符号两字节整数
+single precision floating-point number (4 bytes)	单精度浮点数（4 字节）
+storage manager	存储管理器
+string representing an internal node tree	表示内部节点树的字符串
+text search document	全文检索文档
+text search query	全文检索查询
+textual JSON data	文本形式的 JSON 数据
+time of day (no time zone)	一天中的时间（不含时区）
+time of day, including time zone	一天中的时间，包含时区
+time span	时间跨度
+transaction id	事务 ID
+tuple physical location, format '(block,offset)'	元组的物理位置，格式为 '(block,offset)'
+universally unique identifier	通用唯一标识符
+up to 131072 digits before the decimal point; up to 16383 digits after the decimal point	小数点前最多 131072 位，小数点后最多 16383 位
+user-level transaction ID snapshot	用户级事务 ID 快照
+user-level transaction ID snapshot (deprecated; see pg_snapshot )	用户级事务 ID 快照（已弃用；参见 pg_snapshot）
+variable-length bit string	变长位串
+variable-length character string	变长字符串
+NOT tsquery	对 tsquery 取反
+Right operand	右操作数
+Subtract timestamps (converting 24-hour intervals into days, similarly to justify_hours() )	时间戳相减（将 24 小时间隔转换为天，类似 justify_hours()）
+add (translate path)	相加（平移路径）
+add point to box (translate)	矩形框与点相加（平移）
+add points (translate)	点相加（平移）
+add/update ACL item	添加或更新 ACL 项
+all keys exist	所有键均存在
+any key exists	任一键存在
+append element onto end of array	在数组末尾追加元素
+bitwise and	按位与
+bitwise exclusive or	按位异或
+bitwise not	按位取反
+bitwise or	按位或
+bitwise shift left	按位左移
+bitwise shift right	按位右移
+box intersection	矩形框的交集
+center of	中心点
+closest point to A on B	B 上距离 A 最近的点
+convert date and time to timestamp	将日期和时间转换为时间戳
+convert date and time with time zone to timestamp with time zone	将日期和带时区时间转换为带时区时间戳
+convert time and date to timestamp	将时间和日期转换为时间戳
+convert time with time zone and date to timestamp with time zone	将带时区时间和日期转换为带时区时间戳
+convert to tinterval	转换为 tinterval
+cube root	立方根
+delete array element	删除数组元素
+delete object field	删除对象字段
+delete object fields	删除对象字段
+delete path	删除路径
+distance between	两者之间的距离
+distance between endpoints	端点之间的距离
+divide (rotate/scale path)	相除（旋转或缩放路径）
+divide box by point (scale)	矩形框除以点（缩放）
+divide points (scale/rotate)	点相除（缩放或旋转）
+does not match LIKE expression	不匹配 LIKE 表达式
+does not match LIKE expression, case-insensitive	不匹配 LIKE 表达式，不区分大小写
+does not match regular expression, case-insensitive	不匹配正则表达式，不区分大小写
+does not match regular expression, case-sensitive	不匹配正则表达式，区分大小写
+equal by area	面积相等
+equal by length	长度相等
+get json array element	获取 json 数组元素
+get json array element as text	获取 json 数组元素并返回文本
+get json object field	获取 json 对象字段
+get json object field as text	获取 json 对象字段并返回文本
+get jsonb array element	获取 jsonb 数组元素
+get jsonb array element as text	获取 jsonb 数组元素并返回文本
+get jsonb object field	获取 jsonb 对象字段
+get jsonb object field as text	获取 jsonb 对象字段并返回文本
+get value from json as text with path elements	按路径元素从 json 提取值并返回文本
+get value from json with path elements	按路径元素从 json 提取值
+get value from jsonb as text with path elements	按路径元素从 jsonb 提取值并返回文本
+get value from jsonb with path elements	按路径元素从 jsonb 提取值
+greater than by area	面积大于
+greater than by length	长度大于
+greater than or equal by area	面积大于或等于
+greater than or equal by length	长度大于或等于
+horizontally aligned	水平对齐
+intersection point	交点
+is above	位于上方
+is above (allows touching)	位于上方（允许接触）
+is adjacent to	相邻
+is below	位于下方
+is below (allows touching)	位于下方（允许接触）
+is left of	位于左侧
+is right of	位于右侧
+is subnet	是子网
+is subnet or equal	是子网或相等
+is supernet	是超网
+is supernet or equal	是超网或相等
+jsonpath exists	jsonpath 存在性检查
+jsonpath match	jsonpath 匹配
+key exists	键存在
+less than by area	面积小于
+less than by length	长度小于
+less than or equal by area	面积小于或等于
+less than or equal by length	长度小于或等于
+lseg on line	线段位于直线上
+matches LIKE expression	匹配 LIKE 表达式
+matches LIKE expression, case-insensitive	匹配 LIKE 表达式，不区分大小写
+matches regular expression, case-insensitive	匹配正则表达式，不区分大小写
+matches regular expression, case-sensitive	匹配正则表达式，区分大小写
+multiply (rotate/scale path)	相乘（旋转或缩放路径）
+multiply box by point (scale)	矩形框乘以点（缩放）
+multiply points (scale/rotate)	点相乘（缩放或旋转）
+multirange intersect	多范围求交集
+multirange minus	多范围求差集
+multirange union	多范围求并集
+not equal by area	面积不等
+not equal by length	长度不等
+not identical	不完全相同
+overlaps (is subnet or supernet)	重叠（是子网或超网）
+overlaps or is above	重叠或位于上方
+overlaps or is below	重叠或位于下方
+overlaps or is left of	重叠或位于左侧
+overlaps or is right of	重叠或位于右侧
+point inside box	点位于矩形框内
+point on line	点位于直线上
+point within closed path, or point on open path	点位于闭合路径内，或位于开放路径上
+prepend element onto front of array	在数组开头插入元素
+range difference	范围求差集
+range intersection	范围求交集
+range union	范围求并集
+remove ACL item	删除 ACL 项
+same as	相同
+start of interval	区间起点
+starts with	以前缀开头
+subtract (translate path)	相减（平移路径）
+subtract point from box (translate)	矩形框减去点（平移）
+subtract points (translate)	点相减（平移）
+sum of path segment lengths	路径线段长度之和
+text search match	全文检索匹配
+unary plus	一元正号
+vertically aligned	垂直对齐
+Class input pair	操作符类输入类型对
+Family member	家族成员
+Right type	右侧类型
+Same as input type (catalog zero)	与输入类型相同（目录值为零）
+None listed in this signature	此语法签名未列出
+psql command-line options and complete manual	psql 命令行选项及完整手册
+Generated from this release’s Snowball language list and SQL template.	根据此版本的 Snowball 语言列表和 SQL 模板生成。
+Word, all ASCII	单词，全部为 ASCII 字符
+default parser	默认解析器
+default word parser	默认单词解析器
+simple dictionary: just lower case and check for stopword	simple 词典：仅转换为小写并检查停用词
+snowball stemmer	Snowball 词干提取器
+synonym dictionary: replace word by its synonym	synonym 词典：用同义词替换单词
+thesaurus dictionary: phrase by phrase substitution	thesaurus 词典：逐短语替换
+Bundled procedural-language variant	随源码提供的过程语言变体
+Native function language	原生函数语言
+SQL-language functions	SQL 语言函数
+This extension is shipped with the source. Its presence does not establish that the language or external runtime is installed.	此扩展随源码提供；收录它并不表示已安装该语言或外部运行时。
+built-in functions	内置函数
+dynamically-loaded C functions	动态加载的 C 函数
+All libpq environment variables	所有 libpq 环境变量
+Connection service file	连接服务文件
+None declared in the option table	选项表中未声明
+Password file	口令文件
+Source-only declaration	仅源码声明
+Right operand	右操作数

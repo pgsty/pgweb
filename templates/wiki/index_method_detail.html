@@ -1,0 +1,32 @@
+{% extends "wiki/reference_base.html" %}
+{% load pgfilters %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<article class="wiki-topic wiki-entry wiki-tone-cat" data-pg-doc-version="{{ major }}">
+  <p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="{{ root }}?v={{ major }}">{{ topic.name }}</a> / {{ item.name }}</p>
+  <header class="wiki-entry__head"><h1>{{ item.name }}</h1><p class="wiki-entry__name">{{ item.category }}</p><p class="wiki-lead">{{ item.summary }}</p></header>
+  {% include "wiki/topic_versions.html" %}
+  {% include "wiki/specialized_localization.html" %}
+  {% if snapshot %}
+  <nav class="topic-jump" aria-label="本页目录"><a href="#capabilities">能力</a><a href="#definition">查询与限制</a><a href="#options">存储参数</a><a href="#comparison">比较版本</a><a href="#sources">来源</a></nav>
+  <section id="capabilities" class="wiki-section"><h2>能力 · PostgreSQL {{ version.label }}</h2><p>能力结论来自对应版本的文档。有条件支持取决于操作符类、索引类型或查询，不能视为普遍保证。</p>
+    <div class="wiki-table"><div class="wiki-table__scroll"><table class="topic-table"><thead><tr><th scope="col">能力</th><th scope="col">支持状态</th><th scope="col">条件与证据</th></tr></thead><tbody>
+    {% for cap in snapshot.capabilities %}<tr id="cap-{{ cap.key }}"><th scope="row">{{ cap.label }}</th><td data-state="{{ cap.state }}">{{ cap.value }}</td><td><p>{{ cap.note }}</p>{% if cap.evidence %}<details><summary>同版本英文证据</summary>{% for evidence in cap.evidence %}<blockquote lang="en"><p>{{ evidence.quote }}</p></blockquote><p><a href="{{ evidence.url|wiki_url }}">{{ evidence.label }}</a></p>{% endfor %}</details>{% else %}<p class="topic-footnote">现有来源不足以确定此项能力，不能据此判断为“不支持”。</p>{% endif %}</td></tr>{% endfor %}
+    </tbody></table></div></div>
+  </section>
+  <section id="definition" class="wiki-section"><h2>查询、运算符与限制</h2><pre><code>{{ snapshot.signature }}</code></pre><p class="topic-footnote">这是语法模板；使用时请替换表、列占位符，并选择兼容的操作符类。</p>
+    {% for section in snapshot.sections %}{% for block in section.blocks %}{% for paragraph in block.paragraphs %}<p>{{ paragraph }}</p>{% endfor %}{% if block.code %}<pre><code>{{ block.code }}</code></pre>{% endif %}{% endfor %}{% endfor %}
+  </section>
+  <section id="options" class="wiki-section"><h2>存储参数</h2><p>通过 <code>CREATE INDEX … WITH</code> 或 <code>ALTER INDEX … SET</code> 设置索引参数。默认值和实际行为取决于访问方法及所选 PostgreSQL 版本。</p>
+    {% for option in snapshot.storage_options %}<h3><a href="{{ option.url|wiki_url }}"><code>{{ option.name }}</code></a></h3>{% for paragraph in option.description %}<p>{{ paragraph }}</p>{% endfor %}<p><a href="{{ option.source.url|wiki_url }}">同版本参数定义</a></p>{% empty %}<p>所选来源中未抽取到此方法的存储参数定义。</p>{% endfor %}
+  </section>
+  {% else %}<section class="wiki-section topic-absence"><h2>此版本尚无记录</h2><p>PostgreSQL {{ version.label }} 的索引类型清单中不包含 {{ item.name }}。请选择已有记录的版本：</p><nav class="topic-links">{% for v in available %}<a href="{{ v.url }}">PostgreSQL {{ v.label }}</a>{% endfor %}</nav></section>{% endif %}
+  {% include "wiki/index_method_comparison.html" %}
+  {% if history %}<section class="wiki-section"><h2>文档记录的历史</h2>{% for row in history %}<h3><a href="{{ row.url }}">PostgreSQL {{ row.before }} → {{ row.after }}</a></h3>{% if row.presence %}<p>{% if row.presence == 'added' %}首次出现在当前样本清单中。{% else %}不再出现在当前样本清单中。{% endif %}</p>{% endif %}<ul>{% for change in row.capabilities %}<li>{{ change.label }}: {{ change.before }} → {{ change.after }}{% if change.evidence_changed %} （来源覆盖变化）{% endif %}</li>{% endfor %}{% for option in row.options_added %}<li>新增记录的存储参数： <code>{{ option }}</code></li>{% endfor %}{% for option in row.options_removed %}<li>不再记录的存储参数： <code>{{ option }}</code></li>{% endfor %}</ul>{% endfor %}</section>{% endif %}
+  {% if snapshot %}<section class="wiki-section"><h2>相关文档与对象</h2><ul class="topic-links">{% for link in snapshot.related %}<li><a href="{{ link.url|wiki_url }}">{{ link.label }}</a></li>{% endfor %}</ul></section>
+  <section id="sources" class="wiki-section"><h2>来源与构建标识</h2><p>原始证据来自英文手册构建 {{ snapshot.release.label }}。中文译文另列来源，不将文档结论作为运行时能力测量。</p><ul>{% for source in snapshot.sources %}<li><a href="{{ source.url|wiki_url }}">{{ source.label }}</a></li>{% endfor %}</ul>
+    <details class="topic-provenance"><summary>来源指纹</summary><dl><dt>手册构建</dt><dd>{{ snapshot.release.ref }}</dd><dt>组合页面 SHA-256</dt><dd><code>{{ snapshot.release.revision }}</code></dd><dt>手册清单记录的源码归档</dt><dd><a href="{{ snapshot.release.manifest.source_url }}">{{ snapshot.release.manifest.release }}</a></dd><dt>手册清单记录的归档 SHA-256</dt><dd><code>{{ snapshot.release.manifest.source_sha256 }}</code></dd>{% if snapshot.release.manifest.source_snapshot_utc %}<dt>记录的开发版快照</dt><dd>{{ snapshot.release.manifest.source_snapshot_utc }}</dd>{% endif %}</dl><ul>{% for source in snapshot.sources %}<li>{{ source.file }}: <code>{{ source.sha256 }}</code></li>{% endfor %}</ul></details>
+  </section>{% endif %}
+  <p class="topic-footnote"><a href="{{ root }}?v={{ major }}">返回 {{ topic.name }}</a> · 已记录于 PostgreSQL {{ first.major }} 至 {{ last.major }}；最早样本不代表实际引入版本。</p>
+</article>
+{% endblock %}

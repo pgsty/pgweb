@@ -1,6 +1,7 @@
-"""Validate and import the four fixed reference snapshots without touching manuals."""
+"""Validate and import fixed reference snapshots without touching manuals."""
 
 from copy import deepcopy
+import gzip
 import json
 from pathlib import Path
 import re
@@ -33,7 +34,7 @@ def links(value, label, required=False):
         text(link.get('label'), label, required=True)
         url = text(link.get('url'), label, required=True)
         parsed = urlsplit(url)
-        if not ((url.startswith(('/docs/', '/wiki/')) and not parsed.netloc) or
+        if not ((url.startswith(('/docs/', '/wiki/', '/e/')) and not parsed.netloc) or
                 (parsed.scheme == 'https' and parsed.hostname and not parsed.username)):
             raise ValueError('Unsafe or unsupported source URL: ' + url)
 
@@ -42,6 +43,15 @@ def prepare(data):
     if not isinstance(data, dict) or data.get('format') != 1 or data.get('kind') not in topics.TOPICS:
         raise ValueError('Expected a format=1 reference snapshot with a known kind')
     kind = data['kind']
+    language = data.get('language')
+    if language not in ('zh', 'zh-CN', 'zh-Hans') and not (language is None and kind in ('hook', 'relopts', 'role', 'oid')):
+        raise ValueError('Expected a Chinese reference snapshot; original collections may omit language')
+    if kind == 'indexam':
+        from .index_method_data import validate
+        validate(data)
+    if kind == 'plan':
+        from .plan_node_data import validate
+        validate(data)
     releases = data.get('releases')
     if not isinstance(releases, list) or not releases:
         raise ValueError('Missing sampled releases')
@@ -50,7 +60,7 @@ def prepare(data):
         if not isinstance(release, dict):
             raise ValueError('Invalid sampled release')
         major = release.get('major')
-        if not isinstance(major, str) or not re.fullmatch(r'\d{1,2}', major) or major in release_map:
+        if not isinstance(major, str) or not re.fullmatch(r'\d{1,2}(?:\.\d)?', major) or major in release_map:
             raise ValueError('Invalid or duplicate major version')
         for key in ('label', 'revision', 'ref', 'channel'):
             text(release.get(key), 'release.' + key, required=True)
@@ -64,12 +74,15 @@ def prepare(data):
             raise ValueError('Invalid reference entity')
         row = {key: deepcopy(item.get(key)) for key in
                ('slug', 'name', 'name_zh', 'category', 'summary', 'aliases', 'versions')}
+        if kind not in ('hook', 'relopts', 'role', 'oid') and row['name_zh'] is None:
+            row['name_zh'] = ''
         slug = row['slug']
         if not isinstance(slug, str) or not re.fullmatch(r'[a-z][a-z0-9_-]{0,95}', slug) or slug in slugs:
             raise ValueError('Invalid or duplicate slug: ' + str(slug))
         slugs.add(slug)
-        for field in ('name', 'name_zh', 'category', 'summary'):
+        for field in ('name', 'category', 'summary'):
             text(row[field], slug + '.' + field, required=True)
+        text(row['name_zh'], slug + '.name_zh', required=kind in ('hook', 'relopts', 'role', 'oid'))
         strings(row['aliases'], slug + '.aliases')
         if not isinstance(row['versions'], dict) or not row['versions']:
             raise ValueError('Missing version snapshots for ' + slug)
@@ -106,6 +119,46 @@ def prepare(data):
                     text(block.get('code', ''), slug + '.block.code')
             links(snapshot.get('sources'), slug + '.sources', required=True)
             links(snapshot.get('related', []), slug + '.related')
+            text(snapshot.get('manual_html', ''), slug + '.manual_html')
+            if snapshot.get('manual_html'):
+                path = text(snapshot.get('manual_path'), slug + '.manual_path', required=True)
+                resolved = path if path.startswith('/') else '/docs/{}/{}'.format('devel' if major == '20' else major, path)
+                if path.startswith('https://pg.center/docs/'):
+                    resolved = path
+                elif not path.startswith('/') and not re.fullmatch(r'[a-z0-9_-]+\.html(?:#[A-Za-z0-9_.:-]+)?', path):
+                    raise ValueError('Invalid manual path')
+                links([{'label': 'Manual', 'url': resolved}], slug + '.manual_path')
+            tables = snapshot.get('tables', []) + snapshot.get('collection_tables', [])
+            if not isinstance(tables, list):
+                raise ValueError('Invalid reference tables')
+            table_keys = set()
+            for table in tables:
+                key = text(table.get('key'), slug + '.table.key', required=True)
+                if not re.fullmatch(r'[a-z][a-z0-9_-]*', key) or key in table_keys:
+                    raise ValueError('Invalid or duplicate table key')
+                table_keys.add(key)
+                text(table.get('title'), slug + '.table.title', required=True)
+                columns = table.get('columns')
+                if not isinstance(columns, list) or not columns:
+                    raise ValueError('Missing table columns')
+                keys = []
+                for column in columns:
+                    keys.append(text(column.get('key'), 'column key', required=True))
+                    text(column.get('label'), 'column label', required=True)
+                if len(set(keys)) != len(keys) or not isinstance(table.get('rows'), list):
+                    raise ValueError('Invalid table rows or duplicate column keys')
+                for record in table['rows']:
+                    if not isinstance(record, dict) or set(record) != set(keys):
+                        raise ValueError('Reference table row does not match columns')
+                    for value in record.values():
+                        if isinstance(value, dict):
+                            text(value.get('text'), 'cell text', required=True)
+                            links([{'label': value['text'], 'url': value.get('url')}], 'cell link')
+                        else:
+                            text(value, 'cell text')
+            if kind in topics.DOMAIN_KEYS:
+                semantic = snapshot.get('comparison_data', {key: snapshot.get(key) for key in ('signature', 'facts', 'tables')})
+                snapshot['comparison_hash'] = topics.digest(semantic)
             snapshot.setdefault('release', deepcopy(release_map[major]))
             if snapshot['release'] != release_map[major]:
                 raise ValueError('Mismatched source build in ' + slug)
@@ -119,7 +172,9 @@ def prepare(data):
 
 
 def load(path):
-    return prepare(json.loads(Path(path).read_text(encoding='utf-8')))
+    path = Path(path)
+    payload = gzip.decompress(path.read_bytes()).decode('utf-8') if path.suffix == '.gz' else path.read_text(encoding='utf-8')
+    return prepare(json.loads(payload))
 
 
 def apply(kind, rows, check=False, prune=False):

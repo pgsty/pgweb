@@ -42,7 +42,7 @@ urlpatterns = [
             RedirectView.as_view(url='/wiki/sqlstate/%(rest)s', permanent=True, query_string=True)),
     re_path(r'^(?:docs|wiki)/reference/$',
             RedirectView.as_view(url='/wiki/', permanent=True, query_string=True)),
-    re_path(r'^docs/(?P<rest>(?:sql|sqlstate|catalog|guc|waitevent|func|lock|hook|relopts|role|oid)/.*)$',
+    re_path(r'^docs/(?P<rest>(?:sql|sqlstate|catalog|guc|waitevent|func|lock|hook|relopts|role|oid|type|indexam|versions|plan|operator|opclass|fdw|tableam|psql|tool|conn|metric|storage|protocol|language|fts|auth|locale|decode)/.*)$',
             RedirectView.as_view(url='/wiki/%(rest)s', permanent=True, query_string=True)),
     path('nls/', include('pgweb.nls.urls')),
     path('e/', include('pgweb.ext.urls_e')),

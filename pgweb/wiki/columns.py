@@ -99,22 +99,28 @@ COLUMNS = (
 )
 
 from .topic_specs import TOPIC_SPECS
+from .topic_registry import DOMAINS
 
 COLUMNS += tuple({
     'slug': slug, 'name': spec['name'], 'short': spec['name'], 'tone': spec['tone'],
     'lead': spec['lead'], 'scale': spec['scale'], 'coverage': 'PostgreSQL 10 – 20 devel',
     'repo': '', 'origin': '', 'live': True,
 } for slug, spec in TOPIC_SPECS.items())
+COLUMNS += ({
+    'slug': 'versions', 'name': '版本发布', 'short': '版本发布', 'tone': 'sql',
+    'lead': '各大版本的生命周期、功能变化、修复、安全问题与升级注意事项。',
+    'scale': '', 'coverage': '', 'repo': '', 'origin': '', 'live': True,
+},)
 
 BY_SLUG = {column['slug']: column for column in COLUMNS}
 
 NAV_GROUPS = (
-    ('query-language', '查询语言', ('sql', 'func', 'sqlstate')),
-    ('indexes-storage', '索引与存储', ('catalog', 'relopts', 'oid')),
-    ('operations', '运行与维护', ('guc', 'waitevent', 'lock', 'role')),
-    ('client-tools', '客户端工具', ()),
-    ('extensibility', '扩展机制', ('hook',)),
-    ('releases', '版本发布', ()),
+    ('query-language', '查询语言', ('sql', 'type', 'func', 'operator', 'sqlstate')),
+    ('indexes-storage', '索引与存储', ('catalog', 'indexam', 'tableam', 'opclass', 'relopts', 'storage', 'oid')),
+    ('operations', '运行与维护', ('guc', 'plan', 'waitevent', 'lock', 'metric', 'auth', 'role')),
+    ('client-tools', '客户端工具', ('psql', 'tool', 'conn', 'protocol')),
+    ('extensibility', '扩展机制', ('fdw', 'hook', 'language', 'fts', 'locale', 'decode')),
+    ('releases', '版本发布', ('versions',)),
 )
 COLUMNS = tuple(dict(BY_SLUG[slug], section=title, section_id=anchor)
                 for anchor, title, slugs in NAV_GROUPS for slug in slugs)
@@ -145,9 +151,17 @@ def home_cards():
         'relopts': ('StorageParameter', '个参数条目', None, None),
         'role': ('PredefinedRole', '个角色', None, None),
         'oid': ('ObjectIdentifierType', '个类型', None, None),
+        'type': ('DataType', '个类型', None, None),
+        'indexam': ('IndexAccessMethod', '种方法', None, None),
     }
+    sources.update({slug: (model, unit, None, None)
+                    for slug, model, table, label, kind, tone, unit, lead in DOMAINS})
     cards = listing()
     for card in cards:
+        if card['slug'] == 'versions':
+            from .version_data import collection_summary
+            card.update(collection_summary(), unit='个大版本')
+            continue
         model_name, unit, version_model, count_field = sources[card['slug']]
         model = getattr(models, model_name)
         if version_model:

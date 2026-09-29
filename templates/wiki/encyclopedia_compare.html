@@ -1,0 +1,9 @@
+<section class="wiki-section" id="comparison"><h2>版本比较</h2>
+<form class="pg-filter-bar" method="get" data-autosubmit><input type="hidden" name="v" value="{{ major }}">
+<label class="pg-field">起始版本<select class="form-control pg-control" name="from">{% for v in versions %}<option value="{{ v.major }}"{% if comparison.left == v.major %} selected{% endif %}>{{ v.label }}</option>{% endfor %}</select></label>
+<label class="pg-field">目标版本<select class="form-control pg-control" name="to">{% for v in versions %}<option value="{{ v.major }}"{% if comparison.right == v.major %} selected{% endif %}>{{ v.label }}</option>{% endfor %}</select></label>
+<button class="btn btn-primary pg-button" data-autosubmit-fallback>比较</button></form>
+<p>PostgreSQL {{ comparison.left }} → {{ comparison.right }}: {% if comparison.status == "unchanged" %}无变化{% elif comparison.status == "added" %}新增收录{% elif comparison.status == "removed" %}不再收录{% else %}属性变化{% endif %}。</p>
+{% if comparison.diff %}<p class="topic-footnote">以下差异保留原始字段名与英文源描述。</p><pre class="topic-diff"><code>{{ comparison.diff }}</code></pre>{% endif %}
+<p class="topic-footnote">比较已记录的接口与属性，排除来源指纹和构建元数据。某个样本中没有记录，不能据此判断实际引入或移除的版本。</p>
+</section>

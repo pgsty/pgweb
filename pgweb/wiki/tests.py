@@ -12,10 +12,12 @@ from .models import (CatalogRelation, CatalogVersion, ErrorCode, ErrorCodeClass,
 class ColumnTests(SimpleTestCase):
     def test_columns_in_reading_order(self):
         self.assertEqual([c['slug'] for c in COLUMNS],
-                         ['sql', 'func', 'sqlstate', 'catalog', 'relopts', 'oid',
-                          'guc', 'waitevent', 'lock', 'role', 'hook'])
-        self.assertEqual(set(BY_SLUG), {'sqlstate', 'guc', 'waitevent', 'catalog', 'sql', 'func', 'lock',
-                                       'hook', 'relopts', 'role', 'oid'})
+                         ['sql', 'type', 'func', 'operator', 'sqlstate',
+                          'catalog', 'indexam', 'tableam', 'opclass', 'relopts', 'storage', 'oid',
+                          'guc', 'plan', 'waitevent', 'lock', 'metric', 'auth', 'role',
+                          'psql', 'tool', 'conn', 'protocol',
+                          'fdw', 'hook', 'language', 'fts', 'locale', 'decode', 'versions'])
+        self.assertEqual(len(BY_SLUG), 30)
 
     def test_a_column_in_preparation_links_to_its_origin_site(self):
         """Navigation must never point at a route that does not exist yet."""

@@ -29,6 +29,9 @@ KINDS = (
     ('language', '过程语言'),
     ('guide', '章节正文'),
 )
+from pgweb.wiki.topic_registry import DOMAINS
+KINDS += (('version', '版本百科'),)
+KINDS += tuple((row[4], row[3]) for row in DOMAINS if row[4] not in dict(KINDS))
 KIND_LABEL = dict(KINDS)
 
 # key, label, kinds folded into the group, example hint
@@ -44,11 +47,16 @@ GROUPS = (
     ('hook', '扩展钩子', ('hook',), 'planner_hook、ExecutorStart_hook'),
     ('relopt', '存储参数', ('relopt',), 'fillfactor、表级 autovacuum、索引选项'),
     ('role', '预定义角色', ('role',), 'pg_monitor、pg_read_all_data'),
-    ('tool', '命令行工具', ('tool', 'option'), 'pg_dump、pg_basebackup、sslmode、PGHOST'),
+    ('tool', '命令行工具', ('tool', 'option', 'conn'), 'pg_dump、pg_basebackup、sslmode、PGHOST'),
     ('psql', 'psql 命令', ('psql',), '\\d+、\\copy、\\watch'),
-    ('extension', '扩展与模块', ('extension', 'am', 'language'), 'postgis、pg_trgm、PL/pgSQL'),
+    ('extension', '扩展与模块', ('extension',), 'postgis、pg_trgm、PL/pgSQL'),
     ('guide', '章节正文', ('guide',), '概念、教程与完整正文'),
 )
+GROUPS += (('am', 'Index AM', ('am',), 'btree、hash、GiST、GIN'),
+           ('version', '版本百科', ('version',), 'PostgreSQL 18、9.6、安全修复与升级'))
+GROUPS += tuple((kind, label, (kind,), '名称或用途')
+                for key, model, table, label, kind, tone, unit, lead in DOMAINS
+                if kind not in {group[0] for group in GROUPS} and kind != 'operator')
 GROUP_META = {key: {'key': key, 'label': label, 'kinds': list(kinds), 'hint': hint} for key, label, kinds, hint in GROUPS}
 GROUP_OF = {kind: key for key, _, kinds, _ in GROUPS for kind in kinds}
 KIND_ALIASES = {'param': 'guc', 'setting': 'guc', 'settings': 'guc', 'func': 'function', 'functions': 'function',
@@ -58,7 +66,7 @@ KIND_ALIASES = {'param': 'guc', 'setting': 'guc', 'settings': 'guc', 'func': 'fu
                 'cli': 'tool', 'meta': 'psql', 'backslash': 'psql', 'chapter': 'guide', 'doc': 'guide',
                 'wait': 'waitevent', 'waits': 'waitevent', 'waitevents': 'waitevent',
                 'wait_event': 'waitevent', 'locks': 'lock', 'hooks': 'hook',
-                'relopts': 'relopt', 'roles': 'role', 'oid': 'type'}
+                'relopts': 'relopt', 'roles': 'role', 'oid': 'type', 'indexam': 'am', 'versions': 'version', 'release': 'version'}
 
 
 def resolve_group(value):

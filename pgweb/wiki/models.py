@@ -1143,3 +1143,147 @@ class LockMode(models.Model):
     @property
     def url(self):
         return '/wiki/lock/{}/'.format(self.slug)
+
+
+class DataType(ReferenceTopic):
+    column = 'type'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'data_type'
+
+
+class IndexAccessMethod(ReferenceTopic):
+    column = 'indexam'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'index_am'
+
+
+class PlanNode(ReferenceTopic):
+    column = 'plan'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'plan_node'
+
+
+class PgOperator(ReferenceTopic):
+    column = 'operator'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'pg_operator_entry'
+
+
+class OperatorClass(ReferenceTopic):
+    column = 'opclass'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'operator_class'
+
+
+class ForeignDataWrapper(ReferenceTopic):
+    column = 'fdw'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'foreign_data_wrapper'
+
+
+class TableAccessMethod(ReferenceTopic):
+    column = 'tableam'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'table_am'
+
+
+class PsqlCommand(ReferenceTopic):
+    column = 'psql'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'psql_command'
+
+
+class CommandLineTool(ReferenceTopic):
+    column = 'tool'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'command_tool'
+
+
+class ConnectionParameter(ReferenceTopic):
+    column = 'conn'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'connection_parameter'
+
+
+class StatisticsMetric(ReferenceTopic):
+    column = 'metric'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'statistics_metric'
+
+
+class StorageStructure(ReferenceTopic):
+    column = 'storage'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'storage_structure'
+
+
+class ProtocolMessage(ReferenceTopic):
+    column = 'protocol'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'protocol_message'
+
+
+class ProceduralLanguage(ReferenceTopic):
+    column = 'language'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'procedural_language'
+
+
+class TextSearchComponent(ReferenceTopic):
+    column = 'fts'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'text_search_component'
+
+
+class AuthenticationMethod(ReferenceTopic):
+    column = 'auth'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'authentication_method'
+
+
+class CollationEncoding(ReferenceTopic):
+    column = 'locale'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'collation_encoding'
+
+
+class LogicalDecodingPlugin(ReferenceTopic):
+    column = 'decode'
+
+    class Meta(ReferenceTopic.Meta):
+        abstract = False
+        db_table = 'logical_decoding_plugin'

@@ -26,7 +26,10 @@ class Command(BaseCommand):
         parser.add_argument('--sqlcmd', action='store_true', help='Rebuild the SQL 命令 entries')
         parser.add_argument('--func', action='store_true', help='Rebuild the 函数百科 entries')
         parser.add_argument('--locks', action='store_true', help='Rebuild the 锁百科 entries')
-        parser.add_argument('--topics', action='store_true', help='Rebuild hooks, reloptions, roles and OID types')
+        parser.add_argument('--topics', action='store_true', help='重建全部主题百科索引')
+        from pgweb.wiki.topics import TOPICS
+        parser.add_argument('--topic-kinds', nargs='+', choices=tuple(TOPICS), help='仅重建所选百科')
+        parser.add_argument('--releases', action='store_true', help='重建版本百科索引')
         parser.add_argument('--force', action='store_true', help='Rebuild unchanged manual pages too')
         parser.add_argument('--dry-run', action='store_true', help='Extract and report without writing')
 
@@ -35,7 +38,7 @@ class Command(BaseCommand):
             Q(tree__gte=10) | Q(tree=0), docpage__isnull=False).values_list('tree', flat=True).distinct()]
         everything = not any((options['versions'], options['extensions'], options['errcodes'],
                               options['catalog'], options['guc'], options['waitevents'],
-                              options['sqlcmd'], options['func'], options['locks'], options['topics']))
+                              options['sqlcmd'], options['func'], options['locks'], options['topics'], options['topic_kinds'], options['releases']))
         versions = options['versions'] or (sorted(available, reverse=True) if everything else [])
         if any(v not in available for v in versions):
             raise CommandError('Requested version has no locally loaded PG10+ or development manual')
@@ -60,8 +63,12 @@ class Command(BaseCommand):
             self.stdout.write(json.dumps(rebuild_func(dry_run=options['dry_run']), ensure_ascii=False))
         if options['locks'] or everything:
             self.stdout.write(json.dumps(rebuild_locks(dry_run=options['dry_run']), ensure_ascii=False))
-        if options['topics'] or everything:
-            self.stdout.write(json.dumps(rebuild_topics(dry_run=options['dry_run']), ensure_ascii=False))
+        if options['topics'] or options['topic_kinds'] or everything:
+            kinds = None if options['topics'] or everything else options['topic_kinds']
+            self.stdout.write(json.dumps(rebuild_topics(dry_run=options['dry_run'], kinds=kinds), ensure_ascii=False))
+        if options['releases'] or everything:
+            from pgweb.wiki.version_search import rebuild_versions
+            self.stdout.write(json.dumps(rebuild_versions(dry_run=options['dry_run']), ensure_ascii=False))
         if not options['dry_run']:
             with connection.cursor() as cursor:
                 cursor.execute('ANALYZE search_searchentry')

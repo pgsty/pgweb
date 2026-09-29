@@ -2,6 +2,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.db import models
+from pgweb.wiki.topic_registry import DOMAINS
 
 
 class IndexedPage(models.Model):
@@ -25,7 +26,8 @@ class SearchEntry(models.Model):
     SOURCES = (('pg', 'PostgreSQL 手册'), ('ext', '扩展目录'), ('errcode', 'SQL 状态码'),
                ('catalog', '系统目录'), ('wait', '等待事件'), ('guc', '配置参数'),
                ('sqlcmd', 'SQL 命令'), ('func', '函数'), ('lock', '锁模式'),
-               ('hook', '扩展钩子'), ('relopts', '存储参数'), ('role', '预定义角色'), ('oid', '对象标识符类型'))
+               ('hook', '扩展钩子'), ('relopts', '存储参数'), ('role', '预定义角色'), ('oid', '对象标识符类型'), ('type', '数据类型'), ('indexam', 'Index AM'),
+               ('versions', '版本百科')) + tuple((row[0], row[3]) for row in DOMAINS)
 
     source = models.CharField(max_length=8, default='pg')
     document = models.ForeignKey(IndexedPage, related_name='entries', null=True, blank=True, on_delete=models.CASCADE)

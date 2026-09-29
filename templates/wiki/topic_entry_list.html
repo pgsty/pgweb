@@ -1,0 +1,19 @@
+<ul class="encyclopedia-entries">
+{% for row in rows %}
+  <li class="encyclopedia-entry">
+    <div class="encyclopedia-entry-heading">
+      <a class="topic-name" href="{{ row.url }}">{{ row.name }}</a>
+      <span class="encyclopedia-chip">{{ row.category }}</span>
+      {% if not row.present %}<span class="encyclopedia-chip">PG {{ major }} 未收录</span>{% endif %}
+    </div>
+    {% if row.name_zh %}<p class="topic-name-zh">{{ row.name_zh }}</p>{% endif %}
+    <p class="encyclopedia-summary">{{ row.summary|truncatechars:250 }}</p>
+    <div class="encyclopedia-history" role="group" aria-label="{{ row.name }} 的版本记录">
+      {% for cell in row.cells %}<a class="encyclopedia-version encyclopedia-version--{{ cell.state }}{% if cell.major == major %} is-current{% endif %}"
+        href="{{ cell.url }}" title="{{ cell.title }}" aria-label="{{ row.name }} · {{ cell.title }}"{% if cell.major == major %} aria-current="page"{% endif %}>{{ cell.major }}</a>{% endfor %}
+    </div>
+  </li>
+{% empty %}
+  <li class="encyclopedia-empty">没有匹配的{% if collection_tables %}核心{% endif %}条目。<a href="{{ root }}?v={{ major }}">查看全部{{ topic.name }}</a></li>
+{% endfor %}
+</ul>

@@ -95,7 +95,7 @@ class WikiRoutingTests(SimpleTestCase):
 
     def test_grouped_home_and_footer_share_only_available_anchors(self):
         sections = nav_sections()
-        ids = ['query-language', 'indexes-storage', 'operations', 'extensibility']
+        ids = ['query-language', 'indexes-storage', 'operations', 'client-tools', 'extensibility', 'releases']
         self.assertEqual([section['id'] for section in sections], ids)
         cards = [dict(column, count=12, unit='个条目', first='10', last='20') for column in listing()]
         context = {'columns': cards, 'wiki_sections': sections, 'navmenu': sitenav['wiki']}

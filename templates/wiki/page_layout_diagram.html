@@ -1,0 +1,5 @@
+<figure class="wiki-section topic-layout"><figcaption><strong>页面布局</strong>——示意布局，未按比例绘制。</figcaption>
+<svg viewBox="0 0 800 150" role="img" aria-label="页面由页首部、行指针、空闲空间、数据项和特殊空间组成。行指针向后增长，数据项向前增长。" class="encyclopedia-page-diagram">
+<g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="35" width="798" height="65" rx="3"/><path d="M130 35v65M275 35v65M470 35v65M660 35v65M290 115h130m-10-5 10 5-10 5M625 115H490m10-5-10 5 10 5"/></g>
+<g fill="currentColor" font-family="system-ui,sans-serif" font-size="17" text-anchor="middle"><text x="65" y="64">页首部</text><text x="65" y="86">24 字节</text><text x="203" y="64">行指针</text><text x="203" y="86">每项 4 字节</text><text x="373" y="74">空闲空间</text><text x="565" y="74">数据项</text><text x="730" y="74">特殊空间</text><text x="355" y="140">行指针增长方向</text><text x="558" y="140">数据项增长方向</text></g></svg>
+<p class="topic-footnote">页大小在编译时确定。特殊空间由访问方法决定，普通堆表页面不使用该区域。偏移与对齐规则以所选版本的手册定义为准。</p></figure>

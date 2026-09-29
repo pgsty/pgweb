@@ -4,7 +4,7 @@ import re
 from urllib.parse import urlsplit, urlunsplit
 
 
-_COLLECTION = re.compile(r'^/docs/(sql|sqlstate|catalog|guc|waitevent|func|lock|hook|relopts|role|oid)(?=/|$)')
+_COLLECTION = re.compile(r'^/docs/(sql|sqlstate|catalog|guc|waitevent|func|lock|hook|relopts|role|oid|type|indexam|versions|plan|operator|opclass|fdw|tableam|psql|tool|conn|metric|storage|protocol|language|fts|auth|locale|decode)(?=/|$)')
 _ERRCODE = re.compile(r'^/(?:docs|wiki)/errcode(?=/|$)')
 _HREF = re.compile(
     r'''(?P<prefix><a(?=\s)(?:[^>"']|"[^"]*"|'[^']*')*?\s+href\s*=\s*)'''

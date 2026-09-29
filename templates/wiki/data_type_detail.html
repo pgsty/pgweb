@@ -1,0 +1,36 @@
+{% extends "wiki/reference_base.html" %}
+{% load pgfilters %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}"><link rel="stylesheet" href="/media/css/type-reference.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<article class="wiki-topic wiki-entry wiki-tone-cat" data-pg-doc-version="{{ major }}">
+  <p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="{{ root }}?v={{ major }}">数据类型</a> / {{ item.category }}</p>
+  <header class="wiki-entry__head"><h1 class="topic-title">{{ item.name }}</h1><p class="wiki-lead">{{ item.summary }}</p></header>
+  {% include "wiki/topic_versions.html" %}
+  {% include "wiki/specialized_localization.html" %}
+  {% if notice %}<p class="topic-footnote">{{ notice }}</p>{% endif %}
+  {% if snapshot %}
+  <p class="topic-footnote">PG10–20 核心源码清单。类型转换与操作符类列出源码显式声明的关系；缺少记录不能排除通过其他机制进行转换或使用索引。</p>
+  <nav class="topic-jump" aria-label="本页目录"><a href="#definition">定义</a>{% if catalog_rows %}<a href="#catalog">系统目录属性</a>{% endif %}{% for table in relation_tables %}<a href="#{{ table.key }}">{{ table.title }}</a>{% endfor %}<a href="#history">版本比较</a><a href="#sources">来源</a></nav>
+  <section class="wiki-section" id="definition"><h2>定义</h2>
+    {% if aliases %}<p><strong>SQL 名称与别名：</strong> {% for alias in aliases %}<code>{{ alias }}</code>{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+    {% for paragraph in snapshot.description %}<p>{{ paragraph }}</p>{% endfor %}
+    {% if snapshot.signature %}<pre><code>{{ snapshot.signature }}</code></pre>{% endif %}
+    {% if snapshot.facts %}<dl class="topic-facts">{% for fact in snapshot.facts %}<div><dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd></div>{% endfor %}</dl>{% endif %}
+  </section>
+  {% for section in snapshot.sections %}<section class="wiki-section"><h2>{{ section.title }}</h2>{% for paragraph in section.paragraphs %}<p>{{ paragraph }}</p>{% endfor %}{% if section.code %}<pre><code>{{ section.code }}</code></pre>{% endif %}{% for block in section.blocks %}{% for paragraph in block.paragraphs %}<p>{{ paragraph }}</p>{% endfor %}{% if block.code %}<pre><code>{{ block.code }}</code></pre>{% endif %}{% endfor %}</section>{% endfor %}
+  {% if manual_html %}<section class="wiki-section"><h2>{% if manual_language == "zh" %}中文手册{% elif manual_language == "mixed" %}手册定义（含英文原文）{% else %}英文来源手册{% endif %}</h2><p><a href="{{ manual_url }}">阅读完整手册章节</a></p><details class="type-manual"><summary>阅读来源定义</summary><div class="type-manual__body" lang="{% if manual_language == 'en' %}en{% else %}zh{% endif %}">{{ manual_html|safe }}</div></details></section>{% endif %}
+  {% if catalog_rows %}<section class="wiki-section" id="catalog"><h2>系统目录属性</h2><p class="topic-footnote">此构建的源码初始化值。字段含义参见 <a href="/wiki/catalog/pg_type/?v={{ major }}">pg_type</a> 。包含头文件默认值；依赖构建的常量保留符号形式，不作为服务器运行时实测。</p><dl class="topic-facts">{% for row in catalog_rows %}<div><dt><code>{{ row.name }}</code></dt><dd><code>{{ row.value }}</code></dd></div>{% endfor %}</dl></section>{% endif %}
+  {% for table in relation_tables %}<section class="wiki-section" id="{{ table.key }}"><h2>{{ table.title }} <span class="topic-count">{{ table.rows|length }}</span></h2>
+    {% if table.key == 'casts' %}<p class="topic-footnote">与此类型相关的显式 pg_cast 记录。PostgreSQL 还支持 pg_cast 之外的类型转换，缺少记录不能证明转换不可能。</p>{% elif table.key == 'operators' %}<p class="topic-footnote">每种操作数签名均为独立重载。实现函数和返回类型来自同一源码构建。</p>{% elif table.key == 'ranges' %}<p class="topic-footnote">pg_range 中的范围与多范围定义：子类型、排序操作符类、排序规则、规范化函数和差值函数。</p>{% else %}<p class="topic-footnote">声明输入类型与此类型相符的操作符类。多态操作符类、类型转换和表达式索引还可能提供其他索引路径；不能仅凭此表判断是否支持索引。</p>{% endif %}
+    <div class="wiki-table"><div class="wiki-table__scroll"><table class="type-relations"><thead><tr>{% for heading in table.headings %}<th scope="col">{{ heading }}</th>{% endfor %}</tr></thead><tbody>{% for row in table.rows %}<tr>{% for cell in row %}<td>{% if cell.display_descr %}<span lang="zh">{{ cell.display_descr }}</span>{% elif cell.url %}<a href="{{ cell.url }}"><code>{{ cell.value }}</code></a>{% else %}<code>{{ cell.value }}</code>{% endif %}</td>{% endfor %}</tr>{% endfor %}</tbody></table></div></div>
+  </section>{% endfor %}
+  {% else %}<section class="wiki-section topic-absence"><h2>此版本尚无记录</h2><p>{{ item.name }} 不在所选版本的源码清单中。已有样本：</p><nav class="topic-links">{% for v in available %}<a href="{{ v.url }}">PostgreSQL {{ v.label }}</a>{% endfor %}</nav></section>{% endif %}
+  <section class="wiki-section" id="history"><h2>版本比较</h2>
+    {% if compare_versions %}<form class="pg-filter-bar" method="get" data-autosubmit><input type="hidden" name="v" value="{{ major }}"><label class="pg-field" for="type-from">比较基准<select id="type-from" class="form-control pg-control" name="from">{% if not baseline %}<option value="">选择版本</option>{% endif %}{% for v in compare_versions %}<option value="{{ v.major }}"{% if v.major == baseline.major %} selected{% endif %}>PostgreSQL {{ v.label }}</option>{% endfor %}</select></label><button class="btn btn-primary pg-button" type="submit" data-autosubmit-fallback>比较</button></form>{% endif %}
+    {% if delta.available %}<p>PostgreSQL {{ baseline.label }} → {{ version.label }}。属性比较不包含构建标识和说明正文；原始目录字段与源描述保留原文。</p>{% for change in delta.changes %}<details class="type-change"><summary>{{ change.label }}</summary><h3>PostgreSQL {{ baseline.label }}</h3><pre>{{ change.before }}</pre><h3>PostgreSQL {{ version.label }}</h3><pre>{{ change.after }}</pre></details>{% empty %}<p>这两个样本的系统目录和结构化属性没有变化。</p>{% endfor %}{% if delta.prose_changed %}<p class="topic-footnote">这些构建的文档也有差异，请查看对应版本的手册定义。</p>{% endif %}{% else %}<p class="topic-footnote">请选择两个已有样本的版本进行属性比较。</p>{% endif %}
+  </section>
+  {% if snapshot %}<section class="wiki-section" id="sources"><h2>文档与源码</h2><ul>{% for source in snapshot.sources %}<li><a href="{{ source.url|wiki_url }}">{{ source.label }}</a></li>{% endfor %}</ul><dl class="topic-facts"><div><dt>构建</dt><dd>{{ snapshot.release.label }} · {{ snapshot.release.ref }}</dd></div><div><dt>指纹</dt><dd><code>{{ snapshot.release.revision }}</code></dd></div></dl></section>
+  {% if snapshot.related %}<section class="wiki-section"><h2>相关条目</h2><ul class="topic-links">{% for link in snapshot.related %}<li><a href="{{ link.url|wiki_url }}">{{ link.label }}</a></li>{% endfor %}</ul></section>{% endif %}{% endif %}
+  <p class="topic-footnote"><a href="{{ root }}?v={{ major }}">全部数据类型</a> · <a href="?v={{ major }}{% if baseline %}&amp;from={{ baseline.major }}{% endif %}&amp;format=json">下载此版本 JSON</a> · 最早收录的样本不代表该类型的实际引入版本。</p>
+</article>
+{% endblock %}

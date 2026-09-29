@@ -6,7 +6,7 @@ from pgweb.wiki import topic_importer
 
 
 class Command(BaseCommand):
-    help = 'Import fixed hook, relopts, role and oid snapshots into their own reference tables.'
+    help = '导入固定中文百科快照；仅修改所选栏目。'
 
     def add_arguments(self, parser):
         parser.add_argument('files', nargs='+')

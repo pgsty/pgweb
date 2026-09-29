@@ -1,0 +1,39 @@
+{% extends "wiki/reference_base.html" %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<div class="wiki-topic wiki-tone-cat">
+<p class="wiki-crumb"><a href="/wiki/">百科</a> / 版本发布</p>
+<h1>版本发布</h1>
+<p class="wiki-lead">查阅各个 PostgreSQL 大版本的生命周期、本站手册、功能变化、升级注意事项与安全证据。</p>
+<p><a class="btn btn-outline-secondary pg-button" href="/docs/compare/">比较发布版本</a></p>
+{% if error %}<p class="topic-absence" role="alert">{{ error }}</p>{% else %}
+<form class="pg-filter-bar" method="get" role="search" data-autosubmit>
+  <label class="pg-field pg-field--search" for="version-q">搜索版本或功能
+    <input class="form-control pg-control" id="version-q" type="search" name="q" value="{{ query }}" placeholder="版本、功能或发布说明正文" maxlength="200" autocomplete="off">
+  </label>
+  <label class="pg-field" for="version-state">生命周期
+    <select class="form-control pg-control" id="version-state" name="state"><option value="">全部状态（{{ total }}）</option>
+      {% for state in states %}<option value="{{ state.key }}"{% if selected_state == state.key %} selected{% endif %}>{{ state.label }}（{{ state.count }}）</option>{% endfor %}
+    </select>
+  </label>
+  <button class="btn btn-primary pg-button" type="submit" data-autosubmit-fallback>筛选</button>
+</form>
+<p class="topic-count">共 {{ total }} 个大版本分支{% if filtered != total %}，匹配 {{ filtered }} 个{% endif %}。发布说明快照：{{ release_as_of }}。</p>
+<div class="wiki-table"><div class="wiki-table__scroll"><table class="topic-table">
+<thead><tr><th scope="col">大版本分支</th><th scope="col">记录构建</th><th scope="col">首次正式发布</th><th scope="col">支持结束</th><th scope="col">发布说明</th><th scope="col">本站手册</th></tr></thead>
+<tbody>{% for row in rows %}<tr>
+  <th scope="row"><a href="{{ row.url }}">PostgreSQL {{ row.branch }}</a><br><span class="topic-count">{{ row.state_label }}</span></th>
+  <td><code>{{ row.build }}</code></td>
+  <td>{{ row.first_release|default:'尚未正式发布' }}</td><td>{{ row.end_of_life|default:'尚无记录' }}</td>
+  <td>{% if row.release_count %}<a href="{{ row.url }}#releases">{{ row.release_count }} 个发布版本</a><br><span class="topic-count">{{ row.entry_count }} 条原始变更</span>{% else %}尚未收录{% endif %}</td>
+  <td>{% if row.manual_url %}<a href="{{ row.manual_url }}">{{ row.manual_pages }} 页</a>{% else %}尚未加载{% endif %}</td>
+</tr>{% empty %}<tr><td colspan="6">没有匹配的版本分支。<a href="/wiki/versions/">清除筛选</a>。</td></tr>{% endfor %}</tbody>
+</table></div></div>
+<section class="wiki-section"><h2>如何阅读版本发布</h2>
+<p>大版本分支形如 <code>18</code> 或 <code>9.6</code>，完整发布版本形如 <code>18.6</code> 或 <code>9.6.24</code>。PostgreSQL 10 之前，前两段数字共同标识大版本。</p>
+<p>生命周期与构建信息来自本站版本记录。只有加载了索引页的手册才提供入口；本站历史手册可能保留英文原文。发布说明的收录范围以数据库中的实际记录为准，预览版和开发版不视为正式发布。</p>
+<p><a href="{{ policy_url }}">PostgreSQL 官方版本政策</a> · <a href="?{{ export_query }}">导出版本清单 JSON</a></p>
+</section>
+{% endif %}
+</div>
+{% endblock %}

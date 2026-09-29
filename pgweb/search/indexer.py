@@ -620,11 +620,15 @@ def rebuild_locks(dry_run=False):
     return {'locks': len(objects)}
 
 
-def rebuild_topics(dry_run=False):
-    """Index the four versioned reference columns, folding OID types with the manual."""
+def rebuild_topics(dry_run=False, kinds=None):
+    """Index selected topic domains, folding their identities with the manual."""
     from pgweb.wiki import topics
+    kinds = tuple(topics.TOPICS) if kinds is None else tuple(kinds)
+    if not kinds or any(kind not in topics.TOPICS for kind in kinds):
+        raise ValueError('Unknown or empty topic selection')
     objects, report = [], {}
-    for kind, spec in topics.TOPICS.items():
+    for kind in kinds:
+        spec = topics.TOPICS[kind]
         rows = list(spec['model'].objects.all().values())
         report[kind] = len(rows)
         for row in rows:
@@ -639,6 +643,11 @@ def rebuild_topics(dry_run=False):
                     texts.extend([section['title'], section.get('code', ''), *section.get('paragraphs', [])])
                     for block in section.get('blocks', []):
                         texts.extend([block.get('code', ''), *block.get('paragraphs', [])])
+                for table in snapshot.get('tables', []):
+                    texts.append(table['title'])
+                    for record in table['rows']:
+                        texts.append(' '.join(value['text'] if isinstance(value, dict) else value
+                                              for value in record.values()))
             body = '\n'.join(dict.fromkeys(texts))
             title = index_text(' '.join([row['name'], *aliases]))
             vector = (SearchVector(Value(title), config='simple', weight='A') +
@@ -647,16 +656,16 @@ def rebuild_topics(dry_run=False):
             preview = '<p>{}</p><p><a href="{}">查看逐版本说明与来源</a></p>'.format(
                 escape(row['summary']), escape(url))
             objects.append(SearchEntry(source=kind, document=None, version=None,
-                key=digest(kind + '\0' + row['slug']), entity_key=topics.entity_key(kind, row),
-                kind=spec['kind'], subtype='', name=row['name'], name_key=normalize_name(row['name']),
-                aliases=aliases, anchor='', heading=spec['name'] + ' · ' + row['category'],
-                signature=row['name_zh'], body=body, preview=preview, url=url, weight=0.5, vector=vector))
+                                       key=digest(kind + '\0' + row['slug']), entity_key=topics.entity_key(kind, row),
+                                       kind=spec['kind'], subtype='', name=row['name'], name_key=normalize_name(row['name']),
+                                       aliases=aliases, anchor='', heading=spec['name'] + ' · ' + row['category'],
+                                       signature=row['name_zh'], body=body, preview=preview, url=url, weight=0.5, vector=vector))
     if dry_run:
         return report
     with transaction.atomic():
         with connection.cursor() as cursor:
             cursor.execute('SELECT pg_advisory_xact_lock(%s, %s)', [LOCK_NAMESPACE, 0])
-        SearchEntry.objects.filter(source__in=list(topics.TOPICS)).delete()
+        SearchEntry.objects.filter(source__in=kinds).delete()
         SearchEntry.objects.bulk_create(objects, batch_size=100)
     service.forget_catalog()
     return report

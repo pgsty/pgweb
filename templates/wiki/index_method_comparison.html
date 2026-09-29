@@ -1,0 +1,17 @@
+<section id="comparison" class="wiki-section"><h2>版本比较</h2>
+  <form class="pg-filter-bar" method="get" data-autosubmit>
+    {% if not changes_page %}<input type="hidden" name="v" value="{{ major }}">{% endif %}
+    {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}{% if category %}<input type="hidden" name="category" value="{{ category }}">{% endif %}
+    <label class="pg-field" for="indexam-from">比较起点<select class="form-control pg-control" id="indexam-from" name="from">{% for v in comparison.versions %}<option value="{{ v.major }}"{% if v.selected %} selected{% endif %}>PostgreSQL {{ v.label }}</option>{% endfor %}</select></label>
+    <p>目标 PostgreSQL {{ version.label }}</p><button type="submit" class="btn btn-primary pg-button" data-autosubmit-fallback>比较</button>
+  </form>
+  {% if comparison.baseline %}
+  {% for row in comparison.rows %}<h3><a href="{{ row.url }}">{{ row.name }}</a></h3>
+    {% if row.presence == 'added' %}<p>PostgreSQL {{ comparison.target }} 有记录，{{ comparison.baseline }} 清单中没有记录。</p>{% elif row.presence == 'removed' %}<p>PostgreSQL {{ comparison.target }} 清单中没有记录，{{ comparison.baseline }} 有记录。</p>{% endif %}
+    {% if row.capabilities %}<ul>{% for change in row.capabilities %}<li>{{ change.label }}: {{ change.before }} → {{ change.after }}{% if change.evidence_changed %} <span class="topic-footnote">（来源覆盖变化，不据此推断引入版本）</span>{% endif %}</li>{% endfor %}</ul>{% endif %}
+    {% if row.options_added %}<p>新增列出的存储参数： {% for option in row.options_added %}<code>{{ option }}</code>{% if not forloop.last %}, {% endif %}{% endfor %}。</p>{% endif %}
+    {% if row.options_removed %}<p>不再列出的存储参数： {% for option in row.options_removed %}<code>{{ option }}</code>{% if not forloop.last %}, {% endif %}{% endfor %}。</p>{% endif %}
+  {% empty %}<p>这些样本的文档能力状态和存储参数清单没有差异{% if query or category %}（所选方法）{% endif %}.</p>{% endfor %}
+  {% else %}<p>这是最早采样的版本，可另选比较版本查看差异。</p>{% endif %}
+  <p class="topic-footnote">比较范围为能力状态和文档中的存储参数名称，不覆盖全部算法、性能特点、参数定义和发布说明变化。</p>
+</section>

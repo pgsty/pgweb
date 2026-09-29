@@ -1,0 +1,92 @@
+{
+  "auth": {
+    "entities": 15,
+    "snapshots": 155,
+    "translated_display_fields": 1634
+  },
+  "conn": {
+    "entities": 55,
+    "snapshots": 446,
+    "translated_display_fields": 8151
+  },
+  "decode": {
+    "entities": 2,
+    "snapshots": 22,
+    "translated_display_fields": 1135
+  },
+  "fdw": {
+    "entities": 2,
+    "snapshots": 22,
+    "translated_display_fields": 1844
+  },
+  "fts": {
+    "entities": 70,
+    "snapshots": 640,
+    "translated_display_fields": 8495
+  },
+  "indexam": {
+    "entities": 6,
+    "snapshots": 101,
+    "translated_display_fields": 5289
+  },
+  "language": {
+    "entities": 11,
+    "snapshots": 109,
+    "translated_display_fields": 2051
+  },
+  "locale": {
+    "entities": 53,
+    "snapshots": 547,
+    "translated_display_fields": 5054
+  },
+  "metric": {
+    "entities": 616,
+    "snapshots": 4965,
+    "translated_display_fields": 78953
+  },
+  "opclass": {
+    "entities": 344,
+    "snapshots": 3241,
+    "translated_display_fields": 188740
+  },
+  "operator": {
+    "entities": 865,
+    "snapshots": 8739,
+    "translated_display_fields": 185113
+  },
+  "plan": {
+    "entities": 42,
+    "snapshots": 451,
+    "translated_display_fields": 16156
+  },
+  "protocol": {
+    "entities": 73,
+    "snapshots": 750,
+    "translated_display_fields": 15562
+  },
+  "psql": {
+    "entities": 130,
+    "snapshots": 1299,
+    "translated_display_fields": 10651
+  },
+  "storage": {
+    "entities": 35,
+    "snapshots": 383,
+    "translated_display_fields": 2387
+  },
+  "tableam": {
+    "entities": 1,
+    "snapshots": 9,
+    "translated_display_fields": 456
+  },
+  "tool": {
+    "entities": 37,
+    "snapshots": 362,
+    "translated_display_fields": 12125
+  },
+  "type": {
+    "entities": 121,
+    "snapshots": 1202,
+    "translated_display_fields": 22760
+  }
+}

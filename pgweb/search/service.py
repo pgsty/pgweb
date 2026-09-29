@@ -79,9 +79,9 @@ def parse_query(raw, scope='pg', kind='', available=(), current=None):
     if scope in EXTENSION_SCOPES:
         scope, sources, version = 'ex', ('ext',), current
     elif scope == 'pg':
-        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid'), current
+        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'versions', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode'), current
     elif re.fullmatch(r'pg\d+', scope):
-        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid'), int(scope[2:])
+        sources, version = ('pg', 'ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'versions', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode'), int(scope[2:])
     else:
         raise ValueError('未知的文档作用域。请使用 pg:、pg17: 或 ex:。')
     if 'pg' in sources and version not in available:
@@ -111,7 +111,8 @@ def highlight(value, term, limit=190):
 
 
 def entry_data(entry, term='', tier=3, variants=1):
-    group = GROUP_OF.get(entry.kind, 'guide')
+    effective_kind = 'conn' if entry.kind == 'option' and entry.subtype == 'connection' else entry.kind
+    group = GROUP_OF.get(effective_kind, 'guide')
     if entry.source == 'pg' and entry.document_id:
         page = entry.document.page
         version = int(entry.version)
@@ -121,7 +122,7 @@ def entry_data(entry, term='', tier=3, variants=1):
         version, url = None, canonical_url(entry.url)
         source_label = '扩展目录' if entry.source == 'ext' else '本站词条'
     return {
-        'id': entry.id, 'name': entry.name, 'kind': entry.kind, 'kind_label': KIND_LABEL.get(entry.kind, entry.kind),
+        'id': entry.id, 'name': entry.name, 'kind': effective_kind, 'kind_label': KIND_LABEL.get(effective_kind, effective_kind),
         'subtype': entry.subtype, 'group': group, 'label': GROUP_META[group]['label'],
         'source': entry.source, 'source_label': source_label, 'version': version,
         'heading': entry.heading, 'signature': entry.signature,
@@ -154,6 +155,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
     phrase = len(name) >= 2 and name.startswith('"') and name.endswith('"')
     literal = name[1:-1] if phrase and name[1:-1].strip() else name
     kinds = GROUP_META[state['kind']]['kinds'] if state['kind'] else []
+    effective_kind = "CASE WHEN e.kind = 'option' AND e.subtype = 'connection' THEN 'conn' ELSE e.kind END"
     parameters = {
         'version': state['version'], 'name': name, 'tokens': tokens,
         'prefix': connection.ops.prep_for_like_query(name) + '%',
@@ -161,7 +163,7 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
         'filtered': bool(kinds), 'kinds': kinds, 'offset': offset, 'limit': limit,
         'popular': [normalize_name(n) for n in POPULAR],
     }
-    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid'))"
+    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'versions', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode'))"
               if 'pg' in state['sources'] else "e.source = 'ext'")
     if not name:
         where = 'true'
@@ -187,12 +189,12 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
     sql = """
         WITH q AS (SELECT CASE WHEN %(tokens)s = '' THEN NULL ELSE plainto_tsquery('simple', %(tokens)s) END AS query),
         matched AS (
-            SELECT e.id, e.kind, e.source, e.entity_key, e.name_key, {tier} AS tier,
+            SELECT e.id, {effective_kind} AS kind, e.source, e.entity_key, e.name_key, {tier} AS tier,
                    CASE WHEN %(name)s = '' THEN 0 ELSE coalesce(ts_rank_cd(e.vector, q.query, 32), 0) + e.weight END AS relevance
             FROM search_searchentry e CROSS JOIN q
             WHERE {source} AND {where}
         ), grouped AS (
-            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source NOT IN ('errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid')), (source = 'ext'), relevance DESC, id) AS choice,
+            SELECT *, row_number() OVER (PARTITION BY entity_key ORDER BY tier, (source NOT IN ('errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'versions', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode')), (source = 'ext'), relevance DESC, id) AS choice,
                    count(*) OVER (PARTITION BY entity_key) AS variants FROM matched
         ), chosen AS (SELECT * FROM grouped WHERE choice = 1),
         facet AS (SELECT kind, count(*) AS n FROM chosen GROUP BY kind),
@@ -203,20 +205,20 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
         )
         SELECT (SELECT coalesce(json_agg(row_to_json(page)), '[]'::json) FROM page),
                (SELECT coalesce(json_object_agg(kind, n), '{{}}'::json) FROM facet)
-    """.format(tier=tier, where=where, source=source)
+    """.format(tier=tier, where=where, source=source, effective_kind=effective_kind)
     with connection.cursor() as cursor:
         cursor.execute(sql, parameters)
         hits, counts = cursor.fetchone()
         # Fuzzy names are an explicit fallback, bounded to this scope and group.
         if not hits and offset == 0 and re.fullmatch('[a-zA-Z_][a-zA-Z0-9_]{3,80}', name):
             cursor.execute("""
-                SELECT DISTINCT ON (entity_key) id, kind, entity_key,
+                SELECT DISTINCT ON (entity_key) id, {effective_kind} AS kind, entity_key,
                     similarity(name_key, %(name)s) AS score
                 FROM search_searchentry e
                 WHERE {source} AND kind != 'guide'
-                    AND (%(filtered)s = false OR kind = ANY(%(kinds)s::text[])) AND name_key %% %(name)s
-                ORDER BY entity_key, score DESC, id
-            """.format(source=source), parameters)
+                    AND (%(filtered)s = false OR {effective_kind} = ANY(%(kinds)s::text[])) AND name_key %% %(name)s
+                ORDER BY entity_key, score DESC, (source IN ('errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'versions', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode')) DESC, id
+            """.format(source=source, effective_kind=effective_kind), parameters)
             fuzzy = sorted(cursor.fetchall(), key=lambda r: -r[3])[:8]
             hits = [{'id': r[0], 'kind': r[1], 'tier': 5, 'variants': 1} for r in fuzzy]
             if hits:
@@ -229,15 +231,16 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
     # A row can vanish between ranking and fetching while the catalogue is being rebuilt.
     result['results'] = [entry_data(entries[h['id']], state['term'], h['tier'], h['variants']) for h in hits if h['id'] in entries]
     for item in result['results']:
-        if item['source'] in ('lock', 'hook', 'relopts', 'role', 'oid') and state['version']:
+        if item['source'] != 'versions' and item['source'] in ('lock', 'hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'versions', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode') and state['version']:
             item['url'] += '?v=' + str(int(state['version']))
-    groups = {}
-    for key, n in counts.items():
-        groups[GROUP_OF.get(key, 'guide')] = groups.get(GROUP_OF.get(key, 'guide'), 0) + n
+    # Client categories overlap: count an entity once in All and in each applicable group.
+    groups = {key: sum(counts.get(kind, 0) for kind in meta['kinds'])
+              for key, meta in GROUP_META.items()}
+    groups['guide'] += sum(n for key, n in counts.items() if key not in GROUP_OF)
     result['facets'] = [{'key': key, 'label': meta['label'], 'hint': meta['hint'], 'count': groups.get(key, 0)}
                         for key, meta in GROUP_META.items()]
-    result['total'] = groups.get(state['kind'], 0) if state['kind'] else sum(groups.values())
-    result['all_total'] = sum(groups.values())
+    result['total'] = groups.get(state['kind'], 0) if state['kind'] else sum(counts.values())
+    result['all_total'] = sum(counts.values())
     if offset + limit < result['total']:
         result['next_offset'] = offset + limit
     result['elapsed_ms'] = round((perf_counter() - started) * 1000)
@@ -289,10 +292,13 @@ def sqlcmd_preview(entry, wanted_major=''):
 
 
 def preview(entry, wanted_major=''):
-    if entry.source in ('hook', 'relopts', 'role', 'oid'):
+    if entry.source in ('hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode'):
         from pgweb.wiki import topics
+        from pgweb.wiki.encyclopedia import collection_state
         wanted_text = str(wanted_major)
-        wanted = wanted_text.split('.')[0] if re.fullmatch(r'\d{1,2}(?:\.0)?', wanted_text) else ''
+        wanted = ('devel' if wanted_text == 'devel' else
+                  str(int(float(wanted_text))) if re.fullmatch(r'\d{2}(?:\.0)?', wanted_text) else
+                  wanted_text if re.fullmatch(r'[6-9]\.\d', wanted_text) else '')
         spec = topics.TOPICS[entry.source]
         slug = entry.url.rstrip('/').rsplit('/', 1)[-1]
         try:
@@ -301,10 +307,11 @@ def preview(entry, wanted_major=''):
             payload = None
         if payload:
             data = entry_data(entry)
-            data.update(url=canonical_url(entry.url) + '?v=' + payload['major'], version=int(payload['major']),
+            data.update(url=canonical_url(entry.url) + '?v=' + payload['major'], version=int(payload['major']) if payload['major'].isdigit() else payload['major'],
                         html=render_to_string('wiki/topic_preview.html', payload),
-                        versions=[{'version': int(v['major']), 'label': v['label'], 'url': v['url'],
-                                   'id': entry.id, 'current': v['is_current']} for v in payload['versions']],
+                        versions=[{'version': int(v['major']) if v['major'].isdigit() else v['major'], 'label': v['label'], 'url': v['url'],
+                                   'id': entry.id, 'current': v['is_current'], 'major': v['major'],
+                                   'state': collection_state(v)} for v in payload['versions']],
                         other_versions=[], definitions=[], catalog=None)
             return data
     if entry.source == 'lock':

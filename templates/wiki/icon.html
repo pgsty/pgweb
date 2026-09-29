@@ -22,5 +22,43 @@
   <circle cx="9" cy="7" r="4"/><path d="M2 21v-2a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v2 M17 3a4 4 0 0 1 0 8 M18 14a5 5 0 0 1 4 5v2"/>
 {% elif name == 'oid' %}
   <rect x="3" y="3" width="7" height="8" rx="2"/><rect x="14" y="13" width="7" height="8" rx="2"/><path d="M15 3h3v8 M15 11h6 M3 13h3v8 M3 21h6"/>
+{% elif name == 'type' %}
+  <path d="M4 4h16v16H4Z M8 8h8 M12 8v8 M9 16h6"/>
+{% elif name == 'indexam' %}
+  <rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v5 M5 17v-5h14v5"/>
+{% elif name == 'versions' %}
+  <path d="M6 3v18 M6 12h9a3 3 0 0 0 3-3V3"/><circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/>
+{% elif name == 'operator' %}
+  <path d="M3 7h7M6.5 3.5v7M14 5l6 6M20 5l-6 6M3 17h7M14 16h7M14 20h7"/>
+{% elif name == 'opclass' %}
+  <rect x="2" y="3" width="7" height="7" rx="1"/><rect x="15" y="14" width="7" height="7" rx="1"/><path d="M9 7h6v10M5 14v7M2 17.5h6M16 5h5M18.5 2.5v5"/>
+{% elif name == 'tableam' %}
+  <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 4 18 4 18 0V5M3 12c0 4 18 4 18 0M8 9v11M16 9v11"/>
+{% elif name == 'plan' %}
+  <rect x="8" y="2" width="8" height="5" rx="1"/><rect x="2" y="17" width="7" height="5" rx="1"/><rect x="15" y="17" width="7" height="5" rx="1"/><path d="M12 7v5H5v5M12 12h7v5"/>
+{% elif name == 'metric' %}
+  <path d="M3 3v18h18M6 15l4-6 4 3 6-8"/>
+{% elif name == 'storage' %}
+  <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 9h20M7 9v11M15 9v11M7 14h8"/>
+{% elif name == 'psql' %}
+  <rect x="2" y="3" width="20" height="18" rx="2"/><path d="M6 8l4 4-4 4M13 16h5"/>
+{% elif name == 'tool' %}
+  <path d="M14 3a6 6 0 0 0-5 8L2 18l4 4 7-7a6 6 0 0 0 8-7l-4 4-5-5 4-4Z"/>
+{% elif name == 'conn' %}
+  <rect x="1" y="7" width="7" height="10" rx="2"/><rect x="16" y="7" width="7" height="10" rx="2"/><path d="M8 10h8M8 14h8M4 4v3M20 17v3"/>
+{% elif name == 'fdw' %}
+  <ellipse cx="6" cy="5" rx="4" ry="2"/><path d="M2 5v12c0 3 8 3 8 0V5M13 9h9m-3-3 3 3-3 3M22 16h-9m3-3-3 3 3 3"/>
+{% elif name == 'protocol' %}
+  <path d="M2 5h18m-4-4 4 4-4 4M22 19H4m4-4-4 4 4 4M3 11h5M11 11h5M19 11h3M3 14h5M11 14h5M19 14h3"/>
+{% elif name == 'language' %}
+  <path d="m8 5-6 7 6 7m8-14 6 7-6 7M14 3l-4 18"/>
+{% elif name == 'fts' %}
+  <circle cx="10" cy="10" r="7"/><path d="m15 15 7 7M6 7h8M6 11h6"/>
+{% elif name == 'auth' %}
+  <path d="M12 2 3 6v6c0 6 9 10 9 10s9-4 9-10V6ZM8 12l3 3 5-6"/>
+{% elif name == 'locale' %}
+  <circle cx="12" cy="12" r="10"/><ellipse cx="12" cy="12" rx="4" ry="10"/><path d="M2 12h20M4 6h16M4 18h16"/>
+{% elif name == 'decode' %}
+  <path d="M3 3h7v18H3ZM14 5h7M14 12h7M14 19h7M6 7h1M6 12h1M6 17h1"/>
 {% endif %}
 </svg>

@@ -1,0 +1,4 @@
+{% if matrix.methods %}<div class="wiki-table"><div class="wiki-table__scroll"><table class="topic-table" aria-label="索引访问方法能力">
+  <thead><tr><th scope="col">能力</th>{% for row in matrix.methods %}<th scope="col"><a href="{{ row.url }}">{{ row.name }}</a></th>{% endfor %}</tr></thead>
+  <tbody>{% for row in matrix.rows %}<tr><th scope="row">{{ row.label }}</th>{% for cell in row.cells %}<td data-capability="{{ row.key }}" data-state="{{ cell.state }}"><a href="{{ cell.url }}" title="{{ cell.note }}">{{ cell.value }}</a></td>{% endfor %}</tr>{% endfor %}</tbody>
+</table></div></div>{% else %}<p>此版本没有符合筛选条件的方法。</p>{% endif %}

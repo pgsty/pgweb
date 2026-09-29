@@ -1,0 +1,29 @@
+{% extends "wiki/reference_base.html" %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<div class="wiki-topic wiki-tone-cat" data-pg-doc-version="{{ major }}">
+  <p class="wiki-crumb"><a href="/wiki/">百科</a> / {{ topic.name }}</p>
+  <h1>{{ topic.name }}</h1><p class="wiki-lead">{{ topic.lead }}</p>
+  {% include "wiki/topic_versions.html" %}
+  <nav class="topic-jump" aria-label="本页目录"><a href="#methods">索引方法</a><a href="#capabilities">能力矩阵</a><a href="#comparison">版本比较</a></nav>
+  <form class="topic-filter pg-filter-bar" method="get" action="{{ root }}" role="search" data-autosubmit>
+    <input type="hidden" name="v" value="{{ major }}">{% if compare_from %}<input type="hidden" name="from" value="{{ compare_from }}">{% endif %}
+    <label class="pg-field pg-field--search" for="indexam-q">查找索引方法<input class="form-control pg-control" id="indexam-q" type="search" name="q" value="{{ query }}" maxlength="120" placeholder="{{ topic.hint }}" autocomplete="off"></label>
+    <label class="pg-field" for="indexam-category">用途<select class="form-control pg-control" id="indexam-category" name="category"><option value="">全部用途</option>{% for c in categories %}<option value="{{ c.name }}"{% if category == c.name %} selected{% endif %}>{{ c.name }}</option>{% endfor %}</select></label>
+    <button type="submit" class="btn btn-primary pg-button" data-autosubmit-fallback>筛选</button>
+    {% if query or category %}<a class="btn btn-outline-secondary pg-button" href="{{ root }}?v={{ major }}">清除筛选</a>{% endif %}
+  </form>
+  <p class="topic-count">共 {{ total }} 种内置方法；PostgreSQL {{ version.label }} 记录了 {{ present }} 种。{% if query or category %} 筛选匹配 {{ found }} 种。{% endif %}</p>
+  <section id="methods" class="wiki-section"><h2>方法与版本覆盖</h2>
+    {% include "wiki/topic_entry_list.html" %}
+    <p class="topic-footnote">方格表示样本中是否存在及文档能力的变化；最早样本不一定是该方法的引入版本。</p>
+  </section>
+  <section id="capabilities" class="wiki-section"><h2>能力矩阵 · PostgreSQL {{ version.label }}</h2>
+    <p>点击单元格查看来源与条件。“未确定”表示当前手册证据不足以判断支持与否。</p>
+    {% include "wiki/index_method_matrix.html" %}
+    <p>{{ topic.note }}</p>
+  </section>
+  {% include "wiki/index_method_comparison.html" %}
+  <section class="wiki-section"><h2>如何选择索引</h2><p>先确认查询使用的运算符与被索引的数据类型，再选择访问方法支持的操作符类。有序输出、近邻排序、覆盖列和仅索引扫描是不同的能力。</p><p>本清单收录内置索引方法。表访问方法与外部数据包装器使用不同接口；bloom 等扩展索引方法不在此清单中。</p><p><a href="/docs/{{ version.doc_slug }}/indexes-opclass.html">操作符类与操作符族</a> · <a href="/wiki/catalog/pg_am/?v={{ major }}">pg_am 系统目录</a> · <a href="{{ root }}changes/{{ major }}/">版本变化</a></p></section>
+</div>
+{% endblock %}

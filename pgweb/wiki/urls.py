@@ -60,3 +60,24 @@ urlpatterns = [
          name=column['slug'])
     for column in COLUMNS if not column['live'] and column['origin']
 ]
+
+
+from . import data_types, encyclopedia, index_method_views, version_views
+from .topic_registry import DOMAIN_KEYS
+urlpatterns += [
+    path('type/', data_types.index, name='type'),
+    path('type/<str:slug>/', data_types.detail, name='type_detail'),
+    path('indexam/', index_method_views.index, name='indexam'),
+    path('indexam/changes/', index_method_views.changes, name='indexam_changes_root'),
+    path('indexam/changes/<str:major>/', index_method_views.changes, name='indexam_changes'),
+    path('indexam/<str:slug>/', index_method_views.detail, name='indexam_detail'),
+    path('versions/', version_views.index, name='versions'),
+    path('versions/<str:branch>/', version_views.detail, name='versions_detail'),
+]
+for topic_kind in DOMAIN_KEYS:
+    urlpatterns += [
+        path(topic_kind + '/', encyclopedia.index, {'kind': topic_kind}, name=topic_kind),
+        path(topic_kind + '/changes/', encyclopedia.changes, {'kind': topic_kind}, name=topic_kind + '_changes_root'),
+        path(topic_kind + '/changes/<str:major>/', encyclopedia.changes, {'kind': topic_kind}, name=topic_kind + '_changes'),
+        path(topic_kind + '/<str:slug>/', encyclopedia.detail, {'kind': topic_kind}, name=topic_kind + '_detail'),
+    ]

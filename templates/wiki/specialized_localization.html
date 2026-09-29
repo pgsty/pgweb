@@ -1,0 +1,6 @@
+{% if snapshot.localization %}
+<aside class="encyclopedia-localization" aria-label="译文与证据来源">
+  {% if snapshot.localization.status == 'partial' or snapshot.manual_language == 'mixed' or snapshot.manual_language == 'en' %}<p>部分来源正文尚无已核验的中文对应内容，保留并标注英文原文。技术标识与来源证据不因翻译而改变。</p>{% endif %}
+  {% if snapshot.localization.sources %}<details class="topic-provenance"><summary>中文译文来源（{{ snapshot.localization.sources|length }}）</summary><ul>{% for source in snapshot.localization.sources %}<li><a href="{{ source.url }}">{{ source.url }}</a>{% if source.sha256 %} · <code>{{ source.sha256 }}</code>{% endif %}</li>{% endfor %}</ul><p>以下原始证据链接及哈希对应英文来源；中文译文保留自己的页面哈希。</p></details>{% endif %}
+</aside>
+{% endif %}

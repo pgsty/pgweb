@@ -1,0 +1,12 @@
+{
+  "display_prose_occurrences": 0,
+  "display_prose_unique": 0,
+  "display_remaining": {},
+  "manual_prose_occurrences": 0,
+  "manual_prose_unique": 0,
+  "manual_remaining": {},
+  "reviewed_sql_examples": 25,
+  "reviewed_technical_values": 329,
+  "reviewed_technical_values_excluding_sql_examples": 304,
+  "scope": "Display prose only; original source quotes, SQL examples and canonical identifiers remain source evidence."
+}

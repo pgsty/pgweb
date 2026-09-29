@@ -1,5 +1,7 @@
 > 当前表名已在 2026-09-25 整理，生效契约与部署记录见 [模型整理实施记录](reference-model-rollout.md)。本文原有 2026-09-15 数据恢复记录中的表名、命令输出与数量属于历史证据，保留原文。当前验收入口 `tools/wiki/check_data.sql` 覆盖十一领域的 17 张业务表及派生检索。
 
+> 2026-09-30 扩展至 30 个栏目。本文的检查脚本仍覆盖原有十一领域；新增 18 张实体表及复用发布库的版本百科，按[中文百科扩展指南](wiki-expansion-zh.md)单独校验、导入并重建所选索引。
+
 # 百科数据发布验收与 2026-09-15 恢复记录
 
 十一类百科的数据均独立于代码和建表迁移。
@@ -96,4 +98,3 @@ PG 19 保留测试版身份，PG 20 保留开发版身份；单个条目在某�
 `scratch-restore-validation.json` 记录恢复演练，
 `public-verification.json` 记录公网检查，
 `local-fingerprints.json` 与 `production-fingerprints.json` 记录两端内容指纹。
-

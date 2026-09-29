@@ -103,7 +103,7 @@ class TopicIntegrationTests(TestCase):
         self.assertContains(self.client.get('/wiki/oid/regdatabase/?v=19'), '19beta4')
 
     def test_four_columns_have_navigation_routes_filters_and_safe_output(self):
-        for kind in topics.TOPICS:
+        for kind in ('hook', 'relopts', 'role', 'oid'):
             with self.subTest(kind=kind):
                 response = self.client.get(reverse('wiki:' + kind))
                 self.assertEqual(response.status_code, 200)

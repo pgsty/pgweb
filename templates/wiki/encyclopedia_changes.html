@@ -1,0 +1,10 @@
+{% extends "wiki/reference_base.html" %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<div class="wiki-topic"><p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="{{ root }}">{{ topic.name }}</a> / 版本变化</p>
+<h1>{{ topic.name }}版本变化</h1><p class="wiki-lead">PostgreSQL {{ left }} → {{ right }}</p>
+<form class="pg-filter-bar" method="get" data-autosubmit><label class="pg-field">对比起始版本<select name="from" class="form-control pg-control">{% for v in versions %}<option value="{{ v.major }}"{% if v.major == left %} selected{% endif %}>{{ v.label }}</option>{% endfor %}</select></label><button class="btn btn-primary pg-button" data-autosubmit-fallback>比较</button></form>
+<p>{{ changes|length }} 个条目的属性或收录状态发生变化。</p>
+<div class="wiki-table"><div class="wiki-table__scroll"><table><thead><tr><th>条目</th><th>变化</th></tr></thead><tbody>{% for row in changes %}<tr><td><a href="{{ row.url }}">{{ row.name }}</a></td><td>{% if row.status == "added" %}新增收录{% elif row.status == "removed" %}不再收录{% else %}属性变化{% endif %}</td></tr>{% empty %}<tr><td colspan="2">未记录到属性变化。</td></tr>{% endfor %}</tbody></table></div></div>
+<p class="topic-footnote">比较仅涉及采样构建，已排除来源指纹和构建元数据。 <a href="{{ root }}?v={{ right }}">返回{{ topic.name }}</a></p></div>
+{% endblock %}

@@ -1,0 +1,331 @@
+Aggregation	聚合
+Aggregation stages	聚合阶段
+Alias	别名
+Ascii language	ASCII 语言名称
+Asynchronous Execution Options	异步执行选项
+Authentication	身份认证
+Authentication and access control	身份认证与访问控制
+Backend messages	后端消息
+Bidirectional messages	双向消息
+Bit strings	位串
+Bitmap	位图
+Block summaries	块摘要
+Boolean	布尔值
+Bootstrap collations	内置排序规则
+Bytes/char	每字符字节数
+Callback	回调
+Capability	能力
+Case-sensitive spelling	区分大小写的写法
+Catalog code	目录代码
+Catalog interpretation	目录记录解读
+Catalog name	目录名称
+Catalogued purpose	目录记载的用途
+Catalogued version	目录记载的版本
+Character strings	字符串
+Class	操作符类
+Classes in this family	本家族的操作符类
+Client	客户端
+Client applications	客户端程序
+Client library	客户端库
+Client-only encodings	仅客户端可用的编码
+Collation provider identities	排序规则提供者标识
+Collection and reset context	采集与重置语义
+Collection and transaction context	采集与事务语义
+Combination	组合
+Command	命令
+Comment	注释
+Compiled fallback expression	编译时回退表达式
+Complete source view definition	源码中的完整视图定义
+Component search	元素检索
+Conditions	适用条件
+Configuration	配置
+Configurations	配置
+Connection destination	连接目标
+Connections and sessions	连接与会话
+Contents of PGDATA	PGDATA 内容
+Control	控制
+Core node tag	核心节点标签
+Core replication	核心复制
+Core table AM	核心表访问方法
+Cross-Version Compatibility	跨版本兼容性
+Data source	数据源
+Data transfer and large objects	数据传输与大对象
+Date and time	日期与时间
+Declared PG majors	声明兼容的 PG 大版本
+Declared length	声明长度
+Declared operator-family membership	声明的操作符家族成员关系
+Default	默认值
+Default class	默认操作符类
+Default resolution and service-file precedence	默认值解析与服务文件优先级
+Default version	默认版本
+Definition scope	定义范围
+Describe database objects	描述数据库对象
+Description	说明
+Dictionaries	词典
+Dictionary	词典
+Dictionary templates	词典模板
+Direction	方向
+Distance ordering	按距离排序
+Documented behavior	手册记载的行为
+Documented declaration	手册中的声明
+Documented executable	手册中的可执行程序
+Documented flow contexts	手册中的交互阶段
+Documented method options and alternatives	手册中的方法选项与替代方式
+Documented options	手册中的选项
+Documented suffix modifiers	手册中的后缀修饰符
+EXPLAIN identity in core source	核心源码中的 EXPLAIN 标识
+EXPLAIN labels in this source build	本构建中的 EXPLAIN 标签
+EXPLAIN names and attributes	EXPLAIN 名称与属性
+EXPLAIN strategies	EXPLAIN 策略
+Encoding	编码
+Encoding id	编码标识
+English manual definition	英文手册定义
+Environment fallback	环境变量回退
+Environment variable evidence	环境变量证据
+Environment variables	环境变量
+Equality search	等值检索
+Evidence date and source	证据日期与来源
+Evidence scope	证据范围
+Evidence state	证据状态
+Exact source expression	源码中的原始表达式
+Examples from this manual build	本版手册中的示例
+Executable version	程序版本
+Executor implementation notes	执行器实现说明
+Executor initializer	执行器初始化函数
+Existing extension	现有扩展
+Expression declared in	表达式声明位置
+Extensibility	扩展机制
+Extensible search	可扩展检索
+Extension	扩展
+FDW-category catalogue	FDW 分类目录
+Family	操作符家族
+Family operator strategies	家族中的操作符策略
+Family support functions	家族支持函数
+Field	字段
+Field entries	字段条目
+Field evidence	字段证据
+Fields in documented order	按手册顺序排列的字段
+File access boundary	文件访问边界
+First field	首个字段
+First wire field	首个线上协议字段
+Fork	关系分叉
+Format	格式
+Framing and repetition	消息边界与重复字段
+Frontend messages	前端消息
+Function signature	函数签名
+GSSAPI and Kerberos	GSSAPI 与 Kerberos
+Generated initdb definition	initdb 生成的定义
+Geometric	几何
+Handler	处理函数
+Handler or routine	处理函数或例程
+Hash join candidate	可用于哈希连接
+Heap storage, visibility and WAL	堆存储、可见性与 WAL
+HeapTupleHeaderData Layout	HeapTupleHeaderData 布局
+High Value	上限
+INCLUDE columns	INCLUDE 附加列
+Icu?	ICU 支持
+Implementation	实现
+Implementing function	实现函数
+Index AM	索引访问方法
+Index-only scans	仅索引扫描
+Inline handler	内联代码处理函数
+Input function	输入函数
+Input type	输入类型
+Inputs	输入
+Inspect this field	查看此字段
+Installation definition from the matching source archive	同构建源码中的安装定义
+Interface and capability boundaries	接口与能力边界
+Interface family	接口类别
+Interface operation	接口操作
+Internal and special-purpose	内部与特殊用途
+Inventory	清单
+Item	项目
+Join	连接
+Key type	键类型
+Kind	种类
+Language	语言
+Layer	层次
+Left operand	左操作数
+Left type	左侧类型
+Length	长度
+Library	库
+Logical replication formats	逻辑复制格式
+Logical-decoding plugin candidates	逻辑解码插件候选
+Low Value	下限
+Manual definition	手册定义
+Manual description	手册说明
+Materialization	物化
+Meaning	含义
+Membership scope	成员范围
+Memory and temporary storage	内存与临时存储
+Memory mechanism	内存机制
+Merge join candidate	可用于归并连接
+Metadata checked	元数据核验时间
+Method	方法
+Modification	修改
+Module pathname	模块路径
+Multiple key columns	多键列
+Multiranges	多范围
+Native function languages	原生函数语言
+Network addresses	网络地址
+Numeric	数值
+Object and transaction identifiers	对象与事务标识符
+Object boundary	对象边界
+Object kind	对象种类
+Operator classes and families	操作符类与家族
+Operator kind	操作符种类
+Operator overload	操作符重载
+Option	选项
+Option and arguments	选项与参数
+Option definition groups	选项定义组
+Option names recognized by this plugin build	本构建识别的插件选项名
+Option or term	选项或术语
+Options	选项
+Order	顺序
+Ordered search	有序检索
+Ordering	排序
+Ordering family	排序家族
+Other built-in types	其他内置类型
+Output	输出
+Output and formatting	输出与格式
+Output and protocol boundaries	输出与协议边界
+Output function	输出函数
+Overall Page Layout	页面总体布局
+PGDATA paths	PGDATA 路径
+PageHeaderData Layout	PageHeaderData 布局
+Parallel execution and instrumentation	并行执行与运行信息采集
+Parallel index build	并行构建索引
+Parallel index scan	并行索引扫描
+Parallelism	并行
+Parser	解析器
+Parser token types	解析器词元类型
+Parsers	解析器
+Password authentication	密码认证
+Physical structures	物理结构
+Position	位置
+Primary-source capability observations	一手来源记载的能力
+Protocol context	协议上下文
+Provider	提供者
+Pseudo-types	伪类型
+Purpose	用途
+Queries, operators and limitations	查询、操作符与限制
+Query buffer and editing	查询缓冲区与编辑
+Query execution	查询执行
+Range	范围
+Ranges	范围类型
+Recorded callbacks	记录的回调
+Reference inventory	参考清单
+References	参考资料
+Registered implementation in core source	核心源码中注册的实现
+Registered interface handlers	注册的接口处理函数
+Relation forks	关系分叉
+Relative path	相对路径
+Remote PostgreSQL	远程 PostgreSQL
+Remote Query Optimization	远程查询优化
+Representation	表示方式
+Reset observation	重置条件
+Resolution	精度
+Result type	返回类型
+Reviewed version	已核验版本
+SQL conveniences	SQL 便捷语法
+SQL type	SQL 类型
+Same-version definition	同版本定义
+Same-version manual discussion	同版本手册说明
+Scan	扫描
+Scope	范围
+Scripting and assistance	脚本与帮助
+Server applications	服务端程序
+Server encodings	服务端编码
+Server files	服务器文件
+Server?	服务端支持
+Service-file controls	服务文件控制
+Session and protocol	会话与协议
+Sorted output	有序输出
+Source declaration notes	源码声明说明
+Source description	源码说明
+Source environment fallback	源码中的环境变量回退
+Source observation	源码观察
+Source option name	源码选项名
+Source projection	源码中的投影表达式
+Source-only declarations	仅源码声明
+Specific manual guidance	专题手册说明
+Spellings in this manual definition	本版手册中的写法
+Stopword lines	停用词行数
+Stopword sha256	停用词 SHA-256
+Stopwords	停用词
+Storage Size	存储大小
+Storage strategy	存储策略
+Stored key type	存储键类型
+Strategy	策略
+Structured EXPLAIN Node Type	结构化 EXPLAIN 节点类型
+Structured node identity	结构化节点标识
+Support number	支持函数编号
+Table AM candidates	表访问方法候选
+Template	模板
+Testing and examples	测试与示例
+Text search	全文检索
+Text-format label	文本格式标签
+Timeouts and keepalives	超时与保活
+Token ID	词元标识
+Token type	词元类型
+Token-to-dictionary mappings	词元到词典的映射
+Transaction Management	事务管理
+Transaction Management Options	事务管理选项
+Trusted	可信
+Type	类型
+Type OID	类型 OID
+Type families	类型类别
+Type kind	类型种类
+Unique keys	唯一键
+Units named in the field definition	字段定义记载的单位
+Validator	校验函数
+Value Example	示例值
+Variable	变量
+View	视图
+View semantics	视图语义
+Wire fields in documented order	按手册顺序排列的线上协议字段
+Yes	支持
+No	不支持
+yes	是
+no	否
+true	真
+false	假
+Not established	未确定
+Not specified	未指定
+Documented	手册已记载
+Conditional	有条件
+Unknown	未知
+Verified in documentation	文档已证实
+Same as input type	与输入类型相同
+Same as input	与输入相同
+Operator class	操作符类
+Operator family	操作符家族
+English manual	英文手册
+Source-defined	源码定义
+None	无
+Arrays	数组
+CREATE DOMAIN — define a new domain	CREATE DOMAIN — 定义新域
+Start-up	启动
+Pipelining	流水线
+Termination	终止
+Prsname	解析器名称（prsname）
+Prsnamespace	解析器模式（prsnamespace）
+Prsstart	启动函数（prsstart）
+Prstoken	词元函数（prstoken）
+Prsend	结束函数（prsend）
+Prsheadline	高亮函数（prsheadline）
+Prslextype	词元类型函数（prslextype）
+Tmplname	模板名称（tmplname）
+Tmplinit	初始化函数（tmplinit）
+Tmpllexize	词法化函数（tmpllexize）
+Collname	排序规则名称（collname）
+Collprovider	排序规则提供者（collprovider）
+Collencoding	字符编码（collencoding）
+Collcollate	排序区域设置（collcollate）
+Collctype	字符分类区域设置（collctype）
+Collversion	提供者版本（collversion）
+Collisdeterministic	是否确定性比较（collisdeterministic）
+Colliculocale	ICU 区域设置（colliculocale）
+Collicurules	ICU 规则（collicurules）
+Colllocale	区域设置（colllocale）
+\gx is equivalent to \g , except that it forces expanded output mode for this query, as if expanded=on were included in the list of \pset options. See also \x .	\gx 与 \g 等价，但会强制此查询使用扩展输出模式，相当于在 \pset 选项列表中指定 expanded=on。另见 \x。

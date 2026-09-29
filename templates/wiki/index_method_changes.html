@@ -1,0 +1,12 @@
+{% extends "wiki/reference_base.html" %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<div class="wiki-topic wiki-tone-cat" data-pg-doc-version="{{ major }}">
+  <p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="{{ root }}?v={{ major }}">{{ topic.name }}</a> / 版本变化</p>
+  <h1>Index AM 版本变化</h1><p class="wiki-lead">比较各 PostgreSQL 版本文档中的能力状态与存储参数清单。</p>
+  {% include "wiki/topic_versions.html" %}
+  {% include "wiki/index_method_comparison.html" %}
+  <section class="wiki-section"><h2>PostgreSQL 能力矩阵： {{ version.label }}</h2>{% include "wiki/index_method_matrix.html" %}</section>
+  <p class="topic-footnote"><a href="{{ root }}?v={{ major }}">返回 Index AM</a></p>
+</div>
+{% endblock %}

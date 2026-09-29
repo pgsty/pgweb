@@ -30,3 +30,13 @@ TOPIC_SPECS = {
         'note': 'reg* 类型可以按名称解析对象；裸 OID 不能跨数据库或跨集群作为持久身份使用。事务标识、命令标识和行位置有各自的生命周期，不等同于对象名称。',
     },
 }
+
+
+from .topic_registry import DOMAINS, DOMAIN_NOTES
+TOPIC_SPECS.update({
+    'type': dict(name='数据类型', tone='cat', kind='type', scale='', lead='数据类型、别名、表示方式及逐版本定义，关联运算符与索引支持。', hint='类型或别名，如 integer、int4、jsonb', note='内置类型、伪类型与类型家族分别收录。serial 是 SQL 便捷写法。用户自定义类型和扩展类型不属于核心清单；手册定义不是实测目录属性。'),
+    'indexam': dict(name='Index AM', tone='cat', kind='am', scale='', lead='比较六种内置索引方法的查询支持、排序、唯一性、存储选项和版本变化。', hint='方法或用途，如 btree、GIN、范围', note='访问方法提供框架；支持的运算符和仅索引扫描可能取决于运算符类、数据类型及索引列。有条件与未知能力分别标注。'),
+})
+TOPIC_SPECS.update({key: dict(name=label, tone=tone, kind=kind, scale='', lead=lead,
+    hint='名称、别名或用途', note=DOMAIN_NOTES[key])
+    for key, model, table, label, kind, tone, unit, lead in DOMAINS})

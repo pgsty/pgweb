@@ -1,0 +1,31 @@
+{% extends "wiki/reference_base.html" %}
+{% load pgfilters %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<article class="wiki-topic wiki-entry wiki-tone-{{ topic.tone }}" data-pg-doc-version="{{ major }}">
+  <p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="{{ root }}?v={{ major }}">{{ topic.name }}</a> / {{ item.category }}</p>
+  <header class="wiki-entry__head"><h1 class="topic-title">{{ item.name }}</h1>{% if item.name_zh %}<p class="wiki-entry__name">{{ item.name_zh }}</p>{% endif %}<p class="wiki-lead">{{ item.summary|truncatechars:250 }}</p></header>
+  {% include "wiki/topic_versions.html" %}
+  {% include "wiki/specialized_localization.html" %}
+  {% if snapshot %}
+  <nav class="topic-jump" aria-label="本页目录"><a href="#description">说明</a>{% if snapshot.signature %}<a href="#signature">{% if kind == 'hook' %}C 接口{% else %}用法{% endif %}</a>{% endif %}{% for section in snapshot.sections %}<a href="#section-{{ forloop.counter }}">{{ section.title }}</a>{% endfor %}{% if tables %}<a href="#attributes">属性</a>{% endif %}{% if snapshot.rendered_html %}<a href="#definition">手册定义</a>{% endif %}<a href="#comparison">版本比较</a><a href="#sources">文档与源码</a></nav>
+  <section class="wiki-section" id="description"><h2>说明</h2>{% for paragraph in snapshot.description %}<p>{{ paragraph }}</p>{% endfor %}
+    {% if snapshot.facts %}<dl class="topic-facts">{% for fact in snapshot.facts %}<div><dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd></div>{% endfor %}</dl>{% endif %}
+  </section>
+  {% if snapshot.signature %}<section class="wiki-section" id="signature"><h2>{% if kind == 'hook' %}C 接口{% else %}用法{% endif %}</h2><pre><code>{{ snapshot.signature }}</code></pre></section>{% endif %}
+  {% for section in snapshot.sections %}<section class="wiki-section" id="section-{{ forloop.counter }}"><h2>{{ section.title }}</h2>{% for paragraph in section.paragraphs %}<p>{{ paragraph }}</p>{% endfor %}{% if section.code %}<pre><code>{{ section.code }}</code></pre>{% endif %}{% for block in section.blocks %}{% for paragraph in block.paragraphs %}<p>{{ paragraph }}</p>{% endfor %}{% if block.code %}<pre><code>{{ block.code }}</code></pre>{% endif %}{% endfor %}</section>{% endfor %}
+  {% if snapshot.diagram == "page-layout" %}{% include "wiki/page_layout_diagram.html" %}{% endif %}
+  {% if tables %}<div id="attributes">{% for table in tables %}<section class="wiki-section" id="table-{{ table.key }}"><h2>{{ table.title }}</h2>{% if table.caption %}<p class="topic-footnote">{{ table.caption }}</p>{% endif %}<div class="wiki-table"><div class="wiki-table__scroll"><table><thead><tr>{% for column in table.columns %}<th scope="col">{{ column.label }}</th>{% endfor %}</tr></thead><tbody>{% for row in table.cells %}<tr>{% for cell in row %}<td>{% if cell.url %}<a href="{{ cell.url|wiki_url }}">{{ cell.text }}</a>{% else %}{{ cell }}{% endif %}</td>{% endfor %}</tr>{% empty %}<tr><td colspan="{{ table.columns|length }}">未收录相关条目。</td></tr>{% endfor %}</tbody></table></div></div></section>{% endfor %}</div>{% endif %}
+  {% if snapshot.rendered_html %}<section class="wiki-section topic-manual" id="definition" lang="{% if snapshot.manual_language == 'en' %}en{% else %}zh{% endif %}"><h2>手册定义{% if snapshot.manual_language == 'en' %}（英文原文）{% elif snapshot.manual_language == 'mixed' %}（含英文原文）{% endif %}</h2>{{ snapshot.rendered_html|safe }}</section>{% endif %}
+  {% if snapshot.related %}<section class="wiki-section"><h2>相关条目</h2><ul class="topic-links">{% for link in snapshot.related %}<li><a href="{{ link.url|wiki_url }}">{{ link.label }}</a></li>{% endfor %}</ul></section>{% endif %}
+  <section class="wiki-section" id="sources"><h2>文档与源码</h2><ul>{% for source in snapshot.sources %}<li><a href="{{ source.url|wiki_url }}">{{ source.label }}</a></li>{% endfor %}</ul>
+    <details class="topic-provenance"><summary>来源构建</summary><dl><dt>版本</dt><dd>{{ snapshot.release.label }}</dd><dt>构建</dt><dd>{{ snapshot.release.ref }}</dd><dt>来源指纹</dt><dd><code>{{ snapshot.release.revision }}</code></dd></dl></details>
+  </section>
+  {% else %}
+  <section class="wiki-section topic-absence"><h2>此版本未收录</h2><p>PostgreSQL {{ version.label }} 的本次采样中没有 {{ item.name }}。以下版本有对应资料：</p><nav class="topic-links">{% for v in available %}<a href="{{ v.url }}">PostgreSQL {{ v.label }}</a>{% endfor %}</nav></section>
+  {% endif %}
+  {% include "wiki/encyclopedia_compare.html" %}
+  {% if neighbours %}<section class="wiki-section"><h2>相关条目</h2><ul class="topic-neighbours">{% for row in neighbours %}<li><a href="{{ row.url }}"><code>{{ row.name }}</code></a><span>{{ row.name_zh }}</span></li>{% endfor %}</ul></section>{% endif %}
+  <p class="topic-footnote"><a href="?v={{ major }}&amp;from={{ comparison.left }}&amp;to={{ comparison.right }}&amp;format=json">导出 JSON</a> · <a href="{{ root }}?v={{ major }}">返回{{ topic.name }}</a> · 收录范围为 PostgreSQL {{ first.major }} 至 {{ last.major }}；最早采样版本不一定是实际引入版本。</p>
+</article>
+{% endblock %}

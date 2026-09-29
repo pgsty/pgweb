@@ -1,4 +1,5 @@
 from .columns import live_columns
+from .topic_registry import DOMAIN_KEYS
 from .models import (CatalogRelation, CatalogVersion, ErrorCode, FuncVersion, GucParameter,
                      GucVersion, LockMode, PgFunction, WaitEvent, WaitEventVersion)
 
@@ -36,3 +37,12 @@ def get_struct():
     for kind, spec in TOPICS.items():
         for slug in spec['model'].objects.values_list('slug', flat=True):
             yield ('wiki/{}/{}/'.format(kind, slug), None)
+        if kind in DOMAIN_KEYS or kind == 'indexam':
+            from .topics import records, releases
+            yield ('wiki/{}/changes/'.format(kind), None)
+            for version in releases(records(kind), '/wiki/' + kind + '/'):
+                yield ('wiki/{}/changes/{}/'.format(kind, version['major']), None)
+    from pgweb.core.models import Version
+    from .version_data import branch_of
+    for version in Version.objects.only('tree'):
+        yield ('wiki/versions/{}/'.format(branch_of(version)), None)

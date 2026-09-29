@@ -1,0 +1,10 @@
+.type-relations { width: 100%; font-size: 13px; }
+.type-relations th, .type-relations td { padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--pg-line); vertical-align: top; }
+.type-relations code { white-space: nowrap; }
+.type-change { margin: 12px 0; padding: 12px 0; border-top: 1px solid var(--pg-line); }
+.type-change summary, .type-manual summary { cursor: pointer; }
+.type-change pre { white-space: pre-wrap; overflow-wrap: anywhere; }
+.type-manual__body { margin-top: 20px; overflow: auto; }
+.type-manual__body table { font-size: 13px; }
+.type-manual__body h1 { font-size: 24px; }
+.wiki-topic .topic-facts dd code { white-space: normal; overflow-wrap: anywhere; }

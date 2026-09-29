@@ -1,0 +1,53 @@
+{% extends "wiki/reference_base.html" %}
+{% load pgfilters %}
+{% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
+{% block wiki_content %}
+<article class="wiki-topic wiki-entry wiki-tone-cat">
+<p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/versions/">版本发布</a></p>
+<header class="wiki-entry__head"><h1>PostgreSQL {{ version.branch }}</h1><p class="wiki-lead">{{ version.state_label }} · 记录构建 <code>{{ version.build }}</code>{% if version.latest_release_date %} · {{ version.latest_release_date }}{% endif %}</p></header>
+<nav class="topic-links" aria-label="选择大版本分支">{% for branch in branches %}<a href="{{ branch.url }}"{% if branch.branch == version.branch %} aria-current="page"{% endif %} title="{{ branch.state_label }}">{{ branch.branch }}</a>{% endfor %}</nav>
+{% if version.state == 'beta' %}<p class="topic-footnote">这是预览构建，功能和说明在正式发布前仍可能变化。此处不将预览日期或暂定日期作为正式发布日期和支持结束日期。</p>{% elif version.state == 'devel' %}<p class="topic-footnote">这是开发版手册快照。发布说明中的空占位不计作已发布功能，也不据此推断发布日期或生命周期。</p>{% elif version.state == 'eol' %}<p class="topic-footnote">此大版本已停止支持，相关记录用于查阅历史；没有更新的安全记录不代表仍可安全运行。</p>{% endif %}
+<dl class="topic-facts">
+  <div><dt>首次正式发布</dt><dd>{{ version.first_release|default:'尚未正式发布' }}</dd></div>
+  <div><dt>支持结束</dt><dd>{{ version.end_of_life|default:'尚无记录' }}</dd></div>
+  <div><dt>已收录发布版本</dt><dd>{{ version.release_count }}</dd></div>
+  <div><dt>原始发布说明条目</dt><dd>{{ version.entry_count }}</dd></div>
+</dl>
+<nav class="topic-jump" aria-label="本页目录"><a href="#manuals">手册与来源</a><a href="#upgrade">升级注意事项</a><a href="#releases">发布历史</a>{% if version.initial %}<a href="#initial-changes">首发变更</a>{% endif %}<a href="#security">安全证据</a></nav>
+<section class="wiki-section" id="manuals"><h2>手册与来源</h2>
+<p>{% if version.manual_url %}<a href="{{ version.manual_url }}">PostgreSQL {{ version.branch }} 本站手册</a> · 已加载 {{ version.manual_pages }} 页。{% else %}此分支尚未加载手册索引页。{% endif %}</p>
+<div class="topic-links">{% for pdf in pdfs %}<a class="btn btn-outline-secondary pg-button" href="{{ pdf.url }}">{{ pdf.label }} · {{ pdf.bytes|filesizeformat }}</a>{% endfor %}</div>
+{% if version.manual_loaded_at %}<p class="topic-footnote">手册加载时间：{{ version.manual_loaded_at }}{% if version.source_revision %}；来源修订：<code>{{ version.source_revision }}</code>{% endif %}。</p>{% endif %}
+<p class="topic-footnote">发布说明快照：{{ release_as_of }}。安全证据快照：{{ security_as_of }}。PDF 链接按本地文件是否存在提供，历史版本的语言与 HTML 手册可能不同。生命周期参见<a href="{{ policy_url }}">官方版本政策</a>。</p>
+</section>
+<section class="wiki-section" id="upgrade"><h2>升级注意事项</h2>
+<p>跨大版本升级需要导出／恢复或 <code>pg_upgrade</code> 等迁移方式，应阅读沿途大版本的发布说明与目标版本手册。小版本更新也可能要求额外操作，请核对对应发布的迁移说明。<a href="{{ policy_url }}">官方升级政策</a>。</p>
+{% if version.initial %}<p><a href="{{ version.initial.url }}&amp;kind=compatibility">{{ version.initial.build }} 的兼容性变化</a>{% if version.comparison_url %} · <a href="{{ version.comparison_url }}">从首发到 {{ version.latest.build }} 的变化</a>{% endif %}</p>{% endif %}
+{% if migration_html %}<details class="topic-provenance"><summary>{{ version.initial.build }} 的原始迁移说明</summary><div class="wiki-prose">{{ migration_html|wiki_links|safe }}</div></details>{% elif version.initial %}<p class="topic-footnote">此快照没有单独的迁移正文；兼容性条目仍保留在完整发布说明中。</p>{% else %}<p class="topic-footnote">此分支尚无结构化发布说明，请查阅其原始手册。</p>{% endif %}
+</section>
+<section class="wiki-section" id="releases"><h2>发布历史</h2>
+<p class="topic-footnote">每次发布的原始变更均独立保留。CVE 数量表示发布说明中的提及，可能包含后续纠正，不等于本次新修复漏洞数。</p>
+{% if releases %}<div class="wiki-table"><div class="wiki-table__scroll"><table class="topic-table"><thead><tr><th scope="col">版本</th><th scope="col">日期／快照截止时间</th><th scope="col">全部变化</th><th scope="col">BUG 修复</th><th scope="col">迁移条目</th><th scope="col">提及 CVE</th></tr></thead><tbody>{% for release in releases %}<tr>
+  <th scope="row"><a href="{{ release.url }}">{{ release.build }}</a>{% if release.status != 'stable' %} <span class="topic-count">预览版</span>{% endif %}</th>
+  <td>{% if release.date %}{{ release.date }}{% elif release.source_as_of %}说明截至 {{ release.source_as_of }}{% else %}尚未公布{% endif %}</td>
+  <td><a href="{{ release.url }}">{{ release.entry_count }}</a></td><td><a href="{{ release.url }}&amp;kind=bugfix">{{ release.categories.bugfix|default:0 }}</a></td><td>{{ release.compatibility_count }}</td><td>{% if release.cve_count %}<a href="{{ release.url }}&amp;kind=security">{{ release.cve_count }}</a>{% else %}0{% endif %}</td>
+</tr>{% endfor %}</tbody></table></div></div>{% else %}<p>此分支尚未收录完整发布条目，这不表示该版本没有变化。</p>{% endif %}
+</section>
+{% if version.initial %}<section class="wiki-section" id="initial-changes"><h2>{% if version.state == 'beta' %}预览版{% else %}首次发布{% endif %}变化</h2>
+<p class="topic-footnote">{{ version.initial.build }} 的原始条目，包含功能和兼容性变化。类别用于浏览，不是上游原始分类。</p>
+<form class="pg-filter-bar" method="get" action="#initial-changes" role="search" data-autosubmit>
+<label class="pg-field pg-field--search" for="version-change-q">搜索变更<input class="form-control pg-control" id="version-change-q" type="search" name="q" value="{{ query }}" maxlength="200" placeholder="功能或发布说明正文"></label>
+<label class="pg-field" for="version-change-kind">类别<select class="form-control pg-control" id="version-change-kind" name="kind"><option value="">全部变化（{{ initial_entry_count }}）</option>{% for item in category_filters %}<option value="{{ item.key }}"{% if selected_kind == item.key %} selected{% endif %}>{{ item.label }}（{{ item.count }}）</option>{% endfor %}</select></label>
+<button class="btn btn-primary pg-button" type="submit" data-autosubmit-fallback>筛选</button></form>
+<p class="topic-count">匹配 {{ initial_entries|length }} / {{ initial_entry_count }} 条原始变更。</p>
+<ul class="topic-links">{% for entry in initial_entries %}<li id="change-{{ entry.id }}"><details class="topic-provenance"><summary>{{ entry.title }} · {{ entry.category_label }}{% if entry.migration %} · 迁移说明{% endif %}</summary><div class="wiki-prose">{{ entry.html|wiki_links|safe }}</div><p class="topic-footnote"><a href="{{ entry.url }}">原始发布条目</a>{% if entry.source_entry_id %} · <code>{{ entry.source_entry_id }}</code>{% endif %}</p></details></li>{% empty %}<li>没有匹配的首发变更。<a href="{{ version.url }}#initial-changes">清除筛选</a>。</li>{% endfor %}</ul>
+</section>{% endif %}
+<section class="wiki-section" id="security"><h2>安全证据</h2>
+<p class="topic-footnote">共 {{ security_rows|length }} 条记录，来自官方安全矩阵及发布说明的提及。只有安全快照明确列出此分支时才显示修复版本；仅有提及不能确定漏洞适用性或新修复。</p>
+{% if not security_covered %}<p class="topic-absence">安全快照没有 PostgreSQL {{ version.branch }} 的完整分支矩阵。缺乏明确证据的漏洞状态保留为未知。</p>{% endif %}
+{% for cve in security_rows %}<details class="topic-provenance"><summary><a href="{{ cve.url }}">{{ cve.id }}</a> · {{ cve.title }}{% if cve.score != None %} · CVSS {{ cve.score }}{% endif %}</summary>
+<div class="wiki-prose">{% if cve.description %}<p lang="{{ cve.description_language }}">{{ cve.description }}</p>{% if cve.description_language == 'en' %}<p class="topic-footnote">以上保留官方英文漏洞说明。</p>{% endif %}{% endif %}<p>{% if cve.fixed %}本分支修复于：{% if cve.fixed_url %}<a href="{{ cve.fixed_url }}">{{ cve.fixed }}</a>{% else %}<code>{{ cve.fixed }}</code>{% endif %}。{% else %}尚未记录本分支的修复版本。{% endif %}{% if cve.component %}组件：{{ cve.component }}。{% endif %}</p>{% if cve.affected %}<p>官方受影响分支记录：<code>{{ cve.affected }}</code>。</p>{% endif %}{% if cve.vector %}<p><code>{{ cve.vector }}</code></p>{% endif %}{% if cve.mentions %}<p>发布说明中的提及：</p><ul>{% for mention in cve.mentions %}<li><a href="{{ mention.url }}">{{ mention.build }}：{{ mention.title }}</a></li>{% endfor %}</ul>{% endif %}</div></details>{% empty %}<p>此快照没有分支相关安全记录，这不证明不存在漏洞。</p>{% endfor %}
+</section>
+<p class="topic-footnote"><a href="{{ version.url }}?{{ export_query }}">导出此分支 JSON</a> · <a href="/docs/compare/">比较已收录的发布版本</a></p>
+</article>
+{% endblock %}
