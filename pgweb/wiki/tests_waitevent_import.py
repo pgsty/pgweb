@@ -696,7 +696,7 @@ class WaitEventImportTests(TestCase):
         self.assertEqual(report['updated'], 0)
         row = WaitEvent.objects.get(key='lwlock/buffercontent')
         self.assertEqual((row.type, row.type_slug, row.name), ('LWLock', 'lwlock', 'BufferContent'))
-        self.assertEqual(row.url, '/docs/waitevent/lwlock/BufferContent/')
+        self.assertEqual(row.url, '/wiki/waitevent/lwlock/BufferContent/')
         self.assertEqual(row.aliases, ['buffer_content'])
         self.assertTrue(row.has_dossier)
         version = WaitEventVersion.objects.get(major='9.0')

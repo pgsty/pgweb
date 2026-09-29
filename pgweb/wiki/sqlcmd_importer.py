@@ -64,7 +64,7 @@ def clean_html(html, doc_slug, filename, command_links=None, major=''):
             continue
         target = (command_links or {}).get(parsed.path)
         if target and not parsed.scheme and not parsed.netloc:
-            anchor['href'] = '/docs/sql/{}/?v={}'.format(target, major)
+            anchor['href'] = '/wiki/sql/{}/?v={}'.format(target, major)
         else:
             anchor['href'] = rewrite_href(href, doc_slug, filename)
     collapse(fragment)

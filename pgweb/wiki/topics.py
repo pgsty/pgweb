@@ -33,7 +33,7 @@ def records(kind):
 
 
 def row_url(kind, row):
-    return '/docs/{}/{}/'.format(kind, row['slug'])
+    return '/wiki/{}/{}/'.format(kind, row['slug'])
 
 
 def releases(rows, root):
@@ -92,7 +92,7 @@ def cells(kind, row, versions):
 def index(kind, wanted='', query='', category=''):
     spec = TOPICS[kind]
     rows = records(kind)
-    root = '/docs/{}/'.format(kind)
+    root = '/wiki/{}/'.format(kind)
     versions = releases(rows, root)
     version = choose_version(versions, wanted)
     if wanted and version is None:
@@ -121,7 +121,7 @@ def detail(kind, slug, wanted=''):
     row = next((r for r in rows if r['slug'] == slug), None)
     if row is None:
         raise TOPICS[kind]['model'].DoesNotExist()
-    root = '/docs/{}/'.format(kind)
+    root = '/wiki/{}/'.format(kind)
     versions = releases(rows, row_url(kind, row))
     version = choose_version(versions, wanted)
     if version is None:

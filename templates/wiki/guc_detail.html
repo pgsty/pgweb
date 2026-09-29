@@ -1,8 +1,9 @@
 {% extends "wiki/base.html" %}
+{% load pgfilters %}
 {% block wiki_content %}
 <article class="wiki-entry wiki-tone-guc guc">
 
-<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/guc/">配置参数</a> / <a href="/docs/guc/#group-{{ group_slug }}">{{ group_label }}</a></p>
+<p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/guc/">配置参数</a> / <a href="/wiki/guc/#group-{{ group_slug }}">{{ group_label }}</a></p>
 
 <header class="wiki-entry__head guc-head">
   <p class="guc-eyebrow"><span class="guc-eyebrow__en" lang="en">{{ eyebrow }}</span><span class="guc-eyebrow__zh">{{ category_zh }}</span></p>
@@ -94,7 +95,7 @@
 </p>
 {% if doc.borrowed %}<p class="wiki-note guc-borrowed">本站未收录 PostgreSQL {{ version.label }} 手册，以下为 PostgreSQL {{ doc.major }} 的译文。</p>{% elif doc.major and doc.major != version.major %}<p class="guc-docsame">本版译文与 PostgreSQL {{ doc.major }} 完全一致，下面就是同一段文字。</p>{% endif %}
 {% if doc.html %}
-<div class="guc-doc">{{ doc.html|safe }}</div>
+<div class="guc-doc">{{ doc.html|wiki_links|safe }}</div>
 {% else %}
 <p class="wiki-empty">本站手册未收录此参数的说明。{% if doc.official_url %}<a href="{{ doc.official_url }}" target="_blank" rel="noopener">到官方文档查看 ↗</a>{% endif %}</p>
 {% endif %}

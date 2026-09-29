@@ -127,7 +127,7 @@ class SqlcmdTests(TestCase):
         self.assertIn('PostgreSQL 18 新增', payload['synopsis']['html'])
         self.assertIn('<em class="replaceable"><code>name</code></em>', payload['synopsis']['html'])
         self.assertIn('语法概要新增 1 行，移除 0 行', payload['change_note'])
-        self.assertEqual(payload['related'][0]['url'], '/docs/sql/select/?v=18')
+        self.assertEqual(payload['related'][0]['url'], '/wiki/sql/select/?v=18')
         self.assertEqual(payload['siblings'][0]['slug'], 'table')
         self.assertEqual(payload['current'], 'create-table')
         self.assertEqual(payload['doc']['local_url'], '/docs/18/sql-createtable.html#SQL-DEMO')
@@ -197,43 +197,43 @@ class SqlcmdTests(TestCase):
             sqlcmd.changes('99')
 
     def test_route_status_codes_aliases_and_queryparams(self):
-        for path in ['/docs/sql/', '/docs/sql/create-table/', '/docs/sql/create-table/?v=10',
-                     '/docs/sql/merge/?v=15', '/docs/sql/wait-for/', '/docs/sql/changes/15/',
-                     '/docs/sql/changes/9.0/', '/docs/sql/changes/20/', '/docs/sql/changes/18/?from=12',
-                     '/docs/sql/?q=create&group=table&verb=CREATE&first=9.0&present=18']:
+        for path in ['/wiki/sql/', '/wiki/sql/create-table/', '/wiki/sql/create-table/?v=10',
+                     '/wiki/sql/merge/?v=15', '/wiki/sql/wait-for/', '/wiki/sql/changes/15/',
+                     '/wiki/sql/changes/9.0/', '/wiki/sql/changes/20/', '/wiki/sql/changes/18/?from=12',
+                     '/wiki/sql/?q=create&group=table&verb=CREATE&first=9.0&present=18']:
             with self.subTest(path=path):
                 self.assertEqual(self.client.get(path).status_code, 200)
         for alias in ['createtable', 'CREATETABLE', 'CREATE-TABLE']:
-            response = self.client.get('/docs/sql/' + alias + '/?v=10')
+            response = self.client.get('/wiki/sql/' + alias + '/?v=10')
             self.assertEqual(response.status_code, 301)
-            self.assertEqual(response['Location'], '/docs/sql/create-table/?v=10')
-        root = self.client.get('/docs/sql/changes/')
-        self.assertEqual((root.status_code, root['Location']), (302, '/docs/sql/changes/18/'))
-        for path in ['/docs/sql/nosuch/', '/docs/sql/changes/99/', '/docs/sql/1bad/']:
+            self.assertEqual(response['Location'], '/wiki/sql/create-table/?v=10')
+        root = self.client.get('/wiki/sql/changes/')
+        self.assertEqual((root.status_code, root['Location']), (302, '/wiki/sql/changes/18/'))
+        for path in ['/wiki/sql/nosuch/', '/wiki/sql/changes/99/', '/wiki/sql/1bad/']:
             self.assertEqual(self.client.get(path).status_code, 404)
-        response = self.client.get('/docs/sql/create-table/?v=10&nope=1')
+        response = self.client.get('/wiki/sql/create-table/?v=10&nope=1')
         self.assertEqual(response.context['version']['major'], '10')
         self.assertNotIn('nope', response.wsgi_request.GET)
 
     def test_pages_have_safe_html_and_active_navigation(self):
-        for path in ['/docs/sql/', '/docs/sql/create-table/', '/docs/sql/changes/18/']:
+        for path in ['/wiki/sql/', '/wiki/sql/create-table/', '/wiki/sql/changes/18/']:
             response = self.client.get(path)
             soup = BeautifulSoup(response.content, 'html.parser')
             self.assertFalse(soup.select('.cmd [style], .cmd [onclick], .cmd script:not([src])'))
             ids = [x['id'] for x in soup.select('.cmd [id]')]
             self.assertEqual(len(ids), len(set(ids)))
             active = [i['link'] for i in response.context['navmenu'] if i.get('active')]
-            self.assertEqual(active, ['/docs/sql/'])
+            self.assertEqual(active, ['/wiki/sql/'])
 
     def test_sitemap_and_column_empty_origin(self):
         from pgweb.wiki import columns
         from pgweb.wiki.struct import get_struct
         from pgweb.util.contexts import _source_url
         paths = [p for p, _ in get_struct()]
-        self.assertIn('docs/sql/', paths)
-        self.assertIn('docs/sql/create-table/', paths)
-        self.assertIn('docs/sql/changes/20/', paths)
-        self.assertEqual(_source_url('/docs/sql/create-table/'), '')
+        self.assertIn('wiki/sql/', paths)
+        self.assertIn('wiki/sql/create-table/', paths)
+        self.assertIn('wiki/sql/changes/20/', paths)
+        self.assertEqual(_source_url('/wiki/sql/create-table/'), '')
         pending = dict(columns.BY_SLUG['sql'], live=False)
         self.assertEqual(columns.url(pending), '')
         with patch.object(columns, 'COLUMNS', [pending]):

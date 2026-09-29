@@ -28,7 +28,7 @@ COLUMNS = (
         'name': 'SQL 状态码',
         'short': 'SQL 状态码',
         'tone': 'err',
-        'lead': '全部 263 个 SQLSTATE 的含义、报文、诊断与处置。',
+        'lead': 'SQLSTATE 的含义、报文、诊断与处置。',
         'scale': '263 个 SQL 状态码 · 44 个类',
         'coverage': 'PostgreSQL 9.0 – 19beta3',
         'repo': 'pgsty/err.pg.center',
@@ -112,7 +112,7 @@ BY_SLUG = {column['slug']: column for column in COLUMNS}
 def url(column):
     """A live column links to its own index; one not yet rendered here links
     straight to its origin site, so every entry leads to real content."""
-    return '/docs/{}/'.format(column['slug']) if column['live'] else column.get('origin', '')
+    return '/wiki/{}/'.format(column['slug']) if column['live'] else column.get('origin', '')
 
 
 def present(column):
@@ -129,5 +129,5 @@ def live_columns():
 
 
 def nav_items():
-    """The encyclopedia columns at the end of the 文档 navigation."""
+    """Collection links for the standalone Wiki navigation."""
     return [{'title': column['name'], 'link': url(column)} for column in COLUMNS if url(column)]

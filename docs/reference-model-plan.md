@@ -33,7 +33,7 @@ PGSQL.CC 参考资料模型整理计划，2026-09-25。
 | `wiki_errcode_runtime` | `sqlstate.evidence.runtimes[]` | 保留原始运行证据 |
 | `wiki_errcode_case` | `sqlstate.evidence.cases[]` | 保留场景、断言、修复和清理步骤 |
 
-`search_indexedpage` 与 `search_searchentry` 保持表名和分工。公开链接仍为 `/docs/sqlstate/`、`/docs/catalog/`、`/docs/guc/`、`/docs/waitevent/`、`/docs/sql/`、`/docs/func/`。
+`search_indexedpage` 与 `search_searchentry` 保持表名和分工。公开链接仍为 `/wiki/sqlstate/`、`/wiki/catalog/`、`/wiki/guc/`、`/wiki/waitevent/`、`/wiki/sql/`、`/wiki/func/`。
 
 现有显式业务索引同步去掉历史应用前缀，例如 `wiki_errcode_condition` → `sqlstate_condition`、`wiki_guc_group` → `guc_group`。表改名并不等于所有索引、约束和序列名称自动改名：实施时从数据库目录列出受影响对象，使用 Django `RenameIndex` 或明确的 SQL 处理遗留名称。以真实对象清单为依据，不猜测自动生成的名字。外键的列、目标与删除行为保持原有语义。
 

@@ -108,7 +108,8 @@ sitenav = {
         {'title': 'FAQ', 'link': '/docs/faq/'},
         {'title': 'PostgreSQL Wiki', 'link': 'https://wiki.postgresql.org'},
         {'title': '三方文档', 'link': '/docs/third-party/', 'id': 'ecosystem-docs'},
-    ] + wiki_nav_items(),
+    ],
+    'wiki': [{'title': '百科', 'link': '/wiki/'}] + wiki_nav_items(),
     'community': [
         {'title': '社区', 'link': '/community/'},
         {'title': '贡献者', 'link': '/community/contributors/'},
@@ -267,9 +268,7 @@ def _get_doc_majors():
 
 
 # 本站独有的栏目，上游没有对应页面。给它们拼一个 postgresql.org 地址只会得到 404。
-LOCAL_ONLY_SECTIONS = ('/docs/sqlstate/', '/docs/catalog/', '/docs/guc/', '/docs/waitevent/',
-                       '/docs/hook/', '/docs/relopts/', '/docs/role/', '/docs/oid/',
-                       '/docs/sql/', '/docs/func/', '/docs/lock/', '/docs/compare/', '/info/', '/ext/', '/e/', '/nls/', '/developer/hacker/')
+LOCAL_ONLY_SECTIONS = ('/wiki/', '/docs/compare/', '/info/', '/ext/', '/e/', '/nls/', '/developer/hacker/')
 
 
 def _source_url(path):

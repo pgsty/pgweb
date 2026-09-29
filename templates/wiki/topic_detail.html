@@ -1,8 +1,9 @@
 {% extends "wiki/base.html" %}
+{% load pgfilters %}
 {% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
 {% block wiki_content %}
 <article class="wiki-topic wiki-entry wiki-tone-{{ topic.tone }}" data-pg-doc-version="{{ major }}">
-  <p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="{{ root }}?v={{ major }}">{{ topic.name }}</a> / {{ item.category }}</p>
+  <p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="{{ root }}?v={{ major }}">{{ topic.name }}</a> / {{ item.category }}</p>
   <header class="wiki-entry__head"><h1 class="topic-title">{{ item.name }}</h1><p class="wiki-entry__name">{{ item.name_zh }}</p><p class="wiki-lead">{{ item.summary }}</p></header>
   {% include "wiki/topic_versions.html" %}
   {% if snapshot %}
@@ -12,8 +13,8 @@
   </section>
   {% if snapshot.signature %}<section class="wiki-section" id="signature"><h2>{% if kind == 'hook' %}接口签名{% else %}用法{% endif %}</h2><pre><code>{{ snapshot.signature }}</code></pre></section>{% endif %}
   {% for section in snapshot.sections %}<section class="wiki-section" id="section-{{ forloop.counter }}"><h2>{{ section.title }}</h2>{% for paragraph in section.paragraphs %}<p>{{ paragraph }}</p>{% endfor %}{% if section.code %}<pre><code>{{ section.code }}</code></pre>{% endif %}{% for block in section.blocks %}{% for paragraph in block.paragraphs %}<p>{{ paragraph }}</p>{% endfor %}{% if block.code %}<pre><code>{{ block.code }}</code></pre>{% endif %}{% endfor %}</section>{% endfor %}
-  {% if snapshot.related %}<section class="wiki-section"><h2>相关条目</h2><ul class="topic-links">{% for link in snapshot.related %}<li><a href="{{ link.url }}">{{ link.label }}</a></li>{% endfor %}</ul></section>{% endif %}
-  <section class="wiki-section" id="sources"><h2>文档与源码</h2><ul>{% for source in snapshot.sources %}<li><a href="{{ source.url }}">{{ source.label }}</a></li>{% endfor %}</ul>
+  {% if snapshot.related %}<section class="wiki-section"><h2>相关条目</h2><ul class="topic-links">{% for link in snapshot.related %}<li><a href="{{ link.url|wiki_url }}">{{ link.label }}</a></li>{% endfor %}</ul></section>{% endif %}
+  <section class="wiki-section" id="sources"><h2>文档与源码</h2><ul>{% for source in snapshot.sources %}<li><a href="{{ source.url|wiki_url }}">{{ source.label }}</a></li>{% endfor %}</ul>
     <details class="topic-provenance"><summary>查看来源构建</summary><dl><dt>版本</dt><dd>{{ snapshot.release.label }}</dd><dt>构建</dt><dd>{{ snapshot.release.ref }}</dd><dt>来源指纹</dt><dd><code>{{ snapshot.release.revision }}</code></dd></dl></details>
   </section>
   {% else %}

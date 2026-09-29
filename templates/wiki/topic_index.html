@@ -2,7 +2,7 @@
 {% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/topics.css?{{gitrev}}">{% endblock %}
 {% block wiki_content %}
 <div class="wiki-topic wiki-tone-{{ topic.tone }}" data-pg-doc-version="{{ major }}">
-  <p class="wiki-crumb"><a href="/docs/">文档</a> / {{ topic.name }}</p>
+  <p class="wiki-crumb"><a href="/wiki/">百科</a> / {{ topic.name }}</p>
   <h1>PostgreSQL {{ topic.name }}</h1>
   <p class="wiki-lead">{{ topic.lead }}</p>
   {% include "wiki/topic_versions.html" %}

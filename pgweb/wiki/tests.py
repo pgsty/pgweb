@@ -21,7 +21,7 @@ class ColumnTests(SimpleTestCase):
         """Navigation must never point at a route that does not exist yet."""
         for column in COLUMNS:
             if column['live']:
-                self.assertEqual(url(column), '/docs/{}/'.format(column['slug']))
+                self.assertEqual(url(column), '/wiki/{}/'.format(column['slug']))
             else:
                 self.assertEqual(url(column), column['origin'])
 
@@ -32,7 +32,7 @@ class ColumnTests(SimpleTestCase):
 
     def test_nav_lists_every_column(self):
         items = nav_items()
-        self.assertEqual(items[0], {'title': 'SQL 命令', 'link': '/docs/sql/'})
+        self.assertEqual(items[0], {'title': 'SQL 命令', 'link': '/wiki/sql/'})
         self.assertEqual(len(items), len(COLUMNS))
 
 
@@ -74,9 +74,9 @@ class LinkRewriteTests(SimpleTestCase):
 
     def test_code_links_become_uppercase_site_links(self):
         self.assertEqual(self.rewrite('见 [25P02](../25p02/)。'),
-                         '见 [25P02](/docs/sqlstate/25P02/)。')
+                         '见 [25P02](/wiki/sqlstate/25P02/)。')
         self.assertEqual(self.rewrite('见 [HV00J](../../hv00j/)。'),
-                         '见 [HV00J](/docs/sqlstate/HV00J/)。')
+                         '见 [HV00J](/wiki/sqlstate/HV00J/)。')
 
     def test_evidence_and_case_links_point_at_page_anchors(self):
         self.assertEqual(self.rewrite('[证据](../data/evidence/23505.json)'), '[证据](#sources)')
@@ -194,7 +194,7 @@ class ErrorCodePageTests(TestCase):
         self.assertEqual(report['updated'], 0)
 
     def test_index_groups_by_class(self):
-        response = self.client.get('/docs/sqlstate/')
+        response = self.client.get('/wiki/sqlstate/')
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
         self.assertIn('导航索引', html)
@@ -203,7 +203,7 @@ class ErrorCodePageTests(TestCase):
         self.assertIn('唯一性冲突', html)
 
     def test_detail_renders_prose_and_panels(self):
-        html = self.client.get('/docs/sqlstate/23505/').content.decode()
+        html = self.client.get('/wiki/sqlstate/23505/').content.decode()
         self.assertIn('unique_violation', html)
         self.assertIn('报文模板', html)
         self.assertIn('duplicate key value', html)
@@ -212,24 +212,24 @@ class ErrorCodePageTests(TestCase):
         self.assertIn('unique_violation condition', html)
 
     def test_a_code_without_evidence_still_renders(self):
-        response = self.client.get('/docs/sqlstate/23000/')
+        response = self.client.get('/wiki/sqlstate/23000/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn('报文模板', response.content.decode())
 
     def test_lowercase_redirects_to_the_canonical_uppercase(self):
-        response = self.client.get('/docs/sqlstate/23505/'.replace('23505', '23p01'.upper().lower()))
+        response = self.client.get('/wiki/sqlstate/23505/'.replace('23505', '23p01'.upper().lower()))
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/sqlstate/23P01/')
+        self.assertEqual(response['Location'], '/wiki/sqlstate/23P01/')
 
     def test_unknown_code_is_404(self):
-        self.assertEqual(self.client.get('/docs/sqlstate/ZZZZZ/').status_code, 404)
-        self.assertEqual(self.client.get('/docs/sqlstate/toolong/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/sqlstate/ZZZZZ/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/sqlstate/toolong/').status_code, 404)
 
     def test_sitemap_lists_every_code(self):
         from .struct import get_struct
         pages = [page for page, _ in get_struct()]
-        self.assertIn('docs/sqlstate/', pages)
-        self.assertIn('docs/sqlstate/23505/', pages)
+        self.assertIn('wiki/sqlstate/', pages)
+        self.assertIn('wiki/sqlstate/23505/', pages)
 
     def test_panels_fall_back_when_the_matching_section_is_missing(self):
         """正文没有 messages 一节时，报文面板挂到含义那一节后面。"""
@@ -925,7 +925,7 @@ class CatalogPayloadTests(TestCase):
         relation.save(update_fields=['versions'])
         cache.clear()
         reference = catalog.detail('pg_demo', '11')['columns'][2]['references']
-        self.assertEqual(reference['url'], '/docs/catalog/pg_gone/?v=11')
+        self.assertEqual(reference['url'], '/wiki/catalog/pg_gone/?v=11')
         # pg_gone 在 12 已经不存在，只给文字不给链接。
         self.assertEqual(catalog.detail('pg_demo', '12')['columns'][2]['references']['url'], '')
 
@@ -1085,7 +1085,7 @@ class CatalogPageTests(TestCase):
         cache.clear()
 
     def test_index_renders_every_group(self):
-        response = self.client.get('/docs/catalog/')
+        response = self.client.get('/wiki/catalog/')
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
         self.assertIn('PostgreSQL 系统目录', html)
@@ -1094,61 +1094,61 @@ class CatalogPageTests(TestCase):
         self.assertIn('演示用的目录表', html)
 
     def test_detail_renders_columns_and_the_change_note(self):
-        html = self.client.get('/docs/catalog/pg_demo/').content.decode()
+        html = self.client.get('/wiki/catalog/pg_demo/').content.decode()
         self.assertIn('SYSTEM CATALOG', html)
         self.assertIn('demoextra', html)
         self.assertIn('行标识符', html)
         self.assertIn('相对 PostgreSQL 11：新增 1 个字段。', html)
 
     def test_detail_honours_the_version_parameter(self):
-        response = self.client.get('/docs/catalog/pg_demo/?v=10')
+        response = self.client.get('/wiki/catalog/pg_demo/?v=10')
         self.assertEqual(response.context['version']['major'], '10')
         self.assertIn('10 是本数据集的收录基线', response.context['change_note'])
         self.assertIn('行标识符（四列格式）', response.content.decode())
 
     def test_an_invalid_version_falls_back_to_the_default(self):
-        html = self.client.get('/docs/catalog/pg_demo/?v=1999').content.decode()
+        html = self.client.get('/wiki/catalog/pg_demo/?v=1999').content.decode()
         self.assertIn('相对 PostgreSQL 11：新增 1 个字段。', html)
 
     def test_unknown_relation_is_404(self):
-        self.assertEqual(self.client.get('/docs/catalog/pg_nope/').status_code, 404)
-        self.assertEqual(self.client.get('/docs/catalog/PG_DEMO/').status_code, 404)
-        self.assertEqual(self.client.get('/docs/catalog/demo/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/catalog/pg_nope/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/catalog/PG_DEMO/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/catalog/demo/').status_code, 404)
 
     def test_changes_root_redirects_to_the_default_version(self):
-        response = self.client.get('/docs/catalog/changes/')
+        response = self.client.get('/wiki/catalog/changes/')
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], '/docs/catalog/changes/12/')
+        self.assertEqual(response['Location'], '/wiki/catalog/changes/12/')
 
     def test_changes_page_renders(self):
-        html = self.client.get('/docs/catalog/changes/12/').content.decode()
+        html = self.client.get('/wiki/catalog/changes/12/').content.decode()
         self.assertIn('PostgreSQL 12 系统目录变更', html)
         self.assertIn('pg_gone', html)
-        html = self.client.get('/docs/catalog/changes/20/').content.decode()
+        html = self.client.get('/wiki/catalog/changes/20/').content.decode()
         self.assertIn('20 devel', html)
         self.assertIn('devel 手册', html)
 
     def test_changes_page_for_an_unknown_version_is_404(self):
-        self.assertEqual(self.client.get('/docs/catalog/changes/99/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/catalog/changes/99/').status_code, 404)
 
     def test_the_docs_navigation_marks_the_column_active(self):
-        response = self.client.get('/docs/catalog/')
+        response = self.client.get('/wiki/catalog/')
         active = [item for item in response.context['navmenu'] if item.get('active')]
-        self.assertEqual([item['link'] for item in active], ['/docs/catalog/'])
+        self.assertEqual([item['link'] for item in active], ['/wiki/catalog/'])
 
     def test_the_column_is_local_only(self):
         from pgweb.util.contexts import LOCAL_ONLY_SECTIONS, _source_url
-        self.assertIn('/docs/catalog/', LOCAL_ONLY_SECTIONS)
-        self.assertEqual(_source_url('/docs/catalog/pg_demo/'), '')
+        self.assertTrue('/wiki/catalog/'.startswith(LOCAL_ONLY_SECTIONS))
+        self.assertEqual(_source_url('/wiki/catalog/pg_demo/'), '')
 
     def test_sitemap_lists_the_index_every_relation_and_every_changes_page(self):
         from .struct import get_struct
         pages = [page for page, _ in get_struct()]
-        self.assertIn('docs/catalog/', pages)
-        self.assertIn('docs/catalog/pg_demo/', pages)
-        self.assertIn('docs/catalog/pg_fresh/', pages)
-        self.assertIn('docs/catalog/changes/10/', pages)
-        self.assertIn('docs/catalog/changes/20/', pages)
+        self.assertIn('wiki/catalog/', pages)
+        self.assertIn('wiki/catalog/pg_demo/', pages)
+        self.assertIn('wiki/catalog/pg_fresh/', pages)
+        self.assertIn('wiki/catalog/changes/10/', pages)
+        self.assertIn('wiki/catalog/changes/20/', pages)
 
 
 class CatalogDocArtifactTests(TestCase):

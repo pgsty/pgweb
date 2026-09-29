@@ -13,10 +13,10 @@ from .models import (CATALOG_KINDS, CATALOG_KIND_EYEBROW, CATALOG_KIND_LABEL, Ca
                      CatalogVersion, RELKIND_LABEL)
 
 
-CACHE_KEY = 'pgweb:wiki:catalog-index'
-VERSION_CACHE_KEY = 'pgweb:wiki:catalog-versions2'
+CACHE_KEY = 'pgweb:wiki:catalog-index:wiki'
+VERSION_CACHE_KEY = 'pgweb:wiki:catalog-versions2:wiki'
 DOC_CACHE_KEY = 'pgweb:wiki:catalog-docpages-v2'
-CHANGES_CACHE_KEY = 'pgweb:wiki:catalog-changes:{}'
+CHANGES_CACHE_KEY = 'pgweb:wiki:catalog-changes:{}:wiki'
 CACHE_SECONDS = 300
 
 KINDS = [kind for kind, _, _ in CATALOG_KINDS]
@@ -263,7 +263,7 @@ def sibling_groups(kind, current=''):
 
 def kind_nav(current=''):
     """「系统目录」下的四个类别，侧栏导航用。"""
-    return [{'title': group['label'], 'link': '/docs/catalog/#' + group['anchor'],
+    return [{'title': group['label'], 'link': '/wiki/catalog/#' + group['anchor'],
              'active': group['kind'] == current} for group in index()['groups']]
 
 
@@ -276,7 +276,7 @@ def reference_of(value, major, known):
     name, _, column = value.partition('.')
     url = ''
     if name in known and major in known[name]:
-        url = '/docs/catalog/{}/?v={}'.format(name, major)
+        url = '/wiki/catalog/{}/?v={}'.format(name, major)
     return {'text': value, 'name': name, 'column': column, 'url': url}
 
 
@@ -342,7 +342,7 @@ def ribbon_of(relation, major, order, changed, removed_in, pages=None):
 
 
 def facts_of(relation, major, snapshot, order):
-    rows = [('类别', relation.kind_label, '/docs/catalog/#kind-' + relation.kind)]
+    rows = [('类别', relation.kind_label, '/wiki/catalog/#kind-' + relation.kind)]
     if snapshot.get('relation_oid'):
         rows.append(('关系 OID', str(snapshot['relation_oid']), ''))
     relkind = snapshot.get('relkind', '') or relation.relkind

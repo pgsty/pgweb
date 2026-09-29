@@ -185,6 +185,6 @@ class RailroadPreviewTests(TestCase):
     def test_detail_uses_the_same_version_diagram_as_preview(self):
         entry = SearchEntry.objects.get(source='sqlcmd', name='CREATE TABLE')
         data = service.preview(entry, '17')
-        response = self.client.get('/docs/sql/create-table/?v=17')
+        response = self.client.get('/wiki/sql/create-table/?v=17')
         self.assertEqual(response.context['railroad']['digest'], data['syntax_digest'])
         self.assertContains(response, '语法铁道图')

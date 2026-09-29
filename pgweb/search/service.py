@@ -8,6 +8,7 @@ from django.db import connection
 from django.utils.html import escape
 from django.template.loader import render_to_string
 
+from pgweb.wiki.links import canonical_url, rewrite_links
 from pgweb.core.models import Version
 from pgweb.docs.versions import manual_major
 from .lexicon import query_text, words
@@ -117,7 +118,7 @@ def entry_data(entry, term='', tier=3, variants=1):
         url = '/docs/{}/{}'.format(page.display_version(), page.file) + ('#' + quote(entry.anchor, safe='-._~') if entry.anchor else '')
         source_label = 'PG' + str(version)
     else:
-        version, url = None, entry.url
+        version, url = None, canonical_url(entry.url)
         source_label = '扩展目录' if entry.source == 'ext' else '本站词条'
     return {
         'id': entry.id, 'name': entry.name, 'kind': entry.kind, 'kind_label': KIND_LABEL.get(entry.kind, entry.kind),
@@ -300,7 +301,7 @@ def preview(entry, wanted_major=''):
             payload = None
         if payload:
             data = entry_data(entry)
-            data.update(url=entry.url + '?v=' + payload['major'], version=int(payload['major']),
+            data.update(url=canonical_url(entry.url) + '?v=' + payload['major'], version=int(payload['major']),
                         html=render_to_string('wiki/topic_preview.html', payload),
                         versions=[{'version': int(v['major']), 'label': v['label'], 'url': v['url'],
                                    'id': entry.id, 'current': v['is_current']} for v in payload['versions']],
@@ -332,7 +333,7 @@ def preview(entry, wanted_major=''):
         if data is not None:
             return data
     data = entry_data(entry)
-    data['html'] = entry.preview
+    data['html'] = rewrite_links(entry.preview)
     others = (SearchEntry.objects.filter(entity_key=entry.entity_key).select_related('document__page')
               .defer('vector', 'preview', 'document__page__content').order_by('-version', 'id'))
     versions, variants, catalogue = {}, [], None

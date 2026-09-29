@@ -10,7 +10,7 @@ from .models import (DEPTHS, ErrorCode, ErrorCodeRelease,
                      EVIDENCE_TIERS, SEVERITY_LABEL, TIER_LABEL)
 
 
-CACHE_KEY = 'pgweb:wiki:errcode-index:v2'
+CACHE_KEY = 'pgweb:wiki:errcode-index:v2:wiki'
 CACHE_SECONDS = 300
 
 # 手册附录只给码和条件名；这里再给宏名称、严重等级与已知版本范围，说明另起一行。
@@ -151,7 +151,7 @@ def index(request=None):
 
 def class_nav(current=''):
     """The 44 classes as the sub-navigation under SQL 状态码 in the side card."""
-    return [{'title': '{} {}'.format(g['code'], g['label']), 'link': '/docs/sqlstate/#' + g['anchor'],
+    return [{'title': '{} {}'.format(g['code'], g['label']), 'link': '/wiki/sqlstate/#' + g['anchor'],
              'active': g['code'] == current} for g in index()['groups']]
 
 

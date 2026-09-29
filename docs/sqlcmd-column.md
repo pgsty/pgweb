@@ -1,4 +1,4 @@
-# SQL 命令 `/docs/sql/`
+# SQL 命令 `/wiki/sql/`
 
 百科第五个栏目：PostgreSQL SQL 命令（手册第 VI 部分「SQL 命令」的每一条参考页）的跨大版本百科。
 和前四个栏目不同，这一栏**没有 pg.center 上游仓库**：权威源就是本站手册的 `sql-*.html` 参考页（10 – 19 与 devel），
@@ -137,14 +137,14 @@ HTML 清洗与链接改写照 GUC §3.1：bleach 白名单同一份再加 `pre, 
 ## 4. 地址与页面
 
 ```
-/docs/sql/                       索引：导览 + 分组入口 + 版本条 + 筛选 + 按分组的大表（含版本变动方格）
-/docs/sql/<slug>/                详情，?v=<major> 切版本；默认 status='stable' 的那一版
-/docs/sql/changes/               302 → /docs/sql/changes/<默认版本>/
-/docs/sql/changes/<major>/       该版本相对上一版的变更；?from=<major> 改比较基准
+/wiki/sql/                       索引：导览 + 分组入口 + 版本条 + 筛选 + 按分组的大表（含版本变动方格）
+/wiki/sql/<slug>/                详情，?v=<major> 切版本；默认 status='stable' 的那一版
+/wiki/sql/changes/               302 → /wiki/sql/changes/<默认版本>/
+/wiki/sql/changes/<major>/       该版本相对上一版的变更；?from=<major> 改比较基准
 ```
 
 `<slug>` 匹配 `^[a-z][a-z0-9-]*$`；`changes/` 排在 `<slug>/` 之前。查找顺序：`slug` → `aliases`（含大小写不敏感）→ 404；命中别名 301 到规范地址并带上 `?v=`。
-`shell()` 把侧栏 `/docs/sql/` 标 active；`LOCAL_ONLY_SECTIONS` 加 `/docs/sql/`；`struct.py` 写 sitemap；
+`shell()` 把侧栏 `/wiki/sql/` 标 active；`LOCAL_ONLY_SECTIONS` 加 `/wiki/sql/`；`struct.py` 写 sitemap；
 `columns.py` 加第五项 `{'slug': 'sql', 'name': 'SQL 命令', 'tone': 'sql', 'lead': '每条 SQL 命令的语法、参数与逐版本的语法演化。', 'scale': '183 条命令 · 17 组', 'coverage': 'PostgreSQL 10 – 20 devel', 'repo': '', 'origin': '', 'live': True}`；
 `columns.url()` 遇到 `origin` 为空且未上线的栏目返回 `''`，`nav_items()` 跳过这种栏目（本栏目一上线就为 True，不会走到这条）。模块 docstring 里的「四个栏目」改成「五个栏目」。
 三个视图挂 `@queryparams`（索引 `q / group / verb / first / present`，详情 `v`，变更页 `from`）。
@@ -154,7 +154,7 @@ HTML 清洗与链接改写照 GUC §3.1：bleach 白名单同一份再加 `pre, 
 ```
 total, group_count(17), default_major, earliest_major, latest_major,
 versions: [ver]                 # major, label, status, status_label, support_status, command_count, added_count, removed_count, changed_count,
-                                #   position, doc_slug, url('/docs/sql/changes/<major>/'), preview, devel, is_default
+                                #   position, doc_slug, url('/wiki/sql/changes/<major>/'), preview, devel, is_default
 groups: [{slug, label, eyebrow, anchor('group-table'), count, rows: [row]}]
 row: {slug, name, url, verb, object, group, purpose_zh, purpose, first, last, baseline(bool 首个收录版本就有), removed, removed_in,
       change_count, last_change, synopsis_lines(最新概要行数),

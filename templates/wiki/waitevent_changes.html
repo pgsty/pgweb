@@ -2,7 +2,7 @@
 {% block wiki_content %}
 <div class="wiki-tone-wait we">
 
-<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/waitevent/">等待事件</a> / {{ version.label }}{% if not na %} 变动{% endif %}</p>
+<p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/waitevent/">等待事件</a> / {{ version.label }}{% if not na %} 变动{% endif %}</p>
 <h1>PostgreSQL {{ version.label }} 等待事件{% if not na %}变动{% endif %}</h1>
 
 {% if na %}
@@ -28,7 +28,7 @@
 {% if previous or arbitrary %}
 <details class="we-rebase"{% if arbitrary %} open{% endif %}>
   <summary>换一个对比基准</summary>
-  <form class="we-rebase__form" action="/docs/waitevent/changes/{{ version.major }}/" method="get">
+  <form class="we-rebase__form" action="/wiki/waitevent/changes/{{ version.major }}/" method="get">
     <label for="we-from">与哪一版比较</label>
     <select class="form-control" id="we-from" name="from">
       {% for item in versions %}{% if not item.is_current %}<option value="{{ item.major }}"{% if item.major == from_major %} selected{% elif not from_major and previous and item.major == previous.major %} selected{% endif %}>PostgreSQL {{ item.label }}</option>{% endif %}{% endfor %}

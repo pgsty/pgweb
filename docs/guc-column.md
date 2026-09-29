@@ -1,4 +1,4 @@
-# 配置参数 `/docs/guc/`
+# 配置参数 `/wiki/guc/`
 
 百科第三个上线栏目：PostgreSQL 配置参数（GUC，`pg_settings` 的每一行）的跨大版本百科。
 数据来自 [guc.pg.center](https://guc.pg.center)（仓库 `pgsty/guc.pg.center`，本机 `~/pg.center/guc`），
@@ -166,15 +166,15 @@ guc 到 19 beta 4 为止；20 由本站 devel 手册（`DocPage.version=0`）推
 ## 4. 地址与页面
 
 ```
-/docs/guc/                       索引：导览 + 分类入口 + 版本条 + 筛选 + 按分类分组的大表（含版本变动方格）
-/docs/guc/<name>/                详情，?v=<major> 切版本；默认 status='stable' 的那一版（当前 18）
-/docs/guc/changes/               302 → /docs/guc/changes/<默认版本>/
-/docs/guc/changes/<major>/       该版本相对上一版的变更；?from=<major> 改比较基准
+/wiki/guc/                       索引：导览 + 分类入口 + 版本条 + 筛选 + 按分类分组的大表（含版本变动方格）
+/wiki/guc/<name>/                详情，?v=<major> 切版本；默认 status='stable' 的那一版（当前 18）
+/wiki/guc/changes/               302 → /wiki/guc/changes/<默认版本>/
+/wiki/guc/changes/<major>/       该版本相对上一版的变更；?from=<major> 改比较基准
 ```
 
-`<name>` 匹配 `^[A-Za-z][A-Za-z0-9_]*$`；`changes/` 路由排在 `<name>/` 之前。查找用 `key=name.lower()`，命中但大小写与规范名不同时 301 到规范地址（`/docs/guc/datestyle/` → `/docs/guc/DateStyle/`）。
+`<name>` 匹配 `^[A-Za-z][A-Za-z0-9_]*$`；`changes/` 路由排在 `<name>/` 之前。查找用 `key=name.lower()`，命中但大小写与规范名不同时 301 到规范地址（`/wiki/guc/datestyle/` → `/wiki/guc/DateStyle/`）。
 无效 `?v=` 落回默认版本（默认版本该参数不存在时取它最后存在的版本）；找不到 404。
-`shell()` 给侧栏把 `/docs/guc/` 标 active；`LOCAL_ONLY_SECTIONS` 加 `/docs/guc/`；`struct.py` 把索引、每个参数、每个版本变更页写进 sitemap；
+`shell()` 给侧栏把 `/wiki/guc/` 标 active；`LOCAL_ONLY_SECTIONS` 加 `/wiki/guc/`；`struct.py` 把索引、每个参数、每个版本变更页写进 sitemap；
 `columns.py` 里 `guc` 置 `live: True`，规模写"449 个参数 · 16 类"（按导入后实际数改），覆盖写"PostgreSQL 9.0 – 20 devel"。
 三个视图都挂 `@queryparams`（索引 `q / group / context / first / present`，详情 `v`，变更页 `from`）。
 
@@ -184,7 +184,7 @@ guc 到 19 beta 4 为止；20 由本站 devel 手册（`DocPage.version=0`）推
 total, group_count(16), default_major, earliest_major('9.0'), latest_major('20'),
 versions: [ver]                 # major, label, status, status_label, support_status, parameter_count, added_count,
                                 #   removed_count, default_changed_count, position, doc_slug, server_version, schema_source,
-                                #   url('/docs/guc/changes/<major>/'), preview, devel, is_default
+                                #   url('/wiki/guc/changes/<major>/'), preview, devel, is_default
 groups: [{slug, group, label, anchor('group-wal'), count,
           subgroups: [{category, label(中文子分类名，去掉一级分类前缀；一级分类本身就是子分类时留空), anchor('cat-wal-settings'), count, rows: [row]}]}]
 row: {name, url, group_slug, category, category_zh, vartype, vartype_label, context, context_label, context_note,
@@ -285,7 +285,7 @@ baseline_groups: 索引页 groups 形状，只含 9.0 存在的参数
 
 `pgweb/search/indexer.py` 加 `guc_entry()` 与 `rebuild_guc()`，`source='guc'`、`kind='guc'`、`subtype=group_slug`、
 `entity_key='guc:' + normalize_name(name)`（与手册页抽出的 `GUC-*` 条目一致，结果列表折叠成一条并让本站词条胜出）、
-别名含小写与去下划线形式、`url='/docs/guc/<name>/'`、正文含两种简述、机制段落、分类；预览含简述 + 事实（类型 / 上下文 / 默认值 / 引入）+ 默认值变迁。
+别名含小写与去下划线形式、`url='/wiki/guc/<name>/'`、正文含两种简述、机制段落、分类；预览含简述 + 事实（类型 / 上下文 / 默认值 / 引入）+ 默认值变迁。
 `service.py` 的来源元组加 `'guc'`，`source_label` 为「本站词条」；`search-ui.js` 把 `guc` 与 `catalog`、`errcode` 同等对待。
 `index_docs --guc` 只重建这批条目。
 

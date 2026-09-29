@@ -25,7 +25,7 @@ BEGIN
            OR EXISTS (SELECT 1 FROM unnest(s.present_in) v
                       WHERE NOT EXISTS (SELECT 1 FROM sqlstate_version WHERE major=v));
     IF inconsistent <> 0 THEN RAISE EXCEPTION 'SQLSTATE % 条派生字段或版本身份不一致', inconsistent; END IF;
-    SELECT array_agg('/docs/sqlstate/' || sqlstate || '/' ORDER BY sqlstate) INTO expected_urls FROM sqlstate;
+    SELECT array_agg('/wiki/sqlstate/' || sqlstate || '/' ORDER BY sqlstate) INTO expected_urls FROM sqlstate;
     SELECT array_agg(url ORDER BY url) INTO indexed_urls FROM search_searchentry WHERE source='errcode';
     IF expected_urls IS DISTINCT FROM indexed_urls THEN RAISE EXCEPTION 'SQLSTATE 检索条目不一致'; END IF;
     SELECT count(*) INTO inconsistent FROM sqlstate_class c
@@ -39,15 +39,15 @@ BEGIN
     FOR item IN
         SELECT * FROM (VALUES
             ('SQL 命令', 'sqlcmd', NULL, NULL, 'sqlcmd',
-             $url$'/docs/sql/' || slug || '/'$url$),
+             $url$'/wiki/sql/' || slug || '/'$url$),
             ('系统目录', 'catalog', 'catalog_version', 'relation_count', 'catalog',
-             $url$'/docs/catalog/' || name || '/'$url$),
+             $url$'/wiki/catalog/' || name || '/'$url$),
             ('等待事件', 'waitevent', 'waitevent_version', 'event_count', 'wait',
-             $url$'/docs/waitevent/' || type_slug || '/' || name || '/'$url$),
+             $url$'/wiki/waitevent/' || type_slug || '/' || name || '/'$url$),
             ('函数百科', 'func', 'func_version', 'function_count', 'func',
-             $url$'/docs/func/' || slug || '/'$url$),
+             $url$'/wiki/func/' || slug || '/'$url$),
             ('配置参数', 'guc', 'guc_version', 'parameter_count', 'guc',
-             $url$'/docs/guc/' || name || '/'$url$)
+             $url$'/wiki/guc/' || name || '/'$url$)
         ) AS columns(label, data_table, version_table, count_field, source_name, url_expr)
     LOOP
         EXECUTE format('SELECT count(*), array_agg(%s ORDER BY %s) FROM %I',
@@ -153,7 +153,7 @@ BEGIN
     IF inconsistent <> 0 THEN
         RAISE EXCEPTION '锁百科：% 个命令引用在对应版本的 SQL 命令百科中不存在。', inconsistent;
     END IF;
-    SELECT array_agg('/docs/lock/' || slug || '/' ORDER BY '/docs/lock/' || slug || '/')
+    SELECT array_agg('/wiki/lock/' || slug || '/' ORDER BY '/wiki/lock/' || slug || '/')
         INTO expected_urls FROM lock_mode;
     SELECT array_agg(url ORDER BY url) INTO indexed_urls FROM search_searchentry WHERE source='lock';
     IF indexed_urls IS DISTINCT FROM expected_urls THEN

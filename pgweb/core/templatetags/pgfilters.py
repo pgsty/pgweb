@@ -15,6 +15,19 @@ import babel
 register = template.Library()
 
 
+@register.filter(is_safe=True)
+def wiki_links(html):
+    """Normalize links in stored Wiki HTML while leaving manual URLs intact."""
+    from pgweb.wiki.links import rewrite_links
+    return rewrite_links(str(html or ''))
+
+
+@register.filter
+def wiki_url(url):
+    from pgweb.wiki.links import canonical_url
+    return canonical_url(str(url or ''))
+
+
 @register.filter(name='class_name')
 def class_name(ob):
     return ob.__class__.__name__
@@ -46,6 +59,7 @@ _NAV_SECTIONS = {
     'about': (('/about/',), ()),
     'download': (('/download/', '/ftp/', '/ext/', '/e/'), ()),
     'docs': (('/docs/',), ()),
+    'wiki': (('/wiki/',), ()),
     'community': (('/community/',), ()),
     'developer': (('/developer/',), ()),
     'support': (('/support/',), ()),

@@ -1155,7 +1155,7 @@ html[data-shout="off"] .pg-shout {
 
 .pg-footer__grid {
   display: grid;
-  grid-template-columns: repeat(var(--pg-footer-cols, 4), minmax(0, 1fr));
+  grid-template-columns: repeat(var(--pg-footer-cols, 5), minmax(0, 1fr));
   gap: 2rem 1.25rem;
 }
 

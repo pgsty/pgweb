@@ -1,4 +1,4 @@
-# 函数百科 `/docs/func/`
+# 函数百科 `/wiki/func/`
 
 百科第六个栏目：PostgreSQL 内置函数的跨大版本百科。数据源不是某个 pg.center 仓库，
 而是**本站手册第 9 章「函数和操作符」**（`functions-*.html`），10 – 19 与 devel 用本站译文，
@@ -210,15 +210,15 @@ class PgFunction(models.Model):             # db_table = 'func'
 ## 4. 地址与页面
 
 ```
-/docs/func/                      索引：导览 + 分组入口 + 版本条 + 筛选 + 按分组的大表（含版本变动方格）
-/docs/func/<slug>/               详情，?v=<major> 切版本；默认 status='stable' 的那一版
-/docs/func/changes/              302 → /docs/func/changes/<默认版本>/
-/docs/func/changes/<major>/      该版相对上一版的变更；?from=<major> 改比较基准
+/wiki/func/                      索引：导览 + 分组入口 + 版本条 + 筛选 + 按分组的大表（含版本变动方格）
+/wiki/func/<slug>/               详情，?v=<major> 切版本；默认 status='stable' 的那一版
+/wiki/func/changes/              302 → /wiki/func/changes/<默认版本>/
+/wiki/func/changes/<major>/      该版相对上一版的变更；?from=<major> 改比较基准
 ```
 
 `<slug>` 匹配 `^[a-z][a-z0-9-]*$`；`changes/` 排在 `<slug>/` 之前。查找顺序：`slug` → `name_key`
 （`to_char`、`TO_CHAR` 都能进）→ 404，命中非规范形式时 301 到规范地址并带上 `?v=`。
-`shell()` 把侧栏 `/docs/func/` 标 active；`LOCAL_ONLY_SECTIONS` 加 `/docs/func/`；
+`shell()` 把侧栏 `/wiki/func/` 标 active；`LOCAL_ONLY_SECTIONS` 加 `/wiki/func/`；
 `struct.py` 把索引、每个函数、每个版本变更页写进 sitemap；三个视图都挂 `@queryparams`
 （索引 `q / group / first / present`，详情 `v`，变更页 `from`）。
 `columns.py` 加第六项：`slug='func'`、`name='函数百科'`、`tone='func'`、
@@ -230,7 +230,7 @@ class PgFunction(models.Model):             # db_table = 'func'
 total, group_count, default_major, earliest_major, latest_major,
 versions: [ver]      # major, label, status, status_label, support_status, function_count, signature_count,
                      #   added_count, removed_count, changed_count, position, doc_slug, lang, source,
-                     #   url('/docs/func/changes/<major>/'), preview, devel, is_default,
+                     #   url('/wiki/func/changes/<major>/'), preview, devel, is_default,
                      #   tick_head/tick_tail/tone/tone_label（由 pgweb/wiki/ruler.py 的 mark_ticks 补）
 groups: [{slug, label, eyebrow, anchor('group-string'), count, rows: [row]}]
 row: {slug, name, url, group, group_label, summary_zh, summary, signature, signature_count,

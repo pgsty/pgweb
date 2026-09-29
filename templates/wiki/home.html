@@ -1,0 +1,13 @@
+{% extends "wiki/base.html" %}
+{% block wiki_content %}
+<h1>PostgreSQL 百科</h1>
+<p class="wiki-lead">按主题查阅 PostgreSQL 的命令、参数与数据库对象，了解它们的含义、用法和版本变化。每个栏目都保留对应版本的手册或源码链接。</p>
+<div class="wiki-cards">
+  {% for column in columns %}
+  <section class="wiki-card {{ column.tone_class }}">
+    <h2 class="wiki-card__title"><a href="{{ column.url }}">{{ column.name }}</a></h2>
+    <p class="wiki-card__lead">{{ column.lead }}</p>
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

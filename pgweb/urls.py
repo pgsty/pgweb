@@ -37,9 +37,13 @@ urlpatterns = [
     path('developer/hacker/', include('pgweb.hacker.urls')),
     re_path(r'^hacker/(?P<rest>.*)$', RedirectView.as_view(
         url='/developer/hacker/%(rest)s', permanent=True, query_string=True)),
-    path('docs/', include('pgweb.wiki.urls')),  # /docs/sqlstate/ 等百科栏目
-    re_path(r'^(?:wiki|docs)/errcode/(?P<rest>.*)$', RedirectView.as_view(url='/docs/sqlstate/%(rest)s', permanent=True)),
-    re_path(r'^wiki/.*$', RedirectView.as_view(url='/docs/', permanent=True)),
+    path('wiki/', include('pgweb.wiki.urls')),
+    re_path(r'^(?:wiki|docs)/errcode/(?P<rest>.*)$',
+            RedirectView.as_view(url='/wiki/sqlstate/%(rest)s', permanent=True, query_string=True)),
+    re_path(r'^(?:docs|wiki)/reference/$',
+            RedirectView.as_view(url='/wiki/', permanent=True, query_string=True)),
+    re_path(r'^docs/(?P<rest>(?:sql|sqlstate|catalog|guc|waitevent|func|lock|hook|relopts|role|oid)/.*)$',
+            RedirectView.as_view(url='/wiki/%(rest)s', permanent=True, query_string=True)),
     path('nls/', include('pgweb.nls.urls')),
     path('e/', include('pgweb.ext.urls_e')),
     re_path(r'^$', pgweb.core.views.home),

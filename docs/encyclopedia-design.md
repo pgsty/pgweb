@@ -8,17 +8,17 @@ PGSQL.CC 在 `/docs/` 下提供 SQL 命令、SQLSTATE、系统目录、配置参
 
 | 领域 | 实体表 | 公共资料 | 主键 / 详情地址 |
 | --- | --- | --- | --- |
-| SQLSTATE | `sqlstate` | `sqlstate_class`、`sqlstate_version` | 五字符大写代码；`/docs/sqlstate/<CODE>/` |
-| 系统目录 | `catalog` | `catalog_version` | 关系名；`/docs/catalog/<name>/` |
-| GUC | `guc` | `guc_version` | 参数规范名；`/docs/guc/<name>/` |
-| 等待事件 | `waitevent` | `waitevent_version` | 归一化身份 key；`/docs/waitevent/<type>/<name>/` |
-| SQL 命令 | `sqlcmd` | 从快照与 `core.Version` 组装 | slug；`/docs/sql/<slug>/` |
-| 函数 | `func` | `func_version` | 函数名归一化 slug；`/docs/func/<slug>/` |
-| 锁模式 | `lock_mode` | 复用 `core.Version`，来源构建保留在快照中 | 锁模式 slug；`/docs/lock/<slug>/` |
-| 扩展钩子 | `hook` | 复用 `core.Version`，来源构建保留在快照中 | slug；`/docs/hook/<slug>/` |
-| 存储参数 | `relopt` | 同上 | 对象类型与参数名构成的 slug；`/docs/relopts/<slug>/` |
-| 预定义角色 | `predefined_role` | 同上 | 角色名；`/docs/role/<slug>/` |
-| 对象标识符类型 | `oid_type` | 同上 | 类型名；`/docs/oid/<slug>/` |
+| SQLSTATE | `sqlstate` | `sqlstate_class`、`sqlstate_version` | 五字符大写代码；`/wiki/sqlstate/<CODE>/` |
+| 系统目录 | `catalog` | `catalog_version` | 关系名；`/wiki/catalog/<name>/` |
+| GUC | `guc` | `guc_version` | 参数规范名；`/wiki/guc/<name>/` |
+| 等待事件 | `waitevent` | `waitevent_version` | 归一化身份 key；`/wiki/waitevent/<type>/<name>/` |
+| SQL 命令 | `sqlcmd` | 从快照与 `core.Version` 组装 | slug；`/wiki/sql/<slug>/` |
+| 函数 | `func` | `func_version` | 函数名归一化 slug；`/wiki/func/<slug>/` |
+| 锁模式 | `lock_mode` | 复用 `core.Version`，来源构建保留在快照中 | 锁模式 slug；`/wiki/lock/<slug>/` |
+| 扩展钩子 | `hook` | 复用 `core.Version`，来源构建保留在快照中 | slug；`/wiki/hook/<slug>/` |
+| 存储参数 | `relopt` | 同上 | 对象类型与参数名构成的 slug；`/wiki/relopts/<slug>/` |
+| 预定义角色 | `predefined_role` | 同上 | 角色名；`/wiki/role/<slug>/` |
+| 对象标识符类型 | `oid_type` | 同上 | 类型名；`/wiki/oid/<slug>/` |
 
 锁百科和四个参考栏目在原 12 张业务表之外各新增一张，共 17 张；不增加独立版本或关系表。详见 [锁百科](lock-column.md) 与 [四个参考栏目](reference-topics.md)。
 

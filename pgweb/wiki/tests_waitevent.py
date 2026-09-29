@@ -213,7 +213,7 @@ class WaitEventIndexTests(TestCase):
         self.assertEqual(payload['na_majors'], ['9.5'])
         na = next(v for v in payload['versions'] if v['major'] == '9.5')
         self.assertFalse(na['has_wait_events'])
-        self.assertEqual(na['url'], '/docs/waitevent/changes/9.5/')
+        self.assertEqual(na['url'], '/wiki/waitevent/changes/9.5/')
 
     def test_groups_follow_the_canonical_type_order(self):
         payload = waitevent.index()
@@ -262,7 +262,7 @@ class WaitEventIndexTests(TestCase):
         self.assertEqual(cells['9.5']['url'], '')
         self.assertEqual(cells['17']['url'], '')
         self.assertEqual(cells['18']['url'], '')
-        self.assertEqual(cells['13']['url'], '/docs/waitevent/lock/Gone/?v=13')
+        self.assertEqual(cells['13']['url'], '/wiki/waitevent/lock/Gone/?v=13')
 
     def test_row_carries_the_names_it_ever_used(self):
         row = self.rows()['lwlock/buffercontent']
@@ -296,7 +296,7 @@ class WaitEventIndexTests(TestCase):
 
     def test_type_nav_and_sibling_groups(self):
         nav = waitevent.type_nav('lwlock')
-        self.assertEqual(nav[-1], {'title': '轻量级锁', 'link': '/docs/waitevent/#type-lwlock',
+        self.assertEqual(nav[-1], {'title': '轻量级锁', 'link': '/wiki/waitevent/#type-lwlock',
                                    'active': True})
         groups = waitevent.sibling_groups('LWLock', 'lwlock/buffercontent')
         self.assertEqual([group['type'] for group in groups], ['LWLock'])
@@ -323,7 +323,7 @@ class WaitEventLookupTests(TestCase):
                        'BUFFER_CONTENT'):
             event, canonical = waitevent.lookup('lwlock', wanted)
             self.assertEqual(event.key, 'lwlock/buffercontent', wanted)
-            self.assertEqual(canonical, '/docs/waitevent/lwlock/BufferContent/', wanted)
+            self.assertEqual(canonical, '/wiki/waitevent/lwlock/BufferContent/', wanted)
 
     def test_an_unknown_type_or_name_finds_nothing(self):
         self.assertEqual(waitevent.lookup('mystery', 'BufferContent'), (None, None))
@@ -333,7 +333,7 @@ class WaitEventLookupTests(TestCase):
 
     def test_detail_reports_the_canonical_url_instead_of_a_payload(self):
         payload = waitevent.detail('lwlock', 'buffer_content')
-        self.assertEqual(payload['canonical'], '/docs/waitevent/lwlock/BufferContent/')
+        self.assertEqual(payload['canonical'], '/wiki/waitevent/lwlock/BufferContent/')
         self.assertEqual(waitevent.detail('lwlock', 'BufferContent')['canonical'], '')
         with self.assertRaises(WaitEvent.DoesNotExist):
             waitevent.detail('lwlock', 'NoSuchEvent')
@@ -450,10 +450,10 @@ class WaitEventDetailTests(TestCase):
         facts = {row['label']: row for row in
                  waitevent.detail('lwlock', 'BufferContent', '18')['facts']}
         self.assertEqual(facts['类型']['value'], '轻量级锁')
-        self.assertEqual(facts['类型']['url'], '/docs/waitevent/#type-lwlock')
+        self.assertEqual(facts['类型']['url'], '/wiki/waitevent/#type-lwlock')
         self.assertEqual(facts['引入版本']['value'], '9.6（机制起点）')
         self.assertEqual(facts['版本状态']['value'], '当前稳定版')
-        self.assertEqual(facts['版本状态']['url'], '/docs/waitevent/changes/18/')
+        self.assertEqual(facts['版本状态']['url'], '/wiki/waitevent/changes/18/')
         self.assertEqual(facts['覆盖版本']['value'], '7 个 · 9.6 – 20')
         self.assertEqual(facts['触发路径']['value'], '实测触发')
         self.assertEqual(facts['实测发行版']['value'], '18.0')
@@ -523,7 +523,7 @@ class WaitEventDetailTests(TestCase):
         cache.clear()
         gucs = {row['name']: row['url']
                 for row in waitevent.detail('lwlock', 'BufferContent', '18')['dossier']['gucs']}
-        self.assertEqual(gucs['work_mem'], '/docs/guc/work_mem/')
+        self.assertEqual(gucs['work_mem'], '/wiki/guc/work_mem/')
         self.assertEqual(gucs['shared_buffers'],
                          '/docs/18/runtime-config-resource.html#GUC-SHARED-BUFFERS')
         self.assertEqual(gucs['no_such_setting'], '/search/?q=no_such_setting&kind=guc')
@@ -532,7 +532,7 @@ class WaitEventDetailTests(TestCase):
         timeline = waitevent.detail('lwlock', 'BufferContent', '18')['timeline']
         self.assertEqual([item['to'] for item in timeline], ['18', '13', '12'])
         self.assertEqual(timeline[0]['reworded']['to'], SHARED)
-        self.assertEqual(timeline[0]['url'], '/docs/waitevent/lwlock/BufferContent/?v=18')
+        self.assertEqual(timeline[0]['url'], '/wiki/waitevent/lwlock/BufferContent/?v=18')
         self.assertEqual(timeline[1]['renamed'],
                          {'from': 'buffer_content', 'to': 'BufferContent'})
         self.assertEqual(timeline[0]['description_zh_to'], '等待访问共享内存中的数据页。')
@@ -574,7 +574,7 @@ class WaitEventChangesTests(TestCase):
         card = payload['renamed'][0]['cards'][0]
         self.assertEqual((card['from_name'], card['to_name']),
                          ('buffer_content', 'BufferContent'))
-        self.assertEqual(card['url'], '/docs/waitevent/lwlock/BufferContent/?v=13')
+        self.assertEqual(card['url'], '/wiki/waitevent/lwlock/BufferContent/?v=13')
 
     def test_removed_and_moved_land_in_their_own_buckets(self):
         seventeen = waitevent.changes('17')
@@ -583,7 +583,7 @@ class WaitEventChangesTests(TestCase):
         self.assertEqual(seventeen['summary']['removed'], 1)
         # 移除的事件链到它最后存在的那一版。
         card = seventeen['removed'][0]['cards'][0]
-        self.assertEqual(card['url'], '/docs/waitevent/lock/Gone/?v=13')
+        self.assertEqual(card['url'], '/wiki/waitevent/lock/Gone/?v=13')
         nineteen = waitevent.changes('19')
         self.assertEqual([card['name'] for group in nineteen['moved'] for card in group['cards']],
                          ['BufferPin'])
@@ -613,7 +613,7 @@ class WaitEventChangesTests(TestCase):
         payload = waitevent.changes('9.5')
         self.assertTrue(payload['na'])
         self.assertEqual(payload['na_note'], waitevent.NA_NOTE)
-        self.assertEqual(payload['first_url'], '/docs/waitevent/changes/9.6/')
+        self.assertEqual(payload['first_url'], '/wiki/waitevent/changes/9.6/')
         self.assertEqual(payload['summary']['total'], 0)
         self.assertEqual(payload['added'], [])
 
@@ -666,11 +666,11 @@ class WaitEventSitemapTests(TestCase):
 
     def test_every_page_is_listed(self):
         paths = {path for path, _ in struct.get_struct()}
-        self.assertIn('docs/waitevent/', paths)
-        self.assertIn('docs/waitevent/lwlock/BufferContent/', paths)
-        self.assertIn('docs/waitevent/lock/Gone/', paths)
-        self.assertIn('docs/waitevent/changes/18/', paths)
-        self.assertIn('docs/waitevent/changes/9.5/', paths)
+        self.assertIn('wiki/waitevent/', paths)
+        self.assertIn('wiki/waitevent/lwlock/BufferContent/', paths)
+        self.assertIn('wiki/waitevent/lock/Gone/', paths)
+        self.assertIn('wiki/waitevent/changes/18/', paths)
+        self.assertIn('wiki/waitevent/changes/9.5/', paths)
 
 
 @unittest.skipUnless(HAS_TEMPLATES, '模板由前端代理并行编写，尚未落地')
@@ -686,7 +686,7 @@ class WaitEventPageTests(TestCase):
         cache.clear()
 
     def test_index_renders_every_group(self):
-        response = self.client.get('/docs/waitevent/')
+        response = self.client.get('/wiki/waitevent/')
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
         self.assertIn('PostgreSQL 等待事件', html)
@@ -694,31 +694,31 @@ class WaitEventPageTests(TestCase):
         self.assertIn('BufferContent', html)
 
     def test_detail_renders_the_change_note_and_honours_v(self):
-        html = self.client.get('/docs/waitevent/lwlock/BufferContent/').content.decode()
+        html = self.client.get('/wiki/waitevent/lwlock/BufferContent/').content.decode()
         self.assertIn('LWLOCK', html)
         self.assertIn('PostgreSQL 18：描述措辞更新。', html)
-        response = self.client.get('/docs/waitevent/lwlock/BufferContent/?v=13')
+        response = self.client.get('/wiki/waitevent/lwlock/BufferContent/?v=13')
         self.assertEqual(response.context['version']['major'], '13')
 
     def test_a_non_canonical_name_redirects_once(self):
-        response = self.client.get('/docs/waitevent/lwlock/buffer_content/')
+        response = self.client.get('/wiki/waitevent/lwlock/buffer_content/')
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/waitevent/lwlock/BufferContent/')
-        response = self.client.get('/docs/waitevent/lwlock/buffer-content/?v=13')
+        self.assertEqual(response['Location'], '/wiki/waitevent/lwlock/BufferContent/')
+        response = self.client.get('/wiki/waitevent/lwlock/buffer-content/?v=13')
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/waitevent/lwlock/BufferContent/?v=13')
+        self.assertEqual(response['Location'], '/wiki/waitevent/lwlock/BufferContent/?v=13')
 
     def test_unknown_type_or_event_is_404(self):
-        self.assertEqual(self.client.get('/docs/waitevent/mystery/BufferContent/').status_code, 404)
-        self.assertEqual(self.client.get('/docs/waitevent/lwlock/NoSuchEvent/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/waitevent/mystery/BufferContent/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/waitevent/lwlock/NoSuchEvent/').status_code, 404)
 
     def test_changes_root_redirects_to_the_default_version(self):
-        response = self.client.get('/docs/waitevent/changes/')
+        response = self.client.get('/wiki/waitevent/changes/')
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], '/docs/waitevent/changes/18/')
+        self.assertEqual(response['Location'], '/wiki/waitevent/changes/18/')
 
     def test_changes_pages_render_including_the_na_one(self):
-        self.assertEqual(self.client.get('/docs/waitevent/changes/13/').status_code, 200)
-        html = self.client.get('/docs/waitevent/changes/9.5/').content.decode()
+        self.assertEqual(self.client.get('/wiki/waitevent/changes/13/').status_code, 200)
+        html = self.client.get('/wiki/waitevent/changes/9.5/').content.decode()
         self.assertIn('尚无等待事件机制', html)
-        self.assertEqual(self.client.get('/docs/waitevent/changes/99/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/waitevent/changes/99/').status_code, 404)

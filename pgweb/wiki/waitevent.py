@@ -26,14 +26,14 @@ from .ruler import mark_ticks
 from .waitevent_common import compare_snapshots, normal_text
 
 
-CACHE_KEY = 'pgweb:wiki:waitevent-index'
-VERSION_CACHE_KEY = 'pgweb:wiki:waitevent-versions2'
+CACHE_KEY = 'pgweb:wiki:waitevent-index:wiki'
+VERSION_CACHE_KEY = 'pgweb:wiki:waitevent-versions2:wiki'
 DOC_CACHE_KEY = 'pgweb:wiki:waitevent-docpages-v2'
-CHANGES_CACHE_KEY = 'pgweb:wiki:waitevent-changes:{}'
-GUC_CACHE_KEY = 'pgweb:wiki:waitevent-guc:{}'
+CHANGES_CACHE_KEY = 'pgweb:wiki:waitevent-changes:{}:wiki'
+GUC_CACHE_KEY = 'pgweb:wiki:waitevent-guc:{}:wiki'
 CACHE_SECONDS = 300
 
-ROOT = '/docs/waitevent/'
+ROOT = '/wiki/waitevent/'
 DOC_FILE = 'monitoring-stats.html'
 UPSTREAM = 'https://www.postgresql.org/docs/{}/{}{}'
 ATLAS = 'https://wait.pg.center/'
@@ -198,7 +198,7 @@ def guc_links(names):
     for key, canonical in GucParameter.objects.filter(key__in=list(lowered)).values_list('key', 'name'):
         wanted = lowered.get(key)
         if wanted:
-            links[wanted] = '/docs/guc/{}/'.format(canonical)
+            links[wanted] = '/wiki/guc/{}/'.format(canonical)
     remaining = [name for name in names if name not in links]
     if remaining:
         links.update(manual_guc_links(remaining))
@@ -787,7 +787,7 @@ def changes_payload(major, from_major=''):
                          'total': 0, 'types': 0},
              'added': [], 'removed': [], 'renamed': [], 'moved': [], 'reworded': [],
              'baseline': False, 'baseline_groups': [], 'na': False, 'na_note': '',
-             'first_url': '/docs/waitevent/changes/{}/'.format(first_major) if first_major else '',
+             'first_url': '/wiki/waitevent/changes/{}/'.format(first_major) if first_major else '',
              'notice': notice_of(version), 'baseline_note': ''}
     if not version['has_wait_events']:
         # 9.0 – 9.5：页面只放一段说明，并链到 9.6。

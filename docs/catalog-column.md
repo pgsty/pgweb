@@ -1,9 +1,9 @@
-# 系统目录 `/docs/catalog/`
+# 系统目录 `/wiki/catalog/`
 
 百科第二个上线栏目：PostgreSQL 系统目录表、系统视图、统计视图与进度视图的跨大版本字段百科。
 数据来自 [cat.pg.center](https://cat.pg.center)（仓库 `pgsty/cat.pg.center`，本机 `~/pg.center/cat`），
 本站在此之上叠加两层：**中文**（从本站手册译文里采集）与 **PostgreSQL 20 开发版快照**（从本站 devel 手册推导）。
-页面设计沿用 SQL 状态码栏目（`/docs/sqlstate/`）的骨架：导览索引页 + 逐条详情页，外加一个按版本看变更的页面。
+页面设计沿用 SQL 状态码栏目（`/wiki/sqlstate/`）的骨架：导览索引页 + 逐条详情页，外加一个按版本看变更的页面。
 
 本文既是设计契约（后端与前端按同一份上下文形状分头实现），也是日后维护入口。
 
@@ -153,14 +153,14 @@ cat 到 19 beta 4 为止；20 由本站 devel 手册（`DocPage.version=0`）推
 ## 4. 地址与页面
 
 ```
-/docs/catalog/                    索引：导览 + 版本条 + 筛选 + 按类别分组的大表（含版本轨迹）
-/docs/catalog/<name>/             详情，?v=<major> 切版本；默认 status='stable' 的那一版（当前 18）
-/docs/catalog/changes/            302 → /docs/catalog/changes/<默认版本>/
-/docs/catalog/changes/<major>/    该版本相对上一版的变更；?from=<major> 改比较基准
+/wiki/catalog/                    索引：导览 + 版本条 + 筛选 + 按类别分组的大表（含版本轨迹）
+/wiki/catalog/<name>/             详情，?v=<major> 切版本；默认 status='stable' 的那一版（当前 18）
+/wiki/catalog/changes/            302 → /wiki/catalog/changes/<默认版本>/
+/wiki/catalog/changes/<major>/    该版本相对上一版的变更；?from=<major> 改比较基准
 ```
 
 `<name>` 匹配 `^pg_[a-z0-9_]+$`；`changes/` 路由排在 `<name>/` 之前。无效 `?v=` 落回默认版本；无效 name 404。
-`shell()` 给"文档"侧栏把 `/docs/catalog/` 标为 active；`LOCAL_ONLY_SECTIONS` 加 `/docs/catalog/`；`struct.py` 把索引、每个关系、每个版本变更页都写进 sitemap。
+`shell()` 给"百科"侧栏把 `/wiki/catalog/` 标为 active；`LOCAL_ONLY_SECTIONS` 用 `/wiki/` 覆盖全部百科；`struct.py` 把索引、每个关系、每个版本变更页都写进 sitemap。
 `columns.py` 里 `catalog` 置 `live: True`，规模写"153 个关系 · 4 类"（cat 的 151 加上 20 推导层的
 `pg_stat_kind_info` 和 `pg_stat_progress_data_checksums`），覆盖写"PostgreSQL 9.0 – 20 devel"。
 三个视图都要挂 `@queryparams`（索引 `q / kind / present / first`、详情 `v`、变更页 `from`）：
@@ -173,7 +173,7 @@ total, kind_count, default_major, earliest_major('9.0'), latest_major('20'),
 versions: [ver]                 # 版本条：major, label, status, status_label, support_status,
                                 #   relation_count, column_count, kinds, position, doc_slug, release,
                                 #   source_tag, documentation_version, runtime_verified, schema_source,
-                                #   url('/docs/catalog/changes/<major>/'), preview(bool), devel(bool), is_default
+                                #   url('/wiki/catalog/changes/<major>/'), preview(bool), devel(bool), is_default
 groups: [{kind, label, eyebrow, anchor('kind-catalog'), count, rows: [row]}]
 row: {name, url, kind, kind_label, summary, summary_zh, first, last, removed(bool), removed_in('13' 或 ''),
       column_count, changed_in: [...], change_count,
@@ -185,7 +185,7 @@ filters: [{param:'kind', label:'类别', options:[{value,label,count}]},
 stats: {relations, columns(最新版字段总数), snapshots, structural_changes}
 ```
 
-轨迹（strip）的状态：`absent` 该版没有；`added` 首次出现（9.0 基线除外）；`changed` 该版落地了结构变化；`removed` 只标在 `last_version` 的下一版（`pg_pltemplate` 在 13 标 removed）；其余 `present`。`url` 指向 `/docs/catalog/<name>/?v=<major>`，absent 与 removed 无 url。
+轨迹（strip）的状态：`absent` 该版没有；`added` 首次出现（9.0 基线除外）；`changed` 该版落地了结构变化；`removed` 只标在 `last_version` 的下一版（`pg_pltemplate` 在 13 标 removed）；其余 `present`。`url` 指向 `/wiki/catalog/<name>/?v=<major>`，absent 与 removed 无 url。
 
 `versions()`（版本条）与 `doc_pages()`（本站手册已收录的 `(版本段, 文件名)`）各自缓存 5 分钟。
 默认版本在建版本条缓存时算一次就记在 `is_default` 上，`default_major()` 与 `pick_major()` 读它，不再查库。
@@ -201,7 +201,7 @@ description, description_zh     # 快照两种说明
 columns: [{name, type, documented_type, description, description_zh, zh_from,
            hidden, not_null, array_dimensions, attnum,
            added(bool 本版新增), type_change({from,to} 或 None),
-           references: {text:'pg_namespace.oid', name:'pg_namespace', column:'oid', url:'/docs/catalog/pg_namespace/?v=18' 或 ''} 或 None,
+           references: {text:'pg_namespace.oid', name:'pg_namespace', column:'oid', url:'/wiki/catalog/pg_namespace/?v=18' 或 ''} 或 None,
            schema_note}]
 removed_columns: [同形，本版相对上一版移除的字段（取上一版快照的值）]
 change: 落在本版的 change 记录或 None       # 9.0 基线 None
@@ -232,7 +232,7 @@ version, previous(ver 或 None), from_major, arbitrary(bool 非相邻比较)
 versions: [ver]                 # 发布导航条，含 url、is_current
 summary: {added_relations, removed_relations, changed_relations, structurally_changed, added_columns, removed_columns, type_changes, description_changes}
 added: [card], removed: [card], changed: [card 结构变化], wording: [card 仅描述/引用变化]
-card: {name, url('/docs/catalog/<name>/?v=<major>'), kind, kind_label, summary_zh, summary, status,
+card: {name, url('/wiki/catalog/<name>/?v=<major>'), kind, kind_label, summary_zh, summary, status,
        tags: [{kind: added|removed|type|attr|order|desc|ref, text}], column_count}
 baseline: bool                  # 9.0：列出当时的全部关系
 baseline_groups: [索引页 groups 形状，只含 9.0 存在的关系]
@@ -270,7 +270,7 @@ CSP 禁内联样式，状态一律走 class。亮暗两套。脚本追加到 `me
 
 `pgweb/search/indexer.py` 加 `catalog_entry()` 与 `rebuild_catalog()`，`source='catalog'`、`kind='relation'`、`subtype=关系类别`、
 `entity_key='relation:' + normalize_name(name)`（与手册页抽出的关系条目一致，结果列表折叠成一条并让本站词条胜出）、
-`url='/docs/catalog/<name>/'`、正文含两种一句话、最新版说明与全部字段名、预览含一句话 + 事实 + 字段名。
+`url='/wiki/catalog/<name>/'`、正文含两种一句话、最新版说明与全部字段名、预览含一句话 + 事实 + 字段名。
 别名一律有去下划线的形式（`pgstatactivity`）；去掉 `pg_` 前缀的那个只在剩下的部分仍是复合名时才加——
 `stat_activity` 指得明确，`class` / `index` / `type` / `database` 是手册里的词，不该把 `pg_class` 顶到手册条目前面。
 `service.py` 的来源元组与排序偏好加 `'catalog'`，`source_label` 为「本站词条」；`search-ui.js` 把 `catalog` 与 `errcode` 同等对待。
@@ -319,9 +319,9 @@ unlocated                                       # 定位不到字段表的「关
 .venv/bin/python manage.py test pgweb.wiki pgweb.search --noinput
 ```
 
-页面：`/docs/catalog/`、`/docs/catalog/pg_class/?v=12`、`/docs/catalog/pg_stat_activity/`、
-`/docs/catalog/pg_pltemplate/`、`/docs/catalog/pg_statistic/?v=20`、`/docs/catalog/changes/18/`、
-`/docs/catalog/changes/9.0/`、`/docs/catalog/changes/20/` 都 200，`/docs/catalog/changes/` 302，无效关系名 404。
+页面：`/wiki/catalog/`、`/wiki/catalog/pg_class/?v=12`、`/wiki/catalog/pg_stat_activity/`、
+`/wiki/catalog/pg_pltemplate/`、`/wiki/catalog/pg_statistic/?v=20`、`/wiki/catalog/changes/18/`、
+`/wiki/catalog/changes/9.0/`、`/wiki/catalog/changes/20/` 都 200，`/wiki/catalog/changes/` 302，无效关系名 404。
 
 
 2026-09-25 模型整理：实体表增加 `content_hash`，按实际落库内容判断是否更新；`source_rev` 和导出时间不参与内容比较，未变更的实体保留 `imported_at`。表名与版本表已去掉 `wiki_` 前缀，Python 模型、应用标签、命令、URL 和检索身份保持原约定。全局契约与回退步骤见 [百科模型](encyclopedia-design.md) 和 [模型整理实施记录](reference-model-rollout.md)。

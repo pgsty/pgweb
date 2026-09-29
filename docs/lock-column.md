@@ -1,4 +1,4 @@
-# 锁百科 `/docs/lock/`
+# 锁百科 `/wiki/lock/`
 
 锁百科描述 PostgreSQL 10–20 的 8 种表级锁模式、4 种行级锁模式、冲突关系和取得它们的 SQL 命令。默认版本与本站 `core.Version.current` 一致，测试版、开发快照和停止维护的版本明确标注。PG10 是采样基线，不代表锁模式的引入时间。
 
@@ -6,7 +6,7 @@
 
 新增 `lock_mode`，每种锁模式一行，共 12 行。普通列保存 `slug/name/name_zh/abbrev/scope/summary/position`，`versions[major]` 保存该版本的冲突模式 slug、命令变体、适用条件、来源及构建证据。`content_hash/source_rev/imported_at` 遵循其他百科的幂等导入约定。
 
-不建冲突边表、命令表或版本表：同作用域的冲突集合在版本 JSON 中；兼容集合、矩阵和反向命令映射由它派生。命令 slug 直接链接现有 `/docs/sql/<slug>/?v=<major>`，版本显示复用 `core.Version`。每份快照保留实际采样构建，不能把数据库中的新 beta 标签当成来源已经刷新。来源提交或抓取时间变化而业务内容不变时，不重写实体和 `imported_at`。
+不建冲突边表、命令表或版本表：同作用域的冲突集合在版本 JSON 中；兼容集合、矩阵和反向命令映射由它派生。命令 slug 直接链接现有 `/wiki/sql/<slug>/?v=<major>`，版本显示复用 `core.Version`。每份快照保留实际采样构建，不能把数据库中的新 beta 标签当成来源已经刷新。来源提交或抓取时间变化而业务内容不变时，不重写实体和 `imported_at`。
 
 ## 来源与更新
 
@@ -39,9 +39,9 @@
 
 ## 页面与集成
 
-- 索引 `/docs/lock/?v=18`，详情 `/docs/lock/access-share/?v=18`；不支持的版本或未知模式返回 404，避免悄悄展示另一版本。
+- 索引 `/wiki/lock/?v=18`，详情 `/wiki/lock/access-share/?v=18`；不支持的版本或未知模式返回 404，避免悄悄展示另一版本。
 - 版本下拉是普通 GET 表单，无 JavaScript 仍可切换。矩阵、模式和命令在服务端完整渲染；JavaScript 只增强单元格说明、模式高亮和命令筛选。
-- 文档导航与 sitemap 从 `wiki.columns` 生成；SQL 命令详情显示所选版本的反向锁模式链接。
+- 百科导航与 sitemap 从 `wiki.columns` 生成；SQL 命令详情显示所选版本的反向锁模式链接。
 - 统一检索新增 `source='lock'`、`kind='lock'`、`entity_key='lock:<slug>'`，仍复用两张派生检索表，不新增索引业务表。运行 `index_docs --locks`，搜索预览按请求版本读事实。
 - 样式复用百科壳和等待事件的色调，增强样式与脚本分别为 `media/css/lock.css`、`media/js/lock.js`，遵守 CSP，无内联脚本或样式。
 

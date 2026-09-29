@@ -36,7 +36,7 @@ class WaitEventSearchTests(TestCase):
         entry = SearchEntry.objects.get(source='wait', name='BufferContent')
         self.assertEqual((entry.kind, entry.subtype), ('waitevent', 'lwlock'))
         self.assertEqual(entry.entity_key, 'waitevent:lwlock/buffercontent')
-        self.assertEqual(entry.url, '/docs/waitevent/lwlock/BufferContent/')
+        self.assertEqual(entry.url, '/wiki/waitevent/lwlock/BufferContent/')
         self.assertEqual(entry.weight, 0.5)
         self.assertEqual(entry.heading, '轻量级锁 · 等待事件')
 
@@ -77,7 +77,7 @@ class WaitEventSearchTests(TestCase):
             first = results[0]
             self.assertEqual(first['name'], 'BufferContent', query)
             self.assertEqual((first['source'], first['source_label']), ('wait', '本站词条'), query)
-            self.assertEqual(first['url'], '/docs/waitevent/lwlock/BufferContent/', query)
+            self.assertEqual(first['url'], '/wiki/waitevent/lwlock/BufferContent/', query)
             self.assertEqual((first['kind'], first['group']), ('waitevent', 'waitevent'), query)
             self.assertEqual(first['kind_label'], '等待事件', query)
 
@@ -99,7 +99,7 @@ class WaitEventSearchTests(TestCase):
         entry = SearchEntry.objects.get(source='wait', name='BufferContent')
         detail = preview(entry)
         self.assertEqual(detail['source_label'], '本站词条')
-        self.assertEqual(detail['url'], '/docs/waitevent/lwlock/BufferContent/')
+        self.assertEqual(detail['url'], '/wiki/waitevent/lwlock/BufferContent/')
         # 词条自己没有版本，手册也没有逐事件的定义行。
         self.assertEqual(detail['versions'], [])
         self.assertIn('等待访问共享内存中的数据页。', detail['html'])

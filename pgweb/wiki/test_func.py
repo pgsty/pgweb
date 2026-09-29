@@ -339,7 +339,7 @@ class FuncIndexTests(FuncFixture):
                          ('20 devel', '开发版', 'upstream'))
         self.assertTrue(last['devel'])
         self.assertTrue(order[-2]['preview'])
-        self.assertEqual(last['url'], '/docs/func/changes/20/')
+        self.assertEqual(last['url'], '/wiki/func/changes/20/')
         self.assertEqual(order[0]['doc_slug'], '')
         # 事实一律取自上游英文页，版本条上不再有语言，改说中文覆盖了多少个函数。
         self.assertEqual((order[0]['source'], order[0]['layout']), ('upstream', 'table-old'))
@@ -395,7 +395,7 @@ class FuncIndexTests(FuncFixture):
     def test_rows_carry_the_facts_the_table_prints(self):
         rows = self.rows()
         substring = rows['substring']
-        self.assertEqual(substring['url'], '/docs/func/substring/')
+        self.assertEqual(substring['url'], '/wiki/func/substring/')
         self.assertEqual(substring['name'], 'substring')
         self.assertEqual(substring['group'], 'string')
         self.assertEqual(substring['group_label'], '字符串函数和操作符')
@@ -412,7 +412,7 @@ class FuncIndexTests(FuncFixture):
         self.assertEqual(gone['removed_in'], '13')
         self.assertFalse(rows['gen-random-uuid']['baseline'])
         self.assertEqual(rows['coalesce']['name'], 'COALESCE')
-        self.assertEqual(rows['coalesce']['url'], '/docs/func/coalesce/')
+        self.assertEqual(rows['coalesce']['url'], '/wiki/func/coalesce/')
 
     def test_filters_count_groups_and_versions(self):
         filters = {item['param']: item for item in func.index()['filters']}
@@ -489,7 +489,7 @@ class FuncDetailTests(FuncFixture):
     def test_facts_report_group_signatures_introduction_status_and_source(self):
         facts = {row['label']: row for row in func.detail('substring', '18')['facts']}
         self.assertEqual(facts['分组']['value'], '字符串函数和操作符')
-        self.assertEqual(facts['分组']['url'], '/docs/func/#group-string')
+        self.assertEqual(facts['分组']['url'], '/wiki/func/#group-string')
         self.assertEqual(facts['签名数']['value'], '3 条')
         self.assertEqual(facts['引入版本']['value'], '9.0（基线）')
         self.assertEqual(facts['状态']['value'], '现存')
@@ -606,7 +606,7 @@ class FuncDetailTests(FuncFixture):
         self.assertFalse(cells['18']['current'])
         self.assertEqual(cells['15']['state'], 'changed')
         self.assertEqual(cells['9.0']['state'], 'present')
-        self.assertEqual(cells['18']['url'], '/docs/func/substring/?v=18')
+        self.assertEqual(cells['18']['url'], '/wiki/func/substring/?v=18')
         self.assertEqual(cells['12']['doc_url'],
                          '/docs/12/functions-string.html#FUNCTIONS-STRING-SQL')
         # 本站没有 11 的手册，就不给链接。
@@ -656,7 +656,7 @@ class FuncDetailTests(FuncFixture):
         self.assertEqual((item['from'], item['status']), ('14', 'changed'))
         self.assertEqual(item['added'], [SUB_SIMILAR['text']])
         self.assertEqual(item['removed'], [])
-        self.assertEqual(item['url'], '/docs/func/substring/?v=15')
+        self.assertEqual(item['url'], '/wiki/func/substring/?v=15')
         self.assertFalse(item['doc_overhaul'])
         # 新增与移除也在时间线上。
         self.assertEqual([i['status'] for i in func.detail('gen-random-uuid')['timeline']],
@@ -677,7 +677,7 @@ class FuncDetailTests(FuncFixture):
         self.assertEqual(states[SUB_NEW[0]['text']], ['absent'] * 10 + ['exists'] * 8)
         self.assertEqual(states[SUB_SIMILAR['text']], ['absent'] * 12 + ['exists'] * 6)
         cells = {cell['major']: cell for cell in matrix['rows'][2]['cells']}
-        self.assertEqual(cells['18']['url'], '/docs/func/substring/?v=18')
+        self.assertEqual(cells['18']['url'], '/wiki/func/substring/?v=18')
         self.assertEqual(cells['9.0']['url'], '')
         self.assertTrue(cells['18']['current'])
 
@@ -743,7 +743,7 @@ class FuncDetailTests(FuncFixture):
         cache.clear()
         related = func.detail('substring', '18')['related']
         self.assertEqual([item['slug'] for item in related], ['substr'])
-        self.assertEqual(related[0]['url'], '/docs/func/substr/')
+        self.assertEqual(related[0]['url'], '/wiki/func/substr/')
         self.assertEqual(related[0]['summary_zh'], '取子串。')
 
     def test_siblings_are_the_index_table_of_the_same_group(self):
@@ -773,7 +773,7 @@ class FuncChangesTests(FuncFixture):
         self.assertEqual([card['slug'] for card in payload['removed']], ['txid-snapshot-xip'])
         card = payload['added'][0]
         self.assertEqual(card['name'], 'gen_random_uuid')
-        self.assertEqual(card['url'], '/docs/func/gen-random-uuid/')
+        self.assertEqual(card['url'], '/wiki/func/gen-random-uuid/')
         self.assertEqual(card['group_label'], 'UUID 函数')
         self.assertEqual(card['summary_zh'], '生成版本 4 的随机 UUID。')
         # 引入那一版上游只在正文里提到：卡片如实写 0，不拿最新版的签名充数。
@@ -886,73 +886,73 @@ class FuncPageTests(FuncFixture):
     """四条路由都要能走通。"""
 
     def test_index_renders(self):
-        response = self.client.get('/docs/func/')
+        response = self.client.get('/wiki/func/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['total'], 6)
         self.assertEqual(response.context['column']['slug'], 'func')
         self.assertIn('group-string', response.content.decode())
 
     def test_detail_renders_and_honours_the_version_parameter(self):
-        response = self.client.get('/docs/func/substring/')
+        response = self.client.get('/wiki/func/substring/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['version']['major'], '18')
-        response = self.client.get('/docs/func/substring/?v=9.3')
+        response = self.client.get('/wiki/func/substring/?v=9.3')
         self.assertEqual(response.context['version']['major'], '9.3')
         self.assertTrue(response.context['doc']['borrowed'])
-        self.assertEqual(self.client.get('/docs/func/substring/?v=20')
+        self.assertEqual(self.client.get('/wiki/func/substring/?v=20')
                          .context['version']['major'], '20')
 
     def test_an_invalid_version_falls_back_to_the_default(self):
-        response = self.client.get('/docs/func/substring/?v=1999')
+        response = self.client.get('/wiki/func/substring/?v=1999')
         self.assertEqual(response.context['version']['major'], '18')
 
     def test_query_parameters_outside_the_whitelist_are_dropped(self):
-        response = self.client.get('/docs/func/substring/?v=12&nope=1')
+        response = self.client.get('/wiki/func/substring/?v=12&nope=1')
         self.assertEqual(response.context['version']['major'], '12')
-        self.assertEqual(self.client.get('/docs/func/?q=sub&group=string'
+        self.assertEqual(self.client.get('/wiki/func/?q=sub&group=string'
                                          '&first=9.0&present=18').status_code, 200)
 
     def test_a_non_canonical_spelling_redirects_to_the_canonical_one(self):
-        response = self.client.get('/docs/func/to_char/')
+        response = self.client.get('/wiki/func/to_char/')
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/func/to-char/')
-        response = self.client.get('/docs/func/TO_CHAR/?v=12')
+        self.assertEqual(response['Location'], '/wiki/func/to-char/')
+        response = self.client.get('/wiki/func/TO_CHAR/?v=12')
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/func/to-char/?v=12')
-        response = self.client.get('/docs/func/COALESCE/')
+        self.assertEqual(response['Location'], '/wiki/func/to-char/?v=12')
+        response = self.client.get('/wiki/func/COALESCE/')
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/func/coalesce/')
-        self.assertEqual(self.client.get('/docs/func/to-char/').status_code, 200)
+        self.assertEqual(response['Location'], '/wiki/func/coalesce/')
+        self.assertEqual(self.client.get('/wiki/func/to-char/').status_code, 200)
 
     def test_an_unknown_function_is_404(self):
-        self.assertEqual(self.client.get('/docs/func/nosuch/').status_code, 404)
-        self.assertEqual(self.client.get('/docs/func/9bad/').status_code, 404)
-        self.assertEqual(self.client.get('/docs/func/bad.name/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/func/nosuch/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/func/9bad/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/func/bad.name/').status_code, 404)
 
     def test_changes_root_redirects_to_the_default_version(self):
-        response = self.client.get('/docs/func/changes/')
+        response = self.client.get('/wiki/func/changes/')
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], '/docs/func/changes/18/')
+        self.assertEqual(response['Location'], '/wiki/func/changes/18/')
 
     def test_changes_pages_render_and_honour_from(self):
-        self.assertEqual(self.client.get('/docs/func/changes/9.0/').status_code, 200)
-        response = self.client.get('/docs/func/changes/13/')
+        self.assertEqual(self.client.get('/wiki/func/changes/9.0/').status_code, 200)
+        response = self.client.get('/wiki/func/changes/13/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['version']['label'], '13')
-        self.assertTrue(self.client.get('/docs/func/changes/18/?from=12')
+        self.assertTrue(self.client.get('/wiki/func/changes/18/?from=12')
                         .context['arbitrary'])
-        self.assertEqual(self.client.get('/docs/func/changes/20/').status_code, 200)
-        self.assertEqual(self.client.get('/docs/func/changes/99/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/func/changes/20/').status_code, 200)
+        self.assertEqual(self.client.get('/wiki/func/changes/99/').status_code, 404)
 
     def test_the_docs_navigation_marks_the_column_active(self):
-        response = self.client.get('/docs/func/')
+        response = self.client.get('/wiki/func/')
         active = [item for item in response.context['navmenu'] if item.get('active')]
-        self.assertEqual([item['link'] for item in active], ['/docs/func/'])
+        self.assertEqual([item['link'] for item in active], ['/wiki/func/'])
 
     def test_the_column_is_local_only(self):
         from pgweb.util.contexts import LOCAL_ONLY_SECTIONS, _source_url
-        self.assertIn('/docs/func/', LOCAL_ONLY_SECTIONS)
-        self.assertEqual(_source_url('/docs/func/substring/'), '')
+        self.assertTrue('/wiki/func/'.startswith(LOCAL_ONLY_SECTIONS))
+        self.assertEqual(_source_url('/wiki/func/substring/'), '')
 
     def test_the_column_is_live_and_listed(self):
         self.assertTrue(BY_SLUG['func']['live'])
@@ -962,11 +962,11 @@ class FuncPageTests(FuncFixture):
     def test_sitemap_lists_the_index_every_function_and_every_changes_page(self):
         from .struct import get_struct
         pages = [page for page, _ in get_struct()]
-        self.assertIn('docs/func/', pages)
-        self.assertIn('docs/func/substring/', pages)
-        self.assertIn('docs/func/to-char/', pages)
-        self.assertIn('docs/func/changes/9.0/', pages)
-        self.assertIn('docs/func/changes/20/', pages)
+        self.assertIn('wiki/func/', pages)
+        self.assertIn('wiki/func/substring/', pages)
+        self.assertIn('wiki/func/to-char/', pages)
+        self.assertIn('wiki/func/changes/9.0/', pages)
+        self.assertIn('wiki/func/changes/20/', pages)
 
 
 # ---------------------------------------------------------------- 检索
@@ -983,7 +983,7 @@ class FuncSearchEntryTests(FuncFixture):
         self.assertEqual(entry['entity_key'], 'function:substring')
         self.assertEqual((entry['kind'], entry['subtype']), ('function', 'string'))
         self.assertEqual(entry['name'], 'substring')
-        self.assertEqual(entry['url'], '/docs/func/substring/')
+        self.assertEqual(entry['url'], '/wiki/func/substring/')
         self.assertEqual(entry['weight'], 0.5)
         self.assertEqual(entry['heading'], '函数 · 字符串函数和操作符')
         self.assertEqual(entry['signature'], SUB_NEW[0]['text'])
@@ -1010,7 +1010,7 @@ class FuncSearchEntryTests(FuncFixture):
         self.assertEqual(entry['name'], 'COALESCE')
         self.assertEqual(entry['name_key'], 'coalesce')
         self.assertEqual(entry['entity_key'], 'function:coalesce')
-        self.assertEqual(entry['url'], '/docs/func/coalesce/')
+        self.assertEqual(entry['url'], '/wiki/func/coalesce/')
 
     def test_rebuild_counts_and_replaces_the_source(self):
         from pgweb.search.indexer import rebuild_func
@@ -1026,7 +1026,7 @@ class FuncSearchEntryTests(FuncFixture):
         self.assertEqual(row.entity_key, 'function:substring')
         self.assertIsNone(row.document_id)
         self.assertIsNone(row.version)
-        self.assertEqual(row.url, '/docs/func/substring/')
+        self.assertEqual(row.url, '/wiki/func/substring/')
 
     def test_the_search_service_includes_the_column(self):
         from pgweb.search import service

@@ -1,8 +1,9 @@
 {% extends "wiki/base.html" %}
+{% load pgfilters %}
 {% block wiki_content %}
 <article class="wiki-entry">
 
-<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/sqlstate/">SQL 状态码</a> / <a href="{{ klass.url }}">Class {{ klass.code }} {{ klass.label }}</a></p>
+<p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/sqlstate/">SQL 状态码</a> / <a href="{{ klass.url }}">Class {{ klass.code }} {{ klass.label }}</a></p>
 
 <header class="wiki-entry__head">
   <h1><span class="wiki-entry__code">{{ code.sqlstate }}</span> <span class="wiki-entry__cond">{{ code.condition_name }}</span></h1>
@@ -61,7 +62,7 @@
 {% if block.type == 'section' %}
   <section class="wiki-section" {% if block.section.anchor %}id="{{ block.section.anchor }}"{% endif %}>
     {% if block.section.heading %}<h2>{{ block.section.heading }}</h2>{% endif %}
-    {{ block.section.html|safe }}
+    {{ block.section.html|wiki_links|safe }}
   </section>
 
 {% elif block.type == 'sources_section' %}

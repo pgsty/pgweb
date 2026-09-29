@@ -1,4 +1,4 @@
-"""Mounted under /docs/: the 百科 columns. Unbuilt columns redirect to their origin site."""
+"""Mounted under /wiki/: the 百科 columns. Unbuilt columns redirect to their origin site."""
 
 from django.urls import path, re_path
 from django.views.generic import RedirectView
@@ -8,6 +8,7 @@ from .columns import COLUMNS
 
 app_name = 'wiki'
 urlpatterns = [
+    path('', views.home, name='reference'),
     path('lock/', views.lock_index, name='lock'),
     path('lock/<slug:slug>/', views.lock_detail, name='lock_detail'),
     path('sql/', views.sqlcmd_index, name='sqlcmd'),

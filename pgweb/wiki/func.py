@@ -21,13 +21,13 @@ from .models import (FUNC_GROUP_EYEBROW, FUNC_GROUP_LABEL, FUNC_GROUP_ORDER,
                      FuncVersion, PgFunction)
 
 
-CACHE_KEY = 'pgweb:wiki:func-index'
-VERSION_CACHE_KEY = 'pgweb:wiki:func-versions'
+CACHE_KEY = 'pgweb:wiki:func-index:wiki'
+VERSION_CACHE_KEY = 'pgweb:wiki:func-versions:wiki'
 DOC_CACHE_KEY = 'pgweb:wiki:func-docpages:v2'
-CHANGES_CACHE_KEY = 'pgweb:wiki:func-changes:{}'
+CHANGES_CACHE_KEY = 'pgweb:wiki:func-changes:{}:wiki'
 CACHE_SECONDS = 300
 
-ROOT = '/docs/func/'
+ROOT = '/wiki/func/'
 EYEBROW = 'FUNCTION'
 
 # 列表页不取这两列：整份 JSON 比页面用到的多两个数量级。

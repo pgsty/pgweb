@@ -349,7 +349,7 @@ class CatalogSearchTests(TestCase):
         self.assertEqual(self.report, {'catalog': SearchEntry.objects.filter(source='catalog').count()})
         entry = SearchEntry.objects.get(source='catalog', name='pg_demo')
         self.assertEqual((entry.kind, entry.subtype, entry.url),
-                         ('relation', 'catalog', '/docs/catalog/pg_demo/'))
+                         ('relation', 'catalog', '/wiki/catalog/pg_demo/'))
         self.assertIn('pgdemo', entry.aliases)
         # 去掉 pg_ 之后还是复合名才留别名：stat_demo 指得明确，demo 不指任何东西。
         self.assertNotIn('demo', entry.aliases)
@@ -367,7 +367,7 @@ class CatalogSearchTests(TestCase):
         result = search('pg_demo')
         first = result['results'][0]
         self.assertEqual((first['source'], first['source_label'], first['url']),
-                         ('catalog', '本站词条', '/docs/catalog/pg_demo/'))
+                         ('catalog', '本站词条', '/wiki/catalog/pg_demo/'))
         self.assertEqual(first['group'], 'relation')
         # 同一实体的手册条目折进同一条结果里。
         self.assertGreater(first['variants'], 1)

@@ -4,10 +4,10 @@ PGSQL.CC 原生参考栏目，覆盖 PostgreSQL 10–20，每个实体一行、�
 
 | 栏目 | 地址 | 实体表 | 固定快照 |
 | --- | --- | --- | --- |
-| 扩展钩子 | `/docs/hook/` | `hook` | `data/wiki/hooks.json` |
-| 存储参数 | `/docs/relopts/` | `relopt` | `data/wiki/relopts.json` |
-| 预定义角色 | `/docs/role/` | `predefined_role` | `data/wiki/roles.json` |
-| 对象标识符类型 | `/docs/oid/` | `oid_type` | `data/wiki/oid_types.json` |
+| 扩展钩子 | `/wiki/hook/` | `hook` | `data/wiki/hooks.json` |
+| 存储参数 | `/wiki/relopts/` | `relopt` | `data/wiki/relopts.json` |
+| 预定义角色 | `/wiki/role/` | `predefined_role` | `data/wiki/roles.json` |
+| 对象标识符类型 | `/wiki/oid/` | `oid_type` | `data/wiki/oid_types.json` |
 
 四张独立实体表通过抽象 Python 基类复用字段，不新增公共实体表、版本表或关系表。迁移 `wiki.0012_reference_topics` 依赖当前的 `0011_lockmode`，只建四张新表。栏目规格在 `topic_specs.py`；导入、版本选择和页面分别在 `topic_importer.py`、`topics.py`、`topic_views.py`。
 
@@ -54,7 +54,7 @@ psql -X -d pgweb -f tools/wiki/check_data.sql
 
 ## 页面与检索
 
-列表提供版本、分类和关键词筛选，保留完整采样版本方格。详情提供逐版说明、参数事实或 C 签名、手册示例、相关链接和可展开的来源。栏目自动进入文档菜单、侧栏和 sitemap，不伪造 postgresql.org 对应栏目地址。
+列表提供版本、分类和关键词筛选，保留完整采样版本方格。详情提供逐版说明、参数事实或 C 签名、手册示例、相关链接和可展开的来源。栏目自动进入百科菜单、侧栏和 sitemap，不伪造 postgresql.org 对应栏目地址。
 
 检索 `source` 为 `hook/relopts/role/oid`，类别为 `hook/relopt/role/type`。对象标识符类型使用 `type:<name>` 实体键与手册类型定义折叠；其余以栏目和 slug 为身份。索引包含所有版本的说明、事实、C 签名及 SQL 示例。弹窗预览和结果 URL 保持所选版本，缺失版本同样明确提示。
 
@@ -74,7 +74,7 @@ PGWEB_TEST_DB=test_pgweb_topics .venv/bin/python manage.py test pgweb.wiki.test_
 
 三份手册快照共 3,444 次引用，去重 1,193 个 URL。本地手册的 645 个 URL、176 页、564 项哈希声明及全部锚点通过；488 个百科 URL 全部 HTTP 200 且保持指定版本。60 个外部原文 URL 仅清点，未作在线可用性声明。钩子的 1,036 条源码引用逐一核验文件哈希与行号，固定源码离线重建一致；155 个站内关联目标均核验，其中 56 个新钩子页面另在实际导入后核验了 HTTP 200 与签名正文。
 
-浏览器验收了列表筛选、角色详情、钩子版本签名和全站搜索预览。Sitemap 含四个入口与全部 132 个详情地址。预览运行于 `http://127.0.0.1:8013/docs/hook/`。本轮未部署生产，未提交或推送。详细审计保存在 `tmp/reference-topics-20260926/`，测试与数据库日志为 `tmp/reference-topics-{tests,search-tests,db-check}.log`。
+浏览器验收了列表筛选、角色详情、钩子版本签名和全站搜索预览。Sitemap 含四个入口与全部 132 个详情地址。预览运行于 `http://127.0.0.1:8013/wiki/hook/`。本轮未部署生产，未提交或推送。详细审计保存在 `tmp/reference-topics-20260926/`，测试与数据库日志为 `tmp/reference-topics-{tests,search-tests,db-check}.log`。
 
 ## 2026-09-27 固定快照刷新
 

@@ -8,6 +8,7 @@ from pgweb.util.decorators import cache, queryparams
 
 import urllib.parse
 import re
+from pgweb.wiki.links import canonical_url
 import requests
 import psycopg2
 
@@ -339,7 +340,7 @@ def legacy_search(request):
                                    querystr)),
             'hits': [{
                 'title': h[3],
-                'url': "%s%s" % (settings.SITE_ROOT.rstrip('/') if h[0] == 1 else h[1], h[2]),
+                'url': canonical_url("%s%s" % (settings.SITE_ROOT.rstrip('/') if h[0] == 1 else h[1], h[2])),
                 'abstract': escape(h[4]).replace("[[[[[[", "<strong>").replace("]]]]]]", "</strong>"),
                 'rank': h[5]} for h in hits[:-1]],
         })

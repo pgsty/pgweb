@@ -304,7 +304,7 @@ class GucIndexTests(GucFixture):
                          ('20 devel', '开发版', 'documentation'))
         self.assertTrue(order[-1]['devel'])
         self.assertTrue(order[-2]['preview'])
-        self.assertEqual(order[-1]['url'], '/docs/guc/changes/20/')
+        self.assertEqual(order[-1]['url'], '/wiki/guc/changes/20/')
 
     def test_groups_follow_the_manual_order_and_carry_subgroups(self):
         payload = guc.index()
@@ -450,7 +450,7 @@ class GucDetailTests(GucFixture):
         self.assertTrue(facts['默认值']['mono'])
         self.assertEqual(facts['枚举值']['value'], 'minimal, replica, logical')
         self.assertEqual(facts['分类']['value'], '预写式日志 / 设置')
-        self.assertEqual(facts['分类']['url'], '/docs/guc/#cat-wal-settings')
+        self.assertEqual(facts['分类']['url'], '/wiki/guc/#cat-wal-settings')
         self.assertEqual(facts['引入版本']['value'], '9.0（基线）')
         self.assertEqual(facts['状态']['value'], '现存')
         self.assertNotIn('取值范围', facts)
@@ -482,7 +482,7 @@ class GucDetailTests(GucFixture):
         self.assertFalse(cells['18']['current'])
         self.assertEqual(cells['10']['state'], 'changed')
         self.assertEqual(cells['9.0']['state'], 'present')
-        self.assertEqual(cells['18']['url'], '/docs/guc/wal_level/?v=18')
+        self.assertEqual(cells['18']['url'], '/wiki/guc/wal_level/?v=18')
         self.assertEqual(cells['12']['doc_url'], '/docs/12/runtime-config-wal.html#GUC-WAL-LEVEL')
         # 本站没有 11 的手册，就不给链接。
         self.assertEqual(cells['11']['doc_url'], '')
@@ -558,7 +558,7 @@ class GucDetailTests(GucFixture):
         self.assertEqual(fields['boot_val']['to_human'], 'replica')
         # 枚举值保持列表，由模板拼；默认值另带人类可读形式。
         self.assertEqual(fields['enumvals']['to'], ['minimal', 'replica', 'logical'])
-        self.assertEqual(landmark['url'], '/docs/guc/wal_level/?v=10')
+        self.assertEqual(landmark['url'], '/wiki/guc/wal_level/?v=10')
         # 新增与移除也在时间线上。
         self.assertEqual([item['status'] for item in
                           guc.detail('wal_skip_threshold', '18')['timeline']][-1], 'added')
@@ -628,7 +628,7 @@ class GucDetailTests(GucFixture):
         self.assertEqual(editorial['pitfalls'], ['改这个参数要重启。'])
         related = {item['name']: item for item in editorial['related']}
         self.assertTrue(related['wal_skip_threshold']['exists'])
-        self.assertEqual(related['wal_skip_threshold']['url'], '/docs/guc/wal_skip_threshold/')
+        self.assertEqual(related['wal_skip_threshold']['url'], '/wiki/guc/wal_skip_threshold/')
         self.assertEqual(related['wal_skip_threshold']['short_desc_zh'],
                          '改用 fsync 而非写 WAL 的新文件大小阈值。')
         self.assertFalse(related['nosuch_param']['exists'])
@@ -665,7 +665,7 @@ class GucChangesTests(GucFixture):
                           'reworded': 0})
         entry = payload['default_changed'][0]
         self.assertEqual(entry['name'], 'wal_level')
-        self.assertEqual(entry['url'], '/docs/guc/wal_level/')
+        self.assertEqual(entry['url'], '/wiki/guc/wal_level/')
         self.assertEqual((entry['from']['human'], entry['to']['human']), ('minimal', 'replica'))
         self.assertEqual(entry['category_zh'], '预写式日志 / 设置')
 
@@ -762,70 +762,70 @@ class GucPageTests(GucFixture):
     """四条路由都要能走通。"""
 
     def test_index_renders(self):
-        response = self.client.get('/docs/guc/')
+        response = self.client.get('/wiki/guc/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['total'], 5)
         self.assertEqual(response.context['column']['slug'], 'guc')
         self.assertIn('group-wal', response.content.decode())
 
     def test_detail_renders_and_honours_the_version_parameter(self):
-        response = self.client.get('/docs/guc/wal_level/')
+        response = self.client.get('/wiki/guc/wal_level/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['version']['major'], '18')
-        response = self.client.get('/docs/guc/wal_level/?v=9.3')
+        response = self.client.get('/wiki/guc/wal_level/?v=9.3')
         self.assertEqual(response.context['version']['major'], '9.3')
         self.assertTrue(response.context['doc']['borrowed'])
-        response = self.client.get('/docs/guc/wal_level/?v=20')
+        response = self.client.get('/wiki/guc/wal_level/?v=20')
         self.assertEqual(response.context['version']['major'], '20')
 
     def test_an_invalid_version_falls_back_to_the_default(self):
-        response = self.client.get('/docs/guc/wal_level/?v=1999')
+        response = self.client.get('/wiki/guc/wal_level/?v=1999')
         self.assertEqual(response.context['version']['major'], '18')
 
     def test_query_parameters_outside_the_whitelist_are_dropped(self):
-        response = self.client.get('/docs/guc/wal_level/?v=10&nope=1')
+        response = self.client.get('/wiki/guc/wal_level/?v=10&nope=1')
         self.assertEqual(response.context['version']['major'], '10')
-        self.assertEqual(self.client.get('/docs/guc/?q=wal&group=wal&context=user'
+        self.assertEqual(self.client.get('/wiki/guc/?q=wal&group=wal&context=user'
                                          '&first=9.0&present=18').status_code, 200)
 
     def test_a_non_canonical_spelling_redirects_to_the_canonical_one(self):
-        response = self.client.get('/docs/guc/datestyle/')
+        response = self.client.get('/wiki/guc/datestyle/')
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/guc/DateStyle/')
-        response = self.client.get('/docs/guc/DATESTYLE/?v=10')
+        self.assertEqual(response['Location'], '/wiki/guc/DateStyle/')
+        response = self.client.get('/wiki/guc/DATESTYLE/?v=10')
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/guc/DateStyle/?v=10')
-        self.assertEqual(self.client.get('/docs/guc/DateStyle/').status_code, 200)
+        self.assertEqual(response['Location'], '/wiki/guc/DateStyle/?v=10')
+        self.assertEqual(self.client.get('/wiki/guc/DateStyle/').status_code, 200)
 
     def test_an_unknown_parameter_is_404(self):
-        self.assertEqual(self.client.get('/docs/guc/nosuch/').status_code, 404)
-        self.assertEqual(self.client.get('/docs/guc/9bad/').status_code, 404)
-        self.assertEqual(self.client.get('/docs/guc/bad-name/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/guc/nosuch/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/guc/9bad/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/guc/bad-name/').status_code, 404)
 
     def test_changes_root_redirects_to_the_default_version(self):
-        response = self.client.get('/docs/guc/changes/')
+        response = self.client.get('/wiki/guc/changes/')
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response['Location'], '/docs/guc/changes/18/')
+        self.assertEqual(response['Location'], '/wiki/guc/changes/18/')
 
     def test_changes_pages_render_and_honour_from(self):
-        self.assertEqual(self.client.get('/docs/guc/changes/9.0/').status_code, 200)
-        response = self.client.get('/docs/guc/changes/18/')
+        self.assertEqual(self.client.get('/wiki/guc/changes/9.0/').status_code, 200)
+        response = self.client.get('/wiki/guc/changes/18/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.context['version']['label'], '18')
-        response = self.client.get('/docs/guc/changes/18/?from=9.6')
+        response = self.client.get('/wiki/guc/changes/18/?from=9.6')
         self.assertTrue(response.context['arbitrary'])
-        self.assertEqual(self.client.get('/docs/guc/changes/20/').status_code, 200)
-        self.assertEqual(self.client.get('/docs/guc/changes/99/').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/guc/changes/20/').status_code, 200)
+        self.assertEqual(self.client.get('/wiki/guc/changes/99/').status_code, 404)
 
     def test_the_docs_navigation_marks_the_column_active(self):
-        response = self.client.get('/docs/guc/')
+        response = self.client.get('/wiki/guc/')
         active = [item for item in response.context['navmenu'] if item.get('active')]
-        self.assertEqual([item['link'] for item in active], ['/docs/guc/'])
+        self.assertEqual([item['link'] for item in active], ['/wiki/guc/'])
 
     def test_the_column_is_local_only(self):
         from pgweb.util.contexts import LOCAL_ONLY_SECTIONS, _source_url
-        self.assertIn('/docs/guc/', LOCAL_ONLY_SECTIONS)
-        self.assertEqual(_source_url('/docs/guc/wal_level/'), '')
+        self.assertTrue('/wiki/guc/'.startswith(LOCAL_ONLY_SECTIONS))
+        self.assertEqual(_source_url('/wiki/guc/wal_level/'), '')
 
     def test_the_column_is_live_and_listed(self):
         self.assertTrue(BY_SLUG['guc']['live'])
@@ -834,11 +834,11 @@ class GucPageTests(GucFixture):
     def test_sitemap_lists_the_index_every_parameter_and_every_changes_page(self):
         from .struct import get_struct
         pages = [page for page, _ in get_struct()]
-        self.assertIn('docs/guc/', pages)
-        self.assertIn('docs/guc/wal_level/', pages)
-        self.assertIn('docs/guc/DateStyle/', pages)
-        self.assertIn('docs/guc/changes/9.0/', pages)
-        self.assertIn('docs/guc/changes/20/', pages)
+        self.assertIn('wiki/guc/', pages)
+        self.assertIn('wiki/guc/wal_level/', pages)
+        self.assertIn('wiki/guc/DateStyle/', pages)
+        self.assertIn('wiki/guc/changes/9.0/', pages)
+        self.assertIn('wiki/guc/changes/20/', pages)
 
 
 # ---------------------------------------------------------------- 检索
@@ -855,7 +855,7 @@ class GucSearchEntryTests(GucFixture):
         self.assertEqual(entry['entity_key'], 'guc:wal_level')
         self.assertEqual((entry['kind'], entry['subtype']), ('guc', 'wal'))
         self.assertEqual(entry['name'], 'wal_level')
-        self.assertEqual(entry['url'], '/docs/guc/wal_level/')
+        self.assertEqual(entry['url'], '/wiki/guc/wal_level/')
         self.assertEqual(entry['weight'], 0.5)
         self.assertEqual(entry['aliases'], ['wal_level', 'wallevel'])
         self.assertEqual(entry['heading'], '配置参数 · 预写式日志 / 设置')
@@ -880,7 +880,7 @@ class GucSearchEntryTests(GucFixture):
         self.assertEqual(entry['name'], 'DateStyle')
         self.assertEqual(entry['name_key'], 'datestyle')
         self.assertEqual(entry['entity_key'], 'guc:datestyle')
-        self.assertEqual(entry['url'], '/docs/guc/DateStyle/')
+        self.assertEqual(entry['url'], '/wiki/guc/DateStyle/')
 
     def test_rebuild_counts_and_replaces_the_source(self):
         from pgweb.search.indexer import rebuild_guc

@@ -97,10 +97,10 @@ class TopicIntegrationTests(TestCase):
         self.assertEqual([v['major'] for v in data['available']], ['19', '20'])
         self.assertEqual(topics.index('role')['major'], '18')
         for kind in topics.TOPICS:
-            response = self.client.get('/docs/{}/?v=99'.format(kind))
+            response = self.client.get('/wiki/{}/?v=99'.format(kind))
             self.assertEqual(response.status_code, 404)
-        self.assertContains(self.client.get('/docs/oid/regdatabase/?v=18'), '此版本未收录')
-        self.assertContains(self.client.get('/docs/oid/regdatabase/?v=19'), '19beta4')
+        self.assertContains(self.client.get('/wiki/oid/regdatabase/?v=18'), '此版本未收录')
+        self.assertContains(self.client.get('/wiki/oid/regdatabase/?v=19'), '19beta4')
 
     def test_four_columns_have_navigation_routes_filters_and_safe_output(self):
         for kind in topics.TOPICS:
@@ -111,18 +111,18 @@ class TopicIntegrationTests(TestCase):
                 self.assertEqual(len(soup.select('h1')), 1)
                 self.assertTrue(soup.select('.topic-table tbody tr'))
                 for column in topics.TOPICS:
-                    self.assertTrue(soup.select('a[href="/docs/{}/"]'.format(column)))
-                self.assertEqual(_source_url('/docs/' + kind + '/'), '')
-        response = self.client.get('/docs/role/?q=pg_monitor&category=监控与统计&v=18')
+                    self.assertTrue(soup.select('a[href="/wiki/{}/"]'.format(column)))
+                self.assertEqual(_source_url('/wiki/' + kind + '/'), '')
+        response = self.client.get('/wiki/role/?q=pg_monitor&category=监控与统计&v=18')
         self.assertContains(response, '当前匹配 1 个')
-        self.assertContains(self.client.get('/docs/role/?q=<script>bad()</script>'), '&lt;script&gt;')
-        self.assertEqual(self.client.post('/docs/role/').status_code, 405)
-        self.assertEqual(self.client.get('/docs/role/nonexistent/').status_code, 404)
+        self.assertContains(self.client.get('/wiki/role/?q=<script>bad()</script>'), '&lt;script&gt;')
+        self.assertEqual(self.client.post('/wiki/role/').status_code, 405)
+        self.assertEqual(self.client.get('/wiki/role/nonexistent/').status_code, 404)
 
     def test_canonical_names_and_version_query_survive_redirect(self):
-        response = self.client.get('/docs/role/PG_MONITOR/?v=17')
+        response = self.client.get('/wiki/role/PG_MONITOR/?v=17')
         self.assertEqual(response.status_code, 301)
-        self.assertEqual(response['Location'], '/docs/role/pg_monitor/?v=17')
+        self.assertEqual(response['Location'], '/wiki/role/pg_monitor/?v=17')
 
     def test_search_folds_oid_with_manual_and_preserves_selected_version(self):
         report = indexer.rebuild_topics()
@@ -139,7 +139,7 @@ class TopicIntegrationTests(TestCase):
             exact = [r for r in result['results'] if r['name'] == 'regclass']
             self.assertEqual(len(exact), 1)
             self.assertEqual(exact[0]['source'], 'oid')
-            self.assertEqual(exact[0]['url'], '/docs/oid/regclass/?v=18')
+            self.assertEqual(exact[0]['url'], '/wiki/oid/regclass/?v=18')
             roles = service.search('pg_monitor', kind='role')
             self.assertEqual(roles['results'][0]['source'], 'role')
             self.assertEqual(service.search('fillfactor', kind='relopts')['total'], 5)
@@ -147,14 +147,14 @@ class TopicIntegrationTests(TestCase):
         entry = SearchEntry.objects.get(source='oid', name='regdatabase')
         preview = service.preview(entry, '18')
         self.assertIn('没有此版本', preview['html'])
-        self.assertEqual(preview['url'], '/docs/oid/regdatabase/?v=18')
+        self.assertEqual(preview['url'], '/wiki/oid/regdatabase/?v=18')
 
     def test_all_default_details_render_and_blocks_remain_ordered(self):
         for kind, spec in topics.TOPICS.items():
             for slug in spec['model'].objects.values_list('slug', flat=True):
                 with self.subTest(kind=kind, slug=slug):
-                    response = self.client.get('/docs/{}/{}/'.format(kind, slug))
+                    response = self.client.get('/wiki/{}/{}/'.format(kind, slug))
                     self.assertEqual(response.status_code, 200)
-        text = self.client.get('/docs/oid/regclass/?v=18').content.decode()
+        text = self.client.get('/wiki/oid/regclass/?v=18').content.decode()
         self.assertIn('早绑定', text)
         self.assertNotIn('手册示例（续）', text)

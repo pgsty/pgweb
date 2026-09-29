@@ -34,7 +34,7 @@ class ReferenceTopic(models.Model):
 
     @property
     def url(self):
-        return '/docs/{}/{}/'.format(self.column, self.slug)
+        return '/wiki/{}/{}/'.format(self.column, self.slug)
 
 
 class ExtensionHook(ReferenceTopic):
@@ -117,7 +117,7 @@ class ErrorCodeClass(models.Model):
     @property
     def url(self):
         # 导航索引跳同页锚点，与手册附录 A 的读法一致。
-        return '/docs/sqlstate/#class-' + self.code
+        return '/wiki/sqlstate/#class-' + self.code
 
     @property
     def label(self):
@@ -217,7 +217,7 @@ class ErrorCode(models.Model):
 
     @property
     def url(self):
-        return '/docs/sqlstate/{}/'.format(self.sqlstate)
+        return '/wiki/sqlstate/{}/'.format(self.sqlstate)
 
     @property
     def severity(self):
@@ -322,7 +322,7 @@ class CatalogVersion(models.Model):
 
     @property
     def changes_url(self):
-        return '/docs/catalog/changes/{}/'.format(self.major)
+        return '/wiki/catalog/changes/{}/'.format(self.major)
 
 
 class CatalogRelation(models.Model):
@@ -364,7 +364,7 @@ class CatalogRelation(models.Model):
 
     @property
     def url(self):
-        return '/docs/catalog/{}/'.format(self.name)
+        return '/wiki/catalog/{}/'.format(self.name)
 
     @property
     def kind_label(self):
@@ -554,7 +554,7 @@ class GucVersion(models.Model):
 
     @property
     def changes_url(self):
-        return '/docs/guc/changes/{}/'.format(self.major)
+        return '/wiki/guc/changes/{}/'.format(self.major)
 
 
 class GucParameter(models.Model):
@@ -613,7 +613,7 @@ class GucParameter(models.Model):
 
     @property
     def url(self):
-        return '/docs/guc/{}/'.format(self.name)
+        return '/wiki/guc/{}/'.format(self.name)
 
     @property
     def group_label(self):
@@ -707,7 +707,7 @@ class WaitEventVersion(models.Model):
 
     @property
     def changes_url(self):
-        return '/docs/waitevent/changes/{}/'.format(self.major)
+        return '/wiki/waitevent/changes/{}/'.format(self.major)
 
 
 class WaitEvent(models.Model):
@@ -756,7 +756,7 @@ class WaitEvent(models.Model):
 
     @property
     def url(self):
-        return '/docs/waitevent/{}/{}/'.format(self.type_slug, self.name)
+        return '/wiki/waitevent/{}/{}/'.format(self.type_slug, self.name)
 
     @property
     def type_label(self):
@@ -905,7 +905,7 @@ class SqlCommand(models.Model):
 
     @property
     def url(self):
-        return '/docs/sql/{}/'.format(self.slug)
+        return '/wiki/sql/{}/'.format(self.slug)
 
     @property
     def group_label(self):
@@ -1057,7 +1057,7 @@ class FuncVersion(models.Model):
 
     @property
     def changes_url(self):
-        return '/docs/func/changes/{}/'.format(self.major)
+        return '/wiki/func/changes/{}/'.format(self.major)
 
 
 class PgFunction(models.Model):
@@ -1097,7 +1097,7 @@ class PgFunction(models.Model):
 
     @property
     def url(self):
-        return '/docs/func/{}/'.format(self.slug)
+        return '/wiki/func/{}/'.format(self.slug)
 
     @property
     def eyebrow(self):
@@ -1142,4 +1142,4 @@ class LockMode(models.Model):
 
     @property
     def url(self):
-        return '/docs/lock/{}/'.format(self.slug)
+        return '/wiki/lock/{}/'.format(self.slug)

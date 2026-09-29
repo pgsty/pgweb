@@ -98,7 +98,7 @@ class LockTests(TestCase):
                             if c['slug'] == 'reindex'))
         for major in ('10', '18', '19', '20'):
             for command in lock.index(major)['commands']:
-                self.assertEqual(command['url'], '/docs/sql/{}/?v={}'.format(command['slug'], major))
+                self.assertEqual(command['url'], '/wiki/sql/{}/?v={}'.format(command['slug'], major))
         for row in lock.for_command('select', '18'):
             self.assertTrue(row['url'].endswith('?v=18'))
 
@@ -115,20 +115,20 @@ class LockTests(TestCase):
         self.assertEqual(choices['INSERT … ON CONFLICT DO UPDATE（键）'], {'row-exclusive', 'for-update'})
 
     def test_pages_render_full_matrices_and_selected_version_links(self):
-        response = self.client.get('/docs/lock/?v=10')
+        response = self.client.get('/wiki/lock/?v=10')
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
         self.assertEqual(len(soup.select('#lock-table-matrix [data-lock-cell]')), 64)
         self.assertEqual(len(soup.select('#lock-full-matrix [data-lock-cell]')), 196)
         self.assertEqual(soup.select_one('#lock-version option[selected]')['value'], '10')
         self.assertFalse(soup.select('#locks [style], #locks [onclick], script:not([src])'))
-        for anchor in soup.select('#locks a[href^="/docs/sql/"]'):
+        for anchor in soup.select('#locks a[href^="/wiki/sql/"]'):
             self.assertIn('?v=10', anchor['href'])
-        self.assertEqual(_source_url('/docs/lock/'), '')
-        self.assertEqual(reverse('wiki:lock'), '/docs/lock/')
-        self.assertEqual(self.client.post('/docs/lock/').status_code, 405)
-        self.assertEqual(self.client.get('/docs/lock/?v=99').status_code, 404)
-        self.assertEqual(self.client.get('/docs/lock/unknown/').status_code, 404)
+        self.assertEqual(_source_url('/wiki/lock/'), '')
+        self.assertEqual(reverse('wiki:lock'), '/wiki/lock/')
+        self.assertEqual(self.client.post('/wiki/lock/').status_code, 405)
+        self.assertEqual(self.client.get('/wiki/lock/?v=99').status_code, 404)
+        self.assertEqual(self.client.get('/wiki/lock/unknown/').status_code, 404)
 
     def test_every_mode_detail_retains_version(self):
         for row in LockMode.objects.all():
@@ -147,7 +147,7 @@ class LockTests(TestCase):
             result = service.search('ACCESS EXCLUSIVE', scope='pg10', kind='lock')
         self.assertFalse(result['error'])
         self.assertTrue(result['results'])
-        self.assertEqual(result['results'][0]['url'], '/docs/lock/access-exclusive/?v=10')
+        self.assertEqual(result['results'][0]['url'], '/wiki/lock/access-exclusive/?v=10')
         entry = SearchEntry.objects.get(source='lock', name='ROW EXCLUSIVE')
         preview = service.preview(entry, '10')
         self.assertNotIn('MERGE', preview['html'])
@@ -217,7 +217,7 @@ class LiveLockMatrixTests(TestCase):
             major = str(int(cursor.fetchone()[0]) // 10000)
         if major not in {v['major'] for v in snapshot['versions']}:
             self.skipTest('Running PostgreSQL version is outside the collected baseline')
-        modes = [dict(mode, url='/docs/lock/' + mode['slug'] + '/',
+        modes = [dict(mode, url='/wiki/lock/' + mode['slug'] + '/',
                       conflicts=[{'slug': other} for other in mode['versions'][major]['conflicts']])
                  for mode in snapshot['modes']]
         matrix = lock.expanded_matrix(modes)

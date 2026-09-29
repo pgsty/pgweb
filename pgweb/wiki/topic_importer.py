@@ -33,7 +33,7 @@ def links(value, label, required=False):
         text(link.get('label'), label, required=True)
         url = text(link.get('url'), label, required=True)
         parsed = urlsplit(url)
-        if not ((url.startswith('/docs/') and not parsed.netloc) or
+        if not ((url.startswith(('/docs/', '/wiki/')) and not parsed.netloc) or
                 (parsed.scheme == 'https' and parsed.hostname and not parsed.username)):
             raise ValueError('Unsafe or unsupported source URL: ' + url)
 

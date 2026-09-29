@@ -741,7 +741,7 @@ class GucImportTests(TestCase):
         self.assertEqual(row.key, 'demo_level')
         self.assertEqual(row.group_slug, 'wal')
         self.assertEqual(row.present_in, ['10', '11', '12', '20'])
-        self.assertEqual(row.url, '/docs/guc/demo_level/')
+        self.assertEqual(row.url, '/wiki/guc/demo_level/')
 
     def test_import_is_idempotent_and_rewrites_nothing(self):
         guc_importer.import_snapshot(self.snapshot)

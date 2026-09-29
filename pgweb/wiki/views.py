@@ -9,7 +9,7 @@ from pgweb.util.contexts import get_nav_menu
 from pgweb.util.decorators import queryparams
 
 from . import catalog, errcode, func, guc, lock, waitevent, sqlcmd
-from .columns import BY_SLUG
+from .columns import BY_SLUG, listing
 from .models import (CatalogRelation, CatalogVersion, ErrorCode, FuncVersion, GucParameter,
                      GucVersion, PgFunction, WaitEvent, WaitEventVersion)
 
@@ -19,16 +19,16 @@ RELATION = re.compile(r'^pg_[a-z0-9_]+$')
 GUC_NAME = re.compile(r'^[A-Za-z][A-Za-z0-9_]*$')
 # 规范的函数地址段：小写，下划线写成连字符。路由放行的写法更宽，视图负责 301。
 FUNC_SLUG = re.compile(r'^[a-z][a-z0-9-]*$')
-CATALOG_ROOT = '/docs/catalog/'
-GUC_ROOT = '/docs/guc/'
-WAITEVENT_ROOT = '/docs/waitevent/'
-SQLCMD_ROOT = '/docs/sql/'
-FUNC_ROOT = '/docs/func/'
+CATALOG_ROOT = '/wiki/catalog/'
+GUC_ROOT = '/wiki/guc/'
+WAITEVENT_ROOT = '/wiki/waitevent/'
+SQLCMD_ROOT = '/wiki/sql/'
+FUNC_ROOT = '/wiki/func/'
 
 
-def shell(ctx, title, description, canonical, class_code='', section='/docs/sqlstate/'):
-    """The shared page context: the 文档 side navigation and SEO fields."""
-    menu = get_nav_menu('docs')
+def shell(ctx, title, description, canonical, class_code='', section='/wiki/sqlstate/'):
+    """The shared page context: the Wiki side navigation and SEO fields."""
+    menu = get_nav_menu('wiki')
     for item in menu:
         if item.get('link') == section:
             item['active'] = True
@@ -40,6 +40,14 @@ def shell(ctx, title, description, canonical, class_code='', section='/docs/sqls
 
 
 @require_safe
+def home(request):
+    return render(request, 'wiki/home.html', shell(
+        {'columns': listing()}, 'PostgreSQL 百科',
+        '按主题查阅 PostgreSQL 的 SQL 命令、状态码、系统目录、配置参数、函数、锁及其他数据库对象。',
+        '/wiki/', section='/wiki/'))
+
+
+@require_safe
 def errcode_index(request):
     column = BY_SLUG['sqlstate']
     payload = errcode.index()
@@ -48,7 +56,7 @@ def errcode_index(request):
                       payload['total'], payload['class_count'])
     return render(request, 'wiki/errcode_index.html', shell(dict(
         payload, column=column,
-    ), 'PostgreSQL 状态码', description, '/docs/sqlstate/'))
+    ), 'PostgreSQL 状态码', description, '/wiki/sqlstate/'))
 
 
 @require_safe
@@ -58,7 +66,7 @@ def errcode_detail(request, sqlstate):
         raise Http404()
     # 站内规范形式是大写：PostgreSQL 报错里输出的就是大写。
     if sqlstate != sqlstate.upper():
-        return HttpResponsePermanentRedirect('/docs/sqlstate/{}/'.format(sqlstate.upper()))
+        return HttpResponsePermanentRedirect('/wiki/sqlstate/{}/'.format(sqlstate.upper()))
     try:
         payload = errcode.detail_payload(sqlstate, request.GET.get('v', ''))
     except ErrorCode.DoesNotExist:
@@ -115,7 +123,7 @@ def catalog_detail(request, name):
 @require_safe
 def catalog_changes_root(request):
     # 默认落在当前稳定版，不落在预发行或开发版。
-    return HttpResponseRedirect('/docs/catalog/changes/{}/'.format(catalog.default_major()))
+    return HttpResponseRedirect('/wiki/catalog/changes/{}/'.format(catalog.default_major()))
 
 
 @require_safe
@@ -135,7 +143,7 @@ def catalog_changes(request, major):
                        summary['structurally_changed']))
     return render(request, 'wiki/catalog_changes.html', shell(dict(
         payload, column=BY_SLUG['catalog'],
-    ), title, description, '/docs/catalog/changes/{}/'.format(major), section=CATALOG_ROOT))
+    ), title, description, '/wiki/catalog/changes/{}/'.format(major), section=CATALOG_ROOT))
 
 
 # ---------------------------------------------------------------- 配置参数
@@ -167,7 +175,7 @@ def guc_detail(request, name):
     if payload['name'] != name:
         # 站内规范形式是 pg_settings 里的大小写：datestyle → DateStyle。
         wanted = request.GET.get('v', '')
-        return HttpResponsePermanentRedirect('/docs/guc/{}/{}'.format(
+        return HttpResponsePermanentRedirect('/wiki/guc/{}/{}'.format(
             payload['name'], '?v=' + quote(wanted) if wanted else ''))
 
     parameter = payload['parameter']
@@ -184,7 +192,7 @@ def guc_detail(request, name):
 @require_safe
 def guc_changes_root(request):
     # 默认落在当前稳定版，不落在预发行或开发版。
-    return HttpResponseRedirect('/docs/guc/changes/{}/'.format(guc.default_major()))
+    return HttpResponseRedirect('/wiki/guc/changes/{}/'.format(guc.default_major()))
 
 
 @require_safe
@@ -203,7 +211,7 @@ def guc_changes(request, major):
                        summary['added'], summary['removed'], summary['default_changed']))
     return render(request, 'wiki/guc_changes.html', shell(dict(
         payload, column=BY_SLUG['guc'],
-    ), title, description, '/docs/guc/changes/{}/'.format(major), section=GUC_ROOT))
+    ), title, description, '/wiki/guc/changes/{}/'.format(major), section=GUC_ROOT))
 
 
 # ---------------------------------------------------------------- 等待事件
@@ -250,7 +258,7 @@ def waitevent_detail(request, type, name):
 @require_safe
 def waitevent_changes_root(request):
     # 默认落在当前稳定版，不落在预发行或开发版。
-    return HttpResponseRedirect('/docs/waitevent/changes/{}/'.format(waitevent.default_major()))
+    return HttpResponseRedirect('/wiki/waitevent/changes/{}/'.format(waitevent.default_major()))
 
 
 @require_safe
@@ -276,7 +284,7 @@ def waitevent_changes(request, major):
                            summary['renamed'], summary['moved']))
     return render(request, 'wiki/waitevent_changes.html', shell(dict(
         payload, column=BY_SLUG['waitevent'],
-    ), title, description, '/docs/waitevent/changes/{}/'.format(major), section=WAITEVENT_ROOT))
+    ), title, description, '/wiki/waitevent/changes/{}/'.format(major), section=WAITEVENT_ROOT))
 
 
 # ---------------------------------------------------------------- SQL 命令

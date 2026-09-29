@@ -17,11 +17,11 @@ from .sqlcmd_common import (STATUS_LABEL, compare, synopsis_changes, major_of, s
                             version_rows)
 from .sqlcmd_railroad import context as railroad_context
 
-ROOT = '/docs/sql/'
-CACHE_KEY = 'pgweb:wiki:sqlcmd-index'
-VERSION_CACHE_KEY = 'pgweb:wiki:sqlcmd-versions2'
+ROOT = '/wiki/sql/'
+CACHE_KEY = 'pgweb:wiki:sqlcmd-index:wiki'
+VERSION_CACHE_KEY = 'pgweb:wiki:sqlcmd-versions2:wiki'
 DOC_CACHE_KEY = 'pgweb:wiki:sqlcmd-docpages'
-CHANGES_CACHE_KEY = 'pgweb:wiki:sqlcmd-changes:{}'
+CHANGES_CACHE_KEY = 'pgweb:wiki:sqlcmd-changes:{}:wiki'
 CACHE_SECONDS = 300
 DEFER = ('versions', 'changes', 'editorial')
 STATE_LABEL = {'absent': '不存在', 'present': '存在', 'added': '新增',

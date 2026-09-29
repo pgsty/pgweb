@@ -1,4 +1,4 @@
-# Codex 任务书：SQL 命令栏目 `/docs/sql/`（一期）
+# Codex 任务书：SQL 命令栏目 `/wiki/sql/`（一期）
 
 你在 Django 项目 `/Users/vonng/pgsty/pgweb`（PostgreSQL 中文站 pgsql.cc）里实现百科的第五个栏目「SQL 命令」的一期：
 一张表、导入链路、索引页、逐命令详情页、按版本看变更页、检索集成与测试。Python 一律用 `.venv/bin/python`。
@@ -68,7 +68,7 @@
 1. `manage.py migrate wiki`。
 2. `tools/wiki/sync_sqlcmd.py --export tmp/sqlcmd-snapshot.json.gz`，再 `--input tmp/sqlcmd-snapshot.json.gz --write`；第二次 `--write` 必须全部 unchanged。
 3. `manage.py index_docs --sqlcmd`。
-4. 起 `runserver 127.0.0.1:8779`，用 curl 核对：`/docs/sql/` 200、`/docs/sql/create-table/` 200、`/docs/sql/createtable/` 301、`/docs/sql/create-table/?v=10` 200、`/docs/sql/wait-for/` 200、`/docs/sql/nosuch/` 404、`/docs/sql/changes/` 302、`/docs/sql/changes/15/`、`/docs/sql/changes/10/`、`/docs/sql/changes/20/`、`/docs/sql/changes/18/?from=12` 200；再逐个 curl 全部命令详情页，非 200 的列出来。
+4. 起 `runserver 127.0.0.1:8779`，用 curl 核对：`/wiki/sql/` 200、`/wiki/sql/create-table/` 200、`/wiki/sql/createtable/` 301、`/wiki/sql/create-table/?v=10` 200、`/wiki/sql/wait-for/` 200、`/wiki/sql/nosuch/` 404、`/wiki/sql/changes/` 302、`/wiki/sql/changes/15/`、`/wiki/sql/changes/10/`、`/wiki/sql/changes/20/`、`/wiki/sql/changes/18/?from=12` 200；再逐个 curl 全部命令详情页，非 200 的列出来。
 5. 无头 Chrome 截图（1280 与 390 两档，亮暗两套）：索引、`create-table` 详情、`merge` 详情（15 新增）、`changes/15/`；看着截图修样式至少两轮，截图放 `tmp/sqlcmd-shots/`。
 6. 全量测试：`PGWEB_TEST_DB=test_pgweb_sql .venv/bin/python manage.py test pgweb.wiki pgweb.search --noinput`。
 

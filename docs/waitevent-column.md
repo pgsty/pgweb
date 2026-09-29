@@ -1,4 +1,4 @@
-# 等待事件 `/docs/waitevent/`
+# 等待事件 `/wiki/waitevent/`
 
 百科第三个上线栏目：PostgreSQL 核心等待事件（`pg_stat_activity.wait_event_type` / `wait_event`）的跨大版本百科。
 权威源是 [wait.pg.center](https://wait.pg.center)（仓库 `pgsty/wait.pg.center`，本机 `~/pg.center/wait`），它覆盖 13 – 18 并带双语档案；
@@ -103,14 +103,14 @@ class WaitEvent(models.Model):                # db_table = 'waitevent'
 ## 5. 地址与页面
 
 ```
-/docs/waitevent/                          索引
-/docs/waitevent/<type>/<name>/            详情，?v=<major>；type 为规范类型小写，name 为最新显示名（区分大小写）
-/docs/waitevent/changes/                  302 → 默认版本（status='stable'）
-/docs/waitevent/changes/<major>/          版本变更；?from=<major> 改基准
+/wiki/waitevent/                          索引
+/wiki/waitevent/<type>/<name>/            详情，?v=<major>；type 为规范类型小写，name 为最新显示名（区分大小写）
+/wiki/waitevent/changes/                  302 → 默认版本（status='stable'）
+/wiki/waitevent/changes/<major>/          版本变更；?from=<major> 改基准
 ```
 
 查找顺序：精确 `(type_slug, name)` → 不分大小写 → 图谱 `slug` → 曾用名 `aliases`；命中非规范形式时 301 到规范地址。`<type>` 不在九个规范类型里或找不到事件则 404。
-`shell()` 把侧栏 `/docs/waitevent/` 标 active；`LOCAL_ONLY_SECTIONS` 加 `/docs/waitevent/`；`struct.py` 把索引、每个事件、每个变更页写入 sitemap；`columns.py` 里 `waitevent` 置 `live: True`，规模与覆盖按库里实际数量写（导入后核对）。
+`shell()` 把侧栏 `/wiki/waitevent/` 标 active；`LOCAL_ONLY_SECTIONS` 加 `/wiki/waitevent/`；`struct.py` 把索引、每个事件、每个变更页写入 sitemap；`columns.py` 里 `waitevent` 置 `live: True`，规模与覆盖按库里实际数量写（导入后核对）。
 
 `TYPE_META` 放在 `pgweb/wiki/waitevent.py`：九个规范类型的中文标签与一句话（Activity 服务器进程在主循环里空闲等待；Buffer 等待访问数据缓冲区；Client 等待客户端套接字；Extension 扩展代码中的等待；IO 等待文件 I/O；IPC 等待其它进程；Lock 等待重量级锁；LWLock 等待轻量级锁；Timeout 等待超时到期），以及英文眉题（`WAIT EVENT · LWLOCK` 这种形式由模板拼）。
 
@@ -119,7 +119,7 @@ class WaitEvent(models.Model):                # db_table = 'waitevent'
 ```
 total, type_count, default_major, earliest_major('9.6'), latest_major('20'), na_majors(['9.0', … '9.5'])
 versions: [ver]                 # major, label, status, status_label, support_status, has_wait_events, method,
-                                #   event_count, url('/docs/waitevent/changes/<major>/'), preview, devel, is_default
+                                #   event_count, url('/wiki/waitevent/changes/<major>/'), preview, devel, is_default
 groups: [{type, type_slug, label, eyebrow, blurb, anchor('type-lwlock'), count, rows: [row]}]
 row: {key, name, url, type, type_slug, type_label, summary, summary_zh, first, last, removed(bool), removed_in,
       aliases: [...], type_variants: [...], has_dossier, change_count, last_change,
@@ -225,7 +225,7 @@ baseline: bool（9.6）, na: bool（9.0 – 9.5，页面只放一段说明并链
 ### 9.3 页面侧增补
 
 - `WaitEvent.url` 里的 `<name>` 是最新显示名；`Extension/Extension` 这类事件正常成页。
-- GUC 链接：`GucParameter.objects.filter(name__in=…)` 命中的给 `/docs/guc/<name>/`（配置参数栏目并行上线），否则按 §5.2 的 SearchEntry 规则退到手册锚点或 `/search/?q=<guc>&kind=guc`。一次查完，缓存 5 分钟。
+- GUC 链接：`GucParameter.objects.filter(name__in=…)` 命中的给 `/wiki/guc/<name>/`（配置参数栏目并行上线），否则按 §5.2 的 SearchEntry 规则退到手册锚点或 `/search/?q=<guc>&kind=guc`。一次查完，缓存 5 分钟。
 - 图谱派生字段（`dossier` 内加，不改原键）：
   - `kind_label`：`trigger` 触发点 · `resource_path` 资源定义 · `generic_reporter` 通用上报 · `catalog_definition` 目录定义。
   - `status_label`：`live_trigger` 实测触发 · `dynamic_trigger` 动态触发 · `catalog_only` 仅定义。

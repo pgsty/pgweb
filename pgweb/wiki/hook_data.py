@@ -243,16 +243,16 @@ def related_for(name, major):
     elif HOOKS[name][1] in {'查询规划', '统计信息与估算'}:
         links.append(dict(label='规划器与优化器', url=f'/docs/{manual}/planner-optimizer.html'))
     elif HOOKS[name][1] == '执行计划说明':
-        links.append(dict(label='EXPLAIN', url=f'/docs/sql/explain/?v={major}'))
+        links.append(dict(label='EXPLAIN', url=f'/wiki/sql/explain/?v={major}'))
     elif name.startswith('row_security_'):
         links.append(dict(label='行安全策略', url=f'/docs/{manual}/ddl-rowsecurity.html'))
-        links.append(dict(label='CREATE POLICY', url=f'/docs/sql/create-policy/?v={major}'))
+        links.append(dict(label='CREATE POLICY', url=f'/wiki/sql/create-policy/?v={major}'))
     elif name.startswith('shmem_'):
         links.append(dict(label='shared_preload_libraries',
-                          url=f'/docs/guc/shared_preload_libraries/?v={major}'))
+                          url=f'/wiki/guc/shared_preload_libraries/?v={major}'))
     elif name == 'check_password_hook':
-        links.append(dict(label='CREATE ROLE', url=f'/docs/sql/create-role/?v={major}'))
-        links.append(dict(label='ALTER ROLE', url=f'/docs/sql/alter-role/?v={major}'))
+        links.append(dict(label='CREATE ROLE', url=f'/wiki/sql/create-role/?v={major}'))
+        links.append(dict(label='ALTER ROLE', url=f'/wiki/sql/alter-role/?v={major}'))
     elif name in {'fmgr_hook', 'needs_fmgr_hook'}:
         links.append(dict(label='C 语言函数', url=f'/docs/{manual}/xfunc-c.html'))
     paired = {'needs_fmgr_hook': 'fmgr_hook', 'fmgr_hook': 'needs_fmgr_hook',
@@ -262,5 +262,5 @@ def related_for(name, major):
         paired.update(shmem_request_hook='shmem_startup_hook', shmem_startup_hook='shmem_request_hook')
     if name in paired:
         other = paired[name]
-        links.append(dict(label=other, url=f'/docs/hook/{other.lower()}/?v={major}'))
+        links.append(dict(label=other, url=f'/wiki/hook/{other.lower()}/?v={major}'))
     return links

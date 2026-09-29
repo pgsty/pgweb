@@ -210,7 +210,7 @@ def definition(manual, scope, name, dt, dd, file, fallback, extra_sections=None)
         sections.insert(0, {'title': 'TOAST 参数的继承', 'paragraphs': [
             '该选项控制主表附属的 TOAST 表。在主表的 WITH 或 ALTER TABLE SET 子句中使用 toast. 前缀设置；若未设置对应的 TOAST 选项，而主表已设置同名选项，TOAST 表会使用主表的值。',
             '下列手册说明同时介绍主表与 TOAST 形式。自动 ANALYZE 不适用于 TOAST 表；此目录仅展开该版本手册明确列出的 toast. 选项。']})
-        related.append({'label': '主表参数 ' + base, 'url': '/docs/relopts/table-' + base.replace('_', '-') + f'/?v={manual.major}'})
+        related.append({'label': '主表参数 ' + base, 'url': '/wiki/relopts/table-' + base.replace('_', '-') + f'/?v={manual.major}'})
     elif scope == 'view':
         sections.insert(0, {'title': '视图选项', 'paragraphs': [
             '普通视图不存储查询结果。此选项控制视图的安全或更新语义，使用 CREATE VIEW 的 WITH 子句或 ALTER VIEW 设置，不是表或索引的物理存储参数。']})
@@ -230,9 +230,9 @@ def definition(manual, scope, name, dt, dd, file, fallback, extra_sections=None)
             '以下为该版本全局参数的说明，用于理解作用与单位。文中全局默认值、可设置位置和生效方式属于 GUC；关系选项的覆盖规则仍以上面的关系级说明为准。'] + body})
         sources.append(guc_source)
         related.append({'label': '全局参数 ' + guc_name,
-                        'url': f'/docs/guc/{guc_name}/?v={manual.major}'})
+                        'url': f'/wiki/guc/{guc_name}/?v={manual.major}'})
     sql_slug = 'create-view' if scope == 'view' else ('create-index' if scope in INDEX_SCOPES.get(base, ()) else 'create-table')
-    related.append({'label': sql_slug.upper().replace('-', ' '), 'url': f'/docs/sql/{sql_slug}/?v={manual.major}'})
+    related.append({'label': sql_slug.upper().replace('-', ' '), 'url': f'/wiki/sql/{sql_slug}/?v={manual.major}'})
     syntax = f'WITH ({name} = value)'
     # Only extract default/range facts whose context unambiguously applies.
     if base == 'fillfactor' and scope in {'table', 'btree'}:

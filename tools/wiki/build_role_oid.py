@@ -258,7 +258,7 @@ def parse_oid(content, major, channel):
         if name in rows and rows[name]['reference'].startswith('pg_'):
             catalogue = rows[name]['reference']
             related.insert(0, {'label': f'{catalogue} 系统目录',
-                               'url': f'/docs/catalog/{catalogue}/?v={major}'})
+                               'url': f'/wiki/catalog/{catalogue}/?v={major}'})
         entries[name] = dict(description=description, facts=facts, sections=sections,
                              sources=source_links(file, anchor, release),
                              related=related, release=deepcopy(release))

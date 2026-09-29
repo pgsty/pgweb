@@ -152,7 +152,7 @@ class LockImportTests(TestCase):
         self.assertEqual(first, dict(LockMode.objects.values_list('slug', 'imported_at')))
         row = LockMode.objects.get(slug='access-share')
         self.assertEqual(row.versions['10']['provenance']['revision'], 'a' * 40)
-        self.assertEqual(row.url, '/docs/lock/access-share/')
+        self.assertEqual(row.url, '/wiki/lock/access-share/')
 
     def test_provenance_changes_do_not_rewrite_business_content(self):
         self.snapshot['modes'][0]['versions']['10']['commands'][0]['source'] = deepcopy(

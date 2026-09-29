@@ -9,7 +9,7 @@ from django.core.cache import cache
 from .models import LockMode
 from .sqlcmd_common import STATUS_LABEL, version_rows
 
-ROOT = '/docs/lock/'
+ROOT = '/wiki/lock/'
 CACHE_KEY = 'pgweb:wiki:lock-modes:1'
 SCOPE_LABELS = {'table': '表级锁', 'row': '行级锁'}
 ABBREVIATIONS = ('AS', 'RS', 'RX', 'SUE', 'S', 'SRX', 'X', 'AX', 'FKS', 'FS', 'FNKU', 'FU')
@@ -140,7 +140,7 @@ def index(wanted=''):
     sources = OrderedDict()
     for position, row in enumerate(rows):
         snapshot = row['versions'][major]
-        commands = [dict(command, url='/docs/sql/{}/?v={}'.format(command['slug'], major))
+        commands = [dict(command, url='/wiki/sql/{}/?v={}'.format(command['slug'], major))
                     for command in snapshot['commands']]
         mode = {key: row[key] for key in ('slug', 'name', 'name_zh', 'scope', 'summary')}
         mode.update(abbrev=row.get('abbrev') or ABBREVIATIONS[position],

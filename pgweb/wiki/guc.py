@@ -21,13 +21,13 @@ from .models import (GUC_CATEGORY_ORDER, GUC_CONTEXT_LABEL, GUC_CONTEXT_NOTE, GU
                      GUC_SUBSTANTIVE_FIELDS, GUC_VARTYPE_LABEL, GucParameter, GucVersion)
 
 
-CACHE_KEY = 'pgweb:wiki:guc-index'
-VERSION_CACHE_KEY = 'pgweb:wiki:guc-versions2'
+CACHE_KEY = 'pgweb:wiki:guc-index:wiki'
+VERSION_CACHE_KEY = 'pgweb:wiki:guc-versions2:wiki'
 DOC_CACHE_KEY = 'pgweb:wiki:guc-docpages-v2'
-CHANGES_CACHE_KEY = 'pgweb:wiki:guc-changes:{}'
+CHANGES_CACHE_KEY = 'pgweb:wiki:guc-changes:{}:wiki'
 CACHE_SECONDS = 300
 
-ROOT = '/docs/guc/'
+ROOT = '/wiki/guc/'
 
 # 索引页与变更页不取这几列：整份 JSON 比页面用到的多两个数量级。
 DEFER = ('versions', 'changes', 'default_history', 'docs', 'editorial', 'intro_commit')
@@ -704,7 +704,7 @@ def editorial_of(parameter):
         for name in names:
             row = known.get(name.lower())
             related.append({'name': row[0] if row else name,
-                            'url': '/docs/guc/{}/'.format(row[0]) if row else '',
+                            'url': '/wiki/guc/{}/'.format(row[0]) if row else '',
                             'short_desc_zh': row[2] if row else '', 'exists': bool(row)})
     advice = editorial.get('advice_zh') or {}
     return {

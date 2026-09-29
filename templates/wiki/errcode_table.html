@@ -17,7 +17,7 @@
           <span class="wiki-classrow__label">{{ group.label }}</span>
           {% if group.name_zh %}<span class="wiki-classrow__en">{{ group.name }}</span>{% endif %}
           <span class="wiki-classrow__count">{{ group.count }} 个</span>
-          {% if top_link %}<a class="wiki-classrow__top" href="{{ top_link }}" title="回到顶部" aria-label="回到顶部">↑</a>{% else %}<a class="wiki-classrow__top" href="/docs/sqlstate/#{{ group.anchor }}" title="在索引中查看本类">↗</a>{% endif %}
+          {% if top_link %}<a class="wiki-classrow__top" href="{{ top_link }}" title="回到顶部" aria-label="回到顶部">↑</a>{% else %}<a class="wiki-classrow__top" href="/wiki/sqlstate/#{{ group.anchor }}" title="在索引中查看本类">↗</a>{% endif %}
         </div>
       </th>
     </tr>

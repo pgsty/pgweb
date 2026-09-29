@@ -1,8 +1,9 @@
 {% extends "wiki/base.html" %}
+{% load pgfilters %}
 {% block wiki_content %}
 <article class="wiki-entry wiki-tone-func fn">
 
-<p class="wiki-crumb"><a href="/docs/">文档</a> / <a href="/docs/func/">函数百科</a> / <a href="/docs/func/#group-{{ group_slug }}">{{ group_label }}</a></p>
+<p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/func/">函数百科</a> / <a href="/wiki/func/#group-{{ group_slug }}">{{ group_label }}</a></p>
 
 <header class="wiki-entry__head fn-head">
   <p class="fn-eyebrow"><span class="fn-eyebrow__en" lang="en">{{ eyebrow }}</span><span class="fn-eyebrow__zh">{{ group_label }}</span></p>
@@ -75,15 +76,15 @@
   <li class="fn-sig{% if item.added %} is-added{% endif %}">
     <p class="fn-sig__line">
       {% if item.added %}<span class="fn-sig__new" title="PostgreSQL {{ version.label }} 新增的签名">新</span>{% endif %}
-      <code class="fn-sig__code">{% if item.html %}{{ item.html|safe }}{% else %}{{ item.text }}{% endif %}</code>
+      <code class="fn-sig__code">{% if item.html %}{{ item.html|wiki_links|safe }}{% else %}{{ item.text }}{% endif %}</code>
     </p>
     {% comment %}描述分中英两份，各自另有一份保留行内标记的 HTML（中文 description_zh_html、
     英文 description_html），缺席时退回同名的纯文本。inherited 由后端逐条判定：整份快照标
     'doc' 不代表每条签名都配上了中文，所以这里只认签名自己那份，不回落快照。{% endcomment %}
     {% if item.description_zh %}
-    <div class="fn-sig__desc">{% if item.inherited %}<span class="fn-mark fn-mark--carry" title="本版没有单独的译文，英文原文与另一版完全一致，沿用那一版的译文">沿用</span>{% endif %}{% if item.description_zh_html %}{{ item.description_zh_html|safe }}{% else %}{{ item.description_zh }}{% endif %}</div>
+    <div class="fn-sig__desc">{% if item.inherited %}<span class="fn-mark fn-mark--carry" title="本版没有单独的译文，英文原文与另一版完全一致，沿用那一版的译文">沿用</span>{% endif %}{% if item.description_zh_html %}{{ item.description_zh_html|wiki_links|safe }}{% else %}{{ item.description_zh }}{% endif %}</div>
     {% elif item.description %}
-    <div class="fn-sig__desc" lang="en"><span class="fn-mark fn-mark--en" title="本站手册暂无该版译文，按英文原文显示">EN</span>{% if item.description_html %}{{ item.description_html|safe }}{% else %}{{ item.description }}{% endif %}</div>
+    <div class="fn-sig__desc" lang="en"><span class="fn-mark fn-mark--en" title="本站手册暂无该版译文，按英文原文显示">EN</span>{% if item.description_html %}{{ item.description_html|wiki_links|safe }}{% else %}{{ item.description }}{% endif %}</div>
     {% endif %}
     {% if item.examples %}
     <ul class="fn-ex">

@@ -2,9 +2,9 @@
 {% block extrahead %}{{ block.super }}<link rel="stylesheet" href="/media/css/lock.css?{{gitrev}}">{% endblock %}
 {% block wiki_content %}
 <div id="locks" class="wiki-tone-wait">
-  <p class="wiki-crumb"><a href="/docs/">文档</a> / 锁百科</p>
+  <p class="wiki-crumb"><a href="/wiki/">百科</a> / 锁百科</p>
   <h1>PostgreSQL 锁百科</h1>
-  <p class="wiki-lead">一条 SQL 会取得哪些锁，又会与谁互相阻塞？这里汇集 {{ table_modes|length }} 种表级锁模式与 {{ row_modes|length }} 种行级锁模式，按版本查看冲突关系，并关联取得这些锁的 SQL 命令。锁模式与 <a href="/docs/waitevent/">等待事件</a> 是理解同一次等待的不同视角。</p>
+  <p class="wiki-lead">一条 SQL 会取得哪些锁，又会与谁互相阻塞？这里汇集 {{ table_modes|length }} 种表级锁模式与 {{ row_modes|length }} 种行级锁模式，按版本查看冲突关系，并关联取得这些锁的 SQL 命令。锁模式与 <a href="/wiki/waitevent/">等待事件</a> 是理解同一次等待的不同视角。</p>
 
   {% include "wiki/lock_version.html" %}
   <nav class="lock-jump" aria-label="本页目录"><a href="#table-locks">表级锁矩阵</a><a href="#all-locks">组合矩阵</a><a href="#modes">{{ total }} 种锁模式</a><a href="#commands">命令与锁</a><a href="#diagnose">排查等待</a><a href="#sources">数据来源</a></nav>

@@ -207,7 +207,7 @@ class SqlcmdImportTests(TestCase):
     def test_see_also_is_versioned_local_link_and_related(self):
         snap = self.items['wait-for']['versions']['20']
         self.assertEqual(snap['related'], ['create-table'])
-        self.assertIn('href="/docs/sql/create-table/?v=20"', snap['sections'][-1]['html'])
+        self.assertIn('href="/wiki/sql/create-table/?v=20"', snap['sections'][-1]['html'])
 
     def test_synopsis_vs_body_change_and_add_remove(self):
         self.assertEqual(self.items['create-table']['changed_in'], ['19'])
