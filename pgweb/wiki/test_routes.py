@@ -52,6 +52,27 @@ class WikiRoutingTests(SimpleTestCase):
             with self.subTest(path=path):
                 self.assertEqual(resolve(path).func, view)
 
+    def test_sqlstate_case_redirect_preserves_selected_version(self):
+        for prefix in ('/docs/sqlstate/', '/docs/errcode/', '/wiki/errcode/'):
+            with self.subTest(prefix=prefix):
+                legacy = self.client.get(prefix + '42p01/?v=10')
+                self.assertEqual(legacy.status_code, 301)
+                self.assertEqual(legacy['Location'], '/wiki/sqlstate/42p01/?v=10')
+                canonical = self.client.get(legacy['Location'])
+                self.assertEqual(canonical.status_code, 301)
+                self.assertEqual(canonical['Location'], '/wiki/sqlstate/42P01/?v=10')
+
+    def test_wait_for_legacy_name_redirects_to_wait(self):
+        query = '?v=20&q=a%2Bb&q=c'
+        for alias in ('wait-for', 'waitfor', 'WAIT-FOR'):
+            with self.subTest(alias=alias):
+                old = self.client.get('/docs/sql/' + alias + '/' + query)
+                self.assertEqual(old.status_code, 301)
+                self.assertEqual(old['Location'], '/wiki/sql/' + alias + '/' + query)
+                renamed = self.client.get(old['Location'])
+                self.assertEqual(renamed.status_code, 301)
+                self.assertEqual(renamed['Location'], '/wiki/sql/wait/' + query)
+
     def test_wiki_has_its_own_navigation(self):
         self.assertFalse(any(item['link'].startswith('/wiki/') for item in sitenav['docs']))
         self.assertEqual({item['link'] for item in sitenav['wiki']},
@@ -74,6 +95,24 @@ class WikiRoutingTests(SimpleTestCase):
 
 
 class StoredWikiLinkTests(SimpleTestCase):
+    def test_redundant_empty_links_are_removed_without_losing_anchors(self):
+        html = ('<a href="/docs/18/glossary.html#TERM"></a>'
+                '<a href="/docs/18/glossary.html#TERM">术语</a>'
+                '<a id="definition" href="#TERM"></a><a name="legacy"></a>'
+                '<a href="/wiki/" aria-label="百科"></a>')
+        self.assertEqual(rewrite_links(html), html.split('</a>', 1)[1])
+
+    def test_missing_sqlstate_cases_keep_a_linkable_empty_state(self):
+        from .errcode import blocks
+        sections = [{'anchor': 'diagnosis', 'heading': '诊断',
+                     'html': '<p><a href="#cases">案例导出</a></p>'}]
+        sequence = blocks(sections, [], [], [], [], [])
+        self.assertEqual([block['type'] for block in sequence], ['section', 'cases'])
+        html = render_to_string('wiki/errcode_detail.html', {'blocks': sequence, 'cases': []})
+        soup = BeautifulSoup(html, 'html.parser')
+        self.assertIn('当前词条未收录可复现案例', soup.select_one('#cases').get_text())
+        self.assertNotIn('在一次性实例上执行过的场景', soup.select_one('#cases').get_text())
+
     def test_canonicalization_preserves_queries_and_fragments(self):
         for prefix in ('', 'https://pg.center', 'https://pgsql.cc'):
             self.assertEqual(canonical_url(prefix + '/docs/guc/work_mem/?v=18#history'),

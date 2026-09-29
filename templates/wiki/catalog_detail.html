@@ -61,7 +61,7 @@
 
 <section class="wiki-section" id="columns">
 <h2>字段</h2>
-<p class="cat-sectionlead">PostgreSQL {{ version.label }} 的 {{ columns|length }} 个字段，按定义顺序排列。说明默认用本站手册的译文，没有译文的按英文原文显示。</p>
+<p class="cat-sectionlead">PostgreSQL {{ version.label }} 的 {{ columns|length }} 个字段，按定义顺序排列。说明默认用本站手册的译文，没有译文的按英文原文显示。{% if not nullability_measured %}本版字段由手册推导，没有实测，不标 NOT NULL。{% endif %}</p>
 <div class="wiki-table"><div class="wiki-table__scroll">
 <table class="cat-columns">
   <thead><tr>

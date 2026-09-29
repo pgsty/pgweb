@@ -557,11 +557,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=15"
+              "url": "/wiki/guc/shared_preload_libraries/?v=15"
             },
             {
               "label": "shmem_startup_hook",
-              "url": "/docs/hook/shmem_startup_hook/?v=15"
+              "url": "/wiki/hook/shmem_startup_hook/?v=15"
             }
           ],
           "release": {
@@ -632,11 +632,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=16"
+              "url": "/wiki/guc/shared_preload_libraries/?v=16"
             },
             {
               "label": "shmem_startup_hook",
-              "url": "/docs/hook/shmem_startup_hook/?v=16"
+              "url": "/wiki/hook/shmem_startup_hook/?v=16"
             }
           ],
           "release": {
@@ -707,11 +707,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=17"
+              "url": "/wiki/guc/shared_preload_libraries/?v=17"
             },
             {
               "label": "shmem_startup_hook",
-              "url": "/docs/hook/shmem_startup_hook/?v=17"
+              "url": "/wiki/hook/shmem_startup_hook/?v=17"
             }
           ],
           "release": {
@@ -782,11 +782,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=18"
+              "url": "/wiki/guc/shared_preload_libraries/?v=18"
             },
             {
               "label": "shmem_startup_hook",
-              "url": "/docs/hook/shmem_startup_hook/?v=18"
+              "url": "/wiki/hook/shmem_startup_hook/?v=18"
             }
           ],
           "release": {
@@ -857,11 +857,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=19"
+              "url": "/wiki/guc/shared_preload_libraries/?v=19"
             },
             {
               "label": "shmem_startup_hook",
-              "url": "/docs/hook/shmem_startup_hook/?v=19"
+              "url": "/wiki/hook/shmem_startup_hook/?v=19"
             }
           ],
           "release": {
@@ -932,11 +932,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=20"
+              "url": "/wiki/guc/shared_preload_libraries/?v=20"
             },
             {
               "label": "shmem_startup_hook",
-              "url": "/docs/hook/shmem_startup_hook/?v=20"
+              "url": "/wiki/hook/shmem_startup_hook/?v=20"
             }
           ],
           "release": {
@@ -1017,7 +1017,7 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=10"
+              "url": "/wiki/guc/shared_preload_libraries/?v=10"
             }
           ],
           "release": {
@@ -1088,7 +1088,7 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=11"
+              "url": "/wiki/guc/shared_preload_libraries/?v=11"
             }
           ],
           "release": {
@@ -1159,7 +1159,7 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=12"
+              "url": "/wiki/guc/shared_preload_libraries/?v=12"
             }
           ],
           "release": {
@@ -1230,7 +1230,7 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=13"
+              "url": "/wiki/guc/shared_preload_libraries/?v=13"
             }
           ],
           "release": {
@@ -1301,7 +1301,7 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=14"
+              "url": "/wiki/guc/shared_preload_libraries/?v=14"
             }
           ],
           "release": {
@@ -1372,11 +1372,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=15"
+              "url": "/wiki/guc/shared_preload_libraries/?v=15"
             },
             {
               "label": "shmem_request_hook",
-              "url": "/docs/hook/shmem_request_hook/?v=15"
+              "url": "/wiki/hook/shmem_request_hook/?v=15"
             }
           ],
           "release": {
@@ -1447,11 +1447,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=16"
+              "url": "/wiki/guc/shared_preload_libraries/?v=16"
             },
             {
               "label": "shmem_request_hook",
-              "url": "/docs/hook/shmem_request_hook/?v=16"
+              "url": "/wiki/hook/shmem_request_hook/?v=16"
             }
           ],
           "release": {
@@ -1523,11 +1523,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=17"
+              "url": "/wiki/guc/shared_preload_libraries/?v=17"
             },
             {
               "label": "shmem_request_hook",
-              "url": "/docs/hook/shmem_request_hook/?v=17"
+              "url": "/wiki/hook/shmem_request_hook/?v=17"
             }
           ],
           "release": {
@@ -1599,11 +1599,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=18"
+              "url": "/wiki/guc/shared_preload_libraries/?v=18"
             },
             {
               "label": "shmem_request_hook",
-              "url": "/docs/hook/shmem_request_hook/?v=18"
+              "url": "/wiki/hook/shmem_request_hook/?v=18"
             }
           ],
           "release": {
@@ -1675,11 +1675,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=19"
+              "url": "/wiki/guc/shared_preload_libraries/?v=19"
             },
             {
               "label": "shmem_request_hook",
-              "url": "/docs/hook/shmem_request_hook/?v=19"
+              "url": "/wiki/hook/shmem_request_hook/?v=19"
             }
           ],
           "release": {
@@ -1751,11 +1751,11 @@
           "related": [
             {
               "label": "shared_preload_libraries",
-              "url": "/docs/guc/shared_preload_libraries/?v=20"
+              "url": "/wiki/guc/shared_preload_libraries/?v=20"
             },
             {
               "label": "shmem_request_hook",
-              "url": "/docs/hook/shmem_request_hook/?v=20"
+              "url": "/wiki/hook/shmem_request_hook/?v=20"
             }
           ],
           "release": {
@@ -1830,7 +1830,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=10"
+              "url": "/wiki/sql/explain/?v=10"
             }
           ],
           "release": {
@@ -1895,7 +1895,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=11"
+              "url": "/wiki/sql/explain/?v=11"
             }
           ],
           "release": {
@@ -1960,7 +1960,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=12"
+              "url": "/wiki/sql/explain/?v=12"
             }
           ],
           "release": {
@@ -2025,7 +2025,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=13"
+              "url": "/wiki/sql/explain/?v=13"
             }
           ],
           "release": {
@@ -2090,7 +2090,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=14"
+              "url": "/wiki/sql/explain/?v=14"
             }
           ],
           "release": {
@@ -2155,7 +2155,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=15"
+              "url": "/wiki/sql/explain/?v=15"
             }
           ],
           "release": {
@@ -2220,7 +2220,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=16"
+              "url": "/wiki/sql/explain/?v=16"
             }
           ],
           "release": {
@@ -2285,7 +2285,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=17"
+              "url": "/wiki/sql/explain/?v=17"
             }
           ],
           "release": {
@@ -2350,7 +2350,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=18"
+              "url": "/wiki/sql/explain/?v=18"
             }
           ],
           "release": {
@@ -2415,7 +2415,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=19"
+              "url": "/wiki/sql/explain/?v=19"
             }
           ],
           "release": {
@@ -2480,7 +2480,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=20"
+              "url": "/wiki/sql/explain/?v=20"
             }
           ],
           "release": {
@@ -2555,7 +2555,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=18"
+              "url": "/wiki/sql/explain/?v=18"
             }
           ],
           "release": {
@@ -2620,7 +2620,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=19"
+              "url": "/wiki/sql/explain/?v=19"
             }
           ],
           "release": {
@@ -2685,7 +2685,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=20"
+              "url": "/wiki/sql/explain/?v=20"
             }
           ],
           "release": {
@@ -2760,7 +2760,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=18"
+              "url": "/wiki/sql/explain/?v=18"
             }
           ],
           "release": {
@@ -2825,7 +2825,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=19"
+              "url": "/wiki/sql/explain/?v=19"
             }
           ],
           "release": {
@@ -2890,7 +2890,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=20"
+              "url": "/wiki/sql/explain/?v=20"
             }
           ],
           "release": {
@@ -2965,7 +2965,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=18"
+              "url": "/wiki/sql/explain/?v=18"
             }
           ],
           "release": {
@@ -3030,7 +3030,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=19"
+              "url": "/wiki/sql/explain/?v=19"
             }
           ],
           "release": {
@@ -3095,7 +3095,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=20"
+              "url": "/wiki/sql/explain/?v=20"
             }
           ],
           "release": {
@@ -3170,7 +3170,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=10"
+              "url": "/wiki/sql/explain/?v=10"
             }
           ],
           "release": {
@@ -3235,7 +3235,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=11"
+              "url": "/wiki/sql/explain/?v=11"
             }
           ],
           "release": {
@@ -3300,7 +3300,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=12"
+              "url": "/wiki/sql/explain/?v=12"
             }
           ],
           "release": {
@@ -3365,7 +3365,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=13"
+              "url": "/wiki/sql/explain/?v=13"
             }
           ],
           "release": {
@@ -3430,7 +3430,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=14"
+              "url": "/wiki/sql/explain/?v=14"
             }
           ],
           "release": {
@@ -3495,7 +3495,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=15"
+              "url": "/wiki/sql/explain/?v=15"
             }
           ],
           "release": {
@@ -3560,7 +3560,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=16"
+              "url": "/wiki/sql/explain/?v=16"
             }
           ],
           "release": {
@@ -3625,7 +3625,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=17"
+              "url": "/wiki/sql/explain/?v=17"
             }
           ],
           "release": {
@@ -3690,7 +3690,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=18"
+              "url": "/wiki/sql/explain/?v=18"
             }
           ],
           "release": {
@@ -3755,7 +3755,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=19"
+              "url": "/wiki/sql/explain/?v=19"
             }
           ],
           "release": {
@@ -3820,7 +3820,7 @@
           "related": [
             {
               "label": "EXPLAIN",
-              "url": "/docs/sql/explain/?v=20"
+              "url": "/wiki/sql/explain/?v=20"
             }
           ],
           "release": {
@@ -4571,7 +4571,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=10"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=10"
             }
           ],
           "release": {
@@ -4642,7 +4642,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=11"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=11"
             }
           ],
           "release": {
@@ -4713,7 +4713,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=12"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=12"
             }
           ],
           "release": {
@@ -4784,7 +4784,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=13"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=13"
             }
           ],
           "release": {
@@ -4855,7 +4855,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=14"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=14"
             }
           ],
           "release": {
@@ -4926,7 +4926,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=15"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=15"
             }
           ],
           "release": {
@@ -4997,7 +4997,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=16"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=16"
             }
           ],
           "release": {
@@ -5068,7 +5068,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=17"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=17"
             }
           ],
           "release": {
@@ -5139,7 +5139,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=18"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=18"
             }
           ],
           "release": {
@@ -5210,7 +5210,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=19"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=19"
             }
           ],
           "release": {
@@ -5281,7 +5281,7 @@
             },
             {
               "label": "needs_fmgr_hook",
-              "url": "/docs/hook/needs_fmgr_hook/?v=20"
+              "url": "/wiki/hook/needs_fmgr_hook/?v=20"
             }
           ],
           "release": {
@@ -5360,7 +5360,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=10"
+              "url": "/wiki/hook/fmgr_hook/?v=10"
             }
           ],
           "release": {
@@ -5429,7 +5429,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=11"
+              "url": "/wiki/hook/fmgr_hook/?v=11"
             }
           ],
           "release": {
@@ -5498,7 +5498,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=12"
+              "url": "/wiki/hook/fmgr_hook/?v=12"
             }
           ],
           "release": {
@@ -5567,7 +5567,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=13"
+              "url": "/wiki/hook/fmgr_hook/?v=13"
             }
           ],
           "release": {
@@ -5636,7 +5636,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=14"
+              "url": "/wiki/hook/fmgr_hook/?v=14"
             }
           ],
           "release": {
@@ -5705,7 +5705,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=15"
+              "url": "/wiki/hook/fmgr_hook/?v=15"
             }
           ],
           "release": {
@@ -5774,7 +5774,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=16"
+              "url": "/wiki/hook/fmgr_hook/?v=16"
             }
           ],
           "release": {
@@ -5843,7 +5843,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=17"
+              "url": "/wiki/hook/fmgr_hook/?v=17"
             }
           ],
           "release": {
@@ -5912,7 +5912,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=18"
+              "url": "/wiki/hook/fmgr_hook/?v=18"
             }
           ],
           "release": {
@@ -5981,7 +5981,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=19"
+              "url": "/wiki/hook/fmgr_hook/?v=19"
             }
           ],
           "release": {
@@ -6050,7 +6050,7 @@
             },
             {
               "label": "fmgr_hook",
-              "url": "/docs/hook/fmgr_hook/?v=20"
+              "url": "/wiki/hook/fmgr_hook/?v=20"
             }
           ],
           "release": {
@@ -8042,11 +8042,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=10"
+              "url": "/wiki/sql/create-policy/?v=10"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=10"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=10"
             }
           ],
           "release": {
@@ -8115,11 +8115,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=11"
+              "url": "/wiki/sql/create-policy/?v=11"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=11"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=11"
             }
           ],
           "release": {
@@ -8188,11 +8188,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=12"
+              "url": "/wiki/sql/create-policy/?v=12"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=12"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=12"
             }
           ],
           "release": {
@@ -8261,11 +8261,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=13"
+              "url": "/wiki/sql/create-policy/?v=13"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=13"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=13"
             }
           ],
           "release": {
@@ -8334,11 +8334,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=14"
+              "url": "/wiki/sql/create-policy/?v=14"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=14"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=14"
             }
           ],
           "release": {
@@ -8407,11 +8407,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=15"
+              "url": "/wiki/sql/create-policy/?v=15"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=15"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=15"
             }
           ],
           "release": {
@@ -8480,11 +8480,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=16"
+              "url": "/wiki/sql/create-policy/?v=16"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=16"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=16"
             }
           ],
           "release": {
@@ -8553,11 +8553,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=17"
+              "url": "/wiki/sql/create-policy/?v=17"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=17"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=17"
             }
           ],
           "release": {
@@ -8626,11 +8626,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=18"
+              "url": "/wiki/sql/create-policy/?v=18"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=18"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=18"
             }
           ],
           "release": {
@@ -8699,11 +8699,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=19"
+              "url": "/wiki/sql/create-policy/?v=19"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=19"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=19"
             }
           ],
           "release": {
@@ -8772,11 +8772,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=20"
+              "url": "/wiki/sql/create-policy/?v=20"
             },
             {
               "label": "row_security_policy_hook_restrictive",
-              "url": "/docs/hook/row_security_policy_hook_restrictive/?v=20"
+              "url": "/wiki/hook/row_security_policy_hook_restrictive/?v=20"
             }
           ],
           "release": {
@@ -8855,11 +8855,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=10"
+              "url": "/wiki/sql/create-policy/?v=10"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=10"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=10"
             }
           ],
           "release": {
@@ -8928,11 +8928,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=11"
+              "url": "/wiki/sql/create-policy/?v=11"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=11"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=11"
             }
           ],
           "release": {
@@ -9001,11 +9001,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=12"
+              "url": "/wiki/sql/create-policy/?v=12"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=12"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=12"
             }
           ],
           "release": {
@@ -9074,11 +9074,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=13"
+              "url": "/wiki/sql/create-policy/?v=13"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=13"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=13"
             }
           ],
           "release": {
@@ -9147,11 +9147,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=14"
+              "url": "/wiki/sql/create-policy/?v=14"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=14"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=14"
             }
           ],
           "release": {
@@ -9220,11 +9220,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=15"
+              "url": "/wiki/sql/create-policy/?v=15"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=15"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=15"
             }
           ],
           "release": {
@@ -9293,11 +9293,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=16"
+              "url": "/wiki/sql/create-policy/?v=16"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=16"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=16"
             }
           ],
           "release": {
@@ -9366,11 +9366,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=17"
+              "url": "/wiki/sql/create-policy/?v=17"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=17"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=17"
             }
           ],
           "release": {
@@ -9439,11 +9439,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=18"
+              "url": "/wiki/sql/create-policy/?v=18"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=18"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=18"
             }
           ],
           "release": {
@@ -9512,11 +9512,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=19"
+              "url": "/wiki/sql/create-policy/?v=19"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=19"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=19"
             }
           ],
           "release": {
@@ -9585,11 +9585,11 @@
             },
             {
               "label": "CREATE POLICY",
-              "url": "/docs/sql/create-policy/?v=20"
+              "url": "/wiki/sql/create-policy/?v=20"
             },
             {
               "label": "row_security_policy_hook_permissive",
-              "url": "/docs/hook/row_security_policy_hook_permissive/?v=20"
+              "url": "/wiki/hook/row_security_policy_hook_permissive/?v=20"
             }
           ],
           "release": {
@@ -21780,11 +21780,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=10"
+              "url": "/wiki/sql/create-role/?v=10"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=10"
+              "url": "/wiki/sql/alter-role/?v=10"
             }
           ],
           "release": {
@@ -21850,11 +21850,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=11"
+              "url": "/wiki/sql/create-role/?v=11"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=11"
+              "url": "/wiki/sql/alter-role/?v=11"
             }
           ],
           "release": {
@@ -21920,11 +21920,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=12"
+              "url": "/wiki/sql/create-role/?v=12"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=12"
+              "url": "/wiki/sql/alter-role/?v=12"
             }
           ],
           "release": {
@@ -21990,11 +21990,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=13"
+              "url": "/wiki/sql/create-role/?v=13"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=13"
+              "url": "/wiki/sql/alter-role/?v=13"
             }
           ],
           "release": {
@@ -22060,11 +22060,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=14"
+              "url": "/wiki/sql/create-role/?v=14"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=14"
+              "url": "/wiki/sql/alter-role/?v=14"
             }
           ],
           "release": {
@@ -22130,11 +22130,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=15"
+              "url": "/wiki/sql/create-role/?v=15"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=15"
+              "url": "/wiki/sql/alter-role/?v=15"
             }
           ],
           "release": {
@@ -22200,11 +22200,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=16"
+              "url": "/wiki/sql/create-role/?v=16"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=16"
+              "url": "/wiki/sql/alter-role/?v=16"
             }
           ],
           "release": {
@@ -22270,11 +22270,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=17"
+              "url": "/wiki/sql/create-role/?v=17"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=17"
+              "url": "/wiki/sql/alter-role/?v=17"
             }
           ],
           "release": {
@@ -22340,11 +22340,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=18"
+              "url": "/wiki/sql/create-role/?v=18"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=18"
+              "url": "/wiki/sql/alter-role/?v=18"
             }
           ],
           "release": {
@@ -22410,11 +22410,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=19"
+              "url": "/wiki/sql/create-role/?v=19"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=19"
+              "url": "/wiki/sql/alter-role/?v=19"
             }
           ],
           "release": {
@@ -22480,11 +22480,11 @@
           "related": [
             {
               "label": "CREATE ROLE",
-              "url": "/docs/sql/create-role/?v=20"
+              "url": "/wiki/sql/create-role/?v=20"
             },
             {
               "label": "ALTER ROLE",
-              "url": "/docs/sql/alter-role/?v=20"
+              "url": "/wiki/sql/alter-role/?v=20"
             }
           ],
           "release": {

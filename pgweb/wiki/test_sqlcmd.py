@@ -198,7 +198,7 @@ class SqlcmdTests(TestCase):
 
     def test_route_status_codes_aliases_and_queryparams(self):
         for path in ['/wiki/sql/', '/wiki/sql/create-table/', '/wiki/sql/create-table/?v=10',
-                     '/wiki/sql/merge/?v=15', '/wiki/sql/wait-for/', '/wiki/sql/changes/15/',
+                     '/wiki/sql/merge/?v=15', '/wiki/sql/changes/15/',
                      '/wiki/sql/changes/9.0/', '/wiki/sql/changes/20/', '/wiki/sql/changes/18/?from=12',
                      '/wiki/sql/?q=create&group=table&verb=CREATE&first=9.0&present=18']:
             with self.subTest(path=path):

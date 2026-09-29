@@ -190,7 +190,7 @@ BEGIN
             item.data_table) INTO inconsistent;
         IF inconsistent <> 0 THEN RAISE EXCEPTION '%：来源或构建身份无效。', item.label; END IF;
         EXECUTE format('SELECT array_agg(%L || slug || ''/'' ORDER BY %L || slug || ''/'') FROM %I',
-            '/docs/' || item.source_name || '/', '/docs/' || item.source_name || '/', item.data_table)
+            '/wiki/' || item.source_name || '/', '/wiki/' || item.source_name || '/', item.data_table)
             INTO expected_urls;
         SELECT array_agg(url ORDER BY url) INTO indexed_urls
             FROM search_searchentry WHERE source=item.source_name;

@@ -21,7 +21,7 @@ def main(request):
             'title': title,
             'description': 'PostgreSQL 社区近期活动、会议和用户组聚会。',
             'type': 'website',
-            'sitename': 'PostgreSQL 活动',
+            'sitename': 'PGSQL.CC',
         },
     })
 
@@ -39,7 +39,7 @@ def archive(request):
             'title': page_title,
             'description': 'PostgreSQL 社区历史活动、会议和用户组聚会归档。',
             'type': 'website',
-            'sitename': 'PostgreSQL 活动',
+            'sitename': 'PGSQL.CC',
         },
     })
 
@@ -81,6 +81,6 @@ def item(request, itemid, slug=None):
             'title': event.title,
             'description': description,
             'type': 'article',
-            'sitename': 'PostgreSQL 活动',
+            'sitename': 'PGSQL.CC',
         },
     })

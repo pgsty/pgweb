@@ -14,6 +14,9 @@ urlpatterns = [
     path('sql/', views.sqlcmd_index, name='sqlcmd'),
     path('sql/changes/', views.sqlcmd_changes_root, name='sqlcmd_changes_root'),
     re_path(r'^sql/changes/(?P<major>\d+(?:\.\d+)?)/$', views.sqlcmd_changes, name='sqlcmd_changes'),
+    # The early development snapshot called WAIT "WAIT FOR"; preserve shared links.
+    re_path(r'^sql/[Ww][Aa][Ii][Tt]-?[Ff][Oo][Rr]/$', RedirectView.as_view(
+        url='/wiki/sql/wait/', permanent=True, query_string=True)),
     # 大写形式也接受，随后 301 到小写规范地址。
     re_path(r'^sql/(?P<slug>(?i:[a-z][a-z0-9-]*))/$', views.sqlcmd_detail, name='sqlcmd_detail'),
     path('sqlstate/', views.errcode_index, name='errcode'),

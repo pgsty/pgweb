@@ -568,6 +568,14 @@ def build_inventories(atlas, fetch, cache_dir, report):
 
     for major, tag in NAMES_TXT_TAGS.items():
         path = os.path.join(cache_dir, 'wait_event_names-{}.txt'.format(tag))
+        manifest_path = path + '.json'
+        if os.path.exists(manifest_path):
+            with open(manifest_path, encoding='utf-8') as handle:
+                manifest = json.load(handle)
+            with open(path, 'rb') as handle:
+                if hashlib.sha256(handle.read()).hexdigest() != manifest['source_sha256']:
+                    raise ValueError('等待事件固定来源指纹不匹配：' + path)
+            report.setdefault('source_manifests', {})[major] = manifest
         english = parse_names_txt(fetch_text(NAMES_TXT_URL.format(tag), path, fetch,
                                              report['upstream']))
         inventories[major], methods[major] = upstream_inventory(
@@ -782,6 +790,11 @@ def version_notes(major, method, atlas, report):
         notes['sources'].append('本站手册 {} 的 {}'.format(notes['doc_version'], DOC_FILE))
     if notes['sources']:
         notes['fetched_at'] = report['stamps'].get(major, '')
+    manifest = report.get('source_manifests', {}).get(major)
+    if manifest:
+        for field in ('source_archive_sha256', 'source_member', 'source_sha256'):
+            notes[field] = manifest[field]
+        notes['sources'].append('PGDOC frozen source archive sha256:' + manifest['source_archive_sha256'])
     return notes
 
 

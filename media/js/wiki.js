@@ -107,7 +107,8 @@
       if (current.q) { params.set('q', current.q); }
       for (var key in current.picked) { params.set(key, current.picked[key]); }
       var search = params.toString();
-      window.history.replaceState(null, '', search ? '?' + search : window.location.pathname);
+      var url = window.location.pathname + (search ? '?' + search : '') + window.location.hash;
+      window.history.replaceState(null, '', url);
     }
 
     function readUrl() {

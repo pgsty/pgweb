@@ -26,10 +26,7 @@ cat 的 `relations[]` 每项：`name / kind / summary / first_version / last_ver
 
 9.0 是收录基线：9.0 已有的对象不能据此说"首次于 9.0 引入"。页面上凡涉及 9.0 的"引入"字样都要照此措辞。
 
-20 与 19 目前只差关系增删：新增 `pg_stat_kind_info`（7 个字段），移除五个 `pg_propgraph_*` 目录表；
-既存关系的字段、类型、顺序一处没变。2026-09-11 对 postgresql.org/docs/devel 核验：
-`catalogs-overview.html` 列 64 个目录表、不含 propgraph，`monitoring-stats.html` 的 `pg_stat_kind_info`
-字段与本站推导的七个完全一致。
+2026-09-30 按本站现行冻结构建核验：19 beta 4 有 150 个关系、1,521 个字段；20 devel 有 152 个关系、1,538 个字段。19→20 新增 `pg_stat_kind_info`（7 个字段）与 `pg_stat_progress_data_checksums`（10 个字段），没有关系移除，既存关系没有字段增删、类型或顺序变化。此前 beta 3 中的五个 `pg_propgraph_*` 目录表已在 beta 4 源基线中撤回，不再计入 19→20 的移除。开发版的英文与中文说明来自同一份 PG20 源归档，构建固定在 `4d3346909b201ac1648232cf290462a7070c119326f56196f1f0253ed80fae41`，不把在线移动的 devel 页面作为这份快照的构建证明。
 
 ## 2. 数据建模：两张表，非规范化
 
@@ -42,7 +39,7 @@ class CatalogVersion(models.Model):            # db_table = 'catalog_version'，
     status = TextField()                      # historical | stable | preview | devel
     support_status = TextField()              # end-of-life | supported | preview | devel
     source_tag = TextField(blank=True)        # 'REL_18_6'；devel 为 'master'
-    documentation_version = TextField(blank=True)   # '18.6' / '19beta3' / 'devel'
+    documentation_version = TextField(blank=True)   # '18.6' / '19beta4' / 'devel'
     release = TextField(blank=True)
     doc_slug = TextField()                    # 本站手册地址段：'9.0' … '19'，20 为 'devel'
     relation_count = IntegerField(default=0)
@@ -147,6 +144,7 @@ cat 到 19 beta 4 为止；20 由本站 devel 手册（`DocPage.version=0`）推
   把这些关系的 20 快照按 19 的顺序摆，免得页面上字段表看着换了位置、变化那句话却说没变。
 - 19→20 的变化记录用同样的形状，但只比较字段名、类型、顺序（`description_changes`、`reference_changes`、`attribute_changes` 恒为空）；快照 `schema_source='documentation'`、`runtime_verified=False`、`relation_oid=None`、`release=''`，`source_url` 指 `/docs/devel/<页>`，`definition_source_url` 把 tag 换成 `master`。
 - `CatalogVersion('20')`：`label='20 devel'`、`status='devel'`、`support_status='devel'`、`source_tag='master'`、`documentation_version='devel'`、`doc_slug='devel'`。
+- 20 快照里字段的 `not_null`、`hidden`、`type_modifier`、`array_dimensions` 沿用 19，只是为了让 19→20 不比出假的属性变化，不是 20 的实测事实。详情页据 `CatalogVersion.runtime_verified` 判断：没有实测的版本不标 NOT NULL，字段表导语注明“本版字段由手册推导，没有实测，不标 NOT NULL”（2026-09-29 起）。英文站 PG.CENTER 同一规则：NOT NULL 只在实测版本上标，结构变更与本站同一口径（字段增删、类型、顺序，以及可空、隐式、类型修饰、数组维数），9.0 – 20 两站逐关系逐版本一致。
 - 本地没有 devel 手册时跳过 20，报告 `harvest.devel = {'derived': False, 'reason': …}`。
 - 推导的基准版本是 cat 的最后一版，不写死 `'19'`；开发版号取 `pgweb.docs.versions.DEVEL_MAJOR_VERSION`。
 
@@ -291,6 +289,16 @@ CSP 禁内联样式，状态一律走 class。亮暗两套。脚本追加到 `me
 
 发布顺序：拉代码 → `manage.py migrate wiki` → `sync_catalog.py --input … --write` → `index_docs --catalog` → `systemctl restart pgsql.cc`。
 页面缓存 5 分钟，导入后命令主动清缓存（`catalog.forget()`）。cat 出新版本（例如 19 正式发布、20 进入 beta）时：更新 `~/pg.center/cat`，重新导出导入即可；20 推导层跟着本站 devel 手册走，手册重灌后同步归档对应 pgdoc 英文构建与 `build.json`，再重导。预发行事实源的 `documentation_version` 必须与本站 `Version.versionstring` 相同，否则导出拒绝混合构建。
+
+2026-09-30 核对时，默认 cat 英文缓存仍标记旧 `97c64fe3…` 源归档；已先完整备份，再只刷新 gitignored 的
+`~/pg.center/cat/sources/postgresql/devel/`（112 个 HTML 与 `build.json`）。当前中英文统一锁定官方归档
+`4d3346909b201ac1648232cf290462a7070c119326f56196f1f0253ed80fae41`。英文 HTML 取自
+`~/pgsty/pg.center/tmp/pg20-reload-20260928-01a0e7f4/html/20devel/`，逐页与同批 `artifacts.json` 的 SHA-256 核对；
+`catalogs.sgml`、`monitoring.sgml` 同时与固定官方归档逐字节核对。中文构建身份见本站
+`tmp/pg20-reload-20260928-01a0e7f4/release.json`。现有归档的页哈希校验只验证归档内部完整性，
+更新手册时仍需主动核对两种语言的源归档身份，不能只凭 `release=20devel` 判定同构建。
+备份、构建验证、差异与重导记录保存在 `tmp/wiki-release-audit-20260930/`；正式候选为
+`catalog-aligned.json.gz`，复验命令为 `.venv/bin/python tools/wiki/sync_catalog.py --export FILE.json.gz`。
 
 导入报告的形状：
 

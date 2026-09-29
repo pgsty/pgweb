@@ -181,7 +181,7 @@ def detail(request, featureslug):
             'title': title,
             'description': description,
             'type': 'article',
-            'sitename': 'PostgreSQL 特性矩阵',
+            'sitename': 'PGSQL.CC',
         },
     })
 

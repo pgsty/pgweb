@@ -35,7 +35,7 @@ def arguments(request):
 def search_page(request):
     payload = service.search(**arguments(request))
     response = render(request, 'search/docsearch.html', {'search': payload, 'site_search': bool(getattr(settings, 'SEARCH_DSN', '')),
-                                                          'seo': {'title': '文档检索 · PostgreSQL 中文社区'}})
+                                                          'seo': {'title': '文档检索 · PGSQL.CC'}})
     response['Cache-Control'] = 'no-cache'
     return response
 

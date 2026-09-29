@@ -13,7 +13,7 @@ def seo_values(context):
     title = seo.get('title')
     if not title:
         title = og.get('title') or ''
-        if title and not title.startswith('PostgreSQL'):
+        if title and not title.startswith(('PostgreSQL', 'PGSQL.CC')):
             title = 'PostgreSQL ' + title
     return {
         'description': seo.get('description') or og.get('description') or '',

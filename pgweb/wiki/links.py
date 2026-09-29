@@ -9,6 +9,7 @@ _ERRCODE = re.compile(r'^/(?:docs|wiki)/errcode(?=/|$)')
 _HREF = re.compile(
     r'''(?P<prefix><a(?=\s)(?:[^>"']|"[^"]*"|'[^']*')*?\s+href\s*=\s*)'''
     r'''(?P<quote>["'])(?P<url>.*?)(?P=quote)''', re.I | re.S)
+_EMPTY_LINK = re.compile(r'''<a\s+href\s*=\s*(?:"[^"]*"|'[^']*')\s*>\s*</a\s*>''', re.I)
 
 
 def canonical_url(url):
@@ -31,5 +32,8 @@ def canonical_url(url):
 
 def rewrite_links(html):
     """Update hrefs in rendered fragments without changing source snapshots."""
+    # Some manual glossary references include a redundant empty link. Keep
+    # anchors with IDs or other attributes; only remove href-only empty links.
+    html = _EMPTY_LINK.sub('', html)
     return _HREF.sub(lambda match: match['prefix'] + match['quote'] +
                      canonical_url(match['url']) + match['quote'], html)

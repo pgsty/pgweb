@@ -2391,9 +2391,9 @@ a.cat-sq:focus-visible { outline: 2px solid var(--pg-link-hover); outline-offset
   .wiki .cmd-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .wiki .cmd-rebase__form select { min-width: 0; width: 100%; }
 }
-/* SQL 页的窄屏容器只有 8px 留白，抵消 Bootstrap 栅格的 15px 负外边距。 */
-@media (max-width: 575.98px) {
-  .pg-page:has(.wiki .cmd) > .row { margin-right: -8px; margin-left: -8px; }
+/* 百科在收起侧栏后使用 8px 容器留白，匹配 Bootstrap 栅格的负外边距。 */
+@media (max-width: 991.98px) {
+  .pg-page:has(.wiki) > .row { margin-right: -8px; margin-left: -8px; }
 }
 
 /* ===== 函数百科 ===== */

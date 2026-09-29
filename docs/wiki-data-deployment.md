@@ -1,8 +1,8 @@
-> 当前表名已在 2026-09-25 整理，生效契约与部署记录见 [模型整理实施记录](reference-model-rollout.md)。本文原有 2026-09-15 数据恢复记录中的表名、命令输出与数量属于历史证据，保留原文。当前验收入口 `tools/wiki/check_data.sql` 已适配六领域的新表。
+> 当前表名已在 2026-09-25 整理，生效契约与部署记录见 [模型整理实施记录](reference-model-rollout.md)。本文原有 2026-09-15 数据恢复记录中的表名、命令输出与数量属于历史证据，保留原文。当前验收入口 `tools/wiki/check_data.sql` 覆盖十一领域的 17 张业务表及派生检索。
 
 # 百科数据发布验收与 2026-09-15 恢复记录
 
-SQL 命令、系统目录、配置参数、等待事件、函数百科的数据均独立于代码和建表迁移。
+十一类百科的数据均独立于代码和建表迁移。
 发布完成必须同时核验数据、版本覆盖、检索条目与公网页面。
 
 ## 发布检查
@@ -14,25 +14,26 @@ psql -X -d pgweb -f tools/wiki/check_data.sql
 psql -X 'service=pgweb.pg' -f tools/wiki/check_data.sql
 ```
 
-[检查脚本](../tools/wiki/check_data.sql) 检查五个栏目：
+[检查脚本](../tools/wiki/check_data.sql) 检查十一类百科：
 
-- 数据表非空，PG 10–20 每个版本均有快照。
+- 数据表非空；SQL 命令、系统目录、配置参数、等待事件、函数、锁与四个主题均有 PG 10–20 快照。SQLSTATE 按实际已采样版本检查，不推断 PG20 存在性。
 - 每条记录的 `present_in` 与实际快照版本一致。
 - 有版本汇总表的栏目，每个版本的汇总计数与实际快照数一致。
-- 检索条目的 URL 集合与数据逐条对应，没有缺项、重复或遗留条目。
+- 检索条目的 `/wiki/` URL 集合与数据逐条对应，没有缺项、重复或遗留条目。
+- SQLSTATE 的摘要、证据与类别计数一致；锁的 8 + 4 模式、冲突对称性与逐版命令引用有效；四个主题保留有效来源及构建身份。
 
 任何一项失败都以非零状态退出；脚本在只读事务中执行，不修改数据库。
-检查通过仍须访问公网索引、详情、版本变更页及搜索 API；HTTP 200 本身不足以证明数据已加载。
+检查通过仍须复核来源与手册构建、逐条内容指纹，并访问公网索引、详情、版本变更页及搜索 API。该脚本验证结构和索引一致性，不能替代逐领域内容核对；HTTP 200 本身不足以证明数据已加载。
 
 发布顺序：应用 `wiki` 迁移 → 按各栏目契约导入固定快照 → 重建对应索引 →
 执行上述检查 → 按栏目契约重启 `pgsql.cc`、清除工作进程缓存 → 核验公网页面。
 源快照在本地验证，生产通过现有 `tools/wiki/sync_*.py --input ... --target production --write`
 导入。只执行 `migrate wiki` 不会导入百科数据。
 
-四个本次涉及的索引可一起重建：
+百科路由调整或完整数据刷新时，十一类派生索引可一起重建：
 
 ```bash
-ssh pg 'cd /data/app/pgsql.cc && .venv/bin/python manage.py index_docs --catalog --waitevents --sqlcmd --func'
+ssh pg 'cd /data/app/pgsql.cc && .venv/bin/python manage.py index_docs --errcodes --catalog --guc --waitevents --sqlcmd --func --locks --topics'
 ```
 
 各栏目的来源和导入契约见

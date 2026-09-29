@@ -154,8 +154,6 @@
 #locks .lock-matrix__button:focus-visible { outline-offset: -3px; }
 #locks.is-enhanced .lock-version-submit, #locks [hidden] { display: none !important; }
 @media (max-width: 760px) {
-  /* The shared Bootstrap row extends 7px beyond the mobile page shell. */
-  .pg-page:has(#locks) { overflow-x: clip; }
   #locks .lock-explorer { grid-template-columns: minmax(0, 1fr) auto; }
   #locks .lock-explorer > label { grid-column: 1 / -1; }
   #locks .lock-mode { grid-template-columns: minmax(0, 1fr) 40px; gap: 8px 12px; padding: 16px 8px; }

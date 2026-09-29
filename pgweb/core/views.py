@@ -88,7 +88,7 @@ def home(request):
     from pgweb.docs.versions import manual_groups
     from pgweb.info.highlights import home_highlights
 
-    title = 'PostgreSQL 中文社区｜文档、下载与技术资讯'
+    title = 'PGSQL.CC｜PostgreSQL 中文文档与技术资料'
     return render(request, 'index.html', {
         'title': title,
         'news': news,
@@ -102,8 +102,8 @@ def home(request):
             'url': '/',
             'type': 'website',
             'title': title,
-            'description': 'pgsql.cc 是由 Pigsty 团队维护的 PostgreSQL 官方网站中文翻译站，提供中文文档、技术资讯、软件目录与知识库。',
-            'sitename': 'pgsql.cc',
+            'description': 'PGSQL.CC 提供 PostgreSQL 中文文档与技术资料，由 Pigsty 团队维护。',
+            'sitename': 'PGSQL.CC',
         },
     })
 

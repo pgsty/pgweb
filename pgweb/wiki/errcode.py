@@ -332,7 +332,8 @@ def blocks(sections, messages, cases, claims, sources, runtimes):
     """
     available = {
         'templates': bool(messages),
-        'cases': bool(cases),
+        'cases': bool(cases) or any(re.search(r'''<a\b[^>]*\bhref=["']#cases["']''',
+                                             section.get('html', '')) for section in sections),
         'evidence': bool(claims or sources or runtimes),
     }
     anchors = [s.get('anchor') for s in sections]

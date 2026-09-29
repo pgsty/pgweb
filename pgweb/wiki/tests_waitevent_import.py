@@ -5,9 +5,12 @@
 """
 
 import json
+import hashlib
 import os
 import tempfile
 from datetime import date
+from pathlib import Path
+from unittest.mock import patch
 
 from django.test import SimpleTestCase, TestCase
 
@@ -305,6 +308,26 @@ def export(names_txt=True, fetch=False):
 
 class WaitEventParseTests(SimpleTestCase):
     """三种表格式与源码里的事件清单。"""
+
+    def test_fixed_source_manifest_is_verified_and_preserved(self):
+        with tempfile.TemporaryDirectory() as root:
+            path = Path(root) / 'wait_event_names-master.txt'
+            path.write_text('')
+            manifest = {'source_archive_sha256': 'a' * 64, 'source_member': 'src/wait_event_names.txt',
+                        'source_sha256': hashlib.sha256(b'').hexdigest()}
+            Path(str(path) + '.json').write_text(json.dumps(manifest))
+            report = {'collisions': [], 'upstream': {}, 'stamps': {}, 'doc_used': []}
+            with patch.object(importer, 'ATLAS_MAJORS', ()), \
+                 patch.object(importer, 'UPSTREAM_HTML_MAJORS', ()), \
+                 patch.object(importer, 'NAMES_TXT_TAGS', {'20': 'master'}), \
+                 patch.object(importer, 'upstream_inventory', return_value=({}, 'upstream')):
+                importer.build_inventories({}, False, root, report)
+                notes = importer.version_notes('20', 'upstream', {}, report)
+                self.assertEqual(notes['source_sha256'], manifest['source_sha256'])
+                self.assertIn(manifest['source_archive_sha256'], notes['sources'][-1])
+                path.write_text('changed')
+                with self.assertRaisesRegex(ValueError, '固定来源指纹不匹配'):
+                    importer.build_inventories({}, False, root, report)
 
     def soup(self, html):
         from bs4 import BeautifulSoup

@@ -36,7 +36,7 @@ def _list_patches(request, filt, version=None):
             'title': page_title,
             'description': page_description,
             'type': 'article',
-            'sitename': 'PostgreSQL 安全信息',
+            'sitename': 'PGSQL.CC',
         },
     })
 
@@ -77,7 +77,7 @@ def details(request, cve_prefix, cve):
             'title': page_title,
             'description': page_description,
             'type': 'article',
-            'sitename': 'PostgreSQL 安全信息',
+            'sitename': 'PGSQL.CC',
         },
     })
 

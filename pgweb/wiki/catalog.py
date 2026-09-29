@@ -474,14 +474,20 @@ def detail(name, wanted=''):
         if url:
             doc_versions.append({'major': item['major'], 'label': item['label'], 'url': url})
     local_doc = doc_url(snapshot, pages)
+    # 字段是否非空只有实测才知道。20 devel 由手册推导，快照里的 not_null 是 19 的，
+    # 不能当作 20 的事实标出来；英文站 PG.CENTER 同样只在实测版本上标 NOT NULL。
+    measured = bool((version or {}).get('runtime_verified'))
+    columns = [column_data(column, major, known, added, types) for column in snapshot.get('columns') or ()]
+    if not measured:
+        for column in columns:
+            column['not_null'] = None
     return {
         'relation': relation, 'name': relation.name, 'kind_label': relation.kind_label,
         'eyebrow': relation.eyebrow,
         'version': version, 'previous_major': previous, 'snapshot': snapshot,
         'description': snapshot.get('description', ''),
         'description_zh': snapshot.get('description_zh', ''),
-        'columns': [column_data(column, major, known, added, types)
-                    for column in snapshot.get('columns') or ()],
+        'columns': columns, 'nullability_measured': measured,
         'removed_columns': removed_columns,
         'change': change, 'change_note': change_note(relation, major, order, change),
         'ribbon': ribbon_of(relation, major, order, set(relation.changed_in),

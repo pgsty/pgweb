@@ -21,7 +21,7 @@ def _news_meta_description(news):
         pgmarkdown(news.content or '', allow_relative_links=True),
         max_length=180,
     )
-    return content or '{}。查看 PostgreSQL 中文社区新闻、公告与版本更新。'.format(news.title)
+    return content or '{}。查看 PostgreSQL 新闻、公告与版本更新。'.format(news.title)
 
 
 def archive(request, tag=None, paginator=None):
@@ -49,7 +49,7 @@ def archive(request, tag=None, paginator=None):
         paginator = None
 
     page_title = '新闻归档'
-    page_description = '浏览 PostgreSQL 中文社区新闻、公告与版本更新。'
+    page_description = '浏览 PostgreSQL 新闻、公告与版本更新。'
     if tag:
         page_title += ' - {}'.format(tag.name)
         page_description = '{}标签下的 PostgreSQL 新闻、公告与版本更新。'.format(tag.name)
@@ -71,7 +71,7 @@ def archive(request, tag=None, paginator=None):
             'title': page_title,
             'description': page_description,
             'type': 'website',
-            'sitename': 'PostgreSQL 新闻',
+            'sitename': 'PGSQL.CC',
         },
     })
 
@@ -95,7 +95,7 @@ def item(request, itemid, slug=None):
             'title': news.title,
             'description': _news_meta_description(news),
             'noimage': news.org.mailtemplate == 'default',  # For now, control image by "using a custom logo"
-            'sitename': 'PostgreSQL 新闻',
+            'sitename': 'PGSQL.CC',
         }
     })
 

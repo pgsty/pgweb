@@ -568,7 +568,7 @@ def docpage(request, version, filename):
             'modified_time': page.version.docsloaded,
             'title': page_title,
             'description': description,
-            'sitename': 'PostgreSQL 中文文档',
+            'sitename': 'PGSQL.CC',
         },
         'seo': {
             'title': page_title,
@@ -646,7 +646,7 @@ def root(request):
             'type': 'website',
             'title': 'PostgreSQL 中文文档',
             'description': 'PostgreSQL 中文手册、各版本在线文档、PDF 下载与旧版手册归档。',
-            'sitename': 'PostgreSQL 中文站',
+            'sitename': 'PGSQL.CC',
         },
     })
     r['xkey'] = 'pgdocs_all pgdocs_pdf'
@@ -669,7 +669,7 @@ def third_party(request):
             'type': 'website',
             'title': '三方文档',
             'description': 'PostgreSQL 生态组件介绍与中文文档入口，涵盖高可用、连接池、备份恢复、监控、空间数据、时序数据与分布式数据库。',
-            'sitename': 'PostgreSQL 中文站',
+            'sitename': 'PGSQL.CC',
         },
     })
 
@@ -749,7 +749,7 @@ def manualarchive(request):
             'url': '/docs/manuals/archive/',
             'title': 'PostgreSQL 手册归档',
             'description': '不再受支持的 PostgreSQL 版本手册与可用 PDF 归档。',
-            'sitename': 'PostgreSQL 中文站',
+            'sitename': 'PGSQL.CC',
         },
     })
     r['xkey'] = 'pgdocs_all pgdocs_pdf'
@@ -827,7 +827,7 @@ def release_notes_list(request):
             'type': 'website',
             'title': 'PostgreSQL 发布说明归档',
             'description': 'PostgreSQL 各版本发布说明归档。',
-            'sitename': 'PostgreSQL 中文站',
+            'sitename': 'PGSQL.CC',
         },
         'seo': {
             'title': 'PostgreSQL 发布说明归档',
@@ -994,7 +994,7 @@ def release_notes(request, version):
             'url': release_path,
             'title': release_title,
             'description': description,
-            'sitename': 'PostgreSQL 中文站',
+            'sitename': 'PGSQL.CC',
         },
         'seo': {
             'title': release_title,
@@ -1047,7 +1047,7 @@ def books(request):
             'url': '/docs/books/',
             'title': 'PostgreSQL 图书',
             'description': 'PostgreSQL 社区维护的相关书目与出版信息。',
-            'sitename': 'PostgreSQL 中文站',
+            'sitename': 'PGSQL.CC',
         },
     })
 

@@ -14,12 +14,12 @@
 | --- | --- |
 | 权威源 | 本站 `docs` 表（`DocPage`）的 `sql-*.html`，只认页里有 `div.refentry` 的（`sql-commands.html`、`sql-syntax*.html`、`sql-expressions.html`、`sql-keywords-appendix.html` 不是命令） |
 | 版本 | 10 – 19（`DocPage.version`）与 devel（`version=0` → 20）；二期加 9.0 – 9.6（联网抓英文页，缓存到 `tmp/sqlcmd-sources/<major>/`） |
-| 规模 | 10：176 条，18：183 条，19beta4：185 条（`PROPERTY GRAPH` 三条已在 beta4 移除，`WAIT FOR` 更名 `WAIT`、页面改 `sql-wait.html`），devel：185 条。2026-09-25 按重译树核验，共 186 条 |
+| 规模 | 10：176 条，18：183 条，19beta4：185 条（`PROPERTY GRAPH` 三条已在 beta4 移除，`WAIT FOR` 更名 `WAIT`、页面改 `sql-wait.html`），devel：185 条。2026-09-30 按当前冻结手册核验，并集为 185 条、2,006 份逐版快照 |
 | 一句话 | `sql-commands.html` 目录里每条的 `span.refpurpose`（"— 定义一个新表"）；参考页 `div.refnamediv` 的 `<p>` 同样有 |
 | 语法概要 | `div.refsynopsisdiv pre.synopsis`（占位符 `em.replaceable code`，译文里仍是英文，可逐版本比较） |
 | 正文小节 | `div.refsect1`：描述 / 参数 / 注解（少数写「注意」）/ 示例 / 兼容性 / 另见（少数写「参见」「又见」）/ 输出（11 条 DML）/ 个别「重载」「文件格式」 |
 
-每条命令的身份是**命令名**（`CREATE TABLE`），不是文件名：`WAIT FOR` 在 19 是 `sql-wait-for.html`、devel 是 `sql-waitfor.html`，是同一条命令。
+每条命令的身份是**命令名**（`CREATE TABLE`），不是文件名。当前 19 beta 4 与 20 devel 均使用 `WAIT`、`sql-wait.html#SQL-WAIT`。旧开发快照的 `WAIT FOR` 已撤下；其百科地址 `/wiki/sql/wait-for/` 保留参数并 301 到 `/wiki/sql/wait/`。刷新时确认 `wait` 已包含两版后，才用完整快照的 `--prune` 删除旧实体。
 本站地址段 `slug` 取命令名小写、空格换连字符（`create-table`）；手册文件名去掉 `sql-` 与 `.html` 的形式（`createtable`）作为别名，命中就 301。
 
 ## 2. 数据建模：一张表
@@ -106,7 +106,7 @@ HTML 清洗与链接改写照 GUC §3.1：bleach 白名单同一份再加 `pre, 
 | replication | 逻辑复制 | PUBLICATION、SUBSCRIPTION |
 | query | 查询与数据操作 | SELECT、SELECT INTO、VALUES、INSERT、UPDATE、DELETE、MERGE、COPY、EXPLAIN、LOCK |
 | cursor | 游标与预备语句 | DECLARE、FETCH、MOVE、CLOSE、PREPARE、EXECUTE、DEALLOCATE |
-| transaction | 事务控制 | BEGIN、START TRANSACTION、COMMIT、END、ROLLBACK、ABORT、SAVEPOINT、RELEASE SAVEPOINT、ROLLBACK TO SAVEPOINT、SET TRANSACTION、SET CONSTRAINTS、PREPARE TRANSACTION、COMMIT PREPARED、ROLLBACK PREPARED、WAIT FOR |
+| transaction | 事务控制 | BEGIN、START TRANSACTION、COMMIT、END、ROLLBACK、ABORT、SAVEPOINT、RELEASE SAVEPOINT、ROLLBACK TO SAVEPOINT、SET TRANSACTION、SET CONSTRAINTS、PREPARE TRANSACTION、COMMIT PREPARED、ROLLBACK PREPARED、WAIT |
 | session | 会话与参数 | SET、RESET、SHOW、ALTER SYSTEM、DISCARD、LISTEN、NOTIFY、UNLISTEN |
 | maintenance | 维护 | VACUUM、ANALYZE、CLUSTER、CHECKPOINT |
 | misc | 其它对象 | COMMENT、LARGE OBJECT、PROPERTY GRAPH，以及任何没对上的命令（导入报告里列出来） |

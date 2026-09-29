@@ -943,6 +943,24 @@ class CatalogPayloadTests(TestCase):
         self.assertIn('devel 手册', catalog.detail('pg_demo', '20')['notice'])
         self.assertEqual(catalog.detail('pg_demo', '12')['notice'], '')
 
+    def test_not_null_is_shown_only_for_measured_versions(self):
+        """20 由手册推导：快照里的 not_null 沿用自上一版，不当作 20 的事实。"""
+        relation = CatalogRelation.objects.get(name='pg_demo')
+        for major in ('12', '20'):
+            relation.versions[major]['columns'][0]['not_null'] = True
+        relation.save(update_fields=['versions'])
+        cache.clear()
+        measured = catalog.detail('pg_demo', '12')
+        self.assertTrue(measured['nullability_measured'])
+        self.assertTrue(measured['columns'][0]['not_null'])
+        devel = catalog.detail('pg_demo', '20')
+        self.assertFalse(devel['nullability_measured'])
+        self.assertIsNone(devel['columns'][0]['not_null'])
+        html = self.client.get('/wiki/catalog/pg_demo/?v=20').content.decode()
+        self.assertIn('没有实测，不标 NOT NULL', html)
+        self.assertNotIn('title="该字段非空"', html)
+        self.assertIn('title="该字段非空"', self.client.get('/wiki/catalog/pg_demo/?v=12').content.decode())
+
     def test_ribbon_marks_the_current_version_and_offers_doc_links(self):
         ribbon = {cell['major']: cell for cell in catalog.detail('pg_demo', '11')['ribbon']}
         self.assertTrue(ribbon['11']['current'])

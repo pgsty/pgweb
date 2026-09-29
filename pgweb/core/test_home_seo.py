@@ -26,10 +26,12 @@ class HomeMarkup(HTMLParser):
 @override_settings(SITE_ROOT='https://pgsql.cc', ALLOWED_HOSTS=['testserver', 'preview.example'])
 class HomeSEOTests(SimpleTestCase):
     def assertNoOldBrand(self, response):
-        """The old pg.center brand must be gone; the *.pg.center data sites the
-        百科 column links to (err/guc/wait/cat) are different sites and allowed."""
+        """External English Wiki/data links may use pg.center, not our brand."""
         import re
         body = re.sub(r'\b(err|guc|wait|cat)\.pg\.center', '', response.content.decode())
+        english_wiki = '<a href="https://pg.center/docs/reference/" hreflang="en">英文百科</a>'
+        self.assertIn(english_wiki, body)
+        body = body.replace(english_wiki, '')
         self.assertNotIn('pg.center', body)
 
     def setUp(self):
@@ -70,13 +72,13 @@ class HomeSEOTests(SimpleTestCase):
         self.assertEqual(response.status_code, 200)
         html = response.content.decode()
         head = HomeMarkup(html.split('</head>', 1)[0])
-        title = 'PostgreSQL 中文社区｜文档、下载与技术资讯'
+        title = 'PGSQL.CC｜PostgreSQL 中文文档与技术资料'
         self.assertContains(response, '<title>' + title + '</title>', count=1)
         self.assertEqual(head.values('meta', 'content', property='og:title'), [title])
         self.assertEqual(head.values('meta', 'content', name='twitter:title'), [title])
         descriptions = head.values('meta', 'content', name='description')
         self.assertEqual(descriptions, [
-            'pgsql.cc 是由 Pigsty 团队维护的 PostgreSQL 官方网站中文翻译站，提供中文文档、技术资讯、软件目录与知识库。',
+            'PGSQL.CC 提供 PostgreSQL 中文文档与技术资料，由 Pigsty 团队维护。',
         ])
         self.assertNotIn('官方网站中文版', html)
         self.assertEqual(head.values('meta', 'content', property='og:description'), descriptions)
@@ -103,7 +105,7 @@ class HomeSEOTests(SimpleTestCase):
                 data = json.loads(html.split('<script type="application/ld+json">')[1].split('</script>')[0])
                 self.assertEqual(data['@context'], 'https://schema.org')
                 self.assertEqual(data['@type'], 'WebSite')
-                self.assertEqual(data['name'], 'pgsql.cc')
+                self.assertEqual(data['name'], 'PGSQL.CC')
                 self.assertEqual(data['alternateName'], 'pgsql.cc')
                 self.assertEqual(data['url'], 'https://pgsql.cc/')
                 self.assertEqual(data['inLanguage'], 'zh-CN')

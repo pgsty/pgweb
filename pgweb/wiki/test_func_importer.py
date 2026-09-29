@@ -15,6 +15,7 @@ from pathlib import Path
 import tempfile
 from unittest.mock import patch
 
+from bs4 import BeautifulSoup
 from django.test import SimpleTestCase, TestCase
 
 from pgweb.core.models import Version
@@ -390,6 +391,31 @@ def change_between(item, from_major, to_major):
 # ------------------------------------------------------------------ 纯函数
 
 class FuncPureTests(SimpleTestCase):
+    def test_optional_bracket_spacing_preserves_signature_identity_and_translation(self):
+        before = 'generate_series ( start integer, stop integer [, step integer ] ) → setof integer'
+        after = 'generate_series ( start integer, stop integer [, step integer] ) → setof integer'
+        base = {'group': 'srf', 'lang': 'en', 'layout': 'table-new',
+                'description': 'Generates a series.', 'signatures': [{'text': before}]}
+        changed = dict(base, signatures=[{'text': after}])
+        self.assertIsNone(importer.compare_snapshots(base, changed, '19', '20'))
+        entry = {'signatures': {before: ('生成序列。', '生成序列。'),
+                                'other ( ) → integer': ('另一函数。', '另一函数。')},
+                 'order': [], 'order_html': []}
+        report = {'by_text': 0, 'by_position': 0, 'unmatched': 0}
+        importer.attach_signature_zh(changed, entry, 'doc', report)
+        self.assertEqual(changed['signatures'][0]['description_zh'], '生成序列。')
+        self.assertEqual(report['unmatched'], 0)
+
+    def test_empty_docbook_paragraph_does_not_hide_synopsis_description(self):
+        soup = BeautifulSoup('<div class="sect2" id="FUNCTIONS-XML-MAPPING">'
+                             '<pre class="synopsis"><code class="function">query_to_xml</code>'
+                             '( query text ) → xml</pre><p>\n</p>'
+                             '<p>Maps the query result to XML.</p></div>', 'html.parser')
+        rows = importer.harvest_synopsis(soup, importer.parse_context('20', 'devel', 'en'),
+                                        'functions-xml.html')
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0][1]['description'], 'Maps the query result to XML.')
+
     def test_partial_signature_matches_use_unique_calls_without_translated_returns(self):
         entry = {'signatures': {
             'lower ( string ) → text': ('转为小写。', '转为小写。'),

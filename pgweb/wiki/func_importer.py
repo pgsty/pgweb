@@ -47,6 +47,7 @@ from pgweb.docs.versions import DEVEL_MAJOR_VERSION
 from .catalog_importer import text_of
 from .guc_importer import collapse
 from .snapshot import item_hash, hashed_defaults
+from .func_common import signature_key
 from .models import (FUNC_GROUPS, FUNC_GROUP_LABEL, FUNC_GROUP_ORDER, FuncVersion, PgFunction,
                      func_group_of, func_page_order, func_slug)
 
@@ -417,6 +418,8 @@ def attach_prose(signatures, paragraphs, version, filename, examples=None):
     """
     kept, derived = [], []
     for node in paragraphs:
+        if not text_of(node):
+            continue
         example = parse_example(node) if examples is None else None
         if example is not None and kept:
             derived.append(example)
@@ -739,6 +742,8 @@ def harvest_synopsis(soup, version, filename):
                 continue
             if sibling.name != 'p':
                 break
+            if not text_of(sibling):
+                continue
             example = parse_example(sibling)
             if example is not None:
                 examples.append(example)
@@ -933,8 +938,10 @@ def compare_snapshots(left, right, from_major='', to_major=''):
     if not record['doc_overhaul'] and comparable:
         before = [item['text'] for item in left.get('signatures') or ()]
         after = [item['text'] for item in right.get('signatures') or ()]
-        record['signatures'] = {'added': [text for text in after if text not in set(before)],
-                                'removed': [text for text in before if text not in set(after)]}
+        before_keys = {signature_key(text) for text in before}
+        after_keys = {signature_key(text) for text in after}
+        record['signatures'] = {'added': [text for text in after if signature_key(text) not in before_keys],
+                                'removed': [text for text in before if signature_key(text) not in after_keys]}
         if left.get('lang') == right.get('lang'):
             field = 'description_zh' if left.get('lang') == 'zh' else 'description'
             record['descriptions_changed'] = (normal_description(left.get(field)) !=
@@ -1126,8 +1133,14 @@ def attach_signature_zh(snapshot, entry, source, report):
     """
     signatures = snapshot['signatures']
     matched = 0
+    by_signature = defaultdict(list)
+    for text, translated in entry['signatures'].items():
+        by_signature[signature_key(text)].append(translated)
     for signature in signatures:
         text, html = entry['signatures'].get(signature['text'], ('', ''))
+        options = by_signature.get(signature_key(signature['text']), ())
+        if not text and len(options) == 1:
+            text, html = options[0]
         if text:
             matched += 1
         signature['description_zh'] = text

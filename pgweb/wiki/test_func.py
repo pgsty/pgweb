@@ -10,6 +10,7 @@
 
 import copy
 from datetime import date
+from types import SimpleNamespace
 
 from django.conf import settings
 from django.core.cache import cache
@@ -468,6 +469,17 @@ class FuncIndexTests(FuncFixture):
 # ---------------------------------------------------------------- 详情页
 
 class FuncDetailTests(FuncFixture):
+    def test_renderer_whitespace_does_not_split_signature_matrix(self):
+        before = 'row_to_json ( record [, boolean ] ) → json'
+        after = 'row_to_json ( record [, boolean] ) → json'
+        left = {'layout': 'table-new', 'signatures': [{'text': before}]}
+        right = {'layout': 'table-new', 'signatures': [{'text': after}]}
+        function = SimpleNamespace(versions={'19': left, '20': right}, url='/wiki/func/row-to-json/')
+        matrix = func.matrix_of(function, '20', [{'major': '19'}, {'major': '20'}])
+        self.assertEqual(len(matrix['rows']), 1)
+        self.assertEqual([cell['state'] for cell in matrix['rows'][0]['cells']], ['exists', 'exists'])
+        self.assertIsNone(func.compare(left, right, '19', '20'))
+
     """详情页的事实、签名、版本条、矩阵、时间线与措辞。"""
 
     def test_detail_defaults_to_the_stable_version_and_honours_v(self):

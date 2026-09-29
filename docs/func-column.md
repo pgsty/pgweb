@@ -90,7 +90,7 @@ PG 16 的 `any_value`、PG 17 的 `to_bin`、PG 18 的 `crc32`。译文仓库是
 ```python
 class FuncVersion(models.Model):            # db_table = 'func_version'，最多 18 行
     major = CharField(max_length=8, primary_key=True)   # '9.0' … '19', '20'
-    label = TextField()                     # '18' / '19 beta 3' / '20 devel'
+    label = TextField()                     # '18' / '19 beta 4' / '20 devel'
     status = TextField()                    # historical | stable | preview | devel
     support_status = TextField()            # end-of-life | supported | preview | devel
     doc_slug = TextField()                  # 本站手册地址段：'9.0' … '19'，20 为 'devel'；未收录时为 ''
@@ -339,3 +339,10 @@ CSP 禁内联样式与脚本；站内 legacy CSS（`.btn` 宽度、`code` 的 `!
 
 
 2026-09-25 模型整理：实体表增加 `content_hash`，按实际落库内容判断是否更新；`source_rev` 和导出时间不参与内容比较，未变更的实体保留 `imported_at`。表名与版本表已去掉 `wiki_` 前缀，Python 模型、应用标签、命令、URL 和检索身份保持原约定。全局契约与回退步骤见 [百科模型](encyclopedia-design.md) 和 [模型整理实施记录](reference-model-rollout.md)。
+
+
+## 2026-09-30 冻结构建对齐
+
+PG20 默认英文缓存 `tmp/func-sources/20/` 已更新为与当前中文手册同构建的 33 个 `functions*.html` 页面。来源是 PGDOC 已构建英文产物，原始归档 SHA-256 为 `4d3346909b201ac1648232cf290462a7070c119326f56196f1f0253ed80fae41`，逐页摘要及构建来源记录在缓存的 `build.json`。旧缓存保存在 `tmp/wiki-release-audit-20260930/source-cache-before/func-20/`。更新开发版时，先核对同构建归档和逐页哈希，再更新缓存；不能把移动的在线 devel 页面混入已冻结的中文构建。
+
+本地 DocBook 构建与线上 HTML 在可选参数方括号内的空格、空段落上有差别。签名比较、中文匹配与签名矩阵共同使用 `func_common.signature_key()` 忽略这类方括号空白；展示仍保留原签名文本。采集跳过空段落，避免把其后的实际说明误丢，也不把纯排版差异记为新版本的接口变化。

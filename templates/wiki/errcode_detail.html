@@ -107,7 +107,8 @@
 {% elif block.type == 'cases' %}
   <section class="wiki-panel" id="cases">
     <h2>可复现案例</h2>
-    <p class="wiki-panel__lead">在一次性实例上执行过的场景。{% if code.snippet_count %}其中 {{ code.snippet_count }} 个附有可执行 SQL，正文相应小节里给出。{% endif %}</p>
+    {% if cases %}<p class="wiki-panel__lead">在一次性实例上执行过的场景。{% if code.snippet_count %}其中 {{ code.snippet_count }} 个附有可执行 SQL，正文相应小节里给出。{% endif %}</p>
+    {% else %}<p class="wiki-panel__lead">当前词条未收录可复现案例。</p>{% endif %}
     {% for case in cases %}
     <details class="wiki-case" id="{{ case.anchor }}">
       <summary>

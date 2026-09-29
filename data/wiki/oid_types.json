@@ -2068,7 +2068,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=10"
+              "url": "/wiki/catalog/pg_class/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -2180,7 +2180,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=11"
+              "url": "/wiki/catalog/pg_class/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -2292,7 +2292,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=12"
+              "url": "/wiki/catalog/pg_class/?v=12"
             },
             {
               "label": "表 8.26",
@@ -2400,7 +2400,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=13"
+              "url": "/wiki/catalog/pg_class/?v=13"
             },
             {
               "label": "表 8.26",
@@ -2540,7 +2540,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=14"
+              "url": "/wiki/catalog/pg_class/?v=14"
             },
             {
               "label": "表 8.26",
@@ -2684,7 +2684,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=15"
+              "url": "/wiki/catalog/pg_class/?v=15"
             },
             {
               "label": "表 8.26",
@@ -2828,7 +2828,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=16"
+              "url": "/wiki/catalog/pg_class/?v=16"
             },
             {
               "label": "表 8.26",
@@ -2972,7 +2972,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=17"
+              "url": "/wiki/catalog/pg_class/?v=17"
             },
             {
               "label": "表 8.26",
@@ -3116,7 +3116,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=18"
+              "url": "/wiki/catalog/pg_class/?v=18"
             },
             {
               "label": "表 8.26",
@@ -3261,7 +3261,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=19"
+              "url": "/wiki/catalog/pg_class/?v=19"
             },
             {
               "label": "表 8.26",
@@ -3406,7 +3406,7 @@
           "related": [
             {
               "label": "pg_class 系统目录",
-              "url": "/docs/catalog/pg_class/?v=20"
+              "url": "/wiki/catalog/pg_class/?v=20"
             },
             {
               "label": "表 8.26",
@@ -3528,7 +3528,7 @@
           "related": [
             {
               "label": "pg_collation 系统目录",
-              "url": "/docs/catalog/pg_collation/?v=13"
+              "url": "/wiki/catalog/pg_collation/?v=13"
             },
             {
               "label": "表 8.26",
@@ -3668,7 +3668,7 @@
           "related": [
             {
               "label": "pg_collation 系统目录",
-              "url": "/docs/catalog/pg_collation/?v=14"
+              "url": "/wiki/catalog/pg_collation/?v=14"
             },
             {
               "label": "表 8.26",
@@ -3812,7 +3812,7 @@
           "related": [
             {
               "label": "pg_collation 系统目录",
-              "url": "/docs/catalog/pg_collation/?v=15"
+              "url": "/wiki/catalog/pg_collation/?v=15"
             },
             {
               "label": "表 8.26",
@@ -3956,7 +3956,7 @@
           "related": [
             {
               "label": "pg_collation 系统目录",
-              "url": "/docs/catalog/pg_collation/?v=16"
+              "url": "/wiki/catalog/pg_collation/?v=16"
             },
             {
               "label": "表 8.26",
@@ -4100,7 +4100,7 @@
           "related": [
             {
               "label": "pg_collation 系统目录",
-              "url": "/docs/catalog/pg_collation/?v=17"
+              "url": "/wiki/catalog/pg_collation/?v=17"
             },
             {
               "label": "表 8.26",
@@ -4244,7 +4244,7 @@
           "related": [
             {
               "label": "pg_collation 系统目录",
-              "url": "/docs/catalog/pg_collation/?v=18"
+              "url": "/wiki/catalog/pg_collation/?v=18"
             },
             {
               "label": "表 8.26",
@@ -4389,7 +4389,7 @@
           "related": [
             {
               "label": "pg_collation 系统目录",
-              "url": "/docs/catalog/pg_collation/?v=19"
+              "url": "/wiki/catalog/pg_collation/?v=19"
             },
             {
               "label": "表 8.26",
@@ -4534,7 +4534,7 @@
           "related": [
             {
               "label": "pg_collation 系统目录",
-              "url": "/docs/catalog/pg_collation/?v=20"
+              "url": "/wiki/catalog/pg_collation/?v=20"
             },
             {
               "label": "表 8.26",
@@ -4656,7 +4656,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=10"
+              "url": "/wiki/catalog/pg_ts_config/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -4768,7 +4768,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=11"
+              "url": "/wiki/catalog/pg_ts_config/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -4880,7 +4880,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=12"
+              "url": "/wiki/catalog/pg_ts_config/?v=12"
             },
             {
               "label": "表 8.26",
@@ -4988,7 +4988,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=13"
+              "url": "/wiki/catalog/pg_ts_config/?v=13"
             },
             {
               "label": "表 8.26",
@@ -5128,7 +5128,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=14"
+              "url": "/wiki/catalog/pg_ts_config/?v=14"
             },
             {
               "label": "表 8.26",
@@ -5272,7 +5272,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=15"
+              "url": "/wiki/catalog/pg_ts_config/?v=15"
             },
             {
               "label": "表 8.26",
@@ -5416,7 +5416,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=16"
+              "url": "/wiki/catalog/pg_ts_config/?v=16"
             },
             {
               "label": "表 8.26",
@@ -5560,7 +5560,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=17"
+              "url": "/wiki/catalog/pg_ts_config/?v=17"
             },
             {
               "label": "表 8.26",
@@ -5704,7 +5704,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=18"
+              "url": "/wiki/catalog/pg_ts_config/?v=18"
             },
             {
               "label": "表 8.26",
@@ -5849,7 +5849,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=19"
+              "url": "/wiki/catalog/pg_ts_config/?v=19"
             },
             {
               "label": "表 8.26",
@@ -5994,7 +5994,7 @@
           "related": [
             {
               "label": "pg_ts_config 系统目录",
-              "url": "/docs/catalog/pg_ts_config/?v=20"
+              "url": "/wiki/catalog/pg_ts_config/?v=20"
             },
             {
               "label": "表 8.26",
@@ -6149,7 +6149,7 @@
           "related": [
             {
               "label": "pg_database 系统目录",
-              "url": "/docs/catalog/pg_database/?v=19"
+              "url": "/wiki/catalog/pg_database/?v=19"
             },
             {
               "label": "表 8.26",
@@ -6294,7 +6294,7 @@
           "related": [
             {
               "label": "pg_database 系统目录",
-              "url": "/docs/catalog/pg_database/?v=20"
+              "url": "/wiki/catalog/pg_database/?v=20"
             },
             {
               "label": "表 8.26",
@@ -6416,7 +6416,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=10"
+              "url": "/wiki/catalog/pg_ts_dict/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -6528,7 +6528,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=11"
+              "url": "/wiki/catalog/pg_ts_dict/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -6640,7 +6640,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=12"
+              "url": "/wiki/catalog/pg_ts_dict/?v=12"
             },
             {
               "label": "表 8.26",
@@ -6748,7 +6748,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=13"
+              "url": "/wiki/catalog/pg_ts_dict/?v=13"
             },
             {
               "label": "表 8.26",
@@ -6888,7 +6888,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=14"
+              "url": "/wiki/catalog/pg_ts_dict/?v=14"
             },
             {
               "label": "表 8.26",
@@ -7032,7 +7032,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=15"
+              "url": "/wiki/catalog/pg_ts_dict/?v=15"
             },
             {
               "label": "表 8.26",
@@ -7176,7 +7176,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=16"
+              "url": "/wiki/catalog/pg_ts_dict/?v=16"
             },
             {
               "label": "表 8.26",
@@ -7320,7 +7320,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=17"
+              "url": "/wiki/catalog/pg_ts_dict/?v=17"
             },
             {
               "label": "表 8.26",
@@ -7464,7 +7464,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=18"
+              "url": "/wiki/catalog/pg_ts_dict/?v=18"
             },
             {
               "label": "表 8.26",
@@ -7609,7 +7609,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=19"
+              "url": "/wiki/catalog/pg_ts_dict/?v=19"
             },
             {
               "label": "表 8.26",
@@ -7754,7 +7754,7 @@
           "related": [
             {
               "label": "pg_ts_dict 系统目录",
-              "url": "/docs/catalog/pg_ts_dict/?v=20"
+              "url": "/wiki/catalog/pg_ts_dict/?v=20"
             },
             {
               "label": "表 8.26",
@@ -7876,7 +7876,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=10"
+              "url": "/wiki/catalog/pg_namespace/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -7988,7 +7988,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=11"
+              "url": "/wiki/catalog/pg_namespace/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -8100,7 +8100,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=12"
+              "url": "/wiki/catalog/pg_namespace/?v=12"
             },
             {
               "label": "表 8.26",
@@ -8208,7 +8208,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=13"
+              "url": "/wiki/catalog/pg_namespace/?v=13"
             },
             {
               "label": "表 8.26",
@@ -8348,7 +8348,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=14"
+              "url": "/wiki/catalog/pg_namespace/?v=14"
             },
             {
               "label": "表 8.26",
@@ -8492,7 +8492,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=15"
+              "url": "/wiki/catalog/pg_namespace/?v=15"
             },
             {
               "label": "表 8.26",
@@ -8636,7 +8636,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=16"
+              "url": "/wiki/catalog/pg_namespace/?v=16"
             },
             {
               "label": "表 8.26",
@@ -8780,7 +8780,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=17"
+              "url": "/wiki/catalog/pg_namespace/?v=17"
             },
             {
               "label": "表 8.26",
@@ -8924,7 +8924,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=18"
+              "url": "/wiki/catalog/pg_namespace/?v=18"
             },
             {
               "label": "表 8.26",
@@ -9069,7 +9069,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=19"
+              "url": "/wiki/catalog/pg_namespace/?v=19"
             },
             {
               "label": "表 8.26",
@@ -9214,7 +9214,7 @@
           "related": [
             {
               "label": "pg_namespace 系统目录",
-              "url": "/docs/catalog/pg_namespace/?v=20"
+              "url": "/wiki/catalog/pg_namespace/?v=20"
             },
             {
               "label": "表 8.26",
@@ -9336,7 +9336,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=10"
+              "url": "/wiki/catalog/pg_operator/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -9448,7 +9448,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=11"
+              "url": "/wiki/catalog/pg_operator/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -9560,7 +9560,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=12"
+              "url": "/wiki/catalog/pg_operator/?v=12"
             },
             {
               "label": "表 8.26",
@@ -9668,7 +9668,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=13"
+              "url": "/wiki/catalog/pg_operator/?v=13"
             },
             {
               "label": "表 8.26",
@@ -9808,7 +9808,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=14"
+              "url": "/wiki/catalog/pg_operator/?v=14"
             },
             {
               "label": "表 8.26",
@@ -9952,7 +9952,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=15"
+              "url": "/wiki/catalog/pg_operator/?v=15"
             },
             {
               "label": "表 8.26",
@@ -10096,7 +10096,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=16"
+              "url": "/wiki/catalog/pg_operator/?v=16"
             },
             {
               "label": "表 8.26",
@@ -10240,7 +10240,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=17"
+              "url": "/wiki/catalog/pg_operator/?v=17"
             },
             {
               "label": "表 8.26",
@@ -10384,7 +10384,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=18"
+              "url": "/wiki/catalog/pg_operator/?v=18"
             },
             {
               "label": "表 8.26",
@@ -10529,7 +10529,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=19"
+              "url": "/wiki/catalog/pg_operator/?v=19"
             },
             {
               "label": "表 8.26",
@@ -10674,7 +10674,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=20"
+              "url": "/wiki/catalog/pg_operator/?v=20"
             },
             {
               "label": "表 8.26",
@@ -10796,7 +10796,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=10"
+              "url": "/wiki/catalog/pg_operator/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -10908,7 +10908,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=11"
+              "url": "/wiki/catalog/pg_operator/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -11020,7 +11020,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=12"
+              "url": "/wiki/catalog/pg_operator/?v=12"
             },
             {
               "label": "表 8.26",
@@ -11128,7 +11128,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=13"
+              "url": "/wiki/catalog/pg_operator/?v=13"
             },
             {
               "label": "表 8.26",
@@ -11268,7 +11268,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=14"
+              "url": "/wiki/catalog/pg_operator/?v=14"
             },
             {
               "label": "表 8.26",
@@ -11412,7 +11412,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=15"
+              "url": "/wiki/catalog/pg_operator/?v=15"
             },
             {
               "label": "表 8.26",
@@ -11556,7 +11556,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=16"
+              "url": "/wiki/catalog/pg_operator/?v=16"
             },
             {
               "label": "表 8.26",
@@ -11700,7 +11700,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=17"
+              "url": "/wiki/catalog/pg_operator/?v=17"
             },
             {
               "label": "表 8.26",
@@ -11844,7 +11844,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=18"
+              "url": "/wiki/catalog/pg_operator/?v=18"
             },
             {
               "label": "表 8.26",
@@ -11989,7 +11989,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=19"
+              "url": "/wiki/catalog/pg_operator/?v=19"
             },
             {
               "label": "表 8.26",
@@ -12134,7 +12134,7 @@
           "related": [
             {
               "label": "pg_operator 系统目录",
-              "url": "/docs/catalog/pg_operator/?v=20"
+              "url": "/wiki/catalog/pg_operator/?v=20"
             },
             {
               "label": "表 8.26",
@@ -12256,7 +12256,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=10"
+              "url": "/wiki/catalog/pg_proc/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -12368,7 +12368,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=11"
+              "url": "/wiki/catalog/pg_proc/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -12480,7 +12480,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=12"
+              "url": "/wiki/catalog/pg_proc/?v=12"
             },
             {
               "label": "表 8.26",
@@ -12588,7 +12588,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=13"
+              "url": "/wiki/catalog/pg_proc/?v=13"
             },
             {
               "label": "表 8.26",
@@ -12728,7 +12728,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=14"
+              "url": "/wiki/catalog/pg_proc/?v=14"
             },
             {
               "label": "表 8.26",
@@ -12872,7 +12872,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=15"
+              "url": "/wiki/catalog/pg_proc/?v=15"
             },
             {
               "label": "表 8.26",
@@ -13016,7 +13016,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=16"
+              "url": "/wiki/catalog/pg_proc/?v=16"
             },
             {
               "label": "表 8.26",
@@ -13160,7 +13160,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=17"
+              "url": "/wiki/catalog/pg_proc/?v=17"
             },
             {
               "label": "表 8.26",
@@ -13304,7 +13304,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=18"
+              "url": "/wiki/catalog/pg_proc/?v=18"
             },
             {
               "label": "表 8.26",
@@ -13449,7 +13449,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=19"
+              "url": "/wiki/catalog/pg_proc/?v=19"
             },
             {
               "label": "表 8.26",
@@ -13594,7 +13594,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=20"
+              "url": "/wiki/catalog/pg_proc/?v=20"
             },
             {
               "label": "表 8.26",
@@ -13716,7 +13716,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=10"
+              "url": "/wiki/catalog/pg_proc/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -13828,7 +13828,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=11"
+              "url": "/wiki/catalog/pg_proc/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -13940,7 +13940,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=12"
+              "url": "/wiki/catalog/pg_proc/?v=12"
             },
             {
               "label": "表 8.26",
@@ -14048,7 +14048,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=13"
+              "url": "/wiki/catalog/pg_proc/?v=13"
             },
             {
               "label": "表 8.26",
@@ -14188,7 +14188,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=14"
+              "url": "/wiki/catalog/pg_proc/?v=14"
             },
             {
               "label": "表 8.26",
@@ -14332,7 +14332,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=15"
+              "url": "/wiki/catalog/pg_proc/?v=15"
             },
             {
               "label": "表 8.26",
@@ -14476,7 +14476,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=16"
+              "url": "/wiki/catalog/pg_proc/?v=16"
             },
             {
               "label": "表 8.26",
@@ -14620,7 +14620,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=17"
+              "url": "/wiki/catalog/pg_proc/?v=17"
             },
             {
               "label": "表 8.26",
@@ -14764,7 +14764,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=18"
+              "url": "/wiki/catalog/pg_proc/?v=18"
             },
             {
               "label": "表 8.26",
@@ -14909,7 +14909,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=19"
+              "url": "/wiki/catalog/pg_proc/?v=19"
             },
             {
               "label": "表 8.26",
@@ -15054,7 +15054,7 @@
           "related": [
             {
               "label": "pg_proc 系统目录",
-              "url": "/docs/catalog/pg_proc/?v=20"
+              "url": "/wiki/catalog/pg_proc/?v=20"
             },
             {
               "label": "表 8.26",
@@ -15176,7 +15176,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=10"
+              "url": "/wiki/catalog/pg_authid/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -15288,7 +15288,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=11"
+              "url": "/wiki/catalog/pg_authid/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -15400,7 +15400,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=12"
+              "url": "/wiki/catalog/pg_authid/?v=12"
             },
             {
               "label": "表 8.26",
@@ -15508,7 +15508,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=13"
+              "url": "/wiki/catalog/pg_authid/?v=13"
             },
             {
               "label": "表 8.26",
@@ -15648,7 +15648,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=14"
+              "url": "/wiki/catalog/pg_authid/?v=14"
             },
             {
               "label": "表 8.26",
@@ -15792,7 +15792,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=15"
+              "url": "/wiki/catalog/pg_authid/?v=15"
             },
             {
               "label": "表 8.26",
@@ -15936,7 +15936,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=16"
+              "url": "/wiki/catalog/pg_authid/?v=16"
             },
             {
               "label": "表 8.26",
@@ -16080,7 +16080,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=17"
+              "url": "/wiki/catalog/pg_authid/?v=17"
             },
             {
               "label": "表 8.26",
@@ -16224,7 +16224,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=18"
+              "url": "/wiki/catalog/pg_authid/?v=18"
             },
             {
               "label": "表 8.26",
@@ -16369,7 +16369,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=19"
+              "url": "/wiki/catalog/pg_authid/?v=19"
             },
             {
               "label": "表 8.26",
@@ -16514,7 +16514,7 @@
           "related": [
             {
               "label": "pg_authid 系统目录",
-              "url": "/docs/catalog/pg_authid/?v=20"
+              "url": "/wiki/catalog/pg_authid/?v=20"
             },
             {
               "label": "表 8.26",
@@ -16636,7 +16636,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=10"
+              "url": "/wiki/catalog/pg_type/?v=10"
             },
             {
               "label": "default_with_oids",
@@ -16748,7 +16748,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=11"
+              "url": "/wiki/catalog/pg_type/?v=11"
             },
             {
               "label": "default_with_oids",
@@ -16860,7 +16860,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=12"
+              "url": "/wiki/catalog/pg_type/?v=12"
             },
             {
               "label": "表 8.26",
@@ -16968,7 +16968,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=13"
+              "url": "/wiki/catalog/pg_type/?v=13"
             },
             {
               "label": "表 8.26",
@@ -17108,7 +17108,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=14"
+              "url": "/wiki/catalog/pg_type/?v=14"
             },
             {
               "label": "表 8.26",
@@ -17252,7 +17252,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=15"
+              "url": "/wiki/catalog/pg_type/?v=15"
             },
             {
               "label": "表 8.26",
@@ -17396,7 +17396,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=16"
+              "url": "/wiki/catalog/pg_type/?v=16"
             },
             {
               "label": "表 8.26",
@@ -17540,7 +17540,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=17"
+              "url": "/wiki/catalog/pg_type/?v=17"
             },
             {
               "label": "表 8.26",
@@ -17684,7 +17684,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=18"
+              "url": "/wiki/catalog/pg_type/?v=18"
             },
             {
               "label": "表 8.26",
@@ -17829,7 +17829,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=19"
+              "url": "/wiki/catalog/pg_type/?v=19"
             },
             {
               "label": "表 8.26",
@@ -17974,7 +17974,7 @@
           "related": [
             {
               "label": "pg_type 系统目录",
-              "url": "/docs/catalog/pg_type/?v=20"
+              "url": "/wiki/catalog/pg_type/?v=20"
             },
             {
               "label": "表 8.26",

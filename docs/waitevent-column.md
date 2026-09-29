@@ -256,3 +256,10 @@ baseline: bool（9.6）, na: bool（9.0 – 9.5，页面只放一段说明并链
 
 
 2026-09-25 模型整理：实体表增加 `content_hash`，按实际落库内容判断是否更新；`source_rev` 和导出时间不参与内容比较，未变更的实体保留 `imported_at`。表名与版本表已去掉 `wiki_` 前缀，Python 模型、应用标签、命令、URL 和检索身份保持原约定。全局契约与回退步骤见 [百科模型](encyclopedia-design.md) 和 [模型整理实施记录](reference-model-rollout.md)。
+
+
+## 2026-09-30 PG20 来源刷新
+
+当前 PG20 手册来自源归档 SHA-256 `4d3346909b201ac1648232cf290462a7070c119326f56196f1f0253ed80fae41`。默认 `tmp/waitevent-sources/wait_event_names-master.txt` 已由该归档内的 `src/backend/utils/activity/wait_event_names.txt` 刷新，新增 `LWLock/DataChecksumTransition`；PG20 共 291 个事件，完整百科为 303 个实体、2,731 份逐版快照。各版事件集合和中文描述均与当前本站手册逐条一致。
+
+同名 `.txt.json` 旁车保存 `source_archive_sha256/source_member/source_sha256`，导出器在读取缓存前核对文件 SHA-256，并把固定来源身份写入该版 `notes`。旧 master 缓存保存在 `tmp/wiki-release-audit-20260930/source-cache-before/wait_event_names-master.txt`。`master` 只是缓存文件名和上游分支身份，不代表每次导出都抓取实时源码；刷新时必须使用与手册相同的构建，并同步旁车，不能只替换为不同 HEAD 的在线内容。

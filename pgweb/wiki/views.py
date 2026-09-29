@@ -66,7 +66,9 @@ def errcode_detail(request, sqlstate):
         raise Http404()
     # 站内规范形式是大写：PostgreSQL 报错里输出的就是大写。
     if sqlstate != sqlstate.upper():
-        return HttpResponsePermanentRedirect('/wiki/sqlstate/{}/'.format(sqlstate.upper()))
+        wanted = request.GET.get('v', '')
+        return HttpResponsePermanentRedirect('/wiki/sqlstate/{}/{}'.format(
+            sqlstate.upper(), '?v=' + quote(wanted) if wanted else ''))
     try:
         payload = errcode.detail_payload(sqlstate, request.GET.get('v', ''))
     except ErrorCode.DoesNotExist:

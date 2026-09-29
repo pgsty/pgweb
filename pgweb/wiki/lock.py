@@ -184,7 +184,8 @@ def index(wanted=''):
         if command.get('note') and command['note'] not in choice['notes']:
             choice['notes'].append(command['note'])
     for choice in choices.values():
-        choice['note'] = '；'.join(choice.pop('notes'))
+        notes = choice.pop('notes')
+        choice['note'] = '；'.join([note.rstrip('。；') for note in notes[:-1]] + notes[-1:])
     table_modes = [m for m in modes if m['scope'] == 'table']
     row_modes = [m for m in modes if m['scope'] == 'row']
     notice = ('尚未正式发布；锁规则及命令说明对应下方标注的采样构建。'

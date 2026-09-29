@@ -17,6 +17,7 @@ from django.db.models.expressions import RawSQL
 
 from .ruler import mark_ticks
 from .manuals import manual_slug
+from .func_common import signature_key
 from .models import (FUNC_GROUP_EYEBROW, FUNC_GROUP_LABEL, FUNC_GROUP_ORDER,
                      FuncVersion, PgFunction)
 
@@ -49,7 +50,7 @@ SECTION_NUMBER = re.compile(r'^(\d[\d.]*)\.\s+')
 # 最早收录的版本是基线，不代表这些函数首次于那一版引入。所有「引入」字样照此措辞。
 BASELINE_TEMPLATE = '{0} 是本数据集的收录基线，不代表该函数首次于 {0} 引入。'
 PREVIEW_TEMPLATE = '{} 为预发行快照，正式发布前仍可能变化。'
-DEVEL_TEMPLATE = 'PostgreSQL {} 开发版尚未定稿：函数清单取自本站 devel 手册，正式发布前仍可能变化。'
+DEVEL_TEMPLATE = 'PostgreSQL {} 开发版尚未定稿：函数清单取自固定英文手册快照，中文说明取自本站同版手册，正式发布前仍可能变化。'
 OVERHAUL_TEMPLATE = 'PostgreSQL {} 重排了函数表的写法，签名文本整体改变，此处不逐条比较。'
 # 上游该版只在正文里提到这个函数、没有给出签名。不借别版的签名充数，如实说。
 PROSE_TEMPLATE = 'PostgreSQL {} 的手册只在正文里提到此函数，未给出签名。'
@@ -613,16 +614,16 @@ def matrix_of(function, major, order):
     per_version = {}
     for version in present:
         items = texts_of(function.versions.get(version['major']))
-        per_version[version['major']] = set(items)
+        per_version[version['major']] = {signature_key(text) for text in items}
         for text in items:
-            if text not in seen:
-                seen.add(text)
+            if signature_key(text) not in seen:
+                seen.add(signature_key(text))
                 texts.append(text)
     rows = []
     for text in texts:
         cells = []
         for version in present:
-            exists = text in per_version[version['major']]
+            exists = signature_key(text) in per_version[version['major']]
             cells.append({'major': version['major'], 'state': 'exists' if exists else 'absent',
                           'url': '{}?v={}'.format(function.url, version['major']) if exists else '',
                           'current': version['major'] == major})
@@ -749,8 +750,10 @@ def compare(left, right, from_major='', to_major=''):
         signatures = dict(blank)
     else:
         before, after = texts_of(left), texts_of(right)
-        signatures = {'added': [text for text in after if text not in set(before)],
-                      'removed': [text for text in before if text not in set(after)]}
+        before_keys = {signature_key(text) for text in before}
+        after_keys = {signature_key(text) for text in after}
+        signatures = {'added': [text for text in after if signature_key(text) not in before_keys],
+                      'removed': [text for text in before if signature_key(text) not in after_keys]}
     descriptions_changed = bool(not overhaul and descriptions_differ(left, right))
     group_changed = None
     if left.get('group') and right.get('group') and left['group'] != right['group']:
