@@ -9,7 +9,7 @@ from pgweb.util.contexts import get_nav_menu
 from pgweb.util.decorators import queryparams
 
 from . import catalog, errcode, func, guc, lock, waitevent, sqlcmd
-from .columns import BY_SLUG, listing
+from .columns import BY_SLUG, home_cards
 from .models import (CatalogRelation, CatalogVersion, ErrorCode, FuncVersion, GucParameter,
                      GucVersion, PgFunction, WaitEvent, WaitEventVersion)
 
@@ -42,7 +42,7 @@ def shell(ctx, title, description, canonical, class_code='', section='/wiki/sqls
 @require_safe
 def home(request):
     return render(request, 'wiki/home.html', shell(
-        {'columns': listing()}, 'PostgreSQL 百科',
+        {'columns': home_cards()}, 'PostgreSQL 百科',
         '按主题查阅 PostgreSQL 的 SQL 命令、状态码、系统目录、配置参数、函数、锁及其他数据库对象。',
         '/wiki/', section='/wiki/'))
 

@@ -5,6 +5,7 @@ from django.core.cache import cache
 
 from pgweb.util.seo import page_metadata
 from pgweb.wiki.columns import nav_items as wiki_nav_items
+from pgweb.wiki.columns import nav_sections as wiki_nav_sections
 
 
 TOPBAR_CACHE_KEY = 'pgweb:topbar-news'
@@ -291,6 +292,7 @@ def PGWebContextProcessor(request):
         'gitrev': gitrev,
         'topbarnews': SimpleLazyObject(_get_topbar_news),
         'sitenav': SimpleLazyObject(_get_sitenav),
+        'wiki_sections': wiki_nav_sections(),
         'doc_majors': SimpleLazyObject(_get_doc_majors),
         'site_search': bool(getattr(settings, 'SEARCH_DSN', '')),
         'seo': page_metadata(request.path),

@@ -11,6 +11,7 @@
          <ul>
            {%for m in navmenu%}
            {%if not forloop.first %}</li>{%endif%}
+           {%if m.section%}{%ifchanged m.section%}<li class="wiki-nav-section"><a href="/wiki/#{{m.section_id}}">{{m.section}}</a></li>{%endifchanged%}{%endif%}
            <li{%if m.id%} id="{{m.id}}"{%endif%}{%if forloop.last%} class="last-child"{%endif%}><a href="{{m.link}}"{%if m.active%} aria-current="page"{%endif%}>{{m.title}}</a>
             {%if m.submenu %}
              <ul>

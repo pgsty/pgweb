@@ -12,8 +12,8 @@ from .models import (CatalogRelation, CatalogVersion, ErrorCode, ErrorCodeClass,
 class ColumnTests(SimpleTestCase):
     def test_columns_in_reading_order(self):
         self.assertEqual([c['slug'] for c in COLUMNS],
-                         ['sql', 'sqlstate', 'catalog', 'guc', 'waitevent', 'lock', 'func',
-                          'hook', 'relopts', 'role', 'oid'])
+                         ['sql', 'func', 'sqlstate', 'catalog', 'relopts', 'oid',
+                          'guc', 'waitevent', 'lock', 'role', 'hook'])
         self.assertEqual(set(BY_SLUG), {'sqlstate', 'guc', 'waitevent', 'catalog', 'sql', 'func', 'lock',
                                        'hook', 'relopts', 'role', 'oid'})
 
@@ -32,7 +32,8 @@ class ColumnTests(SimpleTestCase):
 
     def test_nav_lists_every_column(self):
         items = nav_items()
-        self.assertEqual(items[0], {'title': 'SQL 命令', 'link': '/wiki/sql/'})
+        self.assertEqual(items[0], {'title': 'SQL 命令', 'link': '/wiki/sql/',
+                                    'section': '查询语言', 'section_id': 'query-language'})
         self.assertEqual(len(items), len(COLUMNS))
 
 

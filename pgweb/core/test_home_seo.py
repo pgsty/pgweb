@@ -26,12 +26,9 @@ class HomeMarkup(HTMLParser):
 @override_settings(SITE_ROOT='https://pgsql.cc', ALLOWED_HOSTS=['testserver', 'preview.example'])
 class HomeSEOTests(SimpleTestCase):
     def assertNoOldBrand(self, response):
-        """External English Wiki/data links may use pg.center, not our brand."""
+        """External data-source links may use pg.center, not our brand."""
         import re
         body = re.sub(r'\b(err|guc|wait|cat)\.pg\.center', '', response.content.decode())
-        english_wiki = '<a href="https://pg.center/docs/reference/" hreflang="en">英文百科</a>'
-        self.assertIn(english_wiki, body)
-        body = body.replace(english_wiki, '')
         self.assertNotIn('pg.center', body)
 
     def setUp(self):

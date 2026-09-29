@@ -10,7 +10,7 @@ from pgweb.core.templatetags.pgfilters import nav_active
 from pgweb.search.models import SearchEntry
 from pgweb.search.service import entry_data
 from pgweb.util.contexts import _source_url, sitenav
-from .columns import COLUMNS
+from .columns import COLUMNS, listing, nav_sections
 from .links import canonical_url, rewrite_links
 
 
@@ -92,6 +92,28 @@ class WikiRoutingTests(SimpleTestCase):
             self.assertEqual([a['href'] for a in soup.select(selector + '.active')], ['/wiki/'])
             self.assertTrue(soup.select('a[href="/wiki/guc/"]'))
             self.assertFalse(soup.select('a[href^="/docs/guc/"]'))
+
+    def test_grouped_home_and_footer_share_only_available_anchors(self):
+        sections = nav_sections()
+        ids = ['query-language', 'indexes-storage', 'operations', 'extensibility']
+        self.assertEqual([section['id'] for section in sections], ids)
+        cards = [dict(column, count=12, unit='个条目', first='10', last='20') for column in listing()]
+        context = {'columns': cards, 'wiki_sections': sections, 'navmenu': sitenav['wiki']}
+        html = render_to_string('wiki/home.html', context)
+        soup = BeautifulSoup(html, 'html.parser')
+        self.assertEqual([section['id'] for section in soup.select('.wiki-collection-section')], ids)
+        self.assertEqual([a['href'] for a in soup.select('.wiki-section-links a')], ['#' + key for key in ids])
+        self.assertEqual([a['href'] for a in soup.select('footer [aria-label="百科"] li a')],
+                         ['/wiki/#' + key for key in ids])
+        self.assertEqual([a['href'] for a in soup.select('#pgSideNav .wiki-nav-section a')],
+                         ['/wiki/#' + key for key in ids])
+        self.assertEqual(len(soup.select('a.wiki-card')), len(COLUMNS))
+        for card in soup.select('a.wiki-card'):
+            self.assertTrue(card.select_one('.wiki-card-heading svg'))
+            self.assertTrue(card.select_one('.wiki-card-heading h3'))
+            self.assertEqual(card.select_one('.wiki-card-version').get_text(), 'PG 10–20')
+        self.assertTrue(soup.select_one('.wiki-language-link a[href="https://pg.center/wiki/"]'))
+        self.assertFalse(soup.select('footer a[href^="https://pg.center/"]'))
 
 
 class StoredWikiLinkTests(SimpleTestCase):

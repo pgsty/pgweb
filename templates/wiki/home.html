@@ -2,12 +2,29 @@
 {% block wiki_content %}
 <h1>PostgreSQL 百科</h1>
 <p class="wiki-lead">按主题查阅 PostgreSQL 的命令、参数与数据库对象，了解它们的含义、用法和版本变化。每个栏目都保留对应版本的手册或源码链接。</p>
-<div class="wiki-cards">
-  {% for column in columns %}
-  <section class="wiki-card {{ column.tone_class }}">
-    <h2 class="wiki-card__title"><a href="{{ column.url }}">{{ column.name }}</a></h2>
-    <p class="wiki-card__lead">{{ column.lead }}</p>
-  </section>
-  {% endfor %}
-</div>
+<p class="wiki-language-link"><a href="https://pg.center/wiki/" hreflang="en">英文百科</a></p>
+<nav class="wiki-section-links" aria-label="百科分区">
+  {% for section in wiki_sections %}<a href="#{{ section.id }}">{{ section.title }}</a>{% endfor %}
+</nav>
+{% regroup columns by section as card_sections %}
+{% for section in card_sections %}
+<section class="wiki-collection-section" id="{{ section.list.0.section_id }}" aria-labelledby="{{ section.list.0.section_id }}-title">
+  <h2 class="wiki-section-title" id="{{ section.list.0.section_id }}-title">{{ section.grouper }}</h2>
+  <div class="wiki-card-grid">
+    {% for column in section.list %}
+    <a class="wiki-card {{ column.tone_class }}" href="{{ column.url }}">
+      <div class="wiki-card-heading">
+        {% include "wiki/icon.html" with name=column.slug only %}
+        <h3>{{ column.name }}</h3>
+      </div>
+      <p class="wiki-card-description">{{ column.lead }}</p>
+      <div class="wiki-card-meta">
+        <span>{{ column.count }} {{ column.unit }}</span>
+        <span class="wiki-card-version">{% if column.first %}PG {{ column.first }}–{{ column.last }}{% else %}版本未采样{% endif %}</span>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}
 {% endblock %}

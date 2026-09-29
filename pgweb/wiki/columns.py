@@ -108,6 +108,60 @@ COLUMNS += tuple({
 
 BY_SLUG = {column['slug']: column for column in COLUMNS}
 
+NAV_GROUPS = (
+    ('query-language', '查询语言', ('sql', 'func', 'sqlstate')),
+    ('indexes-storage', '索引与存储', ('catalog', 'relopts', 'oid')),
+    ('operations', '运行与维护', ('guc', 'waitevent', 'lock', 'role')),
+    ('client-tools', '客户端工具', ()),
+    ('extensibility', '扩展机制', ('hook',)),
+    ('releases', '版本发布', ()),
+)
+COLUMNS = tuple(dict(BY_SLUG[slug], section=title, section_id=anchor)
+                for anchor, title, slugs in NAV_GROUPS for slug in slugs)
+BY_SLUG = {column['slug']: column for column in COLUMNS}
+
+
+def nav_sections():
+    """Only available Wiki sections appear in the homepage and global footer."""
+    return [{'id': anchor, 'title': title, 'link': '/wiki/#' + anchor}
+            for anchor, title, slugs in NAV_GROUPS if slugs]
+
+
+def home_cards():
+    """Small current counts and sampled ranges, without loading full snapshots."""
+    from django.db.models import F, Func, TextField
+    from . import models
+    from .sqlcmd_common import version_key
+
+    sources = {
+        'sql': ('SqlCommand', '条命令', None, None),
+        'func': ('PgFunction', '个函数', 'FuncVersion', 'function_count'),
+        'sqlstate': ('ErrorCode', '个状态码', 'ErrorCodeRelease', 'code_count'),
+        'catalog': ('CatalogRelation', '个关系', 'CatalogVersion', 'relation_count'),
+        'guc': ('GucParameter', '个参数', 'GucVersion', 'parameter_count'),
+        'waitevent': ('WaitEvent', '个事件', 'WaitEventVersion', 'event_count'),
+        'lock': ('LockMode', '种锁模式', None, None),
+        'hook': ('ExtensionHook', '个钩子', None, None),
+        'relopts': ('StorageParameter', '个参数条目', None, None),
+        'role': ('PredefinedRole', '个角色', None, None),
+        'oid': ('ObjectIdentifierType', '个类型', None, None),
+    }
+    cards = listing()
+    for card in cards:
+        model_name, unit, version_model, count_field = sources[card['slug']]
+        model = getattr(models, model_name)
+        if version_model:
+            versions = getattr(models, version_model).objects.filter(**{count_field + '__gt': 0})
+            majors = list(versions.values_list('major', flat=True))
+        else:
+            majors = list(model.objects.order_by().annotate(
+                major=Func(F('versions'), function='jsonb_object_keys', output_field=TextField())
+            ).values_list('major', flat=True).distinct())
+        majors.sort(key=version_key)
+        card.update(count=model.objects.count(), unit=unit,
+                    first=majors[0] if majors else '', last=majors[-1] if majors else '')
+    return cards
+
 
 def url(column):
     """A live column links to its own index; one not yet rendered here links
@@ -130,4 +184,6 @@ def live_columns():
 
 def nav_items():
     """Collection links for the standalone Wiki navigation."""
-    return [{'title': column['name'], 'link': url(column)} for column in COLUMNS if url(column)]
+    return [{'title': column['name'], 'link': url(column),
+             'section': column['section'], 'section_id': column['section_id']}
+            for column in COLUMNS if url(column)]

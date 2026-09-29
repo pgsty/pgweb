@@ -129,55 +129,70 @@ a.wiki-cell:focus-visible { outline: 2px solid var(--pg-link-hover); outline-off
 
 /* ------------------------------------------------------------- cards */
 
-.wiki-cards {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
-  margin: 22px 0 32px;
-}
-
-@media (max-width: 720px) {
-  .wiki-cards { grid-template-columns: minmax(0, 1fr); }
-}
-
 .wiki-card {
-  position: relative;
-  padding: 18px 20px 16px;
-  background: var(--pg-surface);
-  border: 1px solid var(--pg-line);
-  border-radius: var(--pg-radius);
-  border-top: 3px solid var(--seg);
-  box-shadow: var(--pg-shadow-sm);
-}
-
-.wiki-card__title {
   display: flex;
-  align-items: center;
+  min-width: 0;
+  flex-direction: column;
   gap: 10px;
-  margin: 0 0 6px;
-  font-size: 19px;
-  line-height: 1.3;
+  padding: 16px 18px 14px;
+  border: 1px solid var(--pg-line);
+  border-top: 2px solid var(--seg, var(--pg-blue));
+  border-radius: 6px;
+  background: var(--pg-surface);
+  transition: background-color .15s, border-color .15s;
 }
-
-.wiki-card__title a { color: var(--pg-heading); }
-.wiki-card__title a:hover { color: var(--seg); }
-
-.wiki-card__lead {
-  margin: 0 0 12px;
+#pgContentWrap a.wiki-card { font-weight: 400; }
+#pgContentWrap a.wiki-card:hover { background: var(--pg-canvas); text-decoration: none; }
+.wiki-card:focus-visible { outline: 2px solid var(--pg-blue); outline-offset: 3px; }
+.wiki-card-heading { display: flex; align-items: center; gap: 10px; }
+.wiki-card-heading .wiki-icon { flex: none; width: 20px; height: 20px; color: var(--seg); }
+#pgContentWrap .wiki-card-heading h3 {
+  margin: 0;
+  color: var(--pg-ink);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -.01em;
+}
+#pgContentWrap .wiki-card-description {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  margin: 0;
+  color: var(--pg-ink-2);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.55;
+  min-height: 3.1em;
+}
+.wiki-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 4px 12px;
+  margin-top: auto;
+  color: var(--pg-ink-2);
+  font-size: 11px;
+  line-height: 1.5;
+}
+.wiki-card-version { margin-left: auto; font-family: var(--pg-font-mono); white-space: nowrap; }
+.wiki-language-link { margin: 0; font-size: 12px; }
+.wiki-section-links { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 24px 0 28px; font-size: 12px; }
+.wiki-collection-section { margin-top: 28px; scroll-margin-top: 88px; }
+#pgContentWrap .wiki-section-title {
+  margin: 0 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--pg-line);
   color: var(--pg-ink-2);
   font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
 }
-
-.wiki-card__meta {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: 3px 12px;
-  margin: 0;
-  font-size: 13px;
-}
-
-.wiki-card__meta dt { color: var(--pg-muted); font-weight: 400; }
-.wiki-card__meta dd { margin: 0; color: var(--pg-ink); }
+.wiki-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 14px; }
+#pgSideNav .wiki-nav-section { margin-top: 18px; padding-top: 10px; border-top: 1px solid var(--pg-line); }
+#pgSideNav .wiki-nav-section > a { color: var(--pg-ink-2); font-size: 12px; font-weight: 600; }
 
 /* ------------------------------------------------------------ badges */
 
@@ -196,9 +211,9 @@ a.wiki-cell:focus-visible { outline: 2px solid var(--pg-link-hover); outline-off
   border: 1px solid var(--pg-line);
 }
 
-/* The theme draws a trailing rule after an inner-page h2; a card title is a
-   heading for structure, not a section divider, so it keeps no rule. */
-#pgContentWrap .wiki-card__title:after { content: none; }
+/* Group headings use their own full-width divider rather than the theme's
+   trailing rule for an ordinary content heading. */
+#pgContentWrap .wiki-section-title:after { content: none; }
 
 /* =========================================================== 错误码大全 */
 
