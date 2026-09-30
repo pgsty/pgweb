@@ -1,0 +1,410 @@
+{
+  "date": "2026-09-29",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、pgnexus #271–284；原文与官方发布说明；截稿 2026-09-30 07:32:20 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 自连接消除补齐行安全身份检查",
+      "summary": "PostgreSQL 已合入自连接消除的行级安全修复，并回补到 18、19 稳定分支。同一张表经视图与直接引用访问时，权限检查身份可能不同，对应的行安全条件也可能不同；此前优化器仅按关系标识归组，可能错误合并这些引用。补丁把 checkAsUser 纳入候选分组，阻止跨身份消除连接，并增加视图与表混合查询的回归测试。这项修改维护了优化前后的权限语义，目前属于代码修复进展。",
+      "url": "https://github.com/postgres/postgres/commit/dca6a9e320e0272f0ea8d7e076cda04b06050866",
+      "author": "Tom Lane",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "行级安全"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "WAL sender 容量还须计入备份与表同步",
+      "summary": "规划 max_wal_senders 时，只数物理备库容易漏算容量。Christophe Pettus 梳理了占用者：默认流式 pg_basebackup 需要两个连接，逻辑订阅还会为正在初始同步的表增加连接，WAL 归档接收程序也在其中。网络中断后未及时关闭的连接，还可能一直占位到超时。PostgreSQL 12 起，这个进程池已独立于普通连接额度；调整时应为备份、同步和断线重连预留余量，并核对备库设置。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_wal_senders/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "容量规划"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "函数级 work_mem 调整消除特定排序溢写",
+      "summary": "一次生产排障把大量临时文件写入定位到单个函数的排序操作。Dinesh Kumar 使用 ALTER FUNCTION 为该函数单独设置 128 MB 的 work_mem，函数退出后恢复调用会话原值。作者报告，在前后均为 1135 次调用的日窗口中，临时文件写入由 150 GB 降至零。这个案例展示了缩小调优范围的方法；内存额度仍按每个排序或哈希操作计算，函数并发运行时仍需评估总内存占用。",
+      "url": "https://cortexridge.com/blog/postgresql-alter-function-set-work-mem/",
+      "author": "Dinesh Kumar",
+      "source": "CortexRidge",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "内存"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Dasha 1.8.1 对比日志中的执行计划退化",
+      "summary": "Dasha 1.8.1 新增 Log Insights，将一个时间窗口的数据库日志按事件类别和常见消息模板归组，并按语句与计划形态整理 auto_explain 输出。计划树会标出大表顺序扫描、严重的行数估算偏差和磁盘排序，还能对比两个窗口，找出执行计划变差的语句。使用前须配置日志源并启用 auto_explain；分组翻页、计划树和窗口比较依赖存储配置及保存的扫描结果，扫描会由每日清理任务删除。",
+      "url": "https://github.com/dbulashev/dasha/releases/tag/v1.8.1",
+      "author": "Dasha 项目",
+      "source": "Dasha",
+      "source_date": "2026-09-20",
+      "image": "https://github.com/user-attachments/assets/21e43582-7b31-4d98-9f6f-6865a1a1f7ef",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "执行计划"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Valkey 内存实测区分版本与数据建模收益",
+      "summary": "Percona 比较了五个 Valkey 版本在相同分配器、无持久化条件下的内存开销。厂商称，写入约 63 万个独立小键、值长 16 字节时，每键增量内存从 7.2.14 的 102.48 字节降到 9.1.1 的 64.02 字节，降幅为 37.5%。文章把变化对应到键内联、哈希表布局和短字符串存储，并对比多个字符串键与单个 Hash 的建模成本。结论针对这组小键负载，容量评估仍需保留实际键长、编码与访问方式。",
+      "url": "https://www.percona.com/blog/valkey-memory-optimization/",
+      "author": "Percona Team",
+      "source": "Percona",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "内存",
+        "基准测试"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 计划用 Merkle 树建设后量子 CA",
+      "summary": "后量子签名会放大证书链与透明度日志的传输成本。Cloudflare 宣布建设支持 Merkle Tree Certificates 的证书颁发机构，目标是在 2027 年初进入 Chrome 的抗量子根库。方案把证书写入追加日志，签署树根并取得独立镜像方的共同签名；客户端若已通过带外更新获得可信树信息，握手时只需传送紧凑的包含证明。公司将提供免费标准签发服务，但生产信任资格仍须经过根库审核。",
+      "url": "https://blog.cloudflare.com/pq-ca-with-mtcs/",
+      "author": "Cloudflare",
+      "source": "Cloudflare Blog",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "密码学",
+        "证书"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PGDG RPM 仓库开始提供 Rust 扩展",
+      "summary": "pgrx 与 postgresql_anonymizer 已入库，并公布打包规范；RHEL 10.3、9.9 的支持仍是后续计划。",
+      "url": "https://people.planetpostgresql.org/devrim/index.php?/archives/131-Rust-extensions-started-landing-PostgreSQL-RPM-repository.html",
+      "author": "Devrim Gündüz",
+      "source": "Devrim’s PostgreSQL Blog",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "软件包"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Aurora PostgreSQL 可零 ETL 同步至湖仓",
+      "summary": "数据持续复制到 Glue 托管目录并呈现为 Iceberg 表，配置流程涉及增强逻辑复制、源端授权与目标目录。",
+      "url": "https://aws.amazon.com/blogs/big-data/aurora-postgresql-zero-etl-integration-with-amazon-sagemaker/",
+      "author": "AWS",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "湖仓"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "选择性复制会放大 Galera 在线改表事务",
+      "summary": "pt-online-schema-change 扫过大量不匹配行时会放大后续分块；案例建议固定分块并按流控状态暂停复制。",
+      "url": "https://www.percona.com/blog/when-pt-online-schema-change-where-meets-galera-understanding-chunk-auto-resize-and-flow-control/",
+      "author": "Corrado Pandiani",
+      "source": "Percona",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "运维",
+        "模式变更"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "SageMaker 项目蓝图支持自定义权限边界",
+      "summary": "Tooling 蓝图可为其创建的三个 IAM 角色统一附加边界，避免组织强制要求边界时项目创建遭到拒绝。",
+      "url": "https://aws.amazon.com/blogs/big-data/enforce-iam-permissions-boundaries-for-amazon-sagemaker-unified-studio-tooling-blueprints/",
+      "author": "AWS",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "权限",
+        "治理"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 用学习到的请求结构辅助拦截",
+      "summary": "API Security 客户可校验路径、参数及请求体；其他客户采用邀请测试，实际阻断需另建规则。",
+      "url": "https://blog.cloudflare.com/application-profiles/",
+      "author": "Zhiyuan Zheng",
+      "source": "Cloudflare Blog",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "应用安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 公测 IKEv2 完整握手认证",
+      "summary": "完整握手记录参与认证以防降级；WAN 与 Magic Transit 用户可申请开通，通信双方均须支持该扩展。",
+      "url": "https://blog.cloudflare.com/ipsec-downgrade-protection/",
+      "author": "Cloudflare",
+      "source": "Cloudflare Blog",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "密码学"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Git 2.56 可只暂存已解决的冲突文件",
+      "summary": "git add --resolved 聚焦未合并文件，并拒绝仍含冲突标记的内容，减少把工作区其他修改一并暂存的风险。",
+      "url": "https://github.blog/open-source/git/highlights-from-git-2-56/",
+      "author": "Elijah Newren",
+      "source": "GitHub Blog",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Git"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 混合检索实验比较智能体记忆接口",
+      "summary": "Tiger Data 用一张表、五类检索入口和三个 MCP 工具开展实验，并区分接口设计、模型差异与入库成本。",
+      "url": "https://www.tigerdata.com/blog/agent-memory-search-problem-not-storage-problem",
+      "author": "Matvey Arye",
+      "source": "Tiger Data",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "检索",
+        "PostgreSQL"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_resetwal 恢复零事务号表示保留原值的语义",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/1f7013fe089d0e0db5b5e4a20d84acecf0f128a1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "数值聚合状态修复扩展继续累加时的平方和标志",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/6a93535798aa9219d01c01c67161a78780e2af1a",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Argo CD 3.6 候选版加入 CNPG 休眠操作",
+      "summary": "",
+      "url": "https://github.com/argoproj/argo-cd/releases/tag/v3.6.0-rc1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CloudNativePG"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Percona MySQL 新增向量距离函数，尚无 ANN 索引",
+      "summary": "",
+      "url": "https://www.percona.com/blog/vector-distance-vector-similarity-search-in-percona-server-for-mysql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量检索"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "EMR on EKS 新增 Spark Connect 交互会话",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/announcing-spark-connect-on-amazon-emr-on-eks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Spark"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 预览直接查询 Workday 数据湖",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/release-notes#September_21_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "湖仓"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 预览查询托管灾备的故障转移历史",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/release-notes#September_29_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "灾备"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 日志新增访问端与源站密钥交换算法",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/post-quantum-visibility/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TLS",
+        "可观测性"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Dependabot 可为私有仓库指定运行器",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-29-repository-custom-runner-settings-for-dependabot/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "依赖管理"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 企业云将运行器版本检查改至 9 月 29 日",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-28-self-hosted-runner-version-enforcement-date-has-moved/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "持续集成"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 分享代码密码学盘点工具的隔离架构",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/ai-driven-cryptography-discovery/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "代码分析",
+        "安全"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 数据智能体预览使用托管凭证注册",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/release-notes#September_22_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据工具"
+      ],
+      "position": 26
+    }
+  ]
+}
