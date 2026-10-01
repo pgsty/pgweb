@@ -202,4 +202,80 @@ BEGIN
 END
 $check$;
 
+-- The eighteen expansion tables share ReferenceTopic's storage contract.
+-- Compare full URL sets so matching totals cannot hide missing/duplicate rows.
+DO $expansion$
+DECLARE
+    item record;
+    total bigint;
+    inconsistent bigint;
+    expected_urls text[];
+    indexed_urls text[];
+BEGIN
+    FOR item IN SELECT * FROM (VALUES
+        ('type','data_type','type'), ('indexam','index_am','am'),
+        ('plan','plan_node','plan'), ('operator','pg_operator_entry','operator'),
+        ('opclass','operator_class','opclass'), ('fdw','foreign_data_wrapper','fdw'),
+        ('tableam','table_am','tableam'), ('psql','psql_command','psql'),
+        ('tool','command_tool','tool'), ('conn','connection_parameter','conn'),
+        ('metric','statistics_metric','metric'), ('storage','storage_structure','storage'),
+        ('protocol','protocol_message','protocol'), ('language','procedural_language','language'),
+        ('fts','text_search_component','fts'), ('auth','authentication_method','auth'),
+        ('locale','collation_encoding','locale'), ('decode','logical_decoding_plugin','decode')
+    ) AS topics(source_name,data_table,search_kind)
+    LOOP
+        EXECUTE format('SELECT count(*) FROM %I', item.data_table) INTO total;
+        IF total = 0 THEN RAISE EXCEPTION '%: empty expansion collection', item.source_name; END IF;
+        EXECUTE format('SELECT count(*) FROM %I
+            WHERE content_hash !~ ''^[0-9a-f]{64}$'' OR name='''' OR category='''' OR summary=''''
+               OR jsonb_typeof(versions) IS DISTINCT FROM ''object'' OR versions=''{}''::jsonb',
+            item.data_table) INTO inconsistent;
+        IF inconsistent <> 0 THEN
+            RAISE EXCEPTION '%: invalid fingerprint, definition or version object', item.source_name;
+        END IF;
+        EXECUTE format('SELECT count(*) FROM %I t CROSS JOIN LATERAL jsonb_each(t.versions) v
+            WHERE v.key !~ ''^[0-9]+(\.[0-9]+)?$'' OR jsonb_typeof(v.value) IS DISTINCT FROM ''object''
+               OR v.value=''{}''::jsonb', item.data_table) INTO inconsistent;
+        IF inconsistent <> 0 THEN RAISE EXCEPTION '%: invalid version snapshot', item.source_name; END IF;
+        EXECUTE format('SELECT array_agg(%L || slug || ''/'' ORDER BY %L || slug || ''/'') FROM %I',
+            '/wiki/' || item.source_name || '/', '/wiki/' || item.source_name || '/', item.data_table)
+            INTO expected_urls;
+        SELECT array_agg(url ORDER BY url) INTO indexed_urls FROM search_searchentry WHERE source=item.source_name;
+        IF expected_urls IS DISTINCT FROM indexed_urls THEN
+            RAISE EXCEPTION '%: expansion search coverage mismatch', item.source_name;
+        END IF;
+        EXECUTE format('SELECT count(*) FROM %I t JOIN search_searchentry s ON s.url=%L || t.slug || ''/''
+            WHERE s.source=%L AND (s.name IS DISTINCT FROM t.name OR s.kind<>%L
+                OR s.entity_key='''' OR s.vector IS NULL OR s.document_id IS NOT NULL OR s.version IS NOT NULL)',
+            item.data_table, '/wiki/' || item.source_name || '/', item.source_name, item.search_kind)
+            INTO inconsistent;
+        IF inconsistent <> 0 THEN RAISE EXCEPTION '%: expansion search projection mismatch', item.source_name; END IF;
+        RAISE NOTICE '%: % entities; version objects and complete search coverage passed.', item.source_name, total;
+    END LOOP;
+
+    -- core_version uses decimal 9.x trees and zero for the current devel tree.
+    -- The development major follows the highest numbered branch in this inventory.
+    IF (SELECT count(*) FROM core_version WHERE tree=0) <> 1 THEN
+        RAISE EXCEPTION 'Versions: expected one development tree';
+    END IF;
+    WITH branches AS (
+        SELECT CASE WHEN tree=0 THEN (SELECT max(tree)::integer + 1 FROM core_version)
+                    ELSE tree END AS branch FROM core_version
+    )
+    SELECT array_agg('/wiki/versions/' || CASE WHEN branch>=10 THEN branch::integer::text
+                     ELSE branch::numeric(3,1)::text END || '/' ORDER BY
+                     '/wiki/versions/' || CASE WHEN branch>=10 THEN branch::integer::text
+                     ELSE branch::numeric(3,1)::text END || '/') INTO expected_urls FROM branches;
+    SELECT array_agg(url ORDER BY url) INTO indexed_urls FROM search_searchentry WHERE source='versions';
+    IF expected_urls IS DISTINCT FROM indexed_urls THEN RAISE EXCEPTION 'Versions: search coverage mismatch'; END IF;
+    IF EXISTS (SELECT 1 FROM search_searchentry WHERE source='versions' AND
+        (kind <> 'version' OR entity_key IS DISTINCT FROM 'version:' || split_part(url,'/',4)
+         OR name IS DISTINCT FROM 'PostgreSQL ' || split_part(url,'/',4)
+         OR vector IS NULL OR document_id IS NOT NULL OR version IS NOT NULL)) THEN
+        RAISE EXCEPTION 'Versions: search identity/vector mismatch';
+    END IF;
+    RAISE NOTICE 'Versions: % branches; complete search coverage passed.', cardinality(expected_urls);
+END
+$expansion$;
+
 ROLLBACK;
