@@ -1,0 +1,410 @@
+{
+  "date": "2026-09-30",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、PGNexus #272–285；官方博客、发布说明与源码提交；截稿 2026-10-01 08:46:32 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复复制槽失效时的进程状态覆盖",
+      "summary": "PostgreSQL 已合入复制槽失效处理的状态覆盖修复。检查点或启动进程释放复制槽时，旧代码会误用仅对普通后端有效的数组偏移，覆盖另一个进程的状态标志。严重时可能丢失影响清理边界的标志，使 VACUUM 删除备库仍需要的行，即使已启用备库反馈也会受影响。补丁改为仅在逻辑解码标志确实存在时更新共享状态，提交注明回补至 PostgreSQL 14。这是已提交的修复，正式版本是否包含仍须看发行记录。",
+      "url": "https://github.com/postgres/postgres/commit/9510a826e4add77280e0a7a65f429563a4c4a2a8",
+      "author": "Vlad Lesin",
+      "source": "PostgreSQL",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "复制"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "max_wal_size 过小会放大检查点与 WAL 写入",
+      "summary": "max_wal_size 是检查点触发阈值的计算依据，并非 pg_wal 目录的硬上限。Christophe Pettus 在 PostgreSQL 18.6 上实测：同一组短时 pgbench 负载把参数从 1 GB 调到 8 GB 后，WAL 写入从 3815 MB 降至 1080 MB。频繁检查点让热数据页反复写入完整页映像，也增加归档与复制成本。调大阈值时还须实测崩溃恢复耗时，结合检查点日志和恢复时间预算确定设置。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-max_wal_size/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_clickhouse 更新编码校验与嵌套类型映射",
+      "summary": "pg_clickhouse 0.11.0 与 chdb 扩展 0.1.2 继续处理 PostgreSQL 和 ClickHouse 之间的数据兼容问题。新增的编码选项默认拒绝无效字节，也可选择移除、替换或截断；替换模式在 UTF-8 下使用替代字符。版本还完善区间、嵌套复合类型与参数化 JSON 的映射。pg_clickhouse 同时停止支持 PostgreSQL 13，并调整原始查询接口名称，升级时应核对外部表数据编码和已有调用。",
+      "url": "https://clickhouse.com/blog/pg_clickhouse-chdb",
+      "author": "David Wheeler",
+      "source": "ClickHouse",
+      "source_date": "2026-09-30",
+      "image": "https://clickhouse.com/_next/image?url=%2Fuploads%2Fgulcin_updated_the_title_54d37d322a.png&w=1200&h=630&q=75",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "数据类型"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "CDC 心跳可缓解低写入表导致的 WAL 滞留",
+      "summary": "业务表很少变化时，CDC 连接器可能迟迟不推进已确认的日志位置，而同一实例的其他写入仍在产生 WAL，最终造成复制槽积压。AWS 分别介绍 DMS 与 Debezium 的心跳配置，用周期性写入帮助消费端推进进度。两者配置不能直接照抄：DMS 的心跳表无需加入任务选表规则，Debezium 的心跳动作则需确保对应表被采集。排查时应同时观察复制槽与日志保留量，区分低流量造成的停滞和真正的消费能力不足。",
+      "url": "https://aws.amazon.com/blogs/database/resolving-postgresql-replication-lag-with-heartbeat-tables-in-change-data-capture-scenarios/",
+      "author": "Donghua Luo、Barry Ooi",
+      "source": "AWS",
+      "source_date": "2026-09-30",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/09/29/DBBLOG-5412-featured-image.png",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "CDC"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Neon 复盘依赖故障如何拖垮数据库控制面",
+      "summary": "Neon 披露了两次由外部依赖故障触发的控制面事故：故障进入自我强化循环，阻碍数据库创建、唤醒和恢复。团队随后用三个月完成三十余项修复，覆盖控制面自身 PostgreSQL 的计划退化与长事务、连接池和 TCP 超时默认值，以及过载时的背压和队列公平性。复盘先量化客户影响，再将每项原因对应到可验证的措施；后续发布按变更风险增加故障演练、渐进放量和回滚检查，避免把依赖恢复当作系统已恢复。",
+      "url": "https://neon.com/blog/how-we-systematically-improved-our-reliability",
+      "author": "Dmitrii Mokhnatkin、Andrei Stolbovskii",
+      "source": "Neon",
+      "source_date": "2026-09-30",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/how-we-systematically-improved-our-reliability/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "可靠性",
+        "故障复盘"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Aurora PostgreSQL 可直接联查湖中数据",
+      "summary": "Aurora PostgreSQL 新增查询 Iceberg 与 Parquet 数据的能力，将 DuckDB 嵌入实例，用外部表把湖中历史数据与本地业务表联查，免去预先复制整份数据。功能从 17.11 和 18.6 起提供，需启用 aurora_analytics 扩展并配置 IAM 角色。查询支持谓词下推、列裁剪和缓存，也可通过 Glue 联邦接入外部目录。读查询能放到副本运行；若将结果物化为 Aurora 表，仍须在写实例执行。",
+      "url": "https://aws.amazon.com/blogs/aws/amazon-aurora-postgresql-now-supports-direct-querying-of-apache-iceberg-and-parquet-data-in-your-data-lake/",
+      "author": "Esra Kayabali",
+      "source": "AWS",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "湖仓",
+        "DuckDB"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "C++ 扩展须处理 PostgreSQL 的异常边界",
+      "summary": "longjmp 会跳过 C++ 析构；案例分别讨论调用边界封装和独立辅助进程，以限制异常及崩溃传播。",
+      "url": "https://clickhouse.com/blog/memory-safety-postgres-extensions-c-cpp",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "内存安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "TimescaleDB 宽表改窄表可分时段迁移历史",
+      "summary": "按时间片回填后用兼容视图切换读取；连续聚合、权限和策略仍须检查，不能假定改名会自动迁移依赖。",
+      "url": "https://www.tigerdata.com/blog/normalizing-wide-well-pipeline-telemetry-table-without-re-ingesting-history",
+      "author": "",
+      "source": "Tiger Data",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时序",
+        "迁移"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Db2 z/OS 可经网关向 Aurora 全量迁移",
+      "summary": "DMS 通过 EC2 上的 Db2 Connect 接入大型机，方案采用周期性全量刷新，并用行数等检查验证结果。",
+      "url": "https://aws.amazon.com/blogs/database/migrate-db2-z-os-to-amazon-aurora-postgresql-using-aws-dms-and-gateway-server/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "DMS"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Tigris 将部分异步任务从 FDB 队列迁到 Kafka",
+      "summary": "垃圾回收等任务迁出以减少数据库扫描、写入和自建队列代码；元数据、复制日志及事务型队列仍留在 FDB。",
+      "url": "https://www.tigrisdata.com/blog/quick-fdb-kafka/",
+      "author": "",
+      "source": "Tigris",
+      "source_date": "2026-09-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "队列",
+        "架构"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Iceberg 1.12 移除 Spark 3.4 支持",
+      "summary": "正式版还让 Kafka Connect 的提交失败显式报错，升级前须核对 Spark 版本和连接器的失败处理。",
+      "url": "https://github.com/apache/iceberg/releases/tag/apache-iceberg-1.12.0",
+      "author": "",
+      "source": "Apache Iceberg",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "湖仓",
+        "兼容性"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse for Microsoft Fabric 开放预览",
+      "summary": "使用独立计算资源加速 OneLake 数据分析；当前集成采用时间点快照同步，持续同步仍属后续计划。",
+      "url": "https://clickhouse.com/blog/clickhouse-for-microsoft-fabric",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分析",
+        "湖仓"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Aurora 与 RDS 引入第五代 EPYC 实例",
+      "summary": "R8a 覆盖 Aurora 和 RDS，M8a 面向 RDS；每个 vCPU 对应一个物理核心，容量对比需采用这一口径。",
+      "url": "https://aws.amazon.com/blogs/database/aws-and-amd-bring-5th-generation-amd-epyc-processors-to-amazon-aurora-and-amazon-rds/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "云数据库",
+        "硬件"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "OpenTofu 1.13 正式版减少计划中的未知值",
+      "summary": "相较已报道的候选版，本次确认正式发布；新增类型转换及已知属性表达能力，帮助计划阶段推断值。",
+      "url": "https://opentofu.org/blog/opentofu-1-13-0/",
+      "author": "",
+      "source": "OpenTofu",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "基础设施即代码"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "RLS 下非 leakproof 条件可能失去索引扫描",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/row-level-security-performance-postgresql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行级安全",
+        "索引"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Datastream 可用 WHERE 条件限定回填范围",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/datastream/docs/manage-backfill-for-the-objects-of-a-stream#initiatepartialbackfill",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CDC"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 安全中心正式集中管理行列权限",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/security-center-overview",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "权限"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Cloud Tasks 正式支持按任务设置重试参数",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/tasks/docs/configure-retry-task",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "队列"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Compute Engine 可配置 120 秒抢占通知期",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/instances/spot#preemption-notice-duration",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "计算"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 新配额将 URL 映射上限增至 1 MB",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/load-balancing/docs/url-map-size-quota",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "负载均衡"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 服务边界支持按文件夹纳入项目",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/vpc-service-controls/docs/folder-membership",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cluster Director 建集群可选择 Slurm 版本",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/cluster-director/docs/release-notes#September_30_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "调度"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Kustomize 5.8.2 增添配置与组件编辑命令",
+      "summary": "",
+      "url": "https://github.com/kubernetes-sigs/kustomize/releases/tag/kustomize/v5.8.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "npm 可信发布可单独授权修改 dist-tag",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-30-opt-in-dist-tag-permissions-for-npm-trusted-publishing/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GHE.com 将拒绝仅用 X25519 的 TLS",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-30-x25519-only-tls-ends-for-ghe-com-on-september-15/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TLS"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Workers Issues 公测将异常上下文交给编码代理",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/real-time-issue-detection/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 26
+    }
+  ]
+}
