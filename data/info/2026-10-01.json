@@ -1,0 +1,416 @@
+{
+  "date": "2026-10-01",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、PGNexus #273–286、项目原文与官方发布；截稿 2026-10-02 07:31:20 +08:00",
+  "items": [
+    {
+      "tier": 1,
+      "title": "Pgpool-II 安全更新修复七项漏洞",
+      "summary": "Pgpool-II 为五个受支持分支发布安全更新，修复七项漏洞，涉及 watchdog 消息处理中的内存破坏、认证绕过和信息泄露，以及客户端证书身份校验。修复版本为 4.7.3、4.6.8、4.5.13、4.4.18 与 4.3.21。使用集群故障切换或证书认证的部署应核对受影响条件并升级；已停止维护的 3.5–4.2 分支不再提供补丁，需要迁移到受支持版本。",
+      "url": "https://www.pgpool.net/docs/latest/en/html/release-4-7-3.html",
+      "author": "Pgpool Global Development Group",
+      "source": "Pgpool-II",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "连接池",
+        "高可用"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "ParadeDB 优化 BM25 索引局部性与多词检索",
+      "summary": "ParadeDB 在回应全文检索基准测试时公布两项新的 BM25 优化：把文档长度信息按倒排列表排列，减少随机访存；对多词稠密查询采用 MAXSCORE，减少无效评分工作。相关改动已进入 0.26.0-rc.2，正式版尚待发布，完整收益需要重建索引。文章还说明查询配置、评分参数与排名一致性会影响对比结论。这次进展是检索执行与存储布局的改进，实际效果仍需用自己的数据和查询复测。",
+      "url": "https://www.paradedb.com/blog/opening-a-closed-tin",
+      "author": "Ming Ying",
+      "source": "ParadeDB",
+      "source_date": "2026-10-01",
+      "image": "https://www.paradedb.com/blog/opening-a-closed-tin/images/opengraph-image.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "全文检索",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Aurora DSQL 解析分布式外键的并发边界",
+      "summary": "分布式数据库中的外键既要维护引用完整性，也要处理并发修改。AWS 说明 Aurora DSQL 如何在快照读取与提交阶段的乐观并发控制之间完成校验，不依赖传统行锁等待。文章给出异步验证已有数据、可延迟约束和级联操作的用法，并指出应用必须重试序列化冲突。级联修改仍计入单事务 3,000 行限制，迁移 PostgreSQL 应用时需要重新审视大批量删除与重试边界。",
+      "url": "https://aws.amazon.com/blogs/database/working-with-foreign-key-constraints-in-aurora-dsql/",
+      "author": "AWS",
+      "source": "AWS Database Blog",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分布式",
+        "事务",
+        "数据完整性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "DynamoDB 导出支持按条件筛选与字段投影",
+      "summary": "DynamoDB 向 S3 导出新增条件筛选与字段投影，可从时间点恢复备份中提取所需租户、记录和属性，覆盖全量与增量导出，不消耗业务表的读取容量。分区键条件能缩小备份读取范围，普通过滤表达式则只减少输出，不能等同于减少扫描工作。文章进一步演示选择性恢复与跨表迁移，强调应使用条件写入避免覆盖目标表的新修改。团队可据此拆分共享数据和恢复范围，无需先导出整张表再处理。",
+      "url": "https://aws.amazon.com/blogs/database/introducing-filtered-export-from-amazon-dynamodb-to-amazon-s3/",
+      "author": "AWS",
+      "source": "AWS Database Blog",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "备份恢复",
+        "对象存储"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare Basin 数据平台正式可用",
+      "summary": "Cloudflare 将数据摄取、目录管理与 SQL 查询整合为正式可用的 Basin，底层采用 R2 对象存储与 Apache Iceberg。数据可经 HTTP、Workers 或 Logpush 进入流水线，转换后落入开放表格式；目录服务负责文件合并、快照过期与元数据维护，SQL 引擎支持连接、窗口函数和公共表表达式。既有组件配置继续有效，其他兼容 Iceberg 的计算引擎也能访问数据，团队可把采集、维护与分析连成统一流程。",
+      "url": "https://blog.cloudflare.com/cloudflare-basin/",
+      "author": "Marc Selwan、Micah Wylde",
+      "source": "Cloudflare",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据湖",
+        "Iceberg",
+        "SQL"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Caddy 2.11.6 安全加固改变多项默认行为",
+      "summary": "Caddy 2.11.6 发布安全修复与连接处理改进，同时收紧若干默认值。请求头大小上限从 1 MB 降至 16 KiB，新增读写空闲超时以限制停滞连接；含点号的请求头默认丢弃，更具体的站点块也不再隐式继承通配站点的客户端证书认证配置。反向代理与认证转发的连接处理问题一并修复。维护者应在升级前检查较大的请求头、慢速传输及多站点 mTLS 配置，避免安全加固触发现有业务的兼容性问题。",
+      "url": "https://github.com/caddyserver/caddy/releases/tag/v2.11.6",
+      "author": "Caddy 项目",
+      "source": "Caddy",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "反向代理"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 合入逐索引 VACUUM 进度统计",
+      "summary": "开发分支新增当前索引及块进度指标，并展示并行工作进程的进度；这是已提交的后续版本改进。",
+      "url": "https://github.com/postgres/postgres/commit/1378aa13430e264a990a18597e9d8fdae740927e",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "可观测性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Babelfish 调优需重新审视执行计划与连接模型",
+      "summary": "AWS 结合等待事件和实际执行计划定位瓶颈，说明迁移后连接池、统计信息与内存参数的调整边界。",
+      "url": "https://aws.amazon.com/blogs/database/babelfish-for-aurora-postgresql-performance-tuning/",
+      "author": "",
+      "source": "AWS Database Blog",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "性能"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "turbopuffer v3 重构向量主索引架构",
+      "summary": "开发中的 v3 将 ANN 改为二级索引，以降低文档重排的写放大；正确性测试已通过，性能调优与生产上线仍在后续。",
+      "url": "https://turbopuffer.com/blog/rip-vector-database",
+      "author": "",
+      "source": "turbopuffer",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "存储",
+        "检索"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "MSK 解析新消费者协议的增量再均衡",
+      "summary": "Kafka 4.x 集群可启用 KIP-848，由服务端协调分区迁移；客户端需显式选择新协议并核对超时配置。",
+      "url": "https://aws.amazon.com/blogs/big-data/optimize-consumer-rebalancing-on-amazon-msk-with-next-generation-protocol/",
+      "author": "",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka",
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare K2 消息流进入公开测试",
+      "summary": "基于 R2 的持久分区日志支持多订阅者独立消费，面向付费 Workers 账户开放；Kafka 客户端兼容仍属后续计划。",
+      "url": "https://blog.cloudflare.com/cloudflare-k2-streams/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "消息流",
+        "对象存储"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Workers KV Instant 开启私测",
+      "summary": "沿用 KV 接口并通过 Quicksilver 推送更新，面向小型配置数据；每个命名空间暂限 1 MB、每秒一次写入。",
+      "url": "https://blog.cloudflare.com/workers-kv-instant/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "键值存储",
+        "边缘计算"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Envoy 修复证书处理导致的内存耗尽漏洞",
+      "summary": "1.39.2 更新 BoringSSL，修复处理特殊 CRL 分发点时的过量内存分配，降低 TLS 拒绝服务风险。",
+      "url": "https://github.com/envoyproxy/envoy/releases/tag/v1.39.2",
+      "author": "",
+      "source": "Envoy",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "服务代理"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Rust 1.99 稳定支持定义 C 可变参数函数",
+      "summary": "稳定版现可定义采用 C 或 C-unwind ABI 的可变参数函数，补全与 C 接口互操作时的实现能力。",
+      "url": "https://blog.rust-lang.org/2026/10/01/Rust-1.99.0/",
+      "author": "",
+      "source": "Rust",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编译器",
+        "开发工具"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "并行自动清理修复等待阶段的限流参数滞后",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/42e96cf2fe095c822f76bc94669ea875cb1e3351",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "pgvector 0.8.7 修复 IVFFlat 构建缓冲区溢出",
+      "summary": "",
+      "url": "https://github.com/pgvector/pgvector/blob/v0.8.7/CHANGELOG.md",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "安全"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Neon 的 Effect SDK 支持可取消请求与类型化错误",
+      "summary": "",
+      "url": "https://neon.com/blog/announcing-neon-effect",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "客户端"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PostgresEDI 分享 Iceberg 分层与 Nuxt 接入实践",
+      "summary": "",
+      "url": "https://vyruss.org/blog/postgresedi-september-2026-meetup-recap-tiering-to-iceberg-postgres-from-nuxt.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区",
+        "技术分享"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Workers 试验性支持 ML-KEM 与 ML-DSA",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/workers-ml-kem-ml-dsa-support/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "密码学"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Artifacts 仓库推送可触发 Workers 构建部署",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/next-git-platform-on-cloudflare/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "持续集成"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "OpenTofu 1.12.7 修复 SSH 配置器死锁",
+      "summary": "",
+      "url": "https://github.com/opentofu/opentofu/releases/tag/v1.12.7",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Jane Street 用只读 FUSE 接通内部对象存储",
+      "summary": "",
+      "url": "https://blog.janestreet.com/linux-engineering-depot-fuse-index/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "文件系统"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 检查与状态记录纳入 Actions 保留期限",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-01-actions-retention-now-covers-checks-runs-and-statuses/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "持续集成"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 定时代码扫描跳过缺少实际分析活动的仓库",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-01-scheduled-code-scanning-skips-inactive-repositories/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代码安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 覆盖率上传跳过尚无 PR 的新分支",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-01-code-coverage-uploads-no-longer-fail-ci-for-new-branches/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "持续集成"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 私密漏洞报告新增必填复现表单",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-01-structured-forms-for-private-vulnerability-reports/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 26
+    }
+  ]
+}
