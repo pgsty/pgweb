@@ -1,0 +1,395 @@
+{
+  "date": "2026-10-02",
+  "origin": "PGSQL.CC 主动采集；截稿 2026-10-03 07:32:16 Asia/Shanghai；官方公告、工程博客与发布说明；pgnexus #274–287 线索核查",
+  "items": [
+    {
+      "tier": 1,
+      "title": "多租户任务队列轮转须防索引误判",
+      "summary": "多个租户共用 PostgreSQL 任务队列时，大租户的积压可能让小租户长时间等待。Chris van Eijk 用四个工作进程比较先来先服务与按租户轮转：在其测试中，小租户完成时间中位数从约 4.5 秒降至 0.1 秒。文章进一步揭示，单有公平调度仍不够；大量空租户与积压任务会让按全局编号排序的查询选错索引。让排序匹配租户局部索引，并只扫描活跃租户，才能兼顾公平性与取任务成本。测试结果对应文中负载，仍需按实际租户分布验证。",
+      "url": "https://now-next.nl/en/insights/postgresql-job-queue-per-tenant-noisy-neighbour/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "任务队列",
+        "多租户",
+        "索引"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Neki 按需解码降低分片路由开销",
+      "summary": "分片代理需要汇总多个 PostgreSQL 实例的结果，但每层完整解码再编码都会增加 CPU 与内存开销。PlanetScale 披露 Neki 的结果处理设计：简单查询直接转发原始行字节，限制行数只解析行边界，跨分片排序则仅解码排序键并缓存结果。原始数据行被装入内部通信消息，以保留文本、二进制格式及扩展类型的表示。这篇工程分析说明了分片路由层怎样按运算需要逐步解析数据，也强调缓存生命周期与内存核算仍须明确管理。",
+      "url": "https://planetscale.com/blog/designing-neki-for-performance",
+      "author": "Dirkjan Bussink",
+      "source": "PlanetScale",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "协议",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Supabase 预览 Multigres 与 OrioleDB",
+      "summary": "Supabase 展示 PostgreSQL 扩展路线。Multigres 托管服务进入私有 Alpha，跨同一区域的三个可用区部署，结合同步复制、共识机制与连接池提供高可用。OrioleDB 则进入公开 Beta，新项目可选择这一使用撤销日志的引擎，并在同库混用原生堆表与 OrioleDB 表；其目标包括减少更新造成的膨胀与冻结维护负担。两者仍处于测试阶段，分别改变集群组织与表存储方式，评估时需要单独核对兼容性、故障恢复和运维行为。",
+      "url": "https://supabase.com/blog/select-2026-scale-without-limits",
+      "author": "Joe Sciarrino 等",
+      "source": "Supabase",
+      "source_date": "2026-10-02",
+      "image": "https://supabase.com/images/blog/select-2026-scale-without-limits/og.png",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "存储引擎",
+        "扩展"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "OpenStack 2026.2 扩充机密计算与存储",
+      "summary": "OpenStack 发布代号 Hibiscus 的 2026.2 版本，扩充自建云的计算隔离与数据服务。Nova 增加 AMD SEV-SNP 和 Intel TDX 支持，Designate 改进 DNS 隔离，Manila 纳入新存储后端，Glance 支持并行导入镜像。这一版属于非 SLURP 版本；使用 2026.1 的部署可按策略跳过它，等待下一次 SLURP 发布。新能力为私有云提供选择，落地需逐项核对硬件、驱动与配置。",
+      "url": "https://www.openstack.org/software/openstack-hibiscus/",
+      "author": "OpenStack 社区",
+      "source": "OpenStack",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "私有云",
+        "机密计算",
+        "存储"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 公测统一追踪与 SQL 遥测接口",
+      "summary": "Cloudflare 将日志、请求追踪与分析查询整合到同一观测平台。新公布的 Traces 公开测试覆盖边缘至源站链路，支持 OpenTelemetry 与 W3C 追踪上下文；SQL API 和自定义告警也进入测试阶段，可用于查询遥测数据并接入既有工作流。Logpush 自助配置与日志转换能力则已正式提供。各能力的发布状态并不相同，跨数据集联接仍待后续开放；团队可以先验证链路关联与日志处理效果，再评估计划于 12 月启用的新计费方式。",
+      "url": "https://blog.cloudflare.com/one-observability-platform/",
+      "author": "Nevi Shah 等",
+      "source": "Cloudflare",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "日志",
+        "追踪"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Prometheus 修复内存耗尽与直方图损坏",
+      "summary": "Prometheus 发布 3.13.4，更新 gRPC 依赖以修复 HTTP/2 数据帧碎片导致的内存耗尽问题，并升级界面中存在漏洞的依赖。本次还修正联邦采集中的浮点原生直方图损坏，以及样本数和各桶计数均为零时的抓取失败。Agent 遇到未知 WAL 记录类型时改为忽略，以支持从较新版本回退。升级评估应覆盖监控服务本身的安全性，也要核查直方图数据与回退路径，尤其是使用联邦抓取、原生直方图或 Agent 模式的部署。",
+      "url": "https://github.com/prometheus/prometheus/releases/tag/v3.13.4",
+      "author": "Prometheus 团队",
+      "source": "Prometheus",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "监控",
+        "数据完整性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 合入已关闭游标的崩溃修复",
+      "summary": "修复预备 FETCH 后关闭游标、再描述语句或门户时的空指针崩溃，改为报游标不存在；代码已提交，尚不等同于维护版发布。",
+      "url": "https://github.com/postgres/postgres/commit/50d6e533e4d9a0f70d798c534254007c83c0d428",
+      "author": "Dirkjan Bussink",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "稳定性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "MongoDB 迁移调优要区分克隆与追赶瓶颈",
+      "summary": "Percona 分别分析初始克隆与持续复制的并发、批量和队列参数；扩大队列无法解决目标端长期处理不足。",
+      "url": "https://www.percona.com/blog/tuning-percona-clustersync-for-mongodb-performance/",
+      "author": "Ivan Groenewold、Adnan Supic",
+      "source": "Percona",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据迁移"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "BigQuery 持续查询可直接写入 Iceberg",
+      "summary": "通过 INSERT 将流式处理结果持续写入托管 Iceberg 表，减少从实时分析进入开放格式湖仓的中间搬运。",
+      "url": "https://docs.cloud.google.com/bigquery/docs/continuous-queries#write-bigquery",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "流处理",
+        "湖仓"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Apigee hybrid 支持外置 Cassandra",
+      "summary": "1.17.1 可将 Cassandra 部署在独立 Kubernetes 集群；同时新增命名空间内 Endpoints 角色要求。",
+      "url": "https://docs.cloud.google.com/apigee/docs/hybrid/v1.17/cassandra-external",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据库",
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Google Cloud 快照可使用独立加密密钥",
+      "summary": "标准与归档快照可单独选择客户管理密钥，无需源盘使用同一密钥；采用客户提供密钥的源盘不在支持范围内。",
+      "url": "https://docs.cloud.google.com/compute/docs/disks/customer-managed-encryption#create_snapshot",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "备份",
+        "加密"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare OHTTP Gateway 开启封闭测试",
+      "summary": "托管网关支持标准及分块 OHTTP，需搭配独立运营的中继，分离用户网络身份与请求内容；目前接受候补申请。",
+      "url": "https://blog.cloudflare.com/announcing-cloudflare-ohttp-gateway/",
+      "author": "Cloudflare",
+      "source": "Cloudflare",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "隐私",
+        "网络"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 安装令牌完成无状态格式切换",
+      "summary": "新令牌约 520 字符，权限与一小时有效期不变；集成方需核对字段长度与校验规则，临时迁移请求头将在 11 月停用。",
+      "url": "https://github.blog/changelog/2026-10-02-stateless-github-app-installation-tokens-rolled-out/",
+      "author": "GitHub",
+      "source": "GitHub",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "认证",
+        "兼容性"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Neon AI Gateway 新增嵌入向量接口",
+      "summary": "兼容 OpenAI 的接口支持单次最多 150 段文本，向量可写入同一分支的 PostgreSQL，用于检索流程。",
+      "url": "https://neon.com/blog/generate-embeddings-with-neon-ai-gateway",
+      "author": "Carlota Soto",
+      "source": "Neon",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "PostgreSQL",
+        "向量"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_dump 补回排斥约束索引的统计目标",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/80931d131a95ddcddc7b671d4fee7aceeb12a314",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 成功后可能清除 MD5 告警日志",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-md5_password_warnings/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 的 Rust 客户端正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/reference/libraries",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 的 OBJ.LIST 文件枚举正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/objectref_functions#objlist",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 执行计划新增写入与导出步骤",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/release-notes#September_30_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Cloud Storage 客户端默认校验读写完整性",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/storage/docs/data-validation#client-validation-writes",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Private NAT 的 IPv6 转 IPv4 正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/nat/docs/private-nat#nat64",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GKE 预览 VPA 与 HPA 协同调整 CPU 资源",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/how-to/rightsize-hpa-workloads-with-vpa",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Google 旧备份控制台将于 2027 年停止新备份",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/backup-disaster-recovery/docs/deprecations",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 安全公告新增仅维护者可见的评论",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-02-confidential-comments-on-repository-security-advisories/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "OpenTofu 1.13.1 修复临时输出复用旧值",
+      "summary": "",
+      "url": "https://github.com/opentofu/opentofu/releases/tag/v1.13.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 漏洞查询支持严重程度与撤回状态过滤",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-02-new-fields-for-securityadvisory-graphql-api/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}
