@@ -1,0 +1,13 @@
+[Unit]
+Description=PGSQL.CC queued email delivery
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/data/app/pgsql.cc
+# Expired registration messages retained for separate recovery, never replayed.
+ExecStart=/data/app/pgsql.cc/.venv/bin/python manage.py send_queued_mail --exclude-ids 13 14 15 16
+TimeoutStartSec=55
+UMask=0077

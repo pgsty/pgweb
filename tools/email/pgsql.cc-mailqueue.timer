@@ -1,0 +1,10 @@
+[Unit]
+Description=Send PGSQL.CC queued email every minute
+
+[Timer]
+OnCalendar=*-*-* *:*:00
+AccuracySec=1s
+Unit=pgsql.cc-mailqueue.service
+
+[Install]
+WantedBy=timers.target
