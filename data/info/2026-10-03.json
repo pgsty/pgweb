@@ -1,0 +1,416 @@
+{
+  "date": "2026-10-03",
+  "origin": "PGSQL.CC 独立采编；PostgreSQL.org / Planet / pgnexus #275–288；项目原文、厂商工程博客与发布说明；截稿 2026-10-04 07:30:47 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 主线撤回外键检查批处理",
+      "summary": "PostgreSQL 开发主线已提交外键快速路径批处理层的回退。此前 PostgreSQL 19 分支已移除这层优化，主线曾保留它继续修正；新的触发器语义问题促使开发者放弃当前实现。当行后触发器修改被引用表时，延后成批校验可能偏离逐行检查的行为。此次删除缓存外键行与集中探测的机制，但保留绕过 SPI、直接访问主键索引的逐行快速路径。变化发生在开发树，相关测试应按新的执行边界重新核对。",
+      "url": "https://github.com/postgres/postgres/commit/425daf545d9146e008220ae0b21415982220cd3f",
+      "author": "Amit Langote",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "外键",
+        "回退"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "直接 I/O 备份兼顾页缓存保护与吞吐",
+      "summary": "大规模物理备份会顺序读遍数据库，挤出操作系统中仍有价值的热数据。ClickHouse 团队介绍其托管 Postgres 对 WAL-G 的调优：使用直接 I/O 绕过页缓存，再把单次读取扩大到覆盖 RAID0 条带，弥补失去内核预读后的吞吐下降。厂商测试中，直接 I/O 保住了预热表的缓存，而默认缓冲读取几乎将其清空。文章同时比较读取并发、查询尾延迟和 CPU 开销，说明备份速度与在线负载保护需要一起衡量。",
+      "url": "https://clickhouse.com/blog/direct-io-managed-postgres-backups",
+      "author": "Kaushik Iska",
+      "source": "ClickHouse",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "WAL-G",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "并行扫描阈值也决定工作进程数量",
+      "summary": "PostgreSQL 的并行扫描最小尺寸参数既控制是否考虑并行，也影响分配多少工作进程。Christophe Pettus 通过计划与实验说明，规划器从该阈值出发，按扫描规模逐级增加进程；把阈值设为零，可能让很小的查询也申请过多进程。索引扫描、仅索引扫描与位图扫描采用的尺寸依据各不相同，表级设置又能覆盖默认估算。参数还影响并行建索引与清理的适用边界，因此调优时应同时检查计划代价、数据规模和实际并发。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-min_parallel_index_scan_size-and-min_parallel_table_scan_size/",
+      "author": "Christophe Pettus",
+      "source": "PGX",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并行查询",
+        "配置",
+        "调优"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "多租户分片遇到热点时应先检查分片键",
+      "summary": "多租户系统按租户均匀分配，并不意味着每个分片的负载均衡：少数大租户可能占据大部分数据和请求。PlanetScale 以 Neki 为背景分析处理路径，从单独扩容热分片，到隔离大租户，再到按具体表的访问模式更换分片键。文章用消息表从工作区改按频道分片说明，拆分必须保留常用查询的局部性；迁移则需要先复制数据、持续追赶变更，最后切换路由。这些取舍把容量规划与数据模型联系起来，不能仅靠增加分片数量解决。",
+      "url": "https://planetscale.com/blog/hot-shards-hotter-tenants",
+      "author": "Simeon Griggs",
+      "source": "PlanetScale",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "多租户",
+        "架构"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "ClusterSync 为 MongoDB 迁移增加主备接管",
+      "summary": "长时间运行的数据迁移需要在同步进程故障后继续追赶。Percona ClusterSync for MongoDB 1.0.0 引入主备模式，通过目标库中的租约选出活跃实例，并用递增任期阻止失去租约的旧进程继续写入检查点。备用实例可从已保存的位置接管持续复制，租约使用服务端时间判断过期，降低节点时钟差异的影响。当前初始克隆仍不能断点恢复，失败后须重新开始；旧版状态也不能直接沿用，升级与演练应分别验证这两个阶段。",
+      "url": "https://www.percona.com/blog/percona-clustersync-for-mongodb-goes-highly-available-active-standby-failover/",
+      "author": "Inel Pandzic",
+      "source": "Percona",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MongoDB",
+        "迁移",
+        "高可用"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Caddy 2.11.7 修复超时策略引入的回归",
+      "summary": "Caddy 2.11.7 修复了 2.11.6 超时调整带来的多种代理回归。此前新增的请求体读取期限可能截断持续发送的请求；HTTP/2 写入空闲计时也可能误伤暂时没有数据的长连接。另一个问题是期限回调晚于处理器结束，导致反向代理发生空指针崩溃。新版本调整这些期限的作用范围，并继续完善流式响应处理。近期升级过的服务应重点回归长时间上传、事件流和安静一段时间后恢复发送的连接，确认安全超时与正常业务兼容。",
+      "url": "https://github.com/caddyserver/caddy/releases/tag/v2.11.7",
+      "author": "Caddy 项目组",
+      "source": "Caddy Releases",
+      "source_date": "2026-10-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "反向代理",
+        "回归修复",
+        "HTTP/2"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Postgres 选型需分清 vCPU 与物理核心",
+      "summary": "PlanetScale 比较 x86 与 Arm 的并发吞吐、单查询表现和迁移约束，提醒不要只按 vCPU 数量推断计算能力。",
+      "url": "https://planetscale.com/blog/when-to-choose-x86-64-vs-aarch64",
+      "author": "",
+      "source": "PlanetScale",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "硬件",
+        "性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Iceberg 分区演进要区分旧文件与新布局",
+      "summary": "AWS 的 Redshift 实践建议用原子替换调整分区字段，并说明新布局仅影响后续写入，旧文件仍由查询引擎兼容读取。",
+      "url": "https://aws.amazon.com/blogs/big-data/getting-started-with-apache-iceberg-write-support-in-amazon-redshift-part-3/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Iceberg",
+        "分区"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Quick Tunnels 可用邮件验证码限制访问",
+      "summary": "cloudflared 2026.9.3 新增允许邮箱列表，无需配置域名即可保护临时隧道，鉴权失败不会退回公开访问。",
+      "url": "https://blog.cloudflare.com/protected-quick-tunnels/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "隧道",
+        "访问控制"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 测试账户级滥用调查视图",
+      "summary": "早期访问功能把可疑登录等事件按账户串联，可追查请求与执行处置，并将查看个人信息的权限独立控制。",
+      "url": "https://blog.cloudflare.com/account-abuse-protection-dashboard/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "可观测性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Streamline 将长时视频处理与请求解耦",
+      "summary": "开源示例以容器运行媒体引擎，用 Durable Objects 管理会话；控制端断开后任务可继续，支持叠图、字幕和实时预览。",
+      "url": "https://blog.cloudflare.com/streamline/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "流处理"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "M4 等待指令的状态丢失问题阻碍 Linux 启动",
+      "summary": "Asahi 开发者定位到等待指令后的寄存器状态异常，以引导配置避开问题路径，相关改动已合入并推进多核启动。",
+      "url": "https://yuka.dev/blog-2026-10-02-linux-m4.html",
+      "author": "",
+      "source": "Yureka Lilian",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "内核"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare AI Search 正式提供混合检索",
+      "summary": "服务整合关键词与向量检索，扩展图像嵌入和 PDF 文本识别，并公布从 11 月起执行的用量计费安排。",
+      "url": "https://blog.cloudflare.com/ai-search-ga/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "检索",
+        "基础设施"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AI Gateway 增加统一网页搜索接口",
+      "summary": "开发者可通过统一 REST 接口或 Workers 绑定调用不同搜索供应商，复用网关的密钥管理、日志与计费能力。",
+      "url": "https://blog.cloudflare.com/introducing-web-search-api/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "搜索",
+        "网关"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Fujitsu 用加密表空间保护 Artifactory 元数据",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/how-to-integrate-jfrog-artifactory-with-fujitsu-enterprise-postgres",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "加密"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Cloud SQL 查看者角色移除数据库导出权限",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/sql/docs/postgres/release-notes#September_28_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Valkey 指标采集需区分节点基线与慢查询分析",
+      "summary": "",
+      "url": "https://valkey.io/blog/monitoring-valkey-with-prometheus/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "监控"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Reffine 研究用稀疏编译统一内存分析执行",
+      "summary": "",
+      "url": "https://arxiv.org/abs/2609.30497",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "查询引擎"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Kirin 研究 Wasm 服务编排与生命周期管理",
+      "summary": "",
+      "url": "https://arxiv.org/abs/2609.39631",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Wasm"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Actions 将于 11 月停用 macOS 14 镜像",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-01-github-actions-macos-14-runner-image-retirement/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "ARC 0.15.0 通过原位修补减少 API 请求",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-01-actions-runner-controller-release-0-15-0/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 为私密漏洞报告新增限流与允许名单",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-01-rate-limits-for-private-vulnerability-reports/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 异步合并 API 正式可用",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-01-github-async-merge-api-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Rust 公布仍在实验阶段的泛型常量参数设计",
+      "summary": "",
+      "url": "https://blog.rust-lang.org/inside-rust/2026/10/02/generic-const-args-and-you/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Enki 原型让稳定版 Rust 函数在 GPU 上执行",
+      "summary": "",
+      "url": "https://github.com/enkiruntime/enki/blob/4df23fe4a645351c49825c81acfd6185359020ca/README.md",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GPU"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "MWAA 插件示例结合任务代码与日志分析失败",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/building-an-llm-powered-dag-failure-analysis-plugin-for-amazon-mwaa/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据管线"
+      ],
+      "position": 26
+    }
+  ]
+}
