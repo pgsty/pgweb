@@ -1,0 +1,423 @@
+{
+  "date": "2026-10-06",
+  "origin": "主动采集：PostgreSQL 官方、Planet、厂商博客与发布说明；截稿 2026-10-07 07:28:37 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复字符索引去重导致的错误结果",
+      "summary": "PostgreSQL 已提交 B-tree 去重修复：bpchar 比较会忽略尾随空格，某些等值数据却有不同的存储表示；去重把它们合并后，仅索引扫描可能返回错误值。补丁为相关操作符类禁用去重，并在主线与 19 分支处理 oidvector 的类似问题。维护者明确要求重建受影响的 bpchar 索引，单纯更新程序无法修正已有索引。补丁注明回补至 14；这是已提交修复，尚不能等同于正式小版本已发布。",
+      "url": "https://github.com/postgres/postgres/commit/a32b8dc9865aa5189d20eca273700b10dfd92fc7",
+      "author": "Peter Geoghegan、Shihao Zhong",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "索引",
+        "数据完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "事务清理遗漏可能让逻辑解码丢失后续变更",
+      "summary": "PostgreSQL 已合入一项逻辑解码修复。事务进入失败状态后仍可能持有事务 ID，逻辑日志模式的更新必须延后；旧处理却只在事务中止路径检查，最终清理没有重新应用变更。连接随后开始的新事务便可能缺少逻辑解码所需的信息，订阅端因此静默跳过数据变化。补丁把状态更新移到事务 ID 清除之后，覆盖显式事务失败后再回滚的边界，并注明回补至 19。依赖逻辑复制或 CDC 的团队应关注后续正式版本收录情况。",
+      "url": "https://github.com/postgres/postgres/commit/10b6e2a3d66098bf26b236c880bab5b3fafc42bd",
+      "author": "Sergei Patiakin、Masahiko Sawada",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "逻辑复制",
+        "数据完整性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgBackRest 2.59.3 修复弱加密子密钥问题",
+      "summary": "pgBackRest 2.59.3 修复了未检查随机数生成结果的问题：若系统熵不足导致调用失败，旧版本可能以残留内存生成加密子密钥或盐，使备份加密强度不足。问题只涉及加密仓库，但升级程序本身不会轮换已经写入仓库元数据的子密钥，后续备份也会继续沿用它们。项目提供了检查方法；确认存在弱子密钥时，需要按公告建立新的仓库与备份链。运维团队应同时核对程序版本和已有密钥，不能把升级完成视为历史风险已经消除。",
+      "url": "https://pgbackrest.org/news.html#weak-encryption",
+      "author": "pgBackRest 项目组",
+      "source": "pgBackRest",
+      "source_date": "2026-10-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "加密",
+        "安全"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "用逻辑复制汇总多库，先处理模式与变更边界",
+      "summary": "将商店、客户管理和账单库汇总到一个分析库，逻辑复制能够搬运数据，却不会自动改写模式名或同步表结构。Dimitri Fontaine 用 PostgreSQL 18 的可复现实验，说明发布端应预先划分模式，新增列与删除列也需要安排两端执行顺序。调整行过滤和列清单不会清掉订阅端已有数据；汇总库再输出 CDC 时，还须明确是否包含复制来源的变更。文章把过滤、二次解码和结构演进放在同一流程中，便于在上线前验证数据边界。",
+      "url": "https://tapoueh.org/blog/2026/10/consolidating-databases-with-postgres-logical-replication/",
+      "author": "Dimitri Fontaine",
+      "source": "Tapoueh",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "数据库工程"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "179 项索引建议实测，32 项反而拖慢查询",
+      "summary": "索引顾问常用 HypoPG 比较优化器成本，但成本下降不代表查询一定加速。Prateek Arora 在 PostgreSQL 16 上使用约 7 GB 的 IMDB 数据，实际创建建议索引并执行查询：179 项可测建议中，128 项至少快 15%，32 项至少慢 5%，其中 7 项耗时超过原来的两倍。行数估算错误会让新索引诱导优化器选择更差的连接计划，而假想索引仍依赖同一套估算。评估工具输出时，应在可控副本上验证真实执行时间与计划。",
+      "url": "https://prateek-arora.github.io/2026/10/timed-179-index-recommendations/",
+      "author": "Prateek Arora",
+      "source": "Prateek Arora",
+      "source_date": "2026-10-06",
+      "image": "https://prateek-arora.github.io/assets/img/job-benchmark.png",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "性能",
+        "数据库工程"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Spanner 为 Iceberg 目录提供原子元数据提交",
+      "summary": "多个计算引擎共享 Iceberg 表时，目录必须协调元数据指针更新，避免并发写入覆盖彼此的结果。Google Cloud 介绍了其湖仓运行目录的实现：以 Spanner 的可串行化事务支撑乐观并发控制，通过 Iceberg REST 接口提供一致的表发现与提交路径，并在区域内提供高可用。目录还可按访问请求发放临时存储凭据，让引擎读取同一份数据而不必长期保管云存储密钥。文章说明的是现有目录的架构与权限边界，可用于评估多引擎湖仓的控制层。",
+      "url": "https://cloud.google.com/blog/products/data-analytics/lakehouse-runtime-catalog-powered-by-spanner",
+      "author": "Vinod Ramachandran、Mina Mikhail",
+      "source": "Google Cloud",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Iceberg",
+        "湖仓",
+        "元数据"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修复横向子查询展开后的漏行",
+      "summary": "已合入的补丁先展开连接别名，再检查横向引用，避免外连接保留行被错误丢弃，并注明回补至 14。",
+      "url": "https://github.com/postgres/postgres/commit/d4c15309e7ed6e30e360b5911e1f4d3ca754aa2b",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "数据完整性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "统计采样波动可能改变位图索引交集计划",
+      "summary": "合成数据实验显示，接近的成本估算会使计划摇摆；多列 GIN 将交集移入索引后，该实验中的计划更稳定。",
+      "url": "https://exobench.ai/blog/postgres-disagreed-with-itself",
+      "author": "",
+      "source": "Exobench",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "执行计划"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "共享表的清理阈值会拖慢大租户计数",
+      "summary": "更新会清除可见性映射，而自动清理阈值按整表计算；大租户计数因此可能从仅索引扫描退化为大量回表。",
+      "url": "https://now-next.nl/en/insights/postgresql-count-per-tenant-estimate-counter/",
+      "author": "",
+      "source": "Now-Next",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "多租户",
+        "性能"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "连接池选型还要核对状态隔离与预备语句",
+      "summary": "对比 Odyssey、pgagroal、Supavisor 等实现时，文章强调事务池状态清理、连接共享范围和预备语句支持的差异。",
+      "url": "https://thebuild.com/blog/the-deep-end/",
+      "author": "",
+      "source": "The Build",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "AlloyDB 用 RRF 函数合并多路检索结果",
+      "summary": "单次 SQL 调用可融合向量、全文及外部检索排名，减少应用端拼接；RUM 索引保留词位置信息以支持短语查询。",
+      "url": "https://cloud.google.com/blog/products/databases/simplify-ai-search-with-alloydb-hybrid-search-and-rrf",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检索",
+        "SQL"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "DuckDB 可在 Glue 单节点完成湖表 ETL",
+      "summary": "示例在 Glue 6.0 中读 Parquet、写 S3 Tables；需控制单机资源，且先删后插的两步写入不具备原子性。",
+      "url": "https://aws.amazon.com/blogs/big-data/cost-effective-etl-with-duckdb-and-amazon-s3-tables-on-aws-glue/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "湖仓"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Envoy 1.39.3 修复认证过滤器崩溃",
+      "summary": "OAuth2 与特定 API Key 配置处理没有路径头的 CONNECT 请求时可能崩溃，新版修复两项拒绝服务问题。",
+      "url": "https://github.com/envoyproxy/envoy/releases/tag/v1.39.3",
+      "author": "",
+      "source": "Envoy",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "代理"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Traefik 隔离已认证的后端连接",
+      "summary": "3.7.14 修复 NTLM、Kerberos 连接隔离，并调整部分路由名称与冲突优先级；依赖旧名称的监控需同步修改。",
+      "url": "https://github.com/traefik/traefik/releases/tag/v3.7.14",
+      "author": "",
+      "source": "Traefik",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代理",
+        "认证"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "VACUUM 修复持锁休眠与哈希清理难以中断的问题",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/96c99955b62994b2cb47380d84f463456cf16ee5",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "运维"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 开发分支修复外键快速检查空指针崩溃",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/e73e0196d30198e4579656881497f057788bb53d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "修复"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "postgres_fdw 提交前补设远端只读状态",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/d6393fc40a59830a88a79bdf08e962122fa9c631",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "事务"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "空闲监听会话可能延迟上报 NOTIFY 缓存统计",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-notify_buffers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "参数",
+        "监控"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Cloudberry 扩展化实验仍需 PostgreSQL 内核补丁",
+      "summary": "",
+      "url": "https://igor-suhorukov.github.io/blog/2026/09/30/greenplum-without-the-fork/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "MPP"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "AWS DMS 以签名包装过程降低 SQL Server CDC 权限",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/run-least-privilege-aws-dms-cdc-migration-from-sql-server/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "迁移",
+        "权限"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Neptune 跨区域容灾须区分切换与故障转移的数据边界",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/a-decision-framework-for-amazon-neptune-availability/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "容灾"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "EMR 8.1 可跨账户联查多种湖表格式",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/query-across-accounts-and-table-formats-with-multi-catalog-in-amazon-emr/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "湖仓"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Chrome 吊销列表封禁顶级域劫持产生的异常证书",
+      "summary": "",
+      "url": "https://blog.google/security/chromes-response-to-recent-cctld-registry-hijacks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "证书"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 堆叠拉取请求正式可用，重放可保留审批",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-06-stacked-pull-requests-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "npm 分阶段发布支持新包先审核再公开",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-02-npm-staged-publishing-now-supports-creating-new-packages/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "数据智能体可将用户身份传至湖仓权限层",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/security/identity-aware-ai-data-agents-with-aws-lake-formation-and-trusted-identity-propagation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "权限",
+        "数据治理"
+      ],
+      "position": 26
+    }
+  ]
+}
