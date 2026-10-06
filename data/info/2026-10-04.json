@@ -1,0 +1,402 @@
+{
+  "date": "2026-10-04",
+  "origin": "PGSQL.CC automation 20261005T233554Z; recovered candidates 20261004T233146Z; active primary-source research; pgnexus #276–290; window 2026-09-21–2026-10-04",
+  "items": [
+    {
+      "tier": 1,
+      "title": "min_wal_size 保留回收池，不能保护备库",
+      "summary": "min_wal_size 限制的是 WAL 文件回收池缩小后的下限，目录里保留的文件可能已经改名为未来段，无法供落后的备库读取。Christophe Pettus 实测发现，提高回收池下限主要减少低谷后突发写入时的建段开销，改善极端尾延迟，并不明显提高平均吞吐。新集群也不会立即预分配到这个容量。运维时须用复制槽或 wal_keep_size 保障备库所需日志，并确认配置至少容纳两个 WAL 段，避免重启时因参数检查而无法启动。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-min_wal_size/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "性能",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "审计触发器的存储节省可能换来更多 CPU",
+      "summary": "多租户审计既要记录应用之外的修改，也要控制批量更新的额外成本。Now-Next 在 PostgreSQL 17.10 上比较逐行与语句级触发器：其测试中，记录完整新旧行使十万行更新由约 0.6 秒增至 2.6 秒，使用转换表的语句级触发器降至约 2.1 秒。仅记录变化列把日志体积缩小约五倍，却增加逐列比较的 CPU 开销。设计时还需让审计表使用租户行安全策略，并撤销应用角色的更新和删除权限，分别验证批量迁移与普通请求。",
+      "url": "https://now-next.nl/en/insights/postgresql-audit-log-per-tenant-trigger-cost/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "审计",
+        "性能",
+        "多租户"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "递归查询揭示 PostgreSQL 内存隔离边界",
+      "summary": "work_mem 并非单条查询的总内存上限，递归 UNION 的去重哈希表还可能持续增长而不落盘。ClickHouse 用这一负载比较四家托管 PostgreSQL 的过载行为，区分查询报错、连接终止和整个集群进入恢复三种结果。厂商称，其服务通过关闭内存过量承诺并限制分配，让压力首先表现为 SQL 错误，代价是提前拒绝部分查询。这个实验提醒运维团队，容量评估应同时检查执行器内存、并发数和服务端的过载处置，不能只调低 work_mem。",
+      "url": "https://clickhouse.com/blog/can-your-postgres-survive-a-bad-query",
+      "author": "Kevin Biju Kizhake Kanichery",
+      "source": "ClickHouse",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存",
+        "可靠性",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Azure PostgreSQL 备份 v2 改用增量快照",
+      "summary": "Azure Backup 披露 PostgreSQL vaulted backup v2 预览，保护范围覆盖 Flexible Server 与 Elastic Cluster。新方案用磁盘物理快照取代 pg_dump，首次全量后仅传输变化块，支持每天或每周备份，并可直接恢复到预建的目标服务器。容量上限按磁盘类型分别为 32 TB 和 64 TB，恢复点可保留七天至十年。备份进入保管库，配合不可变策略保护恢复点，可用于大实例的长期留存。",
+      "url": "https://learn.microsoft.com/en-us/azure/backup/backup-azure-postgresql-flex-server-elastic-cluster-v2-overview",
+      "author": "Microsoft",
+      "source": "Microsoft Learn",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "云数据库"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Spanner Omni 正式支持自管生产部署",
+      "summary": "Google 将可部署在自有基础设施上的 Spanner Omni 推向正式可用，支持虚拟机、Kubernetes 及其他云环境。正式版增加 TLS、身份认证、授权、审计日志和备份恢复，并提供独立的无状态工作节点来分担后台任务。数据库保留关系、图、向量等能力，生产版按 vCPU 收取年度订阅费。选择该方案意味着团队自行承担升级、监控和日常维护；依赖 Google Cloud 的部分原生集成仍不可用，迁移前需要逐项核对功能。",
+      "url": "https://cloud.google.com/blog/products/databases/spanner-omni-deploy-anywhere-version-of-spanner-is-now-ga",
+      "author": "Jagan R. Athreya、Wenzhe Cao",
+      "source": "Google Cloud",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分布式数据库",
+        "自托管"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "MongoDB 9.0 发布，Atlas 预览计算存储分离",
+      "summary": "MongoDB 发布 9.0，并预览计算与存储独立伸缩的 Atlas Infinite。厂商称，新引擎相对 8.0 在大型实例上最高可实现两倍吞吐，并改善读取与更新性能；Infinite 先在 AWS 开放公共预览，其他云的支持计划随正式版推出。符合条件的 Atlas 9.0 集群默认启用工作负载管理，通过排队和优先级保护过载时的可用性，持续超载时可选择主动卸载请求。评估升级时需要区分引擎版本更新与部署架构迁移，分别验证负载和功能边界。",
+      "url": "https://www.mongodb.com/company/blog/product-release-announcements/intelligent-data-platform-for-ai-era",
+      "author": "Dev Ittycheria",
+      "source": "MongoDB",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "架构",
+        "版本发布"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Fabric Database Hub 预览监控 Azure PG",
+      "summary": "直接读取现有服务器资源和 Azure Monitor 指标，无需搬迁数据；本轮预览不含查询计划、等待事件和日志检索。",
+      "url": "https://learn.microsoft.com/en-us/fabric/database/hub/monitor-postgresql",
+      "author": "",
+      "source": "Microsoft Learn",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Supabase 增加连接诊断与查询笔记工具",
+      "summary": "连接面板可查看锁阻塞并终止会话，向全部项目默认开放；Notebooks 将 SQL、日志查询和笔记同步为文件，正分批推出。",
+      "url": "https://supabase.com/blog/select-2026-operate-with-confidence",
+      "author": "",
+      "source": "Supabase",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "开发工具"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Valkey 运维客户端应使用服务端只读权限",
+      "summary": "SCAN 的 COUNT 只是提示，浏览结果并非快照；只读限制须落实到 ACL，慢日志权限也可能暴露命令参数。",
+      "url": "https://valkey.io/blog/browsing-a-valkey-keyspace-safely/",
+      "author": "",
+      "source": "Valkey",
+      "source_date": "2026-09-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "运维",
+        "权限"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "DuckDB 维表可缩窄字符串聚合哈希表",
+      "summary": "先按整数外键聚合再连接字符串可减少重复哈希，但不会降低分组基数，增量键顺序也不等于字符串排序。",
+      "url": "https://duckdb.org/2026/10/02/dimension-tables",
+      "author": "",
+      "source": "DuckDB",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Google Cloud 将停用 GKE 的 ISTIOD 控制面",
+      "summary": "集群内和托管 ISTIOD 均将在 2028 年 3 月 1 日结束支持，需核对功能兼容性并迁到 TRAFFIC_DIRECTOR。",
+      "url": "https://docs.cloud.google.com/service-mesh/docs/release-notes#September_28_2026",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "服务网格"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Google API Gateway 预览双向流式连接",
+      "summary": "支持 SSE、WebSocket 与双向 gRPC；流式模式须在新建网关时启用，既有网关无法切换，并应显式配置连接时限。",
+      "url": "https://docs.cloud.google.com/api-gateway/docs/streaming-configure",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Next.js 16.3.8 修复请求伪造与缓存泄露",
+      "summary": "安全更新覆盖图像优化 SSRF、动态元数据路由泄露，以及自托管 SSG、ISR 和 use cache 的缓存污染问题。",
+      "url": "https://github.com/vercel/next.js/releases/tag/v16.3.8",
+      "author": "",
+      "source": "Next.js",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 将挑战页纳入网络性能测量",
+      "summary": "新增少量免费挑战页采样，使用浏览器测量多家服务商的连接时间，扩大样本覆盖，并以四分位数加权比较网络。",
+      "url": "https://blog.cloudflare.com/network-performance-birthday-week-2026/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "性能"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "ClickHouse Cloud 可用 SCIM 同步成员角色",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/introducing-scim-provisioning-in-clickhouse-cloud",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "权限"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "托管 Spark 可按机型优先级缓解算力缺货",
+      "summary": "",
+      "url": "https://cloud.google.com/blog/products/data-analytics/maximize-apache-spark-availability-with-flexible-vms",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "计算"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 发布服务端 Swift 客户端库",
+      "summary": "",
+      "url": "https://cloud.google.com/blog/topics/developers-practitioners/introducing-the-server-side-cloud-swift-sdk",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Managed Lustre 用分层存储共享开发与训练文件",
+      "summary": "",
+      "url": "https://cloud.google.com/blog/topics/developers-practitioners/democratizing-managed-lustre-with-lower-cost-and-frictionless-development",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "App Engine 开始永久拦截旧版 TLS 请求",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/appengine/docs/flexible/secure-minimum-tls",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "GKE 开放 Z4D 存储优化机型",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/release-notes#September_28_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Google 云单次迁移可读取 Azure 多个存储容器",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/storage-transfer/docs/create-transfers/agentless/azure-all-containers",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "迁移"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cloud Workstations 区域 API 端点正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/workstations/docs/release-notes#September_23_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Prometheus 3.15 正式版稳定 XOR2 浮点编码",
+      "summary": "",
+      "url": "https://github.com/prometheus/prometheus/releases/tag/v3.15.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "监控"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Headstart 原型让 Rust 依赖库提前并行检查",
+      "summary": "",
+      "url": "https://github.com/PowderworksCode/headstart/blob/ff81bfecda2116d54776a7fec538fc2f4e349d1f/README.md",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编译"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 预览由外部系统维护仓库自定义属性",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-09-29-bring-business-context-with-external-custom-properties/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Data Agent Kit 正式支持 Bigtable 与 Spark",
+      "summary": "",
+      "url": "https://cloud.google.com/blog/topics/developers-practitioners/data-agent-kit-is-now-ga-bring-google-data-cloud-to-any-coding-agent/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据库"
+      ],
+      "position": 26
+    }
+  ]
+}
