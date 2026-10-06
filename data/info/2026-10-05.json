@@ -1,0 +1,412 @@
+{
+  "date": "2026-10-05",
+  "origin": "主动采集：PostgreSQL 官方、Planet、厂商博客与发布说明；截稿 2026-10-06 07:35:54 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "长事务会放大 MultiXact 缓存未命中的代价",
+      "summary": "外键检查形成的行锁会产生 MultiXact，长批量事务又让其他会话反复读取旧成员记录。Christophe Pettus 的实测显示，缓存容量不足时，即使文件已在操作系统缓存中，系统调用与锁竞争仍会拖慢插入。PostgreSQL 17 起可调整两个专用缓存，但它们不会随共享缓冲区增大。19 测试版将偏移项扩为 64 位后，同样的缓存页只能容纳一半记录；升级评估应结合 SLRU 读数和最长持锁事务重新估算容量。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-multixact_member_buffers-and-multixact_offset_buffers/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "行锁",
+        "参数"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_vault_tde 1.7.2 修复数据损坏并更换行格式",
+      "summary": "pg_vault_tde 1.7.2 修复透明加密表的更新崩溃、并发密钥轮换及钱包迁移导致的数据不可读问题。新的 v5 行布局保留可遍历的属性结构，旧 v4 行仍可读取，但更新前必须逐表执行 VACUUM FULL 重写。加密索引同时收紧为等值查询，避免范围查询返回错误结果。启用自定义 TOAST WAL 的实例还须干净停机，并同时升级主备；此次资源管理器编号变更不支持滚动升级。",
+      "url": "https://github.com/labmiriade/pg_vault_tde/blob/v1.7.2/doc/ROADMAP.md",
+      "author": "Miriade Srl",
+      "source": "pg_vault_tde",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "加密",
+        "数据完整性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_ivm 1.16 修复增量维护崩溃与误报冲突",
+      "summary": "pg_ivm 通过基表更新后立即应用增量，让物化视图保持最新。1.16 版增加 PostgreSQL 19 支持，并修复同一事务内维护后删除视图造成的崩溃，以及全局 OID 超过有符号整数上限时维护失败的问题。即使视图没有引用某列，基表中缺少默认等值运算符的类型此前也会阻断维护，新版补上了这一边界。提交阶段释放锁的时机也已调整，避免没有实际并发维护时仍报锁冲突并导致事务失败。",
+      "url": "https://github.com/sraoss/pg_ivm/releases/tag/v1.16",
+      "author": "IVM Development Group",
+      "source": "pg_ivm",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "物化视图"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Babelfish 全文检索迁移须逐项核对语义",
+      "summary": "SQL Server 应用迁往 Babelfish 时，T-SQL 接口兼容不代表全文检索能力等价。AWS 给出的六步评估先检查语义搜索、二进制文档索引与非英语分词等阻碍，再清点停用词、查询形式和全文目录。部分搜索可用 PostgreSQL 函数改写，但还需补齐 GIN 索引与排序逻辑，返回顺序也未必一致。团队应把应用代码与动态 SQL 纳入盘点，并对最重的检索负载回归，决定哪些保留兼容层、哪些转向原生搜索。",
+      "url": "https://aws.amazon.com/blogs/database/assess-and-migrate-sql-server-full-text-search-to-babelfish-for-aurora-postgresql/",
+      "author": "Anand Raghavan、Bhavesh Rathod、Vanshika Nigam",
+      "source": "AWS Database Blog",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "全文检索"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "线程池收益取决于数据缓存与连接并发",
+      "summary": "Percona 对 MySQL 线程池的实测把 I/O 受限、部分缓存和全量缓存三类负载分开比较。厂商称，在特定 I/O 受限的高连接场景中，调优后的线程池吞吐可达默认模式的 17.9 倍；数据全部装入内存后，默认模式却在测试范围内保持更高吞吐。线程池仍能收窄高并发下的尾延迟，但线程组数与过量订阅参数没有通用最优值。测试每组只运行一次，容量规划应同时看吞吐、缓存比例和响应时间分布。",
+      "url": "https://www.percona.com/blog/thread-pool-in-percona-server-and-mysql-part-1/",
+      "author": "Bogdan Degtyariov",
+      "source": "Percona",
+      "source_date": "2026-10-05",
+      "image": "https://www.percona.com/wp-content/uploads/2026/10/001.png",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "性能",
+        "线程池"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Redshift 将物化结果保存为共享 Iceberg 表",
+      "summary": "Redshift 新增 Iceberg 物化视图，把预计算结果写入 S3，供 Athena、Spark 等引擎读取同一份开放格式数据。它支持 Serverless 与 RG 实例，RA3 和 DC2 不在支持范围内。部分分组聚合与内连接可增量刷新，窗口函数、外连接等仍需全量重算。不同集群可借助目录协调刷新，但行列级权限过滤暂不支持。该能力适合复用多引擎共有的计算结果；对读取延迟敏感的报表，仍可叠加本地存储中的物化视图。",
+      "url": "https://aws.amazon.com/blogs/big-data/materialize-once-query-anywhere-introducing-iceberg-materialized-views-in-amazon-redshift/",
+      "author": "Sudipta Bagchi、Andre Hernich、Gaurav Saxena、Dhaval Shah、Srishti Mittal",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "湖仓",
+        "物化视图"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "dbForge 2026.2 内置 PostgreSQL 调试器",
+      "summary": "支持断点、单步执行与变量监视，并增加事件触发器、函数和存储过程的可视化编辑器。",
+      "url": "https://www.devart.com/blog/whats-new-in-dbforge-2026-2-2.html",
+      "author": "dbForge Team",
+      "source": "Devart",
+      "source_date": "2026-09-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse Cloud 可执行 UDF 正式支持三大云",
+      "summary": "新增原生编译程序运行时与版本固定；首次挂载或移除最后一个 UDF 会滚动重启，原生运行时暂不支持出网。",
+      "url": "https://clickhouse.com/blog/executable-udfs-generally-available-on-clickhouse-cloud",
+      "author": "ClickHouse",
+      "source": "ClickHouse",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "扩展",
+        "运维"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "SQL Server 空间索引用网格过滤减少精确计算",
+      "summary": "内部表保存网格编号、覆盖类型和原表主键，执行计划先排除不相交网格，仅对边界候选调用昂贵的空间函数。",
+      "url": "https://sqlserverfast.com/blog/hugo/2026/10/storage-structures-7-spatial-indexes/",
+      "author": "Hugo Kornelis",
+      "source": "SQLServerFast",
+      "source_date": "2026-10-04",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "索引",
+        "查询优化"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "S3 Tables 支持 Iceberg v3 全部数据类型",
+      "summary": "新增半结构化、地理与纳秒时间类型，并支持删除向量和行血缘；升级到 v3 后不能降回 v2，新类型限 Parquet。",
+      "url": "https://aws.amazon.com/blogs/aws/amazon-s3-tables-now-support-all-apache-iceberg-v3-data-types/",
+      "author": "Daniel Abib",
+      "source": "AWS",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "湖仓",
+        "存储"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "CodeDeploy 可复用上次版本分批重启主机",
+      "summary": "RESTART 模式保留健康检查与告警，但不执行负载均衡摘流量步骤，请求型服务需在停止钩子中排空在途请求。",
+      "url": "https://aws.amazon.com/blogs/devops/restart-ec2-and-on-premises-fleets-faster-with-aws-codedeploy-restart-deployment-mode/",
+      "author": "AWS",
+      "source": "AWS DevOps Blog",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "部署",
+        "运维"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "节点交换空间可提高 Kubernetes 突发负载密度",
+      "summary": "官方通过编译与沙箱负载实测本地 SSD 交换空间：冷数据可让出内存，活跃工作集被挤出后耗时仍会明显增加。",
+      "url": "https://kubernetes.io/blog/2026/10/05/scaling-kubernetes-workloads-with-node-swap/",
+      "author": "Ocean Xie、Yuan Wang",
+      "source": "Kubernetes",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "内存"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "CloudLinux 公布 BTR 内核内存泄漏影响范围",
+      "summary": "除 7 版外均受影响，能否利用取决于处理器；禁用非特权 BPF 与 JIT 加固均不能阻止攻击，截至公告仍待厂商内核修复。",
+      "url": "https://blog.cloudlinux.com/btr-cve-2026-64507-cve-2026-64508-status-cloudlinux",
+      "author": "Akos Vajda",
+      "source": "CloudLinux",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "Linux"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "ReviewBench 开放 AI 代码审查评测数据",
+      "summary": "基准包含 19 种语言的 219 个拉取请求，分别评价既有缺陷与新发现问题，并可按严重程度、精确率和召回率筛选结果。",
+      "url": "https://github.blog/ai-and-ml/github-copilot/reviewbench-an-open-benchmark-for-ai-code-review/",
+      "author": "Michelle Zhou、Alejandro Carderera de Diego",
+      "source": "GitHub",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具",
+        "评测"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 主线拒绝含换行的备份标签",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/e624e1fd13dcc754deebfd8a5be8f6fa578e17da",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 密钥扫描新增两类 Supabase 令牌",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-05-secret-scanning-adds-detectors-for-lovable-supabase-and-more/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Minigraf 2.0.2 补齐目录刷盘，避免断电丢数据",
+      "summary": "",
+      "url": "https://github.com/project-minigraf/minigraf/releases/tag/v2.0.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-27",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据完整性"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Java 表函数减少导入 DuckDB 的逐行开销",
+      "summary": "",
+      "url": "https://duckdb.org/2026/10/05/import-data-with-java",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据导入"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "LinkedIn 用 ClickHouse 统一指标元数据索引",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/linkedin-observability-at-scale",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 的 Iceberg 表正式支持灵活列名",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/schemas#flexible-column-names",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "湖仓"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Power BI 近似去重计数实测更快却更耗内存",
+      "summary": "",
+      "url": "https://blog.crossjoin.co.uk/2026/10/04/the-problem-with-approximate-distinct-counts-in-power-bi-and-how-to-solve-it/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-04",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GKE 预览容器启动期临时提升 CPU",
+      "summary": "",
+      "url": "https://cloud.google.com/blog/products/containers-kubernetes/gke-cpu-startup-boost-faster-pod-starts-lower-costs",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容器"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 标准网络层预览外部 IPv6",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/vpc/docs/subnets#ipv6-ranges",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Apigee 修复换密钥后首请求的 JWT 校验失败",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/apigee/docs/release/release-notes#October_02_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "认证"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "npm 未验证的可信发布配置将在 48 小时后失效",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-02-unvalidated-npm-trusted-publishing-configurations-now-expire/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链安全"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 预览通过远端 MCP 执行云命令",
+      "summary": "",
+      "url": "https://cloud.google.com/blog/products/ai-machine-learning/google-cloud-cli-remote-mcp-server-in-preview",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}
