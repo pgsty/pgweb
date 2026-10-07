@@ -1,0 +1,420 @@
+{
+  "date": "2026-10-07",
+  "origin": "主动采集：PostgreSQL 官方、Planet、厂商博客、项目发布说明、HN 与 PGNexus #279–292；截稿 2026-10-08 07:33:41 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "逻辑解码重启竞态可能阻断故障转移槽同步",
+      "summary": "PostgreSQL 已提交故障转移复制槽的同步修复：主库删除最后一个逻辑槽后，若很快以同名重建，备库可能把旧的 WAL 起点保存到新槽。后续同步因此报错，连带阻断其他故障转移槽，提升后的槽也无法继续解码。补丁记录逻辑解码最近启用的位置，在创建本地槽后核对远端起点，不合格时等待下一轮重新获取。提交注明回补至 19；这一修复针对动态启停与槽重建之间的竞态，依赖逻辑复制容灾的部署需关注正式版本收录情况。",
+      "url": "https://github.com/postgres/postgres/commit/1f2245371e31f0def347546f5ad250552a4eb8a4",
+      "author": "Masahiko Sawada",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "逻辑复制",
+        "高可用"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pgx-bm25 1.0 将相关性排序纳入原生索引",
+      "summary": "PGX 发布 pgx-bm25 1.0.0，以 PostgreSQL 原生索引访问方法实现 BM25 全文检索。扩展使用 C 编写，通过 PGXS 构建，索引更新接入 WAL、崩溃恢复与复制，并支持 VACUUM 清理。查询可把相关性排序和结果数量限制交给索引，配合分块跳过算法减少不必要的评分，也能为多个文本字段设置不同权重。首版支持 PostgreSQL 17、18，19 测试版仍处于验证范围；它为事务库内的关键词排序提供了新选择。",
+      "url": "https://github.com/pgexperts/pgx-bm25/releases/tag/v1.0.0",
+      "author": "PGX, Inc.",
+      "source": "PGX",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "全文检索",
+        "BM25"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_vexec 在原版 PostgreSQL 上试验向量执行",
+      "summary": "Igor Suhorukov 展示了面向 PostgreSQL 19 的 pg_vexec 实验：利用扩展接口加入批量扫描、聚合、连接和排序，让向量路径参与优化器的成本选择，也可回退原执行方式。与此前需要内核补丁的 Cloudberry 移植不同，这次单机扩展及 ORCA 适配可在原版服务器上运行；另一个扩展用 Arrow Flight SQL 传输结果。作者公布了回归测试和不同查询的实测结果，也列出变慢的场景，仍需继续优化与验证。",
+      "url": "https://igor-suhorukov.github.io/blog/2026/10/07/vectorized-postgresql-extension/",
+      "author": "Igor Suhorukov",
+      "source": "Igor Suhorukov",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "向量化",
+        "扩展"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Neon 将全文检索词典配置放进 SQL 表",
+      "summary": "Neon 为 Lakebase Search 加入 lakebase_tokenizer，把同义词和停用词从服务器文件搬进数据库表。托管数据库用户可通过 SQL 定义词表、创建检索配置，再把生成的 tsvector 交给 GIN 或 BM25 索引；词典也随数据库分支一同复制，便于隔离验证。文章用缩写、变音符号和自然语言查询说明，分词不仅决定能否匹配，也会改变词频统计与排名。此次变化让托管环境也能维护自定义词典，仍需按语料验证效果。",
+      "url": "https://neon.com/blog/bm25-is-only-as-good-as-your-tokens",
+      "author": "Carlota Soto",
+      "source": "Neon",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "分词",
+        "云数据库"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Argo CD 安全更新封堵仓库服务器执行链",
+      "summary": "Argo CD 3.5.4 集中修复多项安全问题，包括 Kustomize 远端引用触发命令执行、Jsonnet 读取仓库服务器文件，以及删除钩子绕过项目限制。部分攻击路径只要求读取已有应用，并不需要修改或同步应用的权限；限制服务器出网也不足以阻断本地传输路径。更新同时改变兼容行为：Kustomize 不再使用指定的 Helm 配置目录，超大 OCI 清单会被拒绝。团队应按所用版本分支升级，并核对依赖自定义 Helm 插件的构建流程。",
+      "url": "https://github.com/argoproj/argo-cd/releases/tag/v3.5.4",
+      "author": "Argo CD 项目组",
+      "source": "Argo CD",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "GitOps",
+        "Kubernetes"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "DNS 根密钥即将轮换，解析器需先信任新锚",
+      "summary": "DNS 根区计划于 10 月 11 日切换密钥签名密钥，启用标识为 38696 的 KSK-2024。执行 DNSSEC 验证的递归解析器若没有信任新密钥，正常网站也可能变得无法访问。Cloudflare 介绍了基于信任锚哨兵协议的预检方法，可区分已信任、未信任与无法判断；软件升级或迁移后，还要确认自动学习的信任状态没有丢失。本次轮换继续使用原有签名算法，网站普通域名配置通常无需调整，检查重点是验证解析器实际采用的根信任锚。",
+      "url": "https://blog.cloudflare.com/root-ksk-2024-rollover/",
+      "author": "Cloudflare",
+      "source": "Cloudflare",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "安全",
+        "运维"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "连续聚合刷新窗口应匹配迟到数据与保留策略",
+      "summary": "频繁刷新、长周期补算和分层聚合可组合使用；原始数据被清理后，刷新窗口仍覆盖该区间可能改掉已保存的汇总。",
+      "url": "https://www.tigerdata.com/blog/continuous-aggregate-refresh-policies-solar-wind-scada",
+      "author": "Damaso Sanoja",
+      "source": "TigerData",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TimescaleDB",
+        "运维"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "SSIS 迁移到 Aurora 要重建调度与控制流",
+      "summary": "AWS 将简单任务映射到数据库定时作业，把循环、并行和错误处理交给 Step Functions 与 Lambda，并说明两类迁移的边界。",
+      "url": "https://aws.amazon.com/blogs/database/migrate-ssis-packages-to-aurora-postgresql-part-2/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "Aurora"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "DBTrail 将 MySQL 变更送入 Parquet 分析",
+      "summary": "先复制存量，再用 binlog 追踪增量，由 DuckDB 查询本地或 S3 上的 Parquet；初始快照仍需短暂读锁，不能视为对源库零影响。",
+      "url": "https://www.percona.com/blog/dbtrail-analytical-reports-on-your-mysql-data-without-running-them-on-mysql-part-1/",
+      "author": "Vadim Tkachenko",
+      "source": "Percona",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "DuckDB"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "PMM 实时视图补充 MongoDB 正在运行的操作",
+      "summary": "与完结后的查询统计不同，实时视图轮询当前操作，快照仅在内存中短暂保留；适合定位长查询和锁等待，当前仅支持 MongoDB。",
+      "url": "https://www.percona.com/blog/what-is-running-on-my-mongodb-right-now-real-time-analytics-in-pmm/",
+      "author": "Tibor Korocz",
+      "source": "Percona",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MongoDB",
+        "监控"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "SPIRE 可把签名密钥与身份注册库交给托管服务",
+      "summary": "AWS 示例用 KMS 管理签名、Aurora PostgreSQL 保存注册数据，并以 S3 分发信任包，明确拆分身份签发、存储与验证的职责。",
+      "url": "https://aws.amazon.com/blogs/security/improving-spire-security-and-resiliency-with-aws-managed-services/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "身份认证",
+        "高可用"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "OpenVPN 2.7.8 收紧证书校验并修复命令注入",
+      "summary": "新版本拒绝主题含空字节的证书，修复 Windows 参数展开，并避免部分 DCO 客户端故障拖垮整个服务进程。",
+      "url": "https://github.com/OpenVPN/openvpn/releases/tag/v2.7.8",
+      "author": "OpenVPN 项目组",
+      "source": "OpenVPN",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "VPN"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 重构 Git 存储以拆分持久性与读取扩容",
+      "summary": "正在建设的架构以对象存储承接持久数据，让读取缓存独立伸缩，并把强协调范围缩小到引用更新，降低仓库整份复制的成本。",
+      "url": "https://github.blog/engineering/architecture-optimization/building-git-infrastructure-for-agent-scale-development/",
+      "author": "Brian Celenza",
+      "source": "GitHub",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Git",
+        "存储"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Copilot 本地沙箱正式可用",
+      "summary": "沙箱通过操作系统机制限制文件、网络与凭据访问，并允许企业统一执行策略，覆盖 CLI、应用和 VS Code 的代理运行环境。",
+      "url": "https://github.blog/changelog/2026-10-07-local-sandboxing-for-github-copilot-now-generally-available/",
+      "author": "GitHub",
+      "source": "GitHub",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具",
+        "隔离"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 20 移除可能影响数组恢复的旧参数",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/e96efd07c72834da48d8a21e4672a150c500a08d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "恢复"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 20 收紧全文检索向量的二进制导入",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/10cc5aa96a6df7cb1d7c47e978cc94f01f785cb7",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "兼容性"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 18 可查询启动所需的系统信号量",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-num_os_semaphores/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pgNimbus 1.0 修复断线重发语句与主机密钥校验",
+      "summary": "",
+      "url": "https://github.com/Shman4ik/pgNimbus/releases/tag/v1.0.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "客户端",
+        "安全"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "schema 0.7 将可视化结构差异扩展到 MySQL",
+      "summary": "",
+      "url": "https://github.com/dobrinov/schema/releases/tag/v0.7.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据库工具"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "musql 0.2 增加列式分组与并行扫描",
+      "summary": "",
+      "url": "https://github.com/samyfodil/musql/releases/tag/v0.2.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "执行器"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "CrowDB 用单容器提供 Iceberg 目录与数据试验环境",
+      "summary": "",
+      "url": "https://buzzcrow.github.io/blog/run-iceberg-in-one-container/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Iceberg"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Redshift MCP 可只读巡检统计信息与负载配置",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/run-an-automated-operational-review-with-the-amazon-redshift-mcp-server/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "运维",
+        "MCP"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "MWAA 多服务流水线日志可集中送入 OpenSearch",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/monitoring-mwaa-orchestrated-etl-pipelines-with-amazon-opensearch-service/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 密钥扫描更新模型以识别非常规格式凭据",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-07-purpose-built-model-for-leaked-secret-detection/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 用固定证据快照约束安全告警分析",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/agentic-security-operations/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "安全运营"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Copilot CLI 可发现本地模型并在会话中切换",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-07-discover-local-models-in-github-copilot-cli/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}
