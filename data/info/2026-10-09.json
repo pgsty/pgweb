@@ -1,0 +1,411 @@
+{
+  "date": "2026-10-09",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、官方发布说明、厂商工程博客、Google Cloud、HN；截稿 2026-10-10 07:26:20 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 补上压缩备份的截断校验",
+      "summary": "PostgreSQL 已合入两项截断检测修复：pg_verifybackup 会确认 gzip、LZ4、zstd 压缩备份完整结束，pg_restore 则补验 LZ4、zstd 转储的最后一帧。此前解压过程没有报错，也可能接受被截断的数据。补丁同时处理 zstd 残留输出，增加多种格式的回归测试。两项提交均注明回补至 19 分支，备份使用者需留意后续构建，并验证实际恢复结果。",
+      "url": "https://github.com/postgres/postgres/commit/e41b01f4359d3256943c00c834a3d9abef6c0129",
+      "author": "Chao Li、Daniel Gustafsson",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "备份",
+        "数据完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "异常信号可让主进程未退出的数据库进入恢复",
+      "summary": "PostgreSQL 后端异常退出后，主进程可能仍保持原有 PID，所有会话却已断开并重新执行崩溃恢复。Shridhar Khanal 从两类 SIGHUP 日志入手，区分正常重载配置与子进程被信号终止：后者会触发共享内存重置和 WAL 重放，不能只凭服务进程仍在就排除故障。对单个后端执行 kill -9 也可能波及整库；处理慢查询应先取消语句，必要时再通过数据库接口终止会话。",
+      "url": "https://stormatics.tech/blogs/postgresql-signals-basics-part-1",
+      "author": "Shridhar Khanal",
+      "source": "Stormatics",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "故障恢复"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgJDBC 42.7.14 修复认证限制与数据泄露",
+      "summary": "pgJDBC 发布 42.7.14，修复两类有明确触发条件的安全问题。42.7.11–42.7.13 在 requireAuth 排除全部认证方法或未给出有效方法时，会将限制视为未设置，可能接受明文密码认证；新版拒绝连接。42.7.4–42.7.13 在应用写入短于声明长度时，可能用同连接先前的 SQL 和参数字节补齐，造成内容泄露；新版改为补零。升级时应检查认证白名单与自定义流写入实现。",
+      "url": "https://jdbc.postgresql.org/changelogs/2026-10-07-42.7.14-release/",
+      "author": "pgJDBC 团队",
+      "source": "pgJDBC",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "驱动"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "StackGres 用查询路由器分担 Citus 入口负载",
+      "summary": "Citus 增加数据节点后，单个协调节点仍可能先耗尽解析、规划与转发能力。StackGres 1.19 引入查询路由器，把不承载分片的 Citus 节点作为独立入口，并由 Kubernetes 服务分散连接。协调节点继续处理 DDL 和拓扑变更，路由器则同步元数据并参与参考表复制。厂商在特定单行查询测试中，称三个路由器将吞吐从约 55 万提升到 143 万次每秒；新增参考表副本期间仍可能阻塞写入。",
+      "url": "https://stackgres.io/blog/scaling-citus-beyond-one-coordinator-announcing-query-routers-stackgres/",
+      "author": "Álvaro Hernández",
+      "source": "StackGres",
+      "source_date": "2026-10-09",
+      "image": "https://stackgres.io/img/blog/thumbnail-citus-query-routers.png",
+      "domain": "pg",
+      "tags": [
+        "Citus",
+        "扩容"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "MySQL 的 PGO 收益取决于训练负载",
+      "summary": "Percona 工程师对 MySQL 二进制的性能剖析引导优化进行实测，发现训练数据比打开编译开关更关键。只用窄范围 sysbench 负载，会把清理、刷盘和其他执行路径当作冷代码；高并发采集还可能扭曲热点或破坏计数。合并功能测试与适度并发训练后，收益仍会随竞争加剧而缩小。作者测得低并发一度提升约 12%，高竞争下不足 2%，说明构建优化必须用真实负载复核，不能直接套用单项基准结果。",
+      "url": "https://www.percona.com/blog/pgo-or-not-pgo-this-is-the-dilemma-step-3/",
+      "author": "Marco Tusa",
+      "source": "Percona",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能",
+        "编译"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 可在生产环境采集函数级性能剖析",
+      "summary": "Cloudflare 为 Workers 与 Durable Objects 开放按需 CPU 和内存性能剖析，可在控制台查看火焰图，也能下载采样文件继续分析。普通 Worker 从正在运行的实例中抽样，有状态对象则可按名称定位到具体实例，帮助追踪热点函数、分配开销及内存不足原因。采样需要实际流量，内存视图只覆盖捕获期间的新分配，无法追溯启动期或此前发生的异常；持续自动剖析仍是后续计划。",
+      "url": "https://blog.cloudflare.com/workers-on-demand-profiling/",
+      "author": "Dominik Picheta",
+      "source": "Cloudflare",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性",
+        "性能"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 表文件名会随关系重写而变化",
+      "summary": "实测区分 OID、relfilenode、各类 fork 与 1 GB 分段，并用 pageinspect 和磁盘字节相互核对。",
+      "url": "https://boringsql.com/posts/files-forks-and-relfilenodes/",
+      "author": "Radim Marek",
+      "source": "boringSQL",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "多余去重与物化可能放大 SQL 执行开销",
+      "summary": "五组实测比较查询语义与执行计划；UNION ALL 和页级随机采样都需先确认符合业务要求。",
+      "url": "https://explainmeasured.com/posts/queries-doing-extra-work/",
+      "author": "Hollis Varden",
+      "source": "Explain, Measured",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "性能"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "RLS 写入失败也可能来自缺失的读取策略",
+      "summary": "RETURNING、带冲突目标的插入与更新插入会检查额外策略，排障须同时看语句类型和实际租户会话状态。",
+      "url": "https://now-next.nl/en/insights/postgresql-new-row-violates-row-level-security-policy/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-10-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限",
+        "多租户"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Arrow 26 修复大值截断与流式错误丢失",
+      "summary": "超过 2 GiB 的二进制值改为报容量错误，同时修复合并生成器丢弃错误并提前结束流的竞态。",
+      "url": "https://arrow.apache.org/release/26.0.0.html",
+      "author": "Apache Arrow 团队",
+      "source": "Apache Arrow",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "列式",
+        "数据完整性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Hetzner 将云网络规则收敛到虚拟机宿主机",
+      "summary": "自建编排层管理 Open vSwitch 流表，在宿主机提供防火墙、VXLAN、DHCP 与元数据服务。",
+      "url": "https://www.hetzner.com/blog/the-hetzner-cloud-network-stack-history-and-technical-overview/",
+      "author": "Maximilian Wilhelm",
+      "source": "Hetzner",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络",
+        "架构"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "NATS 修复认证回调绕过与计数器溢出",
+      "summary": "2.15.1 较候选版新增 auth_users 认证回调绕过修复，并解决 Windows PDH 计数器缓冲区溢出。",
+      "url": "https://github.com/nats-io/nats-server/releases/tag/v2.15.1",
+      "author": "NATS 团队",
+      "source": "NATS",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "消息队列"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Edera 拆分基础设施服务后仍需收紧权限",
+      "summary": "架构分析指出，独立进程与虚拟化分区还需配合有限授权；现有服务仍以 root 运行的部分有待进一步约束。",
+      "url": "https://edera.dev/stories/disaggregated-kubernetes-contain-the-blast-radius",
+      "author": "Nigel Douglas",
+      "source": "Edera",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "隔离",
+        "Kubernetes"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "CodeQL 扩展分析并提示 macOS 构建兼容限制",
+      "summary": "2.27.2 新增 Comdb2 注入模型；macOS 27 或 Xcode 27 环境不再支持编译语言的跟踪构建分析。",
+      "url": "https://github.blog/changelog/2026-10-09-codeql-2-27-2-improves-c-go-rust-and-javascript-analysis/",
+      "author": "Allison",
+      "source": "GitHub",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "开发工具"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG19 分支修复特殊构建的 WAL 调试崩溃",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/6873a138f782cf816e6019bbe922857050df96c9",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "伪造 WAL 归档成功会截断备份恢复链",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/pg-phriday-against-the-wal",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_lake 3.5.6 修复孤儿进程持锁死锁",
+      "summary": "",
+      "url": "https://github.com/Snowflake-Labs/pg_lake/releases/tag/v3.5.6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Memorystore 控制台新建 Redis 默认启用快照",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/memorystore/docs/redis/manage-rdb-snapshots",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "持久化"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Datastream 可复制 SQL Server 空间类型",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/datastream/docs/unified-types#map-sqlserver",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "CDC"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Google 托管 Kafka 调整新集群引导地址格式",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/managed-service-for-apache-kafka/docs/view-cluster#view-bootstrap-address",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Cloud Run 预览通过 SSH 调试运行中实例",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/run/docs/troubleshooting/ssh",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "运维"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GDC 修复维护排空时未等待卷卸载的问题",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/distributed-cloud/bare-metal/docs/release-notes#October_07_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "存储"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "VPC Flow Logs 正式记录 TCP 连接建立情况",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/vpc/docs/flow-logs#connection-logging",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "VPC 边界拒绝诊断预览最小权限修复建议",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/vpc-service-controls/docs/remediation-suggestions",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "权限"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "SCC 持续导出可通知因保留策略删除的发现",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/security-command-center/docs/how-to-api-manage-notifications",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "腾讯云 PostgreSQL MCP 封装 48 项管理能力",
+      "summary": "",
+      "url": "https://developer.cloud.tencent.com/mcp/server/11830",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据库工具"
+      ],
+      "position": 26
+    }
+  ]
+}
