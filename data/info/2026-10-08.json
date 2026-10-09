@@ -1,0 +1,415 @@
+{
+  "date": "2026-10-08",
+  "origin": "PGSQL.CC 主动采编；截稿 2026-10-10 07:26:20 Asia/Shanghai；PostgreSQL 官方提交、Planet PostgreSQL、PGNexus #286–293 与项目原文；扩展回看 2026-09-25—2026-10-10",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复分区裁剪重检的内存失效",
+      "summary": "并发更新触发行资格重检时，PostgreSQL 的执行器可能重复初始化运行期分区裁剪状态，把父执行器仍要使用的内存改挂到短命的重检上下文。重检结束释放上下文后，后续裁剪便可能访问已释放内存。上游已合入修复，通过初始化标记复用既有状态，提交注明回补至 PostgreSQL 18。问题在会覆盖已释放内存的调试构建中更容易显现；生产构建是否触发则取决于内存上下文的实际释放和复用过程。",
+      "url": "https://github.com/postgres/postgres/commit/1b5dd3a24a48659e8413ef8ddd8adb6653507a9d",
+      "author": "David Rowley",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "分区",
+        "修复"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PG19 测试版 OLTP 实测小幅提速",
+      "summary": "Kaarel Moppel 用约 800 小时测试比较 PostgreSQL 18.6 与 19 Beta 3、Beta 4，在两家云平台的多种机器上运行 pgbench 和类 TPC-C 负载。固定事务量的总体执行时间约缩短 3%，部分插入语句改善更明显，更新语句则未普遍加速。测试以能放入内存或轻度访问磁盘的数据集为主，并关闭自动清理。这组结果为升级评估提供了可复现脚本，但不同查询的差异也说明，不能把总体均值直接套到自己的生产负载。",
+      "url": "https://kmoppel.github.io/2026-10-09-postgres-v19-oltp-perf-check/",
+      "author": "Kaarel Moppel",
+      "source": "Kaarel Moppel",
+      "source_date": "2026-10-09",
+      "image": "https://kmoppel.github.io/assets/img/v18_v19_race_2.jpeg",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "PG19",
+        "基准"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "numeric 的性能成本藏在表示与执行过程",
+      "summary": "pgEdge 的 Andrei Lepikhov 分析 PostgreSQL 精确数值类型的执行开销：变长存储、每个值自带标度，以及运行时确定结果精度，使拆解元组、分配内存和比较数值都需要额外工作。文章对照 DuckDB 的定宽整数表示，说明更快的十进制运算往往伴随精度上限或不同的除法语义。优化方向因此不只在算术指令，还包括解包、内存分配和中间结果处理；评估替代类型时，需要连同精度、溢出与输出成本一起比较。",
+      "url": "https://www.pgedge.com/blog/why-is-postgresql-s-numeric-type-so-slow",
+      "author": "Andrei Lepikhov",
+      "source": "pgEdge",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "数据类型"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "TIN 1.0.6 优化带次级排序的全文检索",
+      "summary": "PlanetScale 的 TIN 全文检索扩展继续补齐排序与分词能力。1.0.6 让按相关性排序后再按时间或主键打破平局的查询，也能使用 block-max 跳过无关文档，避免给全部命中结果评分；此前的 1.0.4 已加入 18 种语言的词干处理，启用时需要重建索引。厂商称新版本在其基准中明显提速，并同时公开默认评分与完整评分结果。默认模式会省略高频词的评分贡献，比较速度时必须保持评分语义和硬件条件一致。",
+      "url": "https://planetscale.com/blog/tin-v106",
+      "author": "Patrick Reynolds、Eric Ridge",
+      "source": "PlanetScale",
+      "source_date": "2026-10-08",
+      "image": "https://planetscale.com/assets/tin-v106-social-Cc1d8LiY.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "全文检索"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "GuardDuty 扩展到 PostgreSQL 数据活动检测",
+      "summary": "AWS 为 Aurora PostgreSQL 与 RDS for PostgreSQL 增加数据外泄和破坏行为检测。新的数据活动能力持续分析查询模式，在登录异常之外识别取得有效凭据后的可疑操作；AWS 表示无需安装代理或修改数据库配置。该能力作为登录活动保护的附加项，可通过控制台、API 或基础设施配置为账户及组织启用。覆盖范围是已提供 RDS Protection 的商用区域和美国政府区域，采用前仍需核对数据库版本支持。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/guardduty-rds-data-exfiltration/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "云数据库"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Vault 2.1.2 修复权限绕过并改变路径匹配",
+      "summary": "Vault 2.1.2 修复插件越出配置目录执行、异常策略路径及大小写变体绕过精确拒绝规则等问题，同时收紧 ACME 对未经验证身份字段的签发。升级会改变部分资源名的 ACL 匹配：相关规则必须使用小写路径，旧的混合大小写拒绝规则可能失效；异常历史策略也可能不再授予权限。运维团队需先检查策略和插件目录，再安排升级。发布说明还列出尚未覆盖的认证后端，不能把这次修复理解为所有大小写绕过情形都已消除。",
+      "url": "https://github.com/hashicorp/vault/releases/tag/v2.1.2",
+      "author": "HashiCorp",
+      "source": "HashiCorp",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "访问控制"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "UUID 存成文本会放大索引与查询读页",
+      "summary": "作者在 PostgreSQL 18.6 的 500 万行实验中测得，文本 UUID 索引约大 88%，树高增加一层，随机查询因此多读页面。",
+      "url": "https://explainmeasured.com/posts/uuid-as-text/",
+      "author": "",
+      "source": "Explain Measured",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "数据类型"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "删除租户数据要同时衡量锁与空间回收",
+      "summary": "实测比较级联、分批删除与删除分区：更大批次可能选错计划，普通清理不立即缩库，分区操作还会影响其他租户的锁等待。",
+      "url": "https://now-next.nl/en/insights/postgresql-delete-one-tenant-cascade-batches-partitions/",
+      "author": "",
+      "source": "Now-Next",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "多租户",
+        "运维"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "HorizonDB 用主缓存与显式预取适配远端存储",
+      "summary": "共享缓冲区自动使用约 60%–70% 内存，停用扫描环形缓冲，并把远端页直接预取到共享缓冲区，以隐藏网络读延迟。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/rethinking-memory-management-for-azure-horizondb-on-disaggregated-storage/4562638",
+      "author": "",
+      "source": "Microsoft",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "架构",
+        "缓存"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "IBM Cloud PostgreSQL 扩展原位大版本升级",
+      "summary": "可跨过中间受支持版本，尽量复用高可用成员的数据文件，并在停写前检查复制与预备事务；未记录表仍会清空。",
+      "url": "https://cloud.ibm.com/docs/databases-for-postgresql?topic=databases-for-postgresql-postgresql-relnotes",
+      "author": "",
+      "source": "IBM Cloud",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "高可用"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Dolt 推送按内容哈希传输缺失数据块",
+      "summary": "远端先接收新数据块，再原子更新分支引用；对象存储、文件系统和远端服务共用这一模型，修改少量行无需重传整库。",
+      "url": "https://www.dolthub.com/blog/2026-10-08-how-dolt-remotes-work/",
+      "author": "",
+      "source": "DoltHub",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "存储",
+        "版本控制"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "RDS Oracle 可在维护窗口前预检小版本升级",
+      "summary": "只读预检一次列出阻碍升级的问题；补丁期间新增连接恢复事件，让应用在剩余维护任务结束前重连。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-rds-oracle-minor-version-upgrade-precheck-new-patching-rds-event/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "升级",
+        "运维"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloud SQL MySQL 预览蓝绿升级与配置验证",
+      "summary": "绿色环境通过逻辑复制跟进生产库，可先测试 MySQL 8.0 升至 8.4 或硬件配置，再切换连接端点。",
+      "url": "https://docs.cloud.google.com/sql/docs/mysql/about-blue-green-deployments",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "升级",
+        "MySQL"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "GKE microVM 沙箱正式可用",
+      "summary": "基于 Kata Containers 与 Cloud Hypervisor，每个 Pod 使用独立客体内核，为不可信工作负载提供硬件虚拟化隔离。",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/concepts/sandbox-pods",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "隔离"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "租户唯一约束须包含租户键，避免暴露其他租户记录",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-unique-constraint-per-tenant-soft-delete/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "多租户",
+        "约束"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Postgres 语言服务器新增语法树解析命令",
+      "summary": "",
+      "url": "https://github.com/supabase-community/postgres-language-server/releases/tag/0.28.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_lake 3.5.5 增加 Avro 容器长度溢出检查",
+      "summary": "",
+      "url": "https://github.com/Snowflake-Labs/pg_lake/releases/tag/v3.5.5",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "修复"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Cloud SQL PG 新实例可提高 PSC 连接上限",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/sql/docs/postgres/configure-private-service-connect#limitations",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "DumboDB 0.7.1 加入 TLS 与客户端证书认证",
+      "summary": "",
+      "url": "https://www.dolthub.com/blog/2026-10-06-dumbodb-announcing-tls/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Cloud SQL MySQL 可调整缓冲池恢复扩容阈值",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/sql/docs/mysql/optimize-high-memory-usage#enable-managed-buffer-pool",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "内存"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 可同时预留 H4D 算力与磁盘池",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/hpc/reserve-capacity-account-team",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "App Hub 正式支持批量登记已发现服务",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/monitoring/docs/application-monitoring#register",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 正式支持撤销联合身份的活动会话",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/iam/docs/workforce-revoke-sessions",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "身份认证"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GKE 的旧式 Pod IP 查询须匹配现存命名空间",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/release-notes#October_06_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "DNS"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 可将草稿 PR 计入提交数量限制",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-08-draft-pull-requests-count-toward-pull-request-limits/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 时间线支持读屏逐项导航与加载提示",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-08-screen-readers-can-navigate-timelines-as-lists/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}
