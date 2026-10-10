@@ -1,0 +1,407 @@
+{
+  "date": "2026-10-10",
+  "origin": "主动采集；PGNexus #282–295；截至 2026-10-10T23:32:30Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复哈希桶分裂期间的查询漏行",
+      "summary": "PostgreSQL 主线修复了哈希索引在桶分裂期间启动扫描时漏行的问题。旧代码读完第一个桶后可能提前结束，没有继续读取另一半；触发还要求分裂开始后插入了匹配记录，且首桶最后读取的页含匹配项。补丁统一正反向跨桶逻辑，并加入可复现测试。提交标注回补至 14 分支，使用哈希索引的实例应关注后续维护版；回归验证可覆盖并发插入以及正反向扫描这两类路径。",
+      "url": "https://github.com/postgres/postgres/commit/173cf85a079516fdd2b09ed853702b05fbfcd15e",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "索引",
+        "正确性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PG19 修复非空推断与表达式简化错误",
+      "summary": "PostgreSQL 已提交一组优化器正确性修复。表达式缩减为输入列时保留类型修饰与排序规则，避免 CASE、NULLIF、COALESCE 改写影响排序或分组；同时修复分区虚拟生成列的非空误判，并恢复 ON CONFLICT 对简化索引表达式的匹配。提交均标注回补至 19，其中旧版 CASE 与 NULLIF 的问题因兼容性顾虑暂不回补。测试 PG19 时需以包含修复的新构建复核。",
+      "url": "https://github.com/postgres/postgres/commit/d8ce0050a6cff3efefa5fce8abe3c6df7bd492ce",
+      "author": "Richard Guo",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "优化器",
+        "正确性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "租户分区只靠 RLS 过滤会放大规划与锁开销",
+      "summary": "Now-Next 在 PostgreSQL 17、18 上实测发现，一租户一分区配合仅在 RLS 中设置租户条件，会把小查询变成大量规划与加锁工作。其千分区样例从显式租户条件下约 0.25 毫秒升至约 77 毫秒，每次查询持有约 2,003 个关系锁，并发时耗尽共享锁表。提前写明租户谓词可在规划阶段裁剪分区；测试用小表和热缓存，反映的是固定开销，不能直接用于容量规划。",
+      "url": "https://now-next.nl/en/insights/postgresql-partition-per-tenant-row-level-security/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-10-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "分区",
+        "RLS"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Postgres 接入 Iceberg 要先核对查询规划边界",
+      "summary": "Pettus 对照 Aurora、pg_lake、ColdFront 与 pg_clickhouse，指出湖仓查询的关键差别在于由哪个引擎掌握规划权。完整下推可把连接交给湖端；部分下推只传递扫描，本地规划仍可能缺少统计信息。类型与排序规则也会改变执行路径，pg_lake 通过独立进程运行 DuckDB。这份比较依据项目文档，并未同场跑分，选型时应检查普通表与湖表混合连接的执行计划，再核对写入与事务边界。",
+      "url": "https://thebuild.com/blog/the-international-ice-patrol/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-08",
+      "image": "https://thebuild.com/media/media/508ae83218d24f0b97bcaf6cce59ff21.png",
+      "domain": "pg",
+      "tags": [
+        "湖仓",
+        "查询计划"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "TAF 加入 PostgreSQL 全生命周期测试",
+      "summary": "MariaDB 基金会为测试框架 TAF 加入 PostgreSQL 插件，把安装、实例生命周期、SQL 执行、负载运行与结果报告接入同一流程。插件可运行 HammerDB 的 TPROC-C、TPROC-H 及 sysbench 负载，并生成可复现的配置文件与性能剖析。PostgreSQL 的负载配置仍标作测试版；sysbench 必须编入对应的 PostgreSQL 支持，否则框架会告警并跳过。",
+      "url": "https://mariadb.org/mariadb-foundation-adds-postgresql-to-its-engine-agnostic-testing-framework-taf/",
+      "author": "Jonathan Miller",
+      "source": "MariaDB 基金会",
+      "source_date": "2026-10-05",
+      "image": "https://mariadb.org/wp-content/uploads/2026/10/image-8.png",
+      "domain": "pg",
+      "tags": [
+        "性能测试",
+        "工具"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Docker 29.9 修复加密网络明文泄露条件",
+      "summary": "Docker Engine 29.9.0 修复了加密覆盖网络的一处保密性缺陷：内核加密规则配置失败时，部分数据包可能以明文发出。接收端会拒绝这些包，因此影响主要是单向流量与未完成握手，而非已建立连接的全部内容。新版同时通过更新 Go 修复多项 HTTP/2 拒绝服务问题，并修正镜像可运行却缺少导出所需层文件、无根模式连接泄漏等故障。使用 Swarm 加密网络的团队应结合更新安排检查节点网络行为。",
+      "url": "https://github.com/moby/moby/releases/tag/docker-v29.9.0",
+      "author": "Moby 项目",
+      "source": "Moby / Docker",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 主线修复 WAL 读取错误后的描述符泄漏",
+      "summary": "重复触发读取错误可能耗尽文件描述符并导致 PANIC；修复改变内部 ABI，仅进入开发主线，未回补 19。",
+      "url": "https://github.com/postgres/postgres/commit/cb1eef81c9bc8d1a2adc1e3a63669e315b6232bd",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "WAL"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_plan_advice 补齐分区父表的并行限制建议",
+      "summary": "此前只为子表输出 NO_GATHER 仍可能留下上层并行计划；修复增加父表建议，并校正单子列表 JOIN_ORDER 的匹配反馈。",
+      "url": "https://github.com/postgres/postgres/commit/f71a9969d58e3e70239fc51bbeae668db973b265",
+      "author": "Robert Haas",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "查询计划"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "RLS 递归消除后仍需检查权限与索引路径",
+      "summary": "同一成员查询可因策略写法相差数个数量级；安全定义函数还需固定搜索路径、限制执行权限，并单独设置写入策略。",
+      "url": "https://now-next.nl/en/insights/postgresql-infinite-recursion-detected-in-policy-for-relation/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-10-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RLS",
+        "权限"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "并行成本参数应区分小查询吞吐与批量读出",
+      "summary": "Pettus 的双核实测中，并行计划在单客户端略快，却在双客户端下输给串行；两个成本参数只影响计划选择，不决定工作进程数。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-parallel_setup_cost-and-parallel_tuple_cost/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "并行查询"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "DuckDB 用纯视图文件共享湖中数据目录",
+      "summary": "只存视图定义的数据库可只读挂载远端 Parquet，使用者仍需底层数据权限，目录更新后须重新上传。",
+      "url": "https://duckdb.org/2026/10/07/view-only-mode",
+      "author": "The DuckDB team",
+      "source": "DuckDB",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据湖",
+        "视图"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse Cloud 引入短期 JWT 认证",
+      "summary": "自定义 OIDC 接入限 Enterprise，要求 26.4 起；临时用户过期后清理，配额与行策略按稳定身份保留。",
+      "url": "https://clickhouse.com/blog/introducing-jwt-authentication-in-clickhouse-cloud",
+      "author": "ClickHouse team",
+      "source": "ClickHouse",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "认证",
+        "访问控制"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Harbor 2.15.4 恢复内部 webhook 默认访问",
+      "summary": "承接 2.15.3 安全修复并修正 ECR 推送复制回归；内部地址限制改为显式启用，需核对现有防护配置。",
+      "url": "https://github.com/goharbor/harbor/releases/tag/v2.15.4",
+      "author": "",
+      "source": "Harbor",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "rclone 1.75.2 修复凭据泄漏与文件越界",
+      "summary": "修复跨主机重定向泄露令牌、WebDAV/NFS 路径穿越及 S3 多租户分片隔离，并加强自更新哈希校验。",
+      "url": "https://rclone.org/changelog/#v1-75-2-2026-10-09",
+      "author": "",
+      "source": "rclone",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG19 修复关闭定期状态反馈后同步提交卡住的问题",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/cc33773482e879ea746256cc344ab029df1243d9",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "复制"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PG19 修复 JSON 导出误用底层表列名",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/c652cd3f94d57e69965f065c4ed45708a2b2a757",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "导出"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "并行 VACUUM 日志补计工作进程的 I/O 时间",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/abf5fec634f6aac98e80e2ef6c3f3dbf0133dfaa",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "监控"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pg_blocking_pids 补报并行组内的关系扩展锁阻塞",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/e7ef2cf256cc135da018899202d7c4ce167e0699",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "锁"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "MariaDB 建立公开性能变更回归测试库",
+      "summary": "",
+      "url": "https://mariadb.org/building-a-public-performance-change-detection-library-for-mariadb/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能",
+        "测试"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Laravel 13 原生接入 MariaDB 向量查询",
+      "summary": "",
+      "url": "https://mariadb.org/laravel-13-now-supports-mariadb-vector-natively/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Toasty 支持 Turso 本地、同步与远端三种模式",
+      "summary": "",
+      "url": "https://turso.tech/blog/toasty-now-fully-supports-turso",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Rust"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Azure SQL 将于 2027 年 10 月退役 SGX 安全区",
+      "summary": "",
+      "url": "https://techcommunity.microsoft.com/blog/azuresqlblog/azure-sql-database-is-retiring-always-encrypted-with-intel-sgx-enclaves/4556565",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "加密",
+        "迁移"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Compute Engine 精准时钟同步正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/instances/time-synchronization/configure-time-sync",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "时间同步"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 自管 Kafka 事件源支持 OAuth",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aws-Lambda-supports-oauth-kafka-esm/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka",
+        "认证"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Rook 1.21 为主机型 OSD 增加自动替换",
+      "summary": "",
+      "url": "https://github.com/rook/rook/releases/tag/v1.21.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "BuildKit 0.34 可显式启用内部缓存数据库压缩",
+      "summary": "",
+      "url": "https://github.com/moby/buildkit/releases/tag/v0.34.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}
