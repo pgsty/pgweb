@@ -1,0 +1,418 @@
+{
+  "date": "2026-10-11",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL 官方提交、Planet、项目与厂商原文；pgnexus #283–296；截稿 2026-10-12 09:49:18 +08:00",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 提交跨类型提前聚合的分组修复",
+      "summary": "PostgreSQL 已提交提前聚合的跨类型分组修复。小整数与整数连接时，优化器此前可能套用另一类型的相等运算符，把不相等的值并为一组，产生错误结果。补丁只允许同类型表达式复用分组规则，同组还修复了外部表与分区连接的处理，避免部分聚合结果被当作普通扫描，并补齐子关系的排序键。三项提交均标注回补至 19，涉及这些查询的测试环境应重新核对结果与执行计划。",
+      "url": "https://github.com/postgres/postgres/commit/d764d61af3160f725ac087ccc05d9ccf03af8312",
+      "author": "Richard Guo",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "查询优化"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复 TLS 重载失败后的连接异常",
+      "summary": "PostgreSQL 的 SSL 配置重载失败时会保留旧配置，但 PG 19 的 SNI 开关此前可能已经切到新值，导致后续握手访问不存在的主机配置。已提交的修复让握手使用成功加载时的开关值，并复制相关参数，避免重载失败后继续引用失效内存；同组还补上 TLS 销毁与初始化失败时的资源清理。四项修复均标注回补至 19，测试环境可重点复核证书、主机配置热更新后的新连接与回退行为。",
+      "url": "https://github.com/postgres/postgres/commit/72ffdffd1fcc53d6f950c35fbbe1079fbf9f15f4",
+      "author": "PostgreSQL 项目",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "TLS"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "TABLESAMPLE 的可重复采样取决于物理地址",
+      "summary": "Radim Marek 以 PostgreSQL 18.6 的两百万行实验说明，TABLESAMPLE 按物理地址选行。SYSTEM 按页抽样，减少读页，却会让按时间装载的数据成簇入样；BERNOULLI 按行抽样，仍须访问全部页。固定随机种子也无法保证更新或表重写后抽到同一批记录。需要稳定且能保持外键关系的测试子集时，可对主键与相应外键使用同一哈希规则，但要付出全表计算或维护表达式索引的成本。",
+      "url": "https://boringsql.com/posts/tablesample/",
+      "author": "Radim Marek",
+      "source": "boringSQL",
+      "source_date": "2026-10-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL",
+        "数据采样"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_fts 修复并发漏行并优化排序检索",
+      "summary": "全文检索扩展 pg_fts 的 1.11、1.12 版本修复多处索引缺陷。并发刷新待处理列表曾可能丢失新行，已删除行也可能残留并误命中；截断锁与页面回收竞态还会导致崩溃。升级不改变磁盘格式，已有索引中的异常条目需用 REINDEX 清理。1.12 缓存词典索引，减少共享缓冲区的反复加锁和访问；词典缓存重建期间取消查询仍可能泄漏内存，常驻会话需留意这一已知问题。",
+      "url": "https://github.com/gburd/pg_fts/blob/v1.12.0/CHANGELOG.md",
+      "author": "Greg Burd",
+      "source": "pg_fts",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "数据完整性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "ScyllaDB 修复日志回放与数据文件处理缺陷",
+      "summary": "ScyllaDB 2026.3.3 修复多处影响恢复与存储可靠性的缺陷：回放损坏日志段时，大事务片段缓存现按分片隔离，避免混入其他分片的数据；刷新 SSTable 目录时，也只处理已完整创建的文件，防止误删仍在生成的组件。更新还处理了日志段分配超时后无法释放、反复发生可阻塞写入的问题，并为 S3 读取重试加入退避与次数上限。正在使用对象存储或执行节点维护的集群，需关注这些恢复与运维路径。",
+      "url": "https://forum.scylladb.com/t/release-scylladb-2026-3-3/5531",
+      "author": "ScyllaDB 团队",
+      "source": "ScyllaDB",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "可靠性",
+        "恢复"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Turso 0.8 用组提交缓解并发写入等待",
+      "summary": "Turso 0.8 为 BEGIN CONCURRENT 加入组提交，让一批事务共用一次日志 fsync，降低并发写入等待。事务仍须等日志刷盘才可见，持久性约束不变。厂商称，同配置微基准中的吞吐与尾延迟有所改善，但单连接写入仍不及 SQLite，同一行的写冲突仍需重试。该版还补齐窗口函数和递归查询，让全文索引适配 MVCC；Turso Cloud 的 MVCC 仍处技术预览阶段。",
+      "url": "https://turso.tech/blog/turso-0.8.0",
+      "author": "Pekka Enberg",
+      "source": "Turso",
+      "source_date": "2026-09-29",
+      "image": "https://turso.tech/images/blog/turso-0.8.0/cover.png",
+      "domain": "db",
+      "tags": [
+        "并发",
+        "存储"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 主线复用 WAL 的 zstd 解压上下文",
+      "summary": "提交者在全页镜像密集负载中测得恢复提速最高约 4%；上下文随读取器复用，并在结束或错误清理时释放。",
+      "url": "https://github.com/postgres/postgres/commit/ce3387b74b708a679282ba5c72990b532d661bb8",
+      "author": "Andrey Borodin",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "恢复性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修复按引用存储类型的排序内存漏计",
+      "summary": "旧实现把部分标量排序的分配量记为零，漏算按引用存储的数据；修复覆盖不同分配器，并标注回补至 17。",
+      "url": "https://github.com/postgres/postgres/commit/85adc584e2bd3ee6ce1899929fc60afb709b4772",
+      "author": "Mario Karuza",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存管理",
+        "排序"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "用累计计数差分追踪查询随数据增长的退化",
+      "summary": "Tiger Data 比较行数和设备数对延迟的影响，并用留出样本验证；累计平均值会掩盖近期变化，增长范围太窄也难以判断曲线。",
+      "url": "https://www.tigerdata.com/blog/measuring-how-fast-iiot-queries-degrading",
+      "author": "John Shi",
+      "source": "Tiger Data",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能诊断",
+        "时序数据"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Aurora DSQL 支持只覆盖部分行的索引",
+      "summary": "CREATE INDEX 可用 WHERE 只保存工作集；查询条件须落在索引谓词范围内，才能减少扫描与存储。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aurora-dsql-partial-indexes/",
+      "author": "Amazon Web Services",
+      "source": "AWS",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "索引"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Podman 修复检查点镜像绕过沙箱参数",
+      "summary": "以 root 运行检查点镜像可能绕过权限限制；6.1.3、5.8.8 已移除该启动路径，rootless 模式不受影响。",
+      "url": "https://github.com/podman-container-tools/podman/security/advisories/GHSA-2cvf-wqm6-wr9g",
+      "author": "Podman 项目",
+      "source": "Podman",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "容器"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "OpenSSL 修复 DTLS 重传导致的堆内存泄露",
+      "summary": "DTLS 握手写入受阻时，重传可能泄露堆内存或导致崩溃；4.0.3、3.6.5 等版本已修复。",
+      "url": "https://openssl-library.org/news/vulnerabilities/#CVE-2026-84782",
+      "author": "OpenSSL 项目",
+      "source": "OpenSSL",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "DTLS"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Boundary 社区版归档，暂无后续维护计划",
+      "summary": "官方保留既有源码与二进制，后续开发转向托管版和企业版；目前不再计划社区版的新版本、缺陷修复或安全补丁。",
+      "url": "https://github.com/hashicorp/boundary/blob/eeb38a1a84eb17f5770ce51f77663413c9e4ecc3/README.md",
+      "author": "",
+      "source": "HashiCorp",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "项目维护",
+        "访问控制"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Nebius 复盘托管 PostgreSQL 的备份与资源隔离",
+      "summary": "厂商称，在其配置下改用 WAL-G 后，1.5 TB 样例备份从约一天缩至两小时；每个数据库实例独占计算节点，并通过 PgBouncer 接入。",
+      "url": "https://nebius.com/blog/posts/managed-postgresql-for-ai-workloads",
+      "author": "Evgeny Shavlyugin、Daniil Zakhlystov",
+      "source": "Nebius",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库",
+        "备份恢复"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 主线修复崩溃恢复早期停库卡住",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/12f866cd5f72d65ed4435b8203540efde45ba01d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "运维"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 提交 COPY 否定过滤条件的报错修复",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/a14041d437ff9e74d3596aea31bd202662e28800",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "错误修复"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PG 19 外键快速路径补齐只读与命令号检查",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/c993d9f7c8d4bcada0d5c0bd6ea32416d956fc8f",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "外键",
+        "事务"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PG 19 并发 REPACK 补清理已删除列值",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/e40b509c08f34e245bfab4124e24297ddaf4d535",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "REPACK",
+        "空间回收"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PG 19 修复重规划后的 FOUND 与行数状态",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/e3199f3149e77d42ef799858ba3f8b343db09def",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PL/pgSQL",
+        "错误修复"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "关闭并行查询主进程参与未必减少等待",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-parallel_leader_participation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并行查询",
+        "性能诊断"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "AWS Ruby 驱动包装器正式支持快速故障转移",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aws-ruby-driver-wrapper-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "驱动"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cloud SQL 的既有 PG 实例可近实时同步元数据",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/sql/docs/postgres/dataplex-catalog-integration#enable-dataplex-catalog",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "元数据"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "PGConf.EU 将讨论扩展生态的长期维护",
+      "summary": "",
+      "url": "https://justatheory.com/2026/10/pgconf-eu-pgef/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL",
+        "社区活动"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Calico 3.33 的 eBPF 数据面要求 Linux 5.10 起",
+      "summary": "",
+      "url": "https://github.com/projectcalico/calico/releases/tag/v3.33.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "升级"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Velero 1.18.4 修复备份队列永久卡住",
+      "summary": "",
+      "url": "https://github.com/velero-io/velero/releases/tag/v1.18.4",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "备份",
+        "错误修复"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Reactime 仓库 20 个分支被植入恶意脚本",
+      "summary": "",
+      "url": "https://www.deepwoodssec.com/research/reactime",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链安全"
+      ],
+      "position": 26
+    }
+  ]
+}
