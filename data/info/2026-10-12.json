@@ -1,0 +1,423 @@
+{
+  "date": "2026-10-12",
+  "origin": "PGSQL.CC 主动采集；截稿 2026-10-13 07:45:32 Asia/Shanghai；回看 2026-09-29 至截稿；chronicle、PostgreSQL.org、Planet、pgnexus #284–297、官方原文、搜索与 HN 线索",
+  "items": [
+    {
+      "tier": 1,
+      "title": "重设同一密码可让 PgBouncer 的旧密钥失效",
+      "summary": "PostgreSQL 的 SCRAM 口令每次重设都会生成新盐，即使输入的密码没有变化，存储的认证密钥也不同。Christophe Pettus 用 PostgreSQL 18.6 与 PgBouncer 1.26 实测，静态认证文件中的旧密钥会因此失效，但已有连接仍能工作，故障要到连接池再次建立后端连接时才暴露。文章说明，自动化配置不能只在密码变更时更新文件；使用动态认证查询可避免用户密钥副本过期，同时还须安排查询账号自身的认证方式。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-password_encryption/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "ParadeDB 修复行级安全过滤顺序导致的信息泄露",
+      "summary": "ParadeDB 0.26.1 修复了搜索扩展的行级安全边界：此前自定义扫描下推过滤条件时，没有遵循 PostgreSQL 的安全检查顺序，部分表达式可能先在无权读取的行上执行，再通过报错泄露数据。修复为过滤下推增加安全判定，无法安全下推的条件交回常规过滤，或放弃相应自定义扫描。版本还修正连接查询中丢失 WHERE 条件，以及通用计划参数所在内存过早释放的问题。使用 RLS、连接检索或预备语句的部署应优先核对这些查询路径。",
+      "url": "https://github.com/paradedb/paradedb/releases/tag/v0.26.1",
+      "author": "ParadeDB 项目组",
+      "source": "ParadeDB",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PgDog 修复连接恢复误提交与升主识别",
+      "summary": "PostgreSQL 代理 PgDog 0.1.61 修复了后端连接恢复时意外提交流水线请求隐式事务的问题，并把 WAL 时间线纳入升主识别，避免旧主仍可连接时误判拓扑。版本还修正重分片复制的日志位置边界，并把外键校验纳入迁移流程；显式事务只在需要时连接相关分片，以减少连接池占用。插件接口改为逐条处理语句，属于不兼容变化。使用分片、故障切换或自定义插件的部署，应分别核对事务结果、切换行为与接口适配。",
+      "url": "https://github.com/pgdogdev/pgdog/releases/tag/v0.1.61",
+      "author": "PgDog 项目组",
+      "source": "PgDog",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Aurora PG 修复存储达到上限后无法启动",
+      "summary": "Amazon Aurora 在 PostgreSQL 14–18 的五条版本线上发布稳定性补丁，修复存储卷达到最大尺寸时，存储元数据可能使数据库无法再次启动的问题。同批更新还修复 Storage Daemon 内部日志增加存储占用的缺陷，涉及实例能否恢复服务与底层空间消耗两个运维环节。此次更新的重点是存储可靠性，使用相关版本的团队可据此核对维护计划，并把接近容量上限的实例纳入升级与恢复验证范围。",
+      "url": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraPostgreSQLReleaseNotes/AuroraPostgreSQL.Updates.html#aurorapostgresql-versions-version184x-1843",
+      "author": "Amazon Web Services",
+      "source": "AWS",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "故障修复",
+        "云数据库"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Vitess 修复表权限绕过并收紧证书吊销校验",
+      "summary": "Vitess 24.0.4 修补多条严格表权限检查的绕过路径：无法确定访问表的语句改为拒绝执行，DDL、EXPLAIN、SET 等语句内嵌的读取也纳入权限校验。配置证书吊销列表后，TLS 会话恢复和不同 SSL 模式都会执行检查；证书链或配置无法验证时拒绝连接。版本还移除了旧 vtctld HTTP 管理接口。升级需核对受影响语句与证书配置，混合版本期间，旧 vtgate 保存的含子查询设置可能被新 tablet 拒绝。",
+      "url": "https://github.com/vitessio/vitess/releases/tag/v24.0.4",
+      "author": "Vitess 项目",
+      "source": "Vitess",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Lambda 新形态直接运行 HTTP 服务",
+      "summary": "AWS 发布 Lambda Web Functions，让监听端口的 HTTP 应用直接部署到 Lambda，无需改写为事件处理器。每个执行环境最多并发处理 128 个请求，CPU 按实际使用时间计费，等待数据库或外部接口时不按整段墙钟时间计算 CPU 费用，内存仍持续计费。新形态可跨区域复制代码并按延迟路由，也支持按修订分配流量。首发采用 Arm64 与 Node.js 24，覆盖五个区域，并可连接 VPC 内资源。",
+      "url": "https://aws.amazon.com/blogs/aws/announcing-aws-lambda-web-functions-for-fast-consistent-web-app-performance-anywhere/",
+      "author": "Micah Walter",
+      "source": "AWS",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "TimescaleDB 修复排序规则误判与压缩块崩溃",
+      "summary": "2.30.2 修正向量文本比较忽略查询排序规则、不同列布局块合并崩溃，并清理删除模式后遗留的压缩块。",
+      "url": "https://github.com/timescale/timescaledb/releases/tag/2.30.2",
+      "author": "Timescale 项目组",
+      "source": "TimescaleDB",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "两种 MySQL 线程池的实测优势随缓存覆盖率反转",
+      "summary": "厂商实测新增两种实现的直接对照：数据未全缓存时 Percona 领先，全部缓存后 MySQL 在吞吐与尾延迟上领先。",
+      "url": "https://www.percona.com/blog/thread-pool-in-percona-server-and-mysql-part-2/",
+      "author": "Bogdan Degtyariov",
+      "source": "Percona",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能",
+        "连接池"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Dolt 用等价连接查询核对优化器正确性",
+      "summary": "用六条等价规则生成成对连接查询、对比结果，重点核验外连接与反连接改写；原文复盘既有研究成果。",
+      "url": "https://www.dolthub.com/blog/2026-10-05-join-implication-reasoning/",
+      "author": "Angela Xie",
+      "source": "DoltHub",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "查询优化",
+        "测试"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "DoltLite 用性能热点清单约束每次代码变更",
+      "summary": "夜间任务寻找相对 SQLite 超过三倍的慢路径，无法立即消除的热点纳入每次 PR 的回归检查。",
+      "url": "https://www.dolthub.com/blog/2026-10-12-doltlite-gets-better/",
+      "author": "Tim Sehn",
+      "source": "DoltHub",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能",
+        "测试"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Azure SQL Hyperscale 预览自动暂停",
+      "summary": "空闲时停止计算计费，预览最短等待 60 分钟且不支持命名副本；既有实例须显式启用。",
+      "url": "https://techcommunity.microsoft.com/blog/azuresqlblog/public-preview-auto-pause-and-auto-resume-for-azure-sql-database-hyperscale-serv/4560907",
+      "author": "Kendal Van Dyke",
+      "source": "Microsoft Azure",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "云数据库"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Azure MI link 预览整组复制多个数据库",
+      "summary": "单链路可复制整个可用性组并整体切换，需匹配 SQL Server 版本、更新级别和托管实例更新策略。",
+      "url": "https://techcommunity.microsoft.com/blog/azuresqlblog/mi-link-support-for-multiple-databases-in-an-always-on-availability-group-for-sq/4560546",
+      "author": "danimir",
+      "source": "Microsoft Azure",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "复制",
+        "云数据库"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Lambda 容器镜像可从初始化快照恢复",
+      "summary": "SnapStart 将初始化状态保存后按需恢复；数据库连接、凭据和唯一标识须在恢复后重新校验，且只用于已发布版本。",
+      "url": "https://aws.amazon.com/blogs/compute/get-started-with-aws-lambda-snapstart-for-container-images/",
+      "author": "Sachin Saini、Prerna Choudhary、Rakesh Hemrajani",
+      "source": "AWS",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Longhorn 1.13 支持 V2 存储卷在线升级",
+      "summary": "要求 Kubernetes 1.34 起，V2 在线升级仅支持从 1.12.2 迁入；新增卷组快照尚不保证同一时点一致性。",
+      "url": "https://github.com/longhorn/longhorn/releases/tag/v1.13.0",
+      "author": "Longhorn 项目",
+      "source": "Longhorn",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 预览记录每次提交的真实推送者",
+      "summary": "新增持久化推送身份和提交者匹配规则，降低伪造提交元数据的风险；目前限企业客户申请预览。",
+      "url": "https://github.blog/changelog/2026-10-12-push-attribution-public-preview/",
+      "author": "GitHub",
+      "source": "GitHub",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "BigQuery 预览 SQL 多变量时间序列预测",
+      "summary": "AI.FORECAST 可同时预测多个目标，并区分仅有历史值和已知未来值的协变量；TimesFM 3.0 仍处预览。",
+      "url": "https://cloud.google.com/blog/products/data-analytics/bigquery-timesfm-3-0-with-multivariate-time-series-forecasting",
+      "author": "Haiyang Qi、Haoming Chen",
+      "source": "Google Cloud",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据库",
+        "数据分析"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 主线补报并行物化节点峰值存储",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/a241bc4fedefae3c0b0952c0a9d3a28d7747bfe3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "plpgsql_check 修复触发器与游标检查崩溃",
+      "summary": "",
+      "url": "https://github.com/okbob/plpgsql_check/releases/tag/v2.10.15",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PIG 1.9 自动准备仓库密钥并更新扩展目录",
+      "summary": "",
+      "url": "https://pig.pigsty.io/release/pig-1.9.0/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 发件箱用租约与代次拒绝过期写回",
+      "summary": "",
+      "url": "https://code-mill-hub.com/blog/postgresql/2026-09-29-outbox-worker-crash-lease-generation-recovery/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Supabase 预览无需 Docker 的本地开发栈",
+      "summary": "",
+      "url": "https://supabase.com/blog/select-2026-build-anything",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Redis Flex 预览将搜索索引放到 SSD",
+      "summary": "",
+      "url": "https://redis.io/blog/scale-your-workloads-without-paying-all-ram-prices/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-09-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "存储",
+        "搜索"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "ElastiCache Valkey 新增 15 秒遥测采样",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-elasticache-valkey-opentelemetry-metrics-detailed-monitoring/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Redshift 可直接查询其他区域的数据湖",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/redshift-cross-Region-queries-for-data-lake/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-01",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据分析"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 可发现所在可用区并优先读取同区副本",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/compute/reducing-cross-az-latency-with-the-aws-lambda-metadata-endpoint/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "NGINX Ingress 迁到 ALB 要重建认证路径",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/containers/migrating-from-nginx-ingress-to-alb-handling-oauth2-proxy/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "EC2 可随 AMI 跨账户共享指定标签",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/compute/introducing-ec2-ami-tag-sharing-share-ec2-tags-across-aws-accounts/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "runc 1.6 候选版解除 1024 CPU 亲和性上限",
+      "summary": "",
+      "url": "https://github.com/opencontainers/runc/releases/tag/v1.6.0-rc.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "Dependabot 可登记无需凭据的组织级包仓库",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-12-anonymous-organization-level-registries-for-dependabot/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "PGDG 为 pg_statviz 补齐多发行版 AI 依赖",
+      "summary": "",
+      "url": "https://people.planetpostgresql.org/devrim/index.php?/archives/133-PostgreSQL-RPM-repository-meets-AI-with-pg_statviz.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 30
+    }
+  ]
+}
