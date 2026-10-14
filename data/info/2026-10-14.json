@@ -1,0 +1,485 @@
+{
+  "date": "2026-10-14",
+  "origin": "PostgreSQL 官方源与 Planet；PGNexus #296–298；Google News RSS 与中英文主动搜索；项目发布、厂商工程博客及 HN 线索；截稿 2026-10-15 07:32:01 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PgBouncer 1.26.1 修复身份冒用与拒绝服务",
+      "summary": "PgBouncer 1.26.1 修复三项安全漏洞。最严重的问题发生在连接不存在的数据库并进行 SCRAM 认证时，已知一个用户密码的客户端可冒用其他用户，包括管理员与后端超级用户。另外两项缺陷可让未认证客户端触发死循环，分别涉及特定启动参数配置，以及调高最大报文大小后的整数溢出。使用方应升级并核对配置；新版本还让忽略参数规则优先于参数跟踪，恢复显式忽略 search_path 的行为。",
+      "url": "https://www.pgbouncer.org/2026/10/pgbouncer-1-26-1",
+      "author": "PgBouncer 项目",
+      "source": "PgBouncer",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "psqlODBC 修复大批参数绑定的堆内存损坏",
+      "summary": "psqlODBC 18.00.0005 修复参数绑定数量溢出，影响 08.01.0102 至 18.00.0004。旧驱动用有符号 16 位字段计数，绑定第 32769 个参数时可能越界清零，造成崩溃或堆内存损坏。新版本将参数编号限制为 1～32767，越界返回 07009。根据外部输入拼接大型 IN 列表的应用应限制参数数，或改用数组参数。本次还修复千参数语句的类型名截断，以及 bytea 经 OLE DB 调用的兼容问题。",
+      "url": "https://github.com/postgresql-interfaces/psqlodbc/releases/tag/REL-18_00_0005",
+      "author": "psqlODBC 团队",
+      "source": "psqlODBC",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "同步扫描起点会让重复查询快慢悬殊",
+      "summary": "同一查询第二次突然变快，未必是缓存预热。Alexander Ioffe 在 150 万行表上反复运行带 LIMIT 的顺序扫描，首次约 78 毫秒，随后约 0.07 毫秒，但两次访问的页面都已在共享缓存中。实测差异来自同步顺序扫描复用上一次扫描位置，恰好从目标数据附近开始；关闭该机制后，每次都约 81 毫秒。作者用多轮执行的耗时、读页和过滤行数定位原因，提醒性能评估保留逐次样本，并用对照实验验证异常。",
+      "url": "https://exobench.ai/blog/explain-analyze-is-a-sample-size-of-one",
+      "author": "Alexander Ioffe",
+      "source": "ExoBench",
+      "source_date": "2026-10-13",
+      "image": "https://exobench.ai/pics/blog/explain-analyze-is-a-sample-size-of-one/card.png",
+      "domain": "pg",
+      "tags": [],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "逐任务保存点让 PostgreSQL 队列越扩越慢",
+      "summary": "incident.io 复盘了 PostgreSQL 队列增加工作进程后反而变慢的问题。批量锁行后，每个任务再建立保存点，会让父子事务共同持锁并产生 MultiXact；其他工作进程执行 SKIP LOCKED 时反复查询这些记录，放大内部锁竞争。团队把领取与执行拆成短事务和限时租约，缩小队列表，并让每个 Pod 只保留一个领取器。团队称整套优化后峰值吞吐达到原来的 3.5 倍，代价是进程崩溃后，已领取任务最多等待十秒再重试。",
+      "url": "https://incident.io/blog/how-savepoints-quietly-throttled-our-postgres-queue",
+      "author": "Rory Malcolm",
+      "source": "incident.io",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "D1 用边缘路由与异步聚合避开中心数据库热点",
+      "summary": "Cloudflare 复盘 D1 管理数百万个 SQLite 数据库的控制面设计：PostgreSQL 保存事务性元数据，Workers KV 提供分布式路由信息，让查询通常无需访问中心集群。数据库创建先初始化 Durable Object，再记录映射，失败后的孤立对象由周期心跳自行纠正。用量统计则先排队、记录差量，再按账户批量聚合，避免每次变化都争抢同一行锁。文章交代最终一致性的边界，为大量小数据库的租户隔离与配额管理提供实践参考。",
+      "url": "https://blog.cloudflare.com/d1-control-plane/",
+      "author": "David Laban、Lambros Petrou",
+      "source": "Cloudflare",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "架构",
+        "多租户"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "curl 8.23 修补 HTTP/2 上传漏洞并移除 SMB",
+      "summary": "curl 8.23.0 发布当天，项目集中披露 24 项漏洞。其中 HTTP/2 上传释放后使用影响 8.12.0 至 8.22.0；恶意服务端可用特定流重置响应触发问题，代码执行还依赖严格的版本、堆布局和时序条件。更新同时修复代理诱取源站凭据、跨协议重定向漏做 SSH 主机校验等问题，并移除 curl 与 libcurl 的 SMB(S) 支持。升级时应同时检查内嵌 libcurl 的应用和依赖 SMB 传输的脚本。",
+      "url": "https://daniel.haxx.se/blog/2026/10/14/curl-8-23-0/",
+      "author": "Daniel Stenberg",
+      "source": "curl",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 19 正式版拟于 11 月 19 日发布",
+      "summary": "发布团队计划保留 10 月 15 日 RC1，增加 11 月 12 日 RC2，让维护分支积累的修复先经过候选版验证。",
+      "url": "https://www.postgresql.org/message-id/f161fbb7-e193-42eb-bec7-4cfc1af74a50%40postgresql.org",
+      "author": "",
+      "source": "PostgreSQL 发布团队",
+      "source_date": "2026-10-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修复继承表自连接消除错误",
+      "summary": "父表唯一索引不能证明子表也唯一；新提交跳过继承扫描，避免误合并含子表与 ONLY 查询，注明回补至 18。",
+      "url": "https://github.com/postgres/postgres/commit/89e06d78298ec417cfccd4bd684aa63bcec5ce39",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "逻辑解码补清理已中止子事务的目录变更",
+      "summary": "新提交清理回滚子事务留下的目录可见性记录，解决已复现的断言失败，注明回补至 14。",
+      "url": "https://github.com/postgres/postgres/commit/beff3cd00989e2d532cde376da05be42eeb98577",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "btree_gin 修复夏令时回拨附近的查询漏行",
+      "summary": "时间戳跨类型比较可能选错索引扫描起点；新提交向前校正转换值，并处理上界溢出，注明回补至 19。",
+      "url": "https://github.com/postgres/postgres/commit/aadce2c10ffec9326a5119a3c590b77ab58b4f97",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pglifecycle 2.0 测试版减少模式变更的重建",
+      "summary": "beta.2 可原位增删分区、调整主键与唯一约束，并保留安全标签和视图触发器，减少重复部署产生的伪差异。",
+      "url": "https://github.com/gmr/pglifecycle/releases/tag/2.0.0-beta.2",
+      "author": "",
+      "source": "pglifecycle",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "RDS 快照恢复后仍需预热表、索引与 TOAST",
+      "summary": "pg_prewarm 应覆盖表、索引与 TOAST，并核对存储初始化进度；VACUUM 与 ANALYZE 不能替代完整预热。",
+      "url": "https://aws.amazon.com/blogs/database/reducing-storage-initialization-impact-in-amazon-rds-for-postgresql-after-snapshot-restore/",
+      "author": "Sandeep Rai Modappady、Mahesh Thakur、Arunkumar Pattabiraman",
+      "source": "AWS Database Blog",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份恢复",
+        "性能"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Dolt 预填日志空间以减少同步开销",
+      "summary": "已合入主分支、尚未发布；fdatasync 配合预写零字节减少部分文件系统的同步开销，但会增加写放大。",
+      "url": "https://www.dolthub.com/blog/2026-10-13-overwrites-and-fdatasync-vs-fsync/",
+      "author": "Aaron Son",
+      "source": "DoltHub",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "存储",
+        "性能"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Redshift 以元数据识别可安全合并的 Iceberg 写入",
+      "summary": "冲突检查从操作逐步细化到分区与文件；能证明互不影响才重放提交，串行化隔离仍保留失败重试。",
+      "url": "https://aws.amazon.com/blogs/big-data/resolving-concurrent-write-conflicts-for-apache-iceberg-tables-in-amazon-redshift/",
+      "author": "Sanjay Devireddy 等",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Iceberg",
+        "并发控制"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "MariaDB 用固定负载验证缓冲池回归修复",
+      "summary": "TAF 针对 MDEV-37992 在三个分支重现并验证缓冲池回归修复，公开补丁提交、固定负载与硬件参数。",
+      "url": "https://mariadb.org/mariadb-foundation-reproducing-and-validating-mdev-37992-with-taf/",
+      "author": "Jonathan Miller",
+      "source": "MariaDB Foundation",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能",
+        "测试"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Google 披露集成服务冒用服务账户漏洞",
+      "summary": "CVE-2026-85298 可让已认证用户提升权限；服务端已于 8 月 27 日修补，公告称客户无需操作。",
+      "url": "https://docs.cloud.google.com/application-integration/docs/security-bulletins#gcp-2026-068",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "GitHub Actions 预览锁定工作流的传递依赖",
+      "summary": "锁文件将 action、传递依赖和可复用工作流固定到审核过的提交；标签移动后仍执行已锁定版本，并支持强制策略。",
+      "url": "https://github.blog/changelog/2026-10-14-github-actions-workflow-lockfiles-in-public-preview/",
+      "author": "GitHub",
+      "source": "GitHub",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 2,
+      "title": "OTel Collector 修复队列取消死锁与批次丢弃",
+      "summary": "0.163.0 修复满队列取消后的死锁，拆分批次时只丢弃超大的单条 span 或 profile，保留后续数据。",
+      "url": "https://github.com/open-telemetry/opentelemetry-collector/releases/tag/v0.163.0",
+      "author": "open-telemetry",
+      "source": "open-telemetry",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PG19 分支修复 JSONB 窗口聚合的重复键处理",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/4118012791355f59b0d7774b681dc46683b50cb2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "wal2json 2.7 可按分区根表输出变更",
+      "summary": "",
+      "url": "https://github.com/eulerto/wal2json/releases/tag/wal2json_2_7",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "asyncpg 0.32 将连接池最小连接数改为持续保底",
+      "summary": "",
+      "url": "https://github.com/MagicStack/asyncpg/releases/tag/v0.32.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "PGQueuer 1.6 为超时任务扫描增加部分索引",
+      "summary": "",
+      "url": "https://github.com/janbjorge/pgqueuer/releases/tag/v1.6.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Squawk 2.68 新增迁移回滚兼容性检查",
+      "summary": "",
+      "url": "https://github.com/sbdchd/squawk/releases/tag/v2.68.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Perseid 0.1 以 YAML 同步 PostgreSQL 模式",
+      "summary": "",
+      "url": "https://pgsql.cc/about/news/perseid-010-3405/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "默认授权按创建角色生效，改所有者不会补授",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-alter-default-privileges-not-working/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "全局认证后调试延迟也会拖慢并行工作进程",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-post_auth_delay-and-pre_auth_delay/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Cloud SQL 新项目的私网连接默认采用 PSC",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/sql/docs/postgres/release-notes#October_13_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "网络",
+        "云数据库"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Dataform 可在重建表时保留 BigQuery 治理元数据",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/dataform/docs/release-notes#October_14_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据治理"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "sqlsimtools 预览 SQL Server 负载回放与对照测试",
+      "summary": "",
+      "url": "https://techcommunity.microsoft.com/blog/sqlserver/introducing-sqlsimtools/4563955",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "mssql-python 1.16 改善取数并清理池化连接",
+      "summary": "",
+      "url": "https://techcommunity.microsoft.com/blog/sqlserver/mssql-python-1-16-0-python-3-15-support-conda-and-faster-fetches/4564521",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "托管 Kafka 的存储连接器减少内存溢出与小文件",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/managed-service-for-apache-kafka/docs/release-notes#October_14_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka",
+        "数据管道"
+      ],
+      "position": 31
+    },
+    {
+      "tier": 3,
+      "title": "Hyperdisk 多写入者卷支持挂载状态在线扩容",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/release-notes#October_14_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "块存储"
+      ],
+      "position": 32
+    },
+    {
+      "tier": 3,
+      "title": "GKE 修复 FUSE 沙箱 Pod 终止卡住的问题",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/release-notes#October_14_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "存储"
+      ],
+      "position": 33
+    },
+    {
+      "tier": 3,
+      "title": "Google 托管公有证书逐步缩短为 45 天有效期",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/certificate-manager/docs/release-notes#October_14_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TLS",
+        "证书"
+      ],
+      "position": 34
+    }
+  ]
+}
