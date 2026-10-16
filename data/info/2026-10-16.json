@@ -1,0 +1,473 @@
+{
+  "date": "2026-10-16",
+  "origin": "PostgreSQL 官方源、Planet、项目博客与发布说明；中英文主动搜索、Hacker News；pgnexus #288–301",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG 19 分支修复并行 TID 重扫漏行",
+      "summary": "PG 19 分支已修复并行 TID 范围扫描的一项结果正确性缺陷。相关子查询多次执行时，如果每次使用不同的物理行地址范围，工作进程仍会沿用首次扫描的区块范围，导致后续查询静默漏行。补丁在重新初始化共享扫描状态时同时清空起始区块和区块数，并增加真正改变扫描范围的回归用例。改动已进入主线与 19 分支；使用预发布版本测试这类查询的团队，应核对后续构建是否包含该修复。",
+      "url": "https://github.com/postgres/postgres/commit/ba51d62be465c420b0fbe3b0efd0ccd488e79922",
+      "author": "Zsolt Parragi、David Rowley",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "正确性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "关系扩展锁可在低 CPU 占用时限制写入吞吐",
+      "summary": "EDB 工程师用 PostgreSQL 18 与 HammerDB 复现了写入吞吐的隐蔽上限：并发提高后，大量会话排队等待关系扩展锁，CPU 和磁盘指标却仍有余量。案例把热点表分成 10 个哈希分区，让写入分散到独立的扩展锁；厂商称同硬件吞吐达到原来的 7.2 倍。结果取决于分区键能否均匀分散写入，不能只按分区数量判断效果。排查此类瓶颈应查看 Lock:extend 等待，并用实际负载比较写入收益与跨分区查询代价。",
+      "url": "https://www.enterprisedb.com/blog/finding-and-fixing-silent-throughput-ceiling-postgresql",
+      "author": "Vishal Sawale",
+      "source": "EDB",
+      "source_date": "2026-10-16",
+      "image": "https://enterprisedb.com/sites/default/files/2026-10/unnamed_23.png",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "锁",
+        "分区"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Citus 只读分片基准扩展到千万 QPS",
+      "summary": "StackGres 公布 Citus 查询路由器的新一轮扩展测量。厂商称 24 个数据节点配合 48 个路由器，达到约每秒 1,003 万次单行主键读取，客户端中位延迟约 1 毫秒；从 3 个数据节点扩到 24 个时，吞吐达到初始值的 7 倍。测试只含读取，不涉及写入、跨分片查询或副本；其本地 NVMe、数据总量与对照的 Neki 环境也有差异。这是更大规模的扩展测量，完整复现代码仍计划后续公开。",
+      "url": "https://stackgres.io/blog/open-source-citus-matches-planetscales-neki-at-10m-qps-on-half-the-data-nodes/",
+      "author": "Álvaro Hernández",
+      "source": "StackGres",
+      "source_date": "2026-10-16",
+      "image": "https://stackgres.io/img/blog/thumbnail-citus-10m-qps.png",
+      "domain": "pg",
+      "tags": [
+        "Citus",
+        "基准",
+        "分片"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Snowflake Postgres 数据镜像正式可用",
+      "summary": "Snowflake Postgres 到数仓的数据镜像正式可用，覆盖 AWS 与 Azure 上已提供该托管数据库的区域。pg_lake 捕获逻辑复制变更，以事务批次写入 Iceberg 日志，再由数仓原子应用；表结构与新表可自动同步。$live 视图合并已应用数据与在途变更，$changes 保留七天变化记录。用户可按表、模式或数据库建立镜像，减少外部 CDC 服务的运维工作。",
+      "url": "https://www.snowflake.com/en/blog/data-mirroring-ga-snowflake-postgres/",
+      "author": "Craig Kerstiens、Claire Peracchio",
+      "source": "Snowflake",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "湖仓"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Linux 缓存回写放大 Galera 零散更新",
+      "summary": "Percona 排查 PXC 升级后的磁盘写入突增，发现关键变化来自升级的操作系统：XFS 上的大 folio 会把 Galera 缓存中细小的 mmap 修改扩大为整块回写。案例里 InnoDB 与 binlog 写量保持平稳，额外 I/O 计入复制接收和应用线程。文章给出内核、文件系统、预读大小与线程级 I/O 的联合诊断方法；降低预读或使用未启用大 folio 的文件系统可缓解，但影响取决于访问模式，不能仅凭数据库版本归因。",
+      "url": "https://www.percona.com/blog/when-a-small-change-writes-too-much-how-a-linux-kernel-improvement-can-strike-you-in-pxc-galera-workloads/",
+      "author": "Przemysław Malkowski",
+      "source": "Percona",
+      "source_date": "2026-10-16",
+      "image": "https://www.percona.com/wp-content/uploads/2026/10/pxc-gcache-case-card.png",
+      "domain": "db",
+      "tags": [
+        "Linux",
+        "存储",
+        "高可用"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 预览 .NET 原生列式客户端",
+      "summary": "ClickHouse 在官方 .NET 驱动中加入实验性 TCP 客户端，让结果与插入数据直接按列块传输，减少 HTTP RowBinary 路径上的行列转换。列式接口复用缓冲区，支持进度、服务端取消和固定连接会话；厂商基准显示，部分批量读写更快且分配内存明显减少。该接口要求 .NET 8 及以上，尚不支持 ADO.NET 与 JWT，JSON 仍以文本传输。应用迁移前需检查接口缺项与缓冲区生命周期，现有 HTTP 客户端继续可用。",
+      "url": "https://clickhouse.com/blog/introducing-the-blazing-fast-native-tcp-client-for-net",
+      "author": "Alex Soffronow Pagonidis",
+      "source": "ClickHouse",
+      "source_date": "2026-10-16",
+      "image": "https://clickhouse.com/_next/image?url=%2Fuploads%2Fnative_tcp_net_oct2026_banner_686ef67f0f.jpg&w=1200&h=630&q=75",
+      "domain": "db",
+      "tags": [
+        "驱动",
+        "性能"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "OpenBSD 提权研究揭示旧计数器与可预测分配风险",
+      "summary": "Calif 公开 OpenBSD 本地提权链的分析，其中一处共享内存引用计数沿用约 37 年前 BSD 源码里的 16 位有符号整数。反复派生进程可使计数溢出，并与另一处内核越界写组合，在启用内核重链接随机化及 SMAP、SMEP 的环境中获取 root 权限。相关缺陷已由 9 月的两项 OpenBSD 7.9 勘误修复。研究还说明，可预测的内核分配会削弱现有防护，链表完整性检查与分配随机化可进一步抬高攻击门槛。",
+      "url": "https://calif.io/research/big-fish",
+      "author": "Andrew Griffiths",
+      "source": "Calif",
+      "source_date": "2026-10-16",
+      "image": "https://calif.io/og/big-fish.jpg",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "操作系统"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PG 19 分支修复慢客户端拖住备库提升",
+      "summary": "补丁在无需同步逻辑 WAL 状态的情形跳过屏障等待，避免被停止读取结果的客户端无限拖住；已回补 19 分支。",
+      "url": "https://github.com/postgres/postgres/commit/df1be4ddc8345235ffc736adc7dc954f0f944daa",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PG 19 分支修复升级时误丢 MultiXact 成员",
+      "summary": "旧版本最新成员恰好结束在 32 位偏移回绕点时，升级会误判零偏移，导致访问相关行报错；修复已进入 19 分支。",
+      "url": "https://github.com/postgres/postgres/commit/2323f03a1789bc52bee980c56b8057470458701a",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "停用备库的物理槽仍可能阻止主库清理死行",
+      "summary": "热备反馈的 xmin 会留在复制槽中并跨断线保留；应检查 pg_replication_slots，而非只看复制进程或回放延迟。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-primary_slot_name/",
+      "author": "",
+      "source": "The Build",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制槽"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "TypeORM 事务混用仓库可能耗尽连接池",
+      "summary": "全局仓库会另取连接，租户设置因此脱离查询，并发事务还会互等第二条连接；事务内应统一使用回调的管理器。",
+      "url": "https://now-next.nl/en/insights/typeorm-postgresql-row-level-security-tenant/",
+      "author": "",
+      "source": "Now-Next",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cloud SQL 更正旧 PG 实例目录同步范围",
+      "summary": "10 月 14 日公告澄清：4 月 18 日前创建的实例启用目录集成仍默认每日同步，近实时能力尚未普遍开放。",
+      "url": "https://docs.cloud.google.com/sql/docs/postgres/release-notes#October_14_2026",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "DuckDB 可直接把 JSON 文本列转为类型列",
+      "summary": "先合并结构再修正类型，导入时一次解析；严格转换可暴露类型错误，递归展开可保留父级名称避免重名。",
+      "url": "https://duckdb.org/2026/10/16/json-to-typed-columns",
+      "author": "",
+      "source": "DuckDB",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "JSON"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "ClickStack 用独立基线降低异常告警误报",
+      "summary": "均值与标准差采用不同时间窗口，并要求至少 5% 的相对变化；调度器分片、批量写回和异步通知改善大规模告警。",
+      "url": "https://clickhouse.com/blog/scaling-clickstack-alerting-anomaly-detection",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Fluent Bit 5.1.4 限制遥测解压与解码资源",
+      "summary": "更新约束压缩 gRPC 与 MessagePack 的资源使用，修正 SQL 条件运算优先级，并保留重写标签时的资源元数据。",
+      "url": "https://github.com/fluent/fluent-bit/releases/tag/v5.1.4",
+      "author": "",
+      "source": "Fluent Bit",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "日志",
+        "可观测性"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Kueue 修复配额误算和任务无法重新入队",
+      "summary": "0.20.2 修正 DRA 任务规格变更后的配额计算，并重新入队部分被驱逐后卡住的任务；角色配额校验仍是默认关闭的 Alpha 功能。",
+      "url": "https://github.com/kubernetes-sigs/kueue/releases/tag/v0.20.2",
+      "author": "",
+      "source": "Kueue",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "调度"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Let’s Encrypt 将于明年 2 月默认签发 64 天证书",
+      "summary": "生产切换日期为 2027 年 2 月 10 日，授权复用期也将缩至 10 天；固定天数的续期脚本需改按证书寿命安排。",
+      "url": "https://letsencrypt.org/2026/10/07/64-day-certs",
+      "author": "",
+      "source": "Let’s Encrypt",
+      "source_date": "2026-10-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TLS",
+        "运维"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PG 19 分支修复并行清理时强制删库的权限误判",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/a39e53a700c5b728f2f7dab964e33b157979fb3a",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 主线开始统计 WAL 缓冲区读取命中",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/856a6594d86e4a7c0e9490253912af3f6159802f",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 主线为重整跳过外部分区发出警告",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/af090508018be5ace443ba6e2814500c10842a4d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Supabase 项目 API 最早 11 月 10 日停用 CBC 套件",
+      "summary": "",
+      "url": "https://supabase.com/changelog/cbc-tls-ciphers-deprecated",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "用 WAL 与复制积压评估 PostgreSQL 写入余量",
+      "summary": "",
+      "url": "https://www.tigerdata.com/blog/building-ingest-safety-monitor-iiot-pipeline-sql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "hstore 差分审计样例快于 JSONB 聚合",
+      "summary": "",
+      "url": "https://www.depesz.com/2026/10/16/old-tech-is-sometimes-better-a-case-study-based-on-blogpost-from-now-next/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "审计"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Supabase Go 测试版支持按用户权限执行查询",
+      "summary": "",
+      "url": "https://supabase.com/changelog/supabase-go-public-alpha",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "11 月 PostgreSQL 工作坊将讨论表重整实现",
+      "summary": "",
+      "url": "https://rhaas.blogspot.com/2026/10/hacking-workshop-for-november-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "TAF 补齐 TidesDB 的可复现负载配置",
+      "summary": "",
+      "url": "https://mariadb.org/mariadb-foundation-exploring-tidesdb-performance-with-taf/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "测试"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "DuckDB 公布 Vera 单插槽完整 TPC-H 实测",
+      "summary": "",
+      "url": "https://duckdb.org/2026/10/16/nvidia-vera-benchmark",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Cosmos DB 模拟器补齐二进制协议测试路径",
+      "summary": "",
+      "url": "https://devblogs.microsoft.com/cosmosdb/ai-agents-meet-the-azure-cosmos-db-vnext-emulator/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "测试"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "ext4 标记 data=journal 弃用，拟于 2028 年移除",
+      "summary": "",
+      "url": "https://github.com/torvalds/linux/commit/3e78d7b063230d39ffc42e80ee665b6c32a6adeb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "文件系统"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Gateway API 1.7 候选版将 HTTP 重试纳入标准通道",
+      "summary": "",
+      "url": "https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.7.0-rc.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "网络"
+      ],
+      "position": 30
+    },
+    {
+      "tier": 3,
+      "title": "Syncthing 阻止引荐设备自行加入未共享文件夹",
+      "summary": "",
+      "url": "https://github.com/syncthing/syncthing/releases/tag/v2.1.6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "文件同步",
+        "权限"
+      ],
+      "position": 31
+    }
+  ]
+}
