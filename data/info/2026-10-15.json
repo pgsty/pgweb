@@ -1,0 +1,494 @@
+{
+  "date": "2026-10-15",
+  "origin": "PGSQL.CC 主动采编；截稿 2026-10-16 07:35:07 Asia/Shanghai；PostgreSQL 官方新闻与提交、Planet、PGNexus #298–299、项目及厂商原文、主动搜索与 HN；回看窗口 2026-10-02 至截稿",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 首个候选版发布",
+      "summary": "PostgreSQL 19 首个候选版已开放下载，标志着测试进入发布候选阶段。此次汇总 Beta 4 以来对并发 REPACK、查询计划建议、NULL 推断优化和并行自动清理等路径的修复，并纠正 JSON 导出键名与外表统计导入身份。旧版本升级仍需采用 pg_upgrade 或转储恢复等大版本迁移方式。团队计划在 11 月 12 日推出第二个候选版，吸收同日维护版本的修复；若无新的阻碍，正式版拟于 11 月 19 日发布。",
+      "url": "https://www.postgresql.org/about/news/postgresql-19-rc-1-released-3409/",
+      "author": "PostgreSQL Global Development Group",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "版本发布"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pgAdmin 将发布验收改为真实安装与签名检查",
+      "summary": "pgAdmin 已把构建和发布流程迁入 GitHub Actions，使原先主要存在于 Jenkins 配置中的步骤进入代码审查。新的候选版验收按用户安装说明在九种 Linux 发行版实际安装，并验证 Windows 签名、macOS 公证与分离签名，已发现包目录和仓库索引看似齐全却无法安装的问题。容器镜像新增 GitHub 仓库分发，Helm 图表也迁到该处；硬件令牌签名和下载站发布仍保留受限自托管执行器。",
+      "url": "https://www.pgedge.com/blog/moving-the-pgadmin-build-farm-to-github-actions",
+      "author": "Dave Page",
+      "source": "pgEdge",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgAdmin",
+        "构建",
+        "发布"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Neon 公测可订阅任意确定性 SQL 的实时查询",
+      "summary": "Neon 将实时查询开放为公开测试功能：应用可订阅包含联接、聚合和窗口函数的只读确定性 SQL，数据变动后接收结果更新。功能按数据库分支启用，并提供 TypeScript 与 React 接口；厂商称增量计算放在副本，订阅本身不会阻止数据库缩容至零。当前仍有明确边界：尚不支持行级安全，协议可能变化，仅开放四个区域，也未公布性能基准。测试期免收实时功能费用，但计算和出站流量仍正常计费。",
+      "url": "https://neon.com/blog/neon-now-has-realtime",
+      "author": "James Arthur",
+      "source": "Neon",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Neon",
+        "实时查询"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "DuckDB 沿文件树定位 Iceberg 扫描与删除开销",
+      "summary": "Iceberg 表查询变慢时，仅看 SQL 计划未必能找到原因。DuckDB 团队演示如何沿目录指针读取元数据、清单和数据文件，用普通 SQL 检查每次提交留下的文件及统计信息。删除操作可能只增加位置删除文件，原数据文件的行数并不会随之减少；读取时仍需合并两者。列边界决定文件能否跳过，分区边界还可排除整份清单。这套方法有助于区分文件裁剪不足、碎片化提交和删除文件累积，避免把物理行数误当成有效记录数。",
+      "url": "https://duckdb.org/2026/10/13/inside-iceberg-table",
+      "author": "The DuckDB team",
+      "source": "DuckDB",
+      "source_date": "2026-10-13",
+      "image": "https://duckdb.org/images/blog/thumbs/iceberg-writes.png",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "Iceberg",
+        "存储"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Hyperdrive 统一缓存协议格式，修复偶发空结果",
+      "summary": "Cloudflare 在将 Hyperdrive 的 MySQL 支持推向正式可用时，修复了极少出现的空结果和挂起。问题来自客户端节点与数据库端节点共享缓存，却分别保存了面向不同协议能力的响应字节；另一端命中后，可能把正常数据误读为结果结束。修复让两端统一缓存规范格式，再按客户端协商能力转换。团队还纠正了连接重置后的字符集恢复，说明连接池不仅要复用连接，也必须保持会话与协议语义一致。",
+      "url": "https://blog.cloudflare.com/hyperdrive-mysql/",
+      "author": "Pranoy Dutta",
+      "source": "Cloudflare Blog",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "连接池",
+        "缓存"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Ubuntu 26.10 完成 Rust 核心命令迁移",
+      "summary": "Canonical 发布 Ubuntu 26.10，完成默认核心命令向 Rust 实现的迁移，并以 Sequoia PGP 验证 APT 仓库签名，为后量子包签名做准备。系统采用 Linux 7.3，提供 Lustre 支持和面向 amd64v3 的专用安装镜像。对维护数据库与基础设施镜像的团队，这次升级涉及日常文件操作、软件包验证和硬件支持；迁移前应验证管理脚本对命令细节的依赖，并确认现有包源与自动化流程的兼容性。",
+      "url": "https://canonical.com/blog/canonical-releases-ubuntu-26-10-stonking-stingray",
+      "author": "Canonical",
+      "source": "Canonical",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Ubuntu",
+        "Linux",
+        "Rust"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 再修分区重检，消除旧行参数漏行",
+      "summary": "继 10 月 8 日内存修复后，上游改为独立初始化重检的分区裁剪状态，修复旧行参数导致的更新漏行；代码已提交。",
+      "url": "https://github.com/postgres/postgres/commit/73e69062c120f669f71531dabeacfb8041c85daf",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "分区",
+        "修复"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 提交 MultiXact 中止状态修复",
+      "summary": "已提交的修复统一事务状态判断顺序，解决多个更新成员报错，以及崩溃更新者被误认为已提交的问题。",
+      "url": "https://github.com/postgres/postgres/commit/068c9aaec31bc3e73d156a49ba0c4128f067c010",
+      "author": "Chee Wooson",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "事务",
+        "修复"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PG 19 外键函数转换校验已回退到 SPI",
+      "summary": "已合入代码将需调用转换函数的外键检查交回 SPI，保留二进制兼容等快速路径，避开空值和函数替换错误。",
+      "url": "https://github.com/postgres/postgres/commit/6aecabcd5ed54ac055b4df031336e997c84f7450",
+      "author": "Amit Langote",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "外键",
+        "修复"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "可串行化隔离迁移须覆盖完整重试与热备连接",
+      "summary": "提交时仍可出现序列化失败，保存点不足以重试整笔事务；数据库默认值还会传到不支持该隔离级别的热备。",
+      "url": "https://thebuild.com/blog/a-parade-of-horribles-in-serial-order/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务",
+        "复制"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "事务连接池可能让会话顾问锁出现多个领导者",
+      "summary": "后端复用可让会话锁被其他客户端重入或无法释放；事务锁只保护当前显式事务，选主还需可靠租约。",
+      "url": "https://event-driven.io/en/connection-pooler-modes-advisory-locks/",
+      "author": "Oskar Dudycz",
+      "source": "Event-Driven.io",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "顾问锁"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Sequelize 接入 DSQL 需自行覆盖并发重试",
+      "summary": "连接器的事务重试不会自动覆盖 ORM 调用；应用须重读数据、重开事务，并处理 DDL 与保存点限制。",
+      "url": "https://aws.amazon.com/blogs/database/building-node-js-applications-with-sequelize-orm-and-amazon-aurora-dsql/",
+      "author": "Lasita Bhattacharya、Sushant Deshmukh",
+      "source": "AWS Database Blog",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Aurora DSQL",
+        "ORM",
+        "事务"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 前移采样聚合并后置跨区复制",
+      "summary": "边缘事件改为单次接入、缓冲后再跨区复制，并前移采样聚合；厂商称多项调整合计减少约 70 GB/s 压缩骨干流量。",
+      "url": "https://blog.cloudflare.com/rewinding-the-exponential/",
+      "author": "Cathy Chi、Sergey Nuzhdin、Christian Endres",
+      "source": "Cloudflare",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据管线",
+        "复制"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cilium 修复活跃连接被回收导致的映射丢失",
+      "summary": "1.20.3 修复连接跟踪回收竞态，避免误删 NAT 映射并重分配活跃连接源端口，也修正部分策略静默失效。",
+      "url": "https://github.com/cilium/cilium/releases/tag/v1.20.3",
+      "author": "Cilium 项目组",
+      "source": "Cilium",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Cilium",
+        "网络"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "Traefik 拒绝 CONNECT 并调整后端协议判定",
+      "summary": "3.7.15 拒绝所有 HTTP 版本的 CONNECT；HTTPRoute 不再凭端口号猜 HTTPS，升级须显式设置协议或 TLS 策略。",
+      "url": "https://github.com/traefik/traefik/releases/tag/v3.7.15",
+      "author": "Traefik 项目组",
+      "source": "Traefik",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Traefik",
+        "网关"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "eBPF 流量归因须结合 NFS 与服务日志",
+      "summary": "HRT 把内核追踪、请求日志与交换机计数关联，定位绕过本地缓存的跨区读取，并去除同一流量的多重计数。",
+      "url": "https://www.hudsonrivertrading.com/hrtbeat/long-on-research-short-on-bandwidth/",
+      "author": "Eric Goldlust",
+      "source": "Hudson River Trading",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "eBPF",
+        "网络"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "BYPASSRLS 不随角色成员关系直接继承",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-bypassrls-who-bypasses-row-level-security/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RLS",
+        "权限"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "备库连接串中的密码可能随配置重载写进日志",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-primary_conninfo/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "凭证"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pg_textsearch 1.5.1 修复并发落盘合并损坏",
+      "summary": "",
+      "url": "https://github.com/timescale/pg_textsearch/releases/tag/v1.5.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "修复"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "PGDG 用私有 Python 依赖修复 bigquery_fdw",
+      "summary": "",
+      "url": "https://people.planetpostgresql.org/devrim/index.php?/archives/134-bigquery_fdw-works-again-on-every-distribution-we-ship-in-the-RPM-repo.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "FDW",
+        "Python"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Stripe 可用短期凭证同步数据到 Supabase",
+      "summary": "",
+      "url": "https://supabase.com/blog/stripe-data-pipeline-now-syncs-real-time-data-to-supabase",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Supabase",
+        "数据同步"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Supabase 分支将迁移与历史记录放进同一事务",
+      "summary": "",
+      "url": "https://supabase.com/blog/how-a-new-branch-gets-its-config-migrations-and-functions",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Supabase",
+        "迁移"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Redis 主线合入 Roaring 压缩位图",
+      "summary": "",
+      "url": "https://github.com/redis/redis/pull/15331",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Redis",
+        "位图"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 正式支持在同层查询复用列别名",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/column-aliases",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "BigQuery",
+        "SQL"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 跨区域复制表正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/managing-tables#copy_tables_across_regions",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "BigQuery",
+        "复制"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Google 湖仓目录的 Hive 接口正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/lakehouse/docs/about-spark-hive-metastore",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Hive",
+        "湖仓"
+      ],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Buildah 修复复制时的相对符号链接越界",
+      "summary": "",
+      "url": "https://github.com/podman-container-tools/buildah/releases/tag/v1.45.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "安全"
+      ],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "OpenTofu 修复初始化时的 HTTP/2 CPU 耗尽",
+      "summary": "",
+      "url": "https://github.com/opentofu/opentofu/releases/tag/v1.12.8",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "OpenTofu",
+        "安全"
+      ],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "GitHub App 可单独申请建库权限",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-13-github-app-improvements-for-least-privilege-and-management/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub",
+        "权限"
+      ],
+      "position": 29
+    },
+    {
+      "tier": 3,
+      "title": "Void 开源可自托管的 Vite 应用部署平台",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/deploy-with-void/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Vite",
+        "部署"
+      ],
+      "position": 30
+    }
+  ]
+}
