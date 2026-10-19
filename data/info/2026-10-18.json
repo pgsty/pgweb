@@ -1,0 +1,391 @@
+{
+  "date": "2026-10-18",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL 新闻与 Planet；PGNexus #290–303；官方博客、发布说明与搜索；截稿 2026-10-19 07:26:05 Asia/Shanghai；回看 2026-10-05 至截稿",
+  "items": [
+    {
+      "tier": 1,
+      "title": "credcheck 6.0 修复改密流程中的提权漏洞",
+      "summary": "credcheck 为 PostgreSQL 提供密码策略与登录控制。6.0 修复了设置密码有效期时，用户通过修改自身角色夹带其他选项触发提权的问题，并处理堆溢出和内存泄漏。新版本改善与 PgBouncer 的配合，新增首次改密期限和可选登录历史，密码历史改存映射文件并兼容旧数据。已部署用户应结合扩展升级安排重启，验证主备密码历史与连接池登录流程。",
+      "url": "https://github.com/HexaCluster/credcheck/releases/tag/v6.0",
+      "author": "HexaCluster",
+      "source": "HexaCluster",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "密码策略",
+        "扩展"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pgBackRest 2.60 遇坏页默认中止恢复",
+      "summary": "pgBackRest 2.60.0 改变了页校验错误的处理方式：恢复时发现无效校验和会默认报错停止，集群此时尚不完整，需要重新执行恢复；保留链中最旧备份含坏页时，过期清理也会拒绝继续。备份阶段仍默认警告，可用新参数调整行为。版本同时加入对象存储多文件与范围读取预取、GCS 工作负载身份联邦，并修复 Azure 批量删除漏报成功的问题，升级前需要检查恢复与清理流程的错误处理。",
+      "url": "https://pgbackrest.org/release.html#2.60.0",
+      "author": "pgBackRest 项目组",
+      "source": "pgBackRest",
+      "source_date": "2026-10-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复",
+        "数据完整性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_hint_plan 1.9 接入 PG19 路径策略",
+      "summary": "pg_hint_plan 1.9.0 首次支持 PostgreSQL 19，并接入其路径生成策略机制，让执行计划提示继续适配新的规划器。发布同时修复多语句字符串触发提示解析死循环、调试状态输出报错导致服务端崩溃等问题，补上中断检查，并在查询提示表后恢复查询标识。使用该扩展测试 PG19 的团队可据此验证提示生效与异常路径；维护分支也发布对应修复，PG14 分支预计不再继续更新。",
+      "url": "https://github.com/ossc-db/pg_hint_plan/releases/tag/REL19_1_9_0",
+      "author": "pg_hint_plan 项目组",
+      "source": "pg_hint_plan",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "执行计划",
+        "扩展"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_utl_smtp 2.0 让邮件随事务提交发送",
+      "summary": "在数据库事务中发出邮件，可能出现业务回滚而通知已送达的错位。pg_utl_smtp 2.0 新增异步模式，将邮件写入队列表，仅在事务提交后交给 pg_dbms_job 发送，并提供失败重发入口。版本还修复此前 TLS 参数未真正启用加密的问题，增加服务端证书校验，让被忽略的 SMTP 错误明确报错，避免邮件静默丢失。最低 PostgreSQL 版本升至 11，使用者需核对传输安全与事务边界。",
+      "url": "https://github.com/HexaCluster/pg_utl_smtp/releases/tag/v2.0",
+      "author": "HexaCluster",
+      "source": "HexaCluster",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务",
+        "邮件",
+        "扩展"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "随机页成本调优还要看缓存与数据相关性",
+      "summary": "random_page_cost 经常被简化为机械盘与 SSD 的选择题。Christophe Pettus 从规划器的计价过程解释：索引扫描读取堆页的成本还受缓存命中率及物理排列与索引顺序的相关性影响，调整参数对不同查询的作用并不相同。文章特别提醒，表空间可覆盖页成本，而 SHOW 不会显示这层设置，排查时应查看表空间选项。调优应结合实际扫描与缓存数据，并注意修改成本尺度对并行计划和 JIT 阈值的连带影响。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-random_page_cost-and-seq_page_cost/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询优化",
+        "配置参数"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "mongo-health 用历史采样追查数据库慢在哪",
+      "summary": "数据库告警消失后，应用团队往往只能追问某天为什么变慢。Percona 发布的 mongo-health 将 MongoDB 的 FTDC 采样保留三个月，每小时执行 68 项检查，按副本集整理性能异常与证据，帮助回查磁盘、检查点、查询扫描和网络问题。工具以三个容器部署，无需在数据库主机安装代理，可连接自建实例或 Atlas。它面向事后诊断，目前不支持分片集群，也不承担实时告警；停止采集的实例会明确标记为未监测。",
+      "url": "https://www.percona.com/blog/mongodb-was-slow-on-thursday-answering-the-app-team-with-mongo-health/",
+      "author": "Zelmar Michelini",
+      "source": "Percona",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MongoDB",
+        "诊断",
+        "可观测性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG19 回退 servicefile 连接选项",
+      "summary": "主干和 PG19 分支均已撤回该选项及 psql 对应变量，指定会话服务文件继续使用 PGSERVICEFILE。",
+      "url": "https://github.com/postgres/postgres/commit/9d882c10bfb6f56a0a430872ef3040875535b06b",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "兼容性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pgdump-age 用完成标记防止截断备份冒充成功",
+      "summary": "逻辑备份流经压缩、加密后直传对象存储，只有三个阶段全部成功才写完成标记，避免上游失败被上传成功掩盖。",
+      "url": "https://pmaker.dev/articles/backing-up-postgres-without-ever-touching-a-disk",
+      "author": "Pierre Filstroff",
+      "source": "Pierre Filstroff",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "对象存储"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Percona 用 JavaScript 补齐 SQL 的值处理能力",
+      "summary": "示例先由 SQL 缩小集合，再用 JavaScript 处理递归 JSON、校验与距离计算；该组件仍处技术预览阶段。",
+      "url": "https://www.percona.com/blog/javascript-in-mysql-extending-sql-not-moving-the-application/",
+      "author": "Marco Tusa",
+      "source": "Percona",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "开发"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Dataflow 预览 Iceberg 到 Lakehouse 的 CDC",
+      "summary": "支持批量与流式增量同步，要求 Beam 2.77 及以上；源表模式变化仍需手动同步到目标表。",
+      "url": "https://docs.cloud.google.com/lakehouse/docs/migrate-iceberg-cdc",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Iceberg",
+        "CDC"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Google Cloud Z4M 存储优化实例正式可用",
+      "summary": "面向数据库等高存储密度负载，提供最高 168,000 GiB 本地 SSD，双物理网卡机型支持最高 400 Gbps 带宽。",
+      "url": "https://docs.cloud.google.com/compute/docs/storage-optimized-machines#z4m_series",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储",
+        "云计算"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Temporal 修复队列交接时误删新任务的竞态",
+      "summary": "1.31.4 和 1.30.8 为公平队列清理增加所有权检查，防止旧节点删除接管节点刚写入的任务。",
+      "url": "https://github.com/temporalio/temporal/releases/tag/v1.31.4",
+      "author": "Temporal 项目组",
+      "source": "Temporal",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "任务队列",
+        "数据完整性"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Linux 休眠安全方案用 TPM 验证镜像来源",
+      "summary": "Matthew Garrett 解释如何结合 TPM 审计记录与启动测量阻止伪造休眠镜像，方案仍在补丁评审阶段。",
+      "url": "https://codon.org.uk/~mjg59/blog/p/linux-lockdown-and-hibernation-again/",
+      "author": "Matthew Garrett",
+      "source": "Matthew Garrett",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Range 研究减少 KV 缓存恢复的逐对象开销",
+      "summary": "论文将逻辑复用粒度与物理读写批次分离，在 vLLM 与 LMCache 路径中合并索引、存储和 GPU 传输工作。",
+      "url": "https://arxiv.org/html/2610.21241v1",
+      "author": "Dingsen Shi 等",
+      "source": "arXiv",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "推理基础设施",
+        "存储"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "FOSDEM PGDay 2027 征稿截止至 12 月 1 日",
+      "summary": "",
+      "url": "https://2027.fosdempgday.org/callforpapers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Aurora DSQL 用小时 DPU 告警监控消耗",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/monitor-amazon-aurora-dsql-costs-with-the-aurora-dsql-console-and-cloudwatch-alarms/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "RDS SQL Server 示例用递归查询定位阻塞源",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/automated-blocking-and-query-alerts-for-amazon-rds-for-sql-server/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Dataproc 元数据迁往 Lakehouse 正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/lakehouse/docs/migrate-dataproc-metastore",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Z3 小型机型新增跨可用区同步磁盘支持",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/disks/hd-types/hyperdisk-balanced-ha",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "GKE 正式支持 C4 节点的 Intel TDX 加密",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/how-to/confidential-gke-nodes",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Apigee 修复实例重启后丢失流量转发设置",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/apigee/docs/release/release-notes#October_15_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Flow Analyzer 新增网络流丢包率视图",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/network-intelligence-center/docs/flow-analyzer/analyze-traffic-flows#display-packet-drops",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Artifact guard 的 CI/CD 集成将于 10 月 30 日停用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/security-command-center/docs/release-notes#October_06_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "SCC 预览把公网暴露虚拟机纳入攻击路径分析",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/security-command-center/docs/release-notes#October_15_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Actions 的 Xcode 27 镜像转为正式版",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-15-xcode-27-runner-image-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery AI.AGG 可指定结构化输出模式",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-ai-agg",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}
