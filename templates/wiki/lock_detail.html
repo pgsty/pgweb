@@ -5,6 +5,7 @@
   <p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/lock/?v={{ major }}">锁百科</a> / {{ mode.scope_label }}</p>
   <header class="wiki-entry__head lock-head"><p class="lock-eyebrow">{{ mode.scope_label }} · {{ mode.abbrev }}</p><h1 class="lock-title">{{ mode.name }}</h1><p class="wiki-entry__name">{{ mode.name_zh }}</p><p class="wiki-lead">{{ mode.summary }}</p></header>
   {% include "wiki/lock_version.html" %}
+  {% include "wiki/center_zh.html" with snapshot=mode.snapshot %}
   <nav class="lock-jump" aria-label="本页目录"><a href="#conflicts">冲突关系</a><a href="#commands">关联命令</a><a href="/wiki/lock/?v={{ major }}#all-locks">查看完整矩阵</a><a href="#sources">数据来源</a></nav>
 
   <section class="wiki-section" id="conflicts"><h2>冲突关系</h2>

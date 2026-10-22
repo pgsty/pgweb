@@ -26,7 +26,7 @@ from .sqlcmd_common import (compare, major_of, section_text, sections_at, versio
 FORMAT = 1
 CACHE_DIR = 'tmp/sqlcmd-sources'
 SLUG_RE = re.compile(r'^[a-z][a-z0-9-]{0,63}$')
-FILE_RE = re.compile(r'^sql-[a-z0-9-]+\.html$')
+FILE_RE = re.compile(r'^sql-[a-z0-9-]+\.html?$')
 TAGS = list(dict.fromkeys(DOC_TAGS + ['var', 'h3', 'h6', 'caption', 'tfoot', 'acronym']))
 ATTRS = dict(DOC_ATTRS, **{tag: ['class'] for tag in
                          ('pre', 'em', 'var', 'dl', 'dt', 'dd', 'ul', 'ol', 'li')})
@@ -307,7 +307,7 @@ def validate(snapshot):
                 raise ValueError('{} 手册文件名无效'.format(label))
             for section in snap['sections']:
                 require(section, ('key', 'title', 'html'), label + ' 小节')
-                if section['key'] not in set(SECTION_KEYS.values()) | {'other'}:
+                if section['key'] not in set(SECTION_KEYS.values()) | {'other', 'usage', 'diagnostics', 'bugs', 'history'}:
                     raise ValueError('{} 小节 key 无效'.format(label))
             pointer = snap['sections_same_as']
             if pointer and (pointer not in present or present.index(pointer) >= present.index(major)

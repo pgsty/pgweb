@@ -7,6 +7,7 @@
 from django.core.cache import cache
 
 from .catalog_importer import compare_snapshots
+from .center_text import prepare
 from .manuals import manual_slug
 from .ruler import mark_ticks
 from .models import (CATALOG_KINDS, CATALOG_KIND_EYEBROW, CATALOG_KIND_LABEL, CatalogRelation,
@@ -359,6 +360,10 @@ def facts_of(relation, major, snapshot, order):
     version = version_map().get(major)
     if version:
         rows.append(('版本状态', version['status_label'], version['url']))
+        if major == '19':
+            rows.append(('文档版本', version.get('documentation_version') or version['label'], ''))
+            if snapshot.get('runtime_verified'):
+                rows.append(('实测版本', snapshot.get('release') or version.get('release', ''), ''))
     rows.append(('结构变更', '{} 次'.format(len(relation.changed_in)), ''))
     if snapshot.get('carried_from'):
         reason = snapshot.get('carry_reason') or '手册没有这张表'
@@ -447,7 +452,7 @@ def detail(name, wanted=''):
     major = pick_major(wanted, relation.present_in, order)
     if not major:
         raise CatalogRelation.DoesNotExist(name)
-    snapshot = relation.versions[major]
+    snapshot = prepare(dict(relation.versions[major]), major)
     # 手册页清单一次读到底：下面的版本条与链接要问它几十次。
     pages = doc_pages()
     known = {row.name: set(row.present_in)
@@ -476,7 +481,7 @@ def detail(name, wanted=''):
     local_doc = doc_url(snapshot, pages)
     # 字段是否非空只有实测才知道。20 devel 由手册推导，快照里的 not_null 是 19 的，
     # 不能当作 20 的事实标出来；英文站 PG.CENTER 同样只在实测版本上标 NOT NULL。
-    measured = bool((version or {}).get('runtime_verified'))
+    measured = bool(snapshot.get('runtime_verified', (version or {}).get('runtime_verified')))
     columns = [column_data(column, major, known, added, types) for column in snapshot.get('columns') or ()]
     if not measured:
         for column in columns:

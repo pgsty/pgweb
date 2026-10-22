@@ -829,7 +829,7 @@ class GucPageTests(GucFixture):
 
     def test_the_column_is_live_and_listed(self):
         self.assertTrue(BY_SLUG['guc']['live'])
-        self.assertEqual(BY_SLUG['guc']['coverage'], 'PostgreSQL 9.0 – 20 devel')
+        self.assertEqual(BY_SLUG['guc']['coverage'], 'PostgreSQL 7.4 – 20 devel')
 
     def test_sitemap_lists_the_index_every_parameter_and_every_changes_page(self):
         from .struct import get_struct

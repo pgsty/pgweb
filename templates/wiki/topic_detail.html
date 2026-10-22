@@ -7,6 +7,7 @@
   <header class="wiki-entry__head"><h1 class="topic-title">{{ item.name }}</h1><p class="wiki-entry__name">{{ item.name_zh }}</p><p class="wiki-lead">{{ item.summary }}</p></header>
   {% include "wiki/topic_versions.html" %}
   {% if snapshot %}
+  {% include "wiki/center_zh.html" %}
   <nav class="topic-jump" aria-label="本页目录"><a href="#description">说明</a>{% if snapshot.signature %}<a href="#signature">{% if kind == 'hook' %}接口签名{% else %}用法{% endif %}</a>{% endif %}{% for section in snapshot.sections %}<a href="#section-{{ forloop.counter }}">{{ section.title }}</a>{% endfor %}<a href="#sources">文档与源码</a></nav>
   <section class="wiki-section" id="description"><h2>说明</h2>{% for paragraph in snapshot.description %}<p>{{ paragraph }}</p>{% endfor %}
     {% if snapshot.facts %}<dl class="topic-facts">{% for fact in snapshot.facts %}<div><dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd></div>{% endfor %}</dl>{% endif %}

@@ -46,7 +46,7 @@
   <p class="cat-changenote">{{ change_note }}{% if notice %} <span class="cat-changenote__notice">{{ notice }}</span>{% endif %}</p>
 </section>
 
-{% if description_zh %}<p class="cat-desc">{{ description_zh|linebreaksbr }}</p>{% elif description %}<p class="cat-desc" lang="en">{{ description|linebreaksbr }}</p>{% endif %}
+{% if snapshot.center_zh_rendered %}<div class="cat-desc">{{ snapshot.center_zh_rendered|safe }}</div>{% elif description_zh %}<p class="cat-desc">{{ description_zh|linebreaksbr }}</p>{% elif description %}<p class="cat-desc" lang="en">{{ description|linebreaksbr }}</p>{% endif %}
 
 <nav class="wiki-toc" aria-label="本页目录">
   <h2 class="wiki-toc__title">本页目录</h2>

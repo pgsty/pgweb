@@ -903,6 +903,8 @@ class FuncPageTests(FuncFixture):
         self.assertEqual(response.context['total'], 6)
         self.assertEqual(response.context['column']['slug'], 'func')
         self.assertIn('group-string', response.content.decode())
+        self.assertContains(response, '中文说明来自已核对的同版本中文手册与审阅译文')
+        self.assertNotContains(response, '本站未收录译文的版本按')
 
     def test_detail_renders_and_honours_the_version_parameter(self):
         response = self.client.get('/wiki/func/substring/')
@@ -917,6 +919,19 @@ class FuncPageTests(FuncFixture):
     def test_an_invalid_version_falls_back_to_the_default(self):
         response = self.client.get('/wiki/func/substring/?v=1999')
         self.assertEqual(response.context['version']['major'], '18')
+
+    def test_reviewed_chinese_is_not_claimed_as_manual_translation(self):
+        function = PgFunction.objects.get(slug='substring')
+        snapshot = function.versions['18']
+        snapshot['center_zh'] = {'body_html': '<p>已核对的中文说明。</p>', 'summary': '中文摘要'}
+        snapshot['signatures'][0].update(description_zh='审阅补译。',
+            description_zh_html='<p>审阅补译。</p>', zh_from='same-version-source-with-reviewed-chinese')
+        function.save(update_fields=['versions'])
+        response = self.client.get('/wiki/func/substring/?v=18')
+        self.assertContains(response, '中文说明来自同版本手册与审阅译文')
+        self.assertContains(response, 'title="同版原文审阅译文"')
+        self.assertNotContains(response, '9.x 各版取自')
+        self.assertContains(response, '已核对的中文说明。')
 
     def test_query_parameters_outside_the_whitelist_are_dropped(self):
         response = self.client.get('/wiki/func/substring/?v=12&nope=1')
@@ -969,7 +984,7 @@ class FuncPageTests(FuncFixture):
     def test_the_column_is_live_and_listed(self):
         self.assertTrue(BY_SLUG['func']['live'])
         self.assertEqual(BY_SLUG['func']['name'], '函数百科')
-        self.assertEqual(BY_SLUG['func']['coverage'], 'PostgreSQL 9.0 – 20 devel')
+        self.assertEqual(BY_SLUG['func']['coverage'], 'PostgreSQL 7.1 – 20 devel')
 
     def test_sitemap_lists_the_index_every_function_and_every_changes_page(self):
         from .struct import get_struct

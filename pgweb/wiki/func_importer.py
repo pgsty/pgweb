@@ -114,7 +114,13 @@ FUNCTION_FIELDS = ('name', 'name_key', 'group', 'group_label', 'groups', 'summar
                    'signature_count', 'versions', 'changes', 'position', 'source_rev')
 SNAPSHOT_FIELDS = ('group', 'group_label', 'pages', 'doc', 'lang', 'layout', 'signatures',
                    'description_zh', 'description', 'zh_from', 'prose_only')
-ZH_SOURCES = ('doc', 'inherited', '')
+ZH_SOURCES = ('doc', 'inherited', '', 'same-version-pgdoc',
+              'same-version-source-with-reviewed-chinese',
+              'same-version-chinese-manual-exact-paragraph-or-cell',
+              'same-version-chinese-manual-table-description',
+              'same-version-chinese-manual-shared-paragraph',
+              'same-version-source-extraction-correction',
+              'reviewed-adaptation-of-same-version-chinese-manual')
 SIGNATURE_FIELDS = ('text', 'html', 'returns', 'description_zh', 'description', 'examples',
                     'zh_from')
 CHANGE_FIELDS = ('from', 'to', 'status', 'signatures', 'descriptions_changed', 'group_changed',

@@ -13,6 +13,7 @@ from .models import (DataType, ExtensionHook, IndexAccessMethod, ObjectIdentifie
                      PredefinedRole, StorageParameter)
 from .sqlcmd_common import version_rows
 from .topic_specs import TOPIC_SPECS
+from .center_text import prepare as prepare_center_text
 from .topic_registry import DOMAINS, DOMAIN_KEYS
 from . import models as domain_models
 
@@ -185,6 +186,7 @@ def detail(kind, slug, wanted=''):
     if kind == 'type' or kind in DOMAIN_KEYS:
         row = dict(row, versions=TOPICS[kind]['model'].objects.values_list('versions', flat=True).get(pk=slug))
     snapshot = row['versions'].get(major)
+    prepare_center_text(snapshot, major)
     if kind in ('type', 'indexam') + DOMAIN_KEYS:
         row['summary'] = snapshot['description'][0] if snapshot else '所选版本未收录此条目。'
     for v in versions:
@@ -216,6 +218,7 @@ def domain_detail(kind, slug, wanted=''):
         raise ValueError('Unsupported version')
     major = version['major']
     snapshot = row['versions'].get(major)
+    prepare_center_text(snapshot, major)
     row['summary'] = snapshot['description'][0] if snapshot else '所选版本未收录此条目。'
     for v in versions:
         v.update(is_current=v['major'] == major, present=v['major'] in row['versions'],

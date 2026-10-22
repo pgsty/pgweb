@@ -400,6 +400,7 @@ def evidence_records(code):
 def detail_payload(sqlstate, wanted_version=''):
     code = ErrorCode.objects.select_related('klass').get(sqlstate=sqlstate)
     text = code.texts.get('zh') or code.texts.get('en') or {}
+    translated = text.get('center_zh') or {}
     evidence = evidence_records(code)
     sources, claims, cases, runtimes, messages = [evidence.get(key, [])
                                                 for key in ('sources', 'claims', 'cases', 'runtimes', 'messages')]
@@ -407,6 +408,15 @@ def detail_payload(sqlstate, wanted_version=''):
     version = pick_version(code, wanted_version)
     sections = [s for s in text.get('sections', [])
                 if s.get('heading') or not re.match(r'^\s*(<|&lt;)h1', s.get('html', ''))]
+    if translated:
+        from .center_text import localized_html
+        sections = [{'anchor': '', 'heading': '', 'html': localized_html(
+            translated['body_html'], link_map=translated.get('link_map'))}]
+    available_manuals = set(doc_majors())
+    manual_versions = [{'major': major, 'url': '/docs/{}/{}'.format(
+        'devel' if major == '20' else major, DOC_FILE) if (major in available_manuals or
+        (major == '20' and '0' in available_manuals)) else ''}
+        for major in text.get('manual_versions', [])]
     if sources and not any(s.get('anchor') == 'sources' for s in sections):
         sections.append({'anchor': 'sources', 'heading': '来源', 'html': ''})
     return {
@@ -417,6 +427,7 @@ def detail_payload(sqlstate, wanted_version=''):
         'facts': fact_rows(code), 'card': card(code),
         'version_groups': version_groups(code), 'version_bar': version_bar(code),
         'versions': version_options(code), 'version': version,
+        'manual_versions': manual_versions,
         'doc_url': '/docs/{}/{}'.format(version['value'], DOC_FILE) if version else '',
         'messages': messages, 'claims': claims, 'sources': sources, 'source_rows': source_rows(code),
         'cases': cases, 'runtimes': runtimes, 'sibling_groups': sibling_groups(code.klass_id),

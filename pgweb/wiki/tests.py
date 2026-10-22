@@ -1361,4 +1361,4 @@ class CatalogDefaultVersionTests(TestCase):
             self.assertEqual(catalog.pick_major('', []), '')
 
     def test_the_scale_string_matches_what_the_pages_count(self):
-        self.assertEqual(BY_SLUG['catalog']['scale'], '153 个关系 · 4 类')
+        self.assertEqual(BY_SLUG['catalog']['scale'], '155 个关系 · 4 类')

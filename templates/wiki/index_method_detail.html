@@ -8,6 +8,7 @@
   {% include "wiki/topic_versions.html" %}
   {% include "wiki/specialized_localization.html" %}
   {% if snapshot %}
+  {% include "wiki/center_zh.html" %}
   <nav class="topic-jump" aria-label="本页目录"><a href="#capabilities">能力</a><a href="#definition">查询与限制</a><a href="#options">存储参数</a><a href="#comparison">比较版本</a><a href="#sources">来源</a></nav>
   <section id="capabilities" class="wiki-section"><h2>能力 · PostgreSQL {{ version.label }}</h2><p>能力结论来自对应版本的文档。有条件支持取决于操作符类、索引类型或查询，不能视为普遍保证。</p>
     <div class="wiki-table"><div class="wiki-table__scroll"><table class="topic-table"><thead><tr><th scope="col">能力</th><th scope="col">支持状态</th><th scope="col">条件与证据</th></tr></thead><tbody>

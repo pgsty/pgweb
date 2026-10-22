@@ -17,8 +17,8 @@ COLUMNS = (
         'short': 'SQL 命令',
         'tone': 'sql',
         'lead': '每条 SQL 命令的语法、参数与逐版本的语法演化。',
-        'scale': '186 条命令 · 17 组',
-        'coverage': 'PostgreSQL 10 – 20 devel',
+        'scale': '187 条命令 · 17 组',
+        'coverage': 'PostgreSQL 6.4 – 20 devel',
         'repo': '',
         'origin': '',
         'live': True,
@@ -29,8 +29,8 @@ COLUMNS = (
         'short': 'SQL 状态码',
         'tone': 'err',
         'lead': 'SQLSTATE 的含义、报文、诊断与处置。',
-        'scale': '263 个 SQL 状态码 · 44 个类',
-        'coverage': 'PostgreSQL 9.0 – 19beta3',
+        'scale': '264 个 SQL 状态码 · 44 个类',
+        'coverage': 'PostgreSQL 8.1 – 20 devel（手册）',
         'repo': 'pgsty/err.pg.center',
         'origin': 'https://err.pg.center',
         'live': True,
@@ -41,8 +41,8 @@ COLUMNS = (
         'short': '系统目录',
         'tone': 'cat',
         'lead': '系统目录与视图的字段构成，以及逐版本的结构变化。',
-        'scale': '153 个关系 · 4 类',
-        'coverage': 'PostgreSQL 9.0 – 20 devel',
+        'scale': '155 个关系 · 4 类',
+        'coverage': 'PostgreSQL 7.4 – 20 devel',
         'repo': 'pgsty/cat.pg.center',
         'origin': 'https://cat.pg.center',
         'live': True,
@@ -53,8 +53,8 @@ COLUMNS = (
         'short': '配置参数',
         'tone': 'guc',
         'lead': '全部配置参数的作用、默认值演变与调优取舍。',
-        'scale': '449 个参数 · 16 类',
-        'coverage': 'PostgreSQL 9.0 – 20 devel',
+        'scale': '491 个参数 · 16 类',
+        'coverage': 'PostgreSQL 7.4 – 20 devel',
         'repo': 'pgsty/guc.pg.center',
         'origin': 'https://guc.pg.center',
         'live': True,
@@ -65,7 +65,7 @@ COLUMNS = (
         'short': '等待事件',
         'tone': 'wait',
         'lead': '每个等待事件的触发机制、是否异常与排查手段。',
-        'scale': '302 个等待事件 · 9 类',
+        'scale': '303 个等待事件 · 9 类',
         'coverage': 'PostgreSQL 9.6 – 20 devel',
         'repo': 'pgsty/wait.pg.center',
         'origin': 'https://wait.pg.center',
@@ -89,8 +89,8 @@ COLUMNS = (
         'short': '函数百科',
         'tone': 'func',
         'lead': '每个内置函数的签名、说明、示例与逐版本的签名演化。',
-        'scale': '707 个函数 · 27 组',
-        'coverage': 'PostgreSQL 9.0 – 20 devel',
+        'scale': '711 个函数 · 33 组',
+        'coverage': 'PostgreSQL 7.1 – 20 devel',
         # 数据不来自独立的上游仓库：本站手册第 9 章就是来源。
         'repo': '',
         'origin': '',
@@ -164,7 +164,11 @@ def home_cards():
             continue
         model_name, unit, version_model, count_field = sources[card['slug']]
         model = getattr(models, model_name)
-        if version_model:
+        if card['slug'] == 'sqlstate' and model.objects.filter(texts__zh__manual_versions__isnull=False).exists():
+            # Manual coverage is independent of sampled source/runtime history.
+            majors = list({major for values in model.objects.values_list('texts__zh__manual_versions', flat=True)
+                           for major in (values or [])})
+        elif version_model:
             versions = getattr(models, version_model).objects.filter(**{count_field + '__gt': 0})
             majors = list(versions.values_list('major', flat=True))
         else:

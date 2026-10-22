@@ -397,6 +397,18 @@ def doc_ref(snapshot, slug):
 
 # ------------------------------------------------------------------ 快照比较
 
+def catalog_type_key(value):
+    """SQL display spellings and catalog internal spellings describe the same type."""
+    aliases = {'integer': 'int4', 'int': 'int4', 'smallint': 'int2', 'bigint': 'int8',
+               'boolean': 'bool', 'real': 'float4', 'double precision': 'float8',
+               'timestamp with time zone': 'timestamptz',
+               'timestamp without time zone': 'timestamp', '"char"': 'char'}
+    value = (value or '').lower()
+    suffix = '[]' if value.endswith('[]') else ''
+    base = value[:-2] if suffix else value
+    return aliases.get(base, base) + suffix
+
+
 def compare_snapshots(left, right, from_version, to_version, wording=True):
     """cat `compare_snapshots()` 的移植：两份快照之间的变化记录，没有变化返回 None。
 
@@ -418,7 +430,7 @@ def compare_snapshots(left, right, from_version, to_version, wording=True):
     }
     common = a.keys() & b.keys()
     for name in common:
-        if a[name].get('type') != b[name].get('type'):
+        if catalog_type_key(a[name].get('type')) != catalog_type_key(b[name].get('type')):
             change['type_changes'].append({'name': name, 'from': a[name].get('type', ''),
                                            'to': b[name].get('type', '')})
         if not wording:
@@ -1171,9 +1183,11 @@ def coverage(snapshot):
     relation_zh = {'doc': 0, 'inherited': 0, 'none': 0}
     for relation in snapshot['relations']:
         for version in relation['versions'].values():
-            relation_zh[version.get('zh_from') or 'none'] += 1
+            origin = version.get('zh_from') or 'none'
+            relation_zh[origin] = relation_zh.get(origin, 0) + 1
             for column in version.get('columns') or ():
-                counts[column.get('zh_from') or 'none'] += 1
+                origin = column.get('zh_from') or 'none'
+                counts[origin] = counts.get(origin, 0) + 1
     return {'columns': counts, 'relations': relation_zh,
             'summary_zh': sum(1 for r in snapshot['relations'] if r['summary_zh'])}
 

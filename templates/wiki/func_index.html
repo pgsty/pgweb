@@ -59,7 +59,7 @@
 <p class="wiki-empty" id="func-empty" hidden>没有匹配的函数。<a href="/wiki/func/">清除筛选</a></p>
 
 <h2>说明</h2>
-<p>库里共 {{ stats.functions }} 个函数、{{ stats.versions }} 个大版本、{{ stats.snapshots }} 份逐版本快照，最新一版合计 {{ stats.signatures }} 条签名；相邻大版本之间记录到 {{ stats.changes }} 处签名变化，{{ stats.removed }} 个函数已经不在最新版本里。「主签名」是该函数在最新收录版本里的第一条签名，完整签名与全部重载写在详情页；一个函数出现在多页时，这里归到它最新一版里页面序最靠前的那一组。每行的「版本变动」是一排方格，一格一个大版本，与表头刻度逐格对齐；鼠标停在某一格上会写出它是哪一版、发生了什么。PostgreSQL 13 重排了手册里函数表的写法，签名文本整体改变，那一跳只记函数的增删，不逐条比较签名。数据取自本站手册译文；本站未收录译文的版本按 <a href="https://www.postgresql.org/docs/" target="_blank" rel="noopener">postgresql.org</a> 的英文原页显示。</p>
+<p>库里共 {{ stats.functions }} 个函数、{{ stats.versions }} 个大版本、{{ stats.snapshots }} 份逐版本快照，最新一版合计 {{ stats.signatures }} 条签名；相邻大版本之间记录到 {{ stats.changes }} 处签名变化，{{ stats.removed }} 个函数已经不在最新版本里。「主签名」是该函数在最新收录版本里的第一条签名，完整签名与全部重载写在详情页；一个函数出现在多页时，这里归到它最新一版里页面序最靠前的那一组。每行的「版本变动」是一排方格，一格一个大版本，与表头刻度逐格对齐；鼠标停在某一格上会写出它是哪一版、发生了什么。PostgreSQL 13 重排了手册里函数表的写法，签名文本整体改变，那一跳只记函数的增删，不逐条比较签名。函数签名、版本与示例依据同版本 <a href="https://www.postgresql.org/docs/" target="_blank" rel="noopener">PostgreSQL 英文手册</a>；中文说明来自已核对的同版本中文手册与审阅译文。</p>
 
 </div>
 {% endblock %}

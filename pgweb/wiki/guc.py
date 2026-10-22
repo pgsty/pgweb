@@ -312,7 +312,7 @@ def row_of(parameter, order, snapshot=None):
     snapshot = snapshot or {}
     removed_in = removed_after(parameter, order)
     vartype = snapshot.get('vartype') or parameter.vartype
-    context = snapshot.get('context') or parameter.context
+    context = (snapshot.get('context') or '') if snapshot.get('facts_source') == 'documentation' else (snapshot.get('context') or parameter.context)
     boot_human = human_of(snapshot) if snapshot else parameter.boot_human
     changed_in = list(parameter.changed_in)
     return {
@@ -546,7 +546,7 @@ def facts_of(parameter, major, snapshot, order, commit):
 
     vartype = snapshot.get('vartype') or parameter.vartype
     add('类型', GUC_VARTYPE_LABEL.get(vartype, vartype), note=vartype)
-    context = snapshot.get('context') or parameter.context
+    context = (snapshot.get('context') or '') if snapshot.get('facts_source') == 'documentation' else (snapshot.get('context') or parameter.context)
     add('上下文', GUC_CONTEXT_LABEL.get(context, context), note=GUC_CONTEXT_NOTE.get(context, ''))
     unit = snapshot.get('unit') or ''
     # human 是空串就是没采集到：和上下文、取值范围一样整条不出，不假装有默认值。
@@ -563,6 +563,11 @@ def facts_of(parameter, major, snapshot, order, commit):
     category_zh = snapshot.get('category_zh') or parameter.category_zh
     add('分类', category_zh,
         url=ROOT + '#' + category_anchor(parameter.group_slug, parameter.category))
+    if major == '19':
+        version = next((v for v in order if v['major'] == major), {})
+        add('文档版本', version.get('label', major))
+        if snapshot.get('facts_source') != 'documentation':
+            add('实测版本', version.get('server_version', ''))
     baseline = order[0]['major'] if order else ''
     first = parameter.first_version
     add('引入版本', '{}（基线）'.format(first) if first == baseline else first,
@@ -664,7 +669,7 @@ def doc_of(parameter, major, order, pages):
     snapshot = parameter.versions.get(major) or {}
     html, source = doc_html_at(parameter, major)
     borrowed = False
-    if not html:
+    if not html and not snapshot.get('center_zh'):
         positions = {item['major']: item['position'] for item in order}
         here = positions.get(major, 0)
         candidates = []
@@ -735,6 +740,12 @@ def origin_url(name):
     return 'https://guc.pg.center/zh/parameters/{}/'.format(name.lower().replace('_', '-'))
 
 
+def documented_notice(major):
+    if str(major) == '20':
+        return DOCUMENTED_NOTICE
+    return 'PostgreSQL {} 的类型与说明取自同版本手册；默认值、上下文和运行值尚未采样。'.format(major)
+
+
 def detail(name, wanted=''):
     """一个配置参数的详情页上下文。找不到抛 GucParameter.DoesNotExist。
 
@@ -743,6 +754,12 @@ def detail(name, wanted=''):
     """
     parameter = GucParameter.objects.get(key=name.lower())
     order = versions()
+    if (wanted and wanted not in parameter.present_in
+            and any(v['major'] == wanted for v in order)
+            and any(s.get('center_zh') for s in parameter.versions.values())):
+        # A synchronized definition has an exact, reviewed version membership.
+        # An explicit absent version must not silently become another version.
+        raise GucParameter.DoesNotExist('{} @ {}'.format(name, wanted))
     major = pick_major(wanted, parameter.present_in, order)
     if not major:
         raise GucParameter.DoesNotExist(name)
@@ -751,7 +768,7 @@ def detail(name, wanted=''):
     version = version_map().get(major)
     change = change_at(parameter, major)
     commit = intro_commit_of(parameter)
-    context = snapshot.get('context') or parameter.context
+    context = (snapshot.get('context') or '') if snapshot.get('facts_source') == 'documentation' else (snapshot.get('context') or parameter.context)
     vartype = snapshot.get('vartype') or parameter.vartype
     document = doc_of(parameter, major, order, pages)
     doc_versions = []
@@ -777,7 +794,7 @@ def detail(name, wanted=''):
         'default_track': default_track_of(parameter, major, order),
         'ribbon': ribbon_of(parameter, major, order, pages),
         'change': change, 'change_note': change_note(parameter, major, order, change),
-        'notice': DOCUMENTED_NOTICE if snapshot.get('facts_source') == 'documentation' else notice_of(version),
+        'notice': documented_notice(major) if snapshot.get('facts_source') == 'documentation' else notice_of(version),
         'doc': document,
         'editorial': editorial_of(parameter),
         'timeline': timeline_of(parameter),
@@ -819,7 +836,7 @@ def compare(left, right, from_major='', to_major=''):
 def card_of(parameter, snapshot):
     snapshot = snapshot or {}
     vartype = snapshot.get('vartype') or parameter.vartype
-    context = snapshot.get('context') or parameter.context
+    context = (snapshot.get('context') or '') if snapshot.get('facts_source') == 'documentation' else (snapshot.get('context') or parameter.context)
     return {
         'name': parameter.name, 'url': parameter.url,
         'group_slug': parameter.group_slug,
