@@ -48,6 +48,8 @@
   <p class="fn-changenote">{{ change_note }}{% if notice %} <span class="fn-changenote__notice">{{ notice }}</span>{% endif %}</p>
 </section>
 
+{% if center_zh_rendered %}<section class="wiki-section" id="definition"><h2>说明</h2><div class="fn-sig__desc">{{ center_zh_rendered|safe }}</div></section>{% endif %}
+
 <nav class="wiki-toc" aria-label="本页目录">
   <h2 class="wiki-toc__title">本页目录</h2>
   <ol>
@@ -69,7 +71,7 @@
   {% if doc.official_url %}<a class="fn-btn" href="{{ doc.official_url }}" target="_blank" rel="noopener">官方文档 <span class="fn-btn__out" aria-hidden="true">↗</span></a>{% endif %}
 </p>
 {% else %}
-<p class="fn-sectionlead">PostgreSQL {{ version.label }} 里 {{ name }} 的 {{ signatures|length }} 条签名，按上游手册顺序排列。参数名用斜体，类型用弱化色，<span class="fn-sectionlead__arrow" aria-hidden="true">→</span> 之后是返回类型。说明取自本站手册译文：标「沿用」的借用了另一版的译文，标「EN」的本站暂无译文、按英文原文显示。</p>
+<p class="fn-sectionlead">PostgreSQL {{ version.label }} 里 {{ name }} 的 {{ signatures|length }} 条签名，按上游手册顺序排列。参数名用斜体，类型用弱化色，<span class="fn-sectionlead__arrow" aria-hidden="true">→</span> 之后是返回类型。{% if snapshot.center_zh %}中文说明来自同版本手册与审阅译文，悬停可查看每条说明的来源。{% else %}说明取自本站手册译文：标「沿用」的借用了另一版的译文，标「EN」的本站暂无译文、按英文原文显示。{% endif %}</p>
 {% endif %}
 <ol class="fn-sigs">
   {% for item in signatures %}
@@ -82,7 +84,7 @@
     英文 description_html），缺席时退回同名的纯文本。inherited 由后端逐条判定：整份快照标
     'doc' 不代表每条签名都配上了中文，所以这里只认签名自己那份，不回落快照。{% endcomment %}
     {% if item.description_zh %}
-    <div class="fn-sig__desc">{% if item.inherited %}<span class="fn-mark fn-mark--carry" title="本版没有单独的译文，英文原文与另一版完全一致，沿用那一版的译文">沿用</span>{% endif %}{% if item.description_zh_html %}{{ item.description_zh_html|wiki_links|safe }}{% else %}{{ item.description_zh }}{% endif %}</div>
+    <div class="fn-sig__desc" title="{{ item.zh_label }}">{% if item.inherited %}<span class="fn-mark fn-mark--carry" title="本版没有单独的译文，英文原文与另一版完全一致，沿用那一版的译文">沿用</span>{% endif %}{% if item.description_zh_html %}{{ item.description_zh_html|wiki_links|safe }}{% else %}{{ item.description_zh }}{% endif %}</div>
     {% elif item.description %}
     <div class="fn-sig__desc" lang="en"><span class="fn-mark fn-mark--en" title="本站手册暂无该版译文，按英文原文显示">EN</span>{% if item.description_html %}{{ item.description_html|wiki_links|safe }}{% else %}{{ item.description }}{% endif %}</div>
     {% endif %}
@@ -202,7 +204,7 @@
   {% if doc_versions %}
   <p>本站手册收录 {{ name }} 的版本：{% for item in doc_versions %}<a class="fn-docver" href="{{ item.url }}">{{ item.label }}</a>{% endfor %}</p>
   {% endif %}
-  <p>签名、说明与示例取自本站手册第 9 章的译文{% if doc.borrowed %}；本版未收录译文，上面显示的是 PostgreSQL {{ doc.major }} 的内容{% endif %}，9.x 各版取自 <a href="https://www.postgresql.org/docs/" target="_blank" rel="noopener">postgresql.org</a> 的英文原页，最后同步 {{ function.imported_at|date:"Y-m-d" }}。</p>
+  <p>{% if snapshot.center_zh %}签名与示例依据同版本 PostgreSQL 手册，中文说明来自已核对的同版本手册与审阅译文{% else %}签名、说明与示例取自本站手册第 9 章的译文{% if doc.borrowed %}；本版未收录译文，上面显示的是 PostgreSQL {{ doc.major }} 的内容{% endif %}，9.x 各版取自 <a href="https://www.postgresql.org/docs/" target="_blank" rel="noopener">postgresql.org</a> 的英文原页{% endif %}，最后同步 {{ function.imported_at|date:"Y-m-d" }}。</p>
   <p>译文有误请提交到 <a href="https://github.com/pgsty/pgdoc/issues" target="_blank" rel="noopener">pgsty/pgdoc</a>；本站渲染或数据的问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
 </footer>
 

@@ -8,6 +8,7 @@
   {% include "wiki/topic_versions.html" %}
   {% include "wiki/specialized_localization.html" %}
   {% if snapshot %}
+  {% include "wiki/center_zh.html" %}
   <nav class="topic-jump" aria-label="本页目录"><a href="#description">说明</a>{% if snapshot.signature %}<a href="#signature">{% if kind == 'hook' %}C 接口{% else %}用法{% endif %}</a>{% endif %}{% for section in snapshot.sections %}<a href="#section-{{ forloop.counter }}">{{ section.title }}</a>{% endfor %}{% if tables %}<a href="#attributes">属性</a>{% endif %}{% if snapshot.rendered_html %}<a href="#definition">手册定义</a>{% endif %}<a href="#comparison">版本比较</a><a href="#sources">文档与源码</a></nav>
   <section class="wiki-section" id="description"><h2>说明</h2>{% for paragraph in snapshot.description %}<p>{{ paragraph }}</p>{% endfor %}
     {% if snapshot.facts %}<dl class="topic-facts">{% for fact in snapshot.facts %}<div><dt>{{ fact.label }}</dt><dd>{{ fact.value }}</dd></div>{% endfor %}</dl>{% endif %}

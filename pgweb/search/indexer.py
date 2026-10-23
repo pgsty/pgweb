@@ -602,6 +602,9 @@ def rebuild_locks(dry_run=False):
         name_key = normalize_name(mode.name)
         aliases = sorted({name_key, normalize_name(mode.slug), mode.name_zh, mode.abbrev.lower()})
         body = '{}\n{}\n{}'.format(mode.name_zh, scope, mode.summary)
+        from pgweb.wiki.center_text import plain_text
+        body += ''.join('\n' + plain_text(snapshot['center_zh']['body_html'])
+                        for snapshot in mode.versions.values() if snapshot.get('center_zh'))
         preview = '<p>{}</p><p>{} · {}</p><p><a href="{}">查看逐版本命令与冲突矩阵</a></p>'.format(
             escape(mode.summary), escape(scope), escape(mode.name_zh), escape(mode.url))
         vector = (SearchVector(Value(index_text(' '.join([mode.name, *aliases]))), config='simple', weight='A') +
@@ -637,6 +640,9 @@ def rebuild_topics(dry_run=False, kinds=None):
             texts = [row['summary'], row['name_zh'], row['category']]
             for snapshot in row['versions'].values():
                 texts.extend(snapshot['description'])
+                if snapshot.get('center_zh'):
+                    from pgweb.wiki.center_text import plain_text
+                    texts.append(plain_text(snapshot['center_zh']['body_html']))
                 texts.append(snapshot.get('signature', ''))
                 texts.extend(fact['label'] + ' ' + fact['value'] for fact in snapshot.get('facts', []))
                 for section in snapshot.get('sections', []):

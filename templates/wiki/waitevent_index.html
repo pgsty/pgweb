@@ -61,7 +61,7 @@
 <p class="wiki-empty" id="waitevent-empty" hidden>没有匹配的等待事件。<a href="/wiki/waitevent/">清除筛选</a></p>
 
 <h2>说明</h2>
-<p>库里共 {{ stats.events }} 个等待事件、{{ stats.snapshots }} 份逐版本快照，相邻大版本之间记录到 {{ stats.changes }} 处变动（新增、移除、更名、类型变动与描述更新）；其中 {{ stats.dossiers }} 个事件有图谱档案，写明触发机制、诊断 SQL、处置步骤与源码证据。「引入」一栏写的是该事件在本数据集里最早出现的版本；标了「起点」的说明它在 {{ earliest_major }} 就已存在，那一版也正是等待事件机制本身的起点。图谱数据来自 <a href="https://wait.pg.center" target="_blank" rel="noopener">wait.pg.center</a>，9.6 – 12 与 19、20 的事件清单由本站手册译文与上游文档补齐，中文描述没有译文时按英文原文显示。</p>
+<p>库里共 {{ stats.events }} 个等待事件、{{ stats.snapshots }} 份逐版本快照，相邻大版本之间记录到 {{ stats.changes }} 处变动（新增、移除、更名、类型变动与描述更新）；其中 {{ stats.dossiers }} 个事件有图谱档案，写明触发机制、诊断 SQL、处置步骤与源码证据。「引入」一栏写的是该事件在本数据集里最早出现的版本；标了「起点」的说明它在 {{ earliest_major }} 就已存在，那一版也正是等待事件机制本身的起点。图谱数据来自 <a href="https://wait.pg.center" target="_blank" rel="noopener">wait.pg.center</a>，中文说明采用同版本手册及审阅译文；诊断档案保留原记录版本。</p>
 
 </div>
 {% endblock %}

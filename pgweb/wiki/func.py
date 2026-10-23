@@ -60,6 +60,15 @@ NO_ZH_NOTE = '本站手册未收录该版的这条译文，说明按英文原文
 STATE_LABEL = {'absent': '不存在', 'present': '存在', 'added': '新增', 'removed': '移除',
                'changed': '签名变更'}
 ZH_FROM_LABEL = {'doc': '本站译文', 'inherited': '本站译文（沿用）', '': '英文原文'}
+ZH_FROM_LABEL.update({
+    'same-version-pgdoc': '同版手册译文',
+    'same-version-source-with-reviewed-chinese': '同版原文审阅译文',
+    'same-version-chinese-manual-exact-paragraph-or-cell': '同版手册译文',
+    'same-version-chinese-manual-table-description': '同版手册译文',
+    'same-version-chinese-manual-shared-paragraph': '同版手册译文',
+    'same-version-source-extraction-correction': '同版手册抽取校正',
+    'reviewed-adaptation-of-same-version-chinese-manual': '同版手册审阅译文',
+})
 
 # 相关函数取同分组里位置相邻的这么多个（前后各 N 个）。
 RELATED_SPAN = 4
@@ -202,7 +211,7 @@ def doc_url(snapshot, pages=None):
 
     `pages` 是 `doc_pages()` 的结果。一个详情页要问十几次，调用方读一次传进来。
     """
-    doc = (snapshot or {}).get('doc') or {}
+    doc = (snapshot or {}).get('zh_doc') or (snapshot or {}).get('doc') or {}
     slug, filename, anchor = doc.get('slug', ''), doc.get('file', ''), doc.get('anchor', '')
     pages = doc_pages() if pages is None else pages
     if not slug or not filename or (slug, filename) not in pages:
@@ -211,7 +220,7 @@ def doc_url(snapshot, pages=None):
 
 
 def doc_title(snapshot, pages=None):
-    doc = (snapshot or {}).get('doc') or {}
+    doc = (snapshot or {}).get('zh_doc') or (snapshot or {}).get('doc') or {}
     pages = doc_pages() if pages is None else pages
     title = pages.get((doc.get('slug', ''), doc.get('file', '')), '')
     return SECTION_NUMBER.sub(r'\1 ', title).strip()
@@ -548,6 +557,8 @@ def facts_of(function, major, snapshot, order, version):
 
 def signatures_of(snapshot, change):
     """本版的签名。`added` 标出本版相对上一版新增的那几条。"""
+    from .center_text import localized_html
+    link_map = (snapshot.get('center_zh') or {}).get('link_map')
     added = set(((change or {}).get('signatures') or {}).get('added') or ())
     rows = []
     for signature in snapshot.get('signatures') or ():
@@ -562,7 +573,7 @@ def signatures_of(snapshot, change):
             # 模板要保真就用它。两份分语言，`description_html` 是英文原文那份，
             # `description_zh_html` 是中文译文那份，没有译文时为空。
             'description_html': signature.get('description_html', ''),
-            'description_zh_html': signature.get('description_zh_html', ''),
+            'description_zh_html': localized_html(signature.get('description_zh_html', ''), link_map=link_map),
             'examples': [{'expr': example.get('expr', ''), 'result': example.get('result', '')}
                          for example in signature.get('examples') or ()],
             'added': text in added,
@@ -700,7 +711,8 @@ def detail(slug, wanted=''):
         'eyebrow': EYEBROW,
         'version': version, 'previous_major': previous_major(function, major),
         'snapshot': snapshot,
-        'summary_zh': function.summary_zh, 'summary': function.summary,
+        'summary_zh': snapshot.get('center_zh', {}).get('summary', function.summary_zh), 'summary': function.summary,
+        'center_zh_rendered': center_body(snapshot),
         'description_zh': snapshot.get('description_zh', ''),
         'description': snapshot.get('description', ''),
         'facts': facts_of(function, major, snapshot, order, version),
@@ -722,6 +734,12 @@ def detail(slug, wanted=''):
         'doc_versions': doc_versions,
         'versions': order,
     }
+
+
+def center_body(snapshot):
+    from .center_text import localized_html
+    text = snapshot.get('center_zh') or {}
+    return localized_html(text.get('body_html', ''), link_map=text.get('link_map'))
 
 
 # ---------------------------------------------------------------- 变更页

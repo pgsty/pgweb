@@ -33,6 +33,7 @@
     </div>
   </dl>
 
+  {% if manual_versions %}<p class="wiki-panel__lead">手册收录：{% for item in manual_versions %}{% if item.url %}<a href="{{ item.url }}">{{ item.major }}</a>{% else %}{{ item.major }}{% endif %}{% if not forloop.last %}、{% endif %}{% endfor %}。此处仅表示同版本手册收录，运行证据仍以原核验构建为准。</p>{% endif %}
   {% if version_groups %}
   <div class="wiki-versions">
     <h2 class="wiki-versions__title">版本覆盖</h2>

@@ -9,6 +9,7 @@
   {% include "wiki/specialized_localization.html" %}
   {% if notice %}<p class="topic-footnote">{{ notice }}</p>{% endif %}
   {% if snapshot %}
+  {% include "wiki/center_zh.html" %}
   <p class="topic-footnote">PG10–20 核心源码清单。类型转换与操作符类列出源码显式声明的关系；缺少记录不能排除通过其他机制进行转换或使用索引。</p>
   <nav class="topic-jump" aria-label="本页目录"><a href="#definition">定义</a>{% if catalog_rows %}<a href="#catalog">系统目录属性</a>{% endif %}{% for table in relation_tables %}<a href="#{{ table.key }}">{{ table.title }}</a>{% endfor %}<a href="#history">版本比较</a><a href="#sources">来源</a></nav>
   <section class="wiki-section" id="definition"><h2>定义</h2>

@@ -7,6 +7,7 @@ from hashlib import sha1
 from django.core.cache import cache
 
 from .models import LockMode
+from .center_text import prepare as prepare_center_text
 from .sqlcmd_common import STATUS_LABEL, version_rows
 
 ROOT = '/wiki/lock/'
@@ -213,6 +214,7 @@ def detail(slug, wanted=''):
     mode = next((m for m in payload['modes'] if m['slug'] == slug), None)
     if mode is None:
         raise LockMode.DoesNotExist(slug)
+    prepare_center_text(mode['snapshot'], payload['major'])
     payload.update(mode=mode, conflicting_modes=mode['conflicts'],
                    compatible_modes=[m for m in payload['modes'] if m['scope'] == mode['scope']
                                      and m['slug'] not in {c['slug'] for c in mode['conflicts']}])

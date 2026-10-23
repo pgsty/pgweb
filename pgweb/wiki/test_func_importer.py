@@ -441,8 +441,10 @@ class FuncPureTests(SimpleTestCase):
         self.assertEqual(report['unmatched'], 2)
 
     def test_groups_table(self):
-        self.assertEqual(len(FUNC_GROUPS), 32)
-        self.assertEqual(len({slug for _, slug, _, _ in FUNC_GROUPS}), 32)
+        self.assertEqual(len(FUNC_GROUPS), 33)
+        self.assertIn(('functions-misc.html', 'misc', '其他函数（历史）',
+                       'MISCELLANEOUS FUNCTIONS'), FUNC_GROUPS)
+        self.assertEqual(len({slug for _, slug, _, _ in FUNC_GROUPS}), 33)
         self.assertEqual(FUNC_GROUP_ORDER['logical'], 0)
         self.assertLess(FUNC_GROUP_ORDER['string'], FUNC_GROUP_ORDER['bitstring'])
         self.assertEqual(FUNC_GROUP_LABEL['info'], '系统信息函数和操作符')

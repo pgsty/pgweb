@@ -85,11 +85,12 @@ def doc_url(snapshot, pages=None):
     if not snapshot:
         return ''
     pages = doc_pages() if pages is None else pages
-    slug, filename = snapshot['slug'], snapshot['file']
+    coordinate = snapshot.get('zh_doc') or snapshot
+    slug, filename = coordinate['slug'], coordinate['file']
     if (slug, filename) not in pages:
         return ''
     return '/docs/{}/{}{}'.format(slug, filename,
-                                 '#' + snapshot['anchor'] if snapshot['anchor'] else '')
+                                 '#' + coordinate.get('anchor', '') if coordinate.get('anchor') else '')
 
 
 def forget():
@@ -281,6 +282,23 @@ def change_note(command, major, order, change):
     return note
 
 
+def localized_snapshot(snapshot):
+    """Use the sealed Chinese presentation without mutating English syntax facts."""
+    if not snapshot:
+        return snapshot
+    translated = snapshot.get('center_zh')
+    if not translated:
+        return snapshot
+    from .center_text import localized_html
+    result = deepcopy(snapshot)
+    result.update(deepcopy(translated['display']))
+    result['purpose_zh'] = translated['summary']
+    link_map = translated.get('link_map')
+    for section in result['sections']:
+        section['html'] = localized_html(section['html'], link_map=link_map)
+    return result
+
+
 def detail(slug, wanted_major=''):
     command = find_command(slug)
     order = versions()
@@ -289,10 +307,11 @@ def detail(slug, wanted_major=''):
     if not major or major not in by_major:
         raise SqlCommand.DoesNotExist(slug)
     version = by_major[major]
-    snapshot = command.versions[major]
+    snapshot = localized_snapshot(command.versions[major])
     previous = previous_major(command, major)
     change = next((c for c in command.changes if c['to'] == major and c['status'] != 'removed'), None)
-    sections = deepcopy(sections_at(command.versions, major))
+    sections = deepcopy(snapshot['sections'] if snapshot.get('center_zh')
+                        else sections_at(command.versions, major))
     counts = Counter()
     for section in sections:
         counts[section['key']] += 1
@@ -326,8 +345,8 @@ def detail(slug, wanted_major=''):
         'group': command.group, 'group_label': command.group_label, 'eyebrow': command.eyebrow,
         'verb': command.verb, 'object': command.object, 'version': version,
         'previous_major': previous, 'snapshot': snapshot, 'facts': facts,
-        'railroad': railroad_context(snapshot, 'rr-command-' + command.slug + '-' + major),
-        'synopsis': synopsis_of(snapshot, command.versions.get(previous), major),
+        'railroad': railroad_context(command.versions[major], 'rr-command-' + command.slug + '-' + major),
+        'synopsis': synopsis_of(snapshot, localized_snapshot(command.versions.get(previous)), major),
         'synopsis_diff': change['synopsis'] if change else None, 'sections': sections,
         'ribbon': [dict(by_major[m], state=state, current=m == major,
                         url=command.url + '?v=' + m if m in command.present_in else '',

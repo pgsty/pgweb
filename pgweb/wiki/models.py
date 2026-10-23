@@ -957,6 +957,7 @@ FUNC_GROUPS = (
     ('functions-trigger.html', 'trigger', '触发器函数', 'TRIGGER FUNCTIONS'),
     ('functions-event-triggers.html', 'event-triggers', '事件触发器函数', 'EVENT TRIGGER FUNCTIONS'),
     ('functions-statistics.html', 'statistics', '统计信息函数', 'STATISTICS INFORMATION FUNCTIONS'),
+    ('functions-misc.html', 'misc', '其他函数（历史）', 'MISCELLANEOUS FUNCTIONS'),
 )
 FUNC_GROUP_PAGE = {slug: page for page, slug, _, _ in FUNC_GROUPS}
 FUNC_GROUP_OF_PAGE = {page: slug for page, slug, _, _ in FUNC_GROUPS}
