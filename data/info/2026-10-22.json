@@ -1,0 +1,426 @@
+{
+  "date": "2026-10-22",
+  "origin": "PGSQL.CC independent editorial; cutoff 2026-10-23T09:23:06+08:00; window 2026-10-09..2026-10-23; PostgreSQL news/Planet/events/commits; pgnexus #294-307; Google News/Search; primary project blogs and releases; HN",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG 修复取消通知读取后队列不再推进的问题",
+      "summary": "PostgreSQL 已合入一项通知队列停滞修复：后端读取通知时会设置推进标志，但若在等待安全快照期间被取消或遇到错误，旧代码没有清除该标志，后续既不会推进队列，也不会再次唤醒该后端，队列尾部因此停住。补丁把清理动作加入顶层事务中止路径，提交标注回补至 PostgreSQL 19。依赖 LISTEN / NOTIFY 的应用应跟进包含该修复的版本，并把通知积压纳入运行监控。",
+      "url": "https://github.com/postgres/postgres/commit/871dee0ccbe292cf4c2874aa7b460d242262d242",
+      "author": "shihao zhong",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "通知",
+        "可靠性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "定点恢复后删除信号文件可能越过目标位置",
+      "summary": "Christophe Pettus 用实际恢复过程解释了定点恢复参数的边界：以 shutdown 动作停在目标处后，若直接删除 recovery.signal 再启动，服务器会转入崩溃恢复，重放本地剩余 WAL，可能再次执行本想避开的误操作。正确流程是保留恢复目标与信号文件，将动作改为 promote。文章还展示了时间线选择、事务提交边界和遗留恢复参数怎样改变结果，为恢复脚本与演练提供了具体检查项。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-the-recovery_target-parameters/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "PITR",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "物理副本故障转移要先隔离旧主库再选新主库",
+      "summary": "Christophe Pettus 梳理了 PostgreSQL 物理副本从建库到故障接管的完整流程。非计划切换应先确保旧主库无法继续写入，再比较候选副本已接收与已回放的 WAL 位置，选出拥有最多日志的节点；仅看网络是否可达或某个延迟指标并不够。提升后还需重建物理复制槽、调整客户端入口与备份归档，并检查旧主库能否回退为副本。文章将隔离、数据丢失范围和恢复冗余串成可演练的操作顺序。",
+      "url": "https://thebuild.com/blog/binary-read-replicas-in-postgresql-part-3/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "复制",
+        "运维"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pgVolvra 用行历史提供事务级撤销与冲突检查",
+      "summary": "pgEdge 介绍了 pgVolvra 的行级撤销方案：对预先启用跟踪且具有主键的表，用 SQL 和 PL/pgSQL 触发器记录变更，再按事务、标记或条件预览并执行逆向操作。它在撤销前核对当前行，遇到后续修改会中止或按策略跳过，避免无条件覆盖新数据。当前版本仍为测试版，无需超级用户或预加载库，但会增加写入与 WAL 开销。它适合纠正已跟踪的误操作，不能替代覆盖整库与介质故障的备份。",
+      "url": "https://www.pgedge.com/blog/undo-for-postgres-without-losing-the-rest-of-your-day",
+      "author": "Muhammad Aqeel",
+      "source": "pgEdge",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "工具",
+        "数据完整性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PostGIS 重回 Amazon Linux 2023 并加入 SFCGAL",
+      "summary": "PGDG 为 Amazon Linux 2023 恢复 PostGIS 软件包，覆盖 PostgreSQL 14 至 18 的 x86_64 与 aarch64 架构，并加入 SFCGAL 支持。维护者通过独立安装路径与运行时库搜索路径提供 GDAL、GEOS、PROJ 等依赖，避免替换发行版自带库；缺少依赖的部分 GDAL 驱动仍不可用。此次恢复让该平台重新获得可安装的空间分析组件，但部署前仍需核对数据格式驱动与扩展版本。",
+      "url": "https://people.planetpostgresql.org/devrim/index.php?/archives/136-PostGIS-is-back-on-Amazon-Linux-2023-with-SFCGAL-this-time.html",
+      "author": "Devrim Gündüz",
+      "source": "Devrim's PostgreSQL Blog",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostGIS",
+        "软件包",
+        "空间数据"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "QuestDB 10.1 扩展时序 SQL 并收紧错误语义",
+      "summary": "QuestDB 10.1 增加服务端降采样、精确分位数函数及更多时序连接能力，同时修复查询结果、索引和写入身份校验问题。升级包含多项不兼容变化：无聚合的 HORIZON JOIN 不再自动去重，错误的时间间隔字符串会被拒绝，整数算术统一按 32 位溢出规则处理。受影响的物化视图可能需要完整刷新，Intel Mac 支持也被移除。使用时序连接和旧查询模板的团队，应先核对发布说明中的迁移要求。",
+      "url": "https://github.com/questdb/questdb/releases/tag/10.1.0",
+      "author": "QuestDB",
+      "source": "QuestDB",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "版本发布",
+        "时序数据",
+        "兼容性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG 修复建模式时索引误指向同名临时表",
+      "summary": "CREATE SCHEMA 内部对象重新补全目标模式名，避免索引或触发器错误解析到 pg_temp 等模式；修复标注回补至 PG 19。",
+      "url": "https://github.com/postgres/postgres/commit/b6dae498dfa60c9d15abf791d51434e8d23e5cae",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "数据完整性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "SQL/PGQ 原型将图模式改写为关系查询",
+      "summary": "技术文章拆解图查询的解析与改写路径及能力边界；该功能已从 PG 19 撤回，文中原型并非可用的正式版特性。",
+      "url": "https://www.data-bene.io/en/blog/postgresql-as-a-graph-database-part-1/",
+      "author": "",
+      "source": "Data Bene",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "图查询",
+        "SQL"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "大表调整检查约束可拆开规则切换与存量验证",
+      "summary": "在一个短事务中原子替换 NOT VALID 约束，再单独 VALIDATE；新增写入立即受约束，存量扫描使用较轻的锁。",
+      "url": "https://mydbanotebook.org/posts/region-a-lesson-in-data-integrity/",
+      "author": "",
+      "source": "My DBA Notebook",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "约束",
+        "运维"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "pgCluu 5.0 增加 I/O 与内核压力报告",
+      "summary": "新增复制槽、pg_stat_io、异步 I/O、cgroup 限额与 PSI 报告，让数据库等待与主机资源压力可以对照分析。",
+      "url": "https://github.com/darold/pgcluu/releases/tag/v5.0",
+      "author": "",
+      "source": "pgCluu",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "性能"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "OpenReplay 用物化视图与 TTL 简化事件分析",
+      "summary": "工程案例以 ClickHouse 承担事件处理与留存，PostgreSQL 保留元数据；物化视图先承接变换，稳定后再酌情迁入 Go。",
+      "url": "https://clickhouse.com/blog/openreplay-front-end-observability-at-scale-clickhouse",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "可观测性",
+        "架构"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "RDS SQL Server 可用逐行比较核验副本数据",
+      "summary": "tablediff 提供独立的数据差异证据；只读副本不能写修复表，提升后需重做比较，并为修复语句补上显式事务。",
+      "url": "https://aws.amazon.com/blogs/database/troubleshooting-data-mismatches-with-tablediff-on-amazon-rds-for-sql-server/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "复制",
+        "数据完整性"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Firestore 企业版 DML 正式可用",
+      "summary": "数据管道新增插入与更新插入操作；跨文档原子性需要显式事务，普通批量写入可能部分成功。",
+      "url": "https://docs.cloud.google.com/firestore/native/docs/pipeline/dml",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据处理"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloud Run 实例预览直接 VPC 入站连接",
+      "summary": "实例可用临时私网地址与同一 VPC 的资源通信；地址不跨重启或更新保留，访问规则应按子网范围配置。",
+      "url": "https://docs.cloud.google.com/run/docs/configuring/vpc-direct-vpc#direct-vpc-instance",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络",
+        "容器"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "ParadeDB 0.26.3 修复大 LIMIT 扫描崩溃",
+      "summary": "",
+      "url": "https://github.com/paradedb/paradedb/releases/tag/v0.26.3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "可靠性"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "RLS 实测：把用户函数包进子查询可减少逐行求值",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/supabase-rls-select-auth-uid-performance/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "行级安全",
+        "性能"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Dolt 2.5.1 修复混合大小写列的约束合并误判",
+      "summary": "",
+      "url": "https://github.com/dolthub/dolt/releases/tag/v2.5.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "模式变更"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "etcd 3.7.3 修复快照恢复与流式读取竞态",
+      "summary": "",
+      "url": "https://github.com/etcd-io/etcd/releases/tag/v3.7.3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "可靠性",
+        "分布式存储"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Data Studio 可将 BigQuery 图度量导入报表",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/data-studio/connect-to-google-bigquery#connect-to-a-bigquery-table-or-view",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图查询",
+        "分析"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Compute Engine 可按可用区与机型观察实例组分布",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/instance-groups/monitor-instance-distribution",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "监控",
+        "容量"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "GDC 1.34 修复控制面配置更新时并发重启问题",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/distributed-cloud/bare-metal/docs/release-notes#October_22_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "高可用"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "AWS 示范用 ML-DSA 签名串起软件供应链",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/security/quantum-resistant-signing-on-aws-part-1-build-a-software-supply-chain-with-ml-dsa/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "签名"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Actions 增加日志存储域名需更新白名单",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-22-meta-api-endpoints-updated-for-actions-blob-storage/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "网络"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 数据驻留企业可预览公网泄露凭据监测",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-22-public-monitoring-now-available-with-data-residency/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "凭据"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 文本翻译函数正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-ai-translate",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "SQL",
+        "翻译"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 用量接口细分自定义技能与 MCP 名称",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-22-custom-skills-agents-and-mcp-servers-in-usage-metrics-api/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具",
+        "监控"
+      ],
+      "position": 26
+    }
+  ]
+}
