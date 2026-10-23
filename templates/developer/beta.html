@@ -1,15 +1,15 @@
 {%extends "base/page.html"%}
-{%block title%}Beta 信息{%endblock%}
+{%block title%}预发布版本{%endblock%}
 {%block contents%}
-<h1>Beta 信息 <i class="fa fa-code"></i></h1>
+<h1>预发布版本 <i class="fa fa-code"></i></h1>
 
-<p>PostgreSQL 的 beta 和候选发布版本是社区在正式发布新版本之前的预发布测试版本。它们已经冻结功能（即不再添加新功能），我们将这些版本发布给公众，以便在最终发布之前进行测试。PostgreSQL 的 beta 和候选发布版本<strong>不适用于生产系统</strong>。</p>
+<p>Beta 版和候选发布版（RC）供社区在正式发布前测试。进入这一阶段后，通常不再增加新功能，开发工作以修复问题和验证稳定性为主。预发布版本<strong>不适用于生产系统</strong>。</p>
 
-<p>Beta 和候选发布版本提供给社区，以便在初始发布之前进行测试。它们对于依赖 PostgreSQL 的平台、驱动程序、工具和实用程序的开发人员尤其有用，可以帮助他们为新版本中的变更做好准备。候选发布版本应与 PostgreSQL 新主版本的初始发布相同，但在正式发布之前仍可能进行额外的更改。</p>
+<p>平台、驱动、扩展和工具的开发者可以利用这些版本提前验证兼容性。候选发布版已接近正式版，但在正式发布前仍可能加入修复。</p>
 
-<p>每个 PostgreSQL 版本的稳定性在很大程度上取决于社区使用您的工作负载和测试工具对即将发布的版本进行测试，以便在初始发布之前发现缺陷和回归问题。用户测试的质量决定了我们何时可以进行最终发布。</p>
+<p>欢迎使用实际应用的典型负载，在独立测试环境中检查功能、性能和升级流程，并向社区报告缺陷或回归问题。这些测试有助于判断新版本是否已经具备正式发布的条件。</p>
 
-<p>PostgreSQL 全球开发组强烈建议不要在生产环境或活跃的开发项目中使用 PostgreSQL 的 beta 版本。虽然 PostgreSQL 代码持续经受大量自动化和手动测试，但 beta 版本可能存在严重缺陷。在 beta 开发期间，功能可能随时发生不向后兼容的变更，甚至可能被完全移除。</p>
+<p>即使已经通过大量自动化和人工测试，Beta 版仍可能存在严重缺陷；测试期间也可能出现不兼容变更，或撤回尚未成熟的功能。请为测试准备可恢复的数据副本。</p>
 
 {% if not betaversion %}
   <p>
@@ -20,6 +20,13 @@
   <p>
     当前的测试版本是 <strong>PostgreSQL {{ betaversion.versionstring_spaced }}</strong>。有关当前版本及测试方法的更多信息，请查看以下链接。
   </p>
+
+{% if release.schedule %}
+  <p>下一候选版 <strong>PostgreSQL {{ release.schedule.candidate }}</strong> 计划于 {{ release.schedule.candidate_date|date:"Y 年 n 月 j 日" }} 发布，与受支持版本的例行更新同步。若无需要延期的问题，PostgreSQL {{ betaversion.numtree }} 正式版计划于 {{ release.schedule.release_date|date:"Y 年 n 月 j 日" }} 发布。详见<a href="{{ release.news.url }}">发布公告</a>。</p>
+{% endif %}
+{% if release.type == 'rc' %}
+  <p>从较早版本升级到当前候选版，需要采用大版本升级方式，例如 <code>pg_upgrade</code> 或 <code>pg_dump</code> / <code>pg_restore</code>。具体步骤请参阅<a href="https://www.postgresql.org/docs/{{ betaversion.numtree }}/upgrading.html">上游升级文档</a>。</p>
+{% endif %}
 
   <ul>
 {% if release %}

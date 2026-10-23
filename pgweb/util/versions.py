@@ -34,7 +34,8 @@ class ParsedVersion:
         elif self.type == 'minor':
             return "{}.{}".format(self.major, self.minor)
         else:
-            return "{} {} {}".format(self.major, self.type.capitalize(), self.minor)
+            label = self.type.upper() if self.type == 'rc' else self.type.capitalize()
+            return "{} {} {}".format(self.major, label, self.minor)
 
     def __gt__(self, other):
         # gt operator is required to do max()

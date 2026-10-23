@@ -7,9 +7,20 @@
           有关本次发布的更多信息，请查阅<a href="/docs/release/">发行说明</a>。您可以从<a href="/download/">下载</a>页面获取 PostgreSQL。
         </p>
 {% elif release.type == "alpha" or release.type == "beta" or release.type == "rc" %}
+{% if release.type == "rc" %}
+        <p>
+          PostgreSQL {{ release.versions.0 }} 候选发布版现已<a href="/developer/beta/">开放测试</a>，包含自上个 Beta 版本以来的多项修复。候选版已接近正式版，发布前仍可能修复发现的问题。
+        </p>
+{% else %}
         <p>
           PostgreSQL 全球开发组宣布，PostgreSQL {{ release.versions.0 }} 现已<a href="/download/">开放下载</a>。此版本用于预览 PostgreSQL {{ release.versions.0.major }} 正式发布前的新功能；测试期间部分细节仍可能调整。
         </p>
+{% endif %}
+{% if release.schedule %}
+        <p>
+          按照<a href="{{ release.news.url }}">发布计划</a>，PostgreSQL {{ release.schedule.candidate }} 计划于 {{ release.schedule.candidate_date|date:"Y 年 n 月 j 日" }} 发布；如无需要延期的问题，正式版计划于 {{ release.schedule.release_date|date:"Y 年 n 月 j 日" }} 发布。
+        </p>
+{% endif %}
         <p>
           PostgreSQL {{ release.versions.0.major }} 的功能与变更记录可在<a href="/docs/{{ release.versions.0.major }}/release-{{ release.versions.0.major }}.html">发行说明</a>中查看。
         </p>
