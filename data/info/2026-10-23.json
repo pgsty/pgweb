@@ -1,0 +1,409 @@
+{
+  "date": "2026-10-23",
+  "origin": "PGSQL.CC 主动采编；PostgreSQL.org、Planet、PGNexus #295–308、Google Search/News、厂商与项目原文、HN；截稿 2026-10-24 07:25:25 Asia/Shanghai；回看 2026-10-10 起",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgEdge 展示分布式集群滚动大版本升级",
+      "summary": "pgEdge 给出了从 PostgreSQL 17 滚动迁移到 18 的实操方案：先加入新版本节点，复制数据并验证双向写入，再逐步替换旧节点。文章揭示了逻辑复制与高可用组合中的隐患：复制集成员遗漏会让新节点只收不发，Patroni 中未持久化的配置可能被覆盖，同步备用节点停机会阻塞变更发布。升级还需暂停 DDL 复制并重建备用节点。作者尚未验证故障切换，因此这份流程仍需结合实际拓扑完成演练。",
+      "url": "https://www.pgedge.com/blog/zero-downtime-rolling-major-postgresql-upgrades-on-a-distributed-postgresql-cluster",
+      "author": "Ahsan Hadi、Susan Douglas",
+      "source": "pgEdge",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "逻辑复制",
+        "高可用"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "在 PostgreSQL 19 内嵌 SPARQL 知识库",
+      "summary": "pg_knowledge_base 将 Oxigraph 引擎装进 PostgreSQL 19 扩展，让 SPARQL 查询与 SQL 使用同一事务和快照，无需另养一套图数据库。四元组存入普通表和索引，现有业务表也可通过 R2RML 映射为虚拟 RDF 图，复用数据库的备份与复制能力。代价是装载速度和存储开销尚不及专用后端，图连接也不会自动下推为 SQL。映射表可沿用行级安全，但四元组表没有同等保护，权限设计不能直接照搬。",
+      "url": "https://igor-suhorukov.github.io/blog/2026/10/23/knowledge-base-without-a-second-database/",
+      "author": "Igor Suhorukov",
+      "source": "Igor Suhorukov",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "知识图谱",
+        "事务"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "混合负载下如何调优 Postgres 分析查询",
+      "summary": "Karen Jex 总结了在业务数据库上承载分析查询时的调优取舍。先用执行计划定位瓶颈，再按查询选择表达式索引、生成列或物化视图，同时计算写入成本与数据新鲜度。分析任务可使用独立角色或连接池设置内存，避免全局提高 work_mem 后被并发查询放大。需要隔离负载时，物理副本能分担读取，但不能独立修改表结构；逻辑副本则允许增建分析索引。文章用具体案例串联这些选择，强调按负载验证，而非套用统一参数。",
+      "url": "https://karenjex.blogspot.com/2026/10/tuning-postgres-for-analytics-pgconfeu.html",
+      "author": "Karen Jex",
+      "source": "Karen Jex",
+      "source_date": "2026-10-22",
+      "image": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgyeAZIw-jGSnJ85ho4xDbnxwyxjXCbd7jaxNfs9I9FoWq7SOmQUj6OAb_MHR4qpXOZ8bEeZLS8NHpF9f1_RLuW6vD7Q5Nc47VGoeLDLSfZDqfiZrplS4nQmMzVcK3ms7mZinaAjFOXkXnBdthDf7m_2pJXAlY4IfOl8IKoEZh0hz6kUfG9UQofVYJkff0Z/w1200-h630-p-k-no-nu/Optimising%20for%20Analytics%20PGConfEU%2001.jpeg",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "分析",
+        "运维"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Dolt 2.6 修正长期分支的合并语义",
+      "summary": "Dolt 2.6 调整了数据库分支的合并算法，修复长期分支反复合并后可能静默选取较新修改的问题。新算法沿完整提交图寻找合并基点，按接近 Git 的方式识别双方变更，把原本可能被掩盖的冲突显式交给调用者处理。这是有兼容性影响的行为变化：依赖自动合并的脚本需要检查冲突处理路径，不能只看命令是否完成。版本还加强了数据文件上传及内容块的校验，避免错误内容覆盖已有哈希对应的数据。",
+      "url": "https://github.com/dolthub/dolt/releases/tag/v2.6.0",
+      "author": "Dolt 团队",
+      "source": "Dolt",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "版本控制",
+        "数据完整性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PingCAP 事件调查追踪凭据到云数据的泄露链",
+      "summary": "NebuSec 公布了 PingCAP 安全事件的调查细节：攻击者从受损账号与代码历史中的凭据进入云环境，进一步读取内部数据仓库、对象存储和协作系统。确认暴露的信息包括账户关联、SQL 编辑器记录及业务资料，支持材料中的凭据也扩大了风险。调查未发现客户 TiDB 数据受到影响的证据，逐客户影响范围仍在核查。报告将处置重点落在撤销凭据、收紧跨项目权限与补齐访问日志，提醒团队把支持附件和代码历史纳入秘密扫描。",
+      "url": "https://nebusec.ai/research/pingcap-security-incident/",
+      "author": "NebuSec",
+      "source": "NebuSec",
+      "source_date": "2026-10-21",
+      "image": "https://nebusec.ai/_astro/social-preview.C-KyjYo7_Z1PWcoR.jpeg",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "凭据",
+        "云数据库"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Brotli 修复恶意压缩流触发的越界写入",
+      "summary": "Brotli 1.2.1 修复了恶意压缩流可触发的解码器越界写入漏洞。特定块切换错误被当作需要继续输入处理，使后续解析可能覆盖缓冲区边界，影响取决于应用是否会解压攻击者控制的数据。Node.js 已同步发布受影响版本线的安全更新，说明此类底层库缺陷会沿运行时和依赖链传播。维护者应核对实际使用的 Brotli 实现与运行时版本，优先更新接收外部压缩内容的服务，并回归解压失败时的错误处理路径。",
+      "url": "https://github.com/google/brotli/releases/tag/v1.2.1",
+      "author": "Google Brotli 团队",
+      "source": "Google Brotli",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "压缩",
+        "依赖"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 已提交空键哈希连接性能修复",
+      "summary": "非并行或单批次连接可立即输出空键外侧行，避免暂存落盘；补丁回补至 19 分支，尚不代表已随正式版本发布。",
+      "url": "https://github.com/postgres/postgres/commit/126976a8ffcfa47f40d3df09243ebf4606001912",
+      "author": "Shihao Zhong、Tom Lane",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "AWS 复盘 PostgreSQL 迁移中的触发器与大对象",
+      "summary": "案例梳理 DMS 全量加增量迁移的触发器处理、无主键表与大对象限制，并将序列校准和一致性检查纳入切换步骤。",
+      "url": "https://aws.amazon.com/cn/blogs/china/idc-postgresql-migration-engineering-practice-library-trigger-lob/",
+      "author": "黄振武",
+      "source": "AWS",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Timeplus 用流式 SQL 识别连续区间与会话",
+      "summary": "文章分别以 lag 和会话窗口处理连续事件、空闲超时及显式结束信号，并说明结果发出后如何回收状态。",
+      "url": "https://www.timeplus.com/post/solving-gaps-and-islands",
+      "author": "Timeplus 团队",
+      "source": "Timeplus",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "流处理"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Lake Formation 跨区域传递查询者身份",
+      "summary": "结合 IAM Identity Center 的多区域能力，让 Athena 与 Redshift 按真实用户执行细粒度授权和审计。",
+      "url": "https://aws.amazon.com/blogs/big-data/enable-cross-region-fine-grained-data-access-with-aws-lake-formation-and-trusted-identity-propagation/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "访问控制"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Railway 初报披露泄露范围与构建隔离调整",
+      "summary": "继此前预警后，初报将影响范围界定为最多 1.85% 的工作区，确认部分环境变量泄露，并加快切换单租户构建器。",
+      "url": "https://blog.railway.com/p/preliminary-report-october-security-incident",
+      "author": "Jacob Cooper、Angelo Saraceno",
+      "source": "Railway",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "OpenSSL 4.1 加入 DTLS 1.3 支持",
+      "summary": "同时引入 GREASE 和 IKEv2 KDF；发布说明仍列有 DTLS 1.3 确认与重传问题，部署前需核对适用限制。",
+      "url": "https://github.com/openssl/openssl/releases/tag/openssl-4.1.0",
+      "author": "OpenSSL 团队",
+      "source": "OpenSSL",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TLS"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 开放按范围回源缓存大文件",
+      "summary": "缓存规则可启用分块回源并复用缓存及进行中的请求，源站需支持 Range，系统会校验文件大小与 ETag 的一致性。",
+      "url": "https://blog.cloudflare.com/origin-range-requests/",
+      "author": "Cloudflare",
+      "source": "Cloudflare",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "缓存",
+        "网络"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 预览抗量子区域密钥管理",
+      "summary": "封闭测试采用 ML-KEM 与 X25519 混合加密限制密钥使用区域，CDN 集成仍在开发，尚未全面开放。",
+      "url": "https://blog.cloudflare.com/post-quantum-geo-key-manager/",
+      "author": "Cloudflare",
+      "source": "Cloudflare",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "密码学"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Cloud SQL 既有 PSC 实例可启用托管连接池",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/sql/docs/postgres/release-notes#October_16_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Neon 停止新建 plcoffee 与 plls 扩展",
+      "summary": "",
+      "url": "https://neon.com/docs/changelog/2026-10-23",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Supabase 公开测试开源故障排查知识库",
+      "summary": "",
+      "url": "https://supabase.com/changelog/kb-launch",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "实测展示 Postgres 缓存挤压与 etcd 亚稳态",
+      "summary": "",
+      "url": "https://brooker.co.za/blog/2026/10/23/animations.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可靠性"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Spanner 为两种 SQL 方言加入近似去重计数",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/spanner/docs/release-notes#October_20_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "查询"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Azure SQL 在 Database Hub 预览性能告警",
+      "summary": "",
+      "url": "https://techcommunity.microsoft.com/blog/azuresqlblog/public-preview-alerts-for-azure-sql-database-in-database-hub-powered-by-fabric-a/4566356",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "监控"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Dataflow 预览跨可用区复制流处理状态",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/dataflow/docs/release-notes#October_21_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "高可用"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Config Connector 可配置 Cloud SQL 灾备对",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/config-connector/docs/release-notes#October_13_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "灾备"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Cilium 紧急更新以拒绝受损 eMudhra 证书",
+      "summary": "",
+      "url": "https://github.com/cilium/cilium/releases/tag/v1.20.4",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Apps 的企业级安装正式可用",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-23-enterprise-installations-for-github-apps-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "权限"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 恢复因 SCIM 缺陷误删的托管用户记录",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-23-emu-deletions-fix/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "身份管理"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "OpenSearch 可将 S3 文档直接转换为向量索引",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/big-data/build-rag-ready-indexes-from-amazon-s3-with-amazon-opensearch-intelligent-ingestion/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "向量检索"
+      ],
+      "position": 26
+    }
+  ]
+}
