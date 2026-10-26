@@ -1,0 +1,416 @@
+{
+  "date": "2026-10-26",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org / Planet / GitHub；Google Search / Google News / Web Search；厂商博客与 RSS；HN Top/New/Show/Ask；PGNexus #298–311；截稿 2026-10-27 07:34:51 +08:00；扩展回看 14 天",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG 修复表重写丢失有效行的问题",
+      "summary": "PostgreSQL 已合入一项数据完整性修复：一行插入后被子事务更新，随后子事务回滚，旧代码可能漏设事务无效标志。表重写因此把仍然有效的行误判为已更新，并将其丢弃。补丁补齐可见性判断中的提示位，避免重写路径漏行。提交说明指出，CLUSTER 的受影响分支可追溯到 PG 14，REPACK 则到 PG 19，并标注回补至 14。这是已提交的修复，尚不能据此认定已安装版本包含补丁。",
+      "url": "https://github.com/postgres/postgres/commit/e7f4463e869cc006b7d3210c264d92b1016dcad2",
+      "author": "Shihao Zhong、Michael Paquier",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "数据完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PG 修复 B-tree 删页时的 WAL 竞态",
+      "summary": "PostgreSQL 已合入 B-tree 多层页面删除的 WAL 修复。删除过程释放并重新获取叶页锁时，并发分裂可能改变左侧兄弟页链接；旧代码仍把先前值写入 WAL，导致备库的待删除叶页短暂损坏，并触发 WAL 一致性检查失败。补丁在重新加锁后重读链接，提交标注回补至 PG 14。该问题需要很窄的并发窗口，损坏通常随页面紧接着被彻底删除而消失，不能据此推断为普遍的持久数据损坏。",
+      "url": "https://github.com/postgres/postgres/commit/d42c5457e515319b3ead3a824436ed3c80d3a2ce",
+      "author": "Peter Geoghegan",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "WAL",
+        "复制"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PG 以原子替换保护两阶段事务文件",
+      "summary": "PostgreSQL 已合入检查点期间两阶段事务文件的写入修复。旧实现先截断原文件，再原地写入；若写到一半崩溃，或基础备份恰好复制了中间状态，就可能留下空文件或残缺文件，使后续启动报文件大小错误。新实现先写临时文件，完成后通过原子重命名替换目标，避免恢复过程读到半成品。提交标注回补至 PG 14，使用预备事务及物理备份的系统应跟进包含此补丁的版本；此次消息对应代码合入。",
+      "url": "https://github.com/postgres/postgres/commit/a5ccf20801c821b72bb04d56b7320d52149a1ce5",
+      "author": "Shihao Zhong",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "恢复",
+        "事务"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_ivm 1.17 修复恢复后的增量维护",
+      "summary": "pg_ivm 1.17 修复了增量物化视图在备份恢复和升级后的维护问题。恢复过程曾把已填充视图标为未填充，后续刷新可能重复创建触发器，影响增量维护；新版本同时调整元数据恢复函数与转储逻辑，避免升级时因元数据已存在而失败。唯一键推导改用原始查询，使带 EXISTS 的查询也能建立所需索引，另修复 LATERAL 相关崩溃并拒绝不支持的集合返回函数。版本于 10 月 18 日发布，本期补录该项更新。",
+      "url": "https://github.com/sraoss/pg_ivm/releases/tag/v1.17",
+      "author": "IVM Development Group",
+      "source": "pg_ivm",
+      "source_date": "2026-10-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "物化视图",
+        "恢复"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "HypoPG 1.4.4 修复假想索引状态残留",
+      "summary": "HypoPG 1.4.4 完善了假想索引的失效处理：被依赖的表、函数、访问方法、操作符类或类型改变后，相关索引状态会及时清理，避免后续规划继续使用过期信息。版本还修复失败的 EXPLAIN 污染后续查询状态、WITH 查询内存泄漏，以及包含列数量和索引属性取值等问题，并补充 PG 19 兼容性。使用 HypoPG 比较索引方案时，这些修复关系到会话连续试验的可靠性；假想索引仍只用于规划，不会成为实体索引。",
+      "url": "https://github.com/HypoPG/hypopg/releases/tag/1.4.4",
+      "author": "Julien Rouhaud",
+      "source": "HypoPG",
+      "source_date": "2026-10-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "索引",
+        "查询规划"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "PGDG RPM 仓库大幅减少 EPEL 依赖",
+      "summary": "PGDG 调整了 RHEL 8、9、10 的包依赖，使常用 GIS 扩展和 Python 运维工具更多依靠 PGDG 与系统基础仓库安装。自带库放在独立目录，并通过运行时搜索路径与 EPEL 版本共存；RHEL 10 的部分 Python 包则明确替代对应 EPEL 包，不能一概视为并行安装。CRB 仍是必要来源，Nagios、R、Firebird 等部分依赖仍需 EPEL。维护者强调减少外部依赖，现有主机不应因此直接移除 EPEL。",
+      "url": "https://people.planetpostgresql.org/devrim/index.php?/archives/137-The-PostgreSQL-RPM-repository-needs-a-lot-less-EPEL-now.html",
+      "author": "Devrim Gündüz",
+      "source": "Planet PostgreSQL",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "软件包",
+        "Linux",
+        "运维"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG 修复包装路径误删连接条件",
+      "summary": "补丁穿透 Material、Memoize 等包装路径核对条件，避免 LATERAL UNION ALL 查询返回不符合连接条件的行，回补至 PG 16。",
+      "url": "https://github.com/postgres/postgres/commit/f9bc96514afc9c71d533568f62dc613be8356c4d",
+      "author": "Richard Guo、Tom Lane",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "查询规划"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_combinebackup 拒绝越界块号",
+      "summary": "已合入的修复在读取增量文件头时校验各块号，防止异常值造成长度溢出、数组越界和进程崩溃。",
+      "url": "https://github.com/postgres/postgres/commit/fcfd2456078db0a7591fd53c87c67f717ac73fba",
+      "author": "Peter Eisentraut",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "内核"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PG 隔离单个 SNI 主机的证书加载失败",
+      "summary": "Windows 等 EXEC_BACKEND 构建不再因一个主机配置失败而弃用全部 SSL 配置；补丁仅拒绝该主机的握手，标注回补至 PG 19。",
+      "url": "https://github.com/postgres/postgres/commit/07be6f384ca7a90c83055da46346e39a0b4d421d",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TLS",
+        "内核"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "pg_hdr_histogram 提供可合并延迟直方图",
+      "summary": "1.0.0 引入 HDR 直方图类型及并行聚合，适合汇总延迟分位数；项目给出约 0.1% 的有界误差，并非无误差的精确百分位。",
+      "url": "https://github.com/vovcke/pg_hdr_histogram/releases/tag/v1.0.0",
+      "author": "Vladimir Pavliv",
+      "source": "pg_hdr_histogram",
+      "source_date": "2026-10-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "监控"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Neon 用离线混合检索加速文档搜索",
+      "summary": "热门查询缓存混合检索与重排结果，长尾查询仅走 BM25；厂商称，171 条评测查询的前五条命中率从 80% 提高到 94%。",
+      "url": "https://neon.com/blog/neon-docs-search-lakebase-search",
+      "author": "Andre Landgraf",
+      "source": "Neon",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "搜索",
+        "工程"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "MariaDB 升级案例拆解预热与 CDC 切换",
+      "summary": "RDS 蓝绿升级先预热存储与缓冲池，再停启 DMS 并切换 binlog 起点；厂商称，仅升级引擎的一次切换停写约 7 秒。",
+      "url": "https://aws.amazon.com/blogs/database/how-vestiaire-collective-achieved-near-zero-downtime-rds-for-mariadb-upgrades-with-amazon-rds-blue-green-deployments/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "升级",
+        "复制"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "AWS KMS 新增 ML-KEM 密钥封装",
+      "summary": "支持 512、768、1024 三种参数及封装、解封装接口，私钥保留在 HSM 中，供应用建立抗量子密钥交换流程。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/kms-ml-kem-post-quantum/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "加密"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 披露推理缓存跨请求泄露原因",
+      "summary": "超长提示与 KV 池容量、请求回收逻辑共同触发旧缓存读取；故障已于 9 月修复，本次披露建议升级 SGLang 并校验池容量。",
+      "url": "https://blog.cloudflare.com/kv-cache-exposure-remediation/",
+      "author": "Cloudflare",
+      "source": "Cloudflare",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "安全",
+        "推理"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG 合入 libc 大小写映射导致 ILIKE 漏行的修复",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/8474bae2ba4cf8c6e91db800a441daffe22098ee",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PG 修复多态多范围类型的函数校验与缓存",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/663c34c1eb2c71f35955814923ad578d0d9c0cf1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PG 开发分支移除通知读取的安全快照等待",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/6e9e5681b8a7ff3c5eea09db980e888c8e81ad9c",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Yugabyte 告警接入 Teams 需避免签名参数二次编码",
+      "summary": "",
+      "url": "https://www.yugabyte.com/blog/yugabytedb-anywhere-alerts-to-microsoft-teams-workflows/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "告警"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "DuckDB 社区扩展页新增版本与平台兼容矩阵",
+      "summary": "",
+      "url": "https://duckdb.org/2026/10/26/gems-of-duckdb-200",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "扩展"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Azure SQL 新版查询编辑器支持多标签页与结果导出",
+      "summary": "",
+      "url": "https://techcommunity.microsoft.com/blog/azuresqlblog/modern-query-editor-for-azure-sql-database-is-now-generally-available/4566868",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "工具"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "AWS Clean Rooms 可直接分析 Databricks 共享表",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aws-clean-rooms-supports-databricks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据湖"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "EMR on EKS 的 EMR 附加费降低 30%",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/emr-eks-reduces-emr-charge-30-percent/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "成本"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "EC2 自动伸缩可在账户级默认先启动再终止实例",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/ec2-auto-scaling-launch-before-terminate/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可用性"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "AWS 网络防火墙以 DNS 解析结果校验目标 IP",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/network-firewall-route-53-ip-validation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络",
+        "安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "AWS 策略参考数据新增全局条件键与数据面标记",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aws-service-reference-information-global-condition-keys-service-names-data-plane/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "权限"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch 告警消息可携带标签供自动路由",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-cloudwatch-tags-on-alarm-actions-payload/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "监控"
+      ],
+      "position": 26
+    }
+  ]
+}
