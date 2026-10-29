@@ -1,0 +1,417 @@
+{
+  "date": "2026-10-28",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org 新闻、安全页与活动；Planet PostgreSQL RSS；PGNexus #300–313；Google Search、Google News 与可用搜索工具；厂商博客、RSS、GitHub Releases 与安全公告；HN Top/New/Show/Ask（Firebase/Algolia）；扩展回看 2026-10-15 至截稿 2026-10-29 07:26:56 Asia/Shanghai；source_date 保留原文日期",
+  "items": [
+    {
+      "title": "PG 主线修复并发重建 TOAST 索引后的缺块错误",
+      "summary": "PostgreSQL 主线修复并发重建索引时的缓存失效问题。用户表的 TOAST 索引被归为系统关系，部分会话收到失效通知后仍沿用旧标志，未把新写入的大字段块加入新索引。旧索引删除后，读取就会报缺块；数据块仍留在表中，重建索引可修复这一状态。补丁改为重新读取 TOAST 索引状态，并加入并发复现测试。提交注明回补至 PG 14，受影响环境可据此跟踪后续维护版本和既有索引的修复。",
+      "author": "Bharath Rupireddy；Michael Paquier",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "url": "https://github.com/postgres/postgres/commit/27417270ab4e929aa3731e55945872206c425f75",
+      "tier": 1,
+      "position": 1,
+      "tags": [
+        "内核",
+        "数据完整性"
+      ]
+    },
+    {
+      "title": "Anonymizer 3.3 修复脱敏绕过并要求轮换盐值",
+      "summary": "Anonymizer 3.3 修复 12 项安全漏洞，涉及缓存计划、继承表、统计信息和函数调用绕过脱敏，以及越权写入与拒绝服务。新版禁止脱敏规则使用子查询，透明动态脱敏停用函数内联，并限制受保护角色调用采用 SQL 标准函数体的函数。项目建议轮换可能已泄露的盐值；升级还需删除并重建扩展。现有规则应先核验兼容性，尤其关注依赖函数内联的性能，以及静态脱敏后统计信息仍可能残留原值的问题。",
+      "author": "Dalibo",
+      "source": "PostgreSQL Anonymizer / Dalibo",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "url": "https://gitlab.com/dalibo/postgresql_anonymizer/-/releases/3.3.0",
+      "tier": 1,
+      "position": 2,
+      "tags": [
+        "扩展",
+        "安全",
+        "脱敏"
+      ]
+    },
+    {
+      "title": "逻辑恢复完成后仍需补齐统计信息与可见性图",
+      "summary": "逻辑恢复完成后，查询性能还取决于统计信息与可见性图。Nikolay Samokhvalov 用大于内存的数据集对照维护步骤：统计信息缺失会让优化器误估行数，单做分析又不能补齐可见性图，索引仅扫描仍需回表。在其特定测试中，查询从 32.6 秒降到 23 毫秒。PG 19rc1 首次读取还可能补写可见性信息并产生大量 WAL；迁移窗口应预留清理与分析时间，分区父表另行分析，并在接入流量前检查关键执行计划。",
+      "author": "Nikolay Samokhvalov",
+      "source": "PostgresAI",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "url": "https://postgres.ai/blog/20261028-dump-restore-now-what",
+      "tier": 1,
+      "position": 3,
+      "tags": [
+        "恢复",
+        "性能"
+      ]
+    },
+    {
+      "title": "pgrust 测试版加入列式索引与动态内存管理",
+      "summary": "pgrust 0.4 测试版引入 Gravity 执行器，以新的中间表示扩展即时编译的平台支持。列式存储加入多版本并发控制与增删改能力，也可在原有行存表上建立列式索引，无需先迁走底层数据。查询算子和缓存共享内存视图，在内存紧张时选择落盘，并新增对 JSONB 内容的统计。项目同时转向持续公开开发；目前仍处于测试阶段，作者提示小内存环境或超大查询可能落盘变慢，部分查询会因内存限制被拒绝。",
+      "author": "Michael Malis",
+      "source": "pgrust",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "url": "https://pgrust.com/blog/pgrust-v0-4-beta/",
+      "tier": 1,
+      "position": 4,
+      "tags": [
+        "列式存储",
+        "查询执行"
+      ]
+    },
+    {
+      "title": "RocksDB 11.12 修复恢复不完整与范围裁剪丢键",
+      "summary": "RocksDB 11.12 修复两类数据完整性问题：可重试后台错误恢复失败后，多列族写批可能只恢复一部分；裁剪列族范围时，边界处的非 L0 文件也可能被误删而丢键。新版本让各列族的 WAL 回放边界原子推进，并修正裁剪判断，同时落实外部表校验和结果。发布还调整外部表接口并移除旧导入选项，嵌入式数据库使用方升级时应同时核对恢复路径和接口兼容性。",
+      "author": "RocksDB 项目组",
+      "source": "RocksDB",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "db",
+      "url": "https://github.com/meta/rocksdb/releases/tag/v11.12",
+      "tier": 1,
+      "position": 5,
+      "tags": [
+        "RocksDB",
+        "数据完整性"
+      ]
+    },
+    {
+      "title": "Tailscale 1.104.4 修复 SSH 转发提权",
+      "summary": "Tailscale 1.104.4 修复内置 SSH 服务的权限边界问题。攻击者若已控制获准通过 tailnet 策略连接的设备，在特定转发配置下可能借 tailscaled 的高权限访问 root 专用套接字。新版改为按认证后的 Unix 用户权限执行转发，并处理内存耗尽及 Serve、Funnel 中的缺陷。使用内置 SSH 的团队应升级并复核节点间访问范围，对敏感系统启用额外身份检查，避免已授权连接获得超出预期的系统权限。",
+      "author": "Mike Shaver",
+      "source": "Tailscale",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "infra",
+      "tier": 1,
+      "url": "https://tailscale.com/blog/tailscale-ssh-findings-fixes",
+      "tags": [
+        "安全",
+        "SSH"
+      ],
+      "position": 6
+    },
+    {
+      "title": "PG 主线为基础备份读取控制文件加锁",
+      "summary": "读取控制文件时持有锁并先保存内存副本，避免并发写入造成撕裂与启动校验失败；提交注明回补至 PG 15。",
+      "author": "David Steele；Michael Paquier",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "url": "https://github.com/postgres/postgres/commit/4a92c8c29bd0068ecc747cca5d77949660b5f0a8",
+      "tier": 2,
+      "position": 7,
+      "tags": [
+        "备份",
+        "内核"
+      ]
+    },
+    {
+      "title": "pg_plan_advice 修复禁止并行路径的语义",
+      "summary": "新补丁已合入主线，让 NO_GATHER 抑制部分路径生成，并为并行追加的非并行子项生成建议。",
+      "author": "Robert Haas",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "url": "https://github.com/postgres/postgres/commit/3269ccc961189572ebd8cff4742461ed0d172105",
+      "tier": 2,
+      "position": 8,
+      "tags": [
+        "查询规划",
+        "并行查询"
+      ]
+    },
+    {
+      "title": "rdf_fdw 3.1 修复缓存凭据与条件下推错误",
+      "summary": "扫描开始时重新取凭据，阻止请求头注入并修复 NOT 下推；经普通视图访问时改用视图所有者的用户映射。",
+      "author": "Jim Jones",
+      "source": "rdf_fdw / PGXN",
+      "source_date": "2026-10-25",
+      "image": "",
+      "domain": "pg",
+      "url": "https://pgxn.org/dist/rdf_fdw/3.1.0/",
+      "tier": 2,
+      "position": 9,
+      "tags": [
+        "扩展",
+        "安全"
+      ]
+    },
+    {
+      "title": "Aurora PostgreSQL 无服务器容量上限增至 384 ACU",
+      "summary": "约对应 768 GiB 内存，要求 Platform Version 4 和指定引擎版本；旧平台需先通过维护动作升级。",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "cloud",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aurora-serverless-supports-384-acu/",
+      "tier": 2,
+      "position": 10,
+      "tags": [
+        "PostgreSQL",
+        "弹性扩容"
+      ]
+    },
+    {
+      "title": "Cloud SQL 可自动重建 MySQL 副本专用索引",
+      "summary": "索引定义保存在主库，副本重建后自动恢复；要求 MySQL 8.0 及指定维护版，副本升主时这些索引仍会删除。",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "cloud",
+      "url": "https://docs.cloud.google.com/sql/docs/mysql/replication/read-replica-indexes#managed-replica-indexes",
+      "tier": 2,
+      "position": 11,
+      "tags": [
+        "MySQL",
+        "索引"
+      ]
+    },
+    {
+      "title": "ElastiCache 可原位切换既有集群持久性",
+      "summary": "Valkey 9.0 及以上的既有节点集群可原位启停持久性；异步模式先响应再落盘，AWS 提醒故障时仍可能损失最多 10 秒数据。",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "cloud",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/elasticache-changing-durability/",
+      "tier": 2,
+      "position": 12,
+      "tags": [
+        "Valkey",
+        "持久性"
+      ]
+    },
+    {
+      "tier": 2,
+      "title": "Bigtable 正式支持微秒时间戳以减少写入碰撞",
+      "summary": "限 Enterprise Plus 和 Java 客户端 2.82.0 及以上，建表后不可更改精度，微秒表暂不支持逻辑视图或连续物化视图。",
+      "url": "https://docs.cloud.google.com/bigtable/docs/data-types#timestamp_granularity",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Bigtable",
+        "数据完整性"
+      ],
+      "position": 13
+    },
+    {
+      "title": "Docker Desktop 4.97 清理日志遗留密钥",
+      "summary": "新版清理主机日志与崩溃转储中的第三方密钥和令牌；此前另存或分享的旧诊断包仍需单独删除或脱敏。",
+      "author": "Docker",
+      "source": "Docker",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "infra",
+      "tier": 2,
+      "url": "https://docs.docker.com/security/security-announcements/#docker-desktop-4970-security-update-cve-2026-114409",
+      "tags": [
+        "安全",
+        "容器"
+      ],
+      "position": 14
+    },
+    {
+      "title": "PG 主线为整数求和与平均值补上溢出检测",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "url": "https://github.com/postgres/postgres/commit/903ce587e665af18ef1af24b4632e5ed4bf78edc",
+      "tier": 3,
+      "position": 15,
+      "tags": [
+        "内核",
+        "正确性"
+      ]
+    },
+    {
+      "title": "PG 合入修复：时区表达式在 FROM 中的反解析",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "url": "https://github.com/postgres/postgres/commit/03fa13256389e5a5d41c76b14a3c9ffd1e45eb35",
+      "tier": 3,
+      "position": 16,
+      "tags": [
+        "内核",
+        "SQL"
+      ]
+    },
+    {
+      "title": "textsearch_intl 用 ICU 为中日韩等文字分词",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "url": "https://pgxn.org/dist/textsearch_intl/1.0.1/",
+      "tier": 3,
+      "position": 17,
+      "tags": [
+        "全文搜索"
+      ]
+    },
+    {
+      "title": "pg_nanotime 0.3 测试版加入纳秒范围类型",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "url": "https://pgxn.org/dist/pg_nanotime/0.3.0/",
+      "tier": 3,
+      "position": 18,
+      "tags": [
+        "数据类型"
+      ]
+    },
+    {
+      "title": "恢复脚本须区分归档缺段与下载故障",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-restore_command/",
+      "tier": 3,
+      "position": 19,
+      "tags": [
+        "恢复"
+      ]
+    },
+    {
+      "title": "pg_hba.conf 报错中的“未加密”指连接方式",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "url": "https://now-next.nl/en/insights/postgresql-no-pg-hba-conf-entry-for-host/",
+      "tier": 3,
+      "position": 20,
+      "tags": [
+        "认证"
+      ]
+    },
+    {
+      "title": "FakeValkey 用真实服务对照测试校验命令行为",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "db",
+      "url": "https://valkey.io/blog/testing-without-a-server-fakevalkey/",
+      "tier": 3,
+      "position": 21,
+      "tags": [
+        "Valkey",
+        "测试"
+      ]
+    },
+    {
+      "title": "Valkey GLIDE 的 Ruby 客户端正式可用",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "db",
+      "url": "https://valkey.io/blog/introducing-valkey-glide-ruby-client/",
+      "tier": 3,
+      "position": 22,
+      "tags": [
+        "Valkey",
+        "Ruby"
+      ]
+    },
+    {
+      "title": "EKS Auto Mode 支持 Gateway API 路由",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "cloud",
+      "tier": 3,
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-eks-auto-mode-kubernetes-gateway-api/",
+      "tags": [
+        "Kubernetes",
+        "网关"
+      ],
+      "position": 23
+    },
+    {
+      "title": "Terraform 1.17.1 修复销毁计划漏验策略",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "infra",
+      "tier": 3,
+      "url": "https://github.com/hashicorp/terraform/releases/tag/v1.17.1",
+      "tags": [
+        "IaC"
+      ],
+      "position": 24
+    },
+    {
+      "title": "PyPy 开发者实验用位来源分析简化位操作",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "infra",
+      "tier": 3,
+      "url": "https://pypy.org/posts/2026/10/toy-bit-provenance.html",
+      "tags": [
+        "编译器"
+      ],
+      "position": 25
+    },
+    {
+      "title": "GitHub AI 密钥推送保护从私测转为公测",
+      "summary": "",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "ai",
+      "tier": 3,
+      "url": "https://github.blog/changelog/2026-10-28-push-protection-beyond-predefined-secret-patterns/",
+      "tags": [
+        "安全",
+        "密钥"
+      ],
+      "position": 26
+    }
+  ]
+}
