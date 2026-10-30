@@ -31,7 +31,6 @@
               {% if item.author %}<li>{{item.author}}</li>{% endif %}
               {% if item.version %}<li>{{item.version}}</li>{% endif %}
             </ul>
-            <span class="tutorial-read">前往阅读 <span aria-hidden="true">↗</span></span>
           </div>
         </a>
       </article>
@@ -55,9 +54,13 @@
       <article class="tutorial-course tutorial-course--{{collection.tone}}">
         <a href="{{item.url}}" target="_blank" rel="noopener" aria-label="打开{{item.code}}：{{item.title}}">
           <span class="tutorial-course__cover{% if not item.image %} tutorial-course__cover--identity{% endif %}">
-            {% if item.image %}<img src="{{item.image}}" alt="{{item.image_alt}}" loading="lazy" decoding="async">{% else %}<img src="{{collection.image}}" alt="" loading="lazy" decoding="async"><span class="tutorial-course__code">{{item.code}}</span>{% endif %}
+            {% if item.image %}<img src="{{item.image}}" alt="{{item.image_alt}}" loading="lazy" decoding="async">{% else %}<img src="{{collection.image}}" alt="" loading="lazy" decoding="async">{% endif %}
           </span>
-          <span class="tutorial-course__body"><span class="tutorial-course__code-label">{{item.code}}</span><strong>{{item.title}}</strong><span class="tutorial-course__description">{{item.description}}</span><span class="tutorial-course__link">进入课程 <span aria-hidden="true">↗</span></span></span>
+          <span class="tutorial-course__body">
+            <span class="tutorial-course__code-label">{{item.code}}</span>
+            <strong title="{{item.title}}">{{item.title}}</strong>
+            <span class="tutorial-course__description" title="{{item.description}}">{{item.description}}</span>
+          </span>
         </a>
       </article>
       {% endfor %}

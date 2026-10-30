@@ -26,7 +26,8 @@ import hashlib
 import logging
 
 from pgweb.util.decorators import cache, nocache
-from pgweb.util.contexts import render_pgweb, get_nav_menu, PGWebContextProcessor
+from pgweb.util.contexts import THIRD_PARTY_DOCS, render_pgweb, get_nav_menu, PGWebContextProcessor
+from pgweb.docs.tutorials import tutorialsdata
 from pgweb.util.helpers import PgXmlHelper
 from pgweb.util.moderation import get_all_pending_moderations, get_moderation_model, ModerationState
 from pgweb.util.misc import get_client_ip, varnish_purge, varnish_purge_expr, varnish_purge_xkey
@@ -96,6 +97,8 @@ def home(request):
         'versions': versions,
         'manuals': manual_groups(),
         'info_home': home_highlights(),
+        'tutorials': tutorialsdata.get(),
+        'third_party_docs': THIRD_PARTY_DOCS,
         'planet': planet,
         'release': release,
         'og': {

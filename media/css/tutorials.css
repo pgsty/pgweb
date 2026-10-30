@@ -179,20 +179,9 @@
   list-style: none;
 }
 
-.tutorial-read,
-.tutorial-course__link {
-  color: var(--pg-link-content);
-  font-size: .82rem;
-  font-weight: 600;
-}
-
-.tutorial-read {
-  margin-top: .8rem;
-}
-
 .tutorial-course-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -206,10 +195,11 @@
 
 #pg-tutorials .tutorial-course > a {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 12px;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: center;
+  gap: 16px;
   height: 100%;
-  padding: 12px;
+  padding: 14px 16px;
   border-radius: inherit;
   font-weight: 400;
 }
@@ -218,16 +208,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 88px;
+  width: 56px;
+  height: 76px;
   border: 1px solid var(--pg-line);
   background: var(--pg-surface-2);
 }
 
 .tutorial-course__cover--identity {
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 8px 6px;
+  border: 0;
+  background: transparent;
 }
 
 .tutorial-course__cover--identity img {
@@ -235,47 +224,37 @@
   height: 44px;
 }
 
-.tutorial-course__code {
-  color: var(--pg-heading);
-  font: 600 .75rem/1 var(--pg-font-mono);
-}
-
 .tutorial-course__body {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
 }
 
 .tutorial-course__code-label {
-  margin-bottom: .25rem;
   color: var(--pg-ink-2);
   font: 600 .7rem/1 var(--pg-font-mono);
 }
 
 .tutorial-course__body strong {
+  display: block;
+  overflow: hidden;
   color: var(--pg-heading);
   font-size: .95rem;
-  line-height: 1.4;
-  overflow-wrap: anywhere;
+  line-height: 1.5;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .tutorial-course__description {
-  margin-top: .35rem;
+  display: block;
+  overflow: hidden;
   color: var(--pg-ink-2);
   font-size: .82rem;
   line-height: 1.5;
-}
-
-.tutorial-course__link {
-  margin-top: auto;
-  padding-top: .6rem;
-}
-
-@media (max-width: 1200px) {
-  .tutorial-course-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 @media (max-width: 1100px) {
@@ -303,6 +282,17 @@
 
   #pg-tutorials .tutorials-section__head h2 {
     font-size: 1.25rem;
+  }
+
+  #pg-tutorials .tutorial-course > a {
+    grid-template-columns: 44px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .tutorial-course__cover {
+    width: 44px;
+    height: 60px;
   }
 }
 

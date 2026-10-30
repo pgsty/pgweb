@@ -1,0 +1,42 @@
+<section class="pg-section pg-section--tint pg-home-resources" id="resources" aria-label="书籍与文档">
+  <div class="pg-container pg-resources">
+    <section class="pg-resources__column" aria-labelledby="home-books-title">
+      <div class="pg-section__head pg-resources__head">
+        <h2 id="home-books-title"><a href="/docs/tutorials/">书籍 <span aria-hidden="true">→</span></a></h2>
+      </div>
+      <p class="pg-resources__intro">{{ tutorials.books|length }} 本中文书籍，从入门实践到内核原理。</p>
+      <ul class="pg-resources__grid">
+        {% for book in tutorials.books %}
+        <li>
+          <a class="pg-resource" href="{{ book.url }}" target="_blank" rel="noopener" title="{{ book.title }} · {{ book.author }}">
+            <span class="pg-resource__image pg-resource__image--book"><img src="{{ book.image }}" alt="" width="34" height="46" loading="lazy" decoding="async"></span>
+            <span class="pg-resource__text"><strong>{{ book.title }}</strong><span>{{ book.summary|default:book.description }}</span></span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="pg-resources__training" aria-label="培训教程">
+        {% for collection in tutorials.collections %}
+        <a href="/docs/tutorials/#{{ collection.id }}"><img src="{{ collection.image }}" alt="" width="24" height="24" loading="lazy" decoding="async"><span>{{ collection.title }}</span><span class="pg-resources__count">{{ collection.items|length }} 门课程</span></a>
+        {% endfor %}
+      </div>
+    </section>
+    <section class="pg-resources__column" aria-labelledby="home-docs-title">
+      <div class="pg-section__head pg-resources__head">
+        <h2 id="home-docs-title"><a href="/docs/third-party/">文档 <span aria-hidden="true">→</span></a></h2>
+      </div>
+      <p class="pg-resources__intro">{{ third_party_docs|length }} 个常用组件，部署、运维与扩展随用随查。</p>
+      <ul class="pg-resources__grid">
+        {% for component in third_party_docs %}
+        <li>
+          <a class="pg-resource" href="{{ component.link }}" target="_blank" rel="noopener" title="{{ component.description }}">
+            <span class="pg-resource__image pg-resource__image--logo"><img src="{{ component.logo }}" alt="" width="34" height="34" loading="lazy" decoding="async"></span>
+            <span class="pg-resource__text"><strong>{{ component.title }}</strong><span>{{ component.summary|default:component.description }}</span></span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+      <div class="pg-resources__more"><a href="/docs/third-party/">浏览三方文档 <span aria-hidden="true">→</span></a></div>
+    </section>
+  </div>
+</section>

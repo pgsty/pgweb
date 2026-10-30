@@ -28,7 +28,7 @@ class HomeSEOTests(SimpleTestCase):
     def assertNoOldBrand(self, response):
         """External data-source links may use pg.center, not our brand."""
         import re
-        body = re.sub(r'\b(err|guc|wait|cat)\.pg\.center', '', response.content.decode())
+        body = re.sub(r'\b(err|guc|wait|cat|doc)\.pg\.center', '', response.content.decode())
         self.assertNotIn('pg.center', body)
 
     def setUp(self):

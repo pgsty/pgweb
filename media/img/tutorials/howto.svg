@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 960" role="img" aria-labelledby="title desc">
+  <title id="title">PostgreSQL How To</title>
+  <desc id="desc">PostgreSQL 工程实践指南，Nikolay Samokhvalov 著，熊灿灿译。使用中文阅读站的 H 标识制作索引封面。</desc>
+  <rect width="720" height="960" fill="#edf4f8"/>
+  <rect width="720" height="690" fill="#21476b"/>
+  <g fill="#edf4f8" font-family="Arial, Helvetica, sans-serif">
+    <text x="64" y="122" font-size="46">PostgreSQL</text>
+    <text x="58" y="231" font-size="100" font-weight="700">How To</text>
+  </g>
+  <text x="65" y="301" fill="#b9d5e9" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="30">工程实践指南</text>
+  <!-- Original symbol: https://postgres-howto.cn/images/brand/symbol.svg -->
+  <path d="M4 5h7v9h10V5h3l4 4v18h-7v-9H11v9H4Z" transform="translate(216 355) scale(9)" fill="#edf4f8"/>
+  <path d="M64 744h76" stroke="#4982ae" stroke-width="6"/>
+  <text x="64" y="811" fill="#21476b" font-family="Arial, Helvetica, sans-serif" font-size="31">Nikolay Samokhvalov</text>
+  <text x="64" y="875" fill="#49657d" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="29">熊灿灿 译</text>
+</svg>

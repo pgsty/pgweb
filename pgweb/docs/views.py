@@ -16,6 +16,7 @@ from pgweb.util.helpers import template_to_string
 from pgweb.util.misc import send_template_mail
 from pgweb.util.decorators import xkey
 from pgweb.util.yamldataloader import YamlDataLoader
+from pgweb.docs.tutorials import tutorialsdata
 from pgweb.util.seo import summarize_html
 
 from pgweb.core.models import Version, UserSubmission
@@ -1013,13 +1014,6 @@ class BooksData(YamlDataLoader):
 
 
 booksdata = BooksData()
-
-
-class TutorialsData(YamlDataLoader):
-    DATAFILE = "tutorials.yaml"
-
-
-tutorialsdata = TutorialsData()
 
 
 def _localize_book(book):
