@@ -4100,8 +4100,12 @@ pages:
     description: 了解 PostgreSQL 社区的邮件列表、用户组、IRC、国际站点与其他交流资源。
     lang: zh
   /community/contributors/:
-    title: PostgreSQL 贡献者档案
-    description: 浏览 PostgreSQL 核心组、主要贡献者和其他贡献者名录，了解贡献者资料与更新方式。
+    title: PostgreSQL 认可贡献者
+    description: 浏览近年来持续为 PostgreSQL 作出重要贡献的成员，了解贡献者资料与更新方式。
+    lang: zh
+  /community/people/:
+    title: PostgreSQL 社区成员与贡献徽章
+    description: 浏览 PostgreSQL 社区成员与贡献徽章，了解开发、翻译、会议和志愿服务等贡献，以及公开个人档案的方式。
     lang: zh
   /community/international/:
     title: PostgreSQL 国际社区站点

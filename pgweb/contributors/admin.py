@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib import admin
+from django.db.models import Count
 
-from .models import Contributor, ContributorType
+from .models import Contributor, ContributorType, Badge, Badgeholder
+from .forms import BadgeForm
 
 
 class ContributorAdminForm(forms.ModelForm):
@@ -22,5 +24,32 @@ class ContributorAdmin(admin.ModelAdmin):
     search_fields = ('firstname', 'lastname', 'user__username',)
 
 
+class BadgeAdminForm(forms.ModelForm):
+    class Meta:
+        model = Badge
+        fields = '__all__'
+        labels = {**BadgeForm.Meta.labels, 'approved': '已批准', 'slug': '网址标识', 'sortorder': '排序'}
+        help_texts = BadgeForm.Meta.help_texts
+
+
+class BadgeAdmin(admin.ModelAdmin):
+    form = BadgeAdminForm
+    list_display = ('__str__', 'slug', 'holders_count', 'approved', 'org',)
+    list_filter = ('approved', 'org',)
+    readonly_fields = ('slug',)
+
+    def holders_count(self, obj):
+        return obj.holders_count
+
+    holders_count.short_description = '获得者人数'
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.annotate(holders_count=Count("holders"))
+        return queryset
+
+
 admin.site.register(ContributorType)
 admin.site.register(Contributor, ContributorAdmin)
+admin.site.register(Badge, BadgeAdmin)
+admin.site.register(Badgeholder)

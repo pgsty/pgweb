@@ -129,7 +129,8 @@ sitenav = {
     'wiki': [{'title': '百科', 'link': '/wiki/'}] + wiki_nav_items(),
     'community': [
         {'title': '社区', 'link': '/community/'},
-        {'title': '贡献者', 'link': '/community/contributors/'},
+        {'title': '认可贡献者', 'link': '/community/contributors/'},
+        {'title': '社区成员与徽章', 'link': '/community/people/'},
         {'title': '邮件列表', 'link': 'https://www.postgresql.org/list/'},
         {'title': 'IRC', 'link': '/community/irc/'},
         # {'title': 'Slack', 'link': 'https://join.slack.com/t/postgresteam/shared_invite/zt-1qj14i9sj-E9WqIFlvcOiHsEk2yFEMjA'},
@@ -147,7 +148,7 @@ sitenav = {
         {'title': '编码', 'link': '/developer/coding/'},
         {'title': 'CommitFest', 'link': 'https://commitfest.postgresql.org'},
         {'title': '测试', 'link': '/developer/testing/', 'submenu': [
-            {'title': 'Beta 版信息', 'link': '/developer/beta/'},
+            {'title': '预发布版本', 'link': '/developer/beta/'},
         ]},
         {'title': '邮件列表', 'link': 'https://www.postgresql.org/list/'},
         {'title': '开发者 FAQ', 'link': 'https://wiki.postgresql.org/wiki/Developer_FAQ'},
@@ -172,6 +173,7 @@ sitenav = {
             {'title': '产品', 'link': '/account/edit/products/'},
             {'title': '专业服务', 'link': '/account/edit/services/'},
             {'title': '组织', 'link': '/account/edit/organisations/'},
+            {'title': '贡献徽章', 'link': '/account/edit/badges/'},
         ]},
         {'title': '修改密码', 'link': '/account/changepwd/'},
         {'title': '退出登录', 'link': '/account/logout/'},

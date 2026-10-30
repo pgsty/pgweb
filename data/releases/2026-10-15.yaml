@@ -1,0 +1,9 @@
+date: 2026-10-15
+versions:
+  - 19rc1
+news:
+  id: 3409
+schedule:
+  candidate: 19 RC 2
+  candidate_date: 2026-11-12
+  release_date: 2026-11-19

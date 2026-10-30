@@ -37,7 +37,7 @@ from pgweb.news.models import NewsArticle, NewsPostingEmbargo
 from pgweb.events.models import Event
 from pgweb.core.models import Organisation, UserProfile, ModerationNotification
 from pgweb.core.models import OrganisationEmail
-from pgweb.contributors.models import Contributor
+from pgweb.contributors.models import Contributor, Badge
 from pgweb.downloads.models import Product
 from pgweb.profserv.models import ProfessionalService
 
@@ -75,19 +75,20 @@ def _modobjs(qs):
 def home(request):
     modobjects = [
         {
-            'title': 'not submitted yet',
+            'title': '尚未提交审核',
             'objects': [
                 _modobjs(NewsArticle.objects.filter(org__managers=request.user, modstate=ModerationState.CREATED)),
             ],
         },
         {
-            'title': 'waiting for moderator approval',
+            'title': '等待审核',
             'objects': [
                 _modobjs(NewsArticle.objects.filter(org__managers=request.user, modstate=ModerationState.PENDING)),
                 _modobjs(Event.objects.filter(org__managers=request.user, approved=False)),
                 _modobjs(Organisation.objects.filter(managers=request.user, approved=False)),
                 _modobjs(Product.objects.filter(org__managers=request.user, approved=False)),
-                _modobjs(ProfessionalService.objects.filter(org__managers=request.user, approved=False))
+                _modobjs(ProfessionalService.objects.filter(org__managers=request.user, approved=False)),
+                _modobjs(Badge.objects.filter(org__managers=request.user, approved=False)),
             ],
         },
     ]
@@ -128,6 +129,11 @@ objtypes = {
         'submit_header': '<h3>Submit organisation</h3>Before submitting a new Organisation, please verify on the list of <a href="/account/orglist/">current organisations</a> if the organisation already exists. If it does, please contact the manager of the organisation to gain permissions.',
         'editapproved': True,
     },
+    'badges': {
+        'title': '贡献徽章',
+        'objects': lambda u: Badge.objects.filter(org__managers=u),
+        'editapproved': True,
+    },
 }
 
 
@@ -145,11 +151,13 @@ def profile(request):
     can_change_email = (request.user.password != OAUTH_PASSWORD_STORE)
 
     # We may have a contributor record - and we only show that part of the
-    # form if we have it for this user.
+    # form if we have it for this user. If the user has any badges awarded,
+    # offer them to create the contributor record.
     try:
         contrib = Contributor.objects.get(user=request.user.pk)
     except Contributor.DoesNotExist:
         contrib = None
+    badges = Badge.objects.with_has_image().filter(approved=True, holders=request.user.pk)
 
     contribform = None
 
@@ -181,7 +189,9 @@ def profile(request):
                 log.info("User {} changed primary email from {} to {}".format(user.username, oldemail, user.email))
 
             profileform.save()
-            if contrib:
+            if not contrib and badges and request.POST.get('create_contributor_profile') == 'on':
+                contrib = Contributor.objects.create(user=user, firstname=user.first_name, lastname=user.last_name)
+            elif contrib:
                 contribform.save()
             if secondaryemailform.cleaned_data.get('email1', ''):
                 sa = SecondaryEmail(user=request.user, email=secondaryemailform.cleaned_data['email1'], token=generate_random_token())
@@ -214,6 +224,7 @@ def profile(request):
         'secondaryemailform': secondaryemailform,
         'secondaryaddresses': secondaryaddresses,
         'secondarypending': any(not a.confirmed for a in secondaryaddresses),
+        'badges': badges,
         'contribform': contribform,
     })
 

@@ -186,6 +186,15 @@ class ContributorForm(forms.ModelForm):
     class Meta:
         model = Contributor
         exclude = ('ctype', 'user', )  # these fields are not user-editable
+        labels = {
+            'firstname': '名字', 'lastname': '姓氏', 'email': '公开邮箱',
+            'company': '所属组织', 'companyurl': '组织网站',
+            'location': '所在地', 'contribution': '贡献简介',
+        }
+        help_texts = {
+            'email': '选填。填写后会在公开档案中展示；留空可隐藏邮箱。',
+            'contribution': '介绍您参与 PostgreSQL 社区的工作，例如开发、翻译、答疑或活动组织。',
+        }
 
 
 class AddEmailForm(forms.Form):

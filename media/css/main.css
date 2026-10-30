@@ -1513,6 +1513,49 @@ table.contributor-table thead tr th {
   width: 50%;
 }
 
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
+}
+.badges-grid > figure {
+  margin: 0;
+  max-width: 150px;
+}
+.badges-grid img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+.badges-grid figcaption {
+  padding: .5rem 0;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+.badgeholder-retired {
+  font-style: italic;
+}
+.inline-photo-widget {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: contain;
+}
+.contributor-people {
+  line-height: 2;
+}
+.contributor-person {
+  display: inline-block;
+  max-width: 100%;
+  margin-right: .35em;
+  overflow-wrap: anywhere;
+}
+.contributor-profile {
+  overflow-wrap: anywhere;
+}
+
 /* News archive */
 #pgContentWrap span.newstag {
     white-space: nowrap;

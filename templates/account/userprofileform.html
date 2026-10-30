@@ -91,9 +91,23 @@
       </div>
     {%endfor%}
 
+  {% if badges %}
+    <h2>我的贡献徽章</h2>
+    <div class="badges-grid">
+      {% for badge in badges %}
+        <figure>
+          <a href="/community/badge/{{ badge.slug }}/">
+            <img src="{% if badge.has_image %}/community/badge/{{ badge.slug }}/image/{% else %}/media/img/about/press/elephant.png{% endif %}" width="150" height="150" alt="{{ badge }}">
+          </a>
+          <figcaption><a href="/community/badge/{{ badge.slug }}/">{{ badge }}</a></figcaption>
+        </figure>
+      {% endfor %}
+    </div>
+  {% endif %}
+
   {% if contribform %}
     <h2>编辑贡献者信息</h2>
-    <p>您可以编辑显示在<a href="/community/contributors/" target="_blank" rel="noopener">贡献者</a>页面上的信息。请注意，您的更改将立即生效！
+    <p>这些信息会显示在您的<a href="/community/people/{{ user.username }}/">公开贡献者档案</a>中。保存后立即生效，公开邮箱可以留空。
     </p>
     {% for field in contribform %}
       <div class="form-group row">
@@ -113,6 +127,13 @@
         </div>
       </div>
     {% endfor %}
+  {% elif badges %}
+    <h2>创建公开贡献者档案</h2>
+    <p>您已获得贡献徽章。创建公开档案后，您的姓名将出现在社区成员及徽章获得者列表中。邮箱默认不公开，您可以在创建后自行填写贡献简介和公开联系方式。</p>
+    <div class="form-group">
+      <input type="checkbox" name="create_contributor_profile" id="create_contributor_profile">
+      <label for="create_contributor_profile">创建并公开我的贡献者档案</label>
+    </div>
   {% endif %}
 
   <div class="submit-row">

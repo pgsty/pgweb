@@ -1,10 +1,11 @@
 {%extends "base/page.html"%}
 {%load pgfilters%}
-{%block title%}贡献者档案{%endblock%}
+{%block title%}认可贡献者{%endblock%}
 {%block contents%}
-<h1>PostgreSQL 贡献者档案 <i class="fa fa-users"></i></h1>
+<h1>PostgreSQL 认可贡献者 <i class="fa fa-users"></i></h1>
 
-<p>正是这些杰出的人们成就了今天的 PostgreSQL！</p>
+<p>这些贡献者近年来持续为 PostgreSQL 项目作出了重要贡献。</p>
+<p>如需查看多年来参与过 PostgreSQL 贡献的所有成员，请浏览<a href="/community/people/">社区成员与贡献徽章</a>。</p>
 
 <p>
     如需查看特定版本的所有代码贡献列表，请参阅已发布 PostgreSQL 版本的<a href="/docs/release/">发布说明</a>。
@@ -30,7 +31,7 @@
     {%for c in t.contributor_set.all %}
      {%if t.detailed%}
       <tr>
-       <td>{{c.firstname}} {{c.lastname}} {%if t.showemail and c.email%}({{c.email|hidemail}}){%endif%}
+       <td>{% if c.user %}<a href="/community/people/{{ c.user.username }}/">{{c.firstname}} {{c.lastname}}</a>{% else %}{{c.firstname}} {{c.lastname}}{% endif %} {%if t.showemail and c.email%}({{c.email|hidemail}}){%endif%}
           {%if c.company %}
           <br/>
             {% if c.companyurl %}
@@ -39,21 +40,23 @@
               {{c.company}}
             {% endif %}
           {% endif %}
-          <br/>
-          {{c.location}}
+          {%if c.location %}
+            <br/>
+            {{c.location}}
+          {%endif%}
         </td>
         <td>{{c.contribution}}</td>
        </tr>
      {%else%}
       {%if forloop.counter0|divisibleby:"2" %}
        <tr>
-        <td>{{c.firstname}} {{c.lastname}}{%if t.showemail and c.email%} ({{c.email|hidemail}}){%endif%}</td>
+        <td>{% if c.user %}<a href="/community/people/{{ c.user.username }}/">{{c.firstname}} {{c.lastname}}</a>{% else %}{{c.firstname}} {{c.lastname}}{% endif %}{%if t.showemail and c.email%} ({{c.email|hidemail}}){%endif%}</td>
         {%if forloop.last%}
         <td></td>
        </tr>
         {%endif%}
       {%else%}
-        <td>{{c.firstname}} {{c.lastname}}{%if t.showemail and c.email%} ({{c.email|hidemail}}){%endif%}</td>
+        <td>{% if c.user %}<a href="/community/people/{{ c.user.username }}/">{{c.firstname}} {{c.lastname}}</a>{% else %}{{c.firstname}} {{c.lastname}}{% endif %}{%if t.showemail and c.email%} ({{c.email|hidemail}}){%endif%}</td>
        </tr>
       {%endif%}
      {%endif%}

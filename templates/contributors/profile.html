@@ -1,0 +1,37 @@
+{% extends "base/page.html" %}
+{% load pgfilters %}
+{% block title %}{{ contributor.firstname }} {{ contributor.lastname }} · 贡献者档案{% endblock %}
+{% block contents %}
+<h1>{{ contributor.firstname }} {{ contributor.lastname }} <i class="fa fa-user" aria-hidden="true"></i></h1>
+{% if badges %}
+<h2>贡献徽章</h2>
+<div class="badges-grid">
+  {% for holder in badges %}
+    <figure>
+      <a href="/community/badge/{{ holder.badge.slug }}/"><img src="{% if holder.badge.has_image %}/community/badge/{{ holder.badge.slug }}/image/{% else %}/media/img/about/press/elephant.png{% endif %}" width="150" height="150" alt="{{ holder.badge }}"></a>
+      <figcaption{% if holder.date_retired %} class="badgeholder-retired"{% endif %}><a href="/community/badge/{{ holder.badge.slug }}/">{{ holder.badge }}</a>{% if holder.date_retired %}<br>已结束参与{% endif %}</figcaption>
+    </figure>
+  {% endfor %}
+</div>
+{% endif %}
+{% if contributor.contribution %}
+<h2>贡献简介</h2>
+{{ contributor.contribution|linebreaks }}
+{% endif %}
+<h2>个人资料</h2>
+<dl class="row contributor-profile">
+  {% if contributor.ctype %}
+  <dt class="col-sm-3">贡献者类别</dt><dd class="col-sm-9">{{ contributor.ctype.typename }}</dd>
+  {% endif %}
+  {% if contributor.email %}
+  <dt class="col-sm-3">公开邮箱</dt><dd class="col-sm-9">{{ contributor.email|hidemail }}</dd>
+  {% endif %}
+  {% if contributor.location %}
+  <dt class="col-sm-3">所在地</dt><dd class="col-sm-9">{{ contributor.location }}</dd>
+  {% endif %}
+  {% if contributor.company %}
+  <dt class="col-sm-3">所属组织</dt><dd class="col-sm-9">{% if contributor.companyurl %}<a href="{{ contributor.companyurl }}" target="_blank" rel="noopener">{{ contributor.company }}</a>{% else %}{{ contributor.company }}{% endif %}</dd>
+  {% endif %}
+</dl>
+<p><a href="/community/people/">查看所有社区成员与徽章</a></p>
+{% endblock %}

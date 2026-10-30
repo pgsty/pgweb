@@ -533,8 +533,10 @@ def docpage(request, version, filename):
     else:
         version_state = 'eol'
     upstream_path = _doc_path(page.display_version(), page.file)
+    from pgweb.docs.versions import manual_prerelease
+    manual_build = manual_prerelease(page.version) if version_state == 'beta' else None
     version_label = ('PostgreSQL {} 开发快照'.format(DEVEL_MAJOR_VERSION) if version_state == 'devel'
-                     else 'PostgreSQL ' + page.version.versionstring_spaced if version_state == 'beta'
+                     else 'PostgreSQL {}'.format(manual_build or '{} 预发布版'.format(page.version.numtree)) if version_state == 'beta'
                      else 'PostgreSQL {}'.format(page.version.numtree))
     build = ''
     if page.version.docsloaded:

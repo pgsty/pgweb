@@ -54,7 +54,7 @@ def simple_form(instancetype, itemid, request, formclass, formtemplate='base/for
             return HttpResponseRedirect(redirect)
 
         # Process this form
-        form = formclass(data=request.POST, instance=instance)
+        form = formclass(data=request.POST, files=request.FILES, instance=instance)
         if hasattr(form, 'filter_by_user'):
             form.filter_by_user(request.user)
         for fn in form.fields:
@@ -91,7 +91,7 @@ def simple_form(instancetype, itemid, request, formclass, formtemplate='base/for
         # Do some very trivial rate limiting. The idea is "no more than <n> submission events in <t> time",
         # the numbers of <n> and <t> being entirely arbitrary.
         if do_notify and form.is_valid() and UserSubmission.objects.filter(user=request.user, when__gte=datetime.now() - timedelta(minutes=10)).count() > 2:
-            form.add_error(None, 'You have made too many submissions in a short time. Please wait a little and try again.')
+            form.add_error(None, '短时间内提交次数过多，请稍后再试。')
 
         if form.is_valid():
 
@@ -203,20 +203,20 @@ def simple_form(instancetype, itemid, request, formclass, formtemplate='base/for
     else:
         form_intro = None
 
-    savebutton = 'Save'
+    savebutton = '保存'
     deletebutton = None
     if itemid == 'new':
         if 'modstate' in (f.name for f in instance._meta.get_fields()):
             # This is a three-state moderated entry, so don't say "submit new" for new
-            savebutton = 'Save draft'
+            savebutton = '保存草稿'
         else:
-            savebutton = 'Submit New'
+            savebutton = '提交审核'
     else:
         # If it's a three-state moderated entry that is not yet approved, we are still editing the draft
         if 'modstate' in (f.name for f in instance._meta.get_fields()):
             if instance.modstate == ModerationState.CREATED:
-                savebutton = 'Save draft'
-                deletebutton = 'Delete draft'
+                savebutton = '保存草稿'
+                deletebutton = '删除草稿'
 
     ctx = {
         'form': form,
@@ -225,7 +225,7 @@ def simple_form(instancetype, itemid, request, formclass, formtemplate='base/for
         'described_checkboxes': getattr(form, 'described_checkboxes', {}),
         'savebutton': savebutton,
         'deletebutton': deletebutton,
-        'operation': (itemid == "new") and "New" or "Edit",
+        'operation': '新建' if itemid == 'new' else '编辑',
     }
     ctx.update(extracontext)
 

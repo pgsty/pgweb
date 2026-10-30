@@ -12,7 +12,7 @@ from pgweb.util.misc import send_template_mail, generate_random_token
 
 
 class OrganisationForm(forms.ModelForm):
-    new_form_intro = """<em>提示：</em>只有发布新闻、活动、产品或专业服务信息时，才需要创建组织资料。在 PostgreSQL 邮件列表提问或参与讨论、提交 Bug 报告，以及其他一般社区交流，都<em>不需要</em>注册组织。"""
+    new_form_intro = """<em>提示：</em>发布新闻、活动、产品、专业服务或贡献徽章时，需要创建组织资料。在 PostgreSQL 邮件列表提问或参与讨论、提交 Bug 报告，以及其他一般社区交流，都<em>不需要</em>注册组织。"""
 
     remove_email = forms.ModelMultipleChoiceField(required=False, queryset=None, label="当前邮箱地址", help_text="选择要移除的一个或多个邮箱地址")
     add_email = forms.EmailField(required=False, label="添加邮箱地址", help_text="输入要添加的邮箱地址")

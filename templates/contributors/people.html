@@ -1,0 +1,28 @@
+{% extends "base/page.html" %}
+{% block title %}社区成员与徽章{% endblock %}
+{% block contents %}
+<h1>社区成员与徽章 <i class="fa fa-users" aria-hidden="true"></i></h1>
+<p>PostgreSQL 的发展离不开每一位参与者。这里汇集了历年来参与 PostgreSQL 项目及其生态的贡献者，按姓名的字母顺序排列。</p>
+<p>获得 PostgreSQL 项目认可的主要贡献者，请参阅<a href="/community/contributors/">贡献者档案</a>；更多开发者介绍可在<a href="/developer/hacker/">开发者大全</a>中查阅。</p>
+<div class="contributor-people">
+  {% for person in people %}
+    <span class="contributor-person">{% if person.user %}<a href="/community/people/{{ person.user.username }}/">{{ person.firstname }} {{ person.lastname }}</a>{% else %}{{ person.firstname }} {{ person.lastname }}{% endif %}{% if not forloop.last %} ·{% endif %}</span>
+  {% empty %}
+    <p>暂时没有公开的贡献者档案。</p>
+  {% endfor %}
+</div>
+
+<h2 id="badges">贡献徽章</h2>
+<p>组织可以通过徽章记录会议演讲、志愿服务、开发、翻译等贡献。获得徽章后，您可以在<a href="/account/profile/">账户资料</a>中选择创建公开档案。</p>
+<div class="badges-grid">
+  {% for badge in badges %}
+    <figure>
+      <a href="/community/badge/{{ badge.slug }}/"><img src="{% if badge.has_image %}/community/badge/{{ badge.slug }}/image/{% else %}/media/img/about/press/elephant.png{% endif %}" width="150" height="150" alt="{{ badge }}" loading="lazy"></a>
+      <figcaption><a href="/community/badge/{{ badge.slug }}/">{{ badge }}</a></figcaption>
+    </figure>
+  {% empty %}
+    <p>暂时没有公开的贡献徽章。</p>
+  {% endfor %}
+</div>
+<p>组织管理员可以在账户中<a href="/account/edit/badges/">提交和管理徽章</a>。</p>
+{% endblock %}

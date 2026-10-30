@@ -1,0 +1,23 @@
+{% extends "base/page.html" %}
+{% block title %}{{ badge }} · 贡献徽章{% endblock %}
+{% block contents %}
+<h1>{{ badge }} <i class="fa fa-star" aria-hidden="true"></i></h1>
+<p><img src="{% if badge.has_image %}/community/badge/{{ badge.slug }}/image/{% else %}/media/img/about/press/elephant.png{% endif %}" class="inline-photo-widget" width="150" height="150" alt="{{ badge }}"></p>
+<h2>关于此徽章</h2>
+<p>颁发组织：{{ badge.org }}</p>
+{% if badge.description %}{{ badge.description|linebreaks }}{% endif %}
+{% if badge.url %}<p class="contributor-profile"><a href="{{ badge.url }}" target="_blank" rel="noopener">查看相关项目或活动</a></p>{% endif %}
+<h2>徽章获得者</h2>
+<ul class="badge-holders">
+  {% for holder in holders %}
+  <li{% if holder.date_retired %} class="badgeholder-retired"{% endif %}><a href="/community/people/{{ holder.user.username }}/">{{ holder.user.contributor.firstname }} {{ holder.user.contributor.lastname }}</a>{% if holder.date_retired %}（已结束参与）{% endif %}</li>
+  {% empty %}
+  <li>暂时没有选择公开档案的获得者。</li>
+  {% endfor %}
+</ul>
+<p>获得者按姓名的字母顺序排列；已结束参与的成员仍保留贡献记录。</p>
+<h2>参与方式</h2>
+<p>如果您已经参与相关工作，请先在<a href="/account/profile/">账户资料</a>中查看是否收到徽章。收到后，创建公开贡献者档案即可出现在这里；尚未收到时，请联系颁发组织核实。</p>
+{% if badge.contact %}<p class="contributor-profile">联系方式：{{ badge.contact }}</p>{% endif %}
+<p><a href="/community/people/#badges">查看所有贡献徽章</a></p>
+{% endblock %}

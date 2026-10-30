@@ -2664,6 +2664,18 @@ html[data-shout="off"] .pg-shout {
   .pg-page {
     padding: 1rem 8px 0;
   }
+
+  /* Keep the row gutters within the narrower mobile container padding. */
+  .pg-page > .row {
+    margin-left: -8px;
+    margin-right: -8px;
+  }
+
+  .pg-page > .row > .col-lg-2,
+  .pg-page > .row > .col-lg-10 {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
 }
 
 @media (max-width: 767.98px) {
