@@ -28,7 +28,7 @@ class ExternalDocumentationTests(TestCase):
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get('/docs/third-party/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['components']), 10)
+        self.assertEqual(len(response.context['components']), 12)
         entry = next(item for item in response.context['navmenu']
                      if item.get('id') == 'ecosystem-docs')
         self.assertTrue(entry['active'])

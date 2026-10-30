@@ -72,6 +72,18 @@ THIRD_PARTY_DOCS = [
         'logo': 'https://exp.pgsty.com/img/pg-exporter.png',
         'description': '采集 PostgreSQL 与 PgBouncer 监控指标，供 Prometheus 抓取并用于监控与告警。',
     },
+    {
+        'title': 'etcd',
+        'link': 'https://doc.pg.center/zh/etcd/',
+        'logo': 'https://pigsty.cc/img/icon/etcd.svg',
+        'description': '强一致的分布式键值存储，为 Patroni 等组件提供配置存储、服务发现与主节点选举支持。',
+    },
+    {
+        'title': 'HAProxy',
+        'link': 'https://doc.pg.center/zh/haproxy/',
+        'logo': 'https://cdn.haproxy.com/assets/our_logos/haproxy-icon.svg',
+        'description': '高性能 TCP/HTTP 负载均衡与反向代理，通过健康检查和流量转发提供高可用访问入口。',
+    },
 ]
 
 # This is the whole site navigation structure. Stick in a smarter file?
