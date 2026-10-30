@@ -1,0 +1,419 @@
+{
+  "date": "2026-10-20",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL 新闻与 Planet；官方发布说明、工程博客与搜索；截稿 2026-10-21 07:27:13 Asia/Shanghai；回看 2026-10-07 至截稿",
+  "items": [
+    {
+      "tier": 1,
+      "title": "物理副本的长查询可能拖住整个副本回放",
+      "summary": "PostgreSQL 物理只读副本持续处于恢复状态，查询可能与主库清理旧行、回放独占锁等操作冲突。Christophe Pettus 梳理了延迟与取消查询之间的取舍：回放等待额度由整个副本共享，一条长查询耗尽额度后，后续冲突查询可能立即被取消；开启热备反馈又会把旧版本保留压力传回主库。文章建议分别规划故障切换副本与报表副本，并结合冲突计数、回放积压和磁盘空间判断瓶颈，应用同时准备重试与断线重连。",
+      "url": "https://thebuild.com/blog/binary-read-replicas-in-postgresql/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "物理复制",
+        "恢复",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "恢复前逐文件同步可能拖长 PostgreSQL 启动",
+      "summary": "PostgreSQL 在非正常停机后，会先同步数据目录，再开始回放 WAL；文件很多时，这段准备工作可能比实际恢复更慢。Christophe Pettus 用约 60 万文件的集群演示，默认逐文件 fsync 花费数十秒，而 Linux 的 syncfs 可把工作合并到文件系统级。这项设置可重载生效，但需核对内核错误报告能力及同盘其他写入负载。新建物理备库首次启动也会经历这一步，备份工具的同步选项不能代替服务端配置。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-recovery_init_sync_method/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "崩溃恢复",
+        "文件系统",
+        "配置参数"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "TimescaleDB 2.31 修复直接压缩的丢数风险",
+      "summary": "TimescaleDB 2.31.0 修复了直接压缩自动选择分组列时可能丢失数据的问题，也补上 MERGE 修改未触发连续聚合失效、拆分块路由错误等修复。列存 UPDATE、DELETE 与重压缩引入向量化键处理和批量解压，新整数压缩器 AIC 则仍处于默认关闭的预览阶段。版本还允许调整扩展钩子顺序，改善与 pgAudit 的兼容性；需要这项加载器变更的实例必须重启，升级前应结合自身压缩写入和审计配置安排验证。",
+      "url": "https://github.com/timescale/timescaledb/releases/tag/2.31.0",
+      "author": "Timescale 团队",
+      "source": "TimescaleDB",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时序数据库",
+        "数据完整性",
+        "列存"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Oracle 10 月更新修复数据库免认证漏洞",
+      "summary": "Oracle 发布 10 月关键补丁更新，覆盖数据库、Java 与多种企业产品。数据库服务器风险矩阵列出 14 项新增安全补丁，其中 4 项涉及可经网络免认证利用的漏洞，另有 2 项适用于只安装客户端的环境。也涵盖 GoldenGate、REST Data Services 与 TimesTen 等组件的修复。运维团队应按实际组件、受影响版本和权限条件逐项核对补丁范围；本期矩阵仅列新增修复，历史关键补丁仍需结合既有安装水平检查。",
+      "url": "https://www.oracle.com/security-alerts/cpuoct2026.html",
+      "author": "Oracle",
+      "source": "Oracle Security",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Oracle",
+        "安全",
+        "补丁"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Neo4j 2026.10 可按用户标签过滤图数据",
+      "summary": "Neo4j 2026.10.0 允许在基于属性的访问规则中引用用户的 ABAC 标签，使图元素属性与当前用户标签匹配后才可访问，提供类似动态行级安全的能力；这类谓词暂不支持 NOT 取反。版本同时改善并发事务批次调度，在 PROFILE 中显示实际并发度，并修复最小 64 位整数除以负一时静默返回错误结果的问题。备份流程也会在日志已清理时先尝试较新的完整备份作为差分父项，减少直接重做全量备份的情况。",
+      "url": "https://neo4j.com/release-notes/database/neo4j-2026-10-0/",
+      "author": "Neo4j",
+      "source": "Neo4j",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图数据库",
+        "访问控制",
+        "备份"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "ECS Gateway 接管容器服务入口资源",
+      "summary": "AWS 推出 ECS Gateway，以账户级资源统一管理容器服务的入口网络。平台团队设定网关、网络与权限后，服务通过连接配置接入，系统自动创建并维护负载均衡、证书、域名与安全组，最多 25 个服务共享一个应用负载均衡器。现有服务可同时保留原入口，验证新路径后再迁移。网关要求服务处于兼容的 VPC 与可用区范围，达到负载均衡数量上限时部署会失败；底层资源仍在用户账户内，并按相关服务计费。",
+      "url": "https://aws.amazon.com/blogs/aws/introducing-amazon-ecs-gateway-a-fully-managed-ingress-solution-for-ecs-services/",
+      "author": "Channy Yun",
+      "source": "AWS News Blog",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容器",
+        "负载均衡",
+        "网络"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Postgres 主线修正输出函数的波动性",
+      "summary": "依赖会话参数的浮点、字节串等输出函数改为 STABLE，不能再用于要求不可变的索引、生成列与分区键；仅合入开发主线。",
+      "url": "https://github.com/postgres/postgres/commit/e75fcc9867fdfe295957ad5c9a98cbe2e1b4c5c3",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "兼容性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Postgres 修复 XML 判定表达式的导出括号",
+      "summary": "IS DOCUMENT 作为运算对象时可能漏括号，导致转储还原失败或语义变化；修复已提交，并回补至 PostgreSQL 14 分支。",
+      "url": "https://github.com/postgres/postgres/commit/b536d5a0bd7a0e35c3168f3022183f37cb5c2058",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份恢复",
+        "内核"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PGDG 归档 RHEL 与 SLES 的旧小版本仓库",
+      "summary": "RHEL 10.0、9.6 与 SLES 15.6 仓库停止更新并转入归档；RHEL 滚动仓库不受影响，SLES 用户需升级至 15.7。",
+      "url": "https://www.postgresql.org/about/news/rhel-100-and-96-repositories-are-being-retired-3411/",
+      "author": "",
+      "source": "PostgreSQL RPM Repository",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "软件仓库",
+        "升级"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "searchgres.js 组合全文、向量与层级检索",
+      "summary": "TypeScript 库把全文、向量与层级过滤组合为一套检索接口，并将异步向量化任务与文档写入放进同一事务。",
+      "url": "https://www.tigerdata.com/blog/introducing-searchgres-js-composable-search-postgresql",
+      "author": "",
+      "source": "Tiger Data",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "向量检索"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 为托管 PG 增加查询等待分析",
+      "summary": "图表区分 CPU、I/O、锁等活动会话及阻塞分位耗时；CPU 分类表示未进入已知等待，并非 CPU 利用率。",
+      "url": "https://clickhouse.com/blog/postgres-wait-events-query-insights",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可观测性",
+        "等待事件"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Dolt 2.5 支持单事务提交多个分支",
+      "summary": "新增一次原子提交所有已修改分支的存储过程，同时修复远程存储服务路径穿越与集群角色切换的认证缺陷。",
+      "url": "https://github.com/dolthub/dolt/releases/tag/v2.5.0",
+      "author": "",
+      "source": "DoltHub",
+      "source_date": "2026-10-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "版本控制",
+        "事务",
+        "安全"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 包防火墙公测拦截高风险 npm 依赖",
+      "summary": "企业云客户可把下载路由到防火墙，按安全公告、恶意包与发布冷静期等规则过滤，目前仅支持 npm。",
+      "url": "https://github.blog/changelog/2026-10-20-github-package-firewall-in-public-preview/",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链安全",
+        "npm"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "llm-d 1.0 稳定分布式推理接口",
+      "summary": "稳定的 v1 API 配套多租户公平调度、KV 缓存分层卸载和预填充、解码组件独立滚动更新，面向 Kubernetes 上的推理服务。",
+      "url": "https://cloud.google.com/blog/topics/ai-infrastructure/llm-d-1-0-an-open-source-stack-for-distributed-inference",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "推理",
+        "Kubernetes"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "恢复结束钩子可能延长 PostgreSQL 备库提升",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-recovery_end_command/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "AlloyDB 查询 BigQuery 实时数据正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/alloydb/docs/access-real-time-data-overview",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "联邦查询"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "FOSSASIA PGDay 2027 征稿至 11 月 30 日",
+      "summary": "",
+      "url": "https://eventyay.com/fossasia/pgday2027/cfp",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区活动"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Firestore 企业版全文检索正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/firestore/native/docs/text-search",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "全文检索"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "IAM 身份中心迁出 AD 可保留用户与授权",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/security/managing-identity-source-transition-for-aws-iam-identity-center/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "身份认证"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "GKE 修复集群舰队管理的未授权配置变更",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/release-notes#October_20_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "安全"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud CLI 590 移除本地构建组件",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/sdk/docs/release-notes#59000_2026-10-20",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "工具"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Loki 3.7.9 修复并发 WAL 写入乱序",
+      "summary": "",
+      "url": "https://github.com/grafana/loki/releases/tag/v3.7.9",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "日志",
+        "数据完整性"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 可批量把分支保护转换成规则集",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-20-bulk-migrate-branch-protections-to-rulesets-for-a-repository/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 密钥扫描审计将改用企业短名",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-20-updates-to-github-secret-scanning/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "审计"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Dependabot 告警接口可返回依赖版本约束",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-20-dependabot-alerts-rest-api-now-includes-dependency-versions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "依赖管理"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Dependabot 支持 npm 12 与 Bun 1.4",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-20-dependabot-now-supports-npm-12-pnpm-11-and-12-and-bun-1-4/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "依赖管理"
+      ],
+      "position": 26
+    }
+  ]
+}

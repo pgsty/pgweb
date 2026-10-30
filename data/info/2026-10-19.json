@@ -1,0 +1,415 @@
+{
+  "date": "2026-10-19",
+  "origin": "PostgreSQL Git; Planet PostgreSQL; PGNexus #299–304 candidates; official project releases and engineering articles; active web search",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复 JSON 更新中的悬空指针",
+      "summary": "PostgreSQL 已合入 jsonb_set_lax 的释放后使用修复。新值是常量 SQL NULL 时，旧实现会改写调用方的参数区，把按行分配的 JSON 空值留下；处理后续行时，内存已被回收，空值标记却仍被清除，既可能访问失效内存，也可能错误沿用前一次的空值处理方式。补丁改用独立调用帧，并增加多行回归用例。提交标注回补至 PostgreSQL 14，使用该函数批量更新 JSON 的系统应关注后续修订版。",
+      "url": "https://github.com/postgres/postgres/commit/e355089a57d6f480cffc2820c46fcf0b5e371cf6",
+      "author": "John Naylor",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "修复",
+        "JSON"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Awide 开源共享存储数据库 Polar",
+      "summary": "Awide 开源了基于 PolarDB 的数据库引擎、增强版 PolarFS 和基于 ProxySQL 的 PolarProxy，围绕单写节点、共享数据文件与独立读副本构建集群。其 PostgreSQL 17 分支整合 WAL 流水线与提交序号机制；代理根据 WAL 位置等待副本追上写入，让应用在读写分离时保持读己之写。存储层另有跨主机租约与显式设备刷盘处理。并行查询已移植到 15 分支，17 分支仍在推进，各版本的功能完整度不同。",
+      "url": "https://awide.tech/blog/awide-polar-open-source",
+      "author": "Vadim Iatsenko",
+      "source": "Awide",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开源",
+        "存算分离",
+        "高可用"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgbuild 为 pgAdmin 构建锁定依赖与校验值",
+      "summary": "pgAdmin 桌面安装包需要捆绑 PostgreSQL、OpenSSL 等原生依赖，过去通过每天替换的 latest 标签获取归档，同一份源码未必能构建出相同软件。Dave Page 介绍的新流程为每份依赖固定版本和 SHA-256，并在解包前校验；pgbuild 同时保留不可变的版本发布，提供校验值与上游版本信息。依赖更新因此成为可审查的锁文件变更，归档被替换会直接令构建失败。过期依赖只触发提示，升级时机仍由维护者明确决定。",
+      "url": "https://www.pgedge.com/blog/pgbuild-and-knowing-what-ships-with-pgadmin",
+      "author": "Dave Page",
+      "source": "pgEdge",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgAdmin",
+        "供应链",
+        "构建"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PgDog 修复重分片提交确认与会话状态",
+      "summary": "PostgreSQL 连接池与分片代理 PgDog 发布 0.1.62，修正重分片时过早返回成功的问题：现在必须确认每个分片已经提交，才向调用方报告完成。新版还修复 SET 与 SET LOCAL 的覆盖关系、RESET 后的回滚状态，以及未取得顾问锁却占用后端连接的问题，减少连接复用时的状态泄漏。同时加入基础跨分片子查询和逻辑复制进度持久化，但崩溃后恢复流程仍在开发，重分片中断后的恢复还需单独处理。",
+      "url": "https://github.com/pgdogdev/pgdog/releases/tag/v0.1.62",
+      "author": "PgDog 项目组",
+      "source": "PgDog",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "连接池",
+        "数据一致性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "U.S. Bank 复盘 119 TB Oracle 迁移",
+      "summary": "U.S. Bank 与 AWS 披露四套 Oracle 19c 数据库从 Exadata 迁往 RDS for Oracle 的过程，总量为 119 TB。方案以跨平台可传输表空间配合 RMAN 增量备份，在源库保持在线时完成大部分数据搬运，并用控制表调度多个恢复任务。案例称首次基线传输约七天，正式切换平均四小时，后者包含统计信息与对象验证。迁移前还需处理压缩数据展开、单文件大小、字符集和时区兼容；最终增量很小，仍须预留验证与回退窗口。",
+      "url": "https://aws.amazon.com/blogs/database/how-u-s-bank-migrated-119-tb-from-oracle-exadata-to-amazon-rds-for-oracle/",
+      "author": "U.S. Bank 与 AWS",
+      "source": "AWS Database Blog",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Oracle",
+        "迁移",
+        "云数据库"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Vault 2.2 改变 PostgreSQL 后端认证优先级",
+      "summary": "Vault 2.2 正式发布，使用 PostgreSQL 存储后端的 Azure 环境需留意认证顺序变化：配置了工作负载身份时，它将优先于托管身份，旧连接配置可能因此失效。新版还允许 TCP 监听器定期检查证书文件并自动重载 TLS 证书，PKI 引擎增加 ML-DSA 后量子签名支持。与此同时，重复的 HCL 属性不再被接受，过去用于恢复旧解析行为的环境变量已移除。升级前须验证身份选择、配置解析与证书轮换，确认实际访问可用。",
+      "url": "https://github.com/hashicorp/vault/releases/tag/v2.2.0",
+      "author": "HashiCorp",
+      "source": "Vault",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "密钥管理",
+        "认证",
+        "升级"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修正查询反解析的别名歧义",
+      "summary": "UPDATE、DELETE 与 MERGE 的关系别名统一显式输出 AS，避免名为 set 的别名让导出查询无法重新解析。",
+      "url": "https://github.com/postgres/postgres/commit/0497318e4422cbb9bff8c075a53a50b12065147c",
+      "author": "Tom Lane",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "备份"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL RPM 仓库为每个软件建立说明页",
+      "summary": "新目录覆盖七十余个项目，列出安装命令、依赖与仓库元数据生成的系统、架构和 PostgreSQL 版本支持矩阵。",
+      "url": "https://people.planetpostgresql.org/devrim/index.php?/archives/135-Every-package-in-the-PostgreSQL-RPM-repositories-now-has-a-page.html",
+      "author": "Devrim Gündüz",
+      "source": "PostgreSQL RPM",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "软件仓库"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "RLS 策略替换需要同时处理事务与锁等待",
+      "summary": "实验显示事务内删除再创建策略可避免中间状态，但会取得强表锁；并发迁移还应串行执行，并设置等锁期限。",
+      "url": "https://now-next.nl/en/insights/postgresql-create-policy-if-not-exists/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "RLS",
+        "迁移"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "CloudNativePG 推出 Headlamp 管理插件",
+      "summary": "插件已进入官方目录，可在 Kubernetes 界面检查数据库实例、连接池和备份，并查看日志、指标或打开 psql。",
+      "url": "https://cloudnative-pg.io/blog/headlamp-plugin/",
+      "author": "Tamara Nocentini",
+      "source": "CloudNativePG",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Kubernetes",
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Supabase 用类型化中间件传递用户数据库权限",
+      "summary": "新库以 Web Fetch 接口组合鉴权与数据库访问，借助类型检查约束上下文顺序，并可将用户声明限制在当前数据库事务。",
+      "url": "https://supabase.com/blog/supabase-middleware",
+      "author": "Supabase",
+      "source": "Supabase",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发",
+        "RLS"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "对象存储数据库的提交边界取决于 WAL 位置",
+      "summary": "技术比较区分对象写入、多可用区对象仲裁与独立日志节点仲裁：同样使用对象存储，写入确认条件和故障恢复责任可能不同。",
+      "url": "https://www.loams.dev/blog/where-the-wal-lives",
+      "author": "Dinakaran",
+      "source": "Loams",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "存算分离",
+        "WAL"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloud Service Mesh 修复 HTTP 方法大小写绕权",
+      "summary": "HTTP/2 请求可借方法名大小写绕过授权策略；集群内版本须升级到公告列出的修正版，托管版本由服务方自动更新。",
+      "url": "https://docs.cloud.google.com/service-mesh/docs/security-bulletins#gcp-2026-069",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "服务网格"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 复盘代码审查推理降本的取舍",
+      "summary": "厂商称共享提示前缀、调度和模型配置使单次成本下降 68%；部分低强度配置也明显减少了性能问题的发现。",
+      "url": "https://blog.cloudflare.com/obsessive-inference-optimization/",
+      "author": "Ryan Skidmore",
+      "source": "Cloudflare",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具",
+        "成本"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pgsql_tweaks 1.1 增加索引膨胀估算视图",
+      "summary": "",
+      "url": "https://pgsql-tweaks.org/blog/pgsql_tweaks-v1-1-0-released.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "psql 单事务恢复失败时仍可能返回零退出码",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-unrecognized-configuration-parameter/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "杀掉客户端未必立即释放 PostgreSQL 连接",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-remaining-connection-slots-are-reserved/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "将 UUID 列转成文本过滤可能绕开原有索引",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-invalid-input-syntax-for-type-uuid/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Supabase 的 .NET 客户端增加调用追踪与指标",
+      "summary": "",
+      "url": "https://supabase.com/changelog/dotnet-opentelemetry-support",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Compute Engine 正式支持最长六小时优雅关机",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/release-notes#October_19_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "运维"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Cloud Armor 更新两代稳定版 WAF 防护规则",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/armor/docs/release-notes#October_19_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 持续评估已验证爬虫的守规行为",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/verified-bots-accountability/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络安全"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 部分公开仓库 HTTPS 拉取临时要求认证",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-19-some-git-over-https-may-temporarily-require-authentication/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Git"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Grype 修复 Swift 软件包漏配安全公告",
+      "summary": "",
+      "url": "https://github.com/anchore/grype/releases/tag/v0.121.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全扫描"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 将拉取请求 AI 安全扫描转为正式服务",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-15-ai-scan-for-pull-requests-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "代码安全"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 模型策略 API 开放企业与团队级控制",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-19-copilot-model-policy-api-for-enterprise-orgs-and-teams/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}

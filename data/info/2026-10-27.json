@@ -1,0 +1,422 @@
+{
+  "date": "2026-10-27",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org 新闻归档、安全页与活动页；Planet PostgreSQL RSS；PGNexus #299–312；Google Search（JavaScript shell）/ Google News RSS；厂商博客、RSS、GitHub Releases 与安全公告；HN Top/New/Show/Ask（Algolia/Firebase）；覆盖 2026-10-14 至 2026-10-28 07:30 Asia/Shanghai，截稿 2026-10-28 07:30 +08:00；扩展回看 14 天；source_date 保留原文日期",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复备份复制被替换文件的截断风险",
+      "summary": "PostgreSQL 已合入一项基础备份安全修复：文件被原子重命名替换后，备份程序若继续使用旧的 fstat 结果，可能把新文件当成旧大小读取，产生截断或补零副本。补丁在写入备份头和清单前重新获取文件状态，避免备份包含不完整内容。它针对的是非关系文件的替换场景，回补至 PostgreSQL 15；这是代码已合入，仍需等待维护版本发布，不能据此认定现有安装已包含修复。",
+      "url": "https://github.com/postgres/postgres/commit/51d7bf5edcaf4f8a95bb10f96b7af76d00a2f83f",
+      "author": "David Steele；Chao Li、Michael Paquier、Shihao Zhong",
+      "source": "PostgreSQL 核心",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "数据完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Citus 14.3.0 与 13.5.0 修复跨分片排序与安全问题",
+      "summary": "Citus 14.3.0 与 13.5.0 收紧内部元数据清理的权限上下文，并清空内部 SPI 的 search_path；13.5.0 修复 EXTRACT 字段转义导致的 SQL 注入，14.3.0 修复节点移除后的事务恢复和并行参考表重平衡中的外键缓存损坏。14.3.0 还为跨分片 ORDER BY 增加 sorted-merge 执行路径，升级时应核对版本线、扩展兼容和回滚方案。",
+      "url": "https://github.com/citusdata/citus/releases/tag/v14.3.0",
+      "author": "Citus 项目（ihalatci）",
+      "source": "Citus",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Citus",
+        "安全",
+        "分布式"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Valkey 多分支修复超大 Pub/Sub 消息堆溢出",
+      "summary": "Valkey 9.1.3、9.0.7、8.1.11、8.0.12 和 7.2.15 的安全更新修复同一类超大集群 Pub/Sub 消息堆溢出：认证客户端构造超过限制的消息时，可能触发代码执行。各分支还有独立修复：9.1.3 处理 listpack 编码造成的 RDB 加载或复制失败，7.2.15 修复默认用户禁用时 AOF 回放触发 ACL 检查而造成的静默数据丢失。不要把某一分支的额外修复泛化到其他版本，部署时需按实际分支升级。",
+      "url": "https://github.com/valkey-io/valkey/releases/tag/9.1.3",
+      "author": "Valkey 项目（valkeyrie-ops）",
+      "source": "Valkey",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "Pub/Sub"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Aurora PostgreSQL 修复读副本停止复制问题",
+      "summary": "Aurora PostgreSQL 18.6.1 与 17.11.1 修复一项关键稳定性问题：Aurora 作为 RDS for PostgreSQL 读副本时，某表页先被 VACUUM 标记为 all-visible、随后又 UPDATE，读副本可能停止复制且无法重启。AWS 将其列为 critical stability enhancement。使用该跨产品物理复制拓扑的集群，应纳入补丁升级评估，并在维护后检查复制恢复与延迟。",
+      "url": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraPostgreSQLReleaseNotes/AuroraPostgreSQL.Updates.html",
+      "author": "AWS",
+      "source": "Amazon Aurora",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "复制",
+        "稳定性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "OCI PostgreSQL 支持原地大版本升级",
+      "summary": "Oracle Cloud Infrastructure 支持对现有 PostgreSQL 数据库系统执行原地大版本升级。官方指南说明流程基于 pg_upgrade，复制数据文件并更新系统目录；使用前可能要重建 pglogical、anon、pgaudit 等扩展。若不能接受约 15–30 分钟以上只读窗口，Oracle 建议改用 pg_dump/pg_restore 或 pglogical。升级前要验证扩展兼容、回退路径和停机预算。",
+      "url": "https://docs.oracle.com/en-us/iaas/releasenotes/services/postgresql/index.htm",
+      "author": "Oracle Cloud Infrastructure",
+      "source": "OCI PostgreSQL",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "升级",
+        "pg_upgrade"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 CommitFest 5.4 变更汇总",
+      "summary": "Postgres Professional 总结 PostgreSQL 19 的 2026-03 CommitFest 5.4，覆盖 SQL、DEV1 和 DEV2，包含 ON CONFLICT DO SELECT、COPY JSON 导出、jsonpath 字符串方法、postgres_fdw 事务属性继承、检查约束与虚拟列，以及 lz4 作为 TOAST 默认压缩等改动。它是评审周期汇总，最终行为仍以版本文档和发布说明为准。",
+      "url": "https://postgrespro.com/blog/pgsql/5973418",
+      "author": "Pavel Luzanov",
+      "source": "Postgres Professional",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL 19",
+        "CommitFest",
+        "SQL"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 禁止分区表复制 NOT NULL NO INHERIT",
+      "summary": "Bug #19770 修复可能把该约束复制到分区表的 CREATE TABLE (LIKE) 场景，并提供检测与修复 SQL；回补至 PG 18。",
+      "url": "https://github.com/postgres/postgres/commit/700b422af7e26cf310caf3fb76d78f4c8ca39c1f",
+      "author": "David Rowley、Nitin Motiani",
+      "source": "PostgreSQL 核心",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分区",
+        "正确性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 恢复 hash_mem 桶上限避免执行器 OOM",
+      "summary": "Bug #19759 修复哈希桶数量上限，避免错误估算申请过大的初始哈希表；回补至 PG 19。",
+      "url": "https://github.com/postgres/postgres/commit/34d52e6d3daa7dfeecddc32be91f7d5ee4dcb92f",
+      "author": "David Rowley",
+      "source": "PostgreSQL 核心",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "内存"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_stat_statements 修复嵌套调用的顶层跟踪",
+      "summary": "QueryDesc 扩展状态保存嵌套层级，避免 ExecutorEnd 漏记原始条目或重复写入原始查询；因 ABI 变化不回补旧版本。",
+      "url": "https://github.com/postgres/postgres/commit/23bf901fa5306b245e23ace52e5a6777ea08bed6",
+      "author": "Sami Imseih、Michael Paquier",
+      "source": "PostgreSQL 核心",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pg_stat_statements",
+        "扩展"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 为执行器钩子加入扩展私有状态",
+      "summary": "QueryDesc 现在可携带后端本地扩展 ID 和不透明查询状态，并随对象释放，为扩展执行器钩子保存上下文。",
+      "url": "https://github.com/postgres/postgres/commit/e5d5d1ad1e3aa495609e19fa716dcea6a39db1bb",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL 核心",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "执行器"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Supabase Personal Access Token 默认支持范围收敛",
+      "summary": "Dashboard 新建 PAT 默认按组织、项目、资源、权限和过期时间限定范围；旧的全账户 token 继续可用，数据库密码权限不受其影响。",
+      "url": "https://supabase.com/blog/scope-your-personal-access-tokens",
+      "author": "Hieu Pham、Kemal Y、Gildas Garcia、Wen Bo Xie",
+      "source": "Supabase",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "凭证",
+        "安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "PlanetScale 自动发现 PostgreSQL 逻辑复制槽",
+      "summary": "平台移除 patroni.slots 参数并自动检测 logical slots；故障切换仍需保留 failover support，旧配置维护流程要随之调整。",
+      "url": "https://planetscale.com/changelog/postgres-logical-slots-no-registration",
+      "author": "PlanetScale",
+      "source": "PlanetScale",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "高可用"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Prometheus 更新容器 CA 信任与导出日志保护",
+      "summary": "3.15.1 与 3.13.5 撤销两套根证书信任并更新 Go/x/net；3.13.5 另修复 OTLP 导出端点 URL 写入 info 日志。",
+      "url": "https://github.com/prometheus/prometheus/releases/tag/v3.15.1",
+      "author": "Prometheus 项目",
+      "source": "Prometheus",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "监控"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 26.10 调整整数除法与扫描过滤",
+      "summary": "官方发布演讲介绍 SQL 兼容的整数除法选项、大哈希表内存优化和扫描层字符串过滤；性能幅度只按项目方口径理解，包索引提供稳定版日期。",
+      "url": "https://presentations.clickhouse.com/2026-release-26.10/",
+      "author": "Alexey Milovidov",
+      "source": "ClickHouse",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "发布",
+        "查询"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PlanetScale service token 现在显示最近使用来源",
+      "summary": "",
+      "url": "https://planetscale.com/changelog/service-token-last-used-ip",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "凭证",
+        "审计"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Heroku Migrator 将 secondary indexes 延后重建",
+      "summary": "",
+      "url": "https://planetscale.com/changelog/heroku-migrator-deferred-indexes",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "迁移",
+        "索引"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PlanetScale Postgres 集群可启用 huge_pages",
+      "summary": "",
+      "url": "https://planetscale.com/changelog/postgres-neki-huge-pages",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "配置"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL GUC 逐项谈：reserved_connections",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-reserved_connections/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL GUC 逐项谈：restart_after_crash",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-restart_after_crash/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "SQL 与 PL/pgSQL 函数循环中的计划缓存差异",
+      "summary": "",
+      "url": "https://cortexridge.com/blog/postgresql-sql-vs-plpgsql-functions-in-loops/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PL/pgSQL",
+        "性能"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "表访问方法开发（六）处理 TRUNCATE",
+      "summary": "",
+      "url": "https://dbmsdrops.kindahl.net/2026/10/25/building-a-table-access-method-part-6/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "table AM",
+        "存储"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "KiviDB 1.1.2 修复 RESTORE 崩溃并撤回 1.1.1",
+      "summary": "",
+      "url": "https://github.com/kividbio/kividb/releases/tag/v1.1.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Redis",
+        "安全"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Ghostty 1.4 完成 Kitty graphics 与终端安全修复",
+      "summary": "",
+      "url": "https://ghostty.org/docs/install/release-notes/1-4-0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "终端",
+        "安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Stalwart v1.0 固化邮件服务数据库布局",
+      "summary": "",
+      "url": "https://stalw.art/blog/stalwart-1-0/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "发布",
+        "迁移"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "EDK II PXE 处理器存在未经认证的越界写",
+      "summary": "",
+      "url": "https://github.com/tianocore/edk2/security/advisories/GHSA-99cj-7hg9-mp4m",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "PXE"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Go 团队跟进 eMudhra 中间证书事件",
+      "summary": "",
+      "url": "https://go.dev/blog/emudhra-incident",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "TLS"
+      ],
+      "position": 26
+    }
+  ]
+}

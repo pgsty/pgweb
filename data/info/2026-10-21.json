@@ -1,0 +1,425 @@
+{
+  "date": "2026-10-21",
+  "origin": "PGSQL.CC independent editorial; cutoff 2026-10-22T07:27:10+08:00; window 2026-10-08..2026-10-22; PostgreSQL news/Planet/events/commits; pgnexus #293-306; Google News/Search; primary project blogs and releases; HN",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PG 合入有损副本标识索引误更新修复",
+      "summary": "PostgreSQL 已合入一项涉及逻辑复制数据正确性的修复：用 GiST 多范围索引充当副本标识时，不同记录可能映射到相同的有损索引键，订阅端此前却把索引命中直接当作精确匹配，导致更新或删除错误的行。补丁在索引要求重检时，按索引列的比较运算符与排序规则核对真实键值，并修正相关冲突分类。提交标注回补至 PostgreSQL 18；使用 WITHOUT OVERLAPS 键参与逻辑复制的环境应重点跟进修复版本。",
+      "url": "https://github.com/postgres/postgres/commit/3cde90ecc5f85e7c6cb9fba29d473b2f6dd40ee1",
+      "author": "Paul A. Jungwirth、Zhijie Hou",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "数据完整性",
+        "内核"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "恢复预取可能放大同步复制的停写时间",
+      "summary": "Jeremy Schneider 通过故障案例与受限 IOPS 环境的复现，分析了 recovery_prefetch 对同步复制可用性的影响。备库断流后先回放本地 WAL，预取可能把顺序访问变成密集的小块随机读取，耗尽存储 IOPS，令主库等待同步确认的时间显著拉长。实验中关闭预取避免了长时间停写；作者也讨论了两个备库配合 ANY 1 确认的取舍。结论针对特定存储瓶颈与恢复路径，值得在容量和故障演练中核对。",
+      "url": "https://ardentperf.com/2026/10/20/postgres-recovery_prefetch-considered-harmful-and-causing-outages/",
+      "author": "Jeremy Schneider",
+      "source": "Ardent Performance Computing",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "高可用",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "MergeTree 与向量执行在 PG 19 中组合试验",
+      "summary": "作者将 MergeTree 列式存储接入 PostgreSQL 19 的表访问接口，再组合 pg_vexec 向量执行与 ORCA 优化器，探索无需修改核心的分析查询路径。作者在千万行 ClickBench 测试中报告，组合方案的几何平均耗时约为原生 PostgreSQL 的三十九分之一，仍慢于 ClickHouse。相比此前单独加入向量执行，这次同时改变数据布局、批处理和投影时机；结果来自实验性扩展与特定测试，尚不能代表生产负载表现。",
+      "url": "https://igor-suhorukov.github.io/blog/2026/10/21/my-postgresql-is-faster-than-yours/",
+      "author": "Igor Suhorukov",
+      "source": "Igor Suhorukov",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "列式存储",
+        "向量执行",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "DuckDB 2.0 发布，扩展异步 I/O 与列式处理",
+      "summary": "DuckDB 2.0 成为新的长期支持版本，维护期至少延续至 2027 年 10 月。该版本为 Parquet 与 CSV 读取加入异步 I/O，将 VARIANT 改为完整列式布局，并把 PEG 解析器设为默认；Quack 远程连接与查询下推也继续完善。升级还涉及存储格式和扩展兼容性：新格式文件不能由旧版本读取，已有数据库则保留原有兼容方式，扩展构建需要适配 C++17。团队应结合文件交换、驱动与扩展依赖安排迁移验证。",
+      "url": "https://duckdb.org/2026/10/21/announcing-duckdb-200",
+      "author": "The DuckDB team",
+      "source": "DuckDB",
+      "source_date": "2026-10-21",
+      "image": "https://duckdb.org/images/blog/thumbs/duckdb-release-2-0-0.png",
+      "domain": "db",
+      "tags": [
+        "版本发布",
+        "分析数据库",
+        "兼容性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "PHP 紧急修复远程执行漏洞，公开前已有攻击尝试",
+      "summary": "PHP 提前发布 8.5.12、8.4.27、8.3.36 与 8.2.35，修复两项内存安全漏洞，涉及内存耗尽后的不完整初始化与请求间残留状态。部分 mod_php 部署甚至无需 PHP 业务代码即可触发远程代码执行。PHP Foundation 公布修复后，AWS 又披露蜜罐早在 10 月 17 日就捕获利用尝试，但早期尝试能否在真实系统成功仍待分析。互联网暴露的 PHP 服务应尽快升级，并把排查窗口前移到公告之前。",
+      "url": "https://thephp.foundation/blog/2026/10/21/todays-php-security-release-and-how-were-strengthening-php-security/",
+      "author": "PHP Foundation",
+      "source": "PHP Foundation",
+      "source_date": "2026-10-21",
+      "image": "https://thephp.foundation/assets/share/2026-10-21-todays-php-security-release-and-how-were-strengthening-php-security.png",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "漏洞修复",
+        "PHP"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "GitLab 紧急修复未认证远程代码执行漏洞",
+      "summary": "GitLab 发布 19.5.1、19.4.3、19.3.6 及多个旧分支补丁，修复正则表达式编译中的整数溢出问题。该漏洞可能让未认证攻击者执行任意代码，官方给出 CVSS 10.0 评分；同批更新还处理 LDAP 账户接管与 OpenID Connect 缓存投毒等缺陷。GitLab.com 已部署修复，自托管实例需按所在分支升级。其中 19.4.3 与 19.3.6 包含数据库迁移，单节点部署应预留停机时间，不能只替换应用文件。",
+      "url": "https://docs.gitlab.com/releases/patches/patch-release-gitlab-19-5-1-released/",
+      "author": "GitLab",
+      "source": "GitLab",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "GitLab",
+        "升级"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG 修复 LATERAL 排序键导致的错误结果",
+      "summary": "新增排序键中的横向引用未转换成执行参数，可能读错元组或报变量缺失；修复已合入主线，提交标注回补至 PG 14。",
+      "url": "https://github.com/postgres/postgres/commit/6b9f40d49ae33eb0b4a7c77666fe4971ef7ba087",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "查询优化"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "断网后补传时序数据需同时处理幂等与限流",
+      "summary": "边缘 SQLite 持久缓冲配合 PostgreSQL 唯一约束，仅在服务端提交后推进确认位点，并限速回补、刷新受影响的聚合区间。",
+      "url": "https://www.tigerdata.com/blog/designing-iiot-ingest-that-survives-cut-uplink",
+      "author": "",
+      "source": "Tiger Data",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "时序数据",
+        "数据完整性"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Supabase .NET SDK 统一升级到 v8",
+      "summary": "各包改用同步版本与统一仓库，加入依赖注入和可配置重试，并以 System.Text.Json 替换 Newtonsoft.Json。",
+      "url": "https://supabase.com/blog/introducing-the-unified-supabase-net-sdk",
+      "author": "",
+      "source": "Supabase",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发工具",
+        "SDK"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 分析 Vera 上的线程扩展边界",
+      "summary": "厂商用字符串扫描区分内存带宽与计算瓶颈：前者较早饱和，正则计算仍可从更多物理核心获益，超线程收益则明显收窄。",
+      "url": "https://clickhouse.com/blog/clickhouse-performance-on-nvidia-vera",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能",
+        "硬件"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Railway 披露环境变量可能遭未授权访问",
+      "summary": "初步调查称加密变量及部分解密变量可能被访问，公告发布时已暂停部署，并建议轮换环境变量、API 密钥与私有镜像仓库凭据。",
+      "url": "https://blog.railway.com/p/security-disclosure-wednesday-october-21st",
+      "author": "",
+      "source": "Railway",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "凭据管理"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare WAF 可结合响应判断并阻断攻击",
+      "summary": "新增请求与响应联合检查及响应侧拦截，面向所有套餐；拦截发生在返回用户前，不能撤销已经到达源站的操作。",
+      "url": "https://blog.cloudflare.com/full-transaction-waf/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "WAF"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "eMudhra 中间证书私钥仅有极低熵",
+      "summary": "研究披露八把中间 CA 私钥的有效随机空间极小，涉及 TLS 与代码签名；非浏览器客户端尤其需要检查信任库和吊销处理。",
+      "url": "https://scotthelme.co.uk/eight-bits-of-trust-emudhras-ca-keys-cracked-in-milliseconds/",
+      "author": "",
+      "source": "Scott Helme",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "证书",
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 重构 Git 写入仲裁与副本存储",
+      "summary": "按引用仲裁替代仓库级写锁，迁往 Azure 的虚拟写副本借助对象存储保证持久性，并为读副本独立扩缩提供基础。",
+      "url": "https://github.blog/engineering/architecture-optimization/the-bridge-to-agent-scale-git-infrastructure/",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "分布式存储",
+        "Git"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG 修复单字节编码下 ILIKE 漏匹配",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/c00a97b646c04c0d895cca44a2b24ad7abec8a6c",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "编码"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "psql 避免翻译标签与客户端编码冲突",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/e7ba5eb899884693ad8d9c62fa7a23f155a4a350",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql",
+        "编码"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PostGIS 3.7 RC3 增加几何简单性诊断",
+      "summary": "",
+      "url": "https://postgis.net/2026/10/PostGIS-3.7.0rc3/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostGIS"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "读已提交的空闲只读事务可不阻挡 VACUUM",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-idle-in-transaction/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务",
+        "运维"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "SKIP LOCKED 不能避免旧快照的序列化失败",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-could-not-serialize-access-due-to-concurrent-update/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务",
+        "并发"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "直接提升延迟备库仍会回放已收到的误操作",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-recovery_min_apply_delay/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "高可用"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Looker 元数据自动入目录正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/looker/docs/looker-core-dataplex",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据治理"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "GitHub CLI 可选用自动刷新的短期令牌",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-21-github-cli-opt-in-to-expiring-auto-refreshing-oauth-tokens/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "开发工具"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "CodeQL 暂不兼容 Swift 6.4",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-19-codeql-changes-for-macos-27-xcode-27-and-swift-6-4/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "静态分析",
+        "兼容性"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare 试验用 Rust 移植 TypeScript",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/typescript-rust-port/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编译器",
+        "开发工具"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "云账单价格导出试行模型属性与词元单位",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/billing/docs/how-to/export-data-bigquery-tables/pricing-data#sku_attributes",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "成本管理"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 文档分块函数转为正式服务",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-ai-chunk-document",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "RAG",
+        "数据处理"
+      ],
+      "position": 26
+    }
+  ]
+}

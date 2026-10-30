@@ -1,0 +1,441 @@
+{
+  "date": "2026-10-17",
+  "origin": "主动原文采集：PostgreSQL 官方、Planet、项目发布、厂商工程文章、Google News 与搜索、HN；chronicle 缓存 pgnexus #289–301；回看 2026-10-04 至截稿 2026-10-18 07:25:29 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "跨版本导出需防关键字静默改变约束语义",
+      "summary": "跨大版本导出时，pg_dump 与旧服务器的关键字表不同。Christophe Pettus 用 PG 15 到 18 的迁移演示：建表列名虽已加引号，CHECK 与行级安全策略中的 system_user 却可能被新版本解释为关键字，恢复成功后悄然改变含义。--quote-all-identifiers 同时控制客户端与服务端引用，保护反编译生成的 SQL；它不会改写 PL/pgSQL 字符串函数体或应用查询，这些代码仍需单独验证。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-quote_all_identifiers/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "升级",
+        "安全"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "ParadeDB 修复检索计划沿用旧租户条件",
+      "summary": "ParadeDB 0.26.2 修复预备检索查询保留旧租户或时间条件的问题。此前 STABLE 表达式可能在规划时求值并存进通用计划，后续执行沿用旧值，甚至影响索引下推的行级安全条件；更新将这类表达式移到执行时计算。版本还修正高并发写入时后台合并难以启动、长期占用缓冲页导致读写报错的缺陷，并补上并行位图重扫崩溃修复。采用 RLS、预备语句与持续写入的检索服务应核对这些路径。",
+      "url": "https://github.com/paradedb/paradedb/releases/tag/v0.26.2",
+      "author": "ParadeDB",
+      "source": "ParadeDB",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "检索",
+        "安全"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_fts 1.14.1 修复错误计数与清理膨胀",
+      "summary": "pg_fts 1.14.1 修复全文检索计数与维护问题：计数下推曾选用无效、部分或对当前快照过新的索引，返回错误总数或报错；清理无法取得截断锁时，还会反复扩张索引文件。更新改用规划器认可的索引集合，并限制清理批次的内存占用，修正待写入文档导致的严重估算偏差。本次更新不改变磁盘格式，无需重建索引；使用 COUNT、持续写入和并行 VACUUM 的部署应重点回归这些路径。",
+      "url": "https://github.com/gburd/pg_fts/releases/tag/v1.14.1",
+      "author": "Greg Burd",
+      "source": "pg_fts",
+      "source_date": "2026-10-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "全文检索",
+        "正确性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pg_turbovec 默认单线程缓解并发争用",
+      "summary": "向量检索扩展 pg_turbovec 2.14 把自动配置下的单查询线程数改为 1，避免连接池中多个查询同时占用多核而争抢 CPU。精确重排窗口也改按请求的候选数量计算，不再由向量维度设定很大的下限，并新增倍数参数调节召回与开销。更新无需重建索引，重连后加载新默认值；低并发场景仍可显式增加线程。每个后端私有的解码索引缓存仍会限制并发容量，线程优化尚未解决这一内存瓶颈。",
+      "url": "https://github.com/gburd/pg_turbovec/releases/tag/v2.14.0",
+      "author": "Greg Burd",
+      "source": "pg_turbovec",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "向量检索",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "TiDB Cloud 公测 PostgreSQL 兼容实例",
+      "summary": "TiDB Cloud 在 AWS 公测 PostgreSQL 兼容的 Starter 实例，创建时可选择 MySQL 或 PostgreSQL 兼容模式。新模式支持连接、监控、备份与恢复，提供兼容 pgvector 的向量检索和部分 PostgreSQL 扩展，可沿用现有工具开展开发验证。此次预览仅面向开发与评估，尚不建议承载生产负载。开发团队可以逐项验证客户端、向量查询与恢复流程，并核对所需扩展的支持范围。",
+      "url": "https://docs.pingcap.com/tidbcloud/tidb-cloud-release-notes/#october-15-2026",
+      "author": "PingCAP",
+      "source": "TiDB Docs",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "PostgreSQL",
+        "云数据库",
+        "预览"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Neptune 1.5 升级查询语义并支持在线清理索引",
+      "summary": "Neptune 1.5.0.0 开始分区域上线，新增面向空图的 Gremlin CSV 快速离线导入，并允许在数据库持续运行时在线重建索引、回收空间。查询引擎扩大 Gremlin 支持，修复查询取消后可用内存减少及无服务器实例无法缩容的问题。此次升级还切换到 TinkerPop 3.8，部分步骤的语义变化可能改变查询结果而不报错，客户端运行环境要求也随之提高。升级验证因此要覆盖结果正确性，不能只检查连接与语法是否成功。",
+      "url": "https://docs.aws.amazon.com/neptune/latest/userguide/engine-releases-1.5.0.0.html",
+      "author": "Amazon Web Services",
+      "source": "AWS",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图数据库",
+        "升级",
+        "存储"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 1,
+      "title": "EMR 可在 Spark 作业内校验数据质量",
+      "summary": "EMR 将 Glue 数据质量引擎直接集成进 Spark 运行时，8.1 及以后版本可在 EC2、EKS 和无服务器三种部署模式中执行同一套 DQDL 规则，无需另起处理引擎。规则既能随作业定义，也能集中存入 Glue 目录并复用。官方案例先把数据写到 Iceberg 分支，再检查完整性、唯一性等约束，全部通过才合入主表；失败数据不会直接暴露给读者。这让质量规则与流水线代码分离，同时把校验放到数据发布之前。",
+      "url": "https://aws.amazon.com/blogs/big-data/bring-data-quality-to-your-amazon-emr-workloads-with-amazon-emr-data-quality-built-on-aws-glue-data-quality/",
+      "author": "Mert Hocanin、Aditya Vallabhani、Edison Xie、Shrey Malpani、Linan Zheng",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Spark",
+        "数据质量",
+        "Iceberg"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 1,
+      "title": "Apigee 私有云版升级 Java 并移除旧管理界面",
+      "summary": "Apigee Edge 私有云版 4.54.00 将核心 API 处理组件升级到 Java 21，并更新多项底层依赖。旧 Java Callout 即使部署成功，也可能因类被移除或反射受限，在真实请求执行时失败，扫描工具又不能覆盖全部动态行为。新版本同时移除 Classic UI，新界面默认端口从 9000 改为 3001，原有自定义配置需另行迁移。升级验收需要覆盖实际代理流量、界面配置与网络入口，不能只检查部署状态。",
+      "url": "https://docs.apigee.com/private-cloud/v4.54.00/changes-privatecloud-45400",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "升级",
+        "兼容性"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "WAL 发送进程修复复制上下文的悬垂指针",
+      "summary": "每条复制命令结束后清空已释放的 WAL 读取器和逻辑解码指针，避免后续命令误用；修复已进入主线与 PG 14 分支。",
+      "url": "https://github.com/postgres/postgres/commit/f2dd2a3bd44eb1d158e6e507b86dc3df787043b1",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "内存安全"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Redshift 共享数据可在独立集群运行 dbt",
+      "summary": "消费端直接读取共享数据并在本地物化模型；须启用跨库元数据支持，普通视图不能引用共享对象。",
+      "url": "https://aws.amazon.com/blogs/big-data/dbt-and-amazon-redshift-data-sharing-multi-cluster-pipelines-without-moving-a-byte/",
+      "author": "Neela Kulkarni、Raza Hafeez",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据仓库",
+        "dbt"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "RDS 的 CLR 迁移应避免逐行调用 Lambda",
+      "summary": "SQL Server 2025 可经 REST 复用 .NET 逻辑；网络往返适合批量任务，先落临时表可缩短目标表持锁时间。",
+      "url": "https://aws.amazon.com/blogs/database/migrate-clr-code-to-aws-lambda-when-upgrading-amazon-rds-for-sql-server-to-2025/",
+      "author": "Raunak Gupta、Dipin Sahadevan",
+      "source": "AWS Database Blog",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "迁移",
+        "SQL Server"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Azure SQL 扩容的 50% 进度只是进行中",
+      "summary": "扩容可能要准备副本并切换连接；普通 ALTER 操作的 50% 不代表耗时过半，PENDING 还可能是在等待资源或配额。",
+      "url": "https://techcommunity.microsoft.com/blog/azuredbsupport/what-really-happens-when-you-scale-azure-sql-database-how-to-monitor-long-runnin/4565191",
+      "author": "Mohamed_Baioumy_MSFT",
+      "source": "Microsoft Azure Database Support Blog",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "运维",
+        "扩容"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Kinesis 跨账户 EFO 需单独授权消费者",
+      "summary": "流所有者须预注册消费者并共享其 ARN；流权限不能代替消费者权限，加密流还需要可跨账户共享的客户管理密钥。",
+      "url": "https://aws.amazon.com/blogs/big-data/build-cross-account-streaming-pipelines-with-the-amazon-kinesis-producer-library-and-kinesis-client-library/",
+      "author": "Charishma Makineni、Chinmayi Narasimhadevara、Pratik Patel、Priyanka Chaudhary",
+      "source": "AWS Big Data Blog",
+      "source_date": "2026-10-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "流处理",
+        "权限"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 网关公测 Worker 内联请求处理",
+      "summary": "Forward 将已获准的 HTTP 请求交给 Worker 修改请求与响应；自定义策略函数仍计划年内提供。",
+      "url": "https://blog.cloudflare.com/programmable-gateway-dlp/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 2,
+      "title": "systemd 限制 DNS 解压跳转并修复登录服务越界",
+      "summary": "262.1 将单个域名的压缩指针跳转限制为 256 次，避免构造报文放大解析开销，同时修正 logind 缓冲区长度。",
+      "url": "https://github.com/systemd/systemd/releases/tag/v262.1",
+      "author": "",
+      "source": "systemd",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "网络",
+        "可靠性"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 2,
+      "title": "Tempo 修复实时追踪合并的并发崩溃",
+      "summary": "3.0.4 修复追踪数据写入与拼装共用数组引发的崩溃，也隔离瞬时与范围指标查询的缓存。",
+      "url": "https://github.com/grafana/tempo/releases/tag/v3.0.4",
+      "author": "",
+      "source": "Grafana Labs",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 2,
+      "title": "Netdata 修复 eBPF 采集堆损坏并降低监控开销",
+      "summary": "2.12.1 修复 possible CPU 数大于在线数时的 eBPF 堆损坏，并降低 Docker 采集及数据文件清理开销。",
+      "url": "https://github.com/netdata/netdata/releases/tag/v2.12.1",
+      "author": "",
+      "source": "Netdata",
+      "source_date": "2026-10-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "监控",
+        "性能"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 主线让 amcheck 损坏索引检查可取消",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/a846ee9854ee9994935d697e1f9c2a0d70f328f1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "栈深报错须区分无限递归与过深表达式",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-stack-depth-limit-exceeded/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Azure SQL 恢复库可能保留旧同步组元数据",
+      "summary": "",
+      "url": "https://techcommunity.microsoft.com/blog/azuredbsupport/azure-sql-data-sync-after-a-database-restore-troubleshooting-leftover-sync-metad/4563165",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "运维"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Dataflow 自动选机优先四代机型并可回退",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/dataflow/docs/release-notes#October_15_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 预览把单区启动盘克隆成区域盘",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/compute/docs/release-notes#October_15_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Google Cloud 内部应用负载均衡预览服务限流",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/load-balancing/docs/release-notes#October_14_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "GKE Standard CPU 节点版本升级可复用虚拟机",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/concepts/node-pool-upgrade-strategies#max-unavailable",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Headlamp 测试插件可追踪 Kueue 任务准入阻塞",
+      "summary": "",
+      "url": "https://kubernetes.io/blog/2026/10/14/tracing-kueue-admission-with-headlamp/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Helm 4.3.1 恢复仅等待钩子模式的 CRD 就绪检查",
+      "summary": "",
+      "url": "https://github.com/helm/helm/releases/tag/v4.3.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    },
+    {
+      "tier": 3,
+      "title": "Trivy 为实验性密码物料清单标注安全等级",
+      "summary": "",
+      "url": "https://github.com/aquasecurity/trivy/discussions/11409",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-14",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 27
+    },
+    {
+      "tier": 3,
+      "title": "Rust 1.99.1 修复 x86_64 的 FFI 布尔返回",
+      "summary": "",
+      "url": "https://blog.rust-lang.org/2026/10/15/Rust-1.99.1/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 28
+    },
+    {
+      "tier": 3,
+      "title": "GitHub 开源许可证合规正式可用并支持数据驻留",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-16-open-source-license-compliance-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 29
+    }
+  ]
+}

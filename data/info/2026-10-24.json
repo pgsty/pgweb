@@ -1,0 +1,432 @@
+{
+  "date": "2026-10-24",
+  "origin": "PostgreSQL、数据库、云与基础设施原始来源；窗口 2026-10-11 至 2026-10-24T23:33:12Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgmq 1.13.1 修复消息越权与路径劫持",
+      "summary": "pgmq 1.13.1 修复了消息队列扩展的两类权限问题：函数固定可信搜索路径并限定内部对象名称，防止攻击者借同名对象执行他人权限的代码；监控角色也不再拥有队列与归档表的整表读取权限，避免消息正文和头部泄露。升级脚本会撤销旧的宽泛授权，并为已有队列补上监控所需的列级权限。项目建议旧版本用户升级；如果撤权失败，升级只会记录警告，因此还需核查日志与实际权限。",
+      "url": "https://github.com/pgmq/pgmq/releases/tag/v1.13.1",
+      "author": "pgmq 社区",
+      "source": "pgmq",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "消息队列",
+        "权限"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "DocumentDB 1.0 达到正式可用状态",
+      "summary": "DocumentDB 发布首个正式可用版本 1.0，以 PostgreSQL 保存原生 BSON，并通过网关兼容 MongoDB 协议。该版与 RC2 代码相同，包含查询权限检查、聚合与索引崩溃修复，以及网关错误报告改进；排序规则支持仍需显式启用。Linux 软件包支持 PostgreSQL 17、18，容器覆盖 15 至 18。旧容器数据卷不会自动更新扩展模式，候选版也没有原位升级路径，迁移须准备新卷并重新加载数据。",
+      "url": "https://documentdb.io/blogs/posts/documentdb-1-0/",
+      "author": "DocumentDB 社区",
+      "source": "DocumentDB",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "文档数据库",
+        "发布"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "CNPG 合入数据库用户密码生成与轮换",
+      "summary": "CloudNativePG 已合入角色密码生成与轮换功能，计划随尚未发布的 1.31 提供。控制器可为 DatabaseRole 生成密码，保存到自己管理的 Secret，并按配置提前轮换；密码有效期同时写入 PostgreSQL，逾期即拒绝新连接。轮换默认关闭，一个角色仍只有一个密码，客户端重连时必须重新读取凭据。副本集群在提升后才生成密码；改密不会立即断开旧会话，目前可通过开发快照试用。",
+      "url": "https://www.gabrielebartolini.it/articles/2026/10/cnpg-recipe-28-generated-and-rotating-postgresql-user-passwords-in-cloudnativepg-1.31/",
+      "author": "Gabriele Bartolini",
+      "source": "Gabriele Bartolini",
+      "source_date": "2026-10-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "Kubernetes",
+        "认证"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PolarFS 用磁盘租约约束共享存储单写者",
+      "summary": "Awide 复盘了 PolarFS 在共享块设备上约束单写者的租约设计。各主机将租约写入独立磁盘扇区，以轮次和存活记录仲裁；持有者持续续租，失败时通过进程退出、强制终止及可选内核看门狗逐层隔离。初版曾把不可读扇区当作空记录，也未充分防住时钟偏移和获取租约途中停顿，修正后遇到这些情况会拒绝挂载。安全性仍依赖时钟偏差不超配置上限，以及被隔离节点确实停止写入。",
+      "url": "https://awide.tech/blog/polarfs-rw-lease",
+      "author": "NeilXP",
+      "source": "Awide Labs",
+      "source_date": "2026-10-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储",
+        "高可用",
+        "一致性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Materialize 用读已提交构建线性化日志",
+      "summary": "Materialize 复盘了 PostgreSQL 元数据存储的亚稳态故障：SIRead 谓词锁膨胀放大了瞬时变慢，每次插入的冲突检查成本随之上升。新方案依靠连续日志、主键仲裁、前驱行共享锁和永久初始化标记，在读已提交级别实现线性化日志，并用 Lean 4 建模证明。团队称同机测试写吞吐约为原来的三倍。功能默认关闭，需先将部署完整升级至 v26.33 或更高版本，再切换隔离级别。",
+      "url": "https://materialize.com/blog/building-a-linearizable-log-on-read-committed/",
+      "author": "Petros Angelatos",
+      "source": "Materialize",
+      "source_date": "2026-10-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "PostgreSQL",
+        "并发控制",
+        "形式化验证"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Materialize 用主键前缀并行读取 MySQL 快照",
+      "summary": "Materialize 团队复盘了超大 MySQL 表的快照并行化：按聚簇主键划分连续范围，用可走索引的前缀探测与 EXPLAIN 估算分配负载，避开 COUNT 和 OFFSET 的全量扫描。团队称，客户最大表的快照耗时由约 30 小时降至 3 小时。实现还需处理字符串排序规则、尾随空格与估算偏差；当前仅覆盖部分字符类型和排序规则，收益取决于数据分布及源库 I/O 能力。",
+      "url": "https://materialize.com/blog/parallelizing-mysql-snapshots/",
+      "author": "Peter Larsen",
+      "source": "Materialize",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "快照",
+        "性能"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG 合入 GIN 严格 JSONPath 漏行修复",
+      "summary": "根字符串的索引标记与查询标记不一致会漏匹配；补丁修正查询提取逻辑，无须重建索引，并标注回补至 PG14。",
+      "url": "https://github.com/postgres/postgres/commit/1b0b45c5ab1aa5dc3c71cfa8e228306c2b92875c",
+      "author": "Rui Zhao；Tom Lane",
+      "source": "PostgreSQL",
+      "source_date": "2026-10-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "索引",
+        "正确性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PgCache 0.8 补齐 DDL 感知与删除失效判断",
+      "summary": "逻辑复制流新增 DDL 事件消息，修复键值删除记录、LIMIT 排序与自连接导致的缓存错误；升级需核查事件触发器权限。",
+      "url": "https://www.pgcache.com/docs/changelog/#0-8-0-2026-10-22",
+      "author": "PgCache 团队",
+      "source": "PgCache",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "缓存",
+        "逻辑复制",
+        "正确性"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "SQL_ASCII 导入可能绕过目标库 UTF8 检查",
+      "summary": "作者实测 PG14–18 的 COPY 可接受非法 UTF8 字节；迁移前须辨明实际编码，混合编码数据不能整库盲目转码。",
+      "url": "https://now-next.nl/en/insights/postgresql-invalid-byte-sequence-for-encoding-utf8/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "编码",
+        "数据完整性"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "DumboDB 备份覆盖分支和未提交工作集",
+      "summary": "0.8.1 起纳入尚未提交的版本控制工作集；用户、权限等管理元数据须单独备份恢复，启用 --auth 时仍禁用备份。",
+      "url": "https://www.dolthub.com/blog/2026-10-20-dumbodb-backups/",
+      "author": "Neil Macneale",
+      "source": "DoltHub",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "备份恢复",
+        "版本控制",
+        "MongoDB"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "TiDB BYOC 让数据平面留在自有云账户",
+      "summary": "AWS 公测将计算、存储和网络留在客户账户，PingCAP 以授权控制面执行运维；服务费与云资源费用分别计收。",
+      "url": "https://www.pingcap.com/blog/tidb-cloud-byoc-public-preview/",
+      "author": "Wendy Cheng",
+      "source": "PingCAP",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "TiDB",
+        "BYOC"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "PMM 3.10 将高可用监控集群转为正式支持",
+      "summary": "支持整套安装的备份恢复及滚动升级，选主时监控可能短暂停顿；新增 MySQL 备份和支持诊断应用仍属技术预览。",
+      "url": "https://docs.percona.com/percona-monitoring-and-management/3/release-notes/3.10.0.html",
+      "author": "Percona",
+      "source": "Percona 文档",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "监控",
+        "高可用",
+        "备份恢复"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "OpenTelemetry 允许安全补丁改变既有行为",
+      "summary": "稳定 SDK 与 Contrib 可在补丁或小版本中调整安全相关行为，仍须保持源码、二进制兼容并公布升级影响。",
+      "url": "https://opentelemetry.io/blog/2026/security-versioning-policy/",
+      "author": "Robert Pająk",
+      "source": "OpenTelemetry",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Rewind VM 将构建字节差异追溯到写入进程",
+      "summary": "rewind blame 比较两次构建，将首个差异字节追溯到写入进程和执行步骤，并沿复制链定位源头；示例揭示哈希种子与目录顺序差异。",
+      "url": "https://fzakaria.com/2026/10/23/who-wrote-this-byte",
+      "author": "Farid Zakaria",
+      "source": "Farid Zakaria’s Blog",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "构建",
+        "调试",
+        "可复现"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "递归查询可按工作表实际行数调整估算",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-recursive_worktable_factor/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询优化",
+        "递归查询"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "BackupDrill 合入恢复前外部外键预检",
+      "summary": "",
+      "url": "https://github.com/backupdrill/cli/commit/79d4b2aafd540ee3385c48415fd38dc2b2a49e74",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "DROP CASCADE 可删除其他表的 RLS 策略",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-cannot-drop-because-other-objects-depend-on-it/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "模式迁移",
+        "权限"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "DynamoDB 最终一致性全局表可拆出独立副本",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/dynamodb-global-tables-disassociate/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DynamoDB",
+        "复制"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "ElastiCache 支持在线迁入 Valkey 无服务器缓存",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-elasticache-serverless-valkey-online-migration/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Valkey",
+        "迁移"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery ObjectRef 对象引用正式可用",
+      "summary": "",
+      "url": "https://cloud.google.com/blog/products/data-analytics/analyze-unstructured-data-in-bigquery-with-objectref",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "BigQuery",
+        "对象存储"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "RDS SQL Server 可直接为只读副本创建快照",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/rds-sqlserver-supports-snapshots-on-read-replicas/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "备份"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "DynamoDB Streams 可按时间戳回放保留数据",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-dynamodb-streams-timestamp-processing/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "CDC"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Aurora 与 RDS 可预留数据库计算容量",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-aurora-rds-on-demand-capacity-reservations/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "RDS",
+        "容量规划"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "OpenBSD 8.0 支持每台虚拟机 64 个 vCPU",
+      "summary": "",
+      "url": "https://www.openbsd.org/80.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "虚拟化",
+        "操作系统"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Wild 0.11 默认支持 Wasm 并可链接内核模块",
+      "summary": "",
+      "url": "https://github.com/wild-linker/wild/releases/tag/0.11.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "编译",
+        "Wasm"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Quad9 将于 11 月 24 日停止服务法国用户",
+      "summary": "",
+      "url": "https://quad9.net/news/blog/au-revoir-france/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "网络"
+      ],
+      "position": 26
+    }
+  ]
+}

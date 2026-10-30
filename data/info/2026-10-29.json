@@ -1,0 +1,429 @@
+{
+  "date": "2026-10-29",
+  "origin": "官方 PostgreSQL 新闻、Planet、活动与安全页；pgnexus #301–314；Google Search/News、官方项目博客/RSS、GitHub Releases、HN Algolia Top/New/Show/Ask；整理窗口 2026-10-16 至 2026-10-30T07:31:20+08:00",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 因集中修复缺陷推迟发布",
+      "summary": "PostgreSQL 提交者 Robert Haas 复盘 PostgreSQL 19 发布延期：大型特性在测试阶段被较晚撤回，主线和稳定分支的修复量也明显增加。文章把变化归因于大语言模型更快发现深层缺陷，但修复仍需提交者人工审查，安全修复和回溯修补又挤占了发布准备时间。延期本身体现了项目对质量的取舍，运维团队应据此调整升级窗口，等待正式版本和完整发布说明，不要把测试版时间表当作承诺。",
+      "url": "https://neon.com/blog/postgres-19-is-late-and-its-ais-fault",
+      "author": "Robert Haas",
+      "source": "Neon",
+      "source_date": "2026-10-21",
+      "image": "https://cdn.neonapi.io/public/images/pages/blog/postgres-19-is-late-and-its-ais-fault/cover.jpg",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "版本",
+        "测试"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Supabase 以 Multigres 提供三节点高可用 Postgres",
+      "summary": "Supabase 将 Multigres 接入平台 Alpha：付费组织可申请创建跨三个可用区的 Postgres 集群，写入经过多数节点确认后才返回，主节点故障时由网关在数秒内完成自动切换，应用继续使用同一连接串。内置连接池还会按用户隔离连接预算并处理预备语句。当前版本只支持单区域、每日备份，不提供 Realtime、PITR、跨区副本或创建后的扩缩容，也没有从 Multigres 返回普通项目的托管路径，不能直接用于关键生产负载。",
+      "url": "https://supabase.com/blog/multigres-private-alpha",
+      "author": "Aditya Maruvada、Manan Gupta",
+      "source": "Supabase",
+      "source_date": "2026-10-29",
+      "image": "https://supabase.com/images/blog/2026-10-29-multigres-private-alpha/og.png",
+      "domain": "cloud",
+      "tags": [
+        "高可用",
+        "PostgreSQL",
+        "云数据库"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "AlloyDB 以 4LT ScaNN 支持百亿向量表",
+      "summary": "Google Cloud 宣布 AlloyDB for PostgreSQL 的 4LT ScaNN 索引可用，PostgreSQL 17 及以上实例单表最多支持 100 亿条向量。索引可自动维护，relaxed_order 流式搜索在带过滤条件的 LIMIT 查询中继续检查叶分区，帮助改善召回率；num_leaves 提高到 104,857,600，并提供 external_search_fdw。升级前应重新评估索引构建与召回参数。",
+      "url": "https://docs.cloud.google.com/release-notes#October_28_2026",
+      "author": "Google Cloud",
+      "source": "Google Cloud Release Notes",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "向量检索",
+        "PostgreSQL",
+        "云数据库"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "纽约时报将 Oracle 迁移到 Aurora PostgreSQL",
+      "summary": "AWS 复盘《纽约时报》将 PLATO 订阅收入系统从 Oracle 迁到 Aurora PostgreSQL：项目从预计 18 个月压缩到 5 个月，上线达到 18,500 requests/s，AWS 称切换无收入中断且逐行数据准确率为 100%。团队处理约 11 万项转换、三套 Schema 和超过 8,000 个应用文件，使用 DMS Schema Conversion、持续复制与自动化工作流。上线前仍需独立验证转换与业务切换。",
+      "url": "https://aws.amazon.com/blogs/database/the-new-york-times-cut-oracle-migration-time-from-18-to-5-months/",
+      "author": "Eli DOE、Rohit Arora、Shashank Nigam、Manoj Duvva",
+      "source": "AWS Database Blog",
+      "source_date": "2026-10-26",
+      "image": "https://d2908q01vomqb2.cloudfront.net/887309d048beef83ad3eabf2a79a64a389ab1c9f/2026/10/05/DBBLOG-5718-featured-image.png",
+      "domain": "cloud",
+      "tags": [
+        "迁移",
+        "PostgreSQL",
+        "云数据库"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "AWS Aurora PostgreSQL 修复多项存储与索引问题",
+      "summary": "Aurora PostgreSQL 在 18.3.5、17.9.5、16.13.5、15.17.5 和 14.22.5 维护版本中修复存储卷达到上限时无法启动、限制 HypoPG 在 EXPLAIN 中只显示当前角色创建的假设索引，以及索引预取可能返回重复行并增加 I/O 等问题；同时回补 PostgreSQL 社区安全修复。运行 Aurora PostgreSQL 的团队应按实际大版本核对维护版本、重启窗口和副本回放，再安排升级。",
+      "url": "https://docs.aws.amazon.com/AmazonRDS/latest/AuroraPostgreSQLReleaseNotes/AuroraPostgreSQL.Updates.html#aurorapostgresql-versions-version183x-1835",
+      "author": "Amazon Web Services",
+      "source": "Aurora PostgreSQL Release Notes",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "维护",
+        "安全",
+        "PostgreSQL"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Ceph Umbrella 21.2.0 发布并收紧部署前提",
+      "summary": "Ceph 发布第 21 个稳定版本 Umbrella 21.2.0：容器镜像改用 Rocky Linux 10 并要求 x86-64-v3，cephadm 要求 Python 3.9 以上；新版本加入更快的纠删码路径、CephX AES256KRB5 加固、在线密钥轮换、监视器备份恢复和按 CRUSH 桶并发升级。升级前必须核对 CPU 指令集、Python、镜像与现有集群兼容性。",
+      "url": "https://docs.ceph.com/en/latest/releases/umbrella/",
+      "author": "Ceph 项目组",
+      "source": "Ceph Documentation",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Ceph",
+        "存储",
+        "安全"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "EDB 梳理 PostgreSQL 19 的改动与测试重点",
+      "summary": "EDB 按查询、复制、存储和运维场景梳理 PostgreSQL 19 的新能力，并列出升级前应覆盖的兼容性与回归测试。",
+      "url": "https://www.enterprisedb.com/blog/postgresql-19-what-changed-what-matters-and-what-test-now",
+      "author": "EDB",
+      "source": "EDB",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "版本",
+        "升级",
+        "测试"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 加固 backup_label 的 LSN 校验",
+      "summary": "PostgreSQL 已用 pg_parse_lsn() 校验 backup_label 的 LSN，拒绝溢出和尾随字符，避免畸形元数据绕过增量备份检查。",
+      "url": "https://github.com/postgres/postgres/commit/76a55702d89ba9f5d0198c2d5d3d2d62357a8880",
+      "author": "Fujii Masao、Hayato Kuroda",
+      "source": "PostgreSQL 官方提交",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "安全"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Estuary 扩展 PostgreSQL CDC 回填与发现控制",
+      "summary": "Estuary 的 PostgreSQL CDC 新增按表回填过滤、发现范围控制和大 Schema 分组发现；WAL 持续捕获不受回填过滤影响。",
+      "url": "https://www.postgresql.org/about/news/estuary-expands-postgresql-cdc-with-targeted-backfills-and-scalable-discovery-3419/",
+      "author": "Estuary",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CDC",
+        "数据同步"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Redis 8.10.3 修复超大 Pub/Sub 集群消息溢出",
+      "summary": "Redis 8.10.3 修复集群模式传播超大 PUBLISH 或 SPUBLISH 消息时的堆缓冲区溢出，使用相关分支的集群实例应安排安全维护升级。",
+      "url": "https://github.com/redis/redis/releases/tag/8.10.3",
+      "author": "@sundb",
+      "source": "Redis GitHub Release",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "Redis"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "PHP2Shell 在公开披露前已遭到利用",
+      "summary": "AWS 发现攻击者在公开披露前四天已尝试利用 PHP2Shell，互联网暴露系统应从 10 月 17 日起回溯日志，并把补丁和缓解措施按小时级别核验。",
+      "url": "https://aws.amazon.com/blogs/security/amazon-threat-intelligence-identifies-php2shell-exploitation-prior-to-public-disclosure-in-madpot/",
+      "author": "CJ Moses",
+      "source": "AWS Security Blog",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "漏洞"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Gheist 利用被盗 GitHub Token 批量窃取 Secret",
+      "summary": "Wiz 发现被盗 GitHub Token 被用于批量窃取仓库 Secret，建议检查 ci-sync-* 分支与 sync-check.yml 工作流。",
+      "url": "https://www.wiz.io/blog/gheist-attempted-scaled-abuse-of-stolen-github-tokens-stumbles",
+      "author": "Rami McCarthy、Hila Ramati",
+      "source": "Wiz Research",
+      "source_date": "2026-10-25",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "GitHub"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Rook 1.21.1 收紧 Ceph 连接并补强监控",
+      "summary": "Rook 1.21.1 强制监视器使用安全 msgr2，新增 Prometheus 抓取超时并更新安全依赖，升级需复核 Ceph 连接与监控。",
+      "url": "https://github.com/rook/rook/releases/tag/v1.21.1",
+      "author": "Rook 项目组",
+      "source": "Rook GitHub Release",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Ceph",
+        "Kubernetes",
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "VictoriaMetrics 1.155.0 改变租户接口默认范围",
+      "summary": "VictoriaMetrics 1.155.0 改变 /admin/tenants 默认范围，vmctl 迁移必须显式提供起止时间；现有自动化可能少取租户。",
+      "url": "https://github.com/VictoriaMetrics/VictoriaMetrics/releases/tag/v1.155.0",
+      "author": "Max Kotliar",
+      "source": "VictoriaMetrics GitHub Release",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "监控",
+        "迁移"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 修复 JSON_TABLE 子链接处理",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/35b349a530c61628f4b7a7968212e594297523c6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/JSON",
+        "修复"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 修复 WAL 一致性检查镜像问题",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/27caf4ca5ae5ecfe66822d5a9c5803e0d1bc2ed0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "可靠性"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pgrecon 提供可审计的 Oracle 迁移评估",
+      "summary": "",
+      "url": "https://www.postgresql.org/about/news/pgrecon-open-source-oracle-to-postgresql-migration-assessment-and-schema-conversion-3410/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "工具"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 索引类型基准比较 B-tree、GIN 与 BRIN",
+      "summary": "",
+      "url": "https://www.alekseialeinikov.com/en/blog/topics/data/postgres-index-types-which-to-use-btree-gin-brin-benchmark",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "性能"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "恢复预取参数决定备用库回放的 I/O 节奏",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-recovery_prefetch/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 物理只读副本需要按负载分配配置",
+      "summary": "",
+      "url": "https://thebuild.com/blog/binary-read-replicas-in-postgresql-part-2/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "运维"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 18 运行在 libnuma 上的注意事项",
+      "summary": "",
+      "url": "https://stormatics.tech/blogs/postgresql-18-and-libnuma",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "Linux"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "VictoriaLogs 发布结构化日志摄取基准",
+      "summary": "",
+      "url": "https://victoriametrics.com/blog/structured-log-ingestion-benchmark/index.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "日志",
+        "基准"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Stalwart 1.0.1 更换指标导出并调整安全行为",
+      "summary": "",
+      "url": "https://github.com/stalwartlabs/stalwart/releases/tag/v1.0.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Redis 8.12 RC1 加入按成员过期与压缩位图",
+      "summary": "",
+      "url": "https://github.com/redis/redis/releases/tag/8.12-rc1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Redis",
+        "预览"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Prometheus 3.16 RC2 加入查询成本估算",
+      "summary": "",
+      "url": "https://github.com/prometheus/prometheus/releases/tag/v3.16.0-rc.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "监控",
+        "PromQL"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Meta 介绍 Prometheus 超大规模训练集群",
+      "summary": "",
+      "url": "https://engineering.fb.com/2026/10/19/data-center-engineering/inside-prometheus-meta-gigawatt-scale-supercluster/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI 基础设施",
+        "可观测性"
+      ],
+      "position": 26
+    }
+  ]
+}
