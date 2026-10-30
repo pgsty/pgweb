@@ -2,21 +2,24 @@
 
 第三方组件只提供外部 URL 入口，不在 pgsql.cc 导入、保存或渲染文档正文，也不纳入本站文档检索。文档页面左侧的“三方文档”默认收起；顶部“文档”下拉菜单与移动端文档导航的最下面也提供“三方文档”入口，链接到 `/docs/third-party/`，不在菜单中展开组件子项。`/docs/` 首页正文不重复展示。
 
-点击左侧“三方文档”进入 `/docs/third-party/`，左侧展开九个组件的外链，右侧按相同顺序展示组件简介，点击组件名称直接前往外部文档。名称、链接、简介与顺序共用 `pgweb/util/contexts.py` 的 `THIRD_PARTY_DOCS`。离开介绍页后，其他文档页面的三方文档分组仍保持收起。`/docs/#ecosystem-docs` 仍可定位到左侧入口。
+点击左侧“三方文档”进入 `/docs/third-party/`，左侧展开十个组件的外链，右侧按相同顺序展示带 Logo 的卡片，整张卡片可点击，在新标签页打开中文文档。桌面为两列、手机为单列，使用站点主题和与书籍教程页一致的卡片样式。名称、链接、Logo、简介与顺序共用 `pgweb/util/contexts.py` 的 `THIRD_PARTY_DOCS`；专用样式为 `media/css/third-party-docs.css`。离开介绍页后，其他文档页面的三方文档分组仍保持收起。`/docs/#ecosystem-docs` 仍可定位到左侧入口。
 
 | 名称 | 目标地址 |
 | --- | --- |
-| Patroni | https://pigsty.cc/docs/patroni |
-| PgBouncer | https://pigsty.cc/docs/pgbouncer |
-| pgBackRest | https://pigsty.cc/docs/pgbackrest |
-| pg_exporter | https://pigsty.cc/docs/pg_exporter |
-| Pigsty | https://pigsty.cc/docs |
-| pig | https://pigsty.cc/docs/pig |
+| Pigsty | https://pigsty.cc/ |
+| Patroni | https://doc.pg.center/zh/patroni/ |
+| PgBouncer | https://doc.pg.center/zh/pgbouncer/ |
+| pgBackRest | https://doc.pg.center/zh/pgbackrest/ |
+| pgBadger | https://doc.pg.center/zh/pgbadger/ |
 | PostGIS | https://postgis.net/docs/manual-dev/zh_Hans/ |
 | TimescaleDB | https://docs.timescaledb.cn/ |
 | Citus | https://learn.microsoft.com/zh-cn/postgresql/citus/?view=citus-14 |
+| pig | https://pig.pgsty.com/zh/ |
+| pg_exporter | https://exp.pgsty.com/zh/ |
 
-链接直接指向外站。旧 `/docs/patroni/`、`/docs/pgbouncer/`、`/docs/pgbackrest/` 及其版本、语言、章节地址统一 301 到各自外部文档首页；不保留本站正文，也不把旧版本号和章节路径拼到外站地址。旧 pgBadger 阅读入口返回 404。sitemap 收录组件介绍页，不收录三方正文或这些兼容跳转地址。
+Logo 使用各项目官网或已有文档站提供的原始图片，URL 同样集中在 `THIRD_PARTY_DOCS`，浏览器直接加载，不在构建时抓取。固定浅色图标底板用于兼容亮暗主题；图标为装饰性图片，卡片名称与简介在图片加载失败时仍可阅读。2026-10-30 已核验上述十个入口均返回 HTTP 200，四个 `doc.pg.center` 入口及 pig、pg_exporter 均为简体中文页面。
+
+链接直接指向外站。旧 `/docs/patroni/`、`/docs/pgbouncer/`、`/docs/pgbackrest/` 及其版本、语言、章节地址统一 301 到各自 `https://doc.pg.center/zh/<组件>/` 文档首页；不保留本站正文，也不把旧版本号和章节路径拼到外站地址。旧 pgBadger 阅读入口返回 404，新入口为介绍页上的外链卡片。sitemap 收录组件介绍页，不收录三方正文或这些兼容跳转地址。
 
 ## 2026-09-09 撤回与归档
 

@@ -13,49 +13,64 @@ _CACHE_MISS = object()
 
 THIRD_PARTY_DOCS = [
     {
+        'title': 'Pigsty',
+        'link': 'https://pigsty.cc/',
+        'logo': 'https://pigsty.cc/img/logo/logo.svg',
+        'description': '开源 PostgreSQL 发行版，提供部署、监控、高可用、备份恢复与扩展管理。',
+    },
+    {
         'title': 'Patroni',
-        'link': 'https://pigsty.cc/docs/patroni',
+        'link': 'https://doc.pg.center/zh/patroni/',
+        'logo': 'https://doc.pg.center/img/patroni/patroni-logo.svg',
         'description': 'PostgreSQL 高可用管理工具，支持集群管理、主从切换与故障恢复。',
     },
     {
         'title': 'PgBouncer',
-        'link': 'https://pigsty.cc/docs/pgbouncer',
+        'link': 'https://doc.pg.center/zh/pgbouncer/',
+        'logo': 'https://www.pgbouncer.org/images/pgbouncer-logo.svg',
         'description': '轻量级 PostgreSQL 连接池，通过复用连接降低连接开销。',
     },
     {
         'title': 'pgBackRest',
-        'link': 'https://pigsty.cc/docs/pgbackrest',
+        'link': 'https://doc.pg.center/zh/pgbackrest/',
+        'logo': 'https://pgbackrest.org/logo.svg',
         'description': 'PostgreSQL 备份与恢复工具，提供备份管理、WAL 归档与恢复功能。',
     },
     {
-        'title': 'pg_exporter',
-        'link': 'https://pigsty.cc/docs/pg_exporter',
-        'description': '采集 PostgreSQL 监控指标，供 Prometheus 抓取并用于监控与告警。',
-    },
-    {
-        'title': 'Pigsty',
-        'link': 'https://pigsty.cc/docs',
-        'description': '开源 PostgreSQL 发行版，提供部署、监控、高可用、备份恢复与扩展管理。',
-    },
-    {
-        'title': 'pig',
-        'link': 'https://pigsty.cc/docs/pig',
-        'description': 'PostgreSQL 命令行工具，用于安装和管理 PostgreSQL 内核与扩展。',
+        'title': 'pgBadger',
+        'link': 'https://doc.pg.center/zh/pgbadger/',
+        'logo': 'https://doc.pg.center/img/pgbadger/logo.png',
+        'description': 'PostgreSQL 日志分析工具，生成可视化报告，帮助排查慢查询与数据库性能问题。',
     },
     {
         'title': 'PostGIS',
         'link': 'https://postgis.net/docs/manual-dev/zh_Hans/',
+        'logo': 'https://postgis.net/brand.svg',
         'description': '为 PostgreSQL 提供几何与地理类型、空间索引和空间分析能力。',
     },
     {
         'title': 'TimescaleDB',
         'link': 'https://docs.timescaledb.cn/',
+        'logo': 'https://docs.timescaledb.cn/favicon.svg?v=7045a84914f0d48a1c822d466332225b',
         'description': '面向时序数据的 PostgreSQL 扩展，提供超表、连续聚合与数据压缩等功能。',
     },
     {
         'title': 'Citus',
         'link': 'https://learn.microsoft.com/zh-cn/postgresql/citus/?view=citus-14',
+        'logo': 'https://pigsty.cc/img/icon/citus.svg',
         'description': '将 PostgreSQL 扩展为分布式数据库，支持在多个节点间分发数据与查询。',
+    },
+    {
+        'title': 'pig',
+        'link': 'https://pig.pgsty.com/zh/',
+        'logo': 'https://pig.pgsty.com/img/pig.svg',
+        'description': 'PostgreSQL 命令行工具，用于安装和管理 PostgreSQL 内核与扩展。',
+    },
+    {
+        'title': 'pg_exporter',
+        'link': 'https://exp.pgsty.com/zh/',
+        'logo': 'https://exp.pgsty.com/img/pg-exporter.png',
+        'description': '采集 PostgreSQL 与 PgBouncer 监控指标，供 Prometheus 抓取并用于监控与告警。',
     },
 ]
 

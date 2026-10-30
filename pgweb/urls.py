@@ -78,7 +78,7 @@ urlpatterns = [
     path('docs/third-party/', pgweb.docs.views.third_party),
     # Retired local manuals: send existing links to the external documentation.
     re_path(r'^(?:(?:en|zh)/)?docs/(?P<project>patroni|pgbouncer|pgbackrest)(?:/.*)?$',
-            RedirectView.as_view(url='https://pigsty.cc/docs/%(project)s', permanent=True)),
+            RedirectView.as_view(url='https://doc.pg.center/zh/%(project)s/', permanent=True)),
     path(r'docs/books/', pgweb.docs.views.books),
     re_path(r'^docs/manuals/$', pgweb.docs.views.manuals),
     re_path(r'^docs/manuals/archive/$', pgweb.docs.views.manualarchive),

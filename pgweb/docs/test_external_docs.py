@@ -1,3 +1,4 @@
+from bs4 import BeautifulSoup
 from django.db import connection
 from django.test import TestCase
 from django.test.utils import CaptureQueriesContext
@@ -13,8 +14,10 @@ class ExternalDocumentationTests(TestCase):
         self.assertContains(response, '<a href="/docs/third-party/">三方文档</a>', count=1, html=True)
         self.assertContains(response, 'href="/docs/third-party/"', count=3)
         self.assertNotIn('submenu', response.context['navmenu'][-1])
+        page = BeautifulSoup(response.content, 'html.parser')
+        doc_links = [link['href'] for link in page.select('#pgSideNav a, #pgContentWrap a')]
         for component in THIRD_PARTY_DOCS:
-            self.assertNotContains(response, 'href="{}"'.format(component['link']))
+            self.assertNotIn(component['link'], doc_links)
         self.assertNotContains(response, 'ecosystem-docs.css')
         for project in ('patroni', 'pgbouncer', 'pgbackrest', 'pgbadger'):
             self.assertNotContains(response, 'href="/docs/{}/'.format(project))
@@ -25,15 +28,17 @@ class ExternalDocumentationTests(TestCase):
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get('/docs/third-party/')
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.context['components']), 9)
+        self.assertEqual(len(response.context['components']), 10)
         entry = next(item for item in response.context['navmenu']
                      if item.get('id') == 'ecosystem-docs')
         self.assertTrue(entry['active'])
         self.assertEqual(entry['submenu'], THIRD_PARTY_DOCS)
+        page = BeautifulSoup(response.content, 'html.parser')
+        doc_links = [link['href'] for link in page.select('#pgSideNav a, #pgContentWrap a')]
         for component in THIRD_PARTY_DOCS:
             # One external link in the sidebar and one in the overview;
             # neither the desktop dropdown nor the mobile drawer includes it.
-            self.assertContains(response, 'href="{}"'.format(component['link']), count=2)
+            self.assertEqual(doc_links.count(component['link']), 2)
             self.assertContains(response, component['description'])
         for query in queries:
             self.assertNotRegex(query['sql'], r'\b(?:docs|doc_project|doc_revision|doc_page)\b')
@@ -41,7 +46,7 @@ class ExternalDocumentationTests(TestCase):
         response = self.client.get('/docs/faq/')
         self.assertEqual(response.status_code, 200)
         self.assertNotIn('submenu', response.context['navmenu'][-1])
-        self.assertNotContains(response, 'href="https://pigsty.cc/docs/patroni"')
+        self.assertNotContains(response, 'href="https://doc.pg.center/zh/patroni/"')
 
     def test_retired_entries_and_chapters_redirect_without_database_queries(self):
         for project in ('patroni', 'pgbouncer', 'pgbackrest'):
@@ -55,7 +60,7 @@ class ExternalDocumentationTests(TestCase):
             ):
                 with self.subTest(project=project, path=path), self.assertNumQueries(0):
                     self.assertRedirects(self.client.get(path.format(project=project)),
-                                         'https://pigsty.cc/docs/' + project,
+                                         'https://doc.pg.center/zh/' + project + '/',
                                          status_code=301, fetch_redirect_response=False)
 
     def test_removed_components_do_not_render_local_manuals(self):
