@@ -76,6 +76,7 @@ urlpatterns = [
 
     re_path(r'^docs/$', pgweb.docs.views.root),
     path('docs/third-party/', pgweb.docs.views.third_party),
+    path('docs/tutorials/', pgweb.docs.views.tutorials),
     # Retired local manuals: send existing links to the external documentation.
     re_path(r'^(?:(?:en|zh)/)?docs/(?P<project>patroni|pgbouncer|pgbackrest)(?:/.*)?$',
             RedirectView.as_view(url='https://doc.pg.center/zh/%(project)s/', permanent=True)),

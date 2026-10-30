@@ -39,7 +39,7 @@ class PageMetadataMapTests(unittest.TestCase):
             '/about/', '/community/', '/developer/beta/', '/download/product-categories/',
             '/community/contributors/', '/community/user-groups/', '/support/versioning/',
             '/support/professional_support/', '/support/professional_hosting/', '/docs/',
-            '/docs/books/', '/docs/manuals/archive/', '/docs/release/',
+            '/docs/books/', '/docs/tutorials/', '/docs/manuals/archive/', '/docs/release/',
         }
         self.assertEqual(sorted(routes - set(self.pages)), [])
 

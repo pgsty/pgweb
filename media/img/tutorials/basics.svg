@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 1020" role="img" aria-labelledby="title desc">
+  <title id="title">Eight Kilobytes</title>
+  <desc id="desc">Eight Kilobytes: PostgreSQL from the page up, by Chase Pierce.</desc>
+  <rect width="720" height="1020" fill="#f1e6d5"/>
+  <rect x="36" y="36" width="648" height="948" fill="none" stroke="#7a4f2b" stroke-width="3"/>
+  <path d="M36 710h648" stroke="#7a4f2b" stroke-width="3"/>
+  <path d="M116 630c56-86 108-129 156-129 61 0 81 55 137 55 51 0 77-44 160-126" fill="none" stroke="#7a4f2b" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="272" cy="501" r="12" fill="#7a4f2b"/>
+  <circle cx="409" cy="556" r="12" fill="#7a4f2b"/>
+  <circle cx="569" cy="430" r="12" fill="#7a4f2b"/>
+  <text x="84" y="126" fill="#7a4f2b" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" letter-spacing="5">PG BASICS</text>
+  <text x="84" y="226" fill="#2e251e" font-family="Georgia, Times New Roman, serif" font-size="68">Eight</text>
+  <text x="84" y="300" fill="#2e251e" font-family="Georgia, Times New Roman, serif" font-size="68">Kilobytes</text>
+  <text x="84" y="788" fill="#7a4f2b" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="21" letter-spacing="3">POSTGRESQL FROM THE PAGE UP</text>
+  <text x="84" y="850" fill="#2e251e" font-family="Georgia, Times New Roman, serif" font-size="31">Chase Pierce</text>
+  <text x="84" y="906" fill="#2e251e" font-family="Georgia, Times New Roman, serif" font-size="25">First edition · PostgreSQL 18</text>
+</svg>

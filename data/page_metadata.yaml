@@ -4209,6 +4209,10 @@ pages:
     title: PostgreSQL 图书｜社区书目
     description: 浏览 PostgreSQL 社区维护的图书目录，查看作者、语言、版本和出版信息。
     lang: zh
+  /docs/tutorials/:
+    title: PostgreSQL 中文书籍与教程
+    description: 汇总 PGSQL.CC 相关的中文 PostgreSQL 书籍、培训课程与实践教程，按主题快速进入对应阅读站点。
+    lang: zh
   /docs/faq/:
     title: PostgreSQL 常见问题 FAQ
     description: 汇总 PostgreSQL 新闻、通用、开发和平台相关常见问题入口。

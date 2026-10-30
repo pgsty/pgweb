@@ -120,6 +120,7 @@ sitenav = {
         {'title': '发行说明', 'link': '/docs/release/'},
         {'title': '版本对比', 'link': '/docs/compare/'},
         {'title': '书籍', 'link': '/docs/books/'},
+        {'title': '教程', 'link': '/docs/tutorials/'},
         {'title': '其他', 'link': '/docs/online-resources/'},
         {'title': 'FAQ', 'link': '/docs/faq/'},
         {'title': 'PostgreSQL Wiki', 'link': 'https://wiki.postgresql.org'},

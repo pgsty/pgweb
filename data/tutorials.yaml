@@ -1,0 +1,223 @@
+# 阅读入口、封面与显示顺序统一在这里维护。
+books:
+- id: int18
+  title: PostgreSQL 18 内参
+  author: Egor Rogov 著 · 冯若航译
+  version: PostgreSQL Internals · 2026 年版
+  description: 从多版本并发控制、缓冲区与 WAL，到锁、查询执行和索引访问方法，系统理解 PostgreSQL 18 的内部机制。
+  tone: teal
+  url: https://int18.pgsql.cc/zh18/
+  image: https://int18.pgsql.cc/images/internal/ru/cover.webp
+  image_alt: PostgreSQL 18 内参原版封面
+- id: pgint
+  title: PostgreSQL 技术内幕
+  author: Hironobu Suzuki 著 · 冯若航、刘阳明、张文升译
+  version: 进程、查询、存储、WAL 与复制
+  description: 从数据库集簇、进程和查询处理出发，逐步理解并发控制、VACUUM、缓冲区、WAL、备份与高可用。
+  tone: blue
+  url: https://pgint.vonng.com/
+  image: https://pgint.vonng.com/cover.svg
+  image_alt: PostgreSQL 技术内幕封面
+- id: pgmon
+  title: PostgreSQL 监控
+  author: Alexey Lesovsky 著 · 冯若航译
+  version: 九章 · 统计、I/O、WAL、复制与清理
+  description: 从活动统计、查询和 I/O 到 WAL、复制与清理，建立定位 PostgreSQL 性能问题的观察方法。
+  tone: green
+  url: https://pgmon.pgsql.cc/
+  image: https://pgmon.pgsql.cc/images/monitoring/cover.jpg
+  image_alt: PostgreSQL 监控封面
+- id: pgqpt
+  title: PostgreSQL 18 查询优化
+  author: Pavel Tolmachev 著 · 冯若航译
+  version: 九章 · 执行计划与调优
+  description: 从演示数据库走到访问方法、排序、连接、统计信息、性能剖析和实用的查询调优方法。
+  tone: amber
+  url: https://pgqpt.pgsql.cc/
+  image: https://pgqpt.pgsql.cc/images/qpt/cover.webp
+  image_alt: PG18 查询优化封面
+- id: intro
+  title: PG 入门
+  author: Pavel Luzanov、Egor Rogov、Igor Levshin 著 · 冯若航译
+  version: 第 11 版 · PostgreSQL 17
+  description: 从安装服务器、编写 SQL 到连接应用，一步步认识 PostgreSQL，并找到下一阶段的学习方向。
+  tone: blue
+  url: https://intro.pgsql.cc/
+  image: https://intro.pgsql.cc/images/intro/cover.webp
+  image_alt: PG 入门封面
+- id: pgexp
+  title: PostgreSQL 实例教程
+  author: Dariush Abbasi 著 · Codex 译
+  version: PostgreSQL 17 · 57 节短课
+  description: 从第一次查询开始，逐步学习数据建模、查询、索引、事务、存储逻辑、全文检索和日常运维。
+  tone: slate
+  url: https://pgexp.pgsql.cc/
+  image: https://pgexp.pgsql.cc/images/examples/cover.svg
+  image_alt: PostgreSQL 实例教程封面
+- id: basic
+  title: PostgreSQL 基础
+  description: 从磁盘上的 8 KB 页讲到索引、查询计划、锁、迁移和生产运维。
+  tone: slate
+  url: https://basic.pgsql.cc/
+  image: /media/img/tutorials/basics.svg
+  image_alt: PostgreSQL 基础：Eight Kilobytes 封面
+  author: Chase Pierce 著
+  version: Eight Kilobytes · PostgreSQL 18
+- id: feat
+  title: PG 特性介绍
+  description: 逐个版本了解 PostgreSQL 的新特性、SQL 示例与兼容性变化。
+  tone: blue
+  url: https://feat.pgsql.cc/
+  image: /media/img/tutorials/features-cover.webp
+  image_alt: PG 特性介绍封面：PostgreSQL 9.5–19 大版本演进
+  author: Noriyoshi Shinoda 著 · 冯若航译
+  version: PostgreSQL 9.5–19 · 十二个版本
+- id: pg36g
+  title: PG 三十六计
+  author: 冯若航（Vonng）
+  version: PostgreSQL 18.6 · Pigsty 4.5
+  description: 从 SQL、应用开发一路讲到部署、监控、故障恢复与事故复盘，把 PostgreSQL 的知识组织成一条可以动手验证的工程路径。
+  tone: navy
+  url: https://pg36g.vonng.com/
+  image: https://pg36g.vonng.com/logo.png
+  image_alt: PG 三十六计封面
+- id: ddia
+  title: 设计数据密集型应用（第二版）
+  author: Martin Kleppmann、Chris Riccomini 著 · 冯若航等译
+  version: 第二版 · 十四章中文译文
+  description: 从数据模型、存储引擎与事务出发，理解复制、分片、一致性、批处理和流处理背后的设计权衡。
+  tone: plum
+  url: https://ddia.vonng.com/
+  image: https://ddia.vonng.com/title.jpg
+  image_alt: 设计数据密集型应用第二版封面
+collections:
+- id: dalibo
+  title: Dalibo 培训
+  tone: dalibo
+  url: https://dalibo.pgsql.cc/
+  image: /media/img/tutorials/dalibo-elephant.png
+  image_alt: Dalibo 大象 logo
+  items:
+  - code: DBA1
+    title: PostgreSQL 管理基础
+    description: 安装、核心概念与日常管理。
+    url: https://dalibo.pgsql.cc/dba1/
+    image: https://dalibo.pgsql.cc/images/dba1/cover.svg
+    image_alt: DBA1 课程封面
+  - code: DBA2
+    title: 高级 PostgreSQL 管理
+    description: 实例组件、缓存、MVCC、清理、PITR 与分区。
+    url: https://dalibo.pgsql.cc/dba2/
+    image: https://dalibo.pgsql.cc/images/dba2/cover.svg
+    image_alt: DBA2 课程封面
+  - code: DBA3
+    title: PostgreSQL 备份与复制
+    description: 备份、恢复、物理复制、逻辑复制与故障切换。
+    url: https://dalibo.pgsql.cc/dba3/
+    image: https://dalibo.pgsql.cc/images/dba3/cover.svg
+    image_alt: DBA3 课程封面
+  - code: HAPAT
+    title: PostgreSQL 高可用
+    description: 高可用概念与 Patroni 实践。
+    url: https://dalibo.pgsql.cc/hapat/
+    image: https://dalibo.pgsql.cc/images/hapat/cover.svg
+    image_alt: HAPAT 课程封面
+  - code: CNPG1
+    title: Kubernetes 中的 PostgreSQL 与 CloudNativePG
+    description: 在 Kubernetes 中部署、运维、备份和升级 PostgreSQL 集群。
+    url: https://dalibo.pgsql.cc/cnpg1/
+    image: https://dalibo.pgsql.cc/images/cnpg1/cover.svg
+    image_alt: CNPG1 课程封面
+  - code: PERF1
+    title: PostgreSQL 性能
+    description: 硬件、操作系统、配置、慢查询与执行计划。
+    url: https://dalibo.pgsql.cc/perf1/
+    image: https://dalibo.pgsql.cc/images/perf1/cover.svg
+    image_alt: PERF1 课程封面
+  - code: PERF2
+    title: 高级索引与 SQL
+    description: 索引、复杂类型、分区与更有效的 SQL。
+    url: https://dalibo.pgsql.cc/perf2/
+    image: https://dalibo.pgsql.cc/images/perf2/cover.svg
+    image_alt: PERF2 课程封面
+  - code: DEV1
+    title: SQL 语言入门
+    description: 从关系模型到连接、集合、排序和安全查询。
+    url: https://dalibo.pgsql.cc/dev1/
+    image: https://dalibo.pgsql.cc/images/dev1/cover.svg
+    image_alt: DEV1 课程封面
+  - code: DEVPG
+    title: 使用 SQL 开发 PostgreSQL 应用
+    description: 应用优化、执行计划、索引机制和常见陷阱。
+    url: https://dalibo.pgsql.cc/devpg/
+    image: https://dalibo.pgsql.cc/images/devpg/cover.svg
+    image_alt: DEVPG 课程封面
+  - code: DBAADM
+    title: 面向资深 DBA 的 PostgreSQL 管理
+    description: 为熟悉其他数据库的 DBA 建立 PostgreSQL 管理能力。
+    url: https://dalibo.pgsql.cc/dbaadm/
+    image: https://dalibo.pgsql.cc/images/dbaadm/cover.svg
+    image_alt: DBAADM 课程封面
+  - code: DBA42
+    title: 高级模块
+    description: 远程访问、扩展、缓存管理与 PgBouncer。
+    url: https://dalibo.pgsql.cc/dba42/
+    image: https://dalibo.pgsql.cc/images/dba42/cover.svg
+    image_alt: DBA42 课程封面
+  - code: DEV42
+    title: 高级 PostgreSQL 开发
+    description: 高级类型、PL/pgSQL、扩展、分区与 FDW。
+    url: https://dalibo.pgsql.cc/dev42/
+    image: https://dalibo.pgsql.cc/images/dev42/cover.svg
+    image_alt: DEV42 课程封面
+  - code: SIG1
+    title: PostGIS 实施
+    description: 空间数据导入、查询、性能与基础管理。
+    url: https://dalibo.pgsql.cc/sig1/
+    image: https://dalibo.pgsql.cc/images/sig1/cover.svg
+    image_alt: SIG1 课程封面
+  - code: SIG2
+    title: PostGIS 高级
+    description: 空间功能、优化、管理和存储过程。
+    url: https://dalibo.pgsql.cc/sig2/
+    image: https://dalibo.pgsql.cc/images/sig2/cover.svg
+    image_alt: SIG2 课程封面
+- id: pgpro
+  title: PGPRO 培训
+  tone: pgpro
+  url: https://pgpro.pgsql.cc/
+  image: https://pgpro.pgsql.cc/people/postgrespro.png
+  image_alt: Postgres Professional 大象 logo
+  items:
+  - code: DBA1
+    title: PostgreSQL 管理：基础课程
+    description: 安装、架构和基本配置。
+    url: https://pgpro.pgsql.cc/dba1/
+  - code: DBA2
+    title: PostgreSQL 管理：配置与监控
+    description: MVCC、WAL、锁、扩展、本地化和升级。
+    url: https://pgpro.pgsql.cc/dba2/
+  - code: DBA3
+    title: PostgreSQL 管理：备份与复制
+    description: 备份、WAL 归档、物理与逻辑复制。
+    url: https://pgpro.pgsql.cc/dba3/
+  - code: DBS
+    title: PostgreSQL 管理：访问控制与安全
+    description: 角色、认证、SSL、RLS 与外部身份验证。
+    url: https://pgpro.pgsql.cc/dbs/
+  - code: DEV1
+    title: PostgreSQL 后端开发：基础课程
+    description: SQL、PL/pgSQL、函数、过程和触发器。
+    url: https://pgpro.pgsql.cc/dev1/
+  - code: DEV2
+    title: PostgreSQL 后端开发：高级课程
+    description: 扩展、操作符类、全文搜索和 FDW。
+    url: https://pgpro.pgsql.cc/dev2/
+  - code: PGPRO
+    title: Postgres Pro Enterprise 功能
+    description: 企业版特有的性能、安全、备份与高可用能力。
+    url: https://pgpro.pgsql.cc/pgpro/
+  - code: QPT
+    title: PostgreSQL 查询性能优化
+    description: 访问方法、排序、连接、统计信息和调优。
+    url: https://pgpro.pgsql.cc/qpt/

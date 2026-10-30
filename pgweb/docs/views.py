@@ -1013,6 +1013,13 @@ class BooksData(YamlDataLoader):
 booksdata = BooksData()
 
 
+class TutorialsData(YamlDataLoader):
+    DATAFILE = "tutorials.yaml"
+
+
+tutorialsdata = TutorialsData()
+
+
 def _localize_book(book):
     """Keep upstream book metadata canonical while supplying Chinese labels."""
     localized = dict(book)
@@ -1047,6 +1054,22 @@ def books(request):
             'url': '/docs/books/',
             'title': 'PostgreSQL 图书',
             'description': 'PostgreSQL 社区维护的相关书目与出版信息。',
+            'sitename': 'PGSQL.CC',
+        },
+    })
+
+
+@xkey('data_tutorials')
+def tutorials(request):
+    data = tutorialsdata.get()
+    return render_pgweb(request, 'docs', 'docs/tutorials.html', {
+        'books': data.get('books', []),
+        'collections': data.get('collections', []),
+        'source_url': '',
+        'og': {
+            'url': '/docs/tutorials/',
+            'title': 'PostgreSQL 书籍与教程',
+            'description': '汇总 PGSQL.CC 相关的中文 PostgreSQL 书籍、培训课程与实践教程。',
             'sitename': 'PGSQL.CC',
         },
     })

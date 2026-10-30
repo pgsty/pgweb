@@ -1,0 +1,68 @@
+{% extends "base/page.html" %}
+{% block title %}书籍与教程{% endblock %}
+{% block extrahead %}<link rel="stylesheet" href="/media/css/tutorials.css?{{gitrev}}">{% endblock %}
+{% block contents %}
+<div id="pg-tutorials">
+  <header class="tutorials-hero">
+    <h1>PostgreSQL 书籍与教程</h1>
+    <p class="tutorials-lead">中文书籍与培训资料，涵盖 PostgreSQL 入门、应用开发、内核原理、性能优化与生产运维。</p>
+    <nav class="tutorials-jump" aria-label="教程栏目">
+      <a href="#books">相关书籍</a>
+      <a href="#dalibo">Dalibo 培训</a>
+      <a href="#pgpro">PGPRO 培训</a>
+    </nav>
+  </header>
+
+  <section class="tutorials-section" id="books" aria-labelledby="tutorials-books-title">
+    <div class="tutorials-section__head">
+      <h2 id="tutorials-books-title">相关书籍</h2>
+    </div>
+    <div class="tutorials-books-grid">
+      {% for item in books %}
+      <article class="tutorial-book tutorial-book--{{item.tone}}">
+        <a class="tutorial-book__link" href="{{item.url}}" target="_blank" rel="noopener" aria-label="阅读《{{item.title}}》">
+          <span class="tutorial-cover">
+            <img src="{{item.image}}" alt="{{item.image_alt}}"{% if forloop.counter > 2 %} loading="lazy"{% endif %} decoding="async">
+          </span>
+          <div class="tutorial-book__body">
+            <h3>{{item.title}}</h3>
+            <p class="tutorial-description">{{item.description}}</p>
+            <ul class="tutorial-meta" aria-label="《{{item.title}}》信息">
+              {% if item.author %}<li>{{item.author}}</li>{% endif %}
+              {% if item.version %}<li>{{item.version}}</li>{% endif %}
+            </ul>
+            <span class="tutorial-read">前往阅读 <span aria-hidden="true">↗</span></span>
+          </div>
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+
+  {% for collection in collections %}
+  <section class="tutorials-section" id="{{collection.id}}" aria-labelledby="tutorials-{{collection.id}}-title">
+    <div class="tutorials-section__head">
+      <h2 id="tutorials-{{collection.id}}-title">
+        <a class="tutorial-collection-title" href="{{collection.url}}" target="_blank" rel="noopener">
+          <img class="tutorial-collection-logo tutorial-collection-logo--{{collection.id}}" src="{{collection.image}}" alt="{{collection.image_alt}}" loading="lazy" decoding="async">
+          <span>{{collection.title}}</span>
+          <span class="tutorial-collection-arrow" aria-hidden="true">↗</span>
+        </a>
+      </h2>
+    </div>
+    <div class="tutorial-course-grid">
+      {% for item in collection.items %}
+      <article class="tutorial-course tutorial-course--{{collection.tone}}">
+        <a href="{{item.url}}" target="_blank" rel="noopener" aria-label="打开{{item.code}}：{{item.title}}">
+          <span class="tutorial-course__cover{% if not item.image %} tutorial-course__cover--identity{% endif %}">
+            {% if item.image %}<img src="{{item.image}}" alt="{{item.image_alt}}" loading="lazy" decoding="async">{% else %}<img src="{{collection.image}}" alt="" loading="lazy" decoding="async"><span class="tutorial-course__code">{{item.code}}</span>{% endif %}
+          </span>
+          <span class="tutorial-course__body"><span class="tutorial-course__code-label">{{item.code}}</span><strong>{{item.title}}</strong><span class="tutorial-course__description">{{item.description}}</span><span class="tutorial-course__link">进入课程 <span aria-hidden="true">↗</span></span></span>
+        </a>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

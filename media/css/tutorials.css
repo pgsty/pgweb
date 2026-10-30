@@ -1,0 +1,320 @@
+/* Book and training index; colours and type follow the PGSQL.CC theme. */
+
+#pg-tutorials a {
+  text-decoration: none;
+}
+
+#pg-tutorials a:focus-visible {
+  outline: 2px solid var(--pg-link-hover);
+  outline-offset: 4px;
+}
+
+.tutorials-hero {
+  margin-bottom: 2.4rem;
+  padding: 1.35rem 1.4rem 1.15rem;
+  border: 1px solid var(--pg-line);
+  border-top: 3px solid var(--pg-blue);
+  border-radius: var(--pg-radius-sm);
+  background: var(--pg-surface);
+}
+
+#pg-tutorials .tutorials-hero h1 {
+  margin: 0 0 .65rem;
+  color: var(--pg-heading);
+  font-size: clamp(1.65rem, 3.1vw, 2.7rem);
+  letter-spacing: -.035em;
+}
+
+.tutorials-lead {
+  max-width: 44em;
+  margin: 0;
+  color: var(--pg-ink-2);
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.tutorials-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-top: 1.3rem;
+  padding-top: .85rem;
+  border-top: 1px solid var(--pg-line);
+  font-size: .86rem;
+  font-weight: 600;
+}
+
+.tutorials-section {
+  margin-bottom: 3rem;
+  scroll-margin-top: 18px;
+}
+
+.tutorials-section__head {
+  margin-bottom: 1.2rem;
+  padding-bottom: .8rem;
+  border-bottom: 1px solid var(--pg-line-strong);
+}
+
+#pg-tutorials .tutorials-section__head h2 {
+  margin: 0;
+  color: var(--pg-heading);
+  font-size: 1.65rem;
+  line-height: 1.3;
+}
+
+#pg-tutorials .tutorials-section__head h2::after {
+  content: none;
+}
+
+#pg-tutorials .tutorial-collection-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--pg-heading);
+  white-space: nowrap;
+}
+
+#pg-tutorials .tutorial-collection-title:hover {
+  color: var(--pg-link-hover);
+}
+
+.tutorial-collection-logo {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.tutorial-collection-arrow {
+  color: var(--pg-ink-2);
+  font-size: 1rem;
+  font-weight: 400;
+}
+
+.tutorials-books-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.tutorial-book {
+  min-width: 0;
+  border: 1px solid var(--pg-line);
+  border-top: 3px solid var(--tutorial-accent, var(--pg-blue));
+  border-radius: var(--pg-radius-sm);
+  background: var(--pg-surface);
+}
+
+.tutorial-book--teal { --tutorial-accent: #2c7c78; }
+.tutorial-book--blue { --tutorial-accent: #3674a1; }
+.tutorial-book--green { --tutorial-accent: #3d7c62; }
+.tutorial-book--amber { --tutorial-accent: #b27731; }
+.tutorial-book--slate { --tutorial-accent: #637989; }
+.tutorial-book--plum { --tutorial-accent: #755d91; }
+.tutorial-book--navy { --tutorial-accent: #315d82; }
+
+#pg-tutorials .tutorial-book__link {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 18px;
+  height: 100%;
+  padding: 18px;
+  border-radius: inherit;
+  font-weight: 400;
+}
+
+.tutorial-book__link:hover,
+.tutorial-course > a:hover {
+  background: var(--pg-wash);
+}
+
+.tutorial-cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 112px;
+  height: 152px;
+  background: var(--pg-surface-2);
+  box-shadow: var(--pg-shadow-sm);
+}
+
+.tutorial-cover img,
+.tutorial-course__cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.tutorial-book__body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+#pg-tutorials .tutorial-book h3 {
+  margin: 0 0 .6rem;
+  color: var(--pg-heading);
+  font-size: 1.125rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.tutorial-description {
+  margin: 0;
+  color: var(--pg-ink-2);
+  font-size: .88rem;
+  line-height: 1.65;
+}
+
+.tutorial-meta {
+  display: grid;
+  gap: 3px;
+  margin: auto 0 0;
+  padding: .8rem 0 0;
+  color: var(--pg-ink-2);
+  font-size: .75rem;
+  line-height: 1.5;
+  list-style: none;
+}
+
+.tutorial-read,
+.tutorial-course__link {
+  color: var(--pg-link-content);
+  font-size: .82rem;
+  font-weight: 600;
+}
+
+.tutorial-read {
+  margin-top: .8rem;
+}
+
+.tutorial-course-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.tutorial-course {
+  min-width: 0;
+  border: 1px solid var(--pg-line);
+  border-top: 2px solid var(--pg-blue);
+  border-radius: var(--pg-radius-sm);
+  background: var(--pg-surface);
+}
+
+#pg-tutorials .tutorial-course > a {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+  height: 100%;
+  padding: 12px;
+  border-radius: inherit;
+  font-weight: 400;
+}
+
+.tutorial-course__cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 88px;
+  border: 1px solid var(--pg-line);
+  background: var(--pg-surface-2);
+}
+
+.tutorial-course__cover--identity {
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px 6px;
+}
+
+.tutorial-course__cover--identity img {
+  width: 44px;
+  height: 44px;
+}
+
+.tutorial-course__code {
+  color: var(--pg-heading);
+  font: 600 .75rem/1 var(--pg-font-mono);
+}
+
+.tutorial-course__body {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.tutorial-course__code-label {
+  margin-bottom: .25rem;
+  color: var(--pg-ink-2);
+  font: 600 .7rem/1 var(--pg-font-mono);
+}
+
+.tutorial-course__body strong {
+  color: var(--pg-heading);
+  font-size: .95rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.tutorial-course__description {
+  margin-top: .35rem;
+  color: var(--pg-ink-2);
+  font-size: .82rem;
+  line-height: 1.5;
+}
+
+.tutorial-course__link {
+  margin-top: auto;
+  padding-top: .6rem;
+}
+
+@media (max-width: 1200px) {
+  .tutorial-course-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 1100px) {
+  #pg-tutorials .tutorial-book__link {
+    grid-template-columns: 88px minmax(0, 1fr);
+    gap: 14px;
+    padding: 14px;
+  }
+
+  .tutorial-cover {
+    width: 88px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .tutorials-hero {
+    padding: 1rem;
+  }
+
+  .tutorials-books-grid,
+  .tutorial-course-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #pg-tutorials .tutorials-section__head h2 {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 380px) {
+  #pg-tutorials .tutorial-book__link {
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .tutorial-cover {
+    width: 72px;
+    height: 98px;
+  }
+}
