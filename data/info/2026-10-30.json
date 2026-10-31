@@ -270,17 +270,17 @@
     },
     {
       "tier": 3,
-      "title": "Supabase 新表默认不暴露 Data API",
+      "title": "MariaDB 修复 InnoDB 内存负载回归",
       "summary": "",
-      "url": "https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically",
+      "url": "https://mariadb.org/how-mariadb-11-8-became-about-3x-faster-on-some-in-memory-workloads-fixing-a-regression-dating-back-to-10.5/",
       "author": "",
       "source": "",
-      "source_date": "2026-04-28",
+      "source_date": "2026-10-27",
       "image": "",
-      "domain": "cloud",
+      "domain": "db",
       "tags": [
-        "权限",
-        "PostgreSQL"
+        "MariaDB",
+        "性能"
       ],
       "position": 17
     },
