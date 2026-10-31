@@ -1,0 +1,432 @@
+{
+  "date": "2026-10-30",
+  "origin": "PostgreSQL.org 新闻、安全页、活动与 Planet RSS；PGNexus #309–315；PGXN；Google Search/News RSS；官方项目与厂商原始页面；HN Firebase 与 Algolia；整理窗口 2026-10-17 至 2026-10-30T23:32:28Z",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复表达式统计信息崩溃路径",
+      "summary": "PostgreSQL 主线修复表达式扩展统计信息的一条崩溃路径：自定义类型的 typanalyze 回调返回异常结果时，服务器此前可能在评估表达式或构建统计数据时解引用空结果。提交让这些组合改为优雅失败，并在 test_custom_types 中加入回归覆盖，且已回补至 PostgreSQL 14。使用自定义类型或扩展统计信息的团队应随对应稳定分支升级并重跑分析任务；这是已提交的稳定性修复，不代表任何待合入特性。",
+      "url": "https://github.com/postgres/postgres/commit/4f89416c9dbc78da5679d32072315af56fbeb8ed",
+      "author": "Shihao Zhong、Michael Paquier",
+      "source": "PostgreSQL 官方提交",
+      "source_date": "2026-10-30",
+      "image": "https://opengraph.githubassets.com/421df652f4a29d5a408b3af5a7978a577ed13d68b6a113ce08ead28f11425d05/postgres/postgres/commit/4f89416c9dbc78da5679d32072315af56fbeb8ed",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "稳定性",
+        "内核"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_tre 4.5.3 修复复杂匹配导致的后端崩溃",
+      "summary": "pg_tre 4.5.3 修复 approximate matcher 在复杂多状态模式下使用固定 512 指针栈数组导致 backend 崩溃，改用可增长的 heap worklist，并以 pg_tre.max_nfa_states 限制状态数。无需 REINDEX，升级后执行 ALTER EXTENSION pg_tre UPDATE；版本支持 PostgreSQL 17–19。使用该索引处理不可信文本的团队应尽快更新并回归查询。",
+      "url": "https://pgxn.org/dist/pg_tre/4.5.3/",
+      "author": "Greg Burd",
+      "source": "PGXN",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "扩展",
+        "正则"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "E-Maj 5.0.1 修复权限提升漏洞",
+      "summary": "E-Maj 5.0.1 修复一个权限边界问题：拥有 emaj_adm 权限的角色可能借助对象归属取得超级用户能力。新版本把 emaj schema 及其内容归属于 emaj_adm，同时修正并行回滚脚本在 PREPARE TRANSACTION 阶段的错误处理。使用 E-Maj 做细粒度写日志或时间旅行的团队应把扩展升级纳入权限审计，核对 emaj_adm 成员和对象 owner；这是数据库内权限修复，不等同于普通功能更新。",
+      "url": "https://pgxn.org/dist/e-maj/5.0.1/",
+      "author": "Philippe Beaudoin",
+      "source": "PGXN",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "扩展",
+        "权限"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PostGIS 3.7.0 正式发布并移除旧版支持",
+      "summary": "PostGIS 3.7.0 正式发布，要求 GEOS 3.10+、PostgreSQL 14–19、Proj 6.1+ 和 libgmp；完整功能还需 GEOS 3.15+ 与 SFCGAL 2.3+。本版包含 RC3 后修复与新特性，移除 PostgreSQL 12、13 支持，构建文档图像新增 Python 3 要求。已评估 RC3 的团队仍需重跑扩展、栅格和 SFCGAL 回归，核对系统库与发行包依赖。",
+      "url": "https://postgis.net/2026/10/PostGIS-3.7.0/",
+      "author": "Regina Obe",
+      "source": "PostGIS",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "GIS",
+        "版本"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "TimescaleDB 引入自适应整数压缩",
+      "summary": "TimescaleDB 的自适应整数压缩 AIC 用六种编码为每个最多 256 个值的块选取解压更快的表示，替代旧的 DeltaDelta。Tiger Data 在自己的测试中称数据库约小 10%、典型查询约快 50%，并观察到部分场景因数据留在堆上而减少 TOAST 访问；这些数字不是通用保证。2.31.0 默认关闭，2.32.0 计划默认开启，已有数据需要重新压缩，升级时应先在真实时间序列负载上验证存储和查询收益。",
+      "url": "https://www.tigerdata.com/blog/adaptive-integer-compression-aic-in-timescaledb",
+      "author": "David Beck",
+      "source": "Tiger Data",
+      "source_date": "2026-10-29",
+      "image": "https://assets.tigerdata.com/blog/2026/10/aic-2.png",
+      "domain": "db",
+      "tags": [
+        "压缩",
+        "时序数据库",
+        "性能"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "LXD/MicroCloud 修复证书链绕过漏洞",
+      "summary": "Ubuntu 安全页面披露 LXD/MicroCloud 的 CVE-2026-112816：HTTPS listener 未正确验证证书链叶证书，未认证攻击者可能利用受信任客户端公钥冒充客户端，取得集群及受管虚拟机访问权。修复版本包括 LXD 6.10.1、5.21.9、5.0.11、4.0.15 及对应 MicroCloud 版本。运行集群的团队应立即核对包版本、证书链和入口，并安排升级。",
+      "url": "https://ubuntu.com/security/CVE-2026-112816",
+      "author": "Canonical",
+      "source": "Ubuntu Security",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "LXD",
+        "虚拟化"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Materialize 26.48.2 改进磁盘溢出恢复",
+      "summary": "v26.48.2 改进磁盘溢出 upsert source 的 hydrate，限制 SCRAM 迭代并修复 Rust 内存安全问题。",
+      "url": "https://materialize.com/docs/releases/#v26.48.2",
+      "author": "Materialize",
+      "source": "Materialize Release Notes",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "流处理",
+        "PostgreSQL",
+        "安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 26.10 启用非 Inner Join 重排",
+      "summary": "26.10 默认启用 DPsub 成本型 Join Optimizer，最多穷举 12 表并支持非 Inner Join 重排。",
+      "url": "https://clickhouse.com/blog/the-new-cost-based-join-optimizer-with-reordering-support-for-non-inner-joins",
+      "author": "Fisnik Kastrati",
+      "source": "ClickHouse",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "查询优化",
+        "Join"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "EDB 预览 Postgres AI 横向写扩展",
+      "summary": "EDB PG AI Distributed 预览按 shard group 分散写入，GA 计划 2027 年 2 月。",
+      "url": "https://www.enterprisedb.com/blog/last-brick-horizontal-write-scaling-coming-edb-postgresr-ai",
+      "author": "Anil Kumar",
+      "source": "EDB",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "高可用",
+        "写扩展"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Snowflake Postgres 外部 OAuth 正式可用",
+      "summary": "External OAuth GA，ACCEPTED_TOKENS 从可选变为必填，采用外部 IdP 的连接配置需复核。",
+      "url": "https://docs.snowflake.com/en/release-notes/2026/other/2026-10-30-snowflake-postgres-external-oauth-ga",
+      "author": "Snowflake",
+      "source": "Snowflake Documentation",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "认证",
+        "云数据库"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "pg_vexec 公布一个月后的向量执行数据",
+      "summary": "一个月跟进公开 ClickBench telemetry，作者称 Parquet 领先 ClickHouse、MergeTree 接近，均为实验数据。",
+      "url": "https://igor-suhorukov.github.io/blog/2026/10/30/pg-vexec-one-month-on/",
+      "author": "Igor Suhorukov",
+      "source": "Igor Suhorukov",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行器",
+        "向量化",
+        "基准"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Grafana 修复告警 contact point 授权绕过",
+      "summary": "CVE-2026-100105 允许低权限 contact point 编辑者借 schema 降级改写受保护目标 URL。",
+      "url": "https://grafana.com/security/security-advisories/cve-2026-100105/",
+      "author": "Grafana Labs",
+      "source": "Grafana Security",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "监控"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Grafana Mimir 两条维护线修复多项 CVE",
+      "summary": "3.2.4 与 3.1.9 更新 go-jose 与 x/net，修复多项 CVE。",
+      "url": "https://github.com/grafana/mimir/releases/tag/mimir-3.2.4",
+      "author": "Grafana Mimir",
+      "source": "Grafana Mimir Release",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "Prometheus",
+        "监控"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "OpenTelemetry eBPF 自动观测进入 v1",
+      "summary": "OpenTelemetry eBPF Instrumentation 进入 v1，固定 Config v2、部署接口与遥测迁移约定。",
+      "url": "https://opentelemetry.io/blog/2026/obi-v1-release/",
+      "author": "Tyler Yahn",
+      "source": "OpenTelemetry",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "eBPF",
+        "可观测性"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Kubernetes 三条稳定分支同步发布补丁",
+      "summary": "",
+      "url": "https://github.com/kubernetes/kubernetes/releases/tag/v1.37.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "安全"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "ClickHouse Managed Postgres 增加五类主动通知",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/expanding-customer-notifications-managed-postgres",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "PostgreSQL",
+        "运维"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Supabase 新表默认不暴露 Data API",
+      "summary": "",
+      "url": "https://supabase.com/changelog/45329-breaking-change-tables-not-exposed-to-data-and-graphql-api-automatically",
+      "author": "",
+      "source": "",
+      "source_date": "2026-04-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "权限",
+        "PostgreSQL"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Percona Operator for MySQL 1.3.0 加入自动调优",
+      "summary": "",
+      "url": "https://www.percona.com/blog/percona-operator-for-mysql-1-3-0/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "Kubernetes"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "OTTL v1 冻结 Collector 变换语言兼容性",
+      "summary": "",
+      "url": "https://opentelemetry.io/blog/2026/ottl-v1/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "OpenTelemetry",
+        "可观测性"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Actions workflow lockfiles 正式可用",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-28-github-actions-workflow-lockfiles-are-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链",
+        "CI"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Actions Linux Runner 扩展到多云",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-28-github-actions-adds-multi-cloud-compute-to-improve-reliability/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CI",
+        "云计算"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "pgEdge 用 TOAST 实测拆分大字段取舍",
+      "summary": "",
+      "url": "https://www.pgedge.com/blog/burnt-toast",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TOAST",
+        "性能"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "pg_hba.conf 的 no encryption 不是加密提示",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/postgresql-no-pg-hba-conf-entry-for-host/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证",
+        "运维"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "CloudNativePG 1.31 预览生成并轮换角色密码",
+      "summary": "",
+      "url": "https://www.gabrielebartolini.it/articles/2026/10/cnpg-recipe-28-generated-and-rotating-postgresql-user-passwords-in-cloudnativepg-1.31/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CloudNativePG",
+        "安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "pg_integrity_checksums 2.0.2 适配 PG 19",
+      "summary": "",
+      "url": "https://pgxn.org/dist/pg_integrity_checksums/2.0.2/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "完整性",
+        "扩展"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "pg_fts 1.15.1 修复长 HTML 分块索引错位",
+      "summary": "",
+      "url": "https://pgxn.org/dist/pg_fts/1.15.1/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "全文检索",
+        "扩展"
+      ],
+      "position": 26
+    }
+  ]
+}
