@@ -1,0 +1,420 @@
+{
+  "date": "2026-10-31",
+  "origin": "PostgreSQL.org 新闻、Planet RSS 与 hackers；PGNexus #309–315；PGXN；Google Search/News；官方项目博客、文档与 GitHub Releases；HN Algolia/Firebase 线索；整理窗口 2026-10-18 至 2026-11-01 07:27:38 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pgAdmin 4 v9.19 修复 15 个安全漏洞",
+      "summary": "pgAdmin 4 v9.19 修复 CVE-2026-116238 至 CVE-2026-116252 共 15 个安全漏洞，涉及 Import/Export Data 命令注入、认证绕过、路径逃逸、服务模式凭据回退、SSH/Kerberos 身份混淆、文件竞争和恶意数据库名连接重定向。版本包含 136 项修复，服务器模式把 Password Exec Commands 改为管理员白名单，升级前应配置允许命令并复核凭据与导入导出路径。",
+      "url": "https://www.postgresql.org/about/news/pgadmin-4-v919-released-3426/",
+      "author": "pgAdmin Development Team",
+      "source": "PostgreSQL 官方新闻",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "pgAdmin",
+        "管理工具"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "OpenEverest CNPG provider 加强复制与备份",
+      "summary": "OpenEverest CloudNativePG provider v0.3.3 增加 requireTLS 参数并支持在线重载 pg_hba.conf，加入按 quorum 或优先级确认的同步复制策略、独立 WAL 存储、Barman 按时间窗口保留并可删除对象存储备份，还会在连接 Secret 中区分读写、任意就绪和只读副本端点。相关 OpenEverest v2 主线仍是开发预览，采用者应按项目版本说明验证恢复、切换和升级路径。",
+      "url": "https://openeverest.io/new/2026-10-22-cloudnative-pg-hardening/",
+      "author": "OpenEverest 项目组",
+      "source": "OpenEverest",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "备份",
+        "CloudNativePG"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 清理 4 TB 大表的实践记录",
+      "summary": "Radim Marek 记录一张约 4 TB 归档表在主库和 10 个副本上的删除实测，比较 DROP TABLE 的 WAL、回放和文件删除影响，也测试仍有读者时的风险。实验使用 PostgreSQL 18.6、校验和和关闭自动 VACUUM 的环境，比较 ext4、XFS、缓存大小、批量删除与 copy-and-swap。文章建议删除前先核对副本、WAL、文件系统和残留读者；这些数据来自特定硬件与布局，不能直接外推。",
+      "url": "https://boringsql.com/posts/delete-4tb/",
+      "author": "Radim Marek",
+      "source": "BoringSQL",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "副本",
+        "WAL"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Redpanda 4.116.0 修复 PostgreSQL CDC",
+      "summary": "Redpanda Connect v4.116.0 修复 postgres_cdc 在 FOR TABLE 与 FOR ALL TABLES 切换时未正确重建 publication，并停止为 PostgreSQL Type、Truncate 和 Origin WAL 消息发出空记录。采用 4.116.0 是因为 4.116.1 越过本次截稿；使用该连接器的团队应在真实 publication、故障重启和增量捕获场景回归。",
+      "url": "https://github.com/redpanda-data/connect/releases/tag/v4.116.0",
+      "author": "Redpanda Connect 项目组",
+      "source": "Redpanda Connect",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CDC",
+        "PostgreSQL",
+        "数据同步"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Cloud SQL PostgreSQL 提醒加拿大时区规则变更",
+      "summary": "Google Cloud 提醒，2026-11-01 02:00 起，未打补丁且使用 Alberta、British Columbia、Manitoba 或 Northwest Territories 时区的 Cloud SQL for PostgreSQL 实例可能落后一小时。建议升级到 *.R20260712.01_44 或更高版本；来不及重启时可改用永久偏移锚定时区。受影响实例应核对时区、版本，存量 timestamp 不变。",
+      "url": "https://docs.cloud.google.com/sql/docs/postgres/release-notes",
+      "author": "Google Cloud",
+      "source": "Google Cloud 文档",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "云数据库",
+        "时区",
+        "维护"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "OpenBao 2.7.2 修复凭据与 PostgreSQL 后端问题",
+      "summary": "OpenBao 2.7.2 与 2.6.5 为两条维护线加入证书撤销列表、AppRole 等路径规范化，拒绝不安全的 OIDC 公共客户端凭据组合，默认禁止 SSH 证书身份通配，并阻止 transit 备份通过路径穿越覆盖任意密钥。2.7.2 还修复 PostgreSQL 存储后端的外部插件事务、集群插件重载和待机重载时序。用 OpenBao 保存数据库凭据的部署应先核对兼容性，再升级并检查策略。",
+      "url": "https://github.com/openbao/openbao/releases/tag/v2.7.2",
+      "author": "OpenBao 项目组",
+      "source": "OpenBao",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "凭据",
+        "PostgreSQL"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pgAudit 19rc1 加入 PostgreSQL 19 支持",
+      "summary": "19rc1 是 pgAudit 面向 PostgreSQL 19 的预发布版本，并修复延迟审计上下文、COPY 行数统计和多处内存问题。",
+      "url": "https://github.com/pgaudit/pgaudit/releases/tag/19rc1",
+      "author": "pgAudit 项目组",
+      "source": "pgAudit",
+      "source_date": "2026-10-27",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "审计",
+        "PostgreSQL"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_search 0.26.4 加入排序连接与过滤下推",
+      "summary": "0.26.4 增加 rank join、过滤下推和数组字段延迟物化，并修复分区父表搜索与依赖安全问题。",
+      "url": "https://github.com/paradedb/paradedb/releases/tag/v0.26.4",
+      "author": "ParadeDB 项目组",
+      "source": "ParadeDB",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "全文检索",
+        "性能"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_turbovec 2.15.0 修复空 IVF 崩溃",
+      "summary": "2.15.0 修复空 IVF 状态与加载后崩溃，查询向量改为每次扫描只解 toast 一次，且升级不改变线格式、不要求重建索引。",
+      "url": "https://pgxn.org/dist/pg_turbovec/2.15.0/",
+      "author": "Greg Burd",
+      "source": "PGXN",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "向量"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "备份任务成功仍需通过恢复演练验证",
+      "summary": "Stormatics 建议同时监控 WAL 归档、最新成功归档段和 pg_wal 大小，并在干净主机按目标时间点恢复；绿色备份任务本身不能证明恢复链路可用。",
+      "url": "https://stormatics.tech/blogs/postgresql-backups-restore-testing",
+      "author": "Semab Tariq",
+      "source": "Stormatics",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复",
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "AlloyDB PostgreSQL 18 修改查询洞察无需重启",
+      "summary": "AlloyDB 的 PostgreSQL 18 及以上集群修改 Advanced Query Insights 不再需要重启；17 及更早版本仍需重启。",
+      "url": "https://docs.cloud.google.com/alloydb/docs/release-notes",
+      "author": "Google Cloud",
+      "source": "AlloyDB 文档",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性",
+        "云数据库"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "NATS 维护版本修复认证与 JetStream 安全问题",
+      "summary": "NATS 2.15.2 与 2.14.9 修复认证、JetStream 快照资源限制和 leafnode ACL 放行问题，并更新 Go 版本。",
+      "url": "https://github.com/nats-io/nats-server/releases/tag/v2.15.2",
+      "author": "NATS 项目组",
+      "source": "NATS Server",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "消息系统",
+        "安全",
+        "高可用"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Traefik 3.7.17 修复代理连接泄漏",
+      "summary": "3.7.17 修复 NTLM/Kerberos 与 FastProxy 后端连接泄漏，增加请求头限制并更新 QUIC、Brotli、ACME 等网络依赖。",
+      "url": "https://github.com/traefik/traefik/releases/tag/v3.7.17",
+      "author": "Traefik 项目组",
+      "source": "Traefik",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "代理",
+        "网络",
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Coroot node-agent 1.38.1 支持配置数据库监控",
+      "summary": "node-agent 1.38.1 可通过配置文件启用数据库监控，并修正 L7 接收字节统计使用 iovec 容量而非系统调用返回值的问题。",
+      "url": "https://github.com/coroot/coroot-node-agent/releases/tag/v1.38.1",
+      "author": "Coroot 项目组",
+      "source": "Coroot",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "数据库"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG hackers 讨论 ALTER COLLATION 的错误码缺失",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/e9376dd1-e2b7-4361-a130-7fa7b064b263@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "choose_plan_name() 复杂度升至 O(N³)",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/241077.1793471735@sss.pgh.pa.us",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PG hackers 提议按节点追踪 WAL 与缓冲区用量",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/CAP53Pkwd6Gd4OL6cgh449wtdznWitz_V=-PRoswLHOzsMbcftA@mail.gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PG hackers 提交 tts_tid 缺失的数据损坏修复",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/79ba7164-f924-4ca5-8012-b5a9639bbd96@iki.fi",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据完整性"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "PG hackers 提议为逻辑解码消息增加处理钩子",
+      "summary": "",
+      "url": "https://www.postgresql.org/message-id/b9b5bd27-6416-48b4-8f73-c5a60e2c97e2@gmail.com",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Microsoft PostgreSQL 扩展把计划分析带进 VS Code",
+      "summary": "",
+      "url": "https://developer.microsoft.com/blog/postgresql-like-a-pro-vscode/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "PolarDB 共享存储 WAL 路径尝试零拷贝 I/O",
+      "summary": "",
+      "url": "https://awide.tech/blog/zero-copy-pfsd-io",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "SchemaCrawler 18.0.1 调整目录比较与兼容性",
+      "summary": "",
+      "url": "https://github.com/schemacrawler/SchemaCrawler/releases/tag/v18.0.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "工具"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "GenesisDB 2.0 以 MIT 许可开放完整服务端",
+      "summary": "",
+      "url": "https://www.genesisdb.io/blog/posts/2026-10-24/genesisdb-2-is-open-source",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据库"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Pseudogress 0.1.1 增加多平台归档与 Nix 支持",
+      "summary": "",
+      "url": "https://github.com/mkleczek/pseudogress/releases/tag/v0.1.1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "测试"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Sigstore 1.11.2 限制插件路径并支持 ML-DSA KMS",
+      "summary": "",
+      "url": "https://github.com/sigstore/sigstore/releases/tag/v1.11.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "供应链安全"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "AI 函数标准化进入 SQL 标准讨论",
+      "summary": "",
+      "url": "https://www.enterprisedb.com/blog/ai-functions-reach-sql-standard",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "SQL标准"
+      ],
+      "position": 26
+    }
+  ]
+}
