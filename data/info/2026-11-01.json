@@ -1,0 +1,423 @@
+{
+  "date": "2026-11-01",
+  "origin": "PostgreSQL.org 新闻、支持/安全页与活动、Planet PostgreSQL RSS、pgnexus、Google Search、厂商与项目官方博客/发布说明、GitHub Releases、HN Algolia/Firebase；截稿 2026-11-02 07:31:01 Asia/Shanghai；选题窗口 2026-10-19 至 2026-11-02",
+  "items": [
+    {
+      "tier": 1,
+      "title": "BackupDrill 为 Supabase 加入恢复演练",
+      "summary": "BackupDrill 面向 Supabase 托管的 PostgreSQL，把 pg_dump 自定义格式流式写入自有 S3 兼容桶，并保存校验清单；恢复演练会在一次性 PostgreSQL 容器中执行 pg_restore，检查校验和、索引、约束、触发器、表是否齐全以及有数据的表是否仍非空。备份仍是普通 pg_dump，可用原生 pg_restore 恢复；当前只支持 Supabase，版本低于源库的 pg_dump 会被拒绝。",
+      "url": "https://www.postgresql.org/about/news/backupdrill-open-source-supabase-postgres-backups-with-automated-restore-drills-3413/",
+      "author": "BackupDrill",
+      "source": "PostgreSQL 官方新闻",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复",
+        "Supabase"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "DBOS 用 PgDog 把工作流吞吐扩到每秒百万级",
+      "summary": "DBOS 用 PgDog 把 Postgres durable workflow 的吞吐从单个 RDS 分片约 2 万 workflows/s 扩到 50 个分片的 100 万 workflows/s。每个分片使用 16 核、64 GB 的 db.m7i.4xlarge，50 分片共 2,400 worker；工作流是无步骤的 no-op 任务，代码已公开。结果说明分片能扩展队列负载，不能代表带业务步骤、跨分片事务或复杂查询的生产吞吐。",
+      "url": "https://www.dbos.dev/blog/one-million-workflows",
+      "author": "Peter Kraft",
+      "source": "DBOS",
+      "source_date": "2026-10-28",
+      "image": "https://www.dbos.dev/assets/cms/4841693b75d583e61d68d3e9_1M-Durable-Workflows-Per-Sec-on-Postgres.jpg",
+      "domain": "pg",
+      "tags": [
+        "分片",
+        "工作流",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Egres 发布 PostgreSQL 兼容数据库原型",
+      "summary": "Egres 是一个以 PostgreSQL 协议兼容为入口、从存储引擎开始重做的数据库原型，采用 LSM 树、Raft 和按租户计量资源，并支持分支与读己之写。当前版本仍是单节点，只支持基础等值查询和有限 SQL；作者在 600M 行、580 GiB 数据上对比 PostgreSQL 18，报告磁盘少 46%、几何平均快 2.8 倍，但测试场景与查询覆盖有限，不能视为通用性能结论。",
+      "url": "https://manishrjain.com/egres/",
+      "author": "Manish R Jain",
+      "source": "Manish R Jain",
+      "source_date": "2026-10-27",
+      "image": "https://manishrjain.com/_images/egres-card.png",
+      "domain": "db",
+      "tags": [
+        "数据库",
+        "存储",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 修复特定条件下的未认证远程代码执行",
+      "summary": "ClickHouse 在 26.10.3.7 的安全更新中修复 CVE-2026-116366：能访问网络的未认证用户，在特定条件下可在 ClickHouse Server 执行任意代码。修复已回移到 26.3.62.3-lts、26.8.36.3-lts、26.9.27.3-stable 和 26.10.3.7-stable，ClickHouse Cloud 与 BYOC 已修复。自建实例应先确认版本与暴露面，再升级并收紧接口暴露。",
+      "url": "https://clickhouse.com/docs/resources/changelogs/security-changelog",
+      "author": "ClickHouse 安全团队",
+      "source": "ClickHouse",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "ClickHouse",
+        "CVE"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Percona 对比六种数据库的向量检索成本",
+      "summary": "Percona 用 990,000 个 1,536 维向量，在同一台机器、同容器形态和同查询集上比较六种数据库的 HNSW 检索，记录建索引时间、存储/内存、召回率、并发吞吐与 10% 数据重写后的表现。结果显示建到可查询状态从 1.9 分钟到 6.7 小时，索引从 3.9 GiB 到 15.1 GiB；pgvector 在 32 客户端时达到单客户端吞吐的 21.7 倍。文章已按公开复核修正，且明确这是单机单次实验，不可当作通用排名。",
+      "url": "https://www.percona.com/blog/benchmarking-vector-search-in-six-database-engines/",
+      "author": "Evgeniy Patlan",
+      "source": "Percona",
+      "source_date": "2026-10-29",
+      "image": "https://www.percona.com/wp-content/uploads/2026/10/recall-vs-throughput.png",
+      "domain": "db",
+      "tags": [
+        "向量",
+        "pgvector",
+        "基准测试"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Supabase DBArena 发布跨服务 PostgreSQL 基准",
+      "summary": "Supabase 发布 DBArena，为托管 PostgreSQL 提供跨服务基准。首批比较 Supabase 默认存储、OrioleDB beta、Amazon RDS 和 Google Cloud SQL，按相同 vCPU 与 I/O 配置覆盖七档规格，测试数据装入缓存与超出内存的场景，报告 tpm、每美元 tpm 和 p95 延迟。工具、命令、配置和原始结果公开，项目由 Supabase 赞助，使用者应按版本、区域和参数复测。",
+      "url": "https://supabase.com/blog/introducing-dbarena",
+      "author": "Aditya Maruvada、Daniel Mitterdorfer",
+      "source": "Supabase",
+      "source_date": "2026-10-30",
+      "image": "https://supabase.com/images/blog/2026-10-30-introducing-dbarena/og.png",
+      "domain": "cloud",
+      "tags": [
+        "基准测试",
+        "云数据库",
+        "PostgreSQL"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Awide 演示在事务中把只读操作拆到副本",
+      "summary": "文章演示在一个事务中把只读操作拆到副本，借助 LSN 等待和会话边界保持读己之写；副本延迟仍需显式处理。",
+      "url": "https://awide.tech/blog/splitting-read-only-transaction",
+      "author": "Vadim Yatsenko",
+      "source": "Awide",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "副本",
+        "事务"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "restrict_nonsystem_relation_kind 的作用",
+      "summary": "restrict_nonsystem_relation_kind 控制非超级用户可操作的系统关系类型，需结合角色权限与升级版本核对默认行为。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-restrict_nonsystem_relation_kind/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置",
+        "权限"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL GUC 详解 row_security",
+      "summary": "row_security 决定 RLS 启用时是否报错或绕过策略；排查表属主、BYPASSRLS 与 FORCE ROW LEVEL SECURITY 的组合。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-row_security/",
+      "author": "Christophe Pettus",
+      "source": "The Build",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置",
+        "RLS"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "实测 hstore 与 JSONB 的读写取舍",
+      "summary": "百万行实测显示 flat 数据下 hstore 多数读写更快、更省空间，但所有值都是文本；JSONB 适合保留数字、布尔值和嵌套语义。",
+      "url": "https://now-next.nl/en/insights/postgresql-hstore-vs-jsonb-measured/",
+      "author": "Chris van Eijk",
+      "source": "now-next.nl",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据类型",
+        "性能"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "应用角色不应使用 PostgreSQL superuser",
+      "summary": "应用角色不使用 superuser；按模式、表和 pg_read_all_data 授权，default_transaction_read_only 限制工具。",
+      "url": "https://stormatics.tech/blogs/your-app-does-not-need-postgresql-superuser",
+      "author": "Umair Shahid",
+      "source": "Stormatics",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "权限"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "SafeGrd 按计划恢复并校验 PostgreSQL 备份",
+      "summary": "SafeGrd 按计划备份、恢复并核对行数和 attestation，恢复结果会留下可审计记录，适合补足只备份不演练的流程。",
+      "url": "https://www.postgresql.org/about/news/safegrd-postgresql-backups-that-are-restored-and-checked-on-a-schedule-3414/",
+      "author": "SafeGrd",
+      "source": "PostgreSQL 官方新闻",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "DuckDB 社区回顾从表格到 DuckLake 的演进",
+      "summary": "DuckDB 社区文章以数据工程师案例说明 DuckDB 与 DuckLake 如何用熟悉的 SQL 和较少运维承接分析工作，适合评估何时无需引入更重的平台。",
+      "url": "https://duckdb.org/2026/10/29/from-spreadsheets-to-ducklake",
+      "author": "DuckDB Labs",
+      "source": "DuckDB",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分析",
+        "数据湖"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "CNCF 梳理 AI 工作负载的 Kubernetes 扩缩难题",
+      "summary": "CNCF 分析 AI 加速器下 scheduler/autoscaler 错配，建议考虑拓扑、容量预留与 Kueue provisioning request。",
+      "url": "https://www.cncf.io/blog/2026/10/19/how-ai-workloads-are-reshaping-kubernetes-autoscaling/",
+      "author": "Sajjan Gundapuneedi、Neelendra Bhandari",
+      "source": "CNCF",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "AI 基础设施"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Slotwatch 只读监控复制槽和滞留 WAL",
+      "summary": "",
+      "url": "https://github.com/Dem1241/slotwatch",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "StatPG 把高吞吐指标聚合嵌入 PostgreSQL",
+      "summary": "",
+      "url": "https://statpg.jefflunt.com/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "扩展"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pghacker-mcp 索引 PostgreSQL 代码与邮件",
+      "summary": "",
+      "url": "https://pghacker-mcp.dev/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发工具",
+        "MCP"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "pg_acm 在 PGConf.EU 展示访问控制工具",
+      "summary": "",
+      "url": "https://hdombrovskaya.wordpress.com/2026/10/23/pg_acm-at-pgconf-eu/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "工具"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "FOSSASIA PGDay 2027 曼谷站开放 CFP",
+      "summary": "",
+      "url": "https://www.postgresql.org/about/news/fossasia-pgday-2027-bangkok-9-march-cfp-open-3398/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "活动"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 社区汇总第 41、42 周贡献",
+      "summary": "",
+      "url": "https://postgres-contrib.org/post/101/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "TigerData 比较三种数据库记忆系统",
+      "summary": "",
+      "url": "https://www.tigerdata.com/blog/we-built-three-memory-systems-most-expressive-wasnt-most-useful",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Database Workbench 重做执行计划查看器",
+      "summary": "",
+      "url": "https://www.upscene.com/news/item/20261028",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "工具"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Supabase RLS 排查十种策略失效原因",
+      "summary": "",
+      "url": "https://now-next.nl/en/insights/supabase-rls-policy-not-working/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "RLS",
+        "安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "OLake 支持 PostgreSQL CDC 写入 Iceberg",
+      "summary": "",
+      "url": "https://github.com/datazip-inc/olake",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "CDC",
+        "Iceberg"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "AI agent 比较 SQL 与 SPARQL 记忆检索",
+      "summary": "",
+      "url": "https://igor-suhorukov.github.io/blog/2026/10/28/agent-memory-sql-sparql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI",
+        "PostgreSQL"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Vericto 在数据库执行前校验 AI 生成 SQL",
+      "summary": "",
+      "url": "https://github.com/vericto/vericto-proxy",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI",
+        "SQL"
+      ],
+      "position": 26
+    }
+  ]
+}
