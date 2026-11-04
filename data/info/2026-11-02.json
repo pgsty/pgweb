@@ -1,0 +1,433 @@
+{
+  "date": "2026-11-02",
+  "origin": "2026-11-02 未完成批次恢复；PostgreSQL 核心与项目原文、Planet、PGNexus、官方厂商博客、GitHub Releases、主动搜索及 HN 线索；按四路研究笔记复核；原稿截稿 2026-11-03 07:34:00 Asia/Shanghai，本次核验截稿 2026-11-04 07:33:51 Asia/Shanghai；扩展窗口自 2026-10-21；psqlODBC 安全细节按本次截稿补全",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 合入增量备份漏块修复",
+      "summary": "PostgreSQL 主线合入增量备份的 WAL summary 合并顺序修复：关系被截断后再次扩展时，若未按 LSN 顺序处理摘要，后续修改的数据块可能被漏掉。用早期备份合并恢复后，已写入的行可能回退，已删除的行也可能重新出现。提交注明回补至 PostgreSQL 17，但尚未核实包含它的正式维护版本。使用增量备份的团队应跟踪后续维护版，并核验备份组合、恢复后的数据内容与校验结果。",
+      "url": "https://github.com/postgres/postgres/commit/d903620acf65e45a560af72aadd0965c45104ceb",
+      "author": "Ke、Fujii Masao",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "数据完整性",
+        "WAL"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 合入 pgoutput 缺值崩溃修复",
+      "summary": "PostgreSQL 合入 pgoutput 选项解析修复，处理复制协议允许选项不带值的情况。此前 proto_version 或 publication_names 缺值时会触发空指针解引用，使 WAL sender 崩溃；新逻辑用安全的字符串解析返回错误。提交注明回补至 PostgreSQL 14，尚未确认已发行维护版。使用逻辑复制的团队可检查客户端或代理生成的请求，结合发送进程异常日志定位触发路径，跟踪包含修复的后续维护版本。",
+      "url": "https://github.com/postgres/postgres/commit/180f3dcd415825af1c0d08dd7f4cc19b31112118",
+      "author": "Zhijie Hou",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "安全",
+        "崩溃"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "psqlODBC 18.00.0006 修复 11 个漏洞",
+      "summary": "psqlODBC 18.00.0006 发布安全更新，修复 11 个 CVE，涉及大对象读取和游标缓存的越界处理、格式字符串、ODBC 转义解析栈溢出及标识符未转义导致的 SQL 注入，以及 Unix 日志文件的权限和符号链接处理。漏洞位于应用加载的客户端驱动，攻击条件各不相同；服务器升级不会替换驱动。项目于 11 月 3 日补全公告并修订部分影响范围，使用者应盘点旧驱动及应用连接权限，更新后回归参数绑定和日志场景。",
+      "url": "https://github.com/postgresql-interfaces/psqlodbc/blob/c2f7bbcd983e9b32345a0eed8be82901e182d875/Changelog.md#18000006",
+      "author": "PostgreSQL ODBC 项目组",
+      "source": "psqlODBC 变更日志",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "驱动",
+        "ODBC"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "HypoPG 1.4.5 修复假想索引崩溃问题",
+      "summary": "HypoPG 1.4.5 于 11 月 1 日发布，修复 hypo_estimate_index 中长期存在的逻辑错误，以及假想索引 relid 处理引起的崩溃。这个 PostgreSQL 扩展允许在不实际创建索引的情况下观察优化器估算，常用于上线前比较索引方案。此次更新针对估算逻辑和测试会话稳定性，与此前 1.4.4 的状态残留修复不同。使用该扩展评估索引的团队可升级后复跑关键方案，具体影响仍应按触发条件判断。",
+      "url": "https://github.com/HypoPG/hypopg/releases/tag/1.4.5",
+      "author": "Julien Rouhaud",
+      "source": "HypoPG 发布说明",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "优化器",
+        "稳定性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Gravity 公开分层编译与列式执行设计",
+      "summary": "Michael Malis 公开 Gravity 引擎的编译路径：把 PostgreSQL 执行计划转为流水线图，再经中间表示生成机器码。实现按代价选择列式扫描算法，推迟字典解码，并将函数与聚合内联到执行循环；连续相同分组键还可在寄存器内合并。文章交代不同类型和查询形态的转换验证，补充测试版公告未展开的执行器设计；性能数字来自作者的特定基准，不能直接套用于其他 PostgreSQL 负载。",
+      "url": "https://pgrust.com/blog/programming-at-light-speed/",
+      "author": "Michael Malis",
+      "source": "pgrust",
+      "source_date": "2026-10-29",
+      "image": "https://pgrust.com/blog/assets/programming-at-light-speed-og.png",
+      "domain": "pg",
+      "tags": [
+        "查询引擎",
+        "编译器",
+        "列存"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "PostHog 用内部 PB 级负载验证 Trino 架构",
+      "summary": "PostHog 解释仓库产品为何转向 Trino 与自研 HogLake。用于内部验证的 DuckLake 曾容纳约 2 PB、1 万亿行及 1,530 万个快照；单机资源预估、S3 读取、目录统计膨胀和 PostgreSQL 协议连接管理成为瓶颈。团队称过去三个月用于重构，新的架构先在自身 PB 级负载验证，再交给设计合作伙伴。文章保留了对 DuckDB 单机分析能力的肯定，重点是说明其自有云仓库的规模、成本与兼容性要求。",
+      "url": "https://posthog.com/blog/moving-off-duckdb",
+      "author": "Benjamin Knofe-Vider",
+      "source": "PostHog",
+      "source_date": "2026-11-02",
+      "image": "https://res.cloudinary.com/dmukukwp6/image/upload/moving_off_duckdb_4c95538aac.png",
+      "domain": "db",
+      "tags": [
+        "数据仓库",
+        "DuckDB",
+        "Trino",
+        "湖仓"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PG 合入两阶段回滚的崩溃一致性修复",
+      "summary": "补丁延迟关键区间的检查点启动，避免已确认回滚的事务在崩溃后恢复为待提交状态，提交注明回补至 PG14。",
+      "url": "https://github.com/postgres/postgres/commit/cea96cdfecbf40aa3f12c1c2572c191f27c318d0",
+      "author": "Shihao Zhong",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "两阶段提交",
+        "恢复"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PG 合入重复哈希子计划的错结果修复",
+      "summary": "各子计划实例独立记录哈希表过期状态，避免共享执行状态被首个实例刷新后，其他实例继续使用旧参数结果。",
+      "url": "https://github.com/postgres/postgres/commit/303c9b36205d11e41c7d5d61a1802ec50bccbf5a",
+      "author": "Rahul Yadav",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询执行",
+        "正确性"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PG 合入并行 VACUUM 成本预算共享修复",
+      "summary": "主进程与工作进程按共同成本预算节流，提交注明回补至 PG19，暂不回补 PG18 及更早版本，以免维护更新改变既有负载节流行为。",
+      "url": "https://github.com/postgres/postgres/commit/8628df8891abc7c69bb12ed160e36df727ca40ea",
+      "author": "Bharath Rupireddy",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "性能"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "PgDog 0.1.63 限制内部预备语句访问",
+      "summary": "新版本阻止已认证客户端按内部名称执行预备语句，将默认语句上限设为 5000，并修复自动两阶段提交和部分 HAVING 错结果。",
+      "url": "https://github.com/pgdogdev/pgdog/releases/tag/v0.1.63",
+      "author": "PgDog 项目组",
+      "source": "PgDog 发布说明",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "安全",
+        "事务"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "CloudNativePG 晋级 CNCF 孵化项目",
+      "summary": "项目通过孵化阶段评审，后续治理工作包括扩大维护者来源，并将单家公司在指导委员会的席位限制为最多两席。",
+      "url": "https://www.gabrielebartolini.it/articles/2026/11/cloudnativepg-reaches-cncf-incubation-another-rung-on-the-ladder/",
+      "author": "Gabriele Bartolini",
+      "source": "Gabriele Bartolini",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CloudNativePG",
+        "Kubernetes",
+        "社区"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Aurora PostgreSQL 支持后量子 TLS 密钥交换",
+      "summary": "兼容 PG18 及以上版本的集群可按允许列表配置 ssl_groups，客户端仍需支持相应密钥交换组。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aurora-postgresql-post-quantum-tls-key-exchange/",
+      "author": "Amazon Web Services",
+      "source": "AWS",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Aurora",
+        "TLS",
+        "安全"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "AlloyDB Omni 只读观测界面正式可用",
+      "summary": "界面汇集查询、列存与配置状态，完整硬件指标依赖 Prometheus，管理变更仍由外部配置流程执行。",
+      "url": "https://cloud.google.com/blog/products/databases/alloydb-omni-delivers-a-web-ui-for-cluster-observability",
+      "author": "Omkar Deshmukh、Josh Choinsky",
+      "source": "Google Cloud",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "AlloyDB",
+        "可观测性"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "自治 PostgreSQL 的关键是可审计的工程边界",
+      "summary": "先用 HypoPG 等低影响方式评估动作，只读默认值不能代替权限控制，并发建索引仍需核算 I/O、WAL 和失败残留。",
+      "url": "https://vibhorkumar.wordpress.com/2026/11/02/autonomous-postgres-at-pgconf-eu-2026-from-scripts-to-self-driving-and-the-primitives-in-between/",
+      "author": "Vibhor Kumar",
+      "source": "Vibhor Kumar",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "自治运维",
+        "PostgreSQL",
+        "治理"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG 合入并发 DROP SCHEMA 崩溃修复",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/77705d1e5a616339c3e92f586bbfa7b6bb562beb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "稳定性",
+        "SQL/XML"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PG 合入 SQL/JSON 域转换软错误处理修复",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/b6e41c16f8ccbfca0d51c94bdb6043b6e8393d6f",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/JSON",
+        "错误处理"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pgvector 合入 HNSW 清理与迭代扫描并发修复",
+      "summary": "",
+      "url": "https://github.com/pgvector/pgvector/commit/2f7507eb7aab397725bdf4bb77bc2f4000acac66",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "向量检索",
+        "并发"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "主键扩为 bigint 时须同步检查序列与引用列",
+      "summary": "",
+      "url": "https://schemity.com/blog/postgres-change-int-primary-key-to-bigint/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移",
+        "数据类型"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "JSONB 高频更新须同时衡量索引与 HOT 成本",
+      "summary": "",
+      "url": "https://fabwaseem.com/blog/mongodb-vs-postgres-jsonb",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSONB",
+        "索引"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "DuckRouting 0.1.6 适配 DuckDB 2.0",
+      "summary": "",
+      "url": "https://github.com/am2222/duckrouting/releases/tag/v0.1.6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-21",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "图计算"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "RDS 可按单个快照归集备份费用",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-rds-per-snapshot-billing/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "RDS",
+        "备份"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "MSK 预置集群新增 TLS 1.3 策略",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-msk-tls/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka",
+        "TLS"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Pulse 6.7 区分备份读取失败与没有恢复点",
+      "summary": "",
+      "url": "https://github.com/rcourtman/Pulse/releases/tag/v6.7.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "备份",
+        "可观测性"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "公共仓库 pull_request_target 默认禁用延至 12 月",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-11-02-pull_request_target-blocked-by-default-december-2/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub Actions",
+        "供应链"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "GitHub Webhook 接收白名单新增三个网段",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-10-29-webhook-ip-ranges-added-to-the-meta-api/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "GitHub",
+        "网络"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "OmniDiff 0.3 按语言比较配置字符串内的代码",
+      "summary": "",
+      "url": "https://github.com/ivankovic/omnidiff/releases/tag/v0.3.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "开发工具",
+        "配置"
+      ],
+      "position": 26
+    }
+  ]
+}
