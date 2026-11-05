@@ -1,192 +1,248 @@
 {
   "date": "2026-11-04",
-  "origin": "PostgreSQL.org news/events; Planet PostgreSQL; PGNexus #319; PostgreSQL master commits 2026-11-04; Snowflake; PostGIS; pgEdge; PostgresAI; Tiger Data; Data Egret; EDB; LokaDB; PostgreSQL community sources; collected before 2026-11-05 07:28:15 Asia/Shanghai",
+  "origin": "PostgreSQL commits; Planet PostgreSQL; PGNexus #319; PostgresAI; Data Egret; AWS; CNCF; OpenTelemetry; GitHub Changelog; primary sources dated 2026-10-22 through cutoff 2026-11-05 07:28:15 Asia/Shanghai; fourteen-day reserve review",
   "items": [
     {
       "tier": 1,
-      "title": "PostgreSQL 19 将内置在线表膨胀回收",
-      "summary": "PostgreSQL 19 将把依赖 pg_repack 的表膨胀回收能力纳入内核，新增 REPACK，并支持 REPACK (CONCURRENTLY) 在大部分时间保持表可读写，只在最后交换文件时短暂持有排他锁。Snowflake 工程团队对比了 VACUUM FULL、转储恢复和扩展方案，提醒运维人员关注磁盘峰值、长事务、写入负载与空间回收效果。生产库可把它纳入膨胀治理，但应先在同版本副本验证锁等待、失败恢复和索引重建计划。",
-      "url": "https://www.snowflake.com/en/blog/engineering/postgres-19-repack-table-bloat/",
-      "author": "Craig Kerstiens",
-      "source": "Snowflake Engineering",
-      "source_date": "2026-11-02",
-      "image": "https://www.snowflake.com/content/dam/snowflake-site/engineering-blog/featured-images/sf-eng-blog-ML-2.png",
+      "title": "PostgreSQL 合入 pg_trgm GiST 索引损坏修复",
+      "summary": "PostgreSQL 已合入 pg_trgm 的 GiST 索引损坏修复。可配置签名长度的旧改动在合并索引条目时丢失格式标志，后续插入可能把已有条目视为空值，查询因此漏掉本应匹配的行。补丁保留格式标志并回补至 PostgreSQL 14，但不会自动修复已经损坏的索引。使用 gist_trgm_ops 的集群应在升级到包含该修复的版本后重建相关索引，再核对查询结果；单独运行 REINDEX 不能替代代码修复。",
+      "url": "https://github.com/postgres/postgres/commit/8aea84d2b8a1233ae44bb0dc0fde2a2ab0f5e35f",
+      "author": "Nate Clark",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-04",
+      "image": "",
       "domain": "pg",
-      "tags": ["PostgreSQL 19", "膨胀", "运维"],
+      "tags": [
+        "数据完整性",
+        "索引",
+        "pg_trgm"
+      ],
       "position": 1
     },
     {
       "tier": 1,
-      "title": "PostgreSQL 修复 pg_trgm GiST 索引可能损坏的问题",
-      "summary": "PostgreSQL 主线修复了 pg_trgm 的 gist_trgm_ops 索引可能损坏的问题。此前可配置签名长度的改动在合并索引条目时丢失格式标志，后续插入可能把已有信息当成空条目，查询因此漏掉应匹配的行。该提交只修正之后的写入路径，不会恢复已经受影响的索引；使用相关 opclass 的集群需要排查版本与索引状态，安排 REINDEX，并用业务查询验证结果。",
-      "url": "https://github.com/postgres/postgres/commit/8aea84d2b8a1233ae44bb0dc0fde2a2ab0f5e35f",
-      "author": "Fujii Masao",
+      "title": "PostgreSQL 修复嵌套外键检查的内存误释放",
+      "summary": "PostgreSQL 已修复外键检查中缓存执行计划被过早释放的问题。级联删除或类型转换调用用户代码时，可能再次触发同一约束的检查；若内层检查发现计划失效并立即释放它，外层执行器仍会访问那块内存。补丁跟踪各层正在执行的计划，将失效但仍在使用的计划延后释放，并补充自引用级联删除及异常回滚测试。修复回补至 PostgreSQL 14，涉及复杂触发器和级联操作的团队应关注后续维护版本并回归相应路径。",
+      "url": "https://github.com/postgres/postgres/commit/e5f6a7a28c4ab82a80fd0fa89d9f77b80ae97c07",
+      "author": "Lucas Jeffrey、Trakshan Mishra、Amit Langote",
       "source": "PostgreSQL 提交",
       "source_date": "2026-11-04",
-      "image": "https://opengraph.githubassets.com/ff0e4a030752c59ee65051bebcd34c9ce8a894627363dce4ad2e6add87e9ddda/postgres/postgres/commit/8aea84d2b8a1233ae44bb0dc0fde2a2ab0f5e35f",
+      "image": "",
       "domain": "pg",
-      "tags": ["安全", "索引", "pg_trgm"],
+      "tags": [
+        "稳定性",
+        "外键",
+        "内核"
+      ],
       "position": 2
     },
     {
       "tier": 1,
-      "title": "E-Maj 5.0.1 修复超级用户权限漏洞",
-      "summary": "E-Maj 5.0.1 是一次重要安全更新，修复了此前所有版本中可能让特定用户在一定条件下获得超级用户权限的漏洞，并兼容 PostgreSQL 14–19。E-Maj 用于对数据库子集进行细粒度写入日志和时间旅行；运行该扩展的集群应尽快升级，结合现有权限审计确认暴露范围，不能把网络隔离或普通数据库权限当成替代修复。",
-      "url": "https://www.postgresql.org/about/news/e-maj-501-major-security-update-3425/",
-      "author": "Philippe Beaudoin",
-      "source": "PostgreSQL.org",
-      "source_date": "2026-10-31",
+      "title": "Memoize 修复排序规则不一致导致的错误结果",
+      "summary": "PostgreSQL 已合入 Memoize 缓存键的排序规则修复。参数化连接原先沿用外层表达式的排序规则，而连接条件可能指定另一种规则；如果前者不区分大小写，缓存就可能把连接条件本能区分的两个值视为相同，返回另一个键的结果。补丁让缓存键使用连接条件的输入排序规则，使缓存命中与连接比较保持一致，并回补至 PostgreSQL 14。这是查询正确性问题，使用非确定性排序规则的应用需要回归相关连接查询。",
+      "url": "https://github.com/postgres/postgres/commit/35273454065e6b7f07984e70ac131ce710e6f380",
+      "author": "Shihao Zhong",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-04",
       "image": "",
       "domain": "pg",
-      "tags": ["安全", "扩展", "升级"],
+      "tags": [
+        "Memoize",
+        "正确性",
+        "排序规则"
+      ],
       "position": 3
     },
     {
       "tier": 1,
-      "title": "psqlODBC 18.00.0006 修复多个安全问题",
-      "summary": "PostgreSQL ODBC 项目发布 18.00.0006，修复多个安全问题，并在官方消息中指向变更记录。虽然公告没有逐项展开漏洞影响，使用 psqlODBC 的环境仍应按变更记录核对版本，尽快完成驱动升级和回归测试，避免把数据库安全维护范围只理解为服务器内核。",
-      "url": "https://www.postgresql.org/about/news/security-release-for-psqlodbc-3431/",
-      "author": "Postgresql ODBC",
-      "source": "PostgreSQL.org",
-      "source_date": "2026-11-02",
-      "image": "",
-      "domain": "infra",
-      "tags": ["安全", "ODBC", "升级"],
-      "position": 4
-    },
-    {
-      "tier": 1,
       "title": "等待事件采样可能把真正的锁瓶颈排到第五名",
-      "summary": "PostgresAI 解释 wait_event 只是共享内存里的实时状态，监控面板常按时间采样，无法告诉你等待次数、持续时间或单次请求经历了什么。一次 checkout 尾延迟案例中，面板把锁等待排在第五、占比 2%，但修复该锁后慢请求明显下降，而按面板前两项调整异步提交和内存没有效果。文章提醒 DBA 把采样结果与 pg_locks、pg_stat_io、pg_stat_statements、日志和追踪结合，避免按占比机械调参。",
+      "summary": "PostgresAI 用结账负载的复现实验说明，等待事件面板的时间占比不等于慢请求的根因。实验中，锁等待仅占约 2%，排在第五，却主导了尾延迟；按前两项调整提交方式和内存，未能解决最慢请求。wait_event 只是实时状态，定时采样可以估计时间分布，却无法还原每次等待的次数、时长与请求边界。作者结合跟踪数据定位短暂行锁，并说明现有日志和统计的观测边界，提醒排障时将总体占比与单请求证据分开分析。",
       "url": "https://postgres.ai/blog/20261103-what-postgres-is-waiting-for",
       "author": "Dmitry Fomin",
       "source": "PostgresAI",
       "source_date": "2026-11-03",
-      "image": "https://postgres.ai/assets/blog/20261103-wait-events-1-og.png",
+      "image": "",
       "domain": "pg",
-      "tags": ["监控", "等待事件", "性能"],
+      "tags": [
+        "监控",
+        "等待事件",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "OpenSearch 无服务器时序集合新增温存储",
+      "summary": "AWS 为新一代 OpenSearch Serverless 增加时序集合，面向日志、指标、链路追踪和事件数据。此次新增温存储层，用户可设定数据保留在热层的时长，再将较少访问的历史数据转入温层，同时继续在同一集合中检索。单个集合支持最多 100 TB 热存储，并加入告警和异常检测。相比此前的刷新间隔调整，这次变化涉及数据分层与保留成本；运维团队可据访问频率设置保留策略，再评估历史查询的时延和费用。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/time-series-collection-next-generation-opensearch-serverless/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "OpenSearch",
+        "时序数据",
+        "存储"
+      ],
       "position": 5
     },
     {
       "tier": 1,
-      "title": "PostgreSQL 19 延期发布，质量审查成为主要原因",
-      "summary": "Robert Haas 讨论 PostgreSQL 19 延期背后的质量压力：项目在准备下一版本时仍发现不少问题，因此选择放慢节奏，优先保证质量。文章还指出，LLM 能发现过去人类未发现的缺陷，却没有同等加快人工审查与修复，长期维护压力因此更突出。对使用测试版或跟踪开发分支的团队来说，这意味着发布时间表仍可能调整，应把稳定性验证和升级窗口放在功能追踪之前。这是一篇工程复盘，不是新的版本发布日期公告。",
-      "url": "https://lwn.net/Articles/1104210/",
-      "author": "Robert Haas",
-      "source": "LWN.net（转引 Robert Haas）",
-      "source_date": "2026-10-30",
+      "title": "AWS Backup 为 Redshift 增加定期恢复演练",
+      "summary": "AWS Backup 的恢复测试现已支持 Redshift，可将数据仓库纳入定期灾备演练计划。系统按计划选择恢复点并执行恢复，记录任务完成时间，供团队对照恢复时间目标；资源可以按 ARN 或标签纳入，恢复点可选最新或随机符合条件的一份。测试还可在自动删除临时资源前执行可选验证。它把备份是否能恢复、恢复需要多久变成可重复检查的流程，但恢复任务成功之后，业务数据和应用行为仍需纳入团队自己的验证步骤。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aws-backup-adds-redshift-restore-testing/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-10-28",
       "image": "",
-      "domain": "pg",
-      "tags": ["PostgreSQL 19", "质量", "AI"],
+      "domain": "cloud",
+      "tags": [
+        "Redshift",
+        "备份",
+        "恢复演练"
+      ],
       "position": 6
     },
     {
       "tier": 2,
-      "title": "pgBadger 13.3 发布",
-      "summary": "pgBadger 13.3 修复多行日志、--explode、--dbuser 过滤和重复统计，并改进远程日志 watch 模式与 EXPLAIN 计划复制。",
-      "url": "https://www.postgresql.org/about/news/pgbadger-v133-has-been-released-3435/",
-      "author": "HexaCluster",
-      "source": "PostgreSQL.org",
-      "source_date": "2026-11-03",
+      "title": "逻辑复制修复索引冲突检查的无效快照崩溃",
+      "summary": "无效快照下跳过冲突元组的再次读取；内核逻辑复制从 PG18 起会触及该路径，修复也覆盖扩展调用者并回补至 PG14。",
+      "url": "https://github.com/postgres/postgres/commit/76e9e44b03a3028d3ef79bc334bc45722a96ce4e",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-04",
       "image": "",
       "domain": "pg",
-      "tags": ["pgBadger", "日志", "工具"],
+      "tags": [
+        "逻辑复制",
+        "稳定性",
+        "内核"
+      ],
       "position": 7
     },
     {
       "tier": 2,
-      "title": "Data Egret 拆解默认 postgresql.conf 的连接设置",
-      "summary": "Data Egret 介绍 pg_settings、reload/restart、max_connections、保留连接与 TCP keepalive。",
-      "url": "https://dataegret.com/2026/11/default-postgresql-conf-part-1-connection-settings/",
-      "author": "",
-      "source": "Data Egret",
-      "source_date": "2026-11-04",
-      "image": "",
-      "domain": "pg",
-      "tags": ["配置", "连接", "运维"],
-      "position": 8
-    },
-    {
-      "tier": 2,
-      "title": "PostgreSQL 修复外键缓存计划的释放竞态",
-      "summary": "缓存的外键 RI 计划失效时可能被过早释放，嵌套触发器与用户函数可读到已释放内存；修复增加使用中计划的保护。",
-      "url": "https://github.com/postgres/postgres/commit/e5f6a7a28c4ab82a80fd0fa89d9f77b80ae97c07",
-      "author": "Amit Langote",
-      "source": "PostgreSQL 提交",
-      "source_date": "2026-11-04",
-      "image": "",
-      "domain": "pg",
-      "tags": ["稳定性", "外键", "内核"],
-      "position": 9
-    },
-    {
-      "tier": 2,
-      "title": "逻辑复制 apply worker 崩溃修复",
-      "summary": "修复逻辑复制 apply worker 在无有效快照时调用索引冲突检查导致的崩溃。",
-      "url": "https://github.com/postgres/postgres/commit/76e9e44b03a3028d3ef79bc334bc45722a96ce4e",
-      "author": "Dean Rasheed",
-      "source": "PostgreSQL 提交",
-      "source_date": "2026-11-04",
-      "image": "",
-      "domain": "pg",
-      "tags": ["逻辑复制", "稳定性", "内核"],
-      "position": 10
-    },
-    {
-      "tier": 2,
-      "title": "postgres_fdw 允许更多场景下推 LIMIT",
-      "summary": "postgres_fdw 在排序键被常量消除后仍可下推 LIMIT，减少不必要的本地执行。",
+      "title": "postgres_fdw 修复常量排序键下的 LIMIT 路径",
+      "summary": "排序键被常量消除时，稳定分支修正断言，主线还恢复 LIMIT 下推；两项提交处理同一优化路径问题。",
       "url": "https://github.com/postgres/postgres/commit/b6178c942ea7a85f72beb6a775d2793062a7ff8e",
       "author": "David Rowley",
       "source": "PostgreSQL 提交",
       "source_date": "2026-11-04",
       "image": "",
       "domain": "pg",
-      "tags": ["FDW", "性能", "内核"],
+      "tags": [
+        "FDW",
+        "查询优化",
+        "内核"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "BRIN 多区间索引修复极大 numeric 值溢出",
+      "summary": "距离计算溢出原会中断建索引或 VACUUM 汇总；补丁改用无穷距离处理并统一 NaN 语义，回补至 PG14。",
+      "url": "https://github.com/postgres/postgres/commit/c230e14b44d2bc40d0d141861e4cbd3839843df9",
+      "author": "Kirill Reshke、Tomas Vondra",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "BRIN",
+        "索引",
+        "稳定性"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Data Egret 拆解连接配置的生效机制与排障",
+      "summary": "用 PG18 实测区分配置来源优先级、重载与重启，并检查保留连接和 TCP keepalive，避免参数已改却未生效。",
+      "url": "https://dataegret.com/2026/11/default-postgresql-conf-part-1-connection-settings/",
+      "author": "Ilya Kosmodemiansky",
+      "source": "Data Egret",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "配置",
+        "连接",
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Redshift 可自动跨区域复制最新快照",
+      "summary": "预置集群和无服务器工作组可配置目标区域与保留期，增量复制当前最新快照，无需等待下次本地快照计划。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/redshift-automated-cross-region-backups/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Redshift",
+        "备份",
+        "容灾"
+      ],
       "position": 11
     },
     {
       "tier": 2,
-      "title": "Memoize 修复排序规则导致的错误命中",
-      "summary": "修复 Memoize 使用连接条件输入排序规则错误导致的缓存错命中与错误查询结果。",
-      "url": "https://github.com/postgres/postgres/commit/35273454065e6b7f07984e70ac131ce710e6f380",
-      "author": "David Rowley",
-      "source": "PostgreSQL 提交",
-      "source_date": "2026-11-04",
+      "title": "MSK Connect 可原位更新插件与工作配置",
+      "summary": "无需删除重建连接器即可升级插件或调整工作配置，已提交位点保留，任务在更新完成后从原位置继续处理。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-msk-connect-update-plugin-worker-configurations/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-10-29",
       "image": "",
-      "domain": "pg",
-      "tags": ["Memoize", "正确性", "内核"],
+      "domain": "cloud",
+      "tags": [
+        "Kafka",
+        "数据集成",
+        "运维"
+      ],
       "position": 12
     },
     {
       "tier": 2,
-      "title": "LokaDB 用代理把租户迁到独立 PostgreSQL",
-      "summary": "LokaDB 用 wire-protocol proxy、分区和 postgres_fdw，在不改 SQL 的情况下把租户迁到独立 PostgreSQL。",
-      "url": "https://github.com/lokadb/lokadb",
-      "author": "",
-      "source": "GitHub",
-      "source_date": "2026-11-04",
+      "title": "Volcano 1.16 用历史资源消耗调节队列公平性",
+      "summary": "fairshare 按命名空间累计资源使用并随时间衰减，影响待调度任务顺序；新增命名空间内队列层级，不抢占已运行任务。",
+      "url": "https://www.cncf.io/blog/2026/10/28/volcano-v1-16-released-namespacequeue-fairshare-and-a-broader-hypernode-ecosystem/",
+      "author": "Volcano Maintainers",
+      "source": "CNCF",
+      "source_date": "2026-10-28",
       "image": "",
-      "domain": "cloud",
-      "tags": ["多租户", "代理", "隔离"],
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "调度",
+        "多租户"
+      ],
       "position": 13
     },
     {
       "tier": 2,
-      "title": "HypoPG 1.4.5 修复假设索引问题",
-      "summary": "HypoPG 1.4.5 修复 hypo_estimate_index 长期错误和假设索引中的 relid 处理崩溃问题。",
-      "url": "https://www.postgresql.org/about/news/hypopg-145-is-out-3428/",
-      "author": "Julien Rouhaud",
-      "source": "PostgreSQL.org",
-      "source_date": "2026-11-02",
+      "title": "OTel Collector 隐去上报配置中的环境变量默认值",
+      "summary": "0.164.0 修复 OpAMP 原始配置上报：未展开环境变量引用中的非空字面默认值会被脱敏，避免暴露其中的密钥。",
+      "url": "https://github.com/open-telemetry/opentelemetry-collector/releases/tag/v0.164.0",
+      "author": "",
+      "source": "OpenTelemetry",
+      "source_date": "2026-10-26",
       "image": "",
-      "domain": "pg",
-      "tags": ["HypoPG", "索引", "稳定性"],
+      "domain": "infra",
+      "tags": [
+        "可观测性",
+        "配置",
+        "安全"
+      ],
       "position": 14
     },
     {
       "tier": 3,
-      "title": "多行 INSERT 的下标子查询转换修复",
+      "title": "多行 INSERT 修复下标子查询被重复转换的问题",
       "summary": "",
       "url": "https://github.com/postgres/postgres/commit/ba3115d8389657b199f38244c429ebcfe2f77ed1",
       "author": "",
@@ -194,12 +250,15 @@
       "source_date": "2026-11-04",
       "image": "",
       "domain": "pg",
-      "tags": ["INSERT", "内核"],
+      "tags": [
+        "INSERT",
+        "内核"
+      ],
       "position": 15
     },
     {
       "tier": 3,
-      "title": "NOT IN 反连接转换避免错误结果",
+      "title": "NOT IN 转反连接修复类型转换产生空值时的错结果",
       "summary": "",
       "url": "https://github.com/postgres/postgres/commit/b7eee09eab738e085d6b62d35788f542dd233877",
       "author": "",
@@ -207,12 +266,15 @@
       "source_date": "2026-11-04",
       "image": "",
       "domain": "pg",
-      "tags": ["查询优化", "正确性"],
+      "tags": [
+        "查询优化",
+        "正确性"
+      ],
       "position": 16
     },
     {
       "tier": 3,
-      "title": "Sort 节点不再忽略后续排序键",
+      "title": "单列排序不再忽略后续排序键，避免去重错计",
       "summary": "",
       "url": "https://github.com/postgres/postgres/commit/b715192e52e7310a041b9ac64485560c20cfce39",
       "author": "",
@@ -220,12 +282,15 @@
       "source_date": "2026-11-04",
       "image": "",
       "domain": "pg",
-      "tags": ["排序", "内核"],
+      "tags": [
+        "排序",
+        "内核"
+      ],
       "position": 17
     },
     {
       "tier": 3,
-      "title": "pg_restore_extended_stats 跳过嵌套值",
+      "title": "扩展统计恢复跳过嵌套容器，避免死循环",
       "summary": "",
       "url": "https://github.com/postgres/postgres/commit/f1d69bb7dfc2021091281b7063fe76c6ffcb9613",
       "author": "",
@@ -233,12 +298,15 @@
       "source_date": "2026-11-04",
       "image": "",
       "domain": "pg",
-      "tags": ["统计", "稳定性"],
+      "tags": [
+        "统计",
+        "稳定性"
+      ],
       "position": 18
     },
     {
       "tier": 3,
-      "title": "WAL 读取器释放时补回内存",
+      "title": "WAL 读取器补齐大记录释放，修复检查点进程泄漏",
       "summary": "",
       "url": "https://github.com/postgres/postgres/commit/6a146d297503b271f4cff6cdf8eaf8f80bbd26a6",
       "author": "",
@@ -246,21 +314,75 @@
       "source_date": "2026-11-04",
       "image": "",
       "domain": "pg",
-      "tags": ["WAL", "内存"],
+      "tags": [
+        "WAL",
+        "内存"
+      ],
       "position": 19
     },
     {
       "tier": 3,
-      "title": "postgres_fdw 排序路径断言修复",
+      "title": "libpq 修复重复 GSS 认证造成的凭据内存泄漏",
       "summary": "",
-      "url": "https://github.com/postgres/postgres/commit/52b41da0be54f5df6708f95dc8bda73b8ae7c563",
+      "url": "https://github.com/postgres/postgres/commit/1c9efb57ec974b9c84df041644a39d8d4cc03004",
       "author": "",
       "source": "",
-      "source_date": "2026-11-04",
+      "source_date": "2026-10-30",
       "image": "",
       "domain": "pg",
-      "tags": ["FDW", "稳定性"],
+      "tags": [
+        "libpq",
+        "认证"
+      ],
       "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "XML 序列化修复输出超 1 GB 后的双重释放崩溃",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/01131ca43bbf798be6ec237a33f6bef67bede888",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "XML",
+        "稳定性"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "函数缓存修复校验模式下的结果类型推导错误",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/811527d9d46eabd4a577b16df486ca86b76a073e",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "函数",
+        "稳定性"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "pg_plan_advice 修复自定义连接扫描识别失败",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/eaa5961efc65d3701ccae3d7ed79d421e37cdd9f",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行计划",
+        "内核"
+      ],
+      "position": 23
     },
     {
       "tier": 3,
@@ -271,73 +393,43 @@
       "source": "",
       "source_date": "2026-11-04",
       "image": "",
-      "domain": "infra",
-      "tags": ["构建", "编译"],
-      "position": 21
-    },
-    {
-      "tier": 3,
-      "title": "PostgreSQL 社区第 43 周贡献汇总",
-      "summary": "",
-      "url": "https://postgres-contrib.org/post/102/",
-      "author": "",
-      "source": "",
-      "source_date": "2026-11-04",
-      "image": "",
       "domain": "pg",
-      "tags": ["社区", "活动"],
-      "position": 22
-    },
-    {
-      "tier": 3,
-      "title": "Nordic PGDay 2027 开始接受赞助",
-      "summary": "",
-      "url": "https://www.postgresql.eu/events/nordicpgday2027/news/nordic-pgday-2027-sponsorships-for-nordic-pgday-2027-are-now-open-224/",
-      "author": "",
-      "source": "",
-      "source_date": "2026-11-02",
-      "image": "",
-      "domain": "pg",
-      "tags": ["活动", "社区"],
-      "position": 23
-    },
-    {
-      "tier": 3,
-      "title": "PGConf.EU 2026 回顾：安全、FDW 与日志实践",
-      "summary": "",
-      "url": "https://proopensource.it/blog/pgconf-eu-2026",
-      "author": "",
-      "source": "",
-      "source_date": "2026-11-03",
-      "image": "",
-      "domain": "pg",
-      "tags": ["活动", "社区", "实践"],
+      "tags": [
+        "构建",
+        "编译"
+      ],
       "position": 24
     },
     {
       "tier": 3,
-      "title": "Supabase 合规仍需自行维护 RLS 与审计",
+      "title": "OpenChoreo 持久保存并补齐 Kubernetes 事件元数据",
       "summary": "",
-      "url": "https://unitautogen.com/blog/hipaa-evidence-for-supabase.html",
+      "url": "https://www.cncf.io/blog/2026/10/27/opentelemetry-powered-distributed-tracing-and-kubernetes-events-in-openchoreo/",
       "author": "",
       "source": "",
-      "source_date": "2026-10-29",
+      "source_date": "2026-10-27",
       "image": "",
-      "domain": "cloud",
-      "tags": ["合规", "RLS"],
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "可观测性"
+      ],
       "position": 25
     },
     {
       "tier": 3,
-      "title": "PGConf.EU 社区活动日分享组织经验",
+      "title": "Dependabot 支持 Python 3.15 依赖更新",
       "summary": "",
-      "url": "https://www.data-bene.io/en/blog/organizing-welcoming-and-storytelling-pgconfeu2026/",
+      "url": "https://github.blog/changelog/2026-11-03-dependabot-now-supports-python-3-15/",
       "author": "",
       "source": "",
       "source_date": "2026-11-03",
       "image": "",
       "domain": "infra",
-      "tags": ["社区", "活动"],
+      "tags": [
+        "依赖管理",
+        "Python"
+      ],
       "position": 26
     }
   ]
