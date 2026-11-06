@@ -57,12 +57,20 @@ sudo /usr/share/postgresql-common/pgdg/apt.postgresql.org.sh</pre>
 </p>
 
 <div class="pg-script-container">
-    <pre id="script-box2" class="code" data-lang="bash">sudo apt install curl ca-certificates
+    <pre id="script-box2" class="code" data-lang="bash">sudo apt install curl ca-certificates gpg
 sudo install -d /usr/share/postgresql-common/pgdg
 sudo curl -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc --fail https://www.postgresql.org/media/keys/ACCC4CF8.asc</pre>
     <button id="copy-btn2-root" class="pg-script-copy-btn pg-script-copy-btn-root" title="复制到剪贴板（不使用 sudo，供 root 使用）"><i class="fas fa-terminal"></i></button>
     <button id="copy-btn2" class="pg-script-copy-btn" title="复制到剪贴板"><i class="far fa-copy"></i></button>
 </div>
+
+<p>
+查看公钥信息，并核对指纹是否与下方示例一致：
+</p>
+<pre id="gpg-verify" class="code" data-lang="bash">gpg --show-key /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc</pre>
+<pre class="code" data-lang="text">pub   rsa4096 2011-10-13 [SC]
+      B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+uid                      PostgreSQL Debian Repository</pre>
 
 <p>
 创建 <b>/etc/apt/sources.list.d/pgdg.sources</b>。发行版名称格式为 <em>codename</em><b>-pgdg</b>；下面示例中请将 <em>resolute</em> 替换为您实际使用的发行版代号。文件内容如下：
