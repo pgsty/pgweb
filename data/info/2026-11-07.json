@@ -1,0 +1,428 @@
+{
+  "date": "2026-11-07",
+  "origin": "PostgreSQL.org、Planet PostgreSQL、PGNexus、项目官方博客与发布说明；检索窗口 2026-10-25 至 2026-11-08 07:29:41 Asia/Shanghai；本日期为整理归档日期",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_fts 1.16 修复排序解码越界与墓碑残留",
+      "summary": "pg_fts 1.16 将 CBMC 发现的排序查询解码问题改为在读取前同时检查块长度、列宽和每列字节范围，避免畸形段产生错误 docid 或越界读取。fts_vacuum 也会重写仍带墓碑的单一 packed segment，避免把未清理的段误判为完成。项目说明称磁盘格式没有变化，本次升级无需统一重建索引。",
+      "url": "https://pgxn.org/dist/pg_fts/1.16.0/",
+      "author": "Gregory Burd",
+      "source": "pg_fts / PGXN",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "全文搜索",
+        "安全"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "目录账号竞争可能让 PostgreSQL 重启失败",
+      "summary": "EDB 记录了一类目录服务环境中的启动故障：systemd-sysusers 可能在 AD/LDAP 尚未就绪时创建同名本地账号，导致数据目录数字属主与实际目录 UID 不一致。排查时应比较 getent 返回的 UID、目录属主、NSS 优先级和服务依赖；修复重点是消除账号竞争，不能直接递归改写数据目录属主。",
+      "url": "https://www.enterprisedb.com/blog/systemd-sysusers-and-directory-managed-postgres-accounts-avoiding-startup-failures",
+      "author": "Nick Ivanov",
+      "source": "EDB Postgres Builders Blog",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "systemd",
+        "身份管理"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "OpenTelemetry 限制压缩解码与消息嵌套深度",
+      "summary": "OpenTelemetry Collector 0.165.0 收紧遥测接收端的资源边界：zstd 解码窗口受 HTTP 请求体或 gRPC 消息大小配置约束，避免小型压缩输入触发过大内存分配；protobuf 解码把嵌套深度限制为 100，防止恶意结构耗尽调用栈。版本还修复持久化发送队列访问已释放数据引发的崩溃。升级时应核对接收端大小限制、深层嵌套数据及队列恢复路径。",
+      "url": "https://github.com/open-telemetry/opentelemetry-collector/releases/tag/v0.165.0",
+      "author": "OpenTelemetry 维护团队",
+      "source": "OpenTelemetry",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "OpenTelemetry",
+        "安全",
+        "可观测性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Prometheus 3.16 修复压缩与恢复中的样本丢失",
+      "summary": "Prometheus 3.16 正式版修复多条 TSDB 数据完整性路径：按指定序列或过期序列压缩时，并发提交的样本可能被静默丢弃；检查点和 WAL 重放也可能遗失乱序样本或恢复所需的序列身份。新版本同时修复重启后部分短等待告警无法恢复的问题。相比此前已介绍的候选版查询成本功能，本次重点是正式版的存储与恢复修复，监控集群升级时应回归压缩、重启和乱序写入。",
+      "url": "https://github.com/prometheus/prometheus/releases/tag/v3.16.0",
+      "author": "Prometheus 维护团队",
+      "source": "Prometheus",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Prometheus",
+        "监控"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Expat 2.10.0 修复四项安全问题",
+      "summary": "Expat 2.10.0 修复四项安全问题，涉及 XML 实体展开和解析器重置后的内存分配记账。对于长期复用解析器的服务，计数状态是否正确会影响资源限制能否持续生效；实体相关漏洞则要求特别关注会接收不可信 XML 的入口。维护者同时提供新的发行包与变更说明。使用系统包或嵌入式副本的项目，需要核对实际链接的 Expat 版本，并测试实体处理、错误恢复和解析器复用路径。",
+      "url": "https://blog.hartwork.org/posts/expat-2-10-0-released/",
+      "author": "Sebastian Pipping",
+      "source": "Expat 维护者博客",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "解析器"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Alpine 修复 OpenSSH 密码认证绕过",
+      "summary": "Alpine Linux 公告了一项 OpenSSH 密码认证绕过问题，影响特定的非 PAM 密码认证配置，涉及锁定密码标记与 SHA-crypt 账户。修复包安装后必须重启 sshd 才会生效；在无法立即升级的环境，官方给出的临时措施是关闭密码认证。公告没有把风险扩大到所有 Alpine 容器或所有 OpenSSH 部署，运维人员应先核对认证方式、受影响包版本和服务重启状态，再安排补丁窗口。",
+      "url": "https://alpinelinux.org/posts/2026-11-05-openssh-password-authentication-bypass/",
+      "author": "Alpine Linux 团队",
+      "source": "Alpine Linux",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "OpenSSH",
+        "Alpine"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "HeapDeck 把 PostgreSQL 值班监控带到 iPhone",
+      "summary": "直接连接数据库或走 SSH 隧道，用阻塞树展示根阻塞会话，也可查看事务回卷和复制状态；应用本身不发送告警。",
+      "url": "https://pgsql.cc/about/news/heapdeck-postgresql-3438/",
+      "author": "HeapDeck",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-11-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "移动端"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "MariaDB 用 HLL 原型验证可插拔聚合接口",
+      "summary": "type_hll 将数据类型、聚合与标量函数放入同一插件；仍需开发分支的服务端改动，可插拔聚合计划随 13.3 提供。",
+      "url": "https://mariadb.org/what-mariadbs-plugin-api-can-carry-the-hyperloglog-case/",
+      "author": "Roman Nozdrin",
+      "source": "MariaDB",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MariaDB",
+        "聚合"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "MySQL 清理闲置索引前应核对全部副本",
+      "summary": "工具取各复制节点闲置索引的交集，默认建议先设为 INVISIBLE；统计重置、遗漏副本和唯一约束仍须人工核对。",
+      "url": "https://www.percona.com/blog/multi-node-unused-index-verification/",
+      "author": "Arunjith Aravindan",
+      "source": "Percona",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "索引",
+        "运维"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "AliSQL 的 DuckDB 引擎分担 WooCommerce 分析",
+      "summary": "示例用 AliSQL 的 DuckDB 引擎作 MySQL 异步副本；部分 SQL 不兼容，金额汇总也出现浮点精度差异。",
+      "url": "https://www.percona.com/blog/woocommerce-analytics-with-duckdb/",
+      "author": "Juan Arruti、Marcos Albe",
+      "source": "Percona",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "分析"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Percona 对三条 MongoDB 版本线做性能对照",
+      "summary": "在同一硬件和负载下，9.0 在 CPU 受限时快约 6%，内存或磁盘受限时约 2%；作者建议先定位自身瓶颈。",
+      "url": "https://www.percona.com/blog/mongodb-9-0-vs-8-0-vs-8-3-a-quick-first-look-at-performance/",
+      "author": "Ivan Groenewold",
+      "source": "Percona",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MongoDB",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "AWS 分析引擎可用外部 Iceberg 目录的临时凭据",
+      "summary": "外部 Iceberg REST 目录可提供限定到 S3 前缀的临时凭据，供 AWS 分析引擎访问表，结合 Lake Formation 授权。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/glue-catalog-vended-credentials-iceberg/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Iceberg",
+        "凭据",
+        "数据湖"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "RDS Oracle 跨区域复制快照可同时复制选项组",
+      "summary": "RDS Oracle 跨区域复制快照时可以同时携带 option group，减少目标区域恢复前的手工配置。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-rds-oracle-cross-region-snapshot-copy-option-group/",
+      "author": "AWS",
+      "source": "AWS What's New",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "RDS",
+        "灾备"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Microsoft 开源云存储分布式加速器 DACS",
+      "summary": "用 Kubernetes 节点的 NVMe/SSD 缓存 Azure Blob 数据，减少模型和数据集重复读取；首版仅适合可信租户共用的集群。",
+      "url": "https://opensource.microsoft.com/blog/2026/11/05/accelerate-data-access-for-inference-and-training-with-the-open-source-distributed-accelerator-for-cloud-storage/",
+      "author": "Maneesh Sah、Vipul Modi",
+      "source": "Microsoft Open Source Blog",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI 基础设施",
+        "对象存储"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "ProvSQL 1.13.1 支持限内存溯源求值",
+      "summary": "",
+      "url": "https://pgxn.org/dist/provsql/1.13.1/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "溯源"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "GUC 逐项谈：scram_iterations",
+      "summary": "",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-scram_iterations/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "GUC",
+        "认证"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "FSx Lustre 智能分层元数据 IOPS 上限增至 19.2 万",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-fsx-for-lustre-intelligent-tiering-16x-higher-metadata-iops/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Lustre",
+        "存储"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Rust 编译器继续压缩构建开销",
+      "summary": "",
+      "url": "https://nnethercote.github.io/2026/11/04/how-to-speed-up-the-rust-compiler-in-november-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust",
+        "编译器"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "硬件密钥替代本地 SSH 私钥的实践",
+      "summary": "",
+      "url": "https://blog.infected.systems/posts/2026-11-03-i-deleted-all-my-ssh-keys/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "SSH",
+        "安全"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Maven 用 Git 提交身份生成可复现构建",
+      "summary": "",
+      "url": "https://blog.melnib.one/2026/11/01/git-commit-based-reproducible-builds-with-maven/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-01",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "可复现构建",
+        "Maven"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Figma 用 PostgreSQL 管理温实例池",
+      "summary": "",
+      "url": "https://www.figma.com/blog/how-figma-manages-sandboxes-at-scale/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "PostgreSQL",
+        "资源池"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Node.js 预告 11 月安全版本",
+      "summary": "",
+      "url": "https://nodejs.org/en/blog/vulnerability/november-2026-security-releases",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Node.js",
+        "安全"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Kernel 披露 API 密钥泄露安全事件",
+      "summary": "",
+      "url": "https://www.kernel.sh/blog/public-notice-of-security-incident-nov-4-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "云基础设施"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "libghostty 1.0 稳定 C ABI 与发行版打包接口",
+      "summary": "",
+      "url": "https://mitchellh.com/writing/libghostty-1-0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "终端",
+        "开发工具"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "OPA 修复空集合迭代被类型检查器拒绝的回归",
+      "summary": "",
+      "url": "https://github.com/open-policy-agent/opa/releases/tag/v1.22.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "策略引擎",
+        "安全"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Trigger.dev 披露环境根密钥泄露并要求轮换凭据",
+      "summary": "",
+      "url": "https://trigger.dev/blog/security-incident-report-nov-2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "凭据"
+      ],
+      "position": 26
+    }
+  ]
+}
