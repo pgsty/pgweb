@@ -1,0 +1,429 @@
+{
+  "date": "2026-11-06",
+  "origin": "PostgreSQL.org、Planet PostgreSQL、PGNexus、项目官方博客与发布说明；检索窗口 2026-10-25 至 2026-11-08 07:29:41 Asia/Shanghai；本日期为整理归档日期",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 撤回 JSON 不可变性判断变更",
+      "summary": "PostgreSQL 撤回一项改变 JSON 不可变性判断的提交，并注明回补至 19。回退不会自动删除在短暂生效期间建立的表达式索引、生成列或分区键，但这些对象在 dump/restore 或 pg_upgrade 时可能无法按新规则重建。受影响的集群需要识别并重新定义相关对象；公告只涉及该补丁窗口，不能泛称所有 PostgreSQL 19 对象都会受影响。",
+      "url": "https://github.com/postgres/postgres/commit/b58a9a97fe783c8ce897fa1a5da23c59234aa6bf",
+      "author": "Andrew Dunstan",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON",
+        "升级",
+        "兼容性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "WalShadow 实测检验复制延迟、数据一致性与恢复",
+      "summary": "数据库工程师 Hidehiko ASAHI 分享 9—10 月私有预览测试，对照 WalShadow 与 ClickPipes 的复制表现。指定负载下，WalShadow 中位延迟约 0.4 秒；作者还以行数、求和和哈希核对数据，并测试改列、重启、扩缩容及目标端暂停后的恢复。跨表事务可能分时可见，大事务会拖延后续提交，初始快照时间也不宜直接用于 TTL。结果反映当时的预览环境和测试配置。",
+      "url": "https://clickhouse.com/blog/a-month-with-walshadow-clickhouse-managed-postgres",
+      "author": "Hidehiko ASAHI",
+      "source": "ClickHouse",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL",
+        "复制",
+        "恢复"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "云上 PostgreSQL 的 NUMA 调优须核对虚拟化拓扑",
+      "summary": "Stormatics 讨论云上 PostgreSQL 的 NUMA 调优边界：虚拟机看到的 NUMA 拓扑不一定等于底层物理布局，单节点视图也不能保证内存始终本地访问。文章把显式大页、容器 CPU/内存亲和性和 CAP_SYS_NICE 权限放在同一排查框架中，并强调绑定只有在工作集和资源确实匹配时才可能受益。云实例的 vCPU、内存和虚拟化方式不同，不能直接照搬某一类机器的收益。",
+      "url": "https://stormatics.tech/blogs/postgresql-numa-and-the-cloud",
+      "author": "Chris Travers",
+      "source": "Stormatics",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "NUMA",
+        "云数据库",
+        "性能"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "VectorChord 分支维护说明披露权限与索引修复",
+      "summary": "VectorChord 维护说明梳理 vchord、vchord_bm25 与 pg_tokenizer 的分支、仓库和文档迁移，并列出采样向量、预热权限、VACUUM 后 TID 可见性、read_stream 对齐和索引构建内存等修复。文章还记录 vchord 1.2.0 的发布背景；升级时应按具体版本说明核对是否需要重建索引，不能把维护文章概括成一次无条件迁移。",
+      "url": "https://vonng.com/en/pg/maintain-vchord/",
+      "author": "Ruohang Feng",
+      "source": "冯若航的博客",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "向量",
+        "索引"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "TDE 恢复必须同时保住密钥文件与密钥版本",
+      "summary": "CYBERTEC 说明其企业版 PostgreSQL TDE 的恢复条件：pgee_key_manager 将数据密钥与包装密码或密钥分离，恢复既需要 tdekey.json，也需要文件引用的秘密版本。重新包装无需重写数据库文件，但 Vault、Conjur 等后端的版本保留策略可能删除仍在使用的秘密；KMIP 服务还须提供真正的加解密能力。迁移密钥后端或调整保留策略前，应演练数据库文件与密钥同时恢复的完整流程。",
+      "url": "https://www.cybertec-postgresql.com/en/one-data-key-many-vaults-key-management-for-postgresql-tde/",
+      "author": "Christoph Berg",
+      "source": "CYBERTEC",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "TDE",
+        "备份恢复",
+        "密钥管理"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "pg_search 0.26.5 补齐索引读取权限检查",
+      "summary": "ParadeDB 发布 pg_search 0.26.5，为独立索引读取路径补上权限检查，同时修正空数组与 NULL 条件下推中的查询语义问题。并行搜索结束时，队列会在销毁并行上下文之前分离，合并过程也会回收不再使用的标识页。这次更新涉及访问边界、结果正确性及资源清理，使用该扩展提供全文搜索的团队可结合实际查询和角色权限做升级回归；发布说明未给这些修复分配漏洞等级。",
+      "url": "https://github.com/paradedb/paradedb/releases/tag/v0.26.5",
+      "author": "ParadeDB 团队",
+      "source": "ParadeDB",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "搜索",
+        "安全"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "file_fdw 修复含 DEFAULT 标记时的 ANALYZE 崩溃",
+      "summary": "采样路径为含 DEFAULT 标记的输入建立表达式上下文，避免 ANALYZE 触发断言或崩溃；提交注明回补 PostgreSQL 16。",
+      "url": "https://github.com/postgres/postgres/commit/72b9498df9a369e747f8d96efb5a6cd33c2451e2",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "file_fdw",
+        "ANALYZE"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "JSON_TABLE 修复排序规则缺失导致的错误比较",
+      "summary": "修复 JSON_TABLE 上下文项和 PASSING 参数缺少排序规则分配的问题，回补 PostgreSQL 17，并加入 bug #19768 回归测试。",
+      "url": "https://github.com/postgres/postgres/commit/e405a46c45bae070364ed143fb9d5a631422e5e4",
+      "author": "Venu Kummari",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON_TABLE",
+        "正确性"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修复单输入聚合含多个排序键时的崩溃",
+      "summary": "Datum 排序路径现在同时检查输入数和排序键数，修复单输入聚合含多个 ORDER BY 键时的崩溃，提交标明回补至 PostgreSQL 14。",
+      "url": "https://github.com/postgres/postgres/commit/edbe7ffdc8afe7f3c12675df6ef614bcd5017b3f",
+      "author": "Ayush Tiwari",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "聚合",
+        "稳定性"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "窗口函数修复 IGNORE NULLS 的极端偏移错误",
+      "summary": "lead/lag 使用 IGNORE NULLS 且偏移为 INT_MIN 时，修复 abs 溢出导致的错误结果，提交标明回补 PostgreSQL 19。",
+      "url": "https://github.com/postgres/postgres/commit/b8d82d178758b6e956ee02af512bbd949c335cc2",
+      "author": "jian he",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "窗口函数",
+        "正确性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "隔离旧主库需要切断既有连接，失败策略仍须明确",
+      "summary": "提升副本或重载 pg_hba.conf 不会终止旧主库已有连接；文章说明如何隔离旧主及隔离失败后继续提升的取舍。",
+      "url": "https://clickhouse.com/blog/fencing-a-postgres-primary-that-might-still-be-alive",
+      "author": "Furkan Sahin",
+      "source": "ClickHouse Engineering Blog",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "故障切换"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "CockroachDB 26.4 引入年度跳级升级路径",
+      "summary": "年度跳级从 26.4 升至下一年 .4 版开始，事务模式逻辑复制可跨两地写入；当前仅部分云集群可用，自托管包随后提供。",
+      "url": "https://www.cockroachlabs.com/blog/cockroachdb-26-4/",
+      "author": "Tara Jana、Biplav Saraf",
+      "source": "Cockroach Labs Blog",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "CockroachDB",
+        "复制"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "AWS 向 MySQL 贡献大事务 binlog 优化",
+      "summary": "BOLT 将大事务临时文件直接转为 binlog，减少持锁复制；Aurora 已使用多年，社区版计划在后续创新版本交付。",
+      "url": "https://aws.amazon.com/blogs/database/aws-contributes-a-large-transaction-binary-log-optimization-to-mysql/",
+      "author": "Xueting Wu、Omar Farhat",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "binlog",
+        "复制"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Supabase CLI 3 默认操作本地数据库",
+      "summary": "CLI 3 的 db push、db pull 和 db dump 默认指向本地栈；操作托管项目需显式加 --remote，自动化部署还要传 --yes。",
+      "url": "https://supabase.com/changelog/supabase-cli-v3",
+      "author": "Supabase",
+      "source": "Supabase Changelog",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Supabase",
+        "部署"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "检查扩展拒绝不受支持的临时表与备库关系",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/1ed083f90d29871b21d5b3d2351accf4a0d9ca81",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "contrib",
+        "恢复"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 撤回尚需完善的 COPY 错误处理修复",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/c07545dfe1a9c996d750b4676c6031334a1a2ef7",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "COPY",
+        "内核"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PG Observability Map 1.0.0 发布",
+      "summary": "",
+      "url": "https://github.com/meob/pg-observability-map/releases/tag/v1.0.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可观测性",
+        "工具"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Thermocline 原型为 MongoDB 拆分冷热副本集",
+      "summary": "",
+      "url": "https://www.percona.com/blog/an-alternative-to-sharding-a-mongodb-replica-set-that-outgrew-its-memory-a-proof-of-concept/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MongoDB",
+        "存储"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Redshift SUPER 单字符串上限增至 1600 万字节",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-redshift-expands-super-to-16-million-bytes/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Redshift",
+        "数据类型"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "OpenSearch 优化引擎接入 agent traces",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-opensearch-service-support-traces/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "OpenSearch",
+        "可观测性"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "git-bug 0.12 改用 SQLite 索引并支持并发进程",
+      "summary": "",
+      "url": "https://github.com/git-bug/git-bug/releases/tag/v0.12.0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-07",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Git",
+        "SQLite"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Better Auth 1.7.16 修复会话与 OAuth 问题",
+      "summary": "",
+      "url": "https://github.com/better-auth/better-auth/releases/tag/v1.7.16",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "认证"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Testcontainers 用真实数据库路径验证数据访问代码",
+      "summary": "",
+      "url": "https://blog.master.dev/data-access-testing-with-testcontainers/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "测试",
+        "PostgreSQL"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "AppArmor 叠加标签可能伪装成数据库网络故障",
+      "summary": "",
+      "url": "https://e-whisper.com/posts/22711/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "AppArmor",
+        "容器"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Keycloak 总结原生 OpenTelemetry 可观测性实践",
+      "summary": "",
+      "url": "https://opentelemetry.io/blog/2026/devex-keycloak/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "OpenTelemetry",
+        "可观测性"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Python 2026 年性能分析工具现状",
+      "summary": "",
+      "url": "https://p403n1x87.github.io/the-state-of-python-profiling-in-2026.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Python",
+        "性能分析"
+      ],
+      "position": 26
+    }
+  ]
+}
