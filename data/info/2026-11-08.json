@@ -1,0 +1,413 @@
+{
+  "date": "2026-11-08",
+  "origin": "PGSQL.CC active primary-source research; PostgreSQL/Planet; PGNexus #311–323; cutoff 2026-11-09 07:33:06 Asia/Shanghai; collection 2026-10-26 through cutoff",
+  "items": [
+    {
+      "tier": 1,
+      "title": "jsonb 的体积取决于文档形状与压缩方式",
+      "summary": "Chris van Eijk 在 PostgreSQL 17 与 18 上比较六类文档，发现 jsonb 并不总比 json 紧凑：实测表体积从缩小约 23% 到增大约 41% 不等，空白、数值布局和 TOAST 压缩都会改变结果。缓存内提取单个键时，jsonb 在所测场景更快，但加载和索引也有成本。频繁读取或修改的大文档字段可考虑独立成列；测试脚本公开，结论限于单机、热缓存和这些数据形状。",
+      "url": "https://now-next.nl/en/insights/postgresql-json-vs-jsonb-measured/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSON",
+        "性能",
+        "存储"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "Polar Proxy 用精确匹配降低读连接池开销",
+      "summary": "Awide 介绍 Polar Proxy 的读取连接池实现：复用连接时同时匹配启动配置代次、用户与数据库、客户端身份和启动选项，避免把状态不同的连接混用。线程本地复用与双候选负载选择减少共享锁访问，容量耗尽时登记等待请求，由归还连接定向唤醒。查询摘要和计数更新改为批量处理，大结果集转发也减少缓冲区复制。这些改动保留原有 LSN 路由及回退规则，把高并发下的锁争用和簿记开销移出逐查询路径。",
+      "url": "https://awide.tech/blog/server-first-reader-pool",
+      "author": "Vadim Iatsenko",
+      "source": "Awide Labs",
+      "source_date": "2026-11-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Safegres 将数据库权限检查接入持续集成",
+      "summary": "Constructive 开源 Safegres，从 PostgreSQL 系统目录和 SQL 语法树检查角色实际能够访问哪些行。工具沿授权、角色继承、视图和函数追踪访问路径，将 34 项安全检查与 11 项性能检查分别评分，避免把策略正确性和执行成本混在一起。审计以只读方式运行，可在持续集成中对每次数据库变更设定门槛，并相对基线报告新增问题。它提供多种应用框架预设，适合在迁移和权限规则改动时加入自动核查。",
+      "url": "https://constructive.io/blog/introducing-safegres",
+      "author": "Dan Lynch",
+      "source": "Constructive",
+      "source_date": "2026-11-05",
+      "image": "https://constructive.io/posts/safegres/safegres/og_image.jpg",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "权限",
+        "工具"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Databasus 3.65 收紧跨工作区访问与密钥使用",
+      "summary": "数据库备份工具 Databasus 3.65 在模块重整中修复多项权限边界问题：阻止成员凭已知标识接管其他工作区的数据库，并限制利用已保存密钥测试未保存连接设置的权限，避免只读用户将存储凭据发送到自选主机。删除存储时，数据库约束会阻止级联移除仍被备份引用的记录；恢复与删除流程也增加事务及锁协调。这次更新涉及数据迁移和备份管理接口，部署前需要验证已有配置、权限、恢复流程与删除行为。",
+      "url": "https://github.com/databasus/databasus/releases/tag/v3.65.0",
+      "author": "Databasus 项目",
+      "source": "Databasus",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "安全",
+        "权限"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Dolt 2.7 更新合并冲突存储格式",
+      "summary": "Dolt 2.7 调整模式合并冲突的持久化格式，旧版本无法读取新写入的相关冲突记录。新实现允许两侧分支执行相同主键变更后继续合并，并保存重新映射的共同祖先，使冲突状态能够跨复制、推送和垃圾回收保留。同时修正冲突预览混用三方模式的问题，防止垃圾回收丢掉暂停变基所需的提交及临时表。对长期分支和多客户端协作，这既是结果正确性修复，也是需要协调读写客户端版本的兼容性变化。",
+      "url": "https://github.com/dolthub/dolt/releases/tag/v2.7.0",
+      "author": "DoltHub",
+      "source": "Dolt",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "版本管理",
+        "数据完整性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "AlloyDB Express 预览支持空闲暂停计算",
+      "summary": "Google Cloud 推出 AlloyDB Express 预览，面向开发、测试和原型场景提供 PostgreSQL 数据库。厂商称实例可在两秒内创建，空闲十五分钟后暂停计算，新查询到来时自动唤醒；数据存储仍独立保留和计费。项目可沿用组织的身份与网络策略，并在需求增长时升级为 AlloyDB，保留数据、模式、用户和连接串，再获得高可用、只读副本与灾难恢复能力。该配置仍处预览阶段，应按测试负载评估唤醒和升级行为。",
+      "url": "https://cloud.google.com/blog/products/databases/introducing-alloydb-express-for-rapid-testing-and-prototyping",
+      "author": "Ravi Murthy、Gopal Ashok",
+      "source": "Google Cloud",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "PostgreSQL",
+        "无服务器"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "表访问方法实验补齐插入与全表扫描",
+      "summary": "共享内存中保存堆元组并用偏移构造 TID；目前缺少更新、删除及快照语义，属于存储接口实验。",
+      "url": "https://dbmsdrops.kindahl.net/2026/11/02/building-a-table-access-method-part-7/",
+      "author": "Mats Kindahl",
+      "source": "DBMS Drops",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储",
+        "内核"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_mooncake 维护分支适配 pg_duckdb 1.2",
+      "summary": "分支升至 0.3，适配 pg_duckdb 1.2 与 pgrx 0.19.3，并恢复原项目文档和工程文章。",
+      "url": "https://vonng.com/en/pg/fork-pg-mooncake/",
+      "author": "冯若航",
+      "source": "Vonng",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "列存"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "pg_tre 4.6.2 修复位图读取游标的错误判断",
+      "summary": "更新 sparsemap，验证缓存偏移后再继续查找；磁盘格式不变，发布说明明确无需重建索引。",
+      "url": "https://pgxn.org/dist/pg_tre/4.6.2/CHANGELOG.html",
+      "author": "Greg Burd",
+      "source": "PGXN",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "正确性"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "十三项实测展示索引、内存与维护的取舍",
+      "summary": "作者在 PostgreSQL 18.6 上公开脚本与原始结果：覆盖部分索引、BRIN、覆盖索引和排序内存，数字限于单机测试。",
+      "url": "https://explainmeasured.com/posts/thirteen-measurements-pg18/",
+      "author": "Hollis Varden",
+      "source": "Explain Measured",
+      "source_date": "2026-11-08",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "索引"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "AlloyDB 预览直接联查 Iceberg 与业务表",
+      "summary": "可查询云存储中的 Iceberg 表并与实时业务数据联接；独立的同步能力与湖仓联邦查询同时转为正式可用。",
+      "url": "https://cloud.google.com/blog/products/databases/direct-iceberg-access-in-alloydb",
+      "author": "Nikhil Gaekwad、Bala Narasimhan",
+      "source": "Google Cloud",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "湖仓",
+        "PostgreSQL"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 研究后量子匿名凭证的协议成本",
+      "summary": "候选方案保留不可关联性并隐藏签发者，但通信量增加，安全证明和密码分析仍待完善，尚非部署完成。",
+      "url": "https://blog.cloudflare.com/vole-mole/",
+      "author": "Cloudflare",
+      "source": "Cloudflare",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "密码学"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "查询代价模型迁移硬件需按模板校准",
+      "summary": "预印本在 PostgreSQL 上复测固定执行计划；模板校正改善已测模板，未测模板和复杂工作负载仍存在明显局限。",
+      "url": "https://arxiv.org/abs/2611.05892",
+      "author": "Krish Patel",
+      "source": "arXiv",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据库",
+        "性能"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "代码代理许可文件可能把数据库密码带入仓库",
+      "summary": "Apiiro 复现含密钥命令被写入许可白名单后随 Git 提交泄露；已泄露凭据应先轮换，再清理文件和历史。",
+      "url": "https://apiiro.com/blog/coding-agents-leaking-secrets-github-dont-ask-again",
+      "author": "Apiiro",
+      "source": "Apiiro",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "安全",
+        "开发工具"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pig 1.10.4 修正分类别名的目标 PG 版本选择",
+      "summary": "",
+      "url": "https://pig.pgsty.com/release/pig-1.10.4/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工具"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Neon 托管认证新增 OAuth 提供方能力",
+      "summary": "",
+      "url": "https://neon.com/blog/managed-better-auth-oauth-provider-mcp",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "认证"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "RDS Oracle 与 SQL Server 附加卷支持自动扩容",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-rds-oracle-sqlserver-autoscaling-additional-storage-volumes/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据库"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "IAM Roles Anywhere 可自动刷新证书吊销列表",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/iam-roles-anywhere-cdp/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Security Hub 汇总跨账户软件物料清单",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/security-hub-sbom-inventory/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "EC2 新指标标出仍允许 IMDSv1 的实例",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/ec2-imdsv1enabled-cloudwatch-metric/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "ECS 托管守护进程可采集容器 JSON 文件日志",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-ecs-managed-instances-json-file-log-driver/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "日志"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 为自管 Kafka 增加共享分区队列消费",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-lambda-queue-kafka-esm/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "消息队列"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Inspector 可直接扫描 AMI，无需启动实例",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/ec2-amis-scanned-through-inspector/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "ECS 托管实例支持跨实例与 Spot 容量整合",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/ecs-managed-instances-consolidation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容器"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 托管实例支持 SOCI 镜像按需加载",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/aws-lambda-seekable-oci-soci/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容器"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Cloudflare Zero Wire 汇集漏洞影响与修复证据",
+      "summary": "",
+      "url": "https://blog.cloudflare.com/zero-wire/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 26
+    }
+  ]
+}
