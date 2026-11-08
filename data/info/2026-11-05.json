@@ -1,0 +1,431 @@
+{
+  "date": "2026-11-05",
+  "origin": "PostgreSQL.org、Planet PostgreSQL、PGNexus、项目官方博客与发布说明；检索窗口 2026-10-25 至 2026-11-08 07:29:41 Asia/Shanghai；本日期为整理归档日期",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复增量备份遗留可见性位",
+      "summary": "PostgreSQL 合入增量备份修复：校验和与 wal_log_hints 均关闭时，VACUUM 截断表可能使备份沿用最后一个可见性映射页的旧内容。恢复后的表再次增长，错误位会让 VACUUM 漏冻结，甚至让仅索引扫描返回已删除行。补丁在汇总截断 WAL 时标记该页发生变化，提交注明回补至 17。已有 WAL summary 和旧备份不会自动修复，更新后须从健康服务器重新做全量备份。",
+      "url": "https://github.com/postgres/postgres/commit/b5545d3f5f924289051eb8221c88e72563771928",
+      "author": "Ke、Fujii Masao、Shihao Zhong",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "数据完整性",
+        "内核"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "UUID 随机主键的代价体现在缓存与 WAL",
+      "summary": "PostgresAI 在 PostgreSQL 18.6 上用受控内存、16 个客户端和单行事务比较 UUIDv4 与有序键。随着表增长到一亿行，随机 UUID 的插入速率约为有序方案的 0.62–0.69，每行 WAL 约多 1.5–1.9 倍；作者将差异归因于 B-tree 叶页工作集更分散，以及 full-page image 写放大。文章还讨论 UUIDv4 与 UUIDv7 混用的迁移边界，但这部分不是同一组基准的结论。",
+      "url": "https://postgres.ai/blog/20261105-uuidv4-vs-uuidv7",
+      "author": "Nikolay Samokhvalov",
+      "source": "PostgresAI",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "UUID",
+        "索引",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pgEdge 原地升级实测揭示复制原点重建细节",
+      "summary": "pgEdge 在三写节点 Spock 集群中，用 pg_upgrade --link 将一个节点从 PostgreSQL 17.10 升至 18.6，其余节点继续接收写入。实测发现，Spock 的复制原点不会随升级迁移，须按发布端确认的 LSN 重建；Patroni 也要处理系统标识变化并重建备用节点。新旧集群还需匹配校验和和扩展设置。文章补充了原地升级特有的恢复步骤，单个节点在升级期间仍会停机。",
+      "url": "https://www.pgedge.com/blog/zero-downtime-in-place-major-postgresql-upgrades-on-a-distributed-postgresql-cluster",
+      "author": "Ahsan Hadi、Susan Douglas",
+      "source": "pgEdge",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "高可用",
+        "逻辑复制"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Neon 披露分层缓存的生产读分布",
+      "summary": "Neon 公开 Lakebase 的生产样本：约 99.46% 的页访问由计算节点缓存提供，约 0.54% 由 pageserver 的本地 NVMe 提供，对象存储平均每秒约 39 次请求。读取缺层时，pageserver 会把 image layer 与 WAL delta layer 重建为指定 LSN 的页面。这个比例是厂商样本，不是所有查询的延迟或 SLA；旧时间点分支、恢复和长期休眠唤醒仍可能触发冷读。",
+      "url": "https://neon.com/blog/lakebase-postgres-reads-never-touch-object-storage",
+      "author": "Carlota Soto",
+      "source": "Neon Engineering Blog",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PostgreSQL",
+        "缓存",
+        "云数据库"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 介绍新的 Git 存储架构",
+      "summary": "GitHub 披露新 Git 存储架构的写入协议：先持久化对象，再由 Ref-CAS 原子提交引用和包清单，避免读者看到尚未落稳的数据。对象压缩交给独立集群，减少维护任务与在线写入争用资源。这篇文章补充此前架构介绍未展开的提交顺序和后台维护路径，说明如何在扩大存储规模时守住引用一致性。新系统仍处私有预览，文中扩展性数据来自内部验证。",
+      "url": "https://github.blog/engineering/architecture-optimization/inside-githubs-new-git-storage-architecture/",
+      "author": "Karthik Raman、Brian Celenza",
+      "source": "GitHub",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Git",
+        "存储"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 将 DNS 构建内存从 79 GiB 降到 12 GiB",
+      "summary": "Cloudflare 重做权威 DNS 构建流水线，按变更类型定向构建、合并同区域任务，并把 Kafka 确认与副本检查拆开。其内部数据中峰值工作内存从 79 GiB 降到 12 GiB，变更到构建完成的中位时间从约 7.7 秒降到 3.3 秒。这里的数字描述构建流程，不是全球 DNS 传播延迟；收益依赖其分区、队列和副本架构。",
+      "url": "https://blog.cloudflare.com/dns-targeted-zone-builds/",
+      "author": "Alex Fattouche",
+      "source": "Cloudflare",
+      "source_date": "2026-11-02",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "分布式系统",
+        "性能"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 在认证时重查 OAuth 验证器许可",
+      "summary": "移除 oauth_validator_libraries 后，认证前会再次检查许可列表；错误写入服务器日志，并回补 PostgreSQL 18。",
+      "url": "https://github.com/postgres/postgres/commit/e352ac8c5c90ed6ce792f044c22145578542a330",
+      "author": "Zsolt Parragi",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "OAuth",
+        "认证",
+        "安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修复 SQL/JSON 跨行状态残留",
+      "summary": "清除 SQL/JSON 跨行求值残留的 NULL 与兜底结果，避免前一行污染后续行；提交注明回补至 PG17。",
+      "url": "https://github.com/postgres/postgres/commit/627c4df3b73ae00a0dfd08f4216514fb9ea44b5d",
+      "author": "Srinath Reddy Sadipiralla",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/JSON",
+        "正确性"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "逻辑订阅重复启用两阶段提交不再重置状态",
+      "summary": "重复设置 two_phase=on 不再把已启用订阅退回 pending，复制槽属性也必须与订阅配置一致。",
+      "url": "https://github.com/postgres/postgres/commit/fc1900915b140aaed33fdcccdf85eec1a0035755",
+      "author": "Zhijie Hou",
+      "source": "PostgreSQL 提交",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "两阶段提交"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Tessera 1.3 扩展连接聚合与查询输入",
+      "summary": "新增去重计数、平均值和多列键，输入可包含 CTE、分区表及 RLS，并扩展分组后过滤与排序裁剪。",
+      "url": "https://github.com/GyuyeongKim/Tessera-public/releases/tag/v1.3.0",
+      "author": "Gyuyeong Kim",
+      "source": "Tessera",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "聚合"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "ReinDB 为 PostgreSQL 提供只读性能监控",
+      "summary": "ReinDB 只用只读账户读取 pg_stat_statements，按小时学习基线并给出执行计划证据和可撤销修复脚本；首个数据库免费。",
+      "url": "https://pgsql.cc/about/news/reindbpostgresql-3435/",
+      "author": "Bandlei",
+      "source": "PostgreSQL 新闻",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "DataGrip 借 DuckDB 表函数实现跨数据库查询",
+      "summary": "自定义表函数桥接 DataGrip 既有连接，让 DuckDB 联接多个数据库的查询结果；文件源仍属后续计划。",
+      "url": "https://duckdb.org/2026/11/05/jetbrains-datagrip",
+      "author": "Ilia Epelbaum、Geertjan Wielenga、Tim Cox",
+      "source": "DuckDB",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "DuckDB",
+        "DataGrip",
+        "查询"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "EDB 收购 Altinity，整合事务与实时分析路线",
+      "summary": "交易完成后计划共享 Iceberg 目录和访问控制，集成能力拟在第四季度陆续推出；公告中的路线图仍待具体产品落地。",
+      "url": "https://www.enterprisedb.com/press-releases/edb-acquires-altinity-bring-together-two-leading-open-source-databases-advancing-its",
+      "author": "EnterpriseDB",
+      "source": "EDB",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "PostgreSQL",
+        "ClickHouse",
+        "云数据库"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "DynamoDB 可从 S3 批量写入已有表",
+      "summary": "异步任务可向在线表导入 S3 数据，并输出失败及跳过项目报告；取消操作不会回滚已经完成的写入。",
+      "url": "https://aws.amazon.com/blogs/database/introducing-bulk-put-items-for-amazon-dynamodb-load-data-from-amazon-s3-into-existing-tables-at-scale/",
+      "author": "Lee Hannigan、Anugrah Prakash",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DynamoDB",
+        "S3",
+        "数据导入"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pg_upgrade 跳过删除中断留下的无效数据库",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/37a7664a9204a7fafa04553e906aa0ae9f4a91c3",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "pg_upgrade"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "升级后需把 pg_squeeze 加入输出插件许可列表",
+      "summary": "",
+      "url": "https://www.cybertec-postgresql.com/en/updating-postgresql-with-pg_squeeze-installed/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "扩展"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "RHEL 小版本升级前应留存可回退的 RPM",
+      "summary": "",
+      "url": "https://stormatics.tech/blogs/postgresql-minor-version-upgrade-rhel-9",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "运维"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "CloudNativePG 修正 WAL 文件指标匹配",
+      "summary": "",
+      "url": "https://github.com/cloudnative-pg/cloudnative-pg/commit/8f16a5406e2255e940ce6483de4672acb79bfab5",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "CloudNativePG",
+        "监控"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "pgBackRest 改善错误密钥下的清单报错",
+      "summary": "",
+      "url": "https://github.com/pgbackrest/pgbackrest/commit/44e8804f10f3ddb8899585d76f9eae02aaea0731",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "pgBackRest",
+        "备份"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "myDBR 7.7 为 PostgreSQL 带来 Web 报表支持",
+      "summary": "",
+      "url": "https://pgsql.cc/about/news/mydbr-77-postgresql-web-3436/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "报表",
+        "工具"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "逻辑校验和 2.1.0 消除服务器字节序差异",
+      "summary": "",
+      "url": "https://pgxn.org/dist/pg_integrity_checksums/2.1.0/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-31",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "校验"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "ClickPipes 的 MongoDB CDC 正式可用",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/mongodb-cdc-connector-clickpipes-ga",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MongoDB",
+        "CDC"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "S3 Tables 新增 Hive 到 Iceberg 托管迁移",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-s3-tables-managed-migration-hive-to-iceberg/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "S3",
+        "Iceberg"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "RDS Oracle 可直接接入自管 AD 做 Kerberos 认证",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/rds-oracle-kerberos-self-managed-ad/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "RDS",
+        "Kerberos"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "DataSync 增强模式可用 OIDC 访问跨云存储",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/datasync-enhanced-oidc-google-azure/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "OIDC",
+        "跨云"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "控制器用检查点缩短重启恢复时间",
+      "summary": "",
+      "url": "https://developer.confluent.io/blog/controller-checkpointing/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "控制器"
+      ],
+      "position": 26
+    }
+  ]
+}
