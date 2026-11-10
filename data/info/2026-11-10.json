@@ -1,0 +1,392 @@
+{
+  "date": "2026-11-10",
+  "origin": "PGSQL.CC 独立采编；PostgreSQL.org、Planet、PGNexus #313–325、项目原文与官方发布；截稿 2026-11-11 07:34:17 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "B-tree 的空闲空间只能被对应键区间复用",
+      "summary": "删除大量数据后，索引文件仍可能保持原来的大小。Radim Marek 用 PostgreSQL 18.6 的页面实测展示：均匀删除 80% 的行并执行 VACUUM 后，叶页密度从约 90% 降到 18%，页数却没有减少。叶页只接收落在自身键区间内的新条目，递增键会继续扩展最右侧，无法填满左侧空洞。完全腾空的页面可脱离树并等待复用，但不会缩短文件；回收磁盘空间仍需重建，并为新索引与排序预留空间。",
+      "url": "https://boringsql.com/posts/index-storage-and-bloat/",
+      "author": "Radim Marek",
+      "source": "boringSQL",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "存储",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "表访问方法实验处理跨会话缓存失效",
+      "summary": "自定义表访问方法把共享内存映射缓存在各个后端后，另一个会话删除或截断表，并不意味着旧映射会立即释放。Mats Kindahl 的实验通过关系缓存失效回调识别变化，先移除缓存项并记录失效句柄，再在事务结束时解除映射，避免正在扫描的代码访问已释放内存。当前事务新建的内存区域和被再次使用的映射需要单独保护。这一实现补齐了此前插入与扫描实验中的资源生命周期管理，也展示了扩展如何借用 PostgreSQL 的失效通知机制。",
+      "url": "https://dbmsdrops.kindahl.net/2026/11/10/building-a-table-access-method-part-8/",
+      "author": "Mats Kindahl",
+      "source": "DBMS Drops",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "内存",
+        "开发"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "ElastiCache 无服务器版加入混合检索与聚合",
+      "summary": "AWS 为 ElastiCache Serverless 的 Valkey 9 增加向量、全文和混合检索，并支持在服务器端聚合结果。应用可以在同一查询中组合检索方式，按需要调整召回率，不必另建搜索服务来复制实时数据。厂商称，特定负载可达到微秒级延迟与最高 99% 的向量召回率，写入完成后即可很快检索到更新。现有缓存需升级至 Valkey 9 才能使用；该功能面向流量波动明显、同时关心实时性与响应时间的检索场景。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-elasticache-serverless-search-aggregations/",
+      "author": "Amazon Web Services",
+      "source": "AWS",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Valkey",
+        "搜索",
+        "云数据库"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 公测全托管可观测服务",
+      "summary": "ClickHouse 推出全托管可观测服务公开测试版，提供托管 OTLP 端点，接收日志、指标与追踪数据，并负责摄取、模式和存储管理。摄取与查询使用独立计算资源，团队无需预先为排障查询配置容量。新服务以摄取的数据量或指标点数计费，公测阶段包含 30 天保留期；原 Managed ClickStack 继续作为可自行配置资源的选项。排障人员仍可使用 ClickStack 界面与 SQL 关联信号，开源 ClickStack 也继续维护。",
+      "url": "https://clickhouse.com/blog/announcing-clickhouse-observability",
+      "author": "Mike Shi",
+      "source": "ClickHouse",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "可观测性",
+        "ClickHouse",
+        "公测"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "OpenSearch 支持克隆验证与版本升级回退",
+      "summary": "托管搜索集群升级前，团队现在可以先在独立副本上验证新版本。AWS 的克隆式升级会复制现有集群数据，由原集群继续承载业务，并允许把相同查询发往两个版本，结合 CloudWatch 指标比较性能。确认后再切换，保留旧版本的时间由用户选择，保留期内支持回退。功能适用于 OpenSearch 1.1 及以上或 Elasticsearch 7.10，部分新区域暂未提供。它把升级验证与正式切换分开，便于提前发现查询兼容性和性能回退。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-opensearch-service/upgrades/",
+      "author": "Amazon Web Services",
+      "source": "AWS",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "OpenSearch",
+        "升级",
+        "可靠性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "GitHub 企业服务器修复严重文件读取与代码执行漏洞",
+      "summary": "GitHub Enterprise Server 3.22.4 更新 Ruby Active Storage，修复被列为严重级别的文件读取与远程代码执行漏洞 CVE-2026-66066，同时纳入六项 Git 安全修复及 Brotli 修复。部分镜像中的 Go、OpenSSL、SQLite 等依赖也已更新，但公告明确说明仍有组件需要后续版本处理。升级会移除自定义防火墙规则，维护者须在完成后重新应用。",
+      "url": "https://docs.github.com/en/enterprise-server@3.22/admin/release-notes#3.22.4",
+      "author": "GitHub",
+      "source": "GitHub",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "Git",
+        "运维"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Supabase 接入 Expo 的环境隔离与构建检查",
+      "summary": "EAS CLI 可为预览环境创建独立项目，并把 RLS 与索引检查结果显示在构建记录旁。",
+      "url": "https://supabase.com/blog/set-up-supabase-for-every-expo-environment-in-one-command",
+      "author": "",
+      "source": "Supabase",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发",
+        "权限"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Neon CLI 可创建限定范围的数据库角色",
+      "summary": "新增只读与读写访问选项，可按数据库和模式限定授权；未指定访问选项时仍创建管理员角色。",
+      "url": "https://neon.com/docs/changelog/2026-11-06",
+      "author": "",
+      "source": "Neon",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限",
+        "工具"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "TiDB 拆解向量写入到索引查询的路径",
+      "summary": "新行先进入 TiFlash 的 Delta 层，仍可检索；合并到 Stable 层后才获得 HNSW 索引加速。",
+      "url": "https://www.pingcap.com/blog/integrating-vector-search-into-tidb-for-ai-applications/",
+      "author": "",
+      "source": "PingCAP",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量",
+        "存储"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 私有源站应用防护正式可用",
+      "summary": "从六月封闭测试转为正式可用，代理 DNS 可经已有私网连接回源；仍需核对授权与返回路由。",
+      "url": "https://blog.cloudflare.com/private-origins-public-to-private/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络",
+        "安全"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Lima 2.3 扩展 Windows 与 Linux 虚拟机能力",
+      "summary": "新增实验性 Windows HCS 驱动与 Linux 桥接网络；HCS 当前只支持 plain 模式，且只能运行一个实例。",
+      "url": "https://www.cncf.io/blog/2026/11/08/lima-v2-3-native-on-windows-vmnet-on-linux-and-menu-tui/",
+      "author": "",
+      "source": "CNCF",
+      "source_date": "2026-11-08",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "虚拟化",
+        "开发"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "kpt 1.0 稳定 Kubernetes 配置包工具链",
+      "summary": "项目统一 kpt 与 Porch 的治理，以 KRM 数据操作和校验管理配置包，并支持规模化 GitOps 编排。",
+      "url": "https://www.cncf.io/blog/2026/11/05/kpt-v1-0-0-is-released/",
+      "author": "",
+      "source": "CNCF",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "GitOps"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "GitHub 公测工作流日志中的密钥扫描",
+      "summary": "仅扫描启用后完成的运行，不回填旧日志；公测告警不发通知，需主动查看仓库告警列表。",
+      "url": "https://github.blog/changelog/2026-11-09-secret-scanning-detects-secrets-in-github-actions-workflow-logs/",
+      "author": "",
+      "source": "GitHub",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "CI"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Hyperlight 用微型虚拟机运行未修改的 Linux 程序",
+      "summary": "Unikraft 客体可从预热快照恢复，默认无网络与主机文件权限；ClickHouse Python UDF 集成也采用此隔离方式。",
+      "url": "https://www.cncf.io/blog/2026/11/09/run-linux-applications-in-hypervisor-isolated-micro-vms-with-hyperlight/",
+      "author": "",
+      "source": "CNCF",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "虚拟化",
+        "隔离"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 修复新增哈希分区时的整数回绕",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/9f191dce61ebf0ae77bf251b6383915859d7520b",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "RDS 预览 MySQL 26.10 的读视图复用与清理告警",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/rds-mysql-26-10-preview-environment/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "FOSDEM 数据库生态分会征稿至 11 月 29 日",
+      "summary": "",
+      "url": "https://mariadb.org/fosdem-2027-the-m-ecosystem-devroom-call-for-participation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "MWAA 的 Airflow 3.3.1 预装 DuckDB 操作器",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-mwaa-supports-duckdb-operators/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "S3 Tables 新增表桶请求访问日志",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-s3-tables-server-access-logging/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "S3 Access Grants 可一次列出跨账户授权",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-s3-access-grants-list-across-regions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch PromQL 告警可触发分步扩缩容",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-cloudwatch-alarms-autoscaling-group-actions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch Logs 支持账户级日志保留策略",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-cloudwatch-log-retention/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 允许同一 VPC 关联多个配置档案",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/route-53-profiles-multiple-per-vpc/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Parameter Store 新增 13 种配置值校验类型",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-ssm-parameter-store-allows-organization-validation-with-new-data-types/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "EKS 的 Argo CD 能力接入部署通知",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-eks-argo-cd-notifications/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "CodeQL 打包时剔除符号链接指向包外的文件",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-11-04-codeql-2-27-4-improves-accuracy-and-query-metadata/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}
