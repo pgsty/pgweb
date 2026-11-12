@@ -83,8 +83,8 @@ def releases(rows, root):
     for version in result:
         major = version['major']
         source = sampled[major]
-        # Current support is distinct from the source build (e.g. beta 4).
-        version.update(label=source.get('label') or major, source=source,
+        # Navigation follows the current manual; each source retains its own build.
+        version.update(source=source,
                        url=root + '?v=' + major,
                        tone={'devel': 'dev', 'preview': 'beta', 'supported': 'live',
                              'end-of-life': 'eol'}[version['support_status']])

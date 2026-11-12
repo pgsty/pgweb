@@ -13,7 +13,7 @@
   <p class="wiki-badges">
     <span class="wiki-badge guc-badge guc-badge--type">{{ vartype_label }}</span>
     <span class="wiki-badge guc-badge" title="{{ context_note }}">{{ context_label }}</span>
-    <span class="wiki-badge guc-badge">引入 {{ parameter.first_version }}{% if parameter.baseline %}（基线）{% endif %}</span>
+    <span class="wiki-badge guc-badge">{% if snapshot.minimum_minor %}本分支自 {{ snapshot.minimum_minor }} 起{% else %}引入 {{ parameter.first_version }}{% if parameter.baseline %}（基线）{% endif %}{% endif %}</span>
     {% for cell in ribbon %}{% if cell.state == 'removed' %}<span class="wiki-badge wiki-badge--removed">于 {{ cell.major }} 移除</span>{% endif %}{% endfor %}
     {% with newest=versions|last %}{% if parameter.last_version == newest.major %}<span class="wiki-badge guc-badge">现存至 {{ newest.label }}</span>{% endif %}{% endwith %}
     <span class="wiki-badge guc-badge">{{ parameter.default_changed_in|length }} 次默认值变更</span>
@@ -42,7 +42,7 @@
   <nav class="guc-ribbon">
     <ol class="guc-ribbon__track">
       {% for cell in ribbon %}
-      <li class="guc-ribbon__item">{% if cell.url %}<a class="guc-pill guc-pill--{{ cell.state }}{% if cell.current %} is-current{% endif %}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" href="{{ cell.url }}"{% if cell.current %} aria-current="page"{% endif %} title="PostgreSQL {{ cell.label }} · {% if cell.state == 'added' %}本版新增{% elif cell.state == 'changed' %}本版有实质变化{% else %}存在{% endif %}{% if cell.current %} · 当前查看{% endif %}">{% if cell.state == 'added' %}<span class="guc-pill__sign" aria-hidden="true">+</span>{% endif %}{{ cell.major }}</a>{% else %}<span class="guc-pill guc-pill--{{ cell.state }}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" title="PostgreSQL {{ cell.label }} · {% if cell.state == 'removed' %}已移除{% else %}不存在{% endif %}">{% if cell.state == 'removed' %}<span class="guc-pill__sign" aria-hidden="true">−</span>{% endif %}{{ cell.major }}</span>{% endif %}</li>
+      <li class="guc-ribbon__item">{% if cell.url %}<a class="guc-pill guc-pill--{{ cell.state }}{% if cell.current %} is-current{% endif %}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" href="{{ cell.url }}"{% if cell.current %} aria-current="page"{% endif %} title="PostgreSQL {{ cell.label }} · {% if cell.state == 'added' %}本版新增{% elif cell.state == 'changed' %}本版有实质变化{% elif cell.minimum_minor %}自 {{ cell.minimum_minor }} 起收录{% else %}存在{% endif %}{% if cell.current %} · 当前查看{% endif %}">{% if cell.state == 'added' %}<span class="guc-pill__sign" aria-hidden="true">+</span>{% endif %}{{ cell.major }}</a>{% else %}<span class="guc-pill guc-pill--{{ cell.state }}{% if cell.preview %} is-preview{% elif cell.devel %} is-devel{% endif %}" title="PostgreSQL {{ cell.label }} · {% if cell.state == 'removed' %}已移除{% else %}本次快照未收录{% endif %}">{% if cell.state == 'removed' %}<span class="guc-pill__sign" aria-hidden="true">−</span>{% endif %}{{ cell.major }}</span>{% endif %}</li>
       {% endfor %}
     </ol>
   </nav>
@@ -67,7 +67,7 @@
   </div>
   <p class="guc-sectionlead">{% if default_track|length == 1 %}{% if default_track.0.from == default_track.0.to %}仅记录了 PostgreSQL {{ default_track.0.from }} 的默认值。{% else %}已记录的默认值在 PostgreSQL {{ default_track.0.from }}–{{ default_track.0.to }} 之间未变。{% endif %}{% else %}默认值一共换过 {{ default_track|length }} 档，每段的宽度按它覆盖的大版本数伸展，深色的一段是当前查看的 PostgreSQL {{ version.label }}。{% endif %}带单位的取值换算成了可读形式，原始的 <code class="guc-mono">boot_val</code> 与单位写在悬浮提示里。</p>
   {% else %}
-  <p class="wiki-empty">PostgreSQL {{ version.label }} 尚无 pg_settings 实测，默认值未采集。</p>
+  <p class="wiki-empty">{% if snapshot.runtime_verified == False %}同版源码中的默认值为 <code>{{ snapshot.boot_val }}</code>；尚无 pg_settings 实测历史。{% else %}PostgreSQL {{ version.label }} 尚无 pg_settings 实测，默认值未采集。{% endif %}</p>
   {% endif %}
 </section>
 

@@ -10,7 +10,7 @@
 {%block title%}{{ release_title }}{%endblock%}
 
 {% block contents %}
-<div id="release-notes" class="row">
+<div id="release-notes" class="row no-gutters">
     <div class="col-md-10">
       <section>
         <h1>{{ release_title }} <i class="far fa-file-alt"></i></h1>
@@ -18,7 +18,7 @@
       <div id="docContent">
         {{ release_note.content|safe }}
       </div>
-      <div class="row">
+      <div class="row no-gutters">
         <div class="col-md-3">
 	  {%if previous_minor_release is not None %}
             <a href="/docs/release/{{ major_version }}.{{ previous_minor_release|release_notes_pg_minor_version:major_version }}/">
