@@ -177,8 +177,13 @@
 {% endif %}
 
 <footer class="wiki-entry__foot">
+  {% if code.source_rev|slice:":9" == "sqlstate-" %}
+  <p>本条目的定义、报文与版本边界依据固定的 PostgreSQL 发布源码核对，具体提交与校验值见<a href="#sources">来源</a>。最后更新 {{ code.imported_at|date:"Y-m-d" }}。</p>
+  <p>条目内容或展示有误请提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
+  {% else %}
   <p>数据来自 <a href="https://err.pg.center/{{ code.sqlstate|lower }}/" target="_blank" rel="noopener">err.pg.center</a>（仓库 <a href="https://github.com/pgsty/err.pg.center" target="_blank" rel="noopener">pgsty/err.pg.center</a>），最后同步 {{ code.imported_at|date:"Y-m-d" }}。</p>
   <p>词条内容有误请提交到 <a href="https://github.com/pgsty/err.pg.center/issues" target="_blank" rel="noopener">数据仓库</a>；本站渲染或译文的问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
+  {% endif %}
 </footer>
 
 </article>

@@ -1,0 +1,90 @@
+{
+  "sqlstate": "22P07",
+  "condition": "datum_version_mismatch",
+  "macro": "ERRCODE_DATUM_VERSION_MISMATCH",
+  "class_code": "22",
+  "publication_date": "2026-11-12",
+  "source_path": "src/backend/utils/errcodes.txt",
+  "releases": {
+    "14": {
+      "commit": "9adcf5f8847e0f485a390b1d3ea40688068d71bd",
+      "count": 260,
+      "line": 204,
+      "path": "src/backend/utils/errcodes.txt",
+      "previous_release": "14.24",
+      "previous_sha256": "c3c967fa20577f7ded946cb99e1a4706b85bb2476fd32d7e4a133c971a603552",
+      "release": "14.25",
+      "sha256": "d8a01ebc162a874b800db97e3677f642e6dd6a5161d4a7111821ddc38fd4f555",
+      "tag": "REL_14_25",
+      "archive_sha256": "09af980eb3a5d0a8ad7a34b95031b1988bbcd430c87700a62d6234c0ed97ae4c",
+      "archive_url": "https://ftp.postgresql.org/pub/source/v14.25/postgresql-14.25.tar.bz2"
+    },
+    "15": {
+      "commit": "6a84c5137e820f46f0123276f546eec5b9a56e70",
+      "count": 261,
+      "line": 204,
+      "path": "src/backend/utils/errcodes.txt",
+      "previous_release": "15.19",
+      "previous_sha256": "a34b5fccd8a27c92817314dd942b79e76896cd1d9a8d4be21c81b02227850b4a",
+      "release": "15.20",
+      "sha256": "0000d73a83aa1907cf1fd1262cd781b32086720619892361e35bbc6bfa2a7a83",
+      "tag": "REL_15_20",
+      "archive_sha256": "30e65cbbb771a39b553ed2df7e65622e65647aed55dbc19bd0fe853ff0a08442",
+      "archive_url": "https://ftp.postgresql.org/pub/source/v15.20/postgresql-15.20.tar.bz2"
+    },
+    "16": {
+      "commit": "c0534eb02de050ac1035ad7b3ad7c3f02980f153",
+      "count": 261,
+      "line": 204,
+      "path": "src/backend/utils/errcodes.txt",
+      "previous_release": "16.15",
+      "previous_sha256": "1d1d741b7b7c6dfd8275287e31c79befed75f3b9349e1a42ef0ca147c429ff88",
+      "release": "16.16",
+      "sha256": "9f95161e1438d3f06db7e5a81514b4e59b7ddb221f1f2eac63a804a2c225177f",
+      "tag": "REL_16_16",
+      "archive_sha256": "9d5cd8633043b75740d5d59749c6b7365e6aeb53c47098b1a5e80bb18f87881a",
+      "archive_url": "https://ftp.postgresql.org/pub/source/v16.16/postgresql-16.16.tar.bz2"
+    },
+    "17": {
+      "commit": "702b3dc86d35bcc08c8e23cffa3c4d9fe9d32c85",
+      "count": 261,
+      "line": 204,
+      "path": "src/backend/utils/errcodes.txt",
+      "previous_release": "17.11",
+      "previous_sha256": "bb53279934510355eb4135a807c90d989f07650bd90f87026a4441f11d3296b1",
+      "release": "17.12",
+      "sha256": "4fe9deea25725fa04e8374b07587a2f2335cea1b586592be583ae3a1af804571",
+      "tag": "REL_17_12",
+      "archive_sha256": "9cf136a703d8ee2f83465c43be4e9e8e7930c82b0bfba13be7e2537be769ac55",
+      "archive_url": "https://ftp.postgresql.org/pub/source/v17.12/postgresql-17.12.tar.bz2"
+    },
+    "18": {
+      "commit": "f5c41f6681c910b3f69951bf6fb97c6d74605d25",
+      "count": 263,
+      "line": 210,
+      "path": "src/backend/utils/errcodes.txt",
+      "previous_release": "18.6",
+      "previous_sha256": "6e8de346643ba84aa3c9c6a73360acfc7b2dfb89162c06c08ce9bf5bcd5bbcba",
+      "release": "18.7",
+      "sha256": "b8b7f9f0e3238bcd0db4de2a938be2ee7a145721974c59fa6b4239eb34581bd2",
+      "tag": "REL_18_7",
+      "archive_sha256": "441dfae4280cae3e0425e5f876f80559fb0731c140f1aae22b3e5a54d0411bfd",
+      "archive_url": "https://ftp.postgresql.org/pub/source/v18.7/postgresql-18.7.tar.bz2"
+    },
+    "19": {
+      "commit": "dffcca2e3c81178c64d4c1f44543a3507d0b7508",
+      "count": 263,
+      "line": 210,
+      "path": "src/backend/utils/errcodes.txt",
+      "previous_release": "19rc1",
+      "previous_sha256": "cadb9e83cde9a8699a7e74448891ca623af8579ccc8e11c7e533fb47cbc42f89",
+      "release": "19rc2",
+      "sha256": "21ed56c2fe97a7f4f324a3d02a984211b04db43a032f1b04046f0511fcac1c14",
+      "tag": "REL_19_RC2",
+      "archive_sha256": "23a7bb862e4bac395c047305ed0084117b01e71255ce858b907cdcd78ce40351",
+      "archive_url": "https://ftp.postgresql.org/pub/source/v19rc2/postgresql-19rc2.tar.bz2"
+    }
+  },
+  "runtime_reproduction": false,
+  "pg20": "Pinned snapshot unchanged; absence is not a claim about current upstream master"
+}

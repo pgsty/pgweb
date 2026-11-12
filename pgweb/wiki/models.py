@@ -149,7 +149,7 @@ class ErrorCodeRelease(models.Model):
 
 
 class ErrorCode(models.Model):
-    """一个 SQLSTATE，263 个。"""
+    """一个 SQLSTATE 及其版本、正文和证据。"""
 
     sqlstate = models.CharField(max_length=5, primary_key=True)
     klass = models.ForeignKey(ErrorCodeClass, related_name='codes', db_column='class_code',

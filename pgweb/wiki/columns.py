@@ -29,7 +29,7 @@ COLUMNS = (
         'short': 'SQL 状态码',
         'tone': 'err',
         'lead': 'SQLSTATE 的含义、报文、诊断与处置。',
-        'scale': '264 个 SQL 状态码 · 44 个类',
+        'scale': 'SQL 状态码与分类',
         'coverage': 'PostgreSQL 8.1 – 20 devel（手册）',
         'repo': 'pgsty/err.pg.center',
         'origin': 'https://err.pg.center',
