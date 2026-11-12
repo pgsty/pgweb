@@ -129,7 +129,7 @@
                   <span class="pg-ledger__ver">{{ v.numtree }}.{{ v.latestminor }}</span>
                   <span class="pg-ledger__date">{{ v.reldate|date:"Y-m-d" }}</span>
                 </a>
-                <a class="pg-ledger__link" href="/docs/{{ v.numtree }}/{{ v.relnotes }}">说明 <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
+                <a class="pg-ledger__link" href="{{ v.relnotes_url }}">说明 <i class="fas fa-chevron-right" aria-hidden="true"></i></a>
               </li>
             {% endfor %}
           </ul>

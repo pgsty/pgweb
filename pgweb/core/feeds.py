@@ -18,7 +18,8 @@ class VersionFeed(Feed):
         return Version.objects.filter(tree__gt=0).filter(testing=0)
 
     def item_link(self, obj):
-        return "%s/docs/%s/%s" % (settings.SITE_ROOT.rstrip('/'), obj.numtree, obj.relnotes)
+        url = obj.relnotes_url
+        return settings.SITE_ROOT.rstrip('/') + url if url.startswith('/') else url
 
     def item_pubdate(self, obj):
         return datetime.combine(obj.reldate, time.min)

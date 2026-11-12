@@ -66,6 +66,16 @@ class Version(models.Model):
             # Should never happen so return something broken
             return 'x'
 
+    @property
+    def relnotes_url(self):
+        # Release metadata can arrive before the translated manual is imported.
+        from pgweb.docs.models import DocPage
+
+        path = '/docs/{}/{}'.format(self.numtree, self.relnotes)
+        if DocPage.objects.filter(version=self, file=self.relnotes).exists():
+            return path
+        return 'https://www.postgresql.org' + path
+
     def buildversionstring(self, minor, spaced=False):
         if not self.testing:
             return "%s.%s" % (self.numtree, minor)

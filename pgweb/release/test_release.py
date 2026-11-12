@@ -40,6 +40,24 @@ class ReleaseDataTests(SimpleTestCase):
         )
         self.assertEqual(release['news']['id'], 3365)
 
+    def test_november_release_keeps_15_20_and_marks_final_pg14_release(self):
+        release_path = Path(__file__).resolve().parents[2] / 'data' / 'releases' / '2026-11-12.yaml'
+        with release_path.open() as release_file:
+            release = yaml.safe_load(release_file)
+
+        self.assertEqual(release['versions'], ['18.7', '17.12', '16.16', '15.20', '14.25', '19rc2'])
+        self.assertEqual(release['news']['id'], 3442)
+        self.assertEqual(release['end_of_life'], [14])
+        self.assertEqual(ParsedVersion(release['versions'][3]).minor, 20)
+
+    def test_release_note_link_uses_upstream_until_translation_is_loaded(self):
+        version = Version(tree=15, latestminor=20)
+        with patch('pgweb.docs.models.DocPage.objects.filter') as pages:
+            pages.return_value.exists.return_value = False
+            self.assertEqual(version.relnotes_url, 'https://www.postgresql.org/docs/15/release-15-20.html')
+            pages.return_value.exists.return_value = True
+            self.assertEqual(version.relnotes_url, '/docs/15/release-15-20.html')
+
     def test_prerelease_type_and_chinese_display_value(self):
         version = ParsedVersion('19beta3')
 
@@ -113,3 +131,43 @@ class ReleaseProcessingTests(TestCase):
         self.assertTrue(stable.current and stable.supported)
         self.assertEqual(pinned.pinnedarticle_id, news.pk)
         self.assertEqual(NewsArticle.objects.count(), 1)
+
+    def test_final_minor_release_rolls_back_then_ends_support_idempotently(self):
+        version = Version(
+            tree=14, latestminor=24, testing=0, supported=True,
+            reldate=date(2026, 8, 13), firstreldate=date(2021, 9, 30),
+            eoldate=date(2026, 11, 12),
+        )
+        version.save()
+        release = {
+            'date': date(2026, 11, 12), 'type': 'minor',
+            'versions': [ParsedVersion('14.25')], 'end_of_life': [14],
+        }
+        with patch.object(CurrentRelease, 'get', return_value=release):
+            call_command('process_release', dry_run=True, stdout=StringIO())
+            version.refresh_from_db()
+            self.assertEqual(version.latestminor, 24)
+            self.assertTrue(version.supported)
+            for _ in range(2):
+                call_command('process_release', stdout=StringIO())
+        version.refresh_from_db()
+        self.assertEqual(version.latestminor, 25)
+        self.assertFalse(version.supported or version.current)
+
+    def test_end_of_life_before_scheduled_date_is_rejected_and_rolled_back(self):
+        version = Version(
+            tree=14, latestminor=24, testing=0, supported=True,
+            reldate=date(2026, 8, 13), firstreldate=date(2021, 9, 30),
+            eoldate=date(2026, 11, 12),
+        )
+        version.save()
+        release = {
+            'date': date(2026, 11, 11), 'type': 'minor',
+            'versions': [ParsedVersion('14.25')], 'end_of_life': [14],
+        }
+        with patch.object(CurrentRelease, 'get', return_value=release):
+            with self.assertRaisesMessage(ValueError, 'has not reached its end-of-life date'):
+                call_command('process_release', stdout=StringIO())
+        version.refresh_from_db()
+        self.assertEqual(version.latestminor, 24)
+        self.assertTrue(version.supported)

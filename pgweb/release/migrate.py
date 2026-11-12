@@ -74,6 +74,17 @@ def do_migrate():
         except Version.DoesNotExist:
             print("Could not find version tree {}, cannot update latest minor".format(ver.major))
 
+    # A final minor release ends support only when explicitly listed in its metadata.
+    for major in release.get('end_of_life', []):
+        version = Version.objects.get(tree=major, testing=0)
+        if version.eoldate > release['date']:
+            raise ValueError('Version {} has not reached its end-of-life date'.format(major))
+        if version.supported or version.current:
+            version.supported = False
+            version.current = False
+            version.save(update_fields=['supported', 'current'])
+            print('Set supported=False and current=False for end-of-life version {}'.format(major))
+
     # If there are any CVEs attached to this release, add the news article to them if there is one
     if news:
         for cve in release.get('cve', []):

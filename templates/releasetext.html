@@ -1,10 +1,10 @@
 {% load pgfilters %}
 {%if release.type == "minor" %}
         <p>
-          PG 全球开发组已发布覆盖所有受支持版本的<a href="/download/">更新</a>，包括 <a href="{{ release.news.url }}">{{ release.versions|joinzh }}</a>。本次发布修复了{% if release.cve|length > 0 %} {{ release.cve|length }} 个安全漏洞以及{% endif %}过去几个月内上报的多项错误。
+          PostgreSQL 全球开发组已发布 <a href="{{ release.news.url }}">{{ release.versions|joinzh }}</a>。本次发布修复了{% if release.cve|length > 0 %} {{ release.cve|length }} 个安全漏洞以及{% endif %}过去几个月内上报的多项错误。
         </p>
         <p>
-          有关本次发布的更多信息，请查阅<a href="/docs/release/">发行说明</a>。您可以从<a href="/download/">下载</a>页面获取 PostgreSQL。
+          部分修复需要在更新后重建索引或采取其他措施，请先阅读<a href="{{ release.news.url }}">发布公告中的升级说明</a>。您可以从<a href="/download/">下载</a>页面获取 PostgreSQL。
         </p>
 {% elif release.type == "alpha" or release.type == "beta" or release.type == "rc" %}
 {% if release.type == "rc" %}
@@ -46,7 +46,13 @@
 {% elif release.type == "override" %}
 {{ release.announcetext_zh|default:release.announcetext|safe }}
 {% endif %}
-{% if not release.nooldestwarning %}
+{% if release.end_of_life %}
+{% for major in release.end_of_life %}
+<p>
+PostgreSQL {{ major }} 已于 {{ release.date|date:"Y 年 n 月 j 日" }} 结束维护，本次更新是该大版本的最后一次发布，今后不再提供安全与缺陷修复。仍在使用该版本的用户应规划升级到受支持版本。详情请参阅<a href="/support/versioning/">版本策略</a>。
+</p>
+{% endfor %}
+{% elif not release.nooldestwarning %}
 {% with oldestversion=versions|last %}
 {% if oldestversion.soon_eol %}
 <p>

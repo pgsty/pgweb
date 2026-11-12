@@ -34,6 +34,7 @@ python manage.py process_release
 ## 显式发布处理会执行的操作
 
 - 将 `Version` 的发布日期和最新小版本调整为 YAML 中的值。
+- 将 `end_of_life` 显式列出的正式大版本标为结束维护；若尚未到该版本的维护截止日，则拒绝整批发布。
 - 在测试版本转正式主版本时更新 `testing`、`supported` 和 `current` 状态。
 - 将 YAML 中列出的 CVE 设为公开并关联本地中文新闻。
 - 批准发布公告并将其置顶。

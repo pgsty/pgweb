@@ -17,7 +17,7 @@ def load_security_json(*, overwrite_text=None, prune_missing=None, dry_run=False
     combined_json = list(_load_all_cve_json())
     curs = connection.cursor()
     curs.execute("""WITH t AS (
-SELECT (regexp_match(cveid, '^CVE-(\\d{4}-\\d{4,5})$'))[1] AS cve, title, description, vector, fixed, component
+SELECT (regexp_match(cveid, '^CVE-(\\d{4}-\\d{4,7})$'))[1] AS cve, title, description, vector, fixed, component
 FROM JSON_TABLE(%(j)s::json, '$[*]' COLUMNS (
   cveid text PATH '$.cveMetadata.cveId' ERROR ON EMPTY ERROR ON ERROR,
   title text PATH '$._localized.title' ERROR ON EMPTY ERROR ON ERROR,
@@ -41,7 +41,7 @@ cveload AS (
       description = CASE WHEN %(overwrite_text)s THEN t.title ELSE p.description END,
       details = CASE WHEN %(overwrite_text)s THEN t.description ELSE p.details END,
       component = t.component
-  WHEN NOT MATCHED BY SOURCE AND %(prune_missing)s AND cvenumber > 202500000 THEN
+  WHEN NOT MATCHED BY SOURCE AND %(prune_missing)s AND cvenumber > 20250000000 THEN
     DELETE
   RETURNING p.cve, merge_action() AS action, id
 ),
@@ -62,7 +62,7 @@ versionload AS (
     INSERT (patch_id, version_id, fixed_minor)
     VALUES (patchid, versionid, fixedminor)
   WHEN NOT MATCHED BY SOURCE AND %(prune_missing)s AND patch_id IN (
-    SELECT id FROM security_securitypatch WHERE cvenumber > 202500000
+    SELECT id FROM security_securitypatch WHERE cvenumber > 20250000000
   ) THEN
     DELETE
   RETURNING COALESCE(cve, (SELECT cve FROM security_securitypatch WHERE id=patch_id)) AS cve,

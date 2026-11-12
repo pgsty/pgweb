@@ -15,7 +15,7 @@ class SecurityLoaderTests(SimpleTestCase):
             for cve in _load_all_cve_json()
         }
 
-        self.assertEqual(len(cves), 51)
+        self.assertEqual(len(cves), 103)
         self.assertEqual(
             cves['CVE-2026-6472']['_localized']['title'],
             'PostgreSQL CREATE TYPE 未检查多重范围类型所在 schema 的 CREATE 权限',
@@ -27,13 +27,13 @@ class SecurityLoaderTests(SimpleTestCase):
 
     def test_current_release_cves_all_have_chinese_overlays(self):
         data_path = Path(__file__).resolve().parents[2] / 'data'
-        with (data_path / 'releases' / '2026-08-13.yaml').open() as release_file:
+        with (data_path / 'releases' / '2026-11-12.yaml').open() as release_file:
             release = yaml.safe_load(release_file)
         with (data_path / 'security' / 'cve_zh.yaml').open() as translation_file:
             translations = yaml.safe_load(translation_file)
 
         current_cves = {'CVE-{}'.format(cve) for cve in release['cve']}
-        self.assertEqual(len(current_cves), 28)
+        self.assertEqual(len(current_cves), 52)
         self.assertTrue(current_cves.issubset(translations))
 
     @override_settings(SECURITY_CVE_AUTOLOAD=False)
