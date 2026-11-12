@@ -1,0 +1,392 @@
+{
+  "date": "2026-11-11",
+  "origin": "PGSQL.CC independent editorial; cutoff 2026-11-12T07:26:36+08:00; PostgreSQL.org/Planet; PGNexus #314–326; primary project and vendor sources",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复 GiST 全文索引漏行",
+      "summary": "PostgreSQL 已合入 tsvector GiST 索引的漏行修复。页面分裂只有两个条目时，算法会在最后一个条目的缓存初始化前构造联合键，读取未初始化内存，可能令扫描漏掉本应匹配的行。补丁将缓存填充提前，提交注明回补至 PG 15，并指出已有的单列 tsvector GiST 索引可能需要 REINDEX。维护全文检索的团队应核对索引类型，安排补丁与重建验证，不能只检查查询是否报错。",
+      "url": "https://github.com/postgres/postgres/commit/1d657c6e013e152ed37b42a22ee9f291179ee50f",
+      "author": "Shihao Zhong",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "正确性",
+        "全文检索"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "FULL JOIN 修复错误的常量条件推导",
+      "summary": "PostgreSQL 已合入 FULL JOIN 常量传播修复。优化器此前假定等式左、右操作数分别来自连接两侧；手写 ON 条件交换顺序，或操作数同时引用同一侧时，这个假定可能失效，使推导出的过滤条件作用到错误位置并返回错误结果。补丁先检查操作数实际来源，仅在分属两侧时继续推导，并注明回补至 PG 15。包含 COALESCE 过滤与复杂外连接的查询，可据补丁中的回归用例核对结果。",
+      "url": "https://github.com/postgres/postgres/commit/e50d958f092bc33fcb51089c68c72779bae2a6a3",
+      "author": "Tomas Vondra",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "SQL",
+        "正确性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复子计划复用过期结果",
+      "summary": "PostgreSQL 已合入一项子计划参数依赖修复。优化器移除多余查询层级时，会把初始化子计划交给下层节点，却没有同步它依赖的参数集合；外层值改变后再次扫描，子计划因此可能不重新求值，继续返回旧结果。单分区扫描中的相关子查询是已确认的触发场景。补丁一并转移参数依赖，提交注明回补至 PG 15。使用 LATERAL 与分区表组合的应用，应检查重复扫描时不同外层参数对应的结果。",
+      "url": "https://github.com/postgres/postgres/commit/9b80b3170b9c5be2f22540facea52f5e38915704",
+      "author": "Richard Guo",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询执行",
+        "分区",
+        "正确性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "用统计快照构建 PostgreSQL 工作负载报告",
+      "summary": "AWS 给出在 RDS 与 Aurora PostgreSQL 内构建 AWR 风格报告的完整实现：以统计视图和 pg_stat_statements 保存快照，通过 pg_cron 调度采集，再比较两个快照生成 SQL、等待事件、热点对象及配置变更报告。数据留在数据库中，无需额外采集代理。方案仅采集主实例，跨重启或故障切换的窗口不能直接计算差值；等待采样还会保存原始语句与客户端地址，保留期限和访问权限需同时设置。",
+      "url": "https://aws.amazon.com/blogs/database/build-an-oracle-awr-style-report-for-rds-aurora-postgresql/",
+      "author": "Tushar Rajput",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "性能",
+        "运维"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Aurora 跨区域切换需同步 IAM 认证区域",
+      "summary": "Aurora 全局数据库的写入端点会随主库切换，但稳定的连接地址并不能自动解决 IAM 认证。AWS 的演练指出，令牌签名区域和授权的集群资源 ID 都会改变；应用需动态发现当前主区域，并提前授权各区域集群，再通过统一写入端点连接。原文分别验证 PostgreSQL 与 MySQL 的切换流程，还要求缓存区域发现结果、认证失败时刷新，并遵守 DNS 缓存期限，避免切换后的连接风暴压垮控制面查询。",
+      "url": "https://aws.amazon.com/blogs/database/resilient-iam-database-authentication-with-amazon-aurora-global-database-writer-endpoint/",
+      "author": "Raunak Gupta",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "认证",
+        "云数据库"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 解析 QuePaxa 的广域网共识取舍",
+      "summary": "Cloudflare 解释了实验性全局控制面服务 Meerkat 为何采用 QuePaxa。广域网延迟抖动容易让传统领导者选举反复中断进展，这套协议允许多个提议者协作，借随机优先级收敛到同一提案；领导者提供单轮往返快路径，却不是继续处理请求的必要条件。更积极地并发提议也会增加带宽与决策轮次。团队仍在扩展崩溃恢复能力，并用形式验证、模拟和故障注入检查实现，文章展示的是工程取舍与实验进展。",
+      "url": "https://blog.cloudflare.com/choosing-quepaxa/",
+      "author": "João Pedro Leite、Bob Halley、James Larisch",
+      "source": "Cloudflare Blog",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "分布式",
+        "共识",
+        "基础设施"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "Memoize 再修复缓存键相等语义偏差",
+      "summary": "本次将缓存键相等运算符对齐连接条件，避免不同值共用结果；区别于此前排序规则修复，提交注明回补至 PG 15。",
+      "url": "https://github.com/postgres/postgres/commit/8cdf3c9214feb48179a3cc0fbb0bae0e0f38f2cb",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "正确性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_dump 修复旧版分区表统计迁移",
+      "summary": "从 PG 10–14 升级时，分区表扩展统计的继承标志被误写，恢复后会被优化器忽略；本次修复注明回补至 PG 19。",
+      "url": "https://github.com/postgres/postgres/commit/35def3385998099f3e80e34f9d7bf6444af5bf1c",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "统计信息"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Aurora 故障切换后需重建零 ETL 集成",
+      "summary": "方案用事件触发集成重建；仍需在新区域创建 Redshift 目标数据库，等待完整同步后再切换分析查询。",
+      "url": "https://aws.amazon.com/blogs/database/automate-aurora-zero-etl-recovery-after-global-failover/",
+      "author": "",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "容灾",
+        "数据同步"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Aurora MySQL 8.4 手动内存保护需显式配置",
+      "summary": "关闭默认自动管理后，旧版的保护动作不会自动沿用；需明确配置恢复动作，并监控内存健康与拒绝请求指标。",
+      "url": "https://aws.amazon.com/blogs/database/help-prevent-out-of-memory-restarts-on-aurora-mysql-8-4/",
+      "author": "",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "内存",
+        "运维"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "通过 S3 刷新跨账户的单租户测试数据",
+      "summary": "方案先克隆 Aurora MySQL，再逐表筛选租户数据导出；无需打通两个 VPC，导入前须校验表分类、键冲突与外键。",
+      "url": "https://aws.amazon.com/blogs/database/refresh-a-single-tenant-across-accounts-with-aurora-mysql-and-amazon-s3/",
+      "author": "",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "多租户",
+        "测试"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "DocumentDB 8.0.3 加入后量子 TLS 与通配索引",
+      "summary": "支持 ML-KEM 混合密钥交换、跨集合 unionWith 聚合及删除索引的变更流事件，客户端不支持时沿用传统 TLS。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-documentdb-8-0-3/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "索引"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "OpenSearch 提供托管跨区域灾难恢复",
+      "summary": "需同账户且版本至少 3.7；厂商称 RPO 小于 1 分钟、RTO 小于 20 分钟，不支持 UltraWarm 与 OR1/OR2 实例。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-opensearch-service-managed-cross-region-disaster-recovery/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "容灾"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Istio Ambient 多网络能力正式可用",
+      "summary": "新增跨网络多集群部署与 Sidecar 迁移支持，Traffic Extension API 可用 Lua 或 Wasm 定制流量处理。",
+      "url": "https://www.cncf.io/blog/2026/11/10/istio-enables-global-availability-for-all-workloads-traditional-agentic-and-beyond/",
+      "author": "",
+      "source": "CNCF",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "网络"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "柏林聚会公开 PG 19 升级与托管安全讲义",
+      "summary": "",
+      "url": "https://andreas.scherbaum.la/post/2026-11-11_postgresql-berlin-november-2026-meetup/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "社区"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "RDS Oracle 特定组件可关闭自动小版本升级",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/oracle-jvm-spatial-locator-olap-options-amvu-optional/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "EKS 大型控制面的 etcd 容量提高到 24 GB",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-eks-provisioned-control-plane-larger-etcd-database/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "EKS Auto Mode 支持为 Pod 独立配置安全组",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-eks-auto-mode-security-groups-for-pods/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Cloud WAN 流日志汇总跨区域网络流量",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-cloud-wan-flow-logs/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Lambda MicroVMs 新增 x86 架构支持",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-lambda-microvms-x86-architecture/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "MWAA 无服务器版扩展凭据管理与自定义算子",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/mwaa-serverless-connections-variables/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch 可用 API 密钥接收 OTLP 链路",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-cloudwatch-api-keys-opentelemetry/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-03",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 持久函数提高并发执行与 API 配额",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/lambda-durable-functions-default-quotas/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "AWS Sign-In 可交换第三方 OIDC 令牌",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-signin-token-exchange/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-04",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "AWS Emulator 开源支持本地测试云服务 API",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-emulator-now-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Jaeger 2.22 预览链路排障助手与 MCP 工具",
+      "summary": "",
+      "url": "https://www.cncf.io/blog/2026/11/10/jaeger-previews-ai-assisted-troubleshooting-and-genai-observability-for-opentelemetry-traces-at-kubecon/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}

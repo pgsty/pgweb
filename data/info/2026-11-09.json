@@ -1,0 +1,415 @@
+{
+  "date": "2026-11-09",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、PGNexus #312–324、项目原文与官方 RSS；截稿 2026-11-10 07:26:26 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 合入复合类型版本校验",
+      "summary": "PostgreSQL 已合入复合类型版本校验，为记录值增加一道安全检查。过去，复合值与解析它的元组描述符不匹配时，可能引发崩溃、错误结果或被利用；新机制标记复合值并记录命名类型的版本，发现不匹配即报错。提交说明将完整防护与扩展重新编译联系起来，部分复制内核实现的扩展还需适配。运维团队应留意后续小版本的兼容性说明，特别是扩展二进制、类型变更及降级后再次升级的组合。",
+      "url": "https://github.com/postgres/postgres/commit/245eb832f88631c986a2dadad2cbe94f57089fd6",
+      "author": "Andres Freund",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "内核",
+        "兼容性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复 UPSERT 越过行可见性检查",
+      "summary": "PostgreSQL 已合入两项 UPSERT 安全修复。通过可更新视图执行冲突处理时，旧逻辑可能绕过视图的筛选条件，读取或修改本应隐藏的冲突行；新逻辑先验证该行是否对视图可见，不符合条件就报错。另一项配套修复将行级安全策略检查提前到用户编写的冲突处理条件之前，封住借条件表达式探读隐藏数据的路径。依赖旧行为的应用需要回归测试；这些是已提交的修复，正式升级仍应以相应版本发布说明为准。",
+      "url": "https://github.com/postgres/postgres/commit/315c4e4e85f3fae5ebc3a62d69b5400138d307f9",
+      "author": "Peter Geoghegan、Zsolt Parragi",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "UPSERT",
+        "RLS"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "索引扫描变慢，先数一数命中了多少堆页",
+      "summary": "Richard Yen 复盘一宗 PostgreSQL 迁移后的查询退化：同样返回 200 行，两个环境分别访问 101 个和 5 个堆页，差异来自并行装载后的物理布局。B-tree 有序并不代表表中相关行相邻，重建索引或 VACUUM FULL 也不会按查询键重排行。排查时可用 ctid 统计目标行分布，再结合缓冲区与 I/O 计时判断；按键重排前需评估锁和额外空间，完成后更新统计信息，并在相同缓存条件下复测。",
+      "url": "https://richyen.com/postgres/2026/11/09/index_scan_scattered_heap.html",
+      "author": "Richard Yen",
+      "source": "Richard Yen",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "索引",
+        "迁移"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Dasha 1.10.3 加入无扩展等待采样",
+      "summary": "开源 PostgreSQL 监控工具 Dasha 的 1.10 系列加入 Patroni 集群发现，1.10.3 进一步提供实时活动与等待分析。它以只读方式读取 etcd 或 Consul，并从各主机采样会话，按等待类型和查询标识汇总，帮助定位锁等待与活跃语句。采样间隔可设为 1–10 秒，每个实例对同一主机最多每秒读取一次，不因观看人数增加而重复采样。该分析无需额外扩展，但查询分组仍须满足查询标识与监控权限要求。",
+      "url": "https://github.com/dbulashev/dasha/releases/tag/v1.10.3",
+      "author": "Dasha 项目",
+      "source": "Dasha",
+      "source_date": "2026-11-05",
+      "image": "https://github.com/user-attachments/assets/2dc511f8-008e-461b-8ed0-36b30d34d3fe",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "Patroni",
+        "等待事件"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Percona 复盘容器内大版本升级与排序规则风险",
+      "summary": "Percona 以 PostgreSQL 16 升至 17 的案例梳理 Operator 大版本升级：专用资源触发停库，升级任务在主库卷上执行链接模式的 pg_upgrade，再重建副本并启动新版本。难点还包括底层镜像变化；案例从 UBI 8 切到 UBI 9，glibc 版本随之变化，必须核对排序规则并重建受影响索引，再刷新版本元数据。扩展升级状态、逻辑副本重建和应用回归也要逐项确认，不能把镜像替换视为升级完成。",
+      "url": "https://www.percona.com/blog/beyond-the-version-bump-running-postgresql-major-upgrades-in-percona-operator-for-postgresql/",
+      "author": "Anil Joshi",
+      "source": "Percona",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "Kubernetes",
+        "排序规则"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "ClickHouse 托管 Postgres 正式可用",
+      "summary": "ClickHouse 宣布托管 Postgres 在 AWS 正式可用，GCP 仍处于私有预览。服务使用本地 NVMe 存储，提供跨可用区备库、自动故障转移、时间点恢复、连接池及只读副本，并与分析数据库对接。正式可用也意味着测试期折扣结束，备份存储和公网出站流量开始计费。公司同时宣布收购 Xata，计划整合即时分支、克隆及缩容至零；这些整合能力属于后续路线，现有用户应分别评估当前功能和成本变化。",
+      "url": "https://clickhouse.com/blog/managed-postgres-ga-xata-acquisition",
+      "author": "Sai Srirampur",
+      "source": "ClickHouse",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "托管数据库",
+        "高可用",
+        "云服务"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_basebackup 修复清单格式字符串问题",
+      "summary": "已提交的修复避免把备份清单片段解释为格式字符串，数据目录内的异常文件名可能触发旧路径。",
+      "url": "https://github.com/postgres/postgres/commit/4a18e9b5f36206584501910c81d0da154f88af54",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "安全"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "REASSIGN OWNED 补齐角色与建库权限检查",
+      "summary": "已合入的修复对齐对象转移所需的角色切换能力，并补上数据库转移时遗漏的建库权限校验。",
+      "url": "https://github.com/postgres/postgres/commit/b2f1afd9f132f5fb41006172bbe1a36b37150a00",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限",
+        "安全"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "MariaDB 13.0 扩展查询提示的作用范围",
+      "summary": "新增视图及跨查询块的目标定位方式，便于把优化提示施加到更准确的执行层次。",
+      "url": "https://mariadb.org/giving-the-optimizer-a-hint-whats-new-in-mariadb-server-13-0-compatibility-and-beyond/",
+      "author": "",
+      "source": "MariaDB Foundation",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "优化器"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "MariaDB TAF 用单变量负载剖析子系统开销",
+      "summary": "以可缓存的数据集固定基线，再逐项启用持久化、日志等机制，比较不同硬件上的额外成本。",
+      "url": "https://mariadb.org/mariadb-foundation-taf-profiling-mariadb-subsystems-across-hardware-using-targeted-performance-profiles/",
+      "author": "",
+      "source": "MariaDB Foundation",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能测试"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Topstep 复盘 Redis 向 Valkey 的迁移",
+      "summary": "案例用 RedisShake 迁移约 5300 万个键，并说明自定义 DNS 切换时如何保留服务端 TLS 身份校验。",
+      "url": "https://aws.amazon.com/blogs/database/topsteps-migration-journey-self-managed-redis-oss-to-amazon-elasticache-for-valkey/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "迁移",
+        "Valkey"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Athena 将查询使用记录开放为系统表",
+      "summary": "启用后，查询使用数据写入托管的只读 Iceberg 表，可用 SQL 跨工作组分析用量、成本与审计线索。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/athena-system-tables/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Iceberg",
+        "可观测性"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Nitro Sandboxes 为容器提供硬件隔离边界",
+      "summary": "EKS Pod 和 ECS 任务可各自运行在轻量虚拟机内，并通过加密证明校验工作负载完整性。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/nitro-sandboxes-eks-ecs-ec2/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "隔离"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "AWS STS 支持跨分区身份联邦",
+      "summary": "工作负载可用本分区身份换取另一分区角色的临时凭据，减少跨分区运维对长期访问密钥的依赖。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-sts-cross-partition/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "身份认证"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "psql 等待输入时按 Ctrl+C 可终止整个脚本",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/8b529705d153f6bc592f874a9f2dd47be8fa0589",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 修复 ASAN 与 JIT 并用时的崩溃",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/0607aa61090ac1b574f8bafe854c684195b31e16",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "测试"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Databasus 3.67.2 移除 rclone 存储支持",
+      "summary": "",
+      "url": "https://github.com/databasus/databasus/releases/tag/v3.67.2",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "兼容性"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "DocumentDB 无服务器平台 4 升级后不可降级",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/documentdb-serverless-platform-version-4/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "兼容性"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Neptune 开源界面用 SQL/PGQ 投影湖中数据",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-graphover-datalakes-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图数据库"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "AWS Glue 新增 100 个原生应用连接器",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-glue-adds-100-new-native-connectors/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据集成"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "EKS 与 Karpenter 支持动态设备资源分配",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-eks-auto-mode-karpenter-dra/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "CloudFront 可向源站传递 ISP 与后量子 TLS 信息",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/cloudfront-viewer-isp-post-quantum-visbility/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-30",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "TLS"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "DataSync 增强模式支持更多 FSx 与 OpenShift 环境",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/datasync-enhanced-fsx-openshift/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "数据传输"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "EKS 面板汇总跨账户的 CA 轮换状态",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/amazon-eks-dashboard-fleet-wide-visibility-certificate-authority-ca-rotation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-28",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "证书"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "SageMaker 训练任务支持 SOCI 镜像按需加载",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/10/sagemaker-ai-soci-images-training/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-10-29",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "容器"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Langfuse 开源 Rust 网关进入公开测试",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/langfuse-ai-gateway",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}
