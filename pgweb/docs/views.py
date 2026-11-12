@@ -25,6 +25,7 @@ from pgweb.util.db import exec_to_dict
 from .models import DocPage, DocPageRedirect
 from .forms import DocCommentForm
 from .versions import DEVEL_MAJOR_VERSION
+from .compare_data import embedded_release_notes
 
 
 re_cjk = re.compile(r'[\u4e00-\u9fff]')
@@ -897,10 +898,15 @@ def release_notes(request, version):
     # If we have an exact match for our major version, get that one. If not,
     # use a precise upstream page for stable branches.  Beta/devel branches
     # must not link to guessed future release notes.
-    release_notes = exec_to_dict("SELECT content FROM docs WHERE file=%(filename)s AND version > 0 ORDER BY version=%(major_version)s DESC, version DESC LIMIT 1", {
+    release_notes = exec_to_dict("SELECT content, file FROM docs WHERE version > 0 AND (file=%(filename)s OR (file='release.html' AND version=%(major_version)s AND content LIKE %(embedded_anchor)s)) ORDER BY version=%(major_version)s DESC, file=%(filename)s DESC, version DESC LIMIT 1", {
         'filename': version_file,
         'major_version': major_version,
+        'embedded_anchor': '%id="' + version_file.removesuffix('.html').upper() + '"%',
     })
+    if release_notes and release_notes[0].get('file') == 'release.html':
+        coordinate = '{}.{}'.format(_release_major_label(major_version), minor_version)
+        content = embedded_release_notes(release_notes[0]['content']).get(coordinate)
+        release_notes = [{'content': content}] if content else []
     try:
         release_note = release_notes[0]
     except IndexError:

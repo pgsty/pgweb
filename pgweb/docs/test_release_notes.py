@@ -214,3 +214,18 @@ class ReleaseNotesDescriptionTests(SimpleTestCase):
 
         self.assertIn('2024-05-16', description)
         self.assertIn('此版本修复了归档恢复过程中的一个实际问题', description)
+
+class EmbeddedReleaseViewTests(SimpleTestCase):
+    @patch('pgweb.docs.views.render_pgweb', return_value=HttpResponse())
+    @patch('pgweb.docs.views.exec_to_dict')
+    def test_embedded_release_renders_locally(self, query, render):
+        query.side_effect = [
+            [{'latestminor': 25, 'testing': 0}],
+            [{'file': 'release.html', 'content': '<div class="appendix"><p>Other releases</p><div class="sect1" id="RELEASE-14-25"><h2>14.25</h2><p>本版修复。</p></div></div>'}],
+            [{'minor': 25}, {'minor': 24}],
+        ]
+        response = release_notes(RequestFactory().get('/docs/release/14.25/'), '14.25')
+        self.assertEqual(response.status_code, 200)
+        content = render.call_args.args[3]['release_note']['content']
+        self.assertIn('本版修复', content)
+        self.assertNotIn('Other releases', content)

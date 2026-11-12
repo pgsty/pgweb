@@ -14,6 +14,11 @@ from configparser import ConfigParser
 
 import psycopg2
 
+if __package__:
+    from .docload_encoding import document_encoding, has_utf8_xml_declaration
+else:
+    from docload_encoding import document_encoding, has_utf8_xml_declaration
+
 # the Bootstrap grid classes that are added onto any images that are rendered in the docs
 BOOTSTRAP_FIGURE_CLASS = r'<div\1class="figure col-xl-8 col-lg-10 col-md-12"'
 # a counter that keeps track of the total number of pages (HTML, SVG) that are loaded
@@ -45,17 +50,14 @@ def load_doc_file(filename, f, c):
         indent='auto',
     )
 
-    # Postgres 10 started using xml toolchain and now produces docmentation in utf8. So we need
-    # to figure out which version it is.
+    # Postgres 10 started using the XML toolchain and now produces
+    # documentation in UTF-8.  The XML declaration is optional in some
+    # generated fragments, so it must not be used to infer the encoding.
     rawcontents = f.read()
-    rawfirst = rawcontents[:50].decode('utf8', errors='ignore')
-    if rawfirst.startswith('<?xml version="1.0" encoding="UTF-8"'):
-        # Version 10, use utf8
-        encoding = 'utf-8'
+    encoding = document_encoding(ver)
+    if has_utf8_xml_declaration(rawcontents):
         # XML builds also don't need clean=1, and that one adds some interesting CSS properties
         del tidyopts['clean']
-    else:
-        encoding = 'latin1'
 
     # PostgreSQL prior to 11 used an older toolchain to build the docs, which does not support
     # indented HTML. So turn it off on those, but keep it on the newer versions where it works,

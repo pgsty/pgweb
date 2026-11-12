@@ -9,6 +9,7 @@ import os
 from pathlib import Path
 import re
 import tempfile
+from types import SimpleNamespace
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -16,7 +17,7 @@ from django.core.management.base import BaseCommand, CommandError
 from pgweb.core.models import Version
 from pgweb.docs.compare_data import (
     FORMAT_VERSION, PARSER_VERSION, UNRELEASED_VERSIONS, commit_aliases,
-    branch_key, calibrate_source_entries, enrich_source_commits, parse_release, sgml_commit_entries,
+    branch_key, calibrate_source_entries, embedded_release_notes, enrich_source_commits, parse_release, sgml_commit_entries,
 )
 from pgweb.docs.models import DocPage
 
@@ -34,7 +35,13 @@ def build_snapshot(pgdoc_root=None):
         raise CommandError('No PostgreSQL >= 9.0 version metadata is loaded')
     devel = Version.objects.filter(tree=0).first()
     documents = {}
-    for page in DocPage.objects.filter(file__startswith='release-').exclude(content__isnull=True).iterator():
+    for page in DocPage.objects.filter(file__startswith='release').exclude(content__isnull=True).iterator():
+        if page.file == 'release.html':
+            for version, content in embedded_release_notes(page.content).items():
+                major, minor = version.rsplit('.', 1)
+                if major_string(page.version_id) == major and version not in UNRELEASED_VERSIONS:
+                    documents.setdefault(version, (SimpleNamespace(content=content, file=page.file), major, int(minor), False))
+            continue
         match = RELEASE_FILE.fullmatch(page.file)
         if not match:
             continue
@@ -73,6 +80,7 @@ def build_snapshot(pgdoc_root=None):
             page.content, version, 'devel' if dev_page else str(major), status,
             build='{}devel'.format(major) if dev_page else (metadata.versionstring if metadata.testing else version),
             supported=metadata.supported,
+            source_file=page.file,
         )
         release['manual_build'] = '{}devel'.format(major) if dev_page else metadata.versionstring
         release['eol_date'] = metadata.eoldate.isoformat() if status == 'stable' and getattr(metadata, 'eoldate', None) else ''
