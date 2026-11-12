@@ -1,0 +1,420 @@
+{
+  "date": "2026-11-12",
+  "origin": "PGSQL.CC independent editorial; cutoff 2026-11-13T07:30:24+08:00; PostgreSQL.org/Planet/Git; PGNexus #315–327; primary project and vendor sources",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 发布安全更新，14 迎来最终版本",
+      "summary": "PostgreSQL 发布 18.7、17.12、16.16、15.20、14.25 及 19 RC 2，修复 52 个安全漏洞和逾 140 项缺陷。14.25 是 PostgreSQL 14 的最后一次发布，该版本随即结束维护。此次更新还包含需要额外处理的数据完整性问题：部分索引须重建，使用增量备份的实例须从健康服务器重新建立全量备份链。维护团队应逐项核对发布说明中的修复步骤；19 仍是候选版，尚未正式发布。",
+      "url": "https://www.postgresql.org/about/news/postgresql-187-1712-1616-1520-1425-and-19-rc-2-released-3442/",
+      "author": "PostgreSQL Global Development Group",
+      "source": "PostgreSQL",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "版本发布",
+        "备份"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "glibc 升级的数据库风险不止索引错序",
+      "summary": "Percona 用跨 glibc 版本的物理副本晋升实验，复现排序与字符分类变化对 PostgreSQL 数据的影响。除了索引错序，旧行还可能留在错误的分区，已验证的检查约束不再符合实际数据，存储生成列也会保留旧计算结果。这些问题无法仅靠重建索引解决；字符大小写规则的变化甚至没有独立版本告警。排查应覆盖分区、约束和持久化表达式，完成必要的数据修复后再刷新排序规则版本并更新统计信息。",
+      "url": "https://www.percona.com/blog/ten-ways-a-glibc-change-can-break-your-postgresql-cluster/",
+      "author": "Pablo Svampa",
+      "source": "Percona",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "排序规则",
+        "数据完整性",
+        "升级"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "DuckDB 支撑浏览器与桌面端的本地分析",
+      "summary": "SQLRooms 将 DuckDB 嵌入交互式分析应用，在浏览器中使用 Wasm，在桌面端使用原生引擎，让界面组件共享数据库连接。Foursquare Spatial Desktop 通过空间扩展按视口过滤、抽样和简化数据，再由本地服务提供地图瓦片；Cosmograph 则在后台工作线程中查询，并以列式结果驱动图渲染。这些案例展示了无需独立数据库服务器的分析架构，也说明大数据集的交互性能仍依赖查询裁剪、传输格式与渲染方式。",
+      "url": "https://duckdb.org/2026/11/12/local-analytics-without-a-database-server",
+      "author": "Ilya Boyandin、Geertjan Wielenga、Tim Cox",
+      "source": "DuckDB",
+      "source_date": "2026-11-12",
+      "image": "https://duckdb.org/images/blog/thumbs/local-analytics-without-a-database-server.png",
+      "domain": "db",
+      "tags": [
+        "本地分析",
+        "空间数据",
+        "DuckDB"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "用整机快照恢复 SQL Server 可用性组副本",
+      "summary": "AWS 给出 SQL Server 可用性组故障副本的恢复实操：使用应用一致性的 EC2 快照恢复实例，再补齐网络配置和数据库同步状态。现成的 VSS 数据库恢复运行手册只适用于独立实例或主副本，不能直接重建辅助副本。整机恢复后仍须重新配置辅助 IP，核对日志链；链条不连续时，还要补做差异备份和日志恢复。最终验收包括复制队列、角色状态及切换演练，不能把备份任务成功等同于高可用恢复完成。",
+      "url": "https://aws.amazon.com/blogs/database/using-aws-backup-to-resynchronize-a-sql-server-alwayson-availability-group/",
+      "author": "Gabriel Pereira、Marcelo Fernandes、Naor Alves",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQL Server",
+        "灾难恢复",
+        "备份"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "多租户缓存须区分访问权限与资源隔离",
+      "summary": "AWS 梳理 ElastiCache 的多租户设计边界：独立缓存可隔离计算和内存，共享缓存的 ACL 与角色权限则主要约束键访问，无法避免租户争抢资源。仅靠键名前缀或应用选择逻辑数据库，也不能形成安全边界。分片设计还有另一类陷阱：把同一租户的全部键固定到同一哈希槽，会让大租户形成热点。文章建议按访问控制、资源配额、数据归属和运维需求分别选择方案，必要时采用共享与独立缓存并存的混合模式。",
+      "url": "https://aws.amazon.com/blogs/database/multi-tenancy-with-amazon-elasticache-choosing-the-right-isolation-model/",
+      "author": "Maria Gutovsky、Eran Balan、Oren Weiss",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "缓存",
+        "多租户",
+        "隔离"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Rust 1.100 稳定分配器接口并调整构建布局",
+      "summary": "Rust 1.100 扩展永不返回类型的可用位置，并稳定核心分配器接口，使容器可以使用自定义分配策略。与此同时，旧 edition 中部分类型推断的默认行为发生变化，少数项目可能需要显式标注。Cargo 开始提示未使用的依赖，还调整构建目录的哈希布局，以改善多个工作区共用缓存时的冲突；依赖内部目录结构的脚本需要复核。新增的依赖发布冷却期选项，则允许项目限制过于新鲜的依赖版本。",
+      "url": "https://blog.rust-lang.org/2026/11/12/Rust-1.100.0/",
+      "author": "Rust Release Team",
+      "source": "Rust Blog",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Rust",
+        "编译器",
+        "构建"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 为外键引用关系新增目录索引",
+      "summary": "主干为 pg_constraint.confrelid 建索引，减少升级及分区挂接、摘除时的目录顺序扫描；本次未改动 TRUNCATE 路径。",
+      "url": "https://github.com/postgres/postgres/commit/b0496e30830b7cee6d17485404dd4c51d7aea286",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "性能"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "AND CHAIN 修复事务特征继承错误",
+      "summary": "已合入的修复保留失败事务原有的隔离等特征，并避免子事务只读状态泄漏到后续事务，提交注明回补至 PG 15。",
+      "url": "https://github.com/postgres/postgres/commit/0dbe240dc0e14448fe82f6b356947d4b5c93f89f",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "事务",
+        "正确性"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "VACUUM 修正小样本下的行数估计",
+      "summary": "三项相关提交共同处理表大小变化、过小样本和未知估计，避免沿用过期行数或把活行数误报为零，回补至 PG 19。",
+      "url": "https://github.com/postgres/postgres/commit/eacabd7d031cdc449ae7938dd8b75e6edb3d03b8",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "VACUUM"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Aurora 与 RDS 新增 Graviton5 数据库实例",
+      "summary": "R9g 已正式支持 PostgreSQL、MySQL 等引擎，提供九种规格、最高 192 vCPU，首批开放四个区域。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-aurora-rds-postgresql-mysql-mariadb-r9g-instances/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库",
+        "硬件"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 可通过 Iceberg 接口读写 S3 Tables",
+      "summary": "自建版 26.8 起可接入 Iceberg REST 目录并原子提交元数据；低延迟、高并发查询仍可将热点数据物化到 MergeTree。",
+      "url": "https://aws.amazon.com/blogs/storage/bring-high-performance-analytics-to-your-lakehouse-with-clickhouse-and-amazon-s3-tables/",
+      "author": "",
+      "source": "AWS Storage Blog",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "ClickHouse",
+        "Iceberg"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Flickr 缓存迁移暴露切换前核验缺口",
+      "summary": "团队以 RIOT 同步数据并重做客户端封装，但漏键在切换后才被发现，随后补回数据，并把迁移前完整性核验纳入流程。",
+      "url": "https://aws.amazon.com/blogs/database/how-flickr-modernized-caching-with-amazon-elasticache-for-valkey/",
+      "author": "",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Valkey",
+        "迁移"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Oracle Data Guard 切换流程加入前后置检查",
+      "summary": "AWS 示例用状态机编排角色切换；计划切换要求复制追平，紧急接管则记录最后应用的 SCN 与可能丢失的数据窗口。",
+      "url": "https://aws.amazon.com/blogs/database/automating-oracle-data-guard-switchover-and-failover-on-amazon-ec2/",
+      "author": "",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Oracle",
+        "高可用"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "托管 Flink 快照可跨应用与区域恢复",
+      "summary": "增强快照支持导出到 S3，并在其他应用或区域导入，便于蓝绿部署和灾备；要求 Flink 1.20 或更高版本。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/managed-flink-enhanced-snapshots/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Flink",
+        "灾难恢复"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "SQL 函数修复输入输出参数交错时的名称错绑",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/8e27c9261c9dd6127e16ced998d37ed7a8cb2b7d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "正确性"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "并行相关系数聚合修复常量与非有限值处理",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/ef1b740441cbd88f8f4c68737235cce17bfac508",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "正确性"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "RDS 的 M8id 与 R8id 将临时库放到本地 NVMe",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/rds-sqlserver-supports-m8id-r8id-instances/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQL Server"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "EKS 恢复可用 YAML 修改角色与数据库端点",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-backup-resource-modifiers-eks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "备份"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "FSx Lustre 智能分层降低吞吐与元数据最低配置",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/fsx-lustre-intelligent-tiering-lower-throughput/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Cloud WAN 可按 BGP 团体属性筛选专线路由",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cloud-wan-bgp-community-directconnect/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "MWAA 接入细粒度授权，多团队能力仍基于预览特性",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/mwaa-fine-grained-access-control/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Airflow",
+        "权限"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Cognito 新增登录会话枚举与撤销接口",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-cognito-session-management/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "身份认证"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Network Firewall 分离防火墙与入侵防御规则容量",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/network-firewall-launches-ngfw-policy/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 开放过期或删除域名的自助恢复",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/route-53-domains-self-service-restore/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DNS"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "四张 GPU 的地址空间分配暴露 PCIe 桥对齐缺口",
+      "summary": "",
+      "url": "https://doug.sh/posts/gpu-bars-behind-a-pcie-switch/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Linux",
+        "GPU"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "DMS 示例用代理编排离线模式转换与评估",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/offline-assessment-and-conversion-with-ai-agents-in-aws-dms/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "迁移",
+        "开发工具"
+      ],
+      "position": 26
+    }
+  ]
+}
