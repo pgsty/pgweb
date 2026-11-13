@@ -1,6 +1,6 @@
 # PostgreSQL 14–19 中文文档发布批次（2026-11-13）
 
-本地 PGSQL.CC 的手册、PDF、百科引用、发行说明与检索已更新至 **19rc2、18.7、17.12、16.16、15.20、14.25**。18 为当前稳定版，19 仍为测试版，14 已于 2026-11-12 结束维护。生产 `pgsql.cc` 尚未发布。
+本地 PGSQL.CC 的手册、PDF、百科引用、发行说明与检索已更新至 **19rc2、18.7、17.12、16.16、15.20、14.25**。18 为当前稳定版，19 仍为测试版，14 已于 2026-11-12 结束维护。后续生产发布已完成，见 [生产验收记录](docs-publication-20261113.md)。本页保留本地验收与当时冻结的发布计划。
 
 ## 来源、提交与入库
 
@@ -27,7 +27,7 @@
 
 本地证据位于 `tmp/docs-update-20261113/`；最终 HTTP 与 PDF 下载回执集中在相邻 Go 项目的同名目录。重点回执为 `restore-verified.json`、`reference-final-check.json`、`site-search-repaired.json`、`browser-pgweb.json`，以及 Go 项目中的 `pgweb-final-http.json` 和 `pgweb-pdf-downloads.json`。
 
-## 待生产发布
+## 生产发布输入与流程
 
 联合输入包位于 `../pg.center/tmp/docs-update-20261113/release-bundle/`；以其中 `manifest.json`、`CHECKSUMS.sha256` 和 `pgsql.cc/` 固定输入为准，不使用未冻结的工作目录。代码、来源及轻量发布说明入 Git；HTML、PDF、压缩包和数据库备份不入 Git。
 
