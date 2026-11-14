@@ -102,6 +102,15 @@ class TopicIntegrationTests(TestCase):
         self.assertContains(self.client.get('/wiki/oid/regdatabase/?v=18'), '此版本未收录')
         self.assertContains(self.client.get('/wiki/oid/regdatabase/?v=19'), '19beta4')
 
+    def test_navigation_uses_current_manual_without_relabelling_source_evidence(self):
+        Version.objects.filter(tree=19).update(testing=1, latestminor=2)
+        source = {'label': '19rc1', 'revision': 'original-source', 'channel': 'preview'}
+        rows = [{'versions': {'19': {'release': source}}}]
+        result = topics.releases(rows, '/wiki/tool/')
+        self.assertEqual(result[0]['label'], '19 rc 2')
+        self.assertEqual(result[0]['source'], source)
+        self.assertEqual(rows[0]['versions']['19']['release']['label'], '19rc1')
+
     def test_four_columns_have_navigation_routes_filters_and_safe_output(self):
         for kind in ('hook', 'relopts', 'role', 'oid'):
             with self.subTest(kind=kind):

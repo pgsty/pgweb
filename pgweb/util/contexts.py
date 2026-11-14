@@ -301,11 +301,14 @@ DOC_MAJORS_CACHE_KEY = 'pgweb:doc-majors'
 
 
 def _get_doc_majors():
-    # Supported major versions, newest first, for the "文档" menu.
+    # Loaded supported and preview manuals, newest first, for the "文档" menu.
     majors = cache.get(DOC_MAJORS_CACHE_KEY)
     if majors is None:
         from pgweb.core.models import Version
-        majors = [int(v.tree) for v in Version.objects.filter(supported=True, tree__gt=0).order_by('-tree')]
+        from django.db.models import Q
+        versions = Version.objects.filter(tree__gt=0, docsloaded__isnull=False).filter(
+            Q(supported=True) | Q(testing__gt=0)).order_by('-tree')
+        majors = [int(v.tree) for v in versions]
         cache.set(DOC_MAJORS_CACHE_KEY, majors, 600)
     return majors
 

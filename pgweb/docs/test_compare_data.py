@@ -336,3 +336,24 @@ class ReleaseComparisonSnapshotTests(SimpleTestCase):
         build.assert_called_once()
         write.assert_not_called()
         self.assertIn('Validated 1 releases / 4 entries', stdout.getvalue())
+
+class EmbeddedReleaseTests(SimpleTestCase):
+    def test_first_release_can_live_in_appendix_page(self):
+        from .compare_data import embedded_release_notes
+        content = '''<div class="appendix" id="RELEASE"><p>Appendix context.</p>
+        <div class="sect1" id="RELEASE-14-25"><h2>Release 14.25</h2>
+        <p>Release date: 2026-11-12</p>
+        <div class="sect2" id="RELEASE-14-25-CHANGES"><h3>Changes</h3>
+        <ul><li><p>Fix <a href="runtime-config-developer.html#GUC-COMPOSITE-TYPE-MISMATCH">type checks</a>.</p></li></ul>
+        </div></div></div>'''
+        notes = embedded_release_notes(content)
+        self.assertEqual(set(notes), {'14.25'})
+        release = parse_release(notes['14.25'], '14.25', '14', source_file='release.html')
+        self.assertEqual(release['manual_url'], '/docs/14/release.html#RELEASE-14-25')
+        self.assertEqual(release['entry_count'], 1)
+        self.assertIn('/docs/14/runtime-config-developer.html#GUC-COMPOSITE-TYPE-MISMATCH', release['entries'][0]['html'])
+        self.assertNotIn('Appendix context', release['entries'][0]['text'])
+
+    def test_unrelated_sections_are_not_release_records(self):
+        from .compare_data import embedded_release_notes
+        self.assertEqual(embedded_release_notes('<div class="sect2" id="RELEASE-14-25-CHANGES">Changes</div>'), {})

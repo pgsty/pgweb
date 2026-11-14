@@ -494,13 +494,32 @@ def _entry(item, release, section, compatibility=False):
     }
 
 
-def parse_release(content, version, manual, status='stable', *, build='', supported=False):
+def embedded_release_notes(content):
+    """Release sections kept in release.html by chunk.first.sections=0."""
+    soup = BeautifulSoup(content or '', 'html.parser')
+    _normalize_classes(soup)
+    result = {}
+    for section in soup.select('div.sect1[id], section.sect1[id]'):
+        match = re.fullmatch(r'RELEASE-(9-[0-6]|[1-9]\d+)(?:-(\d+))?', section['id'], re.I)
+        if match:
+            version = '{}.{}'.format(match[1].replace('-', '.'), int(match[2] or 0))
+            if version in result:
+                raise ValueError('Duplicate embedded release: ' + version)
+            result[version] = str(section)
+    return result
+
+
+def parse_release(content, version, manual, status='stable', *, build='', supported=False, source_file=None):
     """Parse one native release note into the versioned snapshot contract."""
     major, minor = release_parts(version)
     if status not in {'stable', 'preview', 'devel'}:
         raise ValueError('Unknown release status: ' + status)
-    filename = release_filename(version)
+    filename = source_file or release_filename(version)
+    if filename != 'release.html' and filename != release_filename(version):
+        raise ValueError('Release source filename disagrees with version')
     manual_url = '/docs/{}/{}'.format(manual, filename)
+    if filename == 'release.html':
+        manual_url += '#RELEASE-' + major.replace('.', '-') + ('-' + str(minor) if minor else '')
     release = {
         'version': version, 'major': major, 'minor': minor, 'status': status,
         'build': build or version, 'supported': bool(supported),

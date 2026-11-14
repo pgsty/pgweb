@@ -8,8 +8,10 @@
 
 - PG10–19 使用同名的 `core_version.tree` / `docs.version`。
 - PG20 开发快照使用上游约定的 `tree = 0`，网址为 `/docs/devel/`；`/docs/20/` 跳转到这里，检索使用 `pg20:`。实际开发版本号统一维护于 `pgweb/docs/versions.py`。
-- PG19 当前为 `19beta4`；保持版本表原有测试状态，不能当作正式版本或当前稳定版本。当前稳定手册由 `core_version.current` 决定。
+- PG19 当前为 `19rc2`；保持版本表原有测试状态，不能当作正式版本或当前稳定版本。当前稳定版为 18.7，其后为 17.12、16.16、15.20、14.25；14 已于 2026-11-12 结束支持。当前稳定手册由 `core_version.current` 决定。
 - 每版两份 PDF 放入 `static/documentation/pdf/<大版本>/postgresql-<大版本>-A4.pdf` 和 `postgresql-<大版本>-US.pdf`。开发版的目录为 `20`，不能与 PG19 的 PDF 混用。
+
+导入器按版本决定源文件编码：PG10 及以上和开发版按 UTF-8，PG9.x 及更早版本按旧工具链的 Latin-1 兼容路径处理。部分发布说明等 HTML 片段没有 XML 声明，因此不能用文件开头是否有 `<?xml ... encoding="UTF-8"?>` 来判断编码；该声明只用于选择 Tidy 的 XML 清理选项。导入后应抽查中文字符和页面哈希，避免把 UTF-8 内容按 Latin-1 解码后以乱码写入 `docs.content`。
 
 ## 导入
 
@@ -39,4 +41,10 @@ cd /data/app/pgsql.cc/tools/search/crawler
 
 爬虫读取当前目录的 `search.ini`，通过 `local_baseurl` 获取主 sitemap 和包含开发快照的内部 sitemap，更新 `webpages.fti`。已有的 `webpages_fti_idx` GIN 索引会自动更新；完成后核查索引有效性、执行 `ANALYZE webpages`，并验证 `/search/?site=1`。不要重复运行整个 `tools/search/sql/indexes.sql` 删除重建无关索引。
 
-验收包括每版手册首页和正文、开发版路由、22 个 PDF 链接、文档检索及结果锚点、站内全文检索，以及两端文档内容摘要一致性。文档检索使用中文分词；原有站内爬虫的 `public.pg` 配置以英文分词为主，不能把它等同于文档检索的中文分词能力。
+验收包括每版手册首页和正文、开发版路由、受影响版本的全部 A4/US PDF 链接、文档检索及结果锚点、站内全文检索，以及两端文档内容摘要一致性。文档检索使用中文分词；原有站内爬虫的 `public.pg` 配置以英文分词为主，不能把它等同于文档检索的中文分词能力。
+
+## 2026-11-13 最终审校批次
+
+本批源译文提交为 pgdoc `b9f0e7232f60f380d642ac9b99226606c254b552`。六版 HTML、A4/US PDF 已按最终源码重新构建，并以冻结产物校验值入库。PG14/15 的发行说明保留在 `release.html`；导入、版本比较和独立发行说明页按 `RELEASE-*` 锚点提取，不假设一定存在独立文件。
+
+引用更新使用 `tools/docs/apply_reference_delta.py --before <基线目录> --after <审阅后的目录> --receipt <回执>`，默认在事务内核验后回滚，明确加 `--write` 才提交。只更新基线与目标之间实际变化的字段；遇到并行编辑冲突即停止。更新后重建相应 `index_docs` 栏目和站内全文索引，核验真实页面及 PDF 下载字节。冻结目录与本地验证回执位于 `tmp/docs-update-20261113/`；生产发布方案见 [本批发布记录](docs-release-20261113.md)。

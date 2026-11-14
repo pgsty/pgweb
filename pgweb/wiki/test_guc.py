@@ -462,6 +462,37 @@ class GucDetailTests(GucFixture):
         self.assertEqual(facts['默认值']['value'], '0 min')
         self.assertEqual(facts['引入版本']['value'], '9.5')
 
+    def test_minor_backport_does_not_invent_introduction_removal_or_measurement(self):
+        boundaries = dict(zip(('14', '15', '16', '17', '18', '19'),
+                              ('14.25', '15.20', '16.16', '17.12', '18.7', '19rc2')))
+        parameter = make_parameter(
+            'composite_type_mismatch', 'Developer Options', 'developer',
+            'runtime-config-developer.html', 'GUC-COMPOSITE-TYPE-MISMATCH',
+            {major: dict(category='Developer Options', vartype='enum', context='superuser',
+                         boot_val='error', enumvals=['error', 'warn', 'disabled'])
+             for major in boundaries}, history=False)
+        for major, snapshot in parameter.versions.items():
+            snapshot.update(minimum_minor=boundaries[major], runtime_verified=False)
+        parameter.save()
+        payload = guc.detail(parameter.name, '19')
+        facts = {row['label']: row['value'] for row in payload['facts']}
+        self.assertEqual(facts['本分支起始版本'], '19rc2')
+        self.assertEqual(facts['源码默认值'], 'error')
+        self.assertNotIn('实测版本', facts)
+        self.assertNotIn('引入版本', facts)
+        self.assertEqual(facts['状态'], '现存')
+        cells = {cell['major']: cell for cell in payload['ribbon']}
+        self.assertEqual(cells['14']['state'], 'present')
+        self.assertEqual(cells['20']['state'], 'absent')
+        self.assertIn('19rc2', payload['change_note'])
+        response = self.client.get(parameter.url + '?v=19')
+        self.assertContains(response, '本分支自 19rc2 起')
+        self.assertContains(response, '尚无 pg_settings 实测历史')
+        self.assertNotContains(response, '于 20 移除')
+        self.assertNotContains(response, '默认值未采集')
+        with self.assertRaises(GucParameter.DoesNotExist):
+            guc.detail(parameter.name, '20')
+
     def test_the_introduction_commit_links_the_introduced_version_fact(self):
         payload = guc.detail('wal_skip_threshold', '18')
         commit = payload['intro_commit']

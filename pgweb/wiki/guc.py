@@ -261,7 +261,7 @@ def category_label(category_zh, group_label):
 
 # ---------------------------------------------------------------- 索引页
 
-def states_of(parameter, order):
+def states_of(parameter, order, minor_boundary=False):
     """逐版本的版本变动状态。"""
     present = set(parameter.present_in)
     changed = set(parameter.changed_in)
@@ -275,7 +275,7 @@ def states_of(parameter, order):
             state = 'removed'
         elif major not in present:
             state = 'absent'
-        elif major == first and major != baseline:
+        elif major == first and major != baseline and not minor_boundary:
             state = 'added'
         elif major in changed:
             state = 'changed'
@@ -286,12 +286,14 @@ def states_of(parameter, order):
 
 
 def removed_after(parameter, order):
-    """移除标在 last_version 的下一版；还在最后一版里就没有移除版本。"""
+    """固定开发快照缺少后来回补的参数，并不能证明该开发分支移除了它。"""
     majors = [version['major'] for version in order]
     if not parameter.last_version or parameter.last_version not in majors:
         return ''
     index = majors.index(parameter.last_version)
-    return majors[index + 1] if index + 1 < len(majors) else ''
+    if index + 1 < len(order) and order[index + 1].get('status') != 'devel':
+        return majors[index + 1]
+    return ''
 
 
 def cell_label(major, state, defaults):
@@ -300,11 +302,11 @@ def cell_label(major, state, defaults):
     return '{} · {}'.format(major, STATE_LABEL.get(state, state))
 
 
-def strip_of(parameter, order):
+def strip_of(parameter, order, minor_boundary=False):
     """版本变动：一排方格，每格一个版本，与表头刻度一一对应。"""
     defaults = set(parameter.default_changed_in)
     return [{'major': major, 'state': state, 'label': cell_label(major, state, defaults)}
-            for major, state in states_of(parameter, order)]
+            for major, state in states_of(parameter, order, minor_boundary)]
 
 
 def row_of(parameter, order, snapshot=None):
@@ -332,7 +334,7 @@ def row_of(parameter, order, snapshot=None):
         'change_count': len(changed_in),
         'default_change_count': len(parameter.default_changed_in),
         'last_change': changed_in[-1] if changed_in else '',
-        'strip': strip_of(parameter, order),
+        'strip': strip_of(parameter, order, bool(snapshot.get('minimum_minor'))),
         'present_tokens': ' '.join(parameter.present_in),
         'text': ' '.join(v for v in (parameter.name, parameter.short_desc_zh,
                                      parameter.short_desc, parameter.category_zh) if v),
@@ -490,6 +492,9 @@ def change_at(parameter, major):
 
 def change_note(parameter, major, order, change):
     """本版变化一句话，六种措辞见 docs/guc-column.md §4.2。"""
+    minimum = (parameter.versions.get(major) or {}).get('minimum_minor')
+    if minimum:
+        return '本分支自 PostgreSQL {} 起收录此参数。'.format(minimum)
     baseline = order[0]['major'] if order else ''
     if change and change.get('carried'):
         return CARRIED_TEMPLATE.format(major, change.get('from', ''))
@@ -521,7 +526,8 @@ def ribbon_of(parameter, major, order, pages=None):
     """版本条：逐版本一格，不合段。"""
     by_major = version_map()
     cells = []
-    for version_major, state in states_of(parameter, order):
+    minor_boundary = any(s.get('minimum_minor') for s in parameter.versions.values())
+    for version_major, state in states_of(parameter, order, minor_boundary):
         version = by_major.get(version_major, {})
         snapshot = parameter.versions.get(version_major)
         cells.append({
@@ -532,6 +538,7 @@ def ribbon_of(parameter, major, order, pages=None):
             'current': version_major == major,
             'preview': bool(version.get('preview')), 'devel': bool(version.get('devel')),
             'doc_url': doc_url(snapshot, pages) if snapshot else '',
+            'minimum_minor': (snapshot or {}).get('minimum_minor', ''),
             'status': version.get('status', ''),
         })
     return cells
@@ -555,7 +562,8 @@ def facts_of(parameter, major, snapshot, order, commit):
     note = ''
     if raw is not None and (unit or str(raw) != human):
         note = '原始值 {}{}'.format(raw if raw != '' else "''", ' ' + unit if unit else '')
-    add('默认值', human, mono=True, note=note)
+    source_only = snapshot.get('runtime_verified') is False
+    add('源码默认值' if source_only else '默认值', human, mono=True, note=note)
     low, high = snapshot.get('min_val') or '', snapshot.get('max_val') or ''
     if low or high:
         add('取值范围', '{} – {}'.format(low or '—', high or '—'), mono=True)
@@ -566,12 +574,17 @@ def facts_of(parameter, major, snapshot, order, commit):
     if major == '19':
         version = next((v for v in order if v['major'] == major), {})
         add('文档版本', version.get('label', major))
-        if snapshot.get('facts_source') != 'documentation':
+        if snapshot.get('facts_source') != 'documentation' and not source_only:
             add('实测版本', version.get('server_version', ''))
     baseline = order[0]['major'] if order else ''
     first = parameter.first_version
-    add('引入版本', '{}（基线）'.format(first) if first == baseline else first,
-        url=(commit or {}).get('url', ''))
+    if snapshot.get('minimum_minor'):
+        add('本分支起始版本', snapshot['minimum_minor'])
+    else:
+        add('引入版本', '{}（基线）'.format(first) if first == baseline else first,
+            url=(commit or {}).get('url', ''))
+    if source_only:
+        add('事实来源', '同版源码与手册，尚无运行实测')
     removed_in = removed_after(parameter, order)
     add('状态', '于 {} 移除'.format(removed_in) if removed_in else '现存')
     return facts
@@ -756,7 +769,8 @@ def detail(name, wanted=''):
     order = versions()
     if (wanted and wanted not in parameter.present_in
             and any(v['major'] == wanted for v in order)
-            and any(s.get('center_zh') for s in parameter.versions.values())):
+            and any(s.get('center_zh') or s.get('minimum_minor')
+                    for s in parameter.versions.values())):
         # A synchronized definition has an exact, reviewed version membership.
         # An explicit absent version must not silently become another version.
         raise GucParameter.DoesNotExist('{} @ {}'.format(name, wanted))
