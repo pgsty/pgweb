@@ -1,0 +1,424 @@
+{
+  "date": "2026-11-13",
+  "origin": "PGSQL.CC 独立采编；截稿 2026-11-14 07:28:01 Asia/Shanghai；覆盖 2026-10-31 至 2026-11-14；PostgreSQL.org、Planet、PGNexus #328、GitHub 提交、项目与厂商原文",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_dump 修复 tar 恢复脚本的保护键",
+      "summary": "PostgreSQL 修复 tar 格式归档中 restore.sql 的 `\\restrict` 保护失效的问题。限制键固定为 `(null)`，文件开头还会先执行没有对应 `\\restrict` 的 `\\unrestrict`；攻击者若能改写恢复脚本，安全边界无法发挥作用。补丁让恢复脚本使用可校验的限制键，并回补至 PostgreSQL 14。使用 tar 归档、允许编辑 restore.sql 的团队应重新生成归档并核对恢复流程。",
+      "url": "https://github.com/postgres/postgres/commit/146e03e79a534a8aa15b3fbf5908ecc80dd382f",
+      "author": "Noah Misch",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "备份",
+        "pg_dump"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制拒绝写入系统目录",
+      "summary": "PostgreSQL 修复了逻辑复制订阅端信任发布端关系类型的问题。恶意或非 PostgreSQL 发布端可以在协议中指定系统目录，超级用户拥有的订阅进程此前可能把变更写入系统目录；受影响范围包括 PostgreSQL 14 及以后。补丁在订阅端打开目标关系、建立关系列表时都拒绝系统目录和临时表，并以 CVE-2026-120145 跟踪。使用外部逻辑复制源或超级用户订阅的环境应等待相应维护版本并检查来源。",
+      "url": "https://github.com/postgres/postgres/commit/7becf1984f46ee7b83f778370fc2a3b60f46f022",
+      "author": "Masahiko Sawada",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "逻辑复制"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_show_all_settings 修复释放后使用漏洞",
+      "summary": "PostgreSQL 修复 `pg_show_all_settings()` 扫描期间加载模块造成的 use-after-free。函数会缓存 GUC 条目指针；如果同一查询随后加载扩展，扩展前缀的占位条目会被释放，旧指针可能返回过期数据或令后端崩溃。补丁改用物化模式，在其他表达式执行前消费完整 GUC 数组，并回补至 PostgreSQL 16；该问题编号为 CVE-2026-120152。使用动态加载模块和该函数的环境应安排升级。",
+      "url": "https://github.com/postgres/postgres/commit/146771107cf1ca5ea33ceb9e1d1bf60eb8a24987",
+      "author": "Masahiko Sawada",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "GUC",
+        "正确性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复 NULLS NOT DISTINCT 分组错结果",
+      "summary": "PostgreSQL 修复 `NULLS NOT DISTINCT` 唯一索引参与外连接 `GROUP BY` 消除时的错误结果。优化器原本认为唯一索引可以证明某些分组列函数依赖于其他列，但外连接补出的 NULL 行会与真实 NULL 行落入同一组，移除列后便可能合并本应分开的结果。补丁在可能被外连接置空的关系上恢复 `NOT NULL` 要求，并回补至 PostgreSQL 18。使用该索引特性和复杂外连接查询的用户应升级并复核结果。",
+      "url": "https://github.com/postgres/postgres/commit/48938780c3577835dda3dd17db4f8c968bb1e166",
+      "author": "Richard Guo",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询规划",
+        "正确性",
+        "索引"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "逻辑解码修复待分离分区崩溃",
+      "summary": "PostgreSQL 修复逻辑解码遇到并发分区分离未完成状态时的崩溃。`DETACH PARTITION CONCURRENTLY` 被锁超时、取消或断连打断后，分区仍标记为待分离，但祖先列表已为空；对 `FOR ALL TABLES` 发布解码变更会触发断言失败，非断言构建则可能空指针解引用，订阅进程因此进入崩溃循环。补丁一次性获取祖先并按独立表处理，问题可追溯至 14，回补至 15。",
+      "url": "https://github.com/postgres/postgres/commit/9a849767eb281c9502aab4a7384a654004ec6ffe",
+      "author": "Mikhail Nikalayeu、Zhijie Hou",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "分区",
+        "正确性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "pg_restore 修复扩展统计空数组丢失",
+      "summary": "PostgreSQL 修复恢复表达式扩展统计信息时丢失数据的问题。`ANALYZE` 对 `range_length_histogram` 和 `most_common_elems` 可能写入空数组，`pg_dump` 输出 `{}`，但旧的 `pg_restore_extended_stats()` 把它当成非法输入，导致升级或恢复后统计信息缺失。补丁只放行这两类空数组，拒绝不应为空的数值数组，并回补至 19。升级链路应复核统计信息。",
+      "url": "https://github.com/postgres/postgres/commit/87524d0dd8470819ce8aa3708a9bf3fa3f1d34fd",
+      "author": "Corey Huinker、Michael Paquier",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "统计信息",
+        "升级"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 修复动态 RECORD 函数的类型混淆",
+      "summary": "动态 RECORD 返回类型的物化集合返回函数可能复用错误元组描述符，造成错结果、崩溃或读取越界数据；修复回补至 14，并编号 CVE-2026-120141。",
+      "url": "https://github.com/postgres/postgres/commit/6f6e4a955cdbef6b08e99dac1cb11d2405709c17",
+      "author": "Robert Haas",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "类型系统"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "MERGE 修复继承父表的额外列错配",
+      "summary": "继承父表被约束排除且子表多出列时，MERGE 的 INSERT 初始化会失败；补丁回补至 15。",
+      "url": "https://github.com/postgres/postgres/commit/7fffb114377507fca5e8c2b4db1820a4ec11615b",
+      "author": "Dean Rasheed",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MERGE",
+        "继承表"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "MERGE 修复 BY SOURCE 的空值标记传播",
+      "summary": "MERGE 的 BY SOURCE 动作若来自连接关系，源表下层 Vars 可能漏标为空值，导致错误结果；补丁回补至 17。",
+      "url": "https://github.com/postgres/postgres/commit/cf44f3fa19b6c35633e043621d325d55a760e472",
+      "author": "Dean Rasheed",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MERGE",
+        "查询规划"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "postgres_fdw 初始化失败后不再崩溃",
+      "summary": "postgres_fdw 选项数组内存分配失败后会留下半初始化指针，后续同一会话可能崩溃；补丁回补至 19。",
+      "url": "https://github.com/postgres/postgres/commit/1d4324a2a302514a24908435dede693cff81fa37",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "postgres_fdw",
+        "稳定性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 防止元组大小整数溢出",
+      "summary": "元组大小计算从 64 位值写入 32 位变量可能整数回绕并覆盖服务器内存；补丁加入溢出检查并回补至 14。",
+      "url": "https://github.com/postgres/postgres/commit/7bb89dbfde47ee773fe45fee1d2b70eb366970bd",
+      "author": "Álvaro Herrera",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "内存安全"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Brume 2.1 保持外键完整性的 PostgreSQL 脱敏",
+      "summary": "Brume 2.1 用确定性转换生成保持外键关联的 PostgreSQL 测试副本，支持列级假名化、子集抽取和声明式配置。",
+      "url": "https://pgsql.cc/about/news/brume-21-postgresql-3439/",
+      "author": "Brume",
+      "source": "PGSQL.CC 新闻",
+      "source_date": "2026-11-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "脱敏",
+        "测试"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Percona 预览 Kubernetes 数据库服务 PDS",
+      "summary": "PDS 预览把 MySQL 与 PostgreSQL 的 Kubernetes 运维控制面放进用户自己的 AWS 账户，提供环境模板、备份与基础监控。",
+      "url": "https://www.percona.com/blog/percona-database-service-pds/",
+      "author": "Andrey Glazkov",
+      "source": "Percona",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "数据库服务"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 18.7 再次暴露扩展 ABI 风险",
+      "summary": "PostgreSQL 18.7 因 CVE-2026-6460 再次触及 C 扩展 ABI；升级时部分扩展需重编或改源码，关闭检查会有安全代价。",
+      "url": "https://ardentperf.com/2026/11/12/postgres-18-7-minor-breaks-abi-compatibility-again/",
+      "author": "Jeremy Schneider",
+      "source": "Ardent Performance Computing",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "升级"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG Observability Map 1.0.0 发布",
+      "summary": "",
+      "url": "https://pgsql.cc/about/news/pg-observability-map-100-3437/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "AgensGraph 2.18 扩展 ISO GQL 支持",
+      "summary": "",
+      "url": "https://pgsql.cc/about/news/agensgraph-218-postgresql-18-iso-gql-3440/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-07",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "图数据库",
+        "GQL"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Autobase 2.12 默认跨可用区部署",
+      "summary": "",
+      "url": "https://pgsql.cc/about/news/autobase-212-3434/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "监控"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 修复可中断后台进程重启",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/5bf919736b20ffdc8d646c33ed2d9054609b23ec",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "后台进程"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Function Scan 的 EXPLAIN 报告内存与磁盘占用",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/edbb1d2dcb18d0706e644d3048a21e4475debd95",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "EXPLAIN",
+        "性能"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 移除命名 POSIX 信号量",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/70c4a57b64d39c526eb4c44a925eb92a6e56f3c5",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "可移植性"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "SQL/JSON PASSING 支持更多字符串类型",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/c5daeb1e0f5adfbc19ed621bb97ce2d68c8455bf",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL/JSON"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "MERGE 分区表 UPDATE 子查询初始化修复",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/7a5559a620a54af0cb3e6c22f8ddf7be778c1238",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MERGE",
+        "分区"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "PL/Perl 修复字面量转换的错误处理",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/3d342deeb433060dbea02fdd276656a5563275d5",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PL/Perl",
+        "稳定性"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "DBOS 与 Fujitsu 展示可恢复 AI 工作流",
+      "summary": "",
+      "url": "https://www.postgresql.fastware.com/blog/build-resilient-ai-workflows-with-dbos-and-fujitsu-enterprise-postgres",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI",
+        "工作流"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Neon 后端汇总 Lakebase、搜索与 Realtime 更新",
+      "summary": "",
+      "url": "https://neon.com/blog/whats-new-with-the-neon-backend",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "云数据库",
+        "PostgreSQL"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Mubit + Neon AI Gateway 降低前沿模型 token 消耗",
+      "summary": "",
+      "url": "https://neon.com/blog/mubit-neon-ai-gateway",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "AI",
+        "云数据库"
+      ],
+      "position": 26
+    }
+  ]
+}
