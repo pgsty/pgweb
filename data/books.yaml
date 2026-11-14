@@ -483,7 +483,7 @@ books:
     format: Paperback
     published: November 2010
   - title: PostgreSQL 9.0 High Performance
-    url: https://2ndquadrant.com/books/postgresql-9-0-high-performance/
+    url: https://www.packtpub.com/en-us/product/postgresql-90-high-performance-9781849510301
     image: 0301OS_MockupCover.jpg
     author: Gregory Smith
     language: English
@@ -491,7 +491,7 @@ books:
     format: PDF, Paperback
     published: October 2010
   - title: PostgreSQL 9 Administration Cookbook
-    url: https://2ndquadrant.com/books/postgresql-9-admin-cookbook/
+    # 旧 2ndQuadrant 书页已跳转到 EDB 首页，未核实到本版的替代书页。
     image: 0288OS_MockupCover_Cookbook.jpg
     author: Simon Riggs, Hannu Krosing
     language: English
@@ -559,7 +559,7 @@ books:
     format: Paperback
     published: December 2006
   - title: 'Beginning PHP & PostgreSQL 8: From Novice to Professionnal'
-    url: https://www.amazon.com/exec/obidos/redirect?link_code=as2&path=ASIN/1590595475&tag=zillablog-20&camp=1789&creative=9325
+    url: https://link.springer.com/book/10.1007/978-1-4302-0136-6
     image: 1590595475.01._AA240_SCLZZZZZZZ_.jpg
     author: W. Jason Gilmore, Robert H. Treat
     language: English
