@@ -7,7 +7,7 @@ books:
   version: PostgreSQL Internals · 2026 年版
   description: 从多版本并发控制、缓冲区与 WAL，到锁、查询执行和索引访问方法，系统理解 PostgreSQL 18 的内部机制。
   tone: teal
-  url: https://int18.pgsql.cc/zh18/
+  url: https://int18.pgsql.cc/
   image: https://int18.pgsql.cc/images/internal/ru/cover.webp
   image_alt: PostgreSQL 18 内参原版封面
 - id: pgint
