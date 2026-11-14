@@ -153,7 +153,10 @@ def branch_security(branch, releases, security):
         cve = registry.get(identifier, {})
         fixed = cve.get('fixed', {}).get(branch, '')
         rows.append({'id': identifier, 'title': cve.get('title') or identifier,
-                     'url': cve.get('url') or 'https://www.postgresql.org/support/security/' + identifier + '/',
+                     # Release-note mentions can refer to dependencies such as
+                     # OpenSSL. NVD is the stable authority when the snapshot
+                     # does not provide a PostgreSQL-specific security URL.
+                     'url': cve.get('url') or 'https://nvd.nist.gov/vuln/detail/' + identifier,
                      'score': cve.get('score'), 'vector': cve.get('vector', ''),
                      'description': cve.get('description_zh') or cve.get('description_en', ''),
                      'description_language': 'zh' if cve.get('description_zh') else 'en',

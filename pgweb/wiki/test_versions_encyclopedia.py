@@ -91,6 +91,7 @@ class VersionDataTests(SimpleTestCase):
         self.assertEqual(rows[0]['evidence'], 'release-note-mention')
         self.assertEqual(rows[0]['fixed'], '')
         self.assertEqual(rows[0]['fixed_url'], '')
+        self.assertEqual(rows[0]['url'], 'https://nvd.nist.gov/vuln/detail/CVE-2026-1001')
         self.assertEqual(len(rows[0]['mentions']), 1)
 
     def test_security_branch_matrix_is_available_even_without_note_mentions(self):

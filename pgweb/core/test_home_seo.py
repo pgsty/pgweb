@@ -128,6 +128,7 @@ class HomeSEOTests(SimpleTestCase):
     def test_about_page_uses_new_brand_and_old_url_redirects(self):
         response = self.client.get('/about/pgsql/')
         self.assertContains(response, '关于 pgsql.cc')
+        self.assertNotContains(response, 'https://www.postgresql.org/about/pgsql/')
         self.assertNoOldBrand(response)
         head = HomeMarkup(response.content.decode().split('</head>', 1)[0])
         self.assertEqual(head.values('link', 'href', rel='canonical'), ['https://pgsql.cc/about/pgsql/'])
