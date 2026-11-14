@@ -4210,12 +4210,12 @@ pages:
     description: 查阅 PostgreSQL 中文手册、各版本在线文档、PDF 下载和其他语言翻译。
     lang: zh
   /docs/books/:
-    title: PostgreSQL 图书｜社区书目
-    description: 浏览 PostgreSQL 社区维护的图书目录，查看作者、语言、版本和出版信息。
+    title: PostgreSQL 图书｜中文书籍与社区书目
+    description: 阅读 PostgreSQL 中文书籍，浏览社区维护的图书目录，查看作者、语言、版本和出版信息。
     lang: zh
   /docs/tutorials/:
-    title: PostgreSQL 中文书籍与教程
-    description: 汇总 PGSQL.CC 相关的中文 PostgreSQL 书籍、培训课程与实践教程，按主题快速进入对应阅读站点。
+    title: PostgreSQL 教程
+    description: Dalibo 与 Postgres Pro 的 PostgreSQL 中文培训课程，涵盖数据库管理、备份恢复、性能优化与应用开发。
     lang: zh
   /docs/faq/:
     title: PostgreSQL 常见问题 FAQ

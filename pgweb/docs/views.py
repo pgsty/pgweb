@@ -1052,10 +1052,11 @@ def _localize_book(book):
 def books(request):
     return render_pgweb(request, 'docs', 'docs/books.html', {
         'books': [_localize_book(book) for book in booksdata.get()['books']],
+        'curated_books': tutorialsdata.get().get('books', []),
         'og': {
             'url': '/docs/books/',
             'title': 'PostgreSQL 图书',
-            'description': 'PostgreSQL 社区维护的相关书目与出版信息。',
+            'description': 'PostgreSQL 中文书籍、在线阅读入口与社区维护的相关书目和出版信息。',
             'sitename': 'PGSQL.CC',
         },
     })
@@ -1065,13 +1066,12 @@ def books(request):
 def tutorials(request):
     data = tutorialsdata.get()
     return render_pgweb(request, 'docs', 'docs/tutorials.html', {
-        'books': data.get('books', []),
         'collections': data.get('collections', []),
         'source_url': '',
         'og': {
             'url': '/docs/tutorials/',
-            'title': 'PostgreSQL 书籍与教程',
-            'description': '汇总 PGSQL.CC 相关的中文 PostgreSQL 书籍、培训课程与实践教程。',
+            'title': 'PostgreSQL 教程',
+            'description': 'Dalibo 与 Postgres Pro 的 PostgreSQL 中文培训课程与实践教程。',
             'sitename': 'PGSQL.CC',
         },
     })

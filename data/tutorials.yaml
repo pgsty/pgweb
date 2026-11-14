@@ -213,7 +213,7 @@ collections:
     image: https://dalibo.pgsql.cc/images/sig2/cover.svg
     image_alt: SIG2 课程封面
 - id: pgpro
-  title: PGPRO 培训
+  title: Postgres Pro 培训
   tone: pgpro
   url: https://pgpro.pgsql.cc/
   image: https://pgpro.pgsql.cc/people/postgrespro.png
