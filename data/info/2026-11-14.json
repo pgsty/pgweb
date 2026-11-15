@@ -1,0 +1,428 @@
+{
+  "date": "2026-11-14",
+  "origin": "PGSQL.CC 独立采编；截稿 2026-11-15 22:08:21 Asia/Shanghai；检索覆盖 2026-11-01 至截稿；PostgreSQL.org、Planet、PGNexus #317–330、中英文搜索、项目与厂商原文、HN Top/New/Show/Ask",
+  "items": [
+    {
+      "tier": 1,
+      "title": "pg_orca 如何对齐 PostgreSQL 的成本估算",
+      "summary": "pg_orca 的技术文章剖析优化器适配单机 PostgreSQL 的方法：把源自 Greenplum 的成本计量改为 PostgreSQL 的成本单位，并读取随机页访问成本、工作内存等参数。作者解释扫描、连接与排序的估算，指出嵌套循环重扫次数和提前终止会影响比较。项目的 188 个同形计划样本中有 183 个的成本差异不超过 2%。这套模型自 5 月已默认启用，本次分析为排查计划选择差异提供了可复现的成本对照。",
+      "url": "https://agentml.ai/blog/pg-orca-pg-aligned-cost-model",
+      "author": "Jianghua Yang",
+      "source": "AgentML",
+      "source_date": "2026-11-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "优化器",
+        "成本模型",
+        "扩展"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "连接回收缓解 PostgreSQL 目录缓存膨胀",
+      "summary": "Cortex Ridge 披露了一个多租户 PostgreSQL 内存排障案例：数据库含 432 个模式、逾 8 万张表，长期存活的池化连接不断接触新表，使后端私有目录缓存持续增长。团队把服务端连接寿命从 24 小时缩短到 10 分钟，并调整租户清理任务，让空闲连接退出时释放缓存。厂商称，实例内存减半后占用仍约为一半，云账单也随之下降。该案例提示，多表系统排查内存时应同时观察连接寿命与私有缓存，而不只调整共享缓冲区。",
+      "url": "https://cortexridge.com/blog/reduce-postgresql-memory-usage-cloud-bill/",
+      "author": "Dinesh Kumar",
+      "source": "Cortex Ridge",
+      "source_date": "2026-11-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存",
+        "连接池",
+        "运维"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "RDS Proxy 连接复用失效的三类根因",
+      "summary": "为 PostgreSQL 加上 RDS Proxy 后，数据库连接数仍可能不降反升。AWS 的排障文章将原因归为会话绑定、连接池碎片和未提交事务：执行 SET 会限制复用，不一致的用户名、数据库或应用名会切分连接池，悬而未决的事务则长期占住后端。文章结合 Java、Python 客户端给出启动参数、初始化查询及事务管理的调整方法，并配套监控诊断流程。团队应先识别具体阻塞复用的行为，再评估代理容量与连接数，避免仅靠扩大连接池掩盖问题。",
+      "url": "https://aws.amazon.com/blogs/database/improve-rds-proxy-multiplexing-for-postgresql-part-1-common-causes/",
+      "author": "Pavel Rabinovich、David Gardner",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "云数据库",
+        "排障"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Aurora 虚拟索引编号耗尽需逻辑重建",
+      "summary": "AWS 分析了 Aurora MySQL 的 63955 错误：内部索引编号达到上限后，已有读写仍可继续，但包含虚拟列的新索引会创建失败，功能索引和多值索引也受影响。所有新建索引都会消耗编号，因此只统计虚拟索引无法预判风险。物理快照或克隆会保留计数，根治需要向新集群逻辑导出导入，并用二进制日志复制缩短切换窗口。将虚拟生成列改为存储列只能临时绕开限制；运行 3.10 及以后版本还可监控预警事件，提前安排重建。",
+      "url": "https://aws.amazon.com/blogs/database/fix-amazon-aurora-mysql-error-63955-virtual-index-id-overflow/",
+      "author": "Kartik Saini",
+      "source": "AWS 数据库博客",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "索引",
+        "迁移"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Galera 节点加权会改变故障容忍边界",
+      "summary": "Percona 重新审视了用节点权重解决 Galera 偶数节点仲裁的做法。权重可以为网络对半分区指定胜方，却把更多票数集中到同一故障点；重节点失联可能让其余节点一并失去多数票。文章还分析了正常退出、连续故障和集群缩容如何改变主分量，说明初始奇数节点也不能保证以后始终有多数派。作者建议优先使用等权节点，跨机房需要独立仲裁位置；仅在明确需要固定胜方时配置权重，并把维护顺序和配置漂移纳入运维检查。",
+      "url": "https://www.percona.com/blog/just-because-you-can-doesnt-mean-you-should-re-evaluating-galera-node-weights/",
+      "author": "Marco Tusa",
+      "source": "Percona",
+      "source_date": "2026-11-13",
+      "image": "https://www.percona.com/wp-content/uploads/2026/11/goat_small.jpg",
+      "domain": "db",
+      "tags": [
+        "Galera",
+        "高可用",
+        "仲裁"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "MariaDB 构建检测遗漏拖慢 TLS 握手",
+      "summary": "MariaDB 开发者定位到构建配置中的 TLS 性能问题：内嵌 WolfSSL 的 CMake 包装层没有检测编译器的 128 位整数支持，导致大数运算退回通用实现。补上检测后，作者在 Apple M4 Pro 上测试 100 次本地连接与断开，耗时从约 4.50 秒降至 1.31 秒，使用的仍是 C 代码优化而非汇编。结果仅针对该环境的连接建立过程，也提示排查数据库加密开销时，除了算法与连接池，也应核对依赖库实际启用的构建能力。",
+      "url": "https://mariadb.org/tls-connect-disconnect-performance-boost-with-wolfssl/",
+      "author": "Georgi Kodinov",
+      "source": "MariaDB Foundation",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "TLS",
+        "性能",
+        "构建"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PL/Python 修复函数缓存间的状态隔离",
+      "summary": "已提交补丁按函数和触发表保存 SD 字典，使其跨排序规则共享并在替换函数后保留，同时回补至 PostgreSQL 19。",
+      "url": "https://git.postgresql.org/gitweb/?p=postgresql.git%3Ba%3Dcommitdiff%3Bh%3Dc13c414c6e018fcbd9fa6e36e778a852c76a1562",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "正确性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Aurora PostgreSQL 快速配置接入 IaC",
+      "summary": "CloudFormation 可用单个创建属性同时生成集群与主实例，无须在模板中另行管理数据库实例。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aurora-postgresql-cloudformation/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库",
+        "IaC"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "DBTrail 按执行计划分流 MySQL 分析查询",
+      "summary": "高成本只读查询可转向列式副本，事务内读取和不兼容函数仍回源，接入前需校验结果语义及复制延迟。",
+      "url": "https://www.percona.com/blog/heavy-mysql-reports-in-seconds-open-source-htap-with-dbtrail-and-percona-server-for-mysql/",
+      "author": "",
+      "source": "Percona",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "HTAP"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "MongoDB 升级路线图逐跳检查兼容条件",
+      "summary": "工具在浏览器本地生成版本迁移步骤，汇总 FCV、驱动与备份组件检查，并逐项链接官方依据。",
+      "url": "https://www.percona.com/blog/mongodb-upgrade-roadmap/",
+      "author": "",
+      "source": "Percona",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MongoDB",
+        "升级"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "OpenSearch 时序集合可直接摄取 S3 日志",
+      "summary": "支持一次导入、持续流入及历史补录，自动解析 JSON 等记录，缺失或无效时间戳会被拒绝。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-opensearch-serverless-nextgen-time-series-intelligent-ingestion/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "日志",
+        "摄取"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "AWS 隔离备份库支持 EBS 快照归档",
+      "summary": "逻辑隔离库中的不可变备份可转入低成本归档层，并通过备份规则配置保留与迁移周期。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-backup-lag-vault-ebs-archive/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "备份",
+        "归档"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 增加计算支出上限控制",
+      "summary": "测试版先覆盖 Workers 与 Durable Objects，达到阈值后暂停收费调用，静态资源仍可访问。",
+      "url": "https://blog.cloudflare.com/spend-management/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "成本",
+        "Serverless"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Kitesurf 浏览器引擎以 Apache 2.0 开源",
+      "summary": "继此前发布服务后，开发者现可查看和修改源码，并把面向代理的浏览器部署到自己的 Workers 账户。",
+      "url": "https://blog.cloudflare.com/kitesurf-open-source/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开源",
+        "浏览器"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Buildfarm 22 用统一配置测试 PGXS 扩展",
+      "summary": "",
+      "url": "https://adpgtech.blogspot.com/2026/11/announcing-release-22-of-postgresql.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "测试",
+        "扩展"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "RDS Oracle 预置维护资源以缩短停机",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/rds-oracle-reduces-maintenance-downtime-for-amvu-scheduled-upgrades/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Oracle",
+        "运维"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Aurora MySQL 排障从等待事件定位热点 SQL",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/diagnose-amazon-aurora-mysql-performance-using-cloudwatch-database-insights/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "监控"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PXC 故障切换实测：未提交事务仍须重试",
+      "summary": "",
+      "url": "https://www.percona.com/blog/inside-an-openeverest-mysql-cluster-galera-health-and-a-live-failover-test/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "高可用",
+        "事务"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Secrets Manager 支持跨账户复制与独立密钥",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/secrets-manager-cross-account/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "密钥",
+        "容灾"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "AWS Glue 自动升级 Spark 前核验输出特征",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/glue-spark-auto-upgrades/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Spark",
+        "升级"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Cognito 令牌交换可限定下游受众与权限",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cognito-token-exchange/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "OAuth",
+        "权限"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "AWS Batch 的 EKS 作业支持 seccomp 配置",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-batch-eks-security-context/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "安全"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "MWAA Serverless 提供遵循 IAM 权限的界面",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/airflow-ui-for-mwaa-serverless/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Airflow",
+        "运维"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 可锁定关键 DNS 记录以防误改",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-route-53-record-set-protection/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "可靠性"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "SSM 可批量接管 Google Cloud 虚拟机运维",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/systems-manager-google-cloud-support/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "多云",
+        "运维"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Datasentinel 通过 MCP 提供只读性能排障",
+      "summary": "",
+      "url": "https://pgsql.cc/about/news/datasentinel-202610-ai-connector-3443/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-15",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "PostgreSQL",
+        "监控"
+      ],
+      "position": 26
+    }
+  ]
+}
