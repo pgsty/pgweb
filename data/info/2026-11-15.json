@@ -1,0 +1,414 @@
+{
+  "date": "2026-11-15",
+  "origin": "PGSQL.CC 独立采编；截稿 2026-11-16 07:45:10 Asia/Shanghai；检索覆盖 2026-11-02 至截稿；PostgreSQL.org、Planet、PGNexus #317–331、中英文搜索、项目与厂商原文、HN Top/New/Show/Ask",
+  "items": [
+    {
+      "tier": 1,
+      "title": "JSON 能解析，不代表能写入 JSONB",
+      "summary": "把文本列迁移为 JSONB 前，只验证 JSON 语法还不够。Chris van Eijk 在 PostgreSQL 16、17、18 上对 38 类输入和多种驱动进行实测，发现零字符、超大数字及客户端数组转换都有各自的失败或静默变形路径。文章给出输入校验与错误详情函数的用法，并比较转换前的保护条件。迁移应按目标类型筛查数据、显式序列化客户端对象，再执行转换；避免把单次查询中的表达式求值顺序当作不会出错的保证。",
+      "url": "https://now-next.nl/en/insights/postgresql-invalid-input-syntax-for-type-json/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSONB",
+        "数据校验",
+        "迁移"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "用 PostgreSQL 18 执行计划定位资源瓶颈",
+      "summary": "微软的排障文章用可复现查询串联 PostgreSQL 18 的执行计划诊断能力：自动缓冲区统计、索引搜索次数、逐节点内存与落盘信息，以及并行工作进程细节。示例中，窗口聚合仅使用约 17 kB，真正落盘的是前面的排序节点，直接调大窗口计算的内存并不能解释问题。把时间、循环次数、读页和临时文件放在一起看，才能区分重复索引访问、缓存命中与排序溢出。这是一份现有功能的实操分析，可用于改进慢查询排障步骤。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/postgresql-18-explain-improvements/4570298",
+      "author": "Anugya Sinha",
+      "source": "Microsoft PostgreSQL 博客",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "执行计划",
+        "性能",
+        "排障"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "小内存实测将 PostgreSQL 占用压至 50 MiB",
+      "summary": "Ted Kupolov 在 512 MiB 虚拟机上比较 PostgreSQL 的小内存配置：使用 222 MB 数据和 4 个客户端，将共享缓冲区降至 16 MB、工作内存设为 1 MB，限制连接和并行。单轮只读测试中，PostgreSQL 峰值 PSS 从 180.1 MiB 降至 50.4 MiB，吞吐量也有所提高，持久性与自动清理保持开启。该结果展示了受限环境的调参取舍，尚未覆盖同机应用或持续写入负载，不能直接外推为通用配置。",
+      "url": "https://pvrlabs.xyz/java-performance/experiments/postgresql-low-memory.html",
+      "author": "Ted Kupolov",
+      "source": "PVRLabs",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存",
+        "基准测试",
+        "配置"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Raven 用混合目录管理湖仓事务与文件",
+      "summary": "湖仓把元数据全部放进文件容易积累提交与清理开销，全部放进数据库又可能遭遇规模瓶颈。Raven 研究提出混合目录：事务性元数据进入数据库，分析型文件元数据继续保存在开放表格式中，再以扩展的读时合并机制降低提交成本。系统同时设计快照隔离下的多表事务，并统一追踪版本与文件引用，支持跨资产垃圾回收。论文在 Iceberg 和 Delta Lake 上评估原型，为湖仓兼顾开放文件、事务一致性和安全清理提供了一条具体设计路径。",
+      "url": "https://arxiv.org/html/2611.15975v1",
+      "author": "Keonwoo Oh、Akshay Mehra、Joshua Kimball、Amol Deshpande",
+      "source": "arXiv",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "湖仓",
+        "元数据",
+        "事务"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "仲裁复制的难点在尾延迟、快照与追赶",
+      "summary": "Alex Miller 发布 HPTS 演讲全文，重新比较无主复制方案能否满足数据库的实际需求。多数派读写寄存器不自动具备原子读改写能力；只压低正常路径延迟，也可能在竞争时付出长尾代价。文章从竞争下的延迟、一致本地快照和增量追赶三个条件，分析 RIOT、Accord 及可交换操作的取舍，并说明不同事务形态为何适合不同协议。这份选型框架把协议轮数与数据库执行需求联系起来，提醒实现者同时检验故障、扫描和恢复路径。",
+      "url": "https://transactional.blog/talk/please-implement-a-quorum-database",
+      "author": "Alex Miller",
+      "source": "Transactional Blog",
+      "source_date": "2026-11-15",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分布式",
+        "复制",
+        "事务"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Railway 终报还原构建凭据到密钥的越权链",
+      "summary": "继 10 月的初步披露后，Railway 终报补齐了攻击横向移动的证据链：构建隔离缺陷暴露凭据，内部任务历史泄露代码，错误的 OIDC 绑定又让攻击者取得云凭据，最终同时触及加密变量数据库和解密权限。报告还修正了早期探测与解密时间线，并说明新的构建隔离和密钥访问边界。这个案例的关键在于多个单独看来受限的权限被串联；对托管平台而言，构建凭据、内部编排和密钥服务之间的信任关系需要分别审计。",
+      "url": "https://blog.railway.com/p/incident-report-october-security-incident",
+      "author": "Jacob Cooper、Angelo Saraceno、Sarah Bedell、Luca Casonato",
+      "source": "Railway",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "构建隔离",
+        "密钥管理"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "db-branch 支持暂停并恢复数据库分支",
+      "summary": "0.2.4 可停库保留数据、端口和凭据以释放内存；暂停期间到期计时继续，集群须先完成协议升级。",
+      "url": "https://github.com/db-branch/db-branch/releases/tag/v0.2.4",
+      "author": "",
+      "source": "db-branch",
+      "source_date": "2026-11-15",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "分支",
+        "测试"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "AlloyDB 阻塞查询分析正式可用",
+      "summary": "可查看持锁查询及其依赖链，定位根阻塞者，再决定是否终止查询以解除等待。",
+      "url": "https://docs.cloud.google.com/alloydb/docs/monitor-active-queries#blocked-query-analysis",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "锁",
+        "可观测性"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Cloud SQL 增强备份兼容灾备副本",
+      "summary": "带指定灾备副本的 PostgreSQL 主实例也可直接关联 Backup and DR 备份计划。",
+      "url": "https://docs.cloud.google.com/sql/docs/postgres/backup-recovery/backup-options#eb-dr-replicas",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "灾备"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "BigQuery 预览更多关系库联邦连接",
+      "summary": "新增 PostgreSQL、MySQL 和 Oracle 连接支持，可在 BigQuery 中执行对应的联邦查询。",
+      "url": "https://docs.cloud.google.com/bigquery/docs/release-notes#November_13_2026",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "联邦查询"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Spanner 参数化视图正式可用",
+      "summary": "视图可依据查询携带的会话上下文动态过滤数据，为多租户应用提供按上下文限制访问的机制。",
+      "url": "https://docs.cloud.google.com/spanner/docs/parameterized-views",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "多租户",
+        "访问控制"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse Cloud 开放自助预览开关",
+      "summary": "组织管理员可在控制台或 API 中启停预览功能，操作进入审计日志，便于按组织控制试用范围。",
+      "url": "https://clickhouse.com/blog/self-service-previews-in-clickhouse-cloud",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "云数据库",
+        "配置"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "BigQuery 正式提供项目配额与身份路由",
+      "summary": "Enterprise 系列可按项目限制槽位和并发，并按执行者身份路由至指定预留容量。",
+      "url": "https://docs.cloud.google.com/bigquery/docs/reservations-workload-management#scheduling-policies",
+      "author": "",
+      "source": "Google Cloud",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "资源治理"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "私网 PostgreSQL 仍需约束 MCP 权限",
+      "summary": "微软结合私有端点、调用者身份与数据库授权说明工具访问边界，强调网关不可被绕过、数据库权限不能仅靠网络隔离。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/private-database-public-tools---securing-azure-database-for-postgresql-flexible-/4569620",
+      "author": "",
+      "source": "Microsoft PostgreSQL 博客",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "MCP",
+        "权限"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Ignite 安排 PostgreSQL 故障恢复实战",
+      "summary": "",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/decisions-decisions-your-guide-to-postgresql-at-microsoft-ignite-2026/4571891",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "活动"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "MariaDB TAF 新增分档扩展性负载与 CPU 绑定",
+      "summary": "",
+      "url": "https://mariadb.org/from-big-iron-to-amd-epyc-preparing-taf-to-push-mariadb-at-scale/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "测试"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 图度量正式支持按键聚合防重复计数",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/graph-measures",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分析"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 正式提供嵌套数组 JSON 展平函数",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/json_functions#json_flatten",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "JSON"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 预览 SQL 内 Zstd 压缩与解压",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/reference/standard-sql/compression-functions",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "压缩"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 预览按查询项目归集计算费用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/reservations-monitoring#reservation_cost_attribution",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "成本"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 流水线正式支持任务并发上限",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/create-pipelines",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "调度"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 流水线表级血缘追踪正式可用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/manage-pipelines#data-lineage",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-12",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "血缘"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "AWS 分析服务与 Workday 开放双向原位查询",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-analytics-workday-data-cloud/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "联邦查询"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Security Hub 用组织策略统一配置安全检查",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/security-hub-cspm-org-policies/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch 新增推理集群 GPU 利用率诊断",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/accelerated-compute-insights-cloudwatch/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-10",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "AgentCore 支持 OAuth 授权服务器发现",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/bedrock-agentcore-oauth2-discovery/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "身份认证"
+      ],
+      "position": 26
+    }
+  ]
+}
