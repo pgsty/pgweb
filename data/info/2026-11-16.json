@@ -1,0 +1,380 @@
+{
+  "date": "2026-11-16",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org / Planet；PGNexus #318–331；截至 2026-11-17 07:29:32 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PGXN 发布扩展构建、测试与发布三套 Actions",
+      "summary": "PGXN 将扩展维护中的重复工作拆成三套 GitHub Actions：启动测试数据库、生成平台与版本矩阵，以及打包上传发布。矩阵每天更新，可自动纳入新的 PostgreSQL 测试版本，也能限定最高版本；启动动作允许先编译需要预加载的模块，再运行数据库。发布动作使用 Git 归档生成发行包，便于将构建和发布衔接起来。Windows 的 C 扩展支持仍未完成，维护者应按实际语言与平台配置测试范围，不能把矩阵生成成功当作兼容性验证。",
+      "url": "https://blog.pgxn.org/2026/github-actions/",
+      "author": "David E. Wheeler",
+      "source": "PGXN",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "持续集成"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "没有死元组的表，也可能留下大量空闲页",
+      "summary": "微软的 PostgreSQL 16 实验展示了表膨胀容易误判的一面：自动清理后，死元组计数已归零，只剩一条有效记录，关系文件却仍约有 25 GB，绝大部分空间闲置。普通 VACUUM 让空间可以再次使用，并不保证把所有空页归还文件系统；扫描成本也不会随有效行数同步下降。排查时应结合关系大小、空闲空间与事务快照判断，再选择重写或在线回收方案。实验中的 VACUUM FULL 显著缩小了文件，但生产操作仍需评估排他锁、额外空间与日志开销。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/postgresql-bloated-tables/4570747",
+      "author": "esantana",
+      "source": "Microsoft Community Hub",
+      "source_date": "2026-11-12",
+      "image": "https://techcommunity.microsoft.com/t5/s/gxcuf89792/images/bS00NTcwNzQ3LTJNRVBjbg?revision=3",
+      "domain": "pg",
+      "tags": [
+        "存储",
+        "性能"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 脱敏方案的边界落在权限与数据关系上",
+      "summary": "Fujitsu 对比了 PostgreSQL 的扩展脱敏、视图方案与商业实现，指出选型首先要区分生成不可逆测试副本和按访问角色动态隐藏数据。社区版没有统一的内置脱敏机制；Anonymizer 可通过安全标签定义规则，视图则必须配合基础表权限收紧，才能形成有效边界。验证还要覆盖外键一致性、可重新识别个人的间接字段，以及日志和备份中的原始值。文章列出的模式与类型限制说明，脱敏不能只验收查询结果是否出现星号，还需逐条核对数据流向与绕过路径。",
+      "url": "https://www.postgresql.fastware.com/blog/postgresql-data-masking-built-in-vs-extension-options",
+      "author": "Diksha Sharma",
+      "source": "Fujitsu",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "脱敏",
+        "权限"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "MariaDB 连接器安全研究从单个漏洞追到同类实现",
+      "summary": "MariaDB 基金会访谈了连接器安全研究者 Yalguun Tumenkhuu。他从服务端可控的协议长度与内存分配问题出发，在不同语言驱动中追查同类缺陷，累计提交九十多份报告，涉及十四个 CVE。研究还覆盖字符集转义、认证流程以及异常报文造成的响应错配，说明数据库客户端本身也需要明确的信任边界。对运维团队而言，升级服务器不能替代更新连接器；使用代理或不可信网络时，还应验证 TLS 身份校验与连接参数来源，避免把所有防护责任留给服务端。",
+      "url": "https://mariadb.org/fix-the-class-not-the-instance-yalguun-tumenkhuu-on-hunting-bugs-in-mariadbs-connectors/",
+      "author": "Simona Aleksandrova",
+      "source": "MariaDB Foundation",
+      "source_date": "2026-11-16",
+      "image": "https://mariadb.org/wp-content/uploads/2026/11/Yalguun-Tumenkhuu.jpg",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "驱动"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "JSONBench 将十亿条文档测试扩到 27 个引擎",
+      "summary": "ClickHouse 更新 JSONBench，将参与比较的引擎从最初五个扩到二十七个，使用十亿条 Bluesky 文档和五组查询。测试在相同硬件上运行，并公开数据、配置和结果，便于核查半结构化数据的处理方式。厂商称 ClickHouse 在综合评分中领先，但这个分数同时计入冷、热查询耗时、加载时间、存储占用及失败惩罚，不能直接理解为查询快了多少倍。选型时可按自身负载拆开这些指标，复现实验后判断导入成本、查询速度与空间之间的取舍。",
+      "url": "https://clickhouse.com/blog/jsonbench-is-back-clickhouse-still-leads",
+      "author": "Tom Schreiber、Mark Needham",
+      "source": "ClickHouse",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "基准测试",
+        "JSON"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Delilah 实验揭示计算存储中的数据搬运瓶颈",
+      "summary": "一项基于真实开放硬件的研究，用 Delilah 将部分星型查询卸载到支持 eBPF 的存储设备，检验现有计算存储接口是否适合数据库执行。实验发现，耗时主要落在共享缓冲区一致性、数据暂存和重排上；由主机逐块驱动算子的方式，还会退化成分块的逐列处理。研究者因此停止继续接入存储管理器，主张让设备更直接地管理数据移动与迭代。这一结论针对所测硬件、查询和主机编排模型，提示计算下推的收益必须连同传输与执行组织方式一起衡量。",
+      "url": "https://arxiv.org/html/2611.18119v1",
+      "author": "Alexander Krause 等",
+      "source": "arXiv",
+      "source_date": "2026-11-13",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "计算存储",
+        "eBPF"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PL/pgSQL 动态查询补上多行结果检查",
+      "summary": "开发分支已合入：EXECUTE INTO 也遵循多行结果的额外警告或错误配置；STRICT 不变，行为变更不回补旧版。",
+      "url": "https://git.postgresql.org/gitweb/?p=postgresql.git;a=commitdiff;h=5ffc82103773eea1ab5aa699edc301d4f03de4ce",
+      "author": "PostgreSQL 开发团队",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "同名索引碰撞会让两套迁移都显示成功",
+      "summary": "PostgreSQL 16 实验表明，IF NOT EXISTS 会掩盖同名异义索引，迁移历史一致仍需核对实际定义。",
+      "url": "https://diffy-pick.com/blog/two-migrations-collide-one-loud-failure-one-silent-one/",
+      "author": "Eggletric",
+      "source": "DiffyPick",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "迁移"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Atarim 用租户过滤后的精确计算替代近似检索",
+      "summary": "约万条向量的案例中，近似检索后再过滤会漏结果；团队先用元数据索引缩小范围，再计算向量距离。",
+      "url": "https://mariadb.org/atarim-on-mariadb-vector-moving-rag-storage-from-qdrant-to-mariadb/",
+      "author": "Simona Aleksandrova",
+      "source": "MariaDB Foundation",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量检索"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Redshift 为 Iceberg 增加多语句原子事务",
+      "summary": "多步修改可提交为一个快照，同时加入不相交写入的冲突处理，以及按时间查询历史快照的能力。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/redshift-time-travel-multi-statement/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Iceberg",
+        "事务"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "S3 Vectors 把全文与向量检索合并为一次查询",
+      "summary": "文本元数据通过 BM25 建索引，查询结果用倒数排名融合合并；已有数据也可原地启用全文检索。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/s3-vectors-hybrid-search/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "混合检索"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Memorystore 资源紧张时可先部署到两个可用区",
+      "summary": "Redis Cluster 与 Valkey 的新能力正式可用；第三个区恢复后，高可用配置会自动重新均衡副本。",
+      "url": "https://docs.cloud.google.com/memorystore/docs/cluster/ha-and-replicas#two-zone-deployments",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "高可用"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "AWS Backup 为 RDS 增加逻辑隔离备份库",
+      "summary": "备份副本受合规模式锁定保护，可通过资源共享授权其他账户直接恢复，降低单账户受损后的恢复依赖。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-backup-air-gapped-vault-rds/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "备份",
+        "恢复"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Google 负载均衡器默认启用后量子密钥交换",
+      "summary": "支持的前端 TLS 1.3 连接采用混合密钥交换，当前阶段仍可通过 SSL 策略退出；旧客户端保持兼容。",
+      "url": "https://docs.cloud.google.com/load-balancing/docs/post-quantum-tls#post-quantum-key-exchange",
+      "author": "Google Cloud",
+      "source": "Google Cloud",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "TLS"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "pgSherpa 为 Mac 提供只读 PostgreSQL 诊断",
+      "summary": "",
+      "url": "https://cortexridge.com/blog/pgsherpa-postgresql-companion-mac-app-store/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Infinitas 用 PostgreSQL 函数简化事件处理",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/infinitas-learning-clickhouse-managed-postgres",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Aurora DSQL 多租户案例把隔离检查集中到数据访问层",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/building-a-multi-tenant-crm-with-amazon-aurora-dsql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-11",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Bigtable 预览内存层命中率与容量监控",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigtable/docs/monitoring-instance#console-monitoring",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "AWS KMS 可通过 RAM 授权跨账户共享密钥",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/kms-key-sharing-resource-access-manager/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Secrets Manager 新增三类外部凭据托管轮换",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/secrets-manager-managed-external-secrets-auth0-okta-palo-alto/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "IAM Identity Center 支持私网端点与网络限制",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/iam-identity-center-vpc-endpoints/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "AWS 允许按使用方分摊共享 VPC 网络费用",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/networking-flexible-cost-allocation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Cloud Armor 预览边缘 ASN 与威胁情报过滤",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/armor/docs/security-policy-overview#expandable-1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Dialogflow 更换 mTLS 证书，旧证书回退将停止",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/dialogflow/cx/docs/concept/mtls",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Neon 函数模板可一条命令安装固定版本依赖",
+      "summary": "",
+      "url": "https://neon.com/blog/save-tokens-with-neon-function-templates",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-05",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "CodeMender 修复 ADC 令牌发送到外部端点的问题",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/release-notes#ce5aca2f",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "ai",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}
