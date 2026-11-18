@@ -1,0 +1,425 @@
+{
+  "date": "2026-11-17",
+  "origin": "PGSQL.CC 编辑；Planet / PGNexus #332–333 线索复核；项目与厂商原文；20261118T233139Z editor17",
+  "items": [
+    {
+      "tier": 1,
+      "title": "多地域主键须同时验证升主与时钟回拨",
+      "summary": "多个地域同时写入时，主键唯一性还取决于故障恢复后的编号状态。Dimitri Fontaine 在 PostgreSQL 19rc1 上比较五种方案：落后的物理副本升主后，序列可能重新发出已用编号；时间编码的 bigint 会受时钟回拨影响；uuidv7() 在实验中未重号，但跨会话顺序仍会倒退。复合主键还能承载地域过滤，代价是引用表更宽。选型因此要把复制身份、时钟条件与切换演练一起验证，不能只比较正常运行时的插入速度。",
+      "url": "https://tapoueh.org/blog/2026/11/distributed-primary-keys/",
+      "author": "Dimitri Fontaine",
+      "source": "Dimitri Fontaine",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "主键",
+        "逻辑复制",
+        "故障切换"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "大对象清理须先核对 vacuumlo 的类型盲区",
+      "summary": "PostgreSQL 大对象独立于业务行存储，删除引用行不会自动删除对象，autovacuum 也不会识别这类孤儿。AWS 的运维分析指出，vacuumlo 只扫描类型名为 oid 或 lo 的列，不会追溯其他域类型的底层类型；放在 bigint、文本或自定义域中的有效引用可能被漏掉，导致误删。清理前应核对应用实际引用并先做预演，同时监测对象数量与 OID 分配压力。大对象过多还会推高大版本升级时导出元数据的内存需求。",
+      "url": "https://aws.amazon.com/blogs/database/postgresql-large-objects-best-practices-for-amazon-aurora-and-rds/",
+      "author": "Sachin Murkar、Huy Nguyen",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "大对象",
+        "维护",
+        "数据完整性"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_fastload 并行解析仍保持单事务导入",
+      "summary": "pg_fastload 从 pg_bulkload 派生，在 PostgreSQL 15–19 上提供并行批量导入与导出。它只读取一次输入，由多个后台进程解析记录和构造元组，再由发起调用的后端统一插入，保持调用者事务的原子性；不适用的配置会明确回退串行。工具还提供进度视图及索引重建提示。发布说明记载 11 月 9 日首发，17 日重打标签，补上二进制文件写出崩溃与重复错误配置被误拒绝两项修复，部署时需核对实际源码与构建。",
+      "url": "https://github.com/yuansong/pg_fastload/releases/tag/v1.0.0",
+      "author": "pg_fastload 项目",
+      "source": "pg_fastload",
+      "source_date": "2026-11-09",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "批量导入",
+        "事务"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Cloudberry 2.2 升级内核并扩展备份观测",
+      "summary": "Apache Cloudberry 2.2 将 PostgreSQL 基线从 14.4 推进到 14.10，并纳入部分后续安全修复。这个面向分析的 MPP 数据库新增六个扩展，覆盖磁盘配额、统计采集、分区扫描约束和分层存储等用途；查询侧增加段内并行扫描与更多并行连接能力。配套 PXF 提供活动观测和取消接口，备份组件新增管理命令与 Prometheus 导出器。发行包新增多架构构建，并停止支持 Ubuntu 20.04。",
+      "url": "https://cloudberry.apache.org/blog/announce-apache-cloudberry-2.2.0/",
+      "author": "Apache Cloudberry 社区",
+      "source": "Apache Cloudberry",
+      "source_date": "2026-11-06",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MPP",
+        "扩展",
+        "备份"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Azure PostgreSQL 新增 Arm 规格与不可变备份",
+      "summary": "Azure PostgreSQL 在 Ignite 公布计算、存储与恢复更新，新增 Cobalt 200 Arm 规格，Ultra Disk 与 SSDv2 自动扩容正式可用。不可变时间点恢复备份进入预览，恢复点与服务器生命周期隔离，删除实例后仍按保留期保存；弹性集群的 Citus CDC 预览将分片 WAL 变化映射回原始分布式表名。无本地临时盘规格适合临时文件较少的负载，若排序或连接溢出到磁盘，临时文件会与数据共享存储 I/O。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/more-power-more-resilience-better-value-azure-database-for-postgresql-at-ignite-/4573613",
+      "author": "GuyBowerman",
+      "source": "Microsoft",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库",
+        "存储",
+        "备份"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Oracle 11 月安全更新覆盖数据库与 MySQL",
+      "summary": "Oracle 发布 11 月关键安全补丁更新，共列出 655 个新安全补丁，覆盖数据库、Java 与中间件等产品线。数据库服务器矩阵包含 7 项，其中 3 项可在无认证条件下远程利用；Oracle Text 与 RDBMS 的部分缺陷评分达 9.9。APEX 的两项缺陷均为无需认证的远程攻击面，MySQL 产品线另有 10 项修复。各产品版本和所需权限不同，运维团队应按风险矩阵核对实际组件与补丁可用性，不能把总补丁数当成独立漏洞数量。",
+      "url": "https://www.oracle.com/security-alerts/cspunov2026.html",
+      "author": "Oracle",
+      "source": "Oracle",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "Oracle",
+        "MySQL"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "CloudNativePG 1.30.2 调整权限并修正副本恢复",
+      "summary": "默认镜像升至 18.7，现有集群需自行换镜像；手工管理 RBAC 的部署须新增 leases 删除权限，快照副本恢复也得到修正。",
+      "url": "https://cloudnative-pg.io/releases/cloudnative-pg-1-30.2-released/",
+      "author": "Gabriele Bartolini",
+      "source": "CloudNativePG",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "升级"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Fabric 预览可自动暂停的 PostgreSQL 服务",
+      "summary": "HorizonDB 初始基于 PostgreSQL 17，可向 OneLake 异步镜像并查询远端分析数据；空闲连接可能阻止自动暂停。",
+      "url": "https://techcommunity.microsoft.com/blog/adforpostgresql/introducing-microsoft-fabric-horizondb-serverless-postgresql-for-applications-an/4572455",
+      "author": "scoriani",
+      "source": "Microsoft",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "Fabric",
+        "无服务器"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "用 NLB 为 RDS 只读副本提供稳定入口",
+      "summary": "Lambda 定期解析副本地址并更新目标组，结合健康检查与可用区亲和分配连接；这套方案仍需管理地址同步与网络配置。",
+      "url": "https://aws.amazon.com/blogs/database/distribute-amazon-rds-traffic-between-read-replicas-using-network-load-balancer/",
+      "author": "AWS",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "只读副本",
+        "负载均衡"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "BigQuery 可直接把分析结果导出到 AlloyDB",
+      "summary": "原生 EXPORT DATA 路径正式可用，Copel 用单条导出语句替代对象存储中转与多步装载编排，供业务侧直接查询分析结果。",
+      "url": "https://cloud.google.com/blog/products/data-analytics/reverse-etl-bigquery-exports-to-alloydb",
+      "author": "Jelson A. Cordeiro、Vinod Ramachandran",
+      "source": "Google Cloud",
+      "source_date": "2026-11-14",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "反向 ETL",
+        "AlloyDB"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "MariaDB 跨多年提交追踪点查询性能回归",
+      "summary": "固定负载的追踪找到八处回退与三处恢复，最终由缓冲页热度维护的争用修复恢复吞吐，说明只比较相邻版本会遗漏累积影响。",
+      "url": "https://mariadb.org/hunting-performance-regressions-through-years-of-mariadb-history/",
+      "author": "Jonathan Miller",
+      "source": "MariaDB Foundation",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能",
+        "回归分析"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Aurora DSQL 将查询成本归集到具体 SQL",
+      "summary": "每条语句完成后记录调用数、扫描行数、时延和 DPU 消耗，可在 Database Insights 与 PromQL 中定位昂贵查询。",
+      "url": "https://aws.amazon.com/blogs/database/use-query-statistics-to-find-slow-and-expensive-queries-in-aurora-dsql/",
+      "author": "AWS",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "查询统计",
+        "可观测性"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "DynamoDB 接入 Valkey 无服务器托管缓存",
+      "summary": "新增客户端集成自动维护缓存，最终一致读可命中，强一致读仍回源；须新建启用该能力的 Valkey 9 及以上缓存。",
+      "url": "https://aws.amazon.com/blogs/database/accelerate-your-dynamodb-workloads-with-dynamodb-caching-with-amazon-elasticache-serverless-for-valkey/",
+      "author": "AWS",
+      "source": "AWS Database Blog",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "缓存",
+        "DynamoDB"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "EMR 8.2 加入并发湖表写入与增量视图刷新",
+      "summary": "这个 LTS 版本可用 S3 条件写入协调多个集群的 Delta 写入，并让 Iceberg 物化视图按变化刷新，扩展血缘与身份传递。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-emr-8.2/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "湖仓",
+        "数据工程"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Belay 用 Lean 检查 SQLite 迁移是否丢数据",
+      "summary": "",
+      "url": "https://github.com/vihren-dev/belay",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "迁移",
+        "验证"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Azure Managed Redis 预览分片指标与 IP 过滤",
+      "summary": "",
+      "url": "https://techcommunity.microsoft.com/blog/azure-managed-redis/what%E2%80%99s-new-in-azure-managed-redis-at-microsoft-ignite-2026/4574168",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "缓存",
+        "运维"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "OpenSearch 无服务器版支持入库时处理文档",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/opensearch-serverless-support-ingest-pipelines/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "搜索",
+        "数据管道"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Kinesis 新增按记录确认的队列消费方式",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/kinesis-data-streams-queues/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "流处理"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "S3 向量与私网端点加入后量子密钥交换",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-s3-post-quantum-tls-key-exchange-support/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "对象存储",
+        "TLS"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "AWS 与 Azure 的托管私网互联正式可用",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-announces-AWS-interconnect-multicloud-azure-ga/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "多云",
+        "网络"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 全局解析可接入 Cloud WAN 私网",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/route-53-global-resolver-cloud-wan/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DNS",
+        "高可用"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 持久执行支持暂停并从检查点继续",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/lambda-durable-pause-delete/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "工作流"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 托管实例的事件函数可缩容至零",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-lambda-managed-instances-scale-to-zero/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "无服务器"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "ECR 私有仓库可共用分区内的全局认证令牌",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/global-authentication-amazon-ecr/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "容器",
+        "认证"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "DuckDB 先筛选评论，再交模型归纳投诉",
+      "summary": "",
+      "url": "https://duckdb.org/2026/11/17/duckdb-user-group-workshop-ai-powered-review-analysis",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "DuckDB",
+        "数据分析"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Copilot 审查可按需调用 GitHub 密钥检测器",
+      "summary": "",
+      "url": "https://github.blog/changelog/2026-11-17-secret-scanning-on-demand-for-developers-and-agents/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "开发工具",
+        "安全"
+      ],
+      "position": 26
+    }
+  ]
+}
