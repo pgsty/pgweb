@@ -1,0 +1,415 @@
+{
+  "date": "2026-11-18",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL Git/Planet；PGNexus #333；项目与厂商原文；截稿 2026-11-19 07:31:39 +08",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复恢复时提交状态提前落盘",
+      "summary": "PostgreSQL 已合入一项恢复一致性修复：关闭 hot_standby 时，事务提交状态可能先写入 CLOG，而最低恢复点尚未推进。如果随后崩溃并恢复到该事务提交记录之前，数据库可能把尚未恢复的事务误判为已提交。补丁让这条路径也携带提交日志位置，先保证最低恢复点推进，再允许提交状态落盘，与热备路径保持一致。提交注明回补至 PG15；这项修复针对恢复过程中的持久化顺序，直接关系到按时间点恢复后的事务可见性。",
+      "url": "https://github.com/postgres/postgres/commit/8303f2e13c5c2fab539e11054073a58942cb0f30",
+      "author": "Jeff Davis",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "恢复",
+        "一致性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "读流重扫修复已释放缓冲策略引用",
+      "summary": "PostgreSQL 已合入堆扫描读流的生命周期修复。扫描描述符会跨重扫复用，但表大小或调用标志变化可能启用或移除批量读取策略；旧读流仍保存首次扫描的策略指针与队列容量，新增策略时无法正确利用它，移除策略时还会留下指向已释放内存的引用。补丁在策略使用状态变化前结束旧读流，再按新策略重建；状态不变时则重置复用。提交注明回补至 PG17，修复重点是让重扫时的预读状态、缓冲策略与资源生命周期保持一致。",
+      "url": "https://github.com/postgres/postgres/commit/556c025db96500168ed865e26dcfcc3a0b68dbb9",
+      "author": "Bertrand Drouvot、Melanie Plageman",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "预读",
+        "内存安全"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "安全补丁用私有构建农场提前验证整套修改",
+      "summary": "Andrew Dunstan 介绍了 PostgreSQL 自今年 6 月起运行的安全补丁基础设施。受保密期约束的修复按分支保存在私有补丁栈中，SecurityFarm 持续测试当前上游加上全部待发布补丁，提前发现跨平台失败、补丁冲突和遗漏回补。构建农场与正式封版使用同一套补丁应用脚本，检查文件缺失、作者身份及应用错误，避免测试内容与最终提交漂移。文章还说明，通用 PatchStack 模块可用于维护者自行携带的补丁集。",
+      "url": "https://adpgtech.blogspot.com/2026/11/new-security-infrastructure-for.html",
+      "author": "Andrew Dunstan",
+      "source": "Andrew Dunstan 博客",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "测试",
+        "发布工程"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "频繁建临时表的开销落在目录、文件与失效队列",
+      "summary": "PostgresAI 用 PG18.6 测量每事务创建临时表的代价：测试中的两列表每次涉及 31 行系统目录、3 个文件和 132 条缓存失效消息。没有大量空闲连接时，主要开销是目录与文件操作；加入数千空闲会话后，共享失效队列清理又成为压力来源。厂商称，在其特定负载中，复用临时表并在提交时清空可达到原方案约 4.7 倍吞吐。文章将各类开销分别测量，说明减少建删表频率与控制连接数量需要一起考虑。",
+      "url": "https://postgres.ai/blog/20261118-hidden-costs-of-create-temp-table",
+      "author": "Nikolay Samokhvalov",
+      "source": "PostgresAI",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "临时表",
+        "运维"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "WAL-G 3.0.10 可通过复制协议提供归档日志",
+      "summary": "WAL-G 3.0.10 加入 wal-send，可把对象存储中的归档 WAL 通过 PostgreSQL 复制协议提供给客户端，为恢复与日志传输增加一种入口。备份流程新增可选的等待归档模式，并修正并发备份名称预留和预取完成后的处理；S3 后端迁移到新版 SDK。删除行为也有需要留意的变化：显式指定备份执行删除时可移除永久备份，而按保留策略清理仍保护它们。部署前应核对备份脚本是否依赖旧删除语义，并验证归档与恢复链路。",
+      "url": "https://github.com/wal-g/wal-g/releases/tag/v3.0.10",
+      "author": "WAL-G 项目组",
+      "source": "WAL-G GitHub Releases",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复",
+        "WAL"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "pgrx 0.20 可直接生成 RPM 与 DEB 扩展包",
+      "summary": "pgrx 0.20 可按项目元数据直接生成 RPM 或 DEB，默认安装路径遵循 PGDG 仓库约定，按 pg_config 选择大版本。版本支持范围调整为 PG15–19，同时自动生成 C 宏与内联函数的 Rust 对应代码，部分安全修复带来接口变化。现有 cargo-deb 元数据可能需要调整，首版尚不支持包签名；维护者可把原先各自编写的打包步骤收进统一构建流程。",
+      "url": "https://blog.taadeem.net///english/2026/11/18/pgrx_0_20_packaging",
+      "author": "Damien Clochard",
+      "source": "Damien Clochard 博客",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "Rust",
+        "软件包"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "并行逻辑应用在共享内存耗尽时改用文件缓冲",
+      "summary": "已合入的修复让共享内存段耗尽时将事务序列化到文件，避免复制反复报错重启却无法前进；同组修复也补齐分配失败的返回约定。",
+      "url": "https://github.com/postgres/postgres/commit/c790e38b4a26f8546a10f3a4fdb79cf090f70632",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "内存"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "差分测试用独立解释器核对行级安全编译结果",
+      "summary": "rowstile 将策略解释器与生成的 PostgreSQL 权限逻辑逐项比较，随机测试暴露差异，也促使测试基准补齐排序规则与类型语义。",
+      "url": "https://rowstile.dev/blog/checking-a-compiler",
+      "author": "",
+      "source": "rowstile",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "权限",
+        "测试"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "大实例实测显示大页收益取决于连接与页表开销",
+      "summary": "作者在 64 核、256 GB 的活跃连接负载中测得约 12% 吞吐提升，并提醒 huge_pages=try 可能静默回退，须验证实际分配。",
+      "url": "https://kmoppel.github.io/2026-11-18-reminder-large-instances-love-huge-pages/",
+      "author": "",
+      "source": "Kaarel Moppel 博客",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "内存"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "pgjumbo 1.0.2 重做备份、恢复与维护流程",
+      "summary": "支持按表选择是否包含数据、设置锁等待上限、先查看归档再恢复，并把备份、恢复和维护放入后台任务面板。",
+      "url": "https://pgjumbo.com/changes/1.0.2",
+      "author": "",
+      "source": "pgjumbo",
+      "source_date": "2026-11-16",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "工具"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "RDS 加快快照恢复与副本创建后的存储初始化",
+      "summary": "厂商称每实例 gp3、io2 卷初始化可达每小时 4 TiB，后台执行并提供进度；账户并发超过可用带宽时按尽力而为处理。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-rds-fast-storage-volume-initialization/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "恢复",
+        "存储"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "RDS MySQL 9.7 引入 JSON 双重视图与新优化器",
+      "summary": "托管服务以 9.7.4 为起点支持这一 LTS 大版本，提供复制应用统计、关系表的 JSON 读写视图及可选的超图优化器。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-rds-mysql-974-available/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "版本"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Aurora DSQL 审计日志补齐连接后的 SQL 活动",
+      "summary": "可记录语句全文、绑定参数、数据库角色与 IAM 身份，并以 JSON 交付至 S3；数据库处理、日志投递与存储分别计费。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-aurora-dsql-audit-logging/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "审计",
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "CloudFront 函数可联网读取数据并后台上报事件",
+      "summary": "cf.fetch 可根据接口响应执行边缘鉴权或路由，cf.beacon 用于后台上报，并复用已有源站连接与访问控制配置。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cloudfront-functions-network-calls/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "边缘计算"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PG 修复过大列号引发可更新性检查报错",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/4892c9447e315f00be028d90a60e1e0ccfe3992d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "to_char 修复科学计数法舍入后的尾数归一化",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/68b927397e7641432078b2fcfa8f1f5f60a9a42d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "单用户模式修复临时关系 I/O 统计与断言失败",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/45047c51aab3b02035217088ef35220b2be905d7",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "MariaDB 四条 LTS 分支修复恢复与数据完整性问题",
+      "summary": "",
+      "url": "https://mariadb.org/mariadb-server-12-3-11-8-11-4-and-10-11-q4-2026-maintenance-releases/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MariaDB"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "ClickHouse 用 SQL 像素结果直接生成航迹动画",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/faa-outage-clickhouse-format-png",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "可视化"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "S3 复制可排除前缀并自动匹配多区域密钥",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-s3-replication-exclusions-multi-region-key-resolution/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "对象存储"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Cognito 时间点恢复可保留用户密码与通行密钥",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cognito-point-in-time-recovery/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "恢复"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 可集中更新共享运行时而无需逐函数部署",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-lambda-customer-managed-runtimes/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "无服务器"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "CloudFront 源站双向 TLS 扩展到 WebSocket 与 gRPC",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-cloudfront-origin-mtls-websockets-grpc/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "CloudFront 标准日志新增播放器缓冲等 CMCD 字段",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cloudfront-standard-logging-cmcd-fields/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Clean Rooms 可将 PySpark 结果写入中间表复用",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-clean-rooms-pyspark-intermediate-table/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "数据分析"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Glue 优化助手根据 Spark 遥测生成配置建议",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/apache-spark-aws-glue-etl/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据工程"
+      ],
+      "position": 26
+    }
+  ]
+}
