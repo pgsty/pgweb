@@ -8,7 +8,7 @@
 
 - PG10–19 使用同名的 `core_version.tree` / `docs.version`。
 - PG20 开发快照使用上游约定的 `tree = 0`，网址为 `/docs/devel/`；`/docs/20/` 跳转到这里，检索使用 `pg20:`。实际开发版本号统一维护于 `pgweb/docs/versions.py`。
-- PG19 当前为 `19rc2`；保持版本表原有测试状态，不能当作正式版本或当前稳定版本。当前稳定版为 18.7，其后为 17.12、16.16、15.20、14.25；14 已于 2026-11-12 结束支持。当前稳定手册由 `core_version.current` 决定。
+- PG19 软件与中文手册均已于 2026-11-19 更新为 `19.0`，为当前稳定版本；18.7、17.12、16.16、15.20 仍受支持，14.25 所属大版本已于 2026-11-12 结束支持。当前稳定手册由 `core_version.current` 决定。正式版发布与恢复验收见 [19.0 发布记录](docs-publication-19.0-20261119.md)。
 - 每版两份 PDF 放入 `static/documentation/pdf/<大版本>/postgresql-<大版本>-A4.pdf` 和 `postgresql-<大版本>-US.pdf`。开发版的目录为 `20`，不能与 PG19 的 PDF 混用。
 
 导入器按版本决定源文件编码：PG10 及以上和开发版按 UTF-8，PG9.x 及更早版本按旧工具链的 Latin-1 兼容路径处理。部分发布说明等 HTML 片段没有 XML 声明，因此不能用文件开头是否有 `<?xml ... encoding="UTF-8"?>` 来判断编码；该声明只用于选择 Tidy 的 XML 清理选项。导入后应抽查中文字符和页面哈希，避免把 UTF-8 内容按 Latin-1 解码后以乱码写入 `docs.content`。
