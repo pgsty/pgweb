@@ -55,7 +55,7 @@ be427be2f7a2ee8ea853b9a3f6835702a6d7b357c90b93c07b5624f5a350dc54
 
 部署提交为 `be8e86d30b2aa8a791b3a5f3e0800df218864068`：移除发布 YAML 中临时指向上游的 `notes_url`，同步已有测试断言，正式发行说明入口改用中文手册。25 项相关测试通过。生产 `/data/app/pgsql.cc` 快进到该提交，只重启 `pgsql.cc`；部署后中文、英文站服务均为 active。后续记录更新不改变此运行代码版本。
 
-本批完成手册、PDF、PG19 版本比较和相应索引。百科中的系统目录、GUC、等待事件、SQLSTATE、钩子等固定来源仍需按各自流程校准，现有 beta/RC 采样事实未改标为 GA；PG20 固定快照未刷新。PG.CENTER 的双语手册本批未发布：官方下载的英文 A4/US PDF 仍声明为 19rc2，尚未通过 19.0 来源检查。
+本批完成手册、PDF、PG19 版本比较和相应索引。百科中的系统目录、GUC、等待事件、SQLSTATE、钩子等固定来源仍需按各自流程校准，现有 beta/RC 采样事实未改标为 GA；PG20 固定快照未刷新。PG.CENTER 于 11 月 20 日另行完成 [19.0 双语发布](https://github.com/pgsty/pg.center/blob/main/docs/docs-publication-19.0-20261120.md)。官方英文 PDF 当时仍声明 19rc2，用户明确授权本次从已验证官方源码自建 A4/US，来源保持“项目自建版，非官方 PDF 原件”；中文制品沿用本记录的已验收字节。两站公开下载均通过完整哈希核对。
 
 本地 `data/info/2026-11-02.json` 原有修改保留，SHA-256 仍为 `286f0397c4d91cceff2f8f8fe1f2bd1122f18f260a4df9a1a7ac0d23f08b1a0e`。
 
