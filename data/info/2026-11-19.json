@@ -1,0 +1,382 @@
+{
+  "date": "2026-11-19",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org、Planet、PGNexus #321–334、项目与厂商原文、Google/Bing/Web Search、HN；截稿 2026-11-20 07:27:25 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "PostgreSQL 19 正式发布，新增并发重整与计划建议",
+      "summary": "PostgreSQL 19 正式发布，将并发重整、计划稳定性和分布式应用所需能力纳入核心。REPACK 可回收表空间并按索引重排，并发模式允许读写继续；计划建议扩展可按查询标识保存和应用执行建议。逻辑复制新增序列值同步，备库可等待指定日志位置后再读，应用也能在插入冲突时直接返回已有行。升级还需核对默认值变化：JIT 默认关闭，启用 LZ4 构建时默认采用该压缩方式，并移除 RADIUS 认证。",
+      "url": "https://www.postgresql.org/about/news/postgresql-19-released-3449/",
+      "author": "PostgreSQL 全球开发组",
+      "source": "PostgreSQL",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "版本发布",
+        "运维"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "WAL_LOG 建库的数据丢失修复已合入",
+      "summary": "PostgreSQL 已合入 WAL_LOG 建库路径的数据完整性修复。复制关系文件时，旧实现把所有页面都按标准布局处理，生成整页日志镜像时可能省略实际含有数据的区域，备库回放后便与主库不同。受影响情形包括可见性映射、空闲空间映射及旧 GIN 索引；错误映射在升主后可能导致清理失败或已不可见数据重新可见。新实现只对已知布局或全零区域省略内容，并可能增加部分访问方法的日志量；提交列出的回补下界为 PG 15。",
+      "url": "https://github.com/postgres/postgres/commit/db26517e79c182b14075e948acf4b23e30f074fd",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据完整性",
+        "复制"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "增量备份合并修复截断后旧数据复活",
+      "summary": "PostgreSQL 已提交增量备份合并修复，针对备份链中间发生文件截断、随后又扩展的情况。旧实现只读取最新增量的截断边界，可能从更早备份取回已删除的页面，覆盖本应补零的区域，恢复后甚至出现旧行复活和表索引不一致。新逻辑逆向遍历备份链时逐步收紧可复用页面的上界，同时保留较新增量自身提供的块。提交注明回补至引入增量备份的 PG 17；这项源码修复使恢复校验必须关注中间截断，而不只是最终文件大小。",
+      "url": "https://github.com/postgres/postgres/commit/4280abf88409d09e5828c4642219df053220a650",
+      "author": "Ke、Rajesh Kumar Thandapani",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "数据完整性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "大租户可能一直沿用小租户选出的通用计划",
+      "summary": "多租户查询即使估算成本很低，也可能在大租户上访问数万次缓冲区。Radim Marek 用 PG 18.7 复现实例说明：连接先处理小租户后可能选中通用预备计划，随后大租户也沿用它；手工把参数替换成常量再看执行计划，会掩盖应用真正执行的路径。案例把取前若干行的限制下移到连接之前，再用覆盖索引减少回表，但等价改写依赖非空外键与唯一键保证连接不丢行、不增行。缓冲访问次数、实际读取与耗时应一起判断。",
+      "url": "https://boringsql.com/posts/planner-cost-and-buffers/",
+      "author": "Radim Marek",
+      "source": "boringSQL",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询优化",
+        "多租户"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "pg_clickhouse 扩展向量检索与写操作下推",
+      "summary": "pg_clickhouse 0.11.1 的技术说明展示了 PostgreSQL 与 ClickHouse 之间更完整的查询下推。外表可显式把浮点数组映射为 pgvector 向量，距离运算交给远端执行，并报告可用的向量索引；对 MergeTree 系列表还支持更新、删除与截断。空聚合、JSON 下标和时区处理也更贴近 PostgreSQL。该版本此前已发布，本次说明给出具体使用边界：轻量更新适合少量行，无条件更新或删除仍会作用于整表。",
+      "url": "https://clickhouse.com/blog/pg-clickhouse-0-11-1",
+      "author": "David Wheeler",
+      "source": "ClickHouse",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "查询下推"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Blobasaur 用 SQLite 分片承载大块配置数据",
+      "summary": "Zerodha 公布了以 SQLite 为存储引擎的 Blobasaur，用来替换保存界面配置的旧存储。系统以 Rust 实现，兼容部分 Redis 命令和集群路由，每台机器再拆成多个 SQLite 文件，通过单分片写队列与批量提交突破单写者瓶颈，并在写入前压缩数据。团队称三节点生产部署的主要请求延迟保持在毫秒级。这个结果有明确取舍：业务允许丢失近期配置写入，当前没有自动故障转移或在线槽迁移，扩分片仍须停机处理。",
+      "url": "https://zerodha.tech/blog/high-performance-distributed-blob-storage/",
+      "author": "Sarat Chandra",
+      "source": "Zerodha",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "SQLite",
+        "存储"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "SP-GiST 修复不可返回键导致的错值与崩溃",
+      "summary": "仅索引扫描改为先核对操作符类能否返回键，避免把错误值带入 INCLUDE 列；提交注明回补至 PG 15。",
+      "url": "https://github.com/postgres/postgres/commit/0c9fc1a96be7054cae5d79a724407426da3cdd8e",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "复制槽同步须建立一致快照后才持久化",
+      "summary": "修复下一轮同步误清跳过原因的问题，避免备库升主后从过晚位置解码而漏掉事务；回补下界为 PG 19。",
+      "url": "https://github.com/postgres/postgres/commit/ba11c48390004ed49b889cbd718c9e5f691fe493",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "WAL 预取修复恢复目标后的错误时间线分叉",
+      "summary": "重新定位读取位置时清除旧记录，避免低 I/O 并发下恢复检查点失败、重启后越过恢复目标；修复已提交。",
+      "url": "https://github.com/postgres/postgres/commit/736ecc413b38555637802ccd8dfd35f034235796",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "FULL JOIN 补上非严格表达式的漏行修复",
+      "summary": "只有能证明两侧表达式遇空仍为空时才推导过滤条件，避免 COALESCE 引入常量后丢弃未匹配行。",
+      "url": "https://github.com/postgres/postgres/commit/72b480e55d72cae35e798500167d05ad5bb58176",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询正确性"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Aurora 压测显示审计开销随并发放大",
+      "summary": "AWS 称同一负载在 800 连接下叠加全量审计后吞吐降至约三分之一，低并发测试未显示同等开销。",
+      "url": "https://aws.amazon.com/blogs/database/performance-impact-of-excessive-logging-in-amazon-aurora-postgresql/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "审计"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "ExtendDB 1.0 将 DynamoDB 兼容层推向生产",
+      "summary": "新增生产可用版本覆盖 PostgreSQL、SQLite、Cassandra 与 MongoDB 后端，本地开发可直接用 SQLite。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-extenddb-1-0/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "开源",
+        "兼容"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Valkey 9.2 正式发布，减少快照与复制开销",
+      "summary": "免 fork 快照需显式启用，复制可压缩，大型有序集合改用 B+ 树；压缩持久化格式还影响降级路径。",
+      "url": "https://valkey.io/blog/valkey-9.2-release/",
+      "author": "",
+      "source": "Valkey",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "缓存",
+        "版本发布"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 将节点诊断与受控摘除连成流程",
+      "summary": "三云实践把内核和磁盘故障转为节点状态，摘除前尽量保留取证数据，并用冷却时间和排除规则限制误操作。",
+      "url": "https://clickhouse.com/blog/node-reliability-across-three-clouds",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes",
+        "可靠性"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "auto_explain 修复未执行索引计划时的空指针",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/a20d50a00edc40ff11b08b1e3e3be6e4f9da51f6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "恢复回放截断时补清可见性映射的缺页记录",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/c266e204a7ab76f79178ed94aa2f679def0bff9d",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "autovacuum 修复并发清理导致的冻结评分虚高",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/4226f1f01ad1a1bd6f017d181c085c788b2961a0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "WAL 持续到达时也能及时响应备库关闭与升主",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/5c06a7ef24c70226db22310b4c6bad546b6f3335",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "开发版 pgstattuple 将未知行数估计改为 NULL",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/b443bc7406fd92f1f869cc700810ef9a17a01d82",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Neon 官方 Terraform 提供程序以测试版上线",
+      "summary": "",
+      "url": "https://neon.com/blog/official-neon-terraform-provider",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "WorkOS 身份资料可定时镜像到 Neon 分支",
+      "summary": "",
+      "url": "https://neon.com/blog/query-your-workos-users-in-neon-with-the-workos-sync-engine",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "clickhousectl 0.6 增加 PG 私网端点与删除保护",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/clickhousectl-v0-6-0",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Power BI 预览通过 Arrow Flight 直连 ClickHouse",
+      "summary": "",
+      "url": "https://clickhouse.com/blog/power-bi-arrow-flight-connector-public-preview",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Neptune 用身份与资源标签约束跨团队集群访问",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/securing-multi-team-amazon-neptune-with-tag-based-access-control/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "db",
+      "tags": [],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "RDS Oracle 的 Outposts 多可用区部署不支持本地备份",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/deploy-amazon-rds-for-oracle-on-aws-outposts/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "Pitot 预览版按分钟采样加速链路下钻",
+      "summary": "",
+      "url": "https://github.com/labstack/pitot/releases/tag/v2026.11.10-alpha",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "infra",
+      "tags": [],
+      "position": 26
+    }
+  ]
+}
