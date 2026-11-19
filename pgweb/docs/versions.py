@@ -52,11 +52,12 @@ def manual_groups():
     loaded = set(DocPage.objects.filter(file__in=('index.html', 'postgres.html', 'postgres.htm', 'book01.htm'))
                  .values_list('version_id', flat=True))
     versions = [v for v in Version.objects.order_by('-tree') if v.tree in loaded]
+    builds = {v.tree: manual_prerelease(v) for v in versions if v.tree > 0}
     groups = {
-        'supported': [int(v.tree) for v in versions if v.tree > 0 and not v.testing and v.supported],
+        'supported': [int(v.tree) for v in versions if v.tree > 0 and not v.testing and v.supported and not builds[v.tree]],
         'historical': [int(v.tree) for v in versions if 10 <= v.tree and not v.testing and not v.supported],
-        'testing': [{'major': int(v.tree), 'label': build.type if (build := manual_prerelease(v)) else '预览'}
-                    for v in versions if v.tree > 0 and v.testing],
+        'testing': [{'major': int(v.tree), 'label': build.type if (build := builds[v.tree]) else '预览'}
+                    for v in versions if v.tree > 0 and (v.testing or (v.supported and builds[v.tree]))],
         'devel': DEVEL_MAJOR_VERSION if any(v.tree == 0 for v in versions) else None,
     }
     cache.set(MANUAL_GROUPS_CACHE_KEY, groups, 600)

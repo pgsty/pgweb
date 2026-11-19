@@ -536,8 +536,9 @@ def docpage(request, version, filename):
         version_state = 'eol'
     upstream_path = _doc_path(page.display_version(), page.file)
     from pgweb.docs.versions import manual_prerelease
-    manual_build = manual_prerelease(page.version) if version_state == 'beta' else None
+    manual_build = manual_prerelease(page.version) if page.version.tree > 0 else None
     version_label = ('PostgreSQL {} 开发快照'.format(DEVEL_MAJOR_VERSION) if version_state == 'devel'
+                     else 'PostgreSQL {}'.format(manual_build) if manual_build
                      else 'PostgreSQL {}'.format(manual_build or '{} 预发布版'.format(page.version.numtree)) if version_state == 'beta'
                      else 'PostgreSQL {}'.format(page.version.numtree))
     build = ''
@@ -562,6 +563,7 @@ def docpage(request, version, filename):
         'loaddate': loaddate,
         'loadgit': loadgit,
         'version_state': version_state,
+        'manual_build': manual_build,
         'version_label': version_label,
         'upstream_url': 'https://www.postgresql.org' + upstream_path,
         'upstream_form_url': 'https://www.postgresql.org/account/comments/new/{}/{}/'.format(
@@ -692,6 +694,9 @@ class _VersionPdfWrapper(object):
         self.indexname = _doc_index_filename(self.__version.tree)
 
     def __getattr__(self, name):
+        if name == 'manual_build':
+            from pgweb.docs.versions import manual_prerelease
+            return manual_prerelease(self.__version) if self.loaded else None
         return getattr(self.__version, name)
 
     def _find_pdf(self, pagetype):

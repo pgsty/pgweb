@@ -72,6 +72,10 @@ class Version(models.Model):
         from pgweb.docs.models import DocPage
 
         path = '/docs/{}/{}'.format(self.numtree, self.relnotes)
+        from pgweb.docs.versions import manual_prerelease
+
+        if self.pk and not self.testing and manual_prerelease(self):
+            return 'https://www.postgresql.org' + path
         if DocPage.objects.filter(version=self, file=self.relnotes).exists():
             return path
         return 'https://www.postgresql.org' + path

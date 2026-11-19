@@ -29,6 +29,13 @@ def do_migrate():
             not release.get('announcetext_zh')):
         raise Exception("Release type {} must specify announcetext_zh or announcetext".format(release['type']))
 
+    if 'eoldate' in release:
+        if (release['type'] != 'major' or len(release['versions']) != 1 or
+                release['versions'][0].type != 'major'):
+            raise ValueError('eoldate requires a single major release')
+        if type(release['eoldate']) is not date or release['eoldate'] <= release['date']:
+            raise ValueError('eoldate must be a date after the release date')
+
     newsid = release.get('news', {}).get('id', None)
     if not newsid:
         print("No news specified for release, cannot approve news or connect CVEs")
@@ -40,10 +47,14 @@ def do_migrate():
             print("Could not find news article with id {}, cannot approve news or connect CVEs".format(release['news']['id']))
             news = None
 
+    upstream_id = release.get('news', {}).get('upstream_id')
+    if upstream_id and (news is None or news.postedto.get('upstream_sync', {}).get('id') != upstream_id):
+        raise ValueError('Release news does not match the expected upstream article {}'.format(upstream_id))
+
     # Update latest available version
     for ver in release['versions']:
         try:
-            v = Version.objects.only('tree', 'latestminor', 'reldate', 'testing').get(tree=ver.major)
+            v = Version.objects.only('tree', 'latestminor', 'reldate', 'testing', 'firstreldate', 'eoldate').get(tree=ver.major)
             uf = []
             if v.latestminor != ver.minor:
                 v.latestminor = ver.minor
@@ -53,6 +64,18 @@ def do_migrate():
                 v.reldate = release['date']
                 uf.append('reldate')
                 print("Set reldate={} for version {}".format(v.reldate, v.numtree))
+
+            # A .0 release fixes the GA dates even if its status was already updated.
+            # Support deadlines are explicit metadata, never inferred from the year.
+            if ver.type == 'major':
+                if v.firstreldate != release['date']:
+                    v.firstreldate = release['date']
+                    uf.append('firstreldate')
+                    print("Set firstreldate={} for version {}".format(v.firstreldate, v.numtree))
+                if 'eoldate' in release and v.eoldate != release['eoldate']:
+                    v.eoldate = release['eoldate']
+                    uf.append('eoldate')
+                    print("Set eoldate={} for version {}".format(v.eoldate, v.numtree))
 
             if ver.testing and v.testing != ver.testing:
                 v.testing = ver.testing

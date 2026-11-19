@@ -44,6 +44,11 @@ features:
   EXPLAIN (BUFFERS) support:
     name: EXPLAIN (BUFFERS) 支持
     description: 增加了显示查询缓冲区使用统计信息的能力
+  EXPLAIN (IO):
+    name: EXPLAIN (IO)
+    description: >-
+      [`EXPLAIN ANALYZE`](https://www.postgresql.org/docs/19/sql-explain.html) 的 `IO` 选项会报告异步 I/O 活动。
+      也可以通过 [`auto_explain.log_io`](https://www.postgresql.org/docs/19/auto-explain.html#AUTO-EXPLAIN-CONFIGURATION-PARAMETERS-LOG-IO) 将这些信息写入日志。
   EXPLAIN (MEMORY):
     name: EXPLAIN (MEMORY)
     description: '`EXPLAIN` 的 `MEMORY` 选项会报告优化器的内存使用情况。'
@@ -69,6 +74,14 @@ features:
     name: pg_stat_checkpointer 系统视图
   pg_stat_io - I/O metrics view:
     name: pg_stat_io I/O 指标视图
+  pg_stat_lock system view:
+    name: pg_stat_lock 系统视图
+    description: >-
+      通过 [`pg_stat_lock`](https://www.postgresql.org/docs/19/monitoring-stats.html#PG-STAT-LOCK-VIEW) 系统视图查看按锁类型汇总的统计信息。
+  pg_stat_recovery system view:
+    name: pg_stat_recovery 系统视图
+    description: >-
+      通过 [`pg_stat_recovery`](https://www.postgresql.org/docs/19/monitoring-stats.html#PG-STAT-RECOVERY-VIEW) 系统视图查看恢复状态。
   pg_wait_events system view:
     name: pg_wait_events 系统视图
   Server statistics in shared memory:
@@ -80,6 +93,11 @@ features:
   Support for anonymous shared memory:
     name: 匿名共享内存支持
     description: 以前调整共享内存大小通常需要调整内核参数来适应变化。现在不再需要了。
+  WAL full page image size reporting:
+    name: WAL 整页镜像大小报告
+    description: >-
+      [`pg_stat_wal`](https://www.postgresql.org/docs/19/monitoring-stats.html#PG-STAT-WAL-VIEW) 的 `wal_fpi_bytes` 字段、
+      `EXPLAIN (ANALYZE, WAL)` 以及 `VACUUM` 和 `ANALYZE` 的日志输出会报告整页镜像写入 WAL 的字节数。
   XML, JSON and YAML output for EXPLAIN:
     name: EXPLAIN 的 XML、JSON 和 YAML 输出
     description: 为 EXPLAIN 添加 XML、JSON 和 YAML 输出，以帮助自动处理查询计划
@@ -106,6 +124,11 @@ features:
   Phrase search:
     name: 短语搜索
     description: 全文检索支持短语和词语邻近度搜索。
+  random() for dates and timestamps:
+    name: 用 random() 生成随机日期和时间戳
+    description: >-
+      [`random(min, max)`](https://www.postgresql.org/docs/19/functions-datetime.html#FUNCTIONS-DATETIME-TABLE)
+      可以在指定范围内生成随机的 `date`、`timestamp` 和 `timestamptz` 值。
   Range types:
     name: 范围类型
     description: https://www.postgresql.org/docs/9.2/static/rangetypes.html
@@ -217,6 +240,16 @@ features:
   GROUPING SETS, CUBE and ROLLUP support:
     name: GROUPING SETS, CUBE 和 ROLLUP 支持
     description: https://www.postgresql.org/docs/current/static/queries-table-expressions.html#QUERIES-GROUPING-SETS
+  IGNORE NULLS / RESPECT NULLS for window functions:
+    name: 窗口函数的 IGNORE NULLS / RESPECT NULLS 支持
+    description: >-
+      `lead()`、`lag()`、`first_value()`、`last_value()` 和 `nth_value()`
+      [窗口函数](https://www.postgresql.org/docs/19/functions-window.html)可以通过 `IGNORE NULLS` 跳过 `NULL` 值。
+  INSERT ... ON CONFLICT DO SELECT:
+    name: INSERT ... ON CONFLICT DO SELECT
+    description: >-
+      [`INSERT ... ON CONFLICT DO SELECT`](https://www.postgresql.org/docs/19/sql-insert.html#SQL-ON-CONFLICT)
+      允许 `RETURNING` 子句返回与插入操作冲突的已有行，也可通过 `FOR UPDATE` 或 `FOR SHARE` 锁定这些行，从而简化“获取或创建”模式。
   INSERT/UPDATE/DELETE RETURNING:
     name: INSERT/UPDATE/DELETE RETURNING
     description: https://www.postgresql.org/docs/current/static/sql-insert.html
@@ -353,6 +386,12 @@ features:
   Automatic plan invalidation:
     name: 自动计划无效化
     description: 自动使缓存的执行计划无效
+  Automatic scaling of I/O workers:
+    name: I/O 工作进程自动伸缩
+    description: >-
+      当 [`io_method`](https://www.postgresql.org/docs/19/runtime-config-resource.html#GUC-IO-METHOD) 设置为 `worker` 时，
+      PostgreSQL 会在 [`io_min_workers`](https://www.postgresql.org/docs/19/runtime-config-resource.html#GUC-IO-MIN-WORKERS)
+      与 [`io_max_workers`](https://www.postgresql.org/docs/19/runtime-config-resource.html#GUC-IO-MAX-WORKERS) 之间自动调整 I/O 工作进程数量。
   Background Checkpointer:
     name: 后台检查点进程
     description: 原来后台写入进程负责写入检查点，但现在已将其移至单独的进程，后台写入进程现在仅负责将脏页写入磁盘。这带来了与性能和功耗降低相关的优势。
@@ -380,6 +419,11 @@ features:
   Distributed checkpointing:
     name: 分布式检查点
     description: 自动平滑检查点以减少突发 I/O 峰值
+  Eager aggregation:
+    name: 提前聚合
+    description: >-
+      规划器可以在连接之前执行部分聚合，以减少需要处理的行数。
+      这一行为由 [`enable_eager_aggregate`](https://www.postgresql.org/docs/19/runtime-config-query.html#GUC-ENABLE-EAGER-AGGREGATE) 控制。
   Foreign keys marked as NOT VALID:
     name: 标记为 NOT VALID 的外键
     description: 引入了创建外键时的新选项 NOT VALID，之后可以修改为 VALIDATED 并执行验证检查。这使得你可以在对读写操作影响最小的情况下添加外键。
@@ -433,6 +477,10 @@ features:
   Just-in-Time (JIT) compilation for expression evaluation and tuple deforming:
     name: 表达式求值和元组解构的即时 (JIT) 编译
     description: https://www.postgresql.org/docs/current/static/jit.html
+  LISTEN/NOTIFY scalability:
+    name: LISTEN/NOTIFY 可伸缩性改进
+    description: >-
+      [`NOTIFY`](https://www.postgresql.org/docs/19/sql-notify.html) 只唤醒正在监听指定通道的后端进程，提升多通道工作负载的可伸缩性。
   Load balancing for libpq / psql:
     name: libpq / psql 负载均衡
   LZ4 compression for TOAST tables:
@@ -444,6 +492,9 @@ features:
   Multiple temporary tablespaces:
     name: 多个临时表空间
     description: 允许为临时操作定义多个表空间
+  NOT IN converted to anti-joins:
+    name: 将 NOT IN 转换为反连接
+    description: '`NOT IN` 子句在不含 `NULL` 值时可以转换为更高效的反连接。'
   Outer Join reordering:
     name: 外连接重排序
     description: 允许查询规划器重新排序外连接
@@ -476,6 +527,11 @@ features:
     description: 针对 ORDER BY x LIMIT 之类的操作优化排序
   Query pipelining:
     name: 查询流水线
+  Query plan management (pg_plan_advice, pg_stash_advice):
+    name: 查询计划管理（pg_plan_advice、pg_stash_advice）
+    description: >-
+      [`pg_plan_advice`](https://www.postgresql.org/docs/19/pgplanadvice.html) 通过专门的“计划建议”语言来稳定计划选择，并支持尝试不同的计划。
+      [`pg_stash_advice`](https://www.postgresql.org/docs/19/pgstashadvice.html) 存储这些建议，并根据查询标识符自动应用到查询上。
   Reduced lock levels for ALTER TABLE commands:
     name: ALTER TABLE 命令的锁定级别降低
     description: '以下命令现在具有更低的锁定级别以减少锁竞争：
@@ -557,6 +613,11 @@ features:
   SQL/JSON path expressions:
     name: SQL/JSON 路径表达式
     description: https://www.postgresql.org/docs/current/functions-json.html#FUNCTIONS-SQLJSON-PATH
+  SQL/JSON path string methods:
+    name: SQL/JSON 路径字符串方法
+    description: >-
+      [SQL/JSON 路径语言](https://www.postgresql.org/docs/19/functions-json.html#FUNCTIONS-SQLJSON-PATH-OPERATORS)
+      新增 `lower()`、`upper()`、`initcap()`、`replace()`、`split_part()`、`btrim()`、`ltrim()` 和 `rtrim()` 字符串方法。
   SQL/JSON query functions:
     name: SQL/JSON 查询函数
   Accelerated partition pruning:
@@ -614,6 +675,21 @@ features:
   Configure max WAL retention for replication slots:
     name: 配置复制槽的最大 WAL 保留量
     description: https://www.postgresql.org/docs/13/runtime-config-replication.html#GUC-MAX-SLOT-WAL-KEEP-SIZE
+  CREATE PUBLICATION ... FOR ALL TABLES EXCEPT:
+    name: CREATE PUBLICATION ... FOR ALL TABLES EXCEPT
+    description: >-
+      可以使用 [`EXCEPT`](https://www.postgresql.org/docs/19/sql-createpublication.html#SQL-CREATEPUBLICATION-PARAMS-FOR-EXCEPT-TABLE)
+      子句，从 `FOR ALL TABLES` 发布中排除指定的表。
+  CREATE SUBSCRIPTION ... SERVER:
+    name: CREATE SUBSCRIPTION ... SERVER
+    description: >-
+      [`CREATE SUBSCRIPTION`](https://www.postgresql.org/docs/19/sql-createsubscription.html#SQL-CREATESUBSCRIPTION-PARAMS-SERVER)
+      可以从外部服务器获取连接设置，例如通过 [`postgres_fdw`](https://www.postgresql.org/docs/19/postgres-fdw.html) 定义的外部服务器。
+  Enable logical replication without a restart:
+    name: 无需重启即可启用逻辑复制
+    description: >-
+      当 `wal_level` 设置为 `replica` 时，PostgreSQL 会在创建第一个逻辑复制槽时自动将实际使用的 WAL 级别提升为 `logical`。
+      当前生效的 WAL 级别由 [`effective_wal_level`](https://www.postgresql.org/docs/19/runtime-config-preset.html#GUC-EFFECTIVE-WAL-LEVEL) 报告。
   Failover support for logical replication slots:
     name: 逻辑复制槽的故障切换支持
   Logical replication:
@@ -630,6 +706,11 @@ features:
   Logical replication from standbys:
     name: 来自备库的逻辑复制
     description: 逻辑复制发布端现在可以在备库实例上创建。
+  Logical replication of sequences:
+    name: 序列值的逻辑复制
+    description: >-
+      可以通过逻辑复制同步[序列值](https://www.postgresql.org/docs/19/logical-replication-sequences.html)。
+      序列通过 [`FOR ALL SEQUENCES`](https://www.postgresql.org/docs/19/sql-createpublication.html#SQL-CREATEPUBLICATION-PARAMS-FOR-ALL-SEQUENCES) 发布，在创建订阅或显式刷新时同步。
   Logical replication of stored generated columns:
     name: 存储生成列的逻辑复制
     description: 存储生成列现在可以参与逻辑复制。
@@ -672,6 +753,10 @@ features:
   Synchronous replication:
     name: 同步复制
     description: 允许主库在确认提交之前等待备库将事务信息写入磁盘。通过 synchronous_standby_names 设置控制，一次可以有一个备库担任同步备库的角色。可以使用 synchronous_commit 设置按事务启用或禁用同步复制。
+  WAIT FOR LSN:
+    name: WAIT FOR LSN
+    description: >-
+      [`WAIT FOR LSN`](https://www.postgresql.org/docs/19/sql-wait.html) 等待备库将 WAL 重放到指定的日志序列号（LSN），从而在备库上提供“读己之写”一致性。
   Archive modules:
     name: 归档模块
   Checksum on data pages:
@@ -756,6 +841,11 @@ features:
   COPY ... ON_ERROR:
     name: COPY ... ON_ERROR
     description: '`COPY` 新增 `ON_ERROR` 选项，可在导入时忽略并丢弃出错的行；默认行为仍为遇错停止。'
+  COPY TO JSON format:
+    name: COPY TO 输出 JSON 格式
+    description: >-
+      [`COPY TO`](https://www.postgresql.org/docs/19/sql-copy.html#SQL-COPY-PARAMS-FORMAT) 可以将数据输出为 JSON，
+      也可以通过 [`FORCE_ARRAY`](https://www.postgresql.org/docs/19/sql-copy.html#SQL-COPY-PARAMS-FORCE-ARRAY) 选项输出为单个 JSON 数组。
   COPY with arbitrary SELECT:
     name: 带任意 SELECT 的 COPY
     description: https://www.postgresql.org/docs/current/static/sql-copy.html
@@ -838,7 +928,7 @@ features:
     description: https://www.postgresql.org/docs/current/static/auth-methods.html#AUTH-LDAP
   Native RADIUS authentication:
     name: 原生 RADIUS 身份验证
-    description: 增加了对 RADIUS 服务器进行身份验证的支持
+    description: 增加了对 RADIUS 服务器进行身份验证的支持；该支持已在 PostgreSQL 19 中移除。
   OAuth Authentication / Authorization:
     name: OAuth 认证 / 授权
   Per user/database connection limits:
@@ -870,6 +960,12 @@ features:
   Security Service Provider Interface (SSPI):
     name: 安全服务提供商接口 (SSPI)
     description: 与 Microsoft Windows 原生身份验证框架的完整集成
+  Server Name Indication (SNI):
+    name: 服务端 SNI（服务器名称指示）
+    description: >-
+      PostgreSQL 服务器可以根据客户端连接的主机名提供不同的 TLS 证书。
+      主机名与证书、密钥的映射在 [`pg_hosts.conf`](https://www.postgresql.org/docs/19/runtime-config-file-locations.html#GUC-HOSTS-FILE) 中配置。
+      详见 [SNI](https://www.postgresql.org/docs/19/ssl-tcp.html#SSL-SNI) 文档。
   SHA-2 encryption for password hashing:
     name: 用于密码哈希的 SHA-2 加密
   SSL certificate validation in libpq:
@@ -900,6 +996,11 @@ features:
   Updatable cursors:
     name: 可更新游标
     description: https://www.postgresql.org/docs/current/static/sql-declare.html
+  Autovacuum prioritization:
+    name: 自动清理优先级调度
+    description: >-
+      自动清理使用[评分系统](https://www.postgresql.org/docs/19/routine-vacuuming.html#AUTOVACUUM-PRIORITY)来决定优先处理哪些表。
+      可以通过 [`pg_stat_autovacuum_scores`](https://www.postgresql.org/docs/19/monitoring-stats.html#PG-STAT-AUTOVACUUM-SCORES-VIEW) 查看评分。
   Inserted data can trigger autovacuum:
     name: 插入的数据可触发自动清理
     description: 这一新行为减少了表需要冻结时的必要工作量，并允许页面被设置为全可见。全可见页面允许仅索引扫描访问更少的堆行。
@@ -909,6 +1010,11 @@ features:
   Page freezing optimizations:
     name: 页面冻结优化
     description: 页面冻结策略的改进提升了 vacuum 以及其他维护操作的整体性能。
+  Parallelized autovacuum for indexes:
+    name: 自动清理并行处理索引
+    description: >-
+      自动清理可以使用并行工作进程清理索引，工作进程数量由
+      [`autovacuum_max_parallel_workers`](https://www.postgresql.org/docs/19/runtime-config-vacuum.html#GUC-AUTOVACUUM-MAX-PARALLEL-WORKERS) 控制。
   Parallelized VACUUM for Indexes:
     name: 索引的并行 VACUUM
     description: 'VACUUM 过程可以对索引进行并行化。可以指定索引的 VACUUM 作业数量。
@@ -921,6 +1027,12 @@ features:
   Radix tree memory structure for vacuum:
     name: VACUUM 的基数树内存结构
     description: vacuum 的内部数据结构现在使用基数树，可显著降低内存占用，并支持使用超过 1GB 的内存。
+  REPACK (CONCURRENTLY):
+    name: REPACK (CONCURRENTLY)
+    description: >-
+      [`REPACK`](https://www.postgresql.org/docs/19/sql-repack.html) 回收表中的闲置空间，还可以按索引顺序重排数据。
+      使用 [`REPACK (CONCURRENTLY)`](https://www.postgresql.org/docs/19/sql-repack.html#SQL-REPACK-NOTES-ON-CONCURRENTLY) 可以在允许并发读写的情况下执行。
+      `REPACK` 取代了 `VACUUM FULL` 和 `CLUSTER`，后两者仍保留以兼容已有用法。
   Vacuum "emergency mode":
     name: Vacuum “紧急模式”
     description: 当 PostgreSQL 检测到事务 ID 回卷风险时，会更激进地执行 vacuum；该行为由 `vacuum_failsafe_age` 控制。
@@ -961,6 +1073,11 @@ features:
     description: 能够在 postgres_fdw 驱动中将 JOIN、排序、UPDATE 和 DELETE 下推到远程数据库，理论上其他驱动也支持。同时支持一些通用的操作符/函数下推。
   postgres_fdw SCRAM authentication passthrough:
     name: postgres_fdw SCRAM 认证透传
+  postgres_fdw statistics import:
+    name: postgres_fdw 统计信息导入
+    description: >-
+      启用 [`import_stats`](https://www.postgresql.org/docs/19/postgres-fdw.html#POSTGRES-FDW-OPTIONS-COST-ESTIMATION) 选项后，
+      `ANALYZE` 会从远端服务器直接导入表的统计信息，无需对远端表的行进行采样。
   PostgreSQL Foreign Data Wrapper:
     name: PostgreSQL 外部数据包装器
     description: https://www.postgresql.org/docs/current/static/postgres-fdw.html
@@ -1036,6 +1153,10 @@ features:
   DO statement for pl/pgsql:
     name: pl/pgsql 的 DO 语句
     description: 允许在 pl/pgsql 中执行匿名代码块
+  Event triggers for PL/Python:
+    name: PL/Python 事件触发器
+    description: >-
+      可以使用 [PL/Python](https://www.postgresql.org/docs/19/plpython-event-trigger.html) 编写事件触发器。
   EXCEPTION support in PL/pgSQL:
     name: PL/pgSQL 中的 EXCEPTION 支持
     description: pl/pgsql 中的完整异常处理支持

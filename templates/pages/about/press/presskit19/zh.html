@@ -1,0 +1,134 @@
+{% extends "pages/about/press/presskit19/base.html" %}
+
+{% block title %}19 新闻资料包{% endblock %}
+{% block presskit_lang %}zh{% endblock presskit_lang %}
+{% block presskit_heading %}PostgreSQL 19 新闻资料包{% endblock presskit_heading %}
+{% block presskit_language_label %}语言版本：{% endblock presskit_language_label %}
+{% block presskit_other_languages %}其他语言（PostgreSQL.org）{% endblock presskit_other_languages %}
+
+{% block presskit_toc %}
+<h2>目录</h2>
+<ul>
+  <li><a href="#original_release">发布新闻稿</a></li>
+  <li><a href="#about">关于 PostgreSQL</a></li>
+  <li><a href="#features">更多功能资料</a></li>
+  <li><a href="#download">下载方式</a></li>
+  <li><a href="#docs">文档</a></li>
+  <li><a href="#licence">许可证</a></li>
+  <li><a href="#contact">联系方式</a></li>
+  <li><a href="#graphics">图像和标志</a></li>
+  <li><a href="#companies">企业支持与捐赠</a></li>
+</ul>
+{% endblock presskit_toc %}
+
+{% block presskit_release_heading %}PostgreSQL 19 正式发布！{% endblock presskit_release_heading %}
+{% block presskit_content %}
+<p>2026 年 11 月 19 日 — <a href="https://www.postgresql.org">PostgreSQL 全球开发组</a>今日宣布 <a href="https://www.postgresql.org/docs/19/release-19.html">PostgreSQL 19</a> 正式发布。这是世界上最先进的开源数据库的最新版本。</p>
+<p>PostgreSQL 在关键业务中的应用持续快速增长。为满足这一需求，PostgreSQL 19 简化了此类大规模工作负载的管理与开发。本次发布引入了 <a href="https://www.postgresql.org/docs/19/sql-repack.html"><code>REPACK (CONCURRENTLY)</code></a> 命令，让用户能够在不中断现有业务的情况下，针对当前工作负载优化表。新增的 <a href="https://www.postgresql.org/docs/19/pgplanadvice.html"><code>pg_plan_advice</code></a> 扩展让用户能够更好地控制查询计划的稳定性与查询性能。本次发布也为开发者带来了许多实用功能，包括在备库上支持“读己之写”一致性，以及可节省一次网络往返的“获取或创建”操作。</p>
+<p>PostgreSQL 核心团队成员 Jonathan Katz 表示：“30 多年来，全球开源社区共同打造 PostgreSQL，使其成为各类组织放心托付最关键数据的数据库。PostgreSQL 19 延续了这一对可靠性的承诺，为用户提供了新的方式，使其能够在不中断业务的情况下管理工作负载，并构建横跨多个系统的应用程序。”</p>
+<p>PostgreSQL 是一个以可靠性、健壮性和可扩展性著称的创新数据管理系统。经过全球开发者社区 30 年的开源开发，它已成为各种规模组织首选的开源关系数据库。</p>
+<h3>简化工作负载管理</h3>
+<p>频繁更新和删除的表可能积累大量未使用空间，形成所谓的“膨胀”（bloat），这也可能显著影响查询性能。此前通常使用 <code>VACUUM FULL</code> 和 <code>CLUSTER</code> 命令处理这一问题，但这些操作存在局限，例如在清理完成前会阻止对表的访问。PostgreSQL 19 引入了 <a href="https://www.postgresql.org/docs/19/sql-repack.html"><code>REPACK</code></a> 命令，既能回收这些空间，也能按照索引顺序重新排列表中的数据；使用 <code>REPACK (CONCURRENTLY)</code> 还可以在不阻塞读写的情况下完成这些操作。<code>REPACK</code> 取代了 <code>VACUUM FULL</code> 和 <code>CLUSTER</code> 命令，后两者仍予保留，以兼容现有用法。</p>
+<p>PostgreSQL 查询规划器通常会为每条查询选择高效的执行计划，但计划可能随数据变化而改变，有时新计划反而更慢。PostgreSQL 19 新增的 <a href="https://www.postgresql.org/docs/19/pgplanadvice.html"><code>pg_plan_advice</code></a> 扩展可以稳定查询计划的选择，并通过简洁的“计划建议”（plan advice）语言试验不同的执行计划。配套的 <a href="https://www.postgresql.org/docs/19/pgstashadvice.html"><code>pg_stash_advice</code></a> 扩展用于存储这些建议，并根据查询标识符自动将建议应用到查询上，从而无需修改应用程序就能修正低效的执行计划。</p>
+<p>PostgreSQL 19 还增强了 <a href="https://www.postgresql.org/docs/19/routine-vacuuming.html#AUTOVACUUM">autovacuum</a> 应对繁忙系统的能力。autovacuum 现在可以使用并行工作进程清理索引，由新增的 <a href="https://www.postgresql.org/docs/19/runtime-config-vacuum.html#GUC-AUTOVACUUM-MAX-PARALLEL-WORKERS"><code>autovacuum_max_parallel_workers</code></a> 参数控制；它还会使用新的<a href="https://www.postgresql.org/docs/19/routine-vacuuming.html#AUTOVACUUM-PRIORITY">评分机制</a>决定优先处理哪些表。读取表的查询现在可以在执行过程中，自动在<a href="https://www.postgresql.org/docs/19/routine-vacuuming.html#VACUUM-FOR-VISIBILITY-MAP">可见性映射</a>中将页面标记为全部可见，减少后续 vacuum 的工作量。此外，<a href="https://www.postgresql.org/docs/19/app-vacuumdb.html"><code>vacuumdb --analyze-only</code></a> 在未指定表时，现在也会分析分区表。</p>
+<p>本次发布新增了多个用于监控工作负载的视图，包括按锁类型提供统计信息的 <a href="https://www.postgresql.org/docs/19/monitoring-stats.html#PG-STAT-LOCK-VIEW"><code>pg_stat_lock</code></a>、显示恢复状态的 <a href="https://www.postgresql.org/docs/19/monitoring-stats.html#PG-STAT-RECOVERY-VIEW"><code>pg_stat_recovery</code></a>，以及展示 autovacuum 如何确定表处理优先级的 <a href="https://www.postgresql.org/docs/19/monitoring-stats.html#PG-STAT-AUTOVACUUM-SCORES-VIEW"><code>pg_stat_autovacuum_scores</code></a>。<a href="https://www.postgresql.org/docs/19/sql-explain.html"><code>EXPLAIN ANALYZE</code></a> 新增的 <code>IO</code> 选项及相应的 <a href="https://www.postgresql.org/docs/19/auto-explain.html#AUTO-EXPLAIN-CONFIGURATION-PARAMETERS-LOG-IO"><code>auto_explain</code></a> 设置可以报告异步 I/O 活动。PostgreSQL 19 还会在 <a href="https://www.postgresql.org/docs/19/monitoring-stats.html#PG-STAT-WAL-VIEW"><code>pg_stat_wal</code></a>、<code>EXPLAIN (ANALYZE, WAL)</code> 以及 vacuum 和 analyze 的日志事件中，报告为记录全页镜像而写入的 WAL 数据量。</p>
+<h3>分布式数据改进</h3>
+<p>此前，启用<a href="https://www.postgresql.org/docs/19/logical-replication.html">逻辑复制</a>通常需要重启 PostgreSQL 服务器，这可能中断生产业务。PostgreSQL 19 简化了逻辑复制的初始化：创建第一个逻辑复制槽时，会自动将实际生效的 WAL 级别提升为 <code>logical</code>。通过新增的 <a href="https://www.postgresql.org/docs/19/runtime-config-preset.html#GUC-EFFECTIVE-WAL-LEVEL"><code>effective_wal_level</code></a> 参数，可以查看当前生效的 WAL 级别。</p>
+<p>PostgreSQL 19 还支持对<a href="https://www.postgresql.org/docs/19/logical-replication-sequences.html">序列值</a>进行逻辑复制，可以在 <a href="https://www.postgresql.org/docs/19/sql-createpublication.html"><code>CREATE PUBLICATION</code></a> 中使用 <code>FOR ALL SEQUENCES</code> 发布序列。<code>CREATE PUBLICATION</code> 还新增了 <code>EXCEPT</code> 子句，用于在使用 <code>FOR ALL TABLES</code> 发布所有表时排除指定的表。<a href="https://www.postgresql.org/docs/19/sql-createsubscription.html"><code>CREATE SUBSCRIPTION</code></a> 现在可以通过 <code>SERVER</code> 子句，从外部服务器定义中获取连接设置，例如使用 <a href="https://www.postgresql.org/docs/19/postgres-fdw.html"><code>postgres_fdw</code></a> 定义的外部服务器。此外，新增的 <a href="https://www.postgresql.org/docs/19/sql-createsubscription.html#SQL-CREATESUBSCRIPTION-PARAMS-WITH-RETAIN-DEAD-TUPLES"><code>retain_dead_tuples</code></a> 订阅选项让 PostgreSQL 能够检测与并发删除相冲突的更新操作，这些冲突会计入 <a href="https://www.postgresql.org/docs/19/monitoring-stats.html#MONITORING-PG-STAT-SUBSCRIPTION-STATS"><code>pg_stat_subscription_stats</code></a> 的统计数据。</p>
+<p>对于将读请求发送到备库的应用，PostgreSQL 19 通过新增的 <a href="https://www.postgresql.org/docs/19/sql-wait.html"><code>WAIT FOR LSN</code></a> 命令提供“读己之写”（read-your-writes）一致性。备库上的会话可以使用 <code>WAIT FOR LSN</code>，等待备库将预写日志（WAL）重放至指定的<a href="https://www.postgresql.org/docs/19/wal-internals.html">日志序列号（LSN）</a>后再执行查询，从而让应用读到自己刚刚写入主库的数据。</p>
+<p>PostgreSQL 19 也改进了对外部表的查询。借助新增的 <a href="https://www.postgresql.org/docs/19/postgres-fdw.html#POSTGRES-FDW-OPTIONS-COST-ESTIMATION"><code>import_stats</code></a> 选项，<a href="https://www.postgresql.org/docs/19/postgres-fdw.html"><code>postgres_fdw</code></a> 在执行 <code>ANALYZE</code> 时，可以直接从远程服务器导入表的统计信息，无需对远程表中的行进行采样，从而帮助查询规划器选择更优的执行计划。</p>
+<h3>开发者体验与性能增强</h3>
+<p>PostgreSQL 19 新增了 <a href="https://www.postgresql.org/docs/19/sql-insert.html#SQL-ON-CONFLICT"><code>INSERT ... ON CONFLICT DO SELECT</code></a>，让 <code>RETURNING</code> 子句能够返回与插入操作发生冲突的已有行，简化常见的“获取或创建”（get or create）模式。<a href="https://www.postgresql.org/docs/19/sql-copy.html"><code>COPY</code></a> 现在可以将数据输出为 JSON 格式，包括输出为一个 JSON 数组。<a href="https://www.postgresql.org/docs/19/functions-json.html#FUNCTIONS-SQLJSON-PATH-OPERATORS">SQL/JSON 路径语言</a>新增了 <code>lower()</code>、<code>upper()</code>、<code>replace()</code>、<code>split_part()</code> 和 <code>btrim()</code> 等字符串方法。此外，<code>lead()</code>、<code>lag()</code>、<code>first_value()</code>、<code>last_value()</code> 和 <code>nth_value()</code> 这些<a href="https://www.postgresql.org/docs/19/functions-window.html">窗口函数</a>现在可以通过 <code>IGNORE NULLS</code> 跳过 <code>NULL</code> 值。<a href="https://www.postgresql.org/docs/19/functions-datetime.html#FUNCTIONS-DATETIME-TABLE"><code>random()</code></a> 函数现在还可以生成指定范围内的随机日期和时间戳。</p>
+<p>本次发布还让许多工作负载无需修改应用程序就能获得性能提升。PostgreSQL 19 改进了外键检查的性能，测试中批量插入的速度接近原来的两倍。查询规划器也新增了多项优化，例如在不存在 <code>NULL</code> 值时，将 <code>NOT IN</code> 子句转换为更高效的反连接；以及在连接之前执行<a href="https://www.postgresql.org/docs/19/runtime-config-query.html#GUC-ENABLE-EAGER-AGGREGATE">预聚合</a>（eager aggregation），减少需要处理的行数。PostgreSQL 19 还进一步改进了 PostgreSQL 18 引入的<a href="https://www.postgresql.org/docs/19/runtime-config-resource.html#GUC-IO-METHOD">异步 I/O</a> 子系统。当 <code>io_method</code> 设置为 <code>worker</code>（默认值）时，PostgreSQL 会在新增的 <a href="https://www.postgresql.org/docs/19/runtime-config-resource.html#GUC-IO-MIN-WORKERS"><code>io_min_workers</code></a> 与 <a href="https://www.postgresql.org/docs/19/runtime-config-resource.html#GUC-IO-MAX-WORKERS"><code>io_max_workers</code></a> 参数设定的范围内，自动调整 I/O 工作进程的数量。这两个参数取代了原有的 <code>io_workers</code> 参数。在多通道工作负载中使用 <a href="https://www.postgresql.org/docs/19/sql-listen.html"><code>LISTEN</code></a> 与 <a href="https://www.postgresql.org/docs/19/sql-notify.html"><code>NOTIFY</code></a> 交换通知时，可扩展性也有所提升。</p>
+<p>最后，新增的 <a href="https://www.postgresql.org/docs/19/runtime-config-connection.html#GUC-PASSWORD-EXPIRATION-WARNING-THRESHOLD"><code>password_expiration_warning_threshold</code></a> 参数会在用户密码即将过期时发出警告。</p>
+<h3>其他重要变更</h3>
+<p>PostgreSQL 19 新增了对<a href="https://www.postgresql.org/docs/19/ssl-tcp.html#SSL-SNI">服务器名称指示（SNI）</a>的服务端支持，使单个 PostgreSQL 服务器可以根据客户端连接时使用的主机名，提供不同的 TLS 证书。可以在新增的 <a href="https://www.postgresql.org/docs/19/runtime-config-file-locations.html#GUC-HOSTS-FILE"><code>pg_hosts.conf</code></a> 文件中，将主机名映射到相应的证书和密钥。PostgreSQL 19 现在还会在 <code>md5</code> 密码认证成功后发出警告，可通过 <a href="https://www.postgresql.org/docs/19/runtime-config-connection.html#GUC-MD5-PASSWORD-WARNINGS"><code>md5_password_warnings</code></a> 参数关闭。<code>md5</code> 密码认证在 PostgreSQL 18 中已被弃用，并将在未来版本中移除。如果需要使用密码认证，请使用 <a href="https://www.postgresql.org/docs/19/auth-password.html">SCRAM 认证</a>。本次发布还移除了对 RADIUS 认证的支持。</p>
+<p><a href="https://www.postgresql.org/docs/19/jit.html">即时编译（JIT）</a>现已默认关闭，因为实践证明，PostgreSQL 用于判断何时启用 JIT 的成本估算并不可靠。如果运行大量大型分析查询，可以考虑启用 JIT。当 PostgreSQL 编译时启用了 LZ4 支持，默认的 <a href="https://www.postgresql.org/docs/19/storage-toast.html">TOAST</a> 压缩方法现在为 <code>lz4</code>。</p>
+<h3>更多功能</h3>
+<p>PostgreSQL 19 还新增了许多其他功能与改进，可能同样适合您的使用场景。完整的新功能与变更列表请参阅<a href="https://www.postgresql.org/docs/19/release-19.html">发行说明</a>。</p>
+<h3>关于 PostgreSQL</h3>
+<p><a href="https://www.postgresql.org">PostgreSQL</a> 是世界上最先进的开源数据库，拥有一个由数千名用户、贡献者以及众多公司和组织组成的全球社区。自 40 多年前发源于加利福尼亚大学伯克利分校以来，PostgreSQL 始终保持着无与伦比的发展速度。PostgreSQL 成熟的功能不仅能与顶尖商业数据库系统相媲美，还在高级数据库功能、可扩展性、安全性和稳定性方面更胜一筹。</p>
+<h3>链接</h3>
+<ul>
+<li><a href="https://www.postgresql.org/download/">下载</a></li>
+<li><a href="https://www.postgresql.org/docs/19/release-19.html">发行说明</a></li>
+<li><a href="https://www.postgresql.org/about/press/">新闻资料</a></li>
+<li><a href="https://www.postgresql.org/support/security/">安全信息</a></li>
+<li><a href="https://www.postgresql.org/support/versioning/">版本策略</a></li>
+<li><a href="https://www.postgresql.org/about/contact/">联系方式</a></li>
+<li><a href="https://www.postgresql.org/about/donate/">捐赠</a></li>
+</ul>
+{% endblock presskit_content %}
+
+
+{% block presskit_about %}
+<h2 id="about">关于 PostgreSQL</h2>
+<p><a href="https://www.postgresql.org">PostgreSQL</a> 是世界上最先进的开源数据库，拥有一个由数千名用户、贡献者以及众多公司和组织组成的全球社区。自 40 多年前发源于加利福尼亚大学伯克利分校以来，PostgreSQL 始终保持着无与伦比的发展速度。PostgreSQL 成熟的功能不仅能与顶尖商业数据库系统相媲美，还在高级数据库功能、可扩展性、安全性和稳定性方面更胜一筹。</p>
+{% endblock presskit_about %}
+
+{% block presskit_learn_more %}
+<p>访问 <a href="https://www.postgresql.org/">PostgreSQL.org</a>，进一步了解 PostgreSQL 并参与社区。</p>
+{% endblock presskit_learn_more %}
+
+{% block presskit_features %}
+<h2 id="features">更多功能</h2>
+<p>有关上述功能及其他改进的详细说明，请参见以下资源：</p>
+<ul>
+<li><a href="https://www.postgresql.org/docs/19/release-19.html">发布说明</a></li>
+<li><a href="https://www.postgresql.org/about/featurematrix/">功能列表</a></li>
+</ul>
+{% endblock presskit_features %}
+
+{% block presskit_download %}
+<h2 id="download">下载方式</h2>
+<p>您可以通过以下方式获取 PostgreSQL 19：</p>
+<ul>
+<li><a href="https://www.postgresql.org/download/">官方下载页面</a>，其中包含 <a href="https://www.postgresql.org/download/windows/">Windows</a>、<a href="https://www.postgresql.org/download/linux/">Linux</a>、<a href="https://www.postgresql.org/download/macosx/">macOS</a> 等多个平台的安装程序与工具。</li>
+<li><a href="https://www.postgresql.org/ftp/source/v19.0/">源代码</a></li>
+</ul>
+<p>更多工具与扩展可在 <a href="https://pgxn.org/">PostgreSQL Extension Network</a> 获取。</p>
+
+{% endblock presskit_download %}
+
+{% block presskit_docs %}
+<h2 id="docs">文档</h2>
+<p>PostgreSQL 19 附带 HTML 文档与手册页。您可以阅读本站的<a href="/docs/19/">中文手册</a>，或访问上游的<a href="https://www.postgresql.org/docs/19/">英文 HTML 文档</a>和<a href="https://www.postgresql.org/files/documentation/pdf/19/postgresql-19-US.pdf">英文 PDF 文档</a>。</p>
+{% endblock presskit_docs %}
+
+{% block presskit_licence %}
+<h2 id="licence">许可证</h2>
+<p>PostgreSQL 使用 <a href="https://www.postgresql.org/about/licence/">PostgreSQL 许可证</a>，这是一种类似 BSD 的宽松许可证。该许可证已获 <a href="https://opensource.org/license/postgresql/">OSI 认证</a>，因其灵活且适合商业使用而广受赞誉，因为它不限制 PostgreSQL 在商业和专有应用中的使用。再加上多家公司支持以及代码公共所有权，这使 PostgreSQL 对希望在自身产品中嵌入数据库的厂商极具吸引力，无需担心费用、供应商锁定或许可条款变化。</p>
+{% endblock presskit_licence %}
+
+{% block presskit_contact %}
+<h2 id="contact">联系方式</h2>
+<p>网站</p>
+<ul>
+<li><a href="https://www.postgresql.org/">https://www.postgresql.org/</a></li>
+</ul>
+<p>邮箱</p>
+<ul>
+<li><a href="mailto:press@postgresql.org">press@postgresql.org</a></li>
+</ul>
+{% endblock presskit_contact %}
+
+{% block presskit_images %}
+<h2 id="graphics">图像和标志</h2>
+<p>Postgres、PostgreSQL 和大象标志（Slonik）均为 <a href="https://www.postgres.ca">PostgreSQL 社区协会</a>的注册商标。如果您希望使用这些标志，必须遵守<a href="https://www.postgresql.org/about/policies/trademarks/">商标政策</a>。</p>
+{% endblock presskit_images %}
+
+{% block presskit_image_links %}
+<img class="img-fluid logo-preview" src="https://www.postgresql.org/media/img/about/press/elephant.png" alt="PostgreSQL 大象标志" />
+<ul>
+  <li><a href="https://www.postgresql.org/media/img/about/press/elephant.png">PostgreSQL 大象标志（PNG 格式）</a></li>
+  <li><a href="https://www.postgresql.org/media/img/about/press/elephant64.png">PostgreSQL 大象图标</a></li>
+  <li><a href="https://www.postgresql.org/media/img/about/press/slonik_with_black_text_and_tagline.gif">含字标、大象与标语的 PostgreSQL 横幅</a></li>
+</ul>
+{% endblock presskit_image_links %}
+
+{% block presskit_corporate %}
+<h2 id="companies">企业支持和捐赠</h2>
+<p>PostgreSQL 得到了众多公司的支持，这些公司赞助开发人员、提供托管资源，并给予项目财务支持。请查看我们的<a href="https://www.postgresql.org/about/sponsors/">赞助商</a>页面，了解项目的重要支持者。</p>
+<p>此外，还有大量<a href="https://www.postgresql.org/support/professional_support/">提供 PostgreSQL 支持服务的公司</a>，从个人顾问到跨国企业均有覆盖。</p>
+<p>如果您希望向 PostgreSQL 全球开发组或其中一个获认可的社区非营利组织捐赠，请访问我们的<a href="https://www.postgresql.org/about/donate/">捐赠</a>页面。</p>
+{% endblock presskit_corporate %}

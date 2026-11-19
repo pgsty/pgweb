@@ -252,12 +252,12 @@ pages:
     description: 认可的 PostgreSQL 用户组，又称"PUG"，可以作为 PostgreSQL 网站上的认可用户组列出。要成为认可的 PostgreSQL 用户组，用户组必须自我证明其满足以下标准，这些标准旨在确保其达到 PostgreSQL 社区期望的开放性要求
     lang: zh
   /about/press/:
-    title: PostgreSQL 媒体资料与新闻资料包
-    description: 获取 PostgreSQL 新闻资料包、媒体常见问题和公关团队联系方式，查阅各版本发布资料及不同语言版本。
+    title: PGSQL.CC｜PostgreSQL 媒体资料与新闻资料包
+    description: 在 PGSQL.CC 阅读 PostgreSQL 19 中英文新闻资料包，查阅媒体常见问题、上游其他语言资料、历史版本发布资料及媒体联系方式。
     lang: zh
   /about/press/faq/:
-    title: PostgreSQL 媒体常见问题
-    description: 面向媒体介绍 PostgreSQL 的版本发布、许可证、项目治理、用户与社区支持，并解答常见的数据库选型问题。
+    title: PGSQL.CC｜PostgreSQL 媒体常见问题
+    description: 了解 PostgreSQL 19 的发布日期与版本编号、PostgreSQL 20 的预计发布计划，以及许可证、项目治理、用户与技术支持等媒体常见问题。
     lang: zh
   /about/press/presskit10/:
     title: PostgreSQL 10 Press Kit
@@ -2729,6 +2729,30 @@ pages:
       th: /about/press/presskit18/th/
       uk: /about/press/presskit18/uk/
       zh: /about/press/presskit18/zh/
+  /about/press/presskit19/:
+    title: 'PGSQL.CC | PostgreSQL 19 Press Kit'
+    description: 'PostgreSQL 19 press materials on PGSQL.CC: the November 19, 2026 release announcement, feature highlights, downloads, English documentation and media contacts.'
+    lang: en
+    canonical: /about/press/presskit19/en/
+    alternates:
+      zh: /about/press/presskit19/zh/
+      en: /about/press/presskit19/en/
+  /about/press/presskit19/en/:
+    title: 'PGSQL.CC | PostgreSQL 19 Press Kit'
+    description: 'PostgreSQL 19 press materials on PGSQL.CC: the November 19, 2026 release announcement, feature highlights, downloads, English documentation and media contacts.'
+    lang: en
+    canonical: /about/press/presskit19/en/
+    alternates:
+      zh: /about/press/presskit19/zh/
+      en: /about/press/presskit19/en/
+  /about/press/presskit19/zh/:
+    title: PGSQL.CC｜PostgreSQL 19 新闻资料包
+    description: PGSQL.CC 提供 PostgreSQL 19 中文新闻资料包：2026 年 11 月 19 日发布新闻稿、新功能介绍、下载与中英文文档链接，以及媒体联系和标志素材。
+    lang: zh
+    canonical: /about/press/presskit19/zh/
+    alternates:
+      zh: /about/press/presskit19/zh/
+      en: /about/press/presskit19/en/
   /about/press/presskit90/:
     title: PostgreSQL 9.0 Press Kit
     description: '20 SEPTEMBER 2010: The PostgreSQL Global Development Group announces the release of

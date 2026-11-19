@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 from django.http import HttpResponse
 from django.test import RequestFactory, SimpleTestCase
+from django.utils.text import slugify
 
 from .struct import get_struct
 from .views import detail, matrixdata
@@ -10,10 +11,16 @@ from .views import detail, matrixdata
 class FeatureMatrixSeoTests(SimpleTestCase):
     def test_sitemap_contains_every_feature_detail(self):
         entries = list(get_struct())
-        self.assertEqual(len(entries), 421)
-        self.assertEqual(entries[0][0], 'about/featurematrix/')
-        self.assertTrue(all(path.endswith('/') for path, _ in entries))
-        self.assertEqual(len({path for path, _ in entries}), len(entries))
+        paths = [path for path, _ in entries]
+        expected_paths = {'about/featurematrix/'} | {
+            'about/featurematrix/detail/{}/'.format(slugify(name))
+            for name in matrixdata.featuremap
+        }
+        self.assertEqual(len(paths), len(matrixdata.featuremap) + 1)
+        self.assertEqual(paths[0], 'about/featurematrix/')
+        self.assertTrue(all(path.endswith('/') for path in paths))
+        self.assertEqual(len(set(paths)), len(paths))
+        self.assertEqual(set(paths), expected_paths)
 
     @patch('pgweb.featurematrix.views.summarize_html', return_value='特性摘要')
     @patch('pgweb.featurematrix.views.render_pgweb', return_value=HttpResponse())

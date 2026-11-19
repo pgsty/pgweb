@@ -8,7 +8,7 @@ import re
 from bs4 import BeautifulSoup
 
 from pgweb.core.models import TESTING_SHORTSTRING, Version
-from pgweb.docs.versions import DEVEL_MAJOR_VERSION
+from pgweb.docs.versions import DEVEL_MAJOR_VERSION, manual_prerelease
 
 DEVEL_MAJOR = str(DEVEL_MAJOR_VERSION)
 STATUS_LABEL = {'stable': '当前稳定版', 'historical': '历史版本',
@@ -24,7 +24,7 @@ def version_key(major):
 
 
 def version_rows(majors):
-    """不建版本表；标签与支持状态始终取本站 Version。"""
+    """支持状态取本站 Version；已发布版本的标签注明仍在使用的预发行手册。"""
     majors = sorted(set(majors), key=version_key)
     stored = {major_of(row.tree): row for row in Version.objects.all()}
     formal = [major for major in majors if major != DEVEL_MAJOR and
@@ -41,6 +41,10 @@ def version_rows(majors):
             label += ' devel'
         elif status == 'preview':
             label += ' {} {}'.format(TESTING_SHORTSTRING[row.testing], row.latestminor)
+        elif row and row.supported and (build := manual_prerelease(row)):
+            # The release can be final before its translated manual is ready.
+            # Keep the release state and each entity's source evidence intact.
+            label += '（当前手册：{}）'.format(build)
         out.append({
             'major': major, 'label': label, 'status': status,
             'support_status': status if status in ('preview', 'devel') else

@@ -43,3 +43,37 @@ class ManualBuildTests(TestCase):
         cache.clear()
         self.assertIsNone(manual_prerelease(self.version))
         self.assertContains(self.client.get('/docs/19/index.html'), 'PostgreSQL 19 预发布版')
+
+    def test_final_release_keeps_preview_manual_and_pdf_labels(self):
+        self.version.testing = 0
+        self.version.latestminor = 0
+        self.version.supported = True
+        self.version.current = True
+        self.version.save()
+        self.page.title = 'PostgreSQL 19rc2 手册'
+        self.page.save()
+        DocPage.objects.create(version=self.version, file='release-19.html', title='19 RC 2 发行说明', content='<p>RC 2</p>')
+
+        self.assertEqual(manual_groups()['testing'], [{'major': 19, 'label': 'rc'}])
+        self.assertNotIn(19, manual_groups()['supported'])
+        response = self.client.get('/docs/current/index.html')
+        self.assertContains(response, '已正式发布，本页中文译文仍基于 PostgreSQL 19 RC 2')
+        self.assertNotContains(response, '尚未正式发布')
+        self.assertContains(response, '上游文档表单')
+        self.assertContains(self.client.get('/docs/'), '当前译文：PostgreSQL 19 RC 2')
+        self.assertEqual(self.version.relnotes_url, 'https://www.postgresql.org/docs/19/release-19.html')
+
+    def test_final_manual_import_removes_preview_notice(self):
+        self.version.testing = 0
+        self.version.latestminor = 0
+        self.version.supported = True
+        self.version.save()
+        self.page.title = 'PostgreSQL 19.0 手册'
+        self.page.save()
+        DocPage.objects.create(version=self.version, file='release-19.html', title='19.0 发行说明', content='<p>19.0</p>')
+
+        self.assertEqual(manual_groups()['supported'], [19])
+        self.assertEqual(manual_groups()['testing'], [])
+        response = self.client.get('/docs/19/index.html')
+        self.assertNotContains(response, '译文构建</strong>')
+        self.assertEqual(self.version.relnotes_url, '/docs/19/release-19.html')

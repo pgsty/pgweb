@@ -1,0 +1,39 @@
+date: 2026-11-19
+versions:
+  - '19.0'
+# Official lifecycle dates: https://www.postgresql.org/versions.json
+eoldate: 2031-11-19
+news:
+  id: 3451
+  upstream_id: 3449
+notes_url: https://www.postgresql.org/docs/release/19.0/
+announcetext: |
+  <p>
+    Mission-critical usage of PostgreSQL continues to rapidly rise, and PostgreSQL 19
+    responds to this by simplifying both administration and development for these
+    workloads at scale. This release introduces the <a href="https://www.postgresql.org/docs/19/sql-repack.html"><code>REPACK (CONCURRENTLY)</code></a>
+    command so users can optimize tables for their current workload without
+    disruption to ongoing operations. PostgreSQL 19 gives users better control over
+    plan stability and query performance with the new <a href="https://www.postgresql.org/docs/19/pgplanadvice.html"><code>pg_plan_advice</code></a> extension. Developers will find many delightful features in this release,
+    from support for "read-your-writes" consistency on standbys to "get or create"
+    behavior that saves a network round trip.
+  </p>
+  <p>
+    PostgreSQL, an innovative data management system known for its reliability,
+    robustness, and extensibility, benefits from 30 years of open source
+    development from a global developer community and has become the preferred open
+    source relational database for organizations of all sizes.
+  </p>
+announcetext_zh: |
+  <p>
+    PostgreSQL 在关键业务中的使用持续增长，PostgreSQL 19 进一步简化了大规模工作负载的管理与开发。
+    新增的 <a href="https://www.postgresql.org/docs/19/sql-repack.html"><code>REPACK (CONCURRENTLY)</code></a>
+    命令可以在不阻塞读写的情况下回收表空间并重排数据；
+    <a href="https://www.postgresql.org/docs/19/pgplanadvice.html"><code>pg_plan_advice</code></a>
+    扩展让用户更好地控制查询计划的稳定性和查询性能。
+    开发者还可以使用备库上的“读己之写”一致性，以及节省一次网络往返的“获取或创建”操作。
+  </p>
+  <p>
+    PostgreSQL 以可靠性、健壮性和可扩展性著称。全球开发者社区经过 30 年的开源协作，
+    使其成为各类组织广泛采用的开源关系型数据库。
+  </p>

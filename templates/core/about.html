@@ -5,7 +5,7 @@
 <h1>关于 <img class="logo" src="/media/img/about/press/elephant.png" alt="PostgreSQL Elephant Logo" /></h1>
 
 <h2>什么是 PostgreSQL？</h2>
-<p>PostgreSQL 是一个强大的开源对象关系型数据库系统。它使用并扩展了 SQL 语言，并结合了大量功能，能够安全地存储数据，并灵活扩展以应对最复杂的数据工作负载。PostgreSQL 的起源可以追溯到 1986 年，当时它还是加州大学伯克利分校 <a href="/docs/current/history.html">POSTGRES</a> 项目的一部分；其核心代码库至今已持续活跃开发近 40 年。</p>
+<p>PostgreSQL 是一个强大的开源对象关系型数据库系统。它使用并扩展了 SQL 语言，并结合了大量功能，能够安全地存储数据，并灵活扩展以应对最复杂的数据工作负载。PostgreSQL 的起源可以追溯到 1986 年，当时它还是加州大学伯克利分校 <a href="/docs/current/history.html">POSTGRES</a> 项目的一部分；其核心代码库至今已持续活跃开发超过 40 年。</p>
 <p>PostgreSQL 凭借成熟的架构、可靠性、数据完整性、强大的功能集和优异的可扩展性，以及开源社区持续交付高性能创新方案的长期投入，赢得了良好声誉。PostgreSQL 可在<a href="/download/">所有主流操作系统</a>上运行，自 2001 年以来一直符合 <a href="https://en.wikipedia.org/wiki/ACID" target="_blank" rel="noopener">ACID</a> 标准，并拥有强大的附加组件，例如广受欢迎的 <a href="https://postgis.net/" target="_blank" rel="noopener">PostGIS</a> 地理空间数据库扩展。因此，PostgreSQL 成为众多个人和组织的首选开源关系型数据库，并不令人意外。</p>
 <p>使用 PostgreSQL <a href="/docs/current/tutorial.html">入门</a>从未如此简单。选择一个您想构建的项目，让 PostgreSQL 安全、稳健地存储您的数据。</p>
 
@@ -13,7 +13,7 @@
 <p>
   PostgreSQL 拥有<a href="/about/featurematrix/">丰富的功能</a>，既能帮助开发者构建应用程序，也能帮助管理员保护数据完整性并构建容错环境。无论数据集规模如何，它都能够胜任。除了<a href="/about/license/">免费和开源</a>之外，PostgreSQL 还具备极高的可扩展性。例如，您可以定义自己的数据类型、编写自定义函数，甚至使用<a href="/docs/current/xplang.html">不同的编程语言</a>开发，而无需重新编译数据库。
 </p>
-<p>PostgreSQL 力求符合 <a href="/docs/current/features.html">SQL 标准</a>，前提是这种一致性不会与传统功能相矛盾或导致不良的架构决策。SQL 标准要求的许多功能都已得到支持，尽管有时语法或函数略有不同。随着时间的推移，预计将进一步向标准靠拢。截至 2025 年 9 月发布的版本 18，PostgreSQL 至少符合 SQL:2023 核心一致性的 177 项强制功能中的 170 项。截至撰写本文时，没有任何关系数据库完全符合该标准。
+<p>PostgreSQL 力求符合 <a href="/docs/current/features.html">SQL 标准</a>，前提是这种一致性不会与传统功能相矛盾或导致不良的架构决策。SQL 标准要求的许多功能都已得到支持，尽管有时语法或函数略有不同。随着时间的推移，预计将进一步向标准靠拢。截至 2026 年 11 月发布的版本 19，PostgreSQL 至少符合 SQL:2023 核心一致性的 177 项强制功能中的 170 项。截至撰写本文时，没有任何关系数据库完全符合该标准。
 </p>
 <p>以下是 PostgreSQL 中各种功能的不完全列表，每个<a href="/developer/roadmap/">主要版本</a>都会添加更多功能：
 </p>
@@ -43,10 +43,10 @@
     <ul>
       <li>索引：B-树，多列，表达式，部分索引</li>
       <li>高级索引：GiST，SP-GiST，KNN GiST，GIN，BRIN，覆盖索引，布隆过滤器</li>
-      <li>复杂的查询规划器/优化器，仅索引扫描，多列统计信息</li>
+      <li>复杂的查询规划器/优化器，仅索引扫描，多列统计信息，查询计划管理</li>
       <li>事务、嵌套事务（通过保存点）</li>
       <li>多版本并发控制（MVCC）</li>
-      <li>读查询和构建 B-树 索引的并行化</li>
+      <li>读查询、索引构建（B-树、BRIN、GIN）和 VACUUM 的并行化</li>
       <li>表分区</li>
       <li>SQL 标准中定义的所有事务隔离级别，包括可串行化</li>
       <li>即时编译（JIT）表达式</li>
@@ -137,13 +137,13 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col-sm-3 feature-grid">
-      <h3>35+ 年持续开发</h3>
+      <h3>40+ 年持续开发</h3>
     </div>
     <div class="col-sm-3 feature-grid">
-      <h3>725+ 位贡献者</h3>
+      <h3>1,600+ 位贡献者</h3>
     </div>
     <div class="col-sm-3 feature-grid">
-      <h3>61,000+ 次提交</h3>
+      <h3>65,000+ 次提交</h3>
     </div>
     <div class="col-sm-3 feature-grid">
       <h3>70+ 个本地用户组</h3>
@@ -151,10 +151,10 @@
   </div>
   <div class="row">
     <div class="col-sm-3 feature-grid">
-      <h3>1,780,000+ 行 C 代码</h3>
+      <h3>1,860,000+ 行 C 代码</h3>
     </div>
     <div class="col-sm-3 feature-grid">
-      <h3>720+ 场活动</h3>
+      <h3>750+ 场活动</h3>
     </div>
     <div class="col-sm-3 feature-grid">
       <h3>数百万满意的用户</h3>

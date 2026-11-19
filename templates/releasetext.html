@@ -33,11 +33,11 @@
 {% elif release.type == "major" %}
 {% with major=release.versions.0.major %}
         <p>
-          PostgreSQL 全球开发组今天宣布发布 <a href="/docs/{{ major }}/release-{{ major }}.html">PostgreSQL {{ major }}</a>，这是世界上最先进的开源数据库的最新版本。
+          PostgreSQL 全球开发组今天宣布发布 <a href="{% if release.notes_url %}{{ release.notes_url }}{% else %}/docs/{{ major }}/release-{{ major }}.html{% endif %}">PostgreSQL {{ major }}</a>，这是世界上最先进的开源数据库的最新版本。
         </p>
 {{ release.announcetext_zh|default:release.announcetext|safe }}
         <p>
-          PostgreSQL {{ major }} 的完整功能列表请参阅<a href="/docs/{{ major }}/release-{{ major }}.html">发行说明</a>。您可以从<a href="/download/">下载</a>页面获取 PostgreSQL {{ major }}。
+          PostgreSQL {{ major }} 的完整功能列表请参阅<a href="{% if release.notes_url %}{{ release.notes_url }}{% else %}/docs/{{ major }}/release-{{ major }}.html{% endif %}">发行说明</a>。您可以从<a href="/download/">下载</a>页面获取 PostgreSQL {{ major }}。
         </p>
         <p>
           如需完整新闻稿及发布公告译文，请访问<a href="/about/press/">媒体资料包</a>。
