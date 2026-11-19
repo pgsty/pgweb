@@ -61,7 +61,7 @@ class ReleaseDataTests(SimpleTestCase):
         self.assertEqual(release['date'], date(2026, 11, 19))
         self.assertEqual(release['eoldate'], date(2031, 11, 19))
         self.assertEqual(release['news'], {'id': 3451, 'upstream_id': 3449})
-        self.assertEqual(release['notes_url'], 'https://www.postgresql.org/docs/release/19.0/')
+        self.assertNotIn('notes_url', release)
         self.assertIn('读己之写', release['announcetext_zh'])
         self.assertEqual(determine_release_type({'versions': [ParsedVersion('19.0')]}), 'major')
 

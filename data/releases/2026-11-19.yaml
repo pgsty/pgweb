@@ -6,7 +6,6 @@ eoldate: 2031-11-19
 news:
   id: 3451
   upstream_id: 3449
-notes_url: https://www.postgresql.org/docs/release/19.0/
 announcetext: |
   <p>
     Mission-critical usage of PostgreSQL continues to rapidly rise, and PostgreSQL 19
