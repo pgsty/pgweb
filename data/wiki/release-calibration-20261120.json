@@ -1117,12 +1117,12 @@
         "pg20_sha256": "50d70818708e01a29552c900ded19f1d089561e69873360bdb9b19de26d8549e"
       }
     ],
-    "after-reviewed": [
+    "after": [
       {
         "table": "authentication_method",
         "key": "slug",
         "rows": 15,
-        "sha256": "cd530ecfadd0d3e52da2200be3495ae64fb42c58cb2adea80b4b124abc62ba83",
+        "sha256": "f0f75675bd80de83d02bce1fb92d05ae233c67f227360983172c0873b02fb19f",
         "pg20_sha256": "25e3135aad81330e85eb1574b5b38e6e19543fb3ada0f5e60e35a8b67a940038"
       },
       {
@@ -1157,14 +1157,14 @@
         "table": "connection_parameter",
         "key": "slug",
         "rows": 55,
-        "sha256": "b864b26ec830b3965afaeb20abe0c73efc58fc00bc9ac31f63b1215bd1d967ee",
+        "sha256": "14a5f8f90cd771bb958512d979f61116bb73789c5c14a72f03e6c5d1465cbe09",
         "pg20_sha256": "19d77f85bb952757b67d51c3ac026b1e489bf162646b187249a868e2e8c255f0"
       },
       {
         "table": "data_type",
         "key": "slug",
         "rows": 121,
-        "sha256": "2be64305cb18c3bf87f64e3f9ff2b1d92ae617041449c5c5752782b06e6cd0c4",
+        "sha256": "ba3d72f143a9f7bef1c37122828a4f9c4e97c89a2dd577b022a6390aae77fff7",
         "pg20_sha256": "e7bb9354bf5cb495258ba3d38af02c37c0596e8477a1529ca16c533b538a0cde"
       },
       {
@@ -1269,7 +1269,7 @@
         "table": "procedural_language",
         "key": "slug",
         "rows": 11,
-        "sha256": "550109984ddfda834ea320fcd8ee299cbaa411fd60ca26a5d8f5e9de0e44d179",
+        "sha256": "ee334683f49f45a78b59b03fbecc386b62678be0a6bc23ec68bb9953c2ae1c5e",
         "pg20_sha256": "869a3395eaccee1f764f0128ca89d1fc8d49624d02070ae3cf5dfd169234ec7e"
       },
       {
@@ -1332,14 +1332,14 @@
         "table": "storage_structure",
         "key": "slug",
         "rows": 35,
-        "sha256": "51cc089c035ae8cc6458b5fa9a8d96ec008f074d3478a0da3080d84fbc0193db",
+        "sha256": "17de17fa6e7be5bdcd4e49e7092825ba60327f44daa2c24892c172b60b643306",
         "pg20_sha256": "bb9a963985d1879797b0e2d07e09c280aa320ca765d9376f211f03e8d6733f73"
       },
       {
         "table": "table_am",
         "key": "slug",
         "rows": 1,
-        "sha256": "4ba6c206ee42e1189eebb775d611078e7b8d4db0bed96cefadfc6fc2ce04eea6",
+        "sha256": "5b0b1d60d37d926c52782d05b5e0fe7aec510d52b1578a29fb293e68f0032722",
         "pg20_sha256": "18ce93f294c69fb3133ab377641dd3eb41961410eb272825c706f446f588bbfe"
       },
       {
@@ -1365,5 +1365,330 @@
       }
     ]
   },
-  "status": "local applied; production pending"
+  "status": "published and verified locally and in production",
+  "artifact_locations": {
+    "local_before": "tmp/wiki-ga-20261120/before",
+    "local_after": "tmp/wiki-ga-20261120/after-links",
+    "production_before": "/tmp/pgweb-wiki-ga-20261120/before",
+    "production_after": "/tmp/pgweb-wiki-ga-20261120/after-final"
+  },
+  "final_business_fingerprints": [
+    {
+      "table": "authentication_method",
+      "rows": 15,
+      "business_sha256": "9fd6ab5c689989dc738b196090d080971e8271fc2dde4641bfbbbe96f38d802e",
+      "pg20_sha256": "25e3135aad81330e85eb1574b5b38e6e19543fb3ada0f5e60e35a8b67a940038"
+    },
+    {
+      "table": "catalog",
+      "rows": 155,
+      "business_sha256": "69108d5d40ad19c14e618f8a47c052a355c99f60cfd6a0e971d6bcd7993bce81",
+      "pg20_sha256": "610b7e16325e228b3874fb02c88df7098b40d3e8eb3adce515f90e7e923693c2"
+    },
+    {
+      "table": "catalog_version",
+      "rows": 24,
+      "business_sha256": "a2c291b06b07c6cc003390bc8cba86ec203757684f2d846ae59347c4603e186e",
+      "pg20_sha256": "c5db35e128bf6792ad6e56cd6c32561e6a6bce1cc4a23b592f202bbde9b3e9dc"
+    },
+    {
+      "table": "collation_encoding",
+      "rows": 53,
+      "business_sha256": "a8efc06de60a0a9230b974e8792765779bce1ea37157d5b0ce15c67f81fd2ef9",
+      "pg20_sha256": "79d784818eb2196e67b4e45e1dd47bacecc9723f128081237766305489b46fb9"
+    },
+    {
+      "table": "command_tool",
+      "rows": 37,
+      "business_sha256": "1d55eddcba7507ae7e9ef69075382a460bcd0c9867a7b736c0a31cecbc96b879",
+      "pg20_sha256": "6c1d160bb74ef947a81e1db25cd97e8c62d9f143485b15508f7c7a768a19e31b"
+    },
+    {
+      "table": "connection_parameter",
+      "rows": 55,
+      "business_sha256": "53bf37ca4527a093c4c98bb4fa800c5048ec73b1fd6328ead7d0b3cb681c5294",
+      "pg20_sha256": "19d77f85bb952757b67d51c3ac026b1e489bf162646b187249a868e2e8c255f0"
+    },
+    {
+      "table": "data_type",
+      "rows": 121,
+      "business_sha256": "116054f31d4c54082d9cc5a4d424f0d32c9a9429f8613a113d23657d0274152b",
+      "pg20_sha256": "e7bb9354bf5cb495258ba3d38af02c37c0596e8477a1529ca16c533b538a0cde"
+    },
+    {
+      "table": "foreign_data_wrapper",
+      "rows": 2,
+      "business_sha256": "d00537b79a0d2e3a08a51e33996ab1d5f7e03425a9aa80f30ad62c3155b9be57",
+      "pg20_sha256": "83e8b022f6ea22a0531fc000abe4a617da30fcb8964b484f778cb2c3875de5d9"
+    },
+    {
+      "table": "func",
+      "rows": 711,
+      "business_sha256": "201192e198f80ce3a31cd21fdf52302803fd1c932e83c50fd4825d8a3ddda4a3",
+      "pg20_sha256": "2f84686ba568d820f4e300a21a68f34f25c323b7339573102a80adf971f08844"
+    },
+    {
+      "table": "func_version",
+      "rows": 27,
+      "business_sha256": "3ceab50fe89e309f0208af2a41d626efef008349d6b9231076db066c3d043cac",
+      "pg20_sha256": "9bdec2066bc1afb75f675e47b13b7f977e920030760103bdd09191a6bed92242"
+    },
+    {
+      "table": "guc",
+      "rows": 492,
+      "business_sha256": "26029ad7fb26de44e8176aea632936b6f806bd6af79e38ce51f01dc1ead9d5b7",
+      "pg20_sha256": "679870688eb17165a725731dcfae330afd1ac5ab57737250dbe399f231fa5502"
+    },
+    {
+      "table": "guc_version",
+      "rows": 24,
+      "business_sha256": "761f5f6300b1161f6af1e7deb6e5b9cd5c39039037b1c573f38249b79348698c",
+      "pg20_sha256": "b17f90dc758afd36b8e2e75f5e4eed97633e3b7915b961cbb301a905ebbe3b6b"
+    },
+    {
+      "table": "hook",
+      "rows": 39,
+      "business_sha256": "ef9093de003ba2c4118ea1ad9c5d87702219c0fc50ad91b13923eb2f45c5a358",
+      "pg20_sha256": "8ab49a12db80da2cb8d447dea5e91b16957c21349a6e87c37c67ac495333f3fb"
+    },
+    {
+      "table": "index_am",
+      "rows": 6,
+      "business_sha256": "d61f6b34da2dfd3a5f0a25c57b838221935403e919236119a9bc0e1bcc037074",
+      "pg20_sha256": "b3bbcaafa4eecc647021e6240c6b465580c25149589adfbaabcf9162aad92a23"
+    },
+    {
+      "table": "lock_mode",
+      "rows": 12,
+      "business_sha256": "d7e803980742e7bd386da94e7064c12e5df1e8b12215c4591964731a6167b702",
+      "pg20_sha256": "1d0e446130930331761b6dc3973af901ad859669812f82182092dd09a3f48b05"
+    },
+    {
+      "table": "logical_decoding_plugin",
+      "rows": 2,
+      "business_sha256": "cb89fc33d84b19a1f112fe8a333efd73ccfe261d7e53ee8e16c30b879a934de8",
+      "pg20_sha256": "ed51d9df1107e5d2ae2706d0862efc23b312431272d9a966b681af76100a5b1c"
+    },
+    {
+      "table": "oid_type",
+      "rows": 18,
+      "business_sha256": "e7b019874918e32dfc747ee3a2f8cc3ad72f34fa858bd9b7a5e45c6f2d172b21",
+      "pg20_sha256": "fc4ba51e9cae401908404d380432cc94839e47477122959a3667eaf99f52159e"
+    },
+    {
+      "table": "operator_class",
+      "rows": 344,
+      "business_sha256": "dfc3c7f52385f21cca9bb267d50ea3593e2bd7d7afff53bf2fe80ec57197ccc6",
+      "pg20_sha256": "d13e624a45c1c519b4dfc7dcd087ea973cfc82cb73a6fa71bd721535944610e5"
+    },
+    {
+      "table": "pg_operator_entry",
+      "rows": 865,
+      "business_sha256": "cddbf67775f12a90b56229ce9cdda1e4dbf23608588fd835360f1cad1901c9ea",
+      "pg20_sha256": "d7989444c4aab92757772b26b6e77b03ac4f4ac96d34d5e2657c6837f7c95a65"
+    },
+    {
+      "table": "plan_node",
+      "rows": 42,
+      "business_sha256": "aa31f170b8745e626190b39cf0c74067d7b7a2983a7e70fe2d8fe2f003e2e711",
+      "pg20_sha256": "7c4edb31aee2dbb60a76fa003d45a5e2df8960cbcb51769d6973c963d567bd20"
+    },
+    {
+      "table": "predefined_role",
+      "rows": 16,
+      "business_sha256": "ef878028ce7e4f38317b5a4168b2d2355a6f548b458eb4d5e6d7cc383112d5ab",
+      "pg20_sha256": "f180810ad6d2dba31778ddc196ab9fad4ff4fa9aeb804bdd643b8d8457876fe3"
+    },
+    {
+      "table": "procedural_language",
+      "rows": 11,
+      "business_sha256": "b9f340f27ca1797b619cdef5307fd5c1d5fbdcede4ebe2a9bca3a5f102ff8ef4",
+      "pg20_sha256": "869a3395eaccee1f764f0128ca89d1fc8d49624d02070ae3cf5dfd169234ec7e"
+    },
+    {
+      "table": "protocol_message",
+      "rows": 73,
+      "business_sha256": "7f50e47b862c9d8a510ff0e7121f672765c95a007e5ec2996c57efc75537a59a",
+      "pg20_sha256": "ed2d3c0e79e1078ce05f61d9448e7b4cdb2246216e24f45e19f3fdefc5638959"
+    },
+    {
+      "table": "psql_command",
+      "rows": 130,
+      "business_sha256": "7bf445781f7b6f4de9d626af5c85be0f5133464e38ab63a347fa72d244b97081",
+      "pg20_sha256": "2e397c067aea34db85369e9674c958286cf1984d6ee1321809de58203ca866da"
+    },
+    {
+      "table": "relopt",
+      "rows": 60,
+      "business_sha256": "46e81b39b43caa52b0b303256687a1660da541b79a962c42da754a313847cdae",
+      "pg20_sha256": "73800a791316f49a4a7143155a5cd6a02854d1da53aeda65da66f63e5c2660de"
+    },
+    {
+      "table": "sqlcmd",
+      "rows": 187,
+      "business_sha256": "306362d7fa02860c391246a8ea307407018c71ec4b8c5560a74bac4a1227f5d2",
+      "pg20_sha256": "d06c4d21aa562588a84392776aced62855662e8c77df04a3881e6b6c6b057e93"
+    },
+    {
+      "table": "sqlstate",
+      "rows": 265,
+      "business_sha256": "7f1105795a2c9dc59960f98b9745c2ef87c2b754b53b3d8924697ccd46ae7183",
+      "pg20_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "table": "sqlstate_class",
+      "rows": 44,
+      "business_sha256": "67d6f71a27589a148556474b00db44f391525115580bed33c59a1a821d90556d",
+      "pg20_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "table": "sqlstate_version",
+      "rows": 17,
+      "business_sha256": "3277cb0bb83db2311d71118eec3d7ef664c89b1f932e40842fefda3fb1010d7d",
+      "pg20_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+    },
+    {
+      "table": "statistics_metric",
+      "rows": 620,
+      "business_sha256": "bfbc7971e574487f068bb3f2bf0ed289b9b1ac3df78d41ed98c0c5435a7085b6",
+      "pg20_sha256": "6db6ee1f0a8ce9717093f1465caefb9b68f4c2484d569827ace439c43b18a090"
+    },
+    {
+      "table": "storage_structure",
+      "rows": 35,
+      "business_sha256": "487fc8d006922ebb8fd513add69d08c64f7f36a758791265519e9a3745acc58a",
+      "pg20_sha256": "bb9a963985d1879797b0e2d07e09c280aa320ca765d9376f211f03e8d6733f73"
+    },
+    {
+      "table": "table_am",
+      "rows": 1,
+      "business_sha256": "c40e9783a30b9e5554ad2beea47f55d240dfe1ea48dfcd6be4cb56ed241e1915",
+      "pg20_sha256": "18ce93f294c69fb3133ab377641dd3eb41961410eb272825c706f446f588bbfe"
+    },
+    {
+      "table": "text_search_component",
+      "rows": 70,
+      "business_sha256": "3236e562bffa58afc12534bfeeb2c0b774d9bf7a1f6f7d7b818e92b6f521f9b7",
+      "pg20_sha256": "e2f1eba6e8228067459c7047353bb683884b3eb465170a1613c293ff4af61970"
+    },
+    {
+      "table": "waitevent",
+      "rows": 303,
+      "business_sha256": "d3f8f0abf06dec4610bf128210b8171378f17e01ccad2de7d77061bee62ed271",
+      "pg20_sha256": "c6b43ddd8c5bbfc77fc38514ba26461158b26a854437f0e72029dac5b973699b"
+    },
+    {
+      "table": "waitevent_version",
+      "rows": 18,
+      "business_sha256": "bcd43df9c501fc69b028128cbaf9695ecfb93785f5ce5abe0f3c0d1221f10259",
+      "pg20_sha256": "50d70818708e01a29552c900ded19f1d089561e69873360bdb9b19de26d8549e"
+    }
+  ],
+  "verification": {
+    "local": {
+      "backup_restore_verified_tables": 139,
+      "final_database_verified_tables": 139,
+      "idempotent_updates": 0,
+      "http_pages": 462,
+      "http_failures": 0,
+      "search_cases": 6,
+      "navigation_preview_export_cases": 14,
+      "crawled_pages": 5134,
+      "crawl_added": 0,
+      "crawl_deleted": 0
+    },
+    "production": {
+      "backup_restore_verified_tables": 139,
+      "final_database_verified_tables": 139,
+      "idempotent_updates": 0,
+      "http_pages": 462,
+      "http_failures": 0,
+      "search_cases": 6,
+      "navigation_preview_export_cases": 14,
+      "crawled_pages": 5134,
+      "crawl_added": 0,
+      "crawl_deleted": 0
+    },
+    "both": {
+      "wiki_tables": 35,
+      "wiki_rows": 4894,
+      "identical_business_content": true,
+      "pg20_unchanged": true,
+      "manuals_compare_and_other_business_content_unchanged": true,
+      "default_major": "19",
+      "chinese_manual_targets_repaired": 130,
+      "english_source_targets_repaired": 90,
+      "english_source_pages_verified": 16
+    },
+    "tests": [
+      {
+        "log": "final-tests.log",
+        "passed": 738
+      },
+      {
+        "log": "latest-tests.log",
+        "passed": 8
+      },
+      {
+        "log": "stream-index-tests.log",
+        "passed": 22
+      },
+      {
+        "log": "english-link-tests.log",
+        "passed": 4
+      }
+    ],
+    "tests_note": "Follow-up runs overlap with the main suite; counts are not added.",
+    "visual": {
+      "surfaces": [
+        "production desktop",
+        "production mobile 375px",
+        "light theme",
+        "dark theme",
+        "local version-scoped search preview"
+      ],
+      "mobile_horizontal_overflow": false,
+      "coverage": "Representative pages, not every page.",
+      "screenshots": [
+        "production/pg19-default-desktop.jpg",
+        "production/pg19-mobile-dark.jpg"
+      ]
+    }
+  },
+  "receipts_sha256": {
+    "tmp/wiki-ga-20261120/local/before.json": "200dff05880bdc92a74109513c8a9586e9430193658324f08d7b1cc4bfc94b53",
+    "tmp/wiki-ga-20261120/local/restored.json": "b37aac34dbcd417888de0db77db91bed2df2b012633bc5ce57715a98a603fd3e",
+    "tmp/wiki-ga-20261120/production/before.json": "e2b41c9b5ed1b0a0c3b4bedcd424e0aa3810b4077c0e87c499f672259557dfa5",
+    "tmp/wiki-ga-20261120/production/restored.json": "9c99e89865edcc46e23e7dd16306bc13ffc4dce20ed81cc51b3f73609dd227c6",
+    "tmp/wiki-ga-20261120/local/final-links-verified.json": "1e5e48b3d4cf3c91e5e152d641373183eba4cba65cffb901b25e32e875f87697",
+    "tmp/wiki-ga-20261120/production-receipts/final-links-verified.json": "1e5e48b3d4cf3c91e5e152d641373183eba4cba65cffb901b25e32e875f87697",
+    "tmp/wiki-ga-20261120/local/final-links-idempotent.json": "838b18d7eb398cc0fa01b37da3cef426f99a52a781d2fac4809f848e4cb5fece",
+    "tmp/wiki-ga-20261120/production-receipts/final-links-idempotent.json": "bd838f1c6e9c13e24997bd274864b1cec02ef21477011ca16bc1f46d90eb125e",
+    "tmp/wiki-ga-20261120/local/preservation-final.json": "7c46e916a9152005fa46f5fd3b69395d7c6ccdfb030c24f485d6a9bd66a15430",
+    "tmp/wiki-ga-20261120/production/preservation-final.json": "7c46e916a9152005fa46f5fd3b69395d7c6ccdfb030c24f485d6a9bd66a15430",
+    "tmp/wiki-ga-20261120/local/final-database/restored.json": "68cf21baa9bcb8224c710dc1539f94d62636ca207ca6e3c7ba73faaf42916a41",
+    "tmp/wiki-ga-20261120/production-receipts/final-database/restored.json": "62b255bb09fb4a6ca2cee1a535fe1900fd7a4e70ba8356671c792d2de14e0351",
+    "tmp/wiki-ga-20261120/local/http-links/pages.json": "dca03aea3244ef0c0932c371357096d945a51655a03d062319adbea87e183782",
+    "tmp/wiki-ga-20261120/production/http-links/pages.json": "dca03aea3244ef0c0932c371357096d945a51655a03d062319adbea87e183782",
+    "tmp/wiki-ga-20261120/local/http-links/search.json": "c085681c51fb1a8defac09e82168c8ec4749a71bd7a15445f13e0288a71209b5",
+    "tmp/wiki-ga-20261120/production/http-links/search.json": "c085681c51fb1a8defac09e82168c8ec4749a71bd7a15445f13e0288a71209b5",
+    "tmp/wiki-ga-20261120/local/acceptance.json": "dcaa2511e85aa91649b83d80161d05357bed817b5668da9b8a61c98374b72668",
+    "tmp/wiki-ga-20261120/production/acceptance-final.json": "dcaa2511e85aa91649b83d80161d05357bed817b5668da9b8a61c98374b72668",
+    "tmp/wiki-ga-20261120/local/crawl.json": "790a0e98036576721df5fa79d37396f2ee17117d8788e3384277eeefda53905e",
+    "tmp/wiki-ga-20261120/production-receipts/crawl.json": "790a0e98036576721df5fa79d37396f2ee17117d8788e3384277eeefda53905e",
+    "tmp/wiki-ga-20261120/local/check-data-final.log": "89971f9cc7155922fad8d4ae0ff836767f5cb040b72cda3d0b2d2711b96eb6bd",
+    "tmp/wiki-ga-20261120/production-receipts/check-data-final.log": "89971f9cc7155922fad8d4ae0ff836767f5cb040b72cda3d0b2d2711b96eb6bd",
+    "tmp/wiki-ga-20261120/english-targets-verified.json": "5e219973975054ef6fe3456dd64d4b0492e4a34e996e5ca7982fc1e1b653ca97",
+    "tmp/wiki-ga-20261120/english-source-coverage.json": "07e5b2cc4f0f7a773e2ff90de53c176ce654a1ed8a9110b6ed1a77985277b6fb",
+    "tmp/wiki-ga-20261120/final-tests.log": "80f5a783c8b93278b0d284d001ad14e1a3adbc3d6004b3a7909d801c2fefc25d",
+    "tmp/wiki-ga-20261120/latest-tests.log": "8167a73d386579f233aca975c8ac9b64f7812445b4b6c8b67b5931cb7570030b",
+    "tmp/wiki-ga-20261120/stream-index-tests.log": "62f34a9d5f5618ba0a978bf792dcd0fb01ebf5318ec860d7be338004a0b634c0",
+    "tmp/wiki-ga-20261120/english-link-tests.log": "532d0364ea1c84bed405683393aefbf589d2ec4023d277c68f415bd2f8fb67a6"
+  },
+  "english_source_links": {
+    "file": "data/wiki/english-source-links-20261120.json",
+    "sha256": "bd9d1395ec4d5d717cb3adb7de28f6dd7c87638ad6c50ddec54b546087ddb495",
+    "updated_rows": 91,
+    "note": "These 91 rows are included in the 4,579 unique changed rows."
+  }
 }

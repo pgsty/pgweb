@@ -53,3 +53,18 @@ class OrderedDeltaTests(SimpleTestCase):
                 write(new, invalid)
                 with self.assertRaises(ValueError):
                     list(iter_pairs(old, new, 'id', True))
+
+
+class ManualLinkScopeTests(SimpleTestCase):
+    def test_chinese_chunk_map_does_not_rewrite_official_english_links(self):
+        from tools.wiki.build_release_delta import repair_manual_links
+        source = '/docs/14/libpq-connect.html#LIBPQ-CONNECT-HOST'
+        target = '/docs/14/libpq.html#LIBPQ-CONNECT-HOST'
+        mapping = {source: target}
+        self.assertEqual(repair_manual_links(source, mapping), target)
+        self.assertEqual(repair_manual_links('https://pgsql.cc' + source, mapping), target)
+        english = 'https://www.postgresql.org' + source
+        self.assertEqual(repair_manual_links(english, mapping), english)
+        html = f'<a href="{source}">中文</a><a href="{english}">English</a>'
+        self.assertEqual(repair_manual_links(html, mapping),
+                         f'<a href="{target}">中文</a><a href="{english}">English</a>')

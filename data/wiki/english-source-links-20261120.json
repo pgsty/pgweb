@@ -1,0 +1,284 @@
+{
+  "date": "2026-11-20",
+  "policy": "English manual links retain upstream chunking; Chinese chunk mappings apply only to local links.",
+  "mappings": {
+    "https://www.postgresql.org/docs/14/mvcc.html#MVCC-INTRO": "https://www.postgresql.org/docs/14/mvcc-intro.html#MVCC-INTRO",
+    "https://www.postgresql.org/docs/14/maintenance.html#ROUTINE-VACUUMING": "https://www.postgresql.org/docs/14/routine-vacuuming.html#ROUTINE-VACUUMING",
+    "https://www.postgresql.org/docs/15/mvcc.html#MVCC-INTRO": "https://www.postgresql.org/docs/15/mvcc-intro.html#MVCC-INTRO",
+    "https://www.postgresql.org/docs/15/maintenance.html#ROUTINE-VACUUMING": "https://www.postgresql.org/docs/15/routine-vacuuming.html#ROUTINE-VACUUMING",
+    "https://www.postgresql.org/docs/14/client-authentication.html#AUTH-PG-HBA-CONF": "https://www.postgresql.org/docs/14/auth-pg-hba-conf.html#AUTH-PG-HBA-CONF",
+    "https://www.postgresql.org/docs/15/client-authentication.html#AUTH-PG-HBA-CONF": "https://www.postgresql.org/docs/15/auth-pg-hba-conf.html#AUTH-PG-HBA-CONF",
+    "https://www.postgresql.org/docs/14/storage.html#STORAGE-FILE-LAYOUT": "https://www.postgresql.org/docs/14/storage-file-layout.html#STORAGE-FILE-LAYOUT",
+    "https://www.postgresql.org/docs/15/storage.html#STORAGE-FILE-LAYOUT": "https://www.postgresql.org/docs/15/storage-file-layout.html#STORAGE-FILE-LAYOUT",
+    "https://www.postgresql.org/docs/14/storage.html#PGDATA-CONTENTS-TABLE": "https://www.postgresql.org/docs/14/storage-file-layout.html#PGDATA-CONTENTS-TABLE",
+    "https://www.postgresql.org/docs/15/storage.html#PGDATA-CONTENTS-TABLE": "https://www.postgresql.org/docs/15/storage-file-layout.html#PGDATA-CONTENTS-TABLE",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-APPLICATION-NAME": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-APPLICATION-NAME",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-APPLICATION-NAME": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-APPLICATION-NAME",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-CHANNEL-BINDING": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-CHANNEL-BINDING",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-CHANNEL-BINDING": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-CHANNEL-BINDING",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-CLIENT-ENCODING": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-CLIENT-ENCODING",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-CLIENT-ENCODING": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-CLIENT-ENCODING",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-CONNECT-TIMEOUT": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-CONNECT-TIMEOUT",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-CONNECT-TIMEOUT": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-CONNECT-TIMEOUT",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-DBNAME": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-DBNAME",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-DBNAME": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-DBNAME",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-GSSENCMODE": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-GSSENCMODE",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-GSSENCMODE": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-GSSENCMODE",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-GSSLIB": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-GSSLIB",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-GSSLIB": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-GSSLIB",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-HOST": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-HOST",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-HOST": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-HOST",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-HOSTADDR": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-HOSTADDR",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-HOSTADDR": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-HOSTADDR",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-KEEPALIVES": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-KEEPALIVES",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-KEEPALIVES": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-KEEPALIVES",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-KEEPALIVES-COUNT": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-KEEPALIVES-COUNT",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-KEEPALIVES-COUNT": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-KEEPALIVES-COUNT",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-KEEPALIVES-IDLE": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-KEEPALIVES-IDLE",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-KEEPALIVES-IDLE": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-KEEPALIVES-IDLE",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-KEEPALIVES-INTERVAL": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-KEEPALIVES-INTERVAL",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-KEEPALIVES-INTERVAL": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-KEEPALIVES-INTERVAL",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-KRBSRVNAME": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-KRBSRVNAME",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-KRBSRVNAME": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-KRBSRVNAME",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-OPTIONS": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-OPTIONS",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-OPTIONS": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-OPTIONS",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-PASSFILE": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-PASSFILE",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-PASSFILE": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-PASSFILE",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-PASSWORD": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-PASSWORD",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-PASSWORD": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-PASSWORD",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-PORT": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-PORT",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-PORT": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-PORT",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-REPLICATION": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-REPLICATION",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-REPLICATION": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-REPLICATION",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-REQUIREPEER": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-REQUIREPEER",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-REQUIREPEER": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-REQUIREPEER",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-REQUIRESSL": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-REQUIRESSL",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-REQUIRESSL": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-REQUIRESSL",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SERVICE": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SERVICE",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SERVICE": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SERVICE",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSLCERT": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLCERT",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSLCERT": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLCERT",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSLCOMPRESSION": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLCOMPRESSION",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSLCOMPRESSION": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLCOMPRESSION",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSLCRL": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLCRL",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSLCRL": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLCRL",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSLCRLDIR": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLCRLDIR",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSLCRLDIR": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLCRLDIR",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSLKEY": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLKEY",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSLKEY": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLKEY",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSLMODE": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLMODE",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSLMODE": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLMODE",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSLPASSWORD": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLPASSWORD",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSLPASSWORD": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLPASSWORD",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSLROOTCERT": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLROOTCERT",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSLROOTCERT": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLROOTCERT",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-SSLSNI": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLSNI",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-SSLSNI": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLSNI",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-TARGET-SESSION-ATTRS": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-TARGET-SESSION-ATTRS",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-TARGET-SESSION-ATTRS": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-TARGET-SESSION-ATTRS",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-TCP-USER-TIMEOUT": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-TCP-USER-TIMEOUT",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-TCP-USER-TIMEOUT": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-TCP-USER-TIMEOUT",
+    "https://www.postgresql.org/docs/14/libpq.html#LIBPQ-CONNECT-USER": "https://www.postgresql.org/docs/14/libpq-connect.html#LIBPQ-CONNECT-USER",
+    "https://www.postgresql.org/docs/15/libpq.html#LIBPQ-CONNECT-USER": "https://www.postgresql.org/docs/15/libpq-connect.html#LIBPQ-CONNECT-USER",
+    "https://www.postgresql.org/docs/14/plpgsql.html#PLPGSQL-OVERVIEW": "https://www.postgresql.org/docs/14/plpgsql-overview.html#PLPGSQL-OVERVIEW",
+    "https://www.postgresql.org/docs/15/plpgsql.html#PLPGSQL-OVERVIEW": "https://www.postgresql.org/docs/15/plpgsql-overview.html#PLPGSQL-OVERVIEW",
+    "https://www.postgresql.org/docs/14/pltcl.html#PLTCL-OVERVIEW": "https://www.postgresql.org/docs/14/pltcl-overview.html#PLTCL-OVERVIEW",
+    "https://www.postgresql.org/docs/15/pltcl.html#PLTCL-OVERVIEW": "https://www.postgresql.org/docs/15/pltcl-overview.html#PLTCL-OVERVIEW",
+    "https://www.postgresql.org/docs/14/datatype.html#DATATYPE-NUMERIC": "https://www.postgresql.org/docs/14/datatype-numeric.html#DATATYPE-NUMERIC",
+    "https://www.postgresql.org/docs/15/datatype.html#DATATYPE-NUMERIC": "https://www.postgresql.org/docs/15/datatype-numeric.html#DATATYPE-NUMERIC"
+  },
+  "verified": [
+    {
+      "url": "https://www.postgresql.org/docs/14/mvcc-intro.html",
+      "status": 200,
+      "anchors": [
+        "MVCC-INTRO"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/14/routine-vacuuming.html",
+      "status": 200,
+      "anchors": [
+        "ROUTINE-VACUUMING"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/15/mvcc-intro.html",
+      "status": 200,
+      "anchors": [
+        "MVCC-INTRO"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/15/routine-vacuuming.html",
+      "status": 200,
+      "anchors": [
+        "ROUTINE-VACUUMING"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/14/auth-pg-hba-conf.html",
+      "status": 200,
+      "anchors": [
+        "AUTH-PG-HBA-CONF"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/15/auth-pg-hba-conf.html",
+      "status": 200,
+      "anchors": [
+        "AUTH-PG-HBA-CONF"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/14/storage-file-layout.html",
+      "status": 200,
+      "anchors": [
+        "PGDATA-CONTENTS-TABLE",
+        "STORAGE-FILE-LAYOUT"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/15/storage-file-layout.html",
+      "status": 200,
+      "anchors": [
+        "PGDATA-CONTENTS-TABLE",
+        "STORAGE-FILE-LAYOUT"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/14/libpq-connect.html",
+      "status": 200,
+      "anchors": [
+        "LIBPQ-CONNECT-APPLICATION-NAME",
+        "LIBPQ-CONNECT-CHANNEL-BINDING",
+        "LIBPQ-CONNECT-CLIENT-ENCODING",
+        "LIBPQ-CONNECT-CONNECT-TIMEOUT",
+        "LIBPQ-CONNECT-DBNAME",
+        "LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME",
+        "LIBPQ-CONNECT-GSSENCMODE",
+        "LIBPQ-CONNECT-GSSLIB",
+        "LIBPQ-CONNECT-HOST",
+        "LIBPQ-CONNECT-HOSTADDR",
+        "LIBPQ-CONNECT-KRBSRVNAME",
+        "LIBPQ-CONNECT-OPTIONS",
+        "LIBPQ-CONNECT-PASSFILE",
+        "LIBPQ-CONNECT-PASSWORD",
+        "LIBPQ-CONNECT-PORT",
+        "LIBPQ-CONNECT-REPLICATION",
+        "LIBPQ-CONNECT-REQUIREPEER",
+        "LIBPQ-CONNECT-REQUIRESSL",
+        "LIBPQ-CONNECT-SERVICE",
+        "LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION",
+        "LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION",
+        "LIBPQ-CONNECT-SSLCERT",
+        "LIBPQ-CONNECT-SSLCOMPRESSION",
+        "LIBPQ-CONNECT-SSLCRL",
+        "LIBPQ-CONNECT-SSLCRLDIR",
+        "LIBPQ-CONNECT-SSLKEY",
+        "LIBPQ-CONNECT-SSLMODE",
+        "LIBPQ-CONNECT-SSLPASSWORD",
+        "LIBPQ-CONNECT-SSLROOTCERT",
+        "LIBPQ-CONNECT-SSLSNI",
+        "LIBPQ-CONNECT-TARGET-SESSION-ATTRS",
+        "LIBPQ-CONNECT-USER",
+        "LIBPQ-KEEPALIVES",
+        "LIBPQ-KEEPALIVES-COUNT",
+        "LIBPQ-KEEPALIVES-IDLE",
+        "LIBPQ-KEEPALIVES-INTERVAL",
+        "LIBPQ-TCP-USER-TIMEOUT"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/15/libpq-connect.html",
+      "status": 200,
+      "anchors": [
+        "LIBPQ-CONNECT-APPLICATION-NAME",
+        "LIBPQ-CONNECT-CHANNEL-BINDING",
+        "LIBPQ-CONNECT-CLIENT-ENCODING",
+        "LIBPQ-CONNECT-CONNECT-TIMEOUT",
+        "LIBPQ-CONNECT-DBNAME",
+        "LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME",
+        "LIBPQ-CONNECT-GSSENCMODE",
+        "LIBPQ-CONNECT-GSSLIB",
+        "LIBPQ-CONNECT-HOST",
+        "LIBPQ-CONNECT-HOSTADDR",
+        "LIBPQ-CONNECT-KRBSRVNAME",
+        "LIBPQ-CONNECT-OPTIONS",
+        "LIBPQ-CONNECT-PASSFILE",
+        "LIBPQ-CONNECT-PASSWORD",
+        "LIBPQ-CONNECT-PORT",
+        "LIBPQ-CONNECT-REPLICATION",
+        "LIBPQ-CONNECT-REQUIREPEER",
+        "LIBPQ-CONNECT-REQUIRESSL",
+        "LIBPQ-CONNECT-SERVICE",
+        "LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION",
+        "LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION",
+        "LIBPQ-CONNECT-SSLCERT",
+        "LIBPQ-CONNECT-SSLCOMPRESSION",
+        "LIBPQ-CONNECT-SSLCRL",
+        "LIBPQ-CONNECT-SSLCRLDIR",
+        "LIBPQ-CONNECT-SSLKEY",
+        "LIBPQ-CONNECT-SSLMODE",
+        "LIBPQ-CONNECT-SSLPASSWORD",
+        "LIBPQ-CONNECT-SSLROOTCERT",
+        "LIBPQ-CONNECT-SSLSNI",
+        "LIBPQ-CONNECT-TARGET-SESSION-ATTRS",
+        "LIBPQ-CONNECT-USER",
+        "LIBPQ-KEEPALIVES",
+        "LIBPQ-KEEPALIVES-COUNT",
+        "LIBPQ-KEEPALIVES-IDLE",
+        "LIBPQ-KEEPALIVES-INTERVAL",
+        "LIBPQ-TCP-USER-TIMEOUT"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/14/plpgsql-overview.html",
+      "status": 200,
+      "anchors": [
+        "PLPGSQL-OVERVIEW"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/15/plpgsql-overview.html",
+      "status": 200,
+      "anchors": [
+        "PLPGSQL-OVERVIEW"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/14/pltcl-overview.html",
+      "status": 200,
+      "anchors": [
+        "PLTCL-OVERVIEW"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/15/pltcl-overview.html",
+      "status": 200,
+      "anchors": [
+        "PLTCL-OVERVIEW"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/14/datatype-numeric.html",
+      "status": 200,
+      "anchors": [
+        "DATATYPE-NUMERIC"
+      ]
+    },
+    {
+      "url": "https://www.postgresql.org/docs/15/datatype-numeric.html",
+      "status": 200,
+      "anchors": [
+        "DATATYPE-NUMERIC"
+      ]
+    }
+  ]
+}

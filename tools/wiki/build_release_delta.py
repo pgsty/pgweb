@@ -40,6 +40,15 @@ def walk(value, transform):
     return transform(value) if isinstance(value, str) else value
 
 
+def repair_manual_links(value, repairs):
+    pattern = re.compile(r'(?P<origin>https?://[^/\s\"\'<>)]*)?(?:/zh)?(?P<url>/docs/[^\s\"\'<>)]*)')
+    def replace(match):
+        if match['origin'] and match['origin'] not in ('https://pg.center', 'https://pgsql.cc', 'http://pgsql.cc'):
+            return match[0]
+        return repairs.get(match['url'], match[0])
+    return pattern.sub(replace, value)
+
+
 def refine_guc_history(rows, order):
     """Unknown documentary defaults do not form measured history segments."""
     for row in rows:
@@ -356,9 +365,8 @@ def main():
 
     # Apply only independently verified same-version link repairs.
     repairs = {r['url']: r['candidate'] for r in read(ROOT / 'data/wiki/audit-20261120-links.json')['mappings']}
-    url_pattern = re.compile(r'(?:https://pg\.center)?(?:/zh)?(?P<url>/docs/[^\s\"\'<>)]*)')
     def repair(value):
-        return url_pattern.sub(lambda match: repairs.get(match['url'], match[0]), value)
+        return repair_manual_links(value, repairs)
     def repair_coordinates(value):
         if isinstance(value, dict):
             if value.get('file') and value.get('slug') in majors:
@@ -376,11 +384,16 @@ def main():
         for row in rows:
             for m in majors:
                 if m in row.get('versions', {}):
+                    original_sources = deepcopy(row['versions'][m].get('sources', []))
                     s = walk(row['versions'][m], repair)
                     repair_coordinates(s)
                     # English source labels must open the original English manual.
-                    for source in s.get('sources', []):
-                        url = source.get('url', '')
+                    for original_source, source in zip(original_sources, s.get('sources', [])):
+                        url = original_source.get('url', '')
+                        for origin in ('https://pg.center', 'https://pgsql.cc', 'http://pgsql.cc'):
+                            if url.startswith(origin + '/'):
+                                url = url.removeprefix(origin)
+                                break
                         if ('English' in source.get('label', '') or '英文' in source.get('label', '')) and url.startswith(('/docs/', '/zh/docs/')):
                             source['url'] = 'https://www.postgresql.org' + url.removeprefix('/zh')
                     row['versions'][m] = s

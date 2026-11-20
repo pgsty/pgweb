@@ -1,6 +1,6 @@
 \set ON_ERROR_STOP on
 
--- Read-only acceptance for all eleven reference domains and their derived search.
+-- Read-only acceptance for all thirty encyclopedia domains and their derived search.
 BEGIN READ ONLY;
 SET LOCAL statement_timeout = '30s';
 
