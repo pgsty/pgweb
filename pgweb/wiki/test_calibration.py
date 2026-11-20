@@ -1,4 +1,8 @@
 from copy import deepcopy
+import gzip
+import json
+from pathlib import Path
+from tempfile import TemporaryDirectory
 
 from django.test import SimpleTestCase, TestCase
 
@@ -32,3 +36,20 @@ class DefaultHistoryTests(SimpleTestCase):
         self.assertEqual([(h['from'], h['to'], h['boot_val']) for h in row['default_history']],
                          [('17', '18', '64'), ('19', '19', '128')])
         self.assertEqual(row['versions']['20'], original)
+
+
+class OrderedDeltaTests(SimpleTestCase):
+    def test_streaming_refuses_membership_order_and_duplicate_identity_changes(self):
+        from tools.docs.apply_reference_delta import iter_pairs
+        with TemporaryDirectory() as directory:
+            old, new = Path(directory) / 'old.gz', Path(directory) / 'new.gz'
+            rows = [{'id': 'a', 'value': 1}, {'id': 'b', 'value': 2}]
+            def write(path, values):
+                path.write_bytes(gzip.compress(''.join(json.dumps(r) + '\n' for r in values).encode()))
+            write(old, rows)
+            write(new, [dict(r, value=r['value'] + 1) for r in rows])
+            self.assertEqual(list(iter_pairs(old, new, 'id', True)), list(iter_pairs(old, new, 'id')))
+            for invalid in (rows[:1], rows + [{'id': 'c'}], list(reversed(rows)), [rows[0], rows[0]]):
+                write(new, invalid)
+                with self.assertRaises(ValueError):
+                    list(iter_pairs(old, new, 'id', True))

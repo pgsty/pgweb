@@ -27,7 +27,7 @@
 
 1. `tools/wiki/freeze_inventory.py --output BEFORE` 固定当前 35 表。两端分别完整备份，实际恢复到隔离库并比较所有表。
 2. `sample_release_runtime.py` 采集隔离的源码构建；`build_release_candidates.py`、`build_release_native.py` 重放候选；`build_release_delta.py` 生成自包含 AFTER 库存，拒绝未审阅的实体或语义差异。
-3. `manage.py migrate search`；使用 `tools/docs/apply_reference_delta.py --before BEFORE --after AFTER --receipt RECEIPT` 事务预演，确认后加 `--write`。生产参数 `--target production` 不负责 SSH，必须在 `/data/app/pgsql.cc` 执行。
+3. `manage.py migrate search`；使用 `tools/docs/apply_reference_delta.py --before BEFORE --after AFTER --stream-ordered --receipt RECEIPT` 逐行读取的事务预演（身份与顺序必须完全一致），确认后加 `--write`。生产参数 `--target production` 不负责 SSH，必须在 `/data/app/pgsql.cc` 执行。
 4. `manage.py index_docs --errcodes --catalog --guc --waitevents --sqlcmd --func --locks --topics --releases`；运行 `tools/wiki/check_data.sql` 和 `audit_release.py`；核验 PG20、正文与链接。
 5. 部署并重启 `pgsql.cc`，运行 `tools/wiki/crawl_release.py --base http://127.0.0.1:8001 --receipt FILE` 定向刷新百科全文搜索；本地 base 为 8000。工具核对 pgsql.cc、pgweb 库及角色，不删除其他页面。
 6. 比较两端最终业务指纹，复验幂等性、搜索、移动与桌面页面。保护 `data/info/2026-11-02.json` 的原有修改。

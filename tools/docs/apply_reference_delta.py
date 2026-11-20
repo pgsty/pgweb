@@ -10,6 +10,7 @@ from copy import deepcopy
 import gzip
 import hashlib
 import json
+from itertools import zip_longest
 import os
 from pathlib import Path
 import sys
@@ -36,6 +37,29 @@ def load(path, key):
     return result
 
 
+def iter_pairs(before_path, after_path, key, ordered=False):
+    if ordered:
+        # Frozen Wiki inventories have the same primary-key order and membership.
+        # Stream one entity at a time to keep large JSON snapshots off the heap.
+        with gzip.open(before_path, 'rt') as old, gzip.open(after_path, 'rt') as new:
+            seen = set()
+            for old_line, new_line in zip_longest(old, new):
+                if old_line is None or new_line is None:
+                    raise ValueError('ordered inventory membership differs: ' + before_path.name)
+                original, desired = json.loads(old_line), json.loads(new_line)
+                identity = original[key]
+                if identity != desired[key] or identity in seen:
+                    raise ValueError('ordered inventory identity differs: ' + before_path.name)
+                seen.add(identity)
+                yield identity, original, desired
+    else:
+        before, after = load(before_path, key), load(after_path, key)
+        if not before.keys() <= after.keys():
+            raise ValueError('deleting identities is not supported: ' + before_path.name)
+        for identity, desired in after.items():
+            yield identity, before.get(identity), desired
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--before', type=Path, required=True)
@@ -43,6 +67,8 @@ def main():
     parser.add_argument('--receipt', type=Path, required=True)
     parser.add_argument('--target', choices=('local', 'production'), default='local')
     parser.add_argument('--write', action='store_true')
+    parser.add_argument('--stream-ordered', action='store_true',
+                        help='Require identical ordered identities; stream large inventories')
     args = parser.parse_args()
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'pgweb.settings')
     import django
@@ -74,14 +100,11 @@ def main():
             table = entry['table']
             model = models[table]
             key = model._meta.pk.attname
-            before = load(args.before / (table + '.jsonl.gz'), key)
-            after = load(args.after / (table + '.jsonl.gz'), key)
-            if not before.keys() <= after.keys():
-                raise ValueError('deleting identities is not supported: ' + table)
             fields = {f.attname: f for f in model._meta.concrete_fields}
             changed = []
-            for identity, desired in after.items():
-                original = before.get(identity)
+            for identity, original, desired in iter_pairs(
+                    args.before / (table + '.jsonl.gz'), args.after / (table + '.jsonl.gz'),
+                    key, args.stream_ordered):
                 touched = {k for k in fields if k not in (key, 'content_hash', 'imported_at', 'source_rev')
                            and k in desired and (original is None or desired[k] != original.get(k))}
                 if not touched:
