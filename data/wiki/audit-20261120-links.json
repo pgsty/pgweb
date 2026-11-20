@@ -1,0 +1,656 @@
+{
+  "date": "2026-11-20",
+  "status": "reviewed candidates; not applied",
+  "mappings": [
+    {
+      "url": "/docs/14/auth-pg-hba-conf.html",
+      "candidate": "/docs/14/client-authentication.html#AUTH-PG-HBA-CONF",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/datatype-numeric.html",
+      "candidate": "/docs/14/datatype.html#DATATYPE-NUMERIC",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/hash-intro.html",
+      "candidate": "/docs/14/hash-index.html#HASH-INTRO",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-APPLICATION-NAME",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-APPLICATION-NAME",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-CHANNEL-BINDING",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-CHANNEL-BINDING",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-CLIENT-ENCODING",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-CLIENT-ENCODING",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-CONNECT-TIMEOUT",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-CONNECT-TIMEOUT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-DBNAME",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-DBNAME",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-GSSENCMODE",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-GSSENCMODE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-GSSLIB",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-GSSLIB",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-HOST",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-HOST",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-HOSTADDR",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-HOSTADDR",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-KRBSRVNAME",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-KRBSRVNAME",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-OPTIONS",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-OPTIONS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-PASSFILE",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-PASSFILE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-PASSWORD",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-PASSWORD",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-PORT",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-PORT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-REPLICATION",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-REPLICATION",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-REQUIREPEER",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-REQUIREPEER",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-REQUIRESSL",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-REQUIRESSL",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SERVICE",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SERVICE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLCERT",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSLCERT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLCOMPRESSION",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSLCOMPRESSION",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLCRL",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSLCRL",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLCRLDIR",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSLCRLDIR",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLKEY",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSLKEY",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLMODE",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSLMODE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLPASSWORD",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSLPASSWORD",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLROOTCERT",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSLROOTCERT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-SSLSNI",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-SSLSNI",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-TARGET-SESSION-ATTRS",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-TARGET-SESSION-ATTRS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-CONNECT-USER",
+      "candidate": "/docs/14/libpq.html#LIBPQ-CONNECT-USER",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-KEEPALIVES",
+      "candidate": "/docs/14/libpq.html#LIBPQ-KEEPALIVES",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-KEEPALIVES-COUNT",
+      "candidate": "/docs/14/libpq.html#LIBPQ-KEEPALIVES-COUNT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-KEEPALIVES-IDLE",
+      "candidate": "/docs/14/libpq.html#LIBPQ-KEEPALIVES-IDLE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-KEEPALIVES-INTERVAL",
+      "candidate": "/docs/14/libpq.html#LIBPQ-KEEPALIVES-INTERVAL",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/libpq-connect.html#LIBPQ-TCP-USER-TIMEOUT",
+      "candidate": "/docs/14/libpq.html#LIBPQ-TCP-USER-TIMEOUT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/mvcc-intro.html",
+      "candidate": "/docs/14/mvcc.html#MVCC-INTRO",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/plperl-funcs.html",
+      "candidate": "/docs/14/plperl.html#PLPERL-FUNCS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/plpgsql-overview.html",
+      "candidate": "/docs/14/plpgsql.html#PLPGSQL-OVERVIEW",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/plpython-python23.html",
+      "candidate": "/docs/14/plpython.html#PLPYTHON-PYTHON23",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/pltcl-overview.html",
+      "candidate": "/docs/14/pltcl.html#PLTCL-OVERVIEW",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/protocol-flow.html#id-1.10.5.7.10",
+      "candidate": "/docs/14/protocol-flow.html#PROTOCOL-FLOW-CANCELING-REQUESTS",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/14/protocol-flow.html#id-1.10.5.7.11",
+      "candidate": "/docs/14/protocol-flow.html#PROTOCOL-FLOW-TERMINATION",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/14/protocol-flow.html#id-1.10.5.7.12",
+      "candidate": "/docs/14/protocol-flow.html#PROTOCOL-FLOW-SSL",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/14/protocol-flow.html#id-1.10.5.7.13",
+      "candidate": "/docs/14/protocol-flow.html#PROTOCOL-FLOW-GSSAPI",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/14/protocol-flow.html#id-1.10.5.7.3",
+      "candidate": "/docs/14/protocol-flow.html#PROTOCOL-FLOW-START-UP",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/14/protocol-flow.html#id-1.10.5.7.4",
+      "candidate": "/docs/14/protocol-flow.html#PROTOCOL-FLOW-SIMPLE-QUERY",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/14/protocol-flow.html#id-1.10.5.7.7",
+      "candidate": "/docs/14/protocol-flow.html#PROTOCOL-FLOW-FUNCTION-CALL",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/14/protocol-overview.html",
+      "candidate": "/docs/14/protocol.html#PROTOCOL-OVERVIEW",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/routine-vacuuming.html",
+      "candidate": "/docs/14/maintenance.html#ROUTINE-VACUUMING",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/runtime-config-logging.html#GUC-DEBUG-PRINT-PLAN",
+      "candidate": "/docs/14/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    },
+    {
+      "url": "/docs/14/runtime-config-logging.html#GUC-DEBUG-PRINT-REWRITTEN",
+      "candidate": "/docs/14/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    },
+    {
+      "url": "/docs/14/storage-file-layout.html",
+      "candidate": "/docs/14/storage.html#STORAGE-FILE-LAYOUT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/storage-file-layout.html#PGDATA-CONTENTS-TABLE",
+      "candidate": "/docs/14/storage.html#PGDATA-CONTENTS-TABLE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/using-explain.html",
+      "candidate": "/docs/14/performance-tips.html#USING-EXPLAIN",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/using-explain.html#USING-EXPLAIN-ANALYZE",
+      "candidate": "/docs/14/performance-tips.html#USING-EXPLAIN-ANALYZE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/using-explain.html#USING-EXPLAIN-BASICS",
+      "candidate": "/docs/14/performance-tips.html#USING-EXPLAIN-BASICS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/14/using-explain.html#USING-EXPLAIN-CAVEATS",
+      "candidate": "/docs/14/performance-tips.html#USING-EXPLAIN-CAVEATS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/auth-pg-hba-conf.html",
+      "candidate": "/docs/15/client-authentication.html#AUTH-PG-HBA-CONF",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/datatype-numeric.html",
+      "candidate": "/docs/15/datatype.html#DATATYPE-NUMERIC",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/hash-intro.html",
+      "candidate": "/docs/15/hash-index.html#HASH-INTRO",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-APPLICATION-NAME",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-APPLICATION-NAME",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-CHANNEL-BINDING",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-CHANNEL-BINDING",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-CLIENT-ENCODING",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-CLIENT-ENCODING",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-CONNECT-TIMEOUT",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-CONNECT-TIMEOUT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-DBNAME",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-DBNAME",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-FALLBACK-APPLICATION-NAME",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-GSSENCMODE",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-GSSENCMODE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-GSSLIB",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-GSSLIB",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-HOST",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-HOST",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-HOSTADDR",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-HOSTADDR",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-KRBSRVNAME",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-KRBSRVNAME",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-OPTIONS",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-OPTIONS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-PASSFILE",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-PASSFILE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-PASSWORD",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-PASSWORD",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-PORT",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-PORT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-REPLICATION",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-REPLICATION",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-REQUIREPEER",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-REQUIREPEER",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-REQUIRESSL",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-REQUIRESSL",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SERVICE",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SERVICE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSL-MAX-PROTOCOL-VERSION",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSL-MIN-PROTOCOL-VERSION",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLCERT",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSLCERT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLCOMPRESSION",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSLCOMPRESSION",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLCRL",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSLCRL",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLCRLDIR",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSLCRLDIR",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLKEY",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSLKEY",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLMODE",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSLMODE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLPASSWORD",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSLPASSWORD",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLROOTCERT",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSLROOTCERT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-SSLSNI",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-SSLSNI",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-TARGET-SESSION-ATTRS",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-TARGET-SESSION-ATTRS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-CONNECT-USER",
+      "candidate": "/docs/15/libpq.html#LIBPQ-CONNECT-USER",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-KEEPALIVES",
+      "candidate": "/docs/15/libpq.html#LIBPQ-KEEPALIVES",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-KEEPALIVES-COUNT",
+      "candidate": "/docs/15/libpq.html#LIBPQ-KEEPALIVES-COUNT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-KEEPALIVES-IDLE",
+      "candidate": "/docs/15/libpq.html#LIBPQ-KEEPALIVES-IDLE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-KEEPALIVES-INTERVAL",
+      "candidate": "/docs/15/libpq.html#LIBPQ-KEEPALIVES-INTERVAL",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/libpq-connect.html#LIBPQ-TCP-USER-TIMEOUT",
+      "candidate": "/docs/15/libpq.html#LIBPQ-TCP-USER-TIMEOUT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/mvcc-intro.html",
+      "candidate": "/docs/15/mvcc.html#MVCC-INTRO",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/plperl-funcs.html",
+      "candidate": "/docs/15/plperl.html#PLPERL-FUNCS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/plpgsql-overview.html",
+      "candidate": "/docs/15/plpgsql.html#PLPGSQL-OVERVIEW",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/plpython-funcs.html",
+      "candidate": "/docs/15/plpython.html#PLPYTHON-FUNCS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/pltcl-overview.html",
+      "candidate": "/docs/15/pltcl.html#PLTCL-OVERVIEW",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/protocol-flow.html#id-1.10.6.7.10",
+      "candidate": "/docs/15/protocol-flow.html#PROTOCOL-FLOW-CANCELING-REQUESTS",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/15/protocol-flow.html#id-1.10.6.7.11",
+      "candidate": "/docs/15/protocol-flow.html#PROTOCOL-FLOW-TERMINATION",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/15/protocol-flow.html#id-1.10.6.7.12",
+      "candidate": "/docs/15/protocol-flow.html#PROTOCOL-FLOW-SSL",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/15/protocol-flow.html#id-1.10.6.7.13",
+      "candidate": "/docs/15/protocol-flow.html#PROTOCOL-FLOW-GSSAPI",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/15/protocol-flow.html#id-1.10.6.7.3",
+      "candidate": "/docs/15/protocol-flow.html#PROTOCOL-FLOW-START-UP",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/15/protocol-flow.html#id-1.10.6.7.4",
+      "candidate": "/docs/15/protocol-flow.html#PROTOCOL-FLOW-SIMPLE-QUERY",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/15/protocol-flow.html#id-1.10.6.7.7",
+      "candidate": "/docs/15/protocol-flow.html#PROTOCOL-FLOW-FUNCTION-CALL",
+      "match": "same-version section title and rendered link label verified"
+    },
+    {
+      "url": "/docs/15/protocol-overview.html",
+      "candidate": "/docs/15/protocol.html#PROTOCOL-OVERVIEW",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/routine-vacuuming.html",
+      "candidate": "/docs/15/maintenance.html#ROUTINE-VACUUMING",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/runtime-config-logging.html#GUC-DEBUG-PRINT-PLAN",
+      "candidate": "/docs/15/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    },
+    {
+      "url": "/docs/15/runtime-config-logging.html#GUC-DEBUG-PRINT-REWRITTEN",
+      "candidate": "/docs/15/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    },
+    {
+      "url": "/docs/15/storage-file-layout.html",
+      "candidate": "/docs/15/storage.html#STORAGE-FILE-LAYOUT",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/storage-file-layout.html#PGDATA-CONTENTS-TABLE",
+      "candidate": "/docs/15/storage.html#PGDATA-CONTENTS-TABLE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/using-explain.html",
+      "candidate": "/docs/15/performance-tips.html#USING-EXPLAIN",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/using-explain.html#USING-EXPLAIN-ANALYZE",
+      "candidate": "/docs/15/performance-tips.html#USING-EXPLAIN-ANALYZE",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/using-explain.html#USING-EXPLAIN-BASICS",
+      "candidate": "/docs/15/performance-tips.html#USING-EXPLAIN-BASICS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/15/using-explain.html#USING-EXPLAIN-CAVEATS",
+      "candidate": "/docs/15/performance-tips.html#USING-EXPLAIN-CAVEATS",
+      "match": "unique same-version anchor"
+    },
+    {
+      "url": "/docs/16/runtime-config-logging.html#GUC-DEBUG-PRINT-PLAN",
+      "candidate": "/docs/16/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    },
+    {
+      "url": "/docs/16/runtime-config-logging.html#GUC-DEBUG-PRINT-REWRITTEN",
+      "candidate": "/docs/16/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    },
+    {
+      "url": "/docs/17/runtime-config-logging.html#GUC-DEBUG-PRINT-PLAN",
+      "candidate": "/docs/17/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    },
+    {
+      "url": "/docs/17/runtime-config-logging.html#GUC-DEBUG-PRINT-REWRITTEN",
+      "candidate": "/docs/17/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    },
+    {
+      "url": "/docs/18/runtime-config-logging.html#GUC-DEBUG-PRINT-PLAN",
+      "candidate": "/docs/18/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    },
+    {
+      "url": "/docs/18/runtime-config-logging.html#GUC-DEBUG-PRINT-REWRITTEN",
+      "candidate": "/docs/18/runtime-config-logging.html#GUC-DEBUG-PRINT-PARSE",
+      "match": "shared parameter definition contains debug_print_parse, debug_print_rewritten and debug_print_plan"
+    }
+  ]
+}

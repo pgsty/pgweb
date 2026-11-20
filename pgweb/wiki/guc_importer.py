@@ -55,7 +55,7 @@ RUNTIME_FILE_RE = r'^runtime-config(?:-[a-z0-9-]+)?\.html$'
 OFFICIAL_URL = 'https://www.postgresql.org/docs/{}/{}'
 
 # 手册里写的类型名 → pg_settings.vartype；其它（pg_lsn、timestamp）归 string。
-DOC_VARTYPES = {'boolean': 'bool', 'bool': 'bool', 'floating point': 'real', 'integer': 'integer',
+DOC_VARTYPES = {'boolean': 'bool', 'bool': 'bool', 'floating point': 'real', 'integer': 'integer', 'int': 'integer',
                 'string': 'string', 'enum': 'enum'}
 
 # devel 手册新参数推不出子分类时的兜底：按页名归到一级分类。

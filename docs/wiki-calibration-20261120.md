@@ -1,0 +1,37 @@
+# PostgreSQL 19.0 百科校准与发布
+
+本批承接 [2026-11-20 全面审计](wiki-release-audit-20261120.md)，范围为 PGSQL.CC 的 30 个百科栏目、35 张实体及版本表。正式基准为 **19.0、18.7、17.12、16.16、15.20、14.25**；PG14 已结束维护，默认主要版本为 PG19。版本比较和正式手册已经发布，本批不重新导入旧 compare 快照或手册。
+
+## 固定来源与差异
+
+六份官方源码包均校验官方 SHA-256，并固定 release tag 与 Git 提交。使用各版源码分别编译 Linux ARM64 实例，在全新数据库采集 `pg_settings`、全部系统目录及字段属性；同构建英文手册和本站中文手册重新抽取函数、SQL 命令、等待事件、SQLSTATE、钩子、锁矩阵及其余主题目录。
+
+可审核的版本、源码、运行样本与前后库存指纹见 [校准清单](../data/wiki/release-calibration-20261120.json)。完整输入、候选、前后差异、备份及回执保存在本地 `tmp/wiki-ga-20261120/` 与生产 `/tmp/pgweb-wiki-ga-20261120/`。完整前后库存并非日常导入快照，须使用守卫发布器。
+
+- 六版目录的关系集合、用户列、系统列、类型、非空、OID 等属性全部与正式版运行采样一致。
+- GUC 的版本号和实际运行信息更新；路径默认值区分上游源码构建与旧 Debian 包。编译条件限定的枚举保留源码支持范围，同时记录实际采样集合；调试参数和发行版补丁参数明确说明没有本次运行样本。
+- 22 类主题目录重新生成候选并核验身份与技术属性；锁矩阵与命令条件由同版源码和手册交叉验证。函数的 52 处英中签名字面差异只有 9 种，全部是“见说明”“与输入类型相同”等可核对译法。
+- 补齐 `file_fdw.reject_limit` 在 ANALYZE 采样时不生效的说明；更新 `pg_combinebackup --sync-method` 的输出目录、WAL 与表空间同步说明，覆盖正文及结构化选项表。
+- 修正过程语言的“语言家族”“受信任：是／否”，以及 `max_locks_per_transaction` 的共享锁表容量说明。
+- 应用 130 个经同版本页面与锚点验证的手册链接映射；同步正文、来源、相关链接和手册坐标。
+
+本次固定差异原位更新 4,579 行，不增删实体身份。保留中文译文；未选版本的逐实体快照逐条断言不变，PG20 的全部 35 表指纹单独保留。SQLSTATE 的小版本引入边界、旧运行记录与原始证据保持原构建，新增正式版校准记录。
+
+## 搜索与页面
+
+四个旧核心栏目的默认版本由 `core.Version.current` 决定。搜索派生表新增 `wiki_versions` 数组和 GIN 索引，按所选版本的真实收录范围过滤百科，过滤先于去重、总数、分页和模糊回退；各类结果与预览保留版本参数。核心百科预览和结果摘要使用所选版本事实，不借用另一版默认值。手机版 GUC 历史说明允许换行。
+
+普通百科导入器会拒绝丢失已校准来源证明的旧快照；因此旧 beta/RC 文件不能覆盖这次校准。未来发布继续固定新输入，审阅差异后走字段守卫流程。PG20 单独更新时需要独立校准，不随正式版本刷新。
+
+## 操作顺序
+
+1. `tools/wiki/freeze_inventory.py --output BEFORE` 固定当前 35 表。两端分别完整备份，实际恢复到隔离库并比较所有表。
+2. `sample_release_runtime.py` 采集隔离的源码构建；`build_release_candidates.py`、`build_release_native.py` 重放候选；`build_release_delta.py` 生成自包含 AFTER 库存，拒绝未审阅的实体或语义差异。
+3. `manage.py migrate search`；使用 `tools/docs/apply_reference_delta.py --before BEFORE --after AFTER --receipt RECEIPT` 事务预演，确认后加 `--write`。生产参数 `--target production` 不负责 SSH，必须在 `/data/app/pgsql.cc` 执行。
+4. `manage.py index_docs --errcodes --catalog --guc --waitevents --sqlcmd --func --locks --topics --releases`；运行 `tools/wiki/check_data.sql` 和 `audit_release.py`；核验 PG20、正文与链接。
+5. 部署并重启 `pgsql.cc`，运行 `tools/wiki/crawl_release.py --base http://127.0.0.1:8001 --receipt FILE` 定向刷新百科全文搜索；本地 base 为 8000。工具核对 pgsql.cc、pgweb 库及角色，不删除其他页面。
+6. 比较两端最终业务指纹，复验幂等性、搜索、移动与桌面页面。保护 `data/info/2026-11-02.json` 的原有修改。
+
+## 验收回执
+
+发布执行中，最终验证结果在本节补齐。两端完整备份均已实际恢复，139 张表与 PG19 页面身份逐项一致；本地事务预演已通过。百科与搜索 738 项测试通过；本地幂等复验为零更新。

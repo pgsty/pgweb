@@ -23,14 +23,15 @@ from .models import (WAITEVENT_SOURCE_STATUS_LABEL, WAITEVENT_TYPES, GucParamete
                      WaitEventVersion)
 from .manuals import manual_slug
 from .ruler import mark_ticks
+from .lifecycle import release_versions
 from .waitevent_common import compare_snapshots, normal_text
 
 
-CACHE_KEY = 'pgweb:wiki:waitevent-index:wiki'
-VERSION_CACHE_KEY = 'pgweb:wiki:waitevent-versions2:wiki'
+CACHE_KEY = 'pgweb:wiki:waitevent-index:lifecycle-v1'
+VERSION_CACHE_KEY = 'pgweb:wiki:waitevent-versions2:lifecycle-v1'
 DOC_CACHE_KEY = 'pgweb:wiki:waitevent-docpages-v2'
-CHANGES_CACHE_KEY = 'pgweb:wiki:waitevent-changes:{}:wiki'
-GUC_CACHE_KEY = 'pgweb:wiki:waitevent-guc:{}:wiki'
+CHANGES_CACHE_KEY = 'pgweb:wiki:waitevent-changes:{}:lifecycle-v1'
+GUC_CACHE_KEY = 'pgweb:wiki:waitevent-guc:{}:lifecycle-v1'
 CACHE_SECONDS = 300
 
 ROOT = '/wiki/waitevent/'
@@ -73,6 +74,7 @@ def version_data(version, is_default=False):
         'url': version.changes_url, 'preview': version.is_preview, 'devel': version.is_devel,
         'doc_slug': version.doc_slug, 'position': version.position,
         'is_default': is_default,
+        'source_release': (version.notes or {}).get('doc_tag', ''),
     }
 
 
@@ -82,15 +84,15 @@ def versions():
     if rows is None:
         stored = list(WaitEventVersion.objects.all())
         default = stable_major(stored)
-        rows = mark_ticks([version_data(version, version.major == default) for version in stored])
+        rows = mark_ticks(release_versions([version_data(version, version.major == default) for version in stored]))
         cache.set(VERSION_CACHE_KEY, rows, CACHE_SECONDS)
     return rows
 
 
 def stable_major(stored):
-    """默认版本是 status='stable' 的那一版（当前 18），没有就取最后一个有事件的正式版。
+    """当前发行版不在采样中时的兜底：stable，其次最后一个有事件的正式版。
 
-    只有 `versions()` 建缓存时算一次，算完就记在版本条的 `is_default` 上。
+    `versions()` 建缓存时先给出候选，再由 release_versions 优先选择当前发行版。
     """
     for version in stored:
         if version.status == 'stable':
@@ -644,6 +646,8 @@ def timeline_of(event):
 
 
 def notice_of(version):
+    if version and version.get('source_notice'):
+        return version['source_notice']
     if version and version['preview']:
         return PREVIEW_NOTICE.format(version['label'])
     if version and version['devel']:

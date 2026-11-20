@@ -427,6 +427,7 @@ def detail_payload(sqlstate, wanted_version=''):
         'facts': fact_rows(code), 'card': card(code),
         'version_groups': version_groups(code), 'version_bar': version_bar(code),
         'versions': version_options(code), 'version': version,
+        'release_calibration': {'calibration': evidence.get('release_calibrations', {}).get(version['value'])} if version else None,
         'manual_versions': manual_versions,
         'doc_url': '/docs/{}/{}'.format(version['value'], DOC_FILE) if version else '',
         'messages': messages, 'claims': claims, 'sources': sources, 'source_rows': source_rows(code),

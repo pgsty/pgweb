@@ -144,8 +144,8 @@ class EncyclopediaIntegrationTests(TestCase):
         indexer.rebuild_topics(kinds=['operator'])
         with patch.object(service, 'catalog', return_value=(18, [{'key': 'pg18', 'version': 18, 'label': '18'}])):
             result = service.search('+', scope='pg18', kind='operator')
-        self.assertEqual(result['total'], 2)
-        self.assertEqual({r['url'] for r in result['results']}, {'/wiki/operator/plus-int4/?v=18', '/wiki/operator/plus-int8/?v=18'})
+        self.assertEqual(result['total'], 1)
+        self.assertEqual({r['url'] for r in result['results']}, {'/wiki/operator/plus-int4/?v=18'})
         entry = SearchEntry.objects.get(source='operator', entity_key='operator:plus-int8')
         preview = service.preview(entry, '18')
         self.assertIn('没有此版本', preview['html'])

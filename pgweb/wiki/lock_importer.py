@@ -218,6 +218,8 @@ def import_snapshot(snapshot, prune=False):
     prepared, write, report = changes(snapshot)
     for item in prepared:
         if item['slug'] in write:
+            from .snapshot import guard_calibration
+            guard_calibration(LockMode, item)
             LockMode.objects.update_or_create(slug=item['slug'], defaults={
                 key: value for key, value in item.items() if key != 'slug'})
     if prune:

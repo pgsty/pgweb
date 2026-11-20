@@ -26,6 +26,7 @@
   </ol>
   <p class="fn-verbar__note">收录了 {{ versions|length }} 个大版本，每个链到它相对上一版的变更清单。颜色是版本的支持状态：<span class="wiki-tonekey is-eol">已停止维护</span><span class="wiki-tonekey is-live">仍在支持</span><span class="wiki-tonekey is-beta">测试版</span><span class="wiki-tonekey is-dev">开发版</span>；填实的是当前稳定版 {{ default_major }}。</p>
 </nav>
+{% for version in versions %}{% if version.is_default and version.source_notice %}<p class="wiki-note">{{ version.source_notice }}</p>{% endif %}{% endfor %}
 
 <form id="func-search" class="fn-search" action="/wiki/func/" method="get" role="search">
   <label class="sr-only" for="func-q">搜索函数</label>

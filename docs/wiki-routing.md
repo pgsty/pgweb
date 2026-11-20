@@ -10,7 +10,7 @@
 
 桌面与移动导航、侧栏、面包屑、规范链接、站点地图、生成器、导入器与搜索结果均使用新路径。已有搜索索引、正文 HTML 与主题快照中的旧链接在展示时转换，不改写原始来源记录或手册坐标；含链接的缓存使用新键。最初的路由迁移没有数据库迁移，通过重建原有十一类百科的派生搜索索引使数据库 URL 与新路由一致。后续导入和建索引直接生成新路径；新增百科的数据迁移另见扩展指南。
 
-仅调整路由时的发布顺序：部署代码 → `manage.py index_docs --errcodes --catalog --guc --waitevents --sqlcmd --func --locks --topics --releases` → `psql service=pgweb.pg -f tools/wiki/check_data.sql` → 按扩展指南核验新增栏目 → 重启 `pgsql.cc` → 核验公网百科、旧地址重定向、搜索和站点地图。本地使用本地数据库连接运行同一检查；不对英文 `center` 库执行中文发布命令。此命令只重建百科条目，不重建手册与扩展索引。站内全文搜索的历史 URL 在响应时转换，后续爬取由新站点地图收集新地址。
+仅调整路由时的发布顺序：部署代码 → `manage.py index_docs --errcodes --catalog --guc --waitevents --sqlcmd --func --locks --topics --releases` → 在生产中文目录运行 `psql service=pg-center.pgweb -f tools/wiki/check_data.sql` → 按扩展指南核验新增栏目 → 重启 `pgsql.cc` → 核验公网百科、旧地址重定向、搜索和站点地图。本地使用本地数据库连接运行同一检查；不对英文 `center` 库执行中文发布命令。此命令只重建百科条目，不重建手册与扩展索引。站内全文搜索的历史 URL 在响应时转换，后续爬取由新站点地图收集新地址。
 
 英文 `~/pgsty/pg.center` 同步使用该路径体系，一级栏目名称为 **Wiki**。两站数据库与发布流程仍相互独立；本地完成修改不代表已经发布。
 

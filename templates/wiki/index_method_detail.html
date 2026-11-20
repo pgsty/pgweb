@@ -29,5 +29,6 @@
     <details class="topic-provenance"><summary>来源指纹</summary><dl><dt>手册构建</dt><dd>{{ snapshot.release.ref }}</dd><dt>组合页面 SHA-256</dt><dd><code>{{ snapshot.release.revision }}</code></dd><dt>手册清单记录的源码归档</dt><dd><a href="{{ snapshot.release.manifest.source_url }}">{{ snapshot.release.manifest.release }}</a></dd><dt>手册清单记录的归档 SHA-256</dt><dd><code>{{ snapshot.release.manifest.source_sha256 }}</code></dd>{% if snapshot.release.manifest.source_snapshot_utc %}<dt>记录的开发版快照</dt><dd>{{ snapshot.release.manifest.source_snapshot_utc }}</dd>{% endif %}</dl><ul>{% for source in snapshot.sources %}<li>{{ source.file }}: <code>{{ source.sha256 }}</code></li>{% endfor %}</ul></details>
   </section>{% endif %}
   <p class="topic-footnote"><a href="{{ root }}?v={{ major }}">返回 {{ topic.name }}</a> · 已记录于 PostgreSQL {{ first.major }} 至 {{ last.major }}；最早样本不代表实际引入版本。</p>
+{% include "wiki/calibration.html" %}
 </article>
 {% endblock %}

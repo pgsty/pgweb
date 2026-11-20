@@ -1,0 +1,5 @@
+{% if snapshot.calibration %}<details class="topic-provenance wiki-calibration"><summary>PostgreSQL {{ snapshot.calibration.release }} 校准依据</summary>
+<p>已按 <a href="{{ snapshot.calibration.source_url }}">{{ snapshot.calibration.tag }} 正式源码</a>及同版本手册核对，核验日期 {{ snapshot.calibration.date }}。</p>
+{% if snapshot.calibration.note %}<p>{{ snapshot.calibration.note }}</p>{% endif %}
+<p>已有中文译文和历史运行案例保留各自来源；本次校准不改变其原始采样记录。</p>
+<dl><dt>源码提交</dt><dd><code>{{ snapshot.calibration.commit }}</code></dd><dt>源码包 SHA-256</dt><dd><code>{{ snapshot.calibration.archive_sha256 }}</code></dd></dl></details>{% endif %}

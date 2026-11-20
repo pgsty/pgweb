@@ -16,15 +16,16 @@ from django.db.models.expressions import RawSQL
 from .guc_common import diff_fields, human_value, is_default_change, is_substantive
 from .manuals import manual_slug
 from .ruler import mark_ticks
+from .lifecycle import release_versions
 from .models import (GUC_CATEGORY_ORDER, GUC_CONTEXT_LABEL, GUC_CONTEXT_NOTE, GUC_CONTEXTS,
                      GUC_FIELD_LABEL, GUC_FIELDS, GUC_GROUP_LABEL, GUC_GROUPS,
                      GUC_SUBSTANTIVE_FIELDS, GUC_VARTYPE_LABEL, GucParameter, GucVersion)
 
 
-CACHE_KEY = 'pgweb:wiki:guc-index:wiki'
-VERSION_CACHE_KEY = 'pgweb:wiki:guc-versions2:wiki'
+CACHE_KEY = 'pgweb:wiki:guc-index:lifecycle-v1'
+VERSION_CACHE_KEY = 'pgweb:wiki:guc-versions2:lifecycle-v1'
 DOC_CACHE_KEY = 'pgweb:wiki:guc-docpages-v2'
-CHANGES_CACHE_KEY = 'pgweb:wiki:guc-changes:{}:wiki'
+CHANGES_CACHE_KEY = 'pgweb:wiki:guc-changes:{}:lifecycle-v1'
 CACHE_SECONDS = 300
 
 ROOT = '/wiki/guc/'
@@ -79,15 +80,15 @@ def versions():
     if rows is None:
         stored = list(GucVersion.objects.all())
         default = stable_major(stored)
-        rows = mark_ticks([version_data(version, version.major == default) for version in stored])
+        rows = mark_ticks(release_versions([version_data(version, version.major == default) for version in stored]))
         cache.set(VERSION_CACHE_KEY, rows, CACHE_SECONDS)
     return rows
 
 
 def stable_major(stored):
-    """默认版本是 status='stable' 的那一版（当前 18），没有就取最后一个正式版。
+    """当前发行版不在采样中时的兜底：stable，其次最后一个正式版。
 
-    只有 `versions()` 建缓存时算一次，算完就记在版本条的 `is_default` 上。
+    `versions()` 建缓存时先给出候选，再由 release_versions 优先选择当前发行版。
     """
     for version in stored:
         if version.status == 'stable':
@@ -477,6 +478,8 @@ def previous_major(parameter, major):
 
 
 def notice_of(version):
+    if version and version.get('source_notice'):
+        return version['source_notice']
     if version and version['preview']:
         return PREVIEW_NOTICE.format(version['label'])
     if version and version['devel']:
@@ -563,7 +566,8 @@ def facts_of(parameter, major, snapshot, order, commit):
     if raw is not None and (unit or str(raw) != human):
         note = '原始值 {}{}'.format(raw if raw != '' else "''", ' ' + unit if unit else '')
     source_only = snapshot.get('runtime_verified') is False
-    add('源码默认值' if source_only else '默认值', human, mono=True, note=note)
+    distribution = snapshot.get('calibration', {}).get('method') == 'distribution-specific historical sample'
+    add('发行版默认值' if distribution else '源码默认值' if source_only else '默认值', human, mono=True, note=note)
     low, high = snapshot.get('min_val') or '', snapshot.get('max_val') or ''
     if low or high:
         add('取值范围', '{} – {}'.format(low or '—', high or '—'), mono=True)
@@ -573,7 +577,7 @@ def facts_of(parameter, major, snapshot, order, commit):
         url=ROOT + '#' + category_anchor(parameter.group_slug, parameter.category))
     if major == '19':
         version = next((v for v in order if v['major'] == major), {})
-        add('文档版本', version.get('label', major))
+        add('采样文档版本', version.get('sample_label') or version.get('label', major))
         if snapshot.get('facts_source') != 'documentation' and not source_only:
             add('实测版本', version.get('server_version', ''))
     baseline = order[0]['major'] if order else ''
@@ -584,7 +588,7 @@ def facts_of(parameter, major, snapshot, order, commit):
         add('引入版本', '{}（基线）'.format(first) if first == baseline else first,
             url=(commit or {}).get('url', ''))
     if source_only:
-        add('事实来源', '同版源码与手册，尚无运行实测')
+        add('事实来源', '发行版历史采样；上游正式构建未提供' if distribution else '同版源码与手册，本次构建未启用')
     removed_in = removed_after(parameter, order)
     add('状态', '于 {} 移除'.format(removed_in) if removed_in else '现存')
     return facts

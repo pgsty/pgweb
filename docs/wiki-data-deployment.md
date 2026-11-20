@@ -1,6 +1,8 @@
-> 当前表名已在 2026-09-25 整理，生效契约与部署记录见 [模型整理实施记录](reference-model-rollout.md)。本文原有 2026-09-15 数据恢复记录中的表名、命令输出与数量属于历史证据，保留原文。当前验收入口 `tools/wiki/check_data.sql` 覆盖十一领域的 17 张业务表及派生检索。
+> 当前表名已在 2026-09-25 整理，生效契约与部署记录见 [模型整理实施记录](reference-model-rollout.md)。本文原有 2026-09-15 数据恢复记录中的表名、命令输出与数量属于历史证据，保留原文。
 
-> 2026-09-30 扩展至 30 个栏目。本文的检查脚本仍覆盖原有十一领域；新增 18 张实体表及复用发布库的版本百科，按[中文百科扩展指南](wiki-expansion-zh.md)单独校验、导入并重建所选索引。
+> 2026-11-20：PG19.0 与 PG14–18 最新小版本的固定来源、校准差异和发布验收见 [百科校准记录](wiki-calibration-20261120.md)。旧快照不能覆盖已有 `calibration` 证明；后续更新须固定新来源并经字段守卫预演。
+
+> 2026-11-20 核验：`tools/wiki/check_data.sql` 已覆盖全部 30 个栏目、35 张百科表及派生检索；版本发布栏目另复用发布库。新增领域按[中文百科扩展指南](wiki-expansion-zh.md)导入并重建所选索引。当前主版本为 PG19，来源校准状态见 [PG19 百科审计](wiki-release-audit-20261120.md)。
 
 # 百科数据发布验收与 2026-09-15 恢复记录
 
@@ -13,10 +15,10 @@
 
 ```bash
 psql -X -d pgweb -f tools/wiki/check_data.sql
-psql -X 'service=pgweb.pg' -f tools/wiki/check_data.sql
+ssh pg "cd /data/app/pgsql.cc && psql -X 'service=pg-center.pgweb' -f tools/wiki/check_data.sql"
 ```
 
-[检查脚本](../tools/wiki/check_data.sql) 检查十一类百科：
+[检查脚本](../tools/wiki/check_data.sql) 检查全部百科栏目：
 
 - 数据表非空；SQL 命令、系统目录、配置参数、等待事件、函数、锁与四个主题均有 PG 10–20 快照。SQLSTATE 按实际已采样版本检查，不推断 PG20 存在性。
 - 每条记录的 `present_in` 与实际快照版本一致。

@@ -188,6 +188,9 @@ def apply(kind, rows, check=False, prune=False):
             state = ('created' if slug not in current else
                      'unchanged' if current[slug] == row['content_hash'] else 'updated')
             report[state] += 1
+            if state != 'unchanged':
+                from .snapshot import guard_calibration
+                guard_calibration(model, row)
             if not check and state != 'unchanged':
                 model.objects.update_or_create(slug=slug,
                                                defaults={k: v for k, v in row.items() if k != 'slug'})

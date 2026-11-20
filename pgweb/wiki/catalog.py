@@ -10,14 +10,15 @@ from .catalog_importer import compare_snapshots
 from .center_text import prepare
 from .manuals import manual_slug
 from .ruler import mark_ticks
+from .lifecycle import release_versions
 from .models import (CATALOG_KINDS, CATALOG_KIND_EYEBROW, CATALOG_KIND_LABEL, CatalogRelation,
                      CatalogVersion, RELKIND_LABEL)
 
 
-CACHE_KEY = 'pgweb:wiki:catalog-index:wiki'
-VERSION_CACHE_KEY = 'pgweb:wiki:catalog-versions2:wiki'
+CACHE_KEY = 'pgweb:wiki:catalog-index:lifecycle-v1'
+VERSION_CACHE_KEY = 'pgweb:wiki:catalog-versions2:lifecycle-v1'
 DOC_CACHE_KEY = 'pgweb:wiki:catalog-docpages-v2'
-CHANGES_CACHE_KEY = 'pgweb:wiki:catalog-changes:{}:wiki'
+CHANGES_CACHE_KEY = 'pgweb:wiki:catalog-changes:{}:lifecycle-v1'
 CACHE_SECONDS = 300
 
 KINDS = [kind for kind, _, _ in CATALOG_KINDS]
@@ -58,15 +59,15 @@ def versions():
     if rows is None:
         stored = list(CatalogVersion.objects.all())
         default = stable_major(stored)
-        rows = mark_ticks([version_data(version, version.major == default) for version in stored])
+        rows = mark_ticks(release_versions([version_data(version, version.major == default) for version in stored]))
         cache.set(VERSION_CACHE_KEY, rows, CACHE_SECONDS)
     return rows
 
 
 def stable_major(stored):
-    """默认版本是 status='stable' 的那一版（当前 18），没有就取最后一个正式版。
+    """当前发行版不在采样中时的兜底：stable，其次最后一个正式版。
 
-    只有 `versions()` 建缓存时算一次，算完就记在版本条的 `is_default` 上。
+    `versions()` 建缓存时先给出候选，再由 release_versions 优先选择当前发行版。
     """
     for version in stored:
         if version.status == 'stable':
@@ -438,6 +439,8 @@ def matrix_of(relation, order):
 
 
 def notice_of(version):
+    if version and version.get('source_notice'):
+        return version['source_notice']
     if version and version['preview']:
         return PREVIEW_NOTICE.format(version['label'])
     if version and version['devel']:

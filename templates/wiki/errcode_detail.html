@@ -2,6 +2,7 @@
 {% load pgfilters %}
 {% block wiki_content %}
 <article class="wiki-entry">
+{% if release_calibration %}{% include "wiki/calibration.html" with snapshot=release_calibration %}{% endif %}
 
 <p class="wiki-crumb"><a href="/wiki/">百科</a> / <a href="/wiki/sqlstate/">SQL 状态码</a> / <a href="{{ klass.url }}">Class {{ klass.code }} {{ klass.label }}</a></p>
 

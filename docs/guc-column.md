@@ -1,5 +1,7 @@
 # 配置参数 `/wiki/guc/`
 
+> 2026-11-20：PG19.0 与 PG14–18 最新小版本的固定来源、校准差异和发布验收见 [百科校准记录](wiki-calibration-20261120.md)。旧快照不能覆盖已有 `calibration` 证明；后续更新须固定新来源并经字段守卫预演。
+
 百科第三个上线栏目：PostgreSQL 配置参数（GUC，`pg_settings` 的每一行）的跨大版本百科。
 数据来自 [guc.pg.center](https://guc.pg.center)（仓库 `pgsty/guc.pg.center`，本机 `~/pg.center/guc`），
 本站在此之上叠加两层：**手册译文**（每个参数、每个版本的说明段落，取自本站手册）与 **PostgreSQL 20 开发版快照**（从本站 devel 手册推导）。
@@ -8,7 +10,7 @@
 本文既是设计契约（后端与前端按同一份上下文形状分头实现），也是日后维护入口。
 凡本文没写的细节，照系统目录栏目的做法办。
 
-2026-11-13 的现行手册为 19rc2、18.7、17.12、16.16、15.20、14.25；本地参数集合为 492 项。下文 beta4 容器记录仍是当时的实际采样证据，不能改标为 rc2 实测。新增的 `composite_type_mismatch` 按分支保存 `minimum_minor`，以同版源码与手册确认枚举、默认值和权限，并标记 `runtime_verified=false`。页面显示本分支起始小版本及源码默认值；固定 PG20 快照未收录该参数不能推断为“20 已移除”。本批引用更新与发布状态见 [2026-11-13 发布记录](docs-release-20261113.md)。
+2026-11-20 核验：现行手册为 19.0、18.7、17.12、16.16、15.20、14.25，当前主版本为 19；参数集合为 492 项。导航与支持状态取 `core.Version`，实际采样构建独立保留。下文 beta4 容器记录仍是当时的实际采样证据，不能改标为 GA 实测。新增的 `composite_type_mismatch` 按分支保存 `minimum_minor`，以同版源码与手册确认枚举、默认值和权限，并标记 `runtime_verified=false`。页面显示本分支起始小版本及源码默认值；固定 PG20 快照未收录该参数不能推断为“20 已移除”。引用更新见 [2026-11-13 发布记录](docs-release-20261113.md)，当前待校准项和本地显示修正见 [PG19 百科审计](wiki-release-audit-20261120.md)。
 
 ## 1. 数据来源与范围
 
@@ -169,7 +171,7 @@ guc 到 19 beta 4 为止；20 由本站 devel 手册（`DocPage.version=0`）推
 
 ```
 /wiki/guc/                       索引：导览 + 分类入口 + 版本条 + 筛选 + 按分类分组的大表（含版本变动方格）
-/wiki/guc/<name>/                详情，?v=<major> 切版本；默认 status='stable' 的那一版（当前 18）
+/wiki/guc/<name>/                详情，?v=<major> 切版本；默认 core.Version.current 对应的已收录版本（当前 19）
 /wiki/guc/changes/               302 → /wiki/guc/changes/<默认版本>/
 /wiki/guc/changes/<major>/       该版本相对上一版的变更；?from=<major> 改比较基准
 ```

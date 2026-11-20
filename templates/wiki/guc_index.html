@@ -26,6 +26,7 @@
   </ol>
   <p class="guc-verbar__note">收录了 {{ versions|length }} 个大版本，每个链到它相对上一版的变更清单。颜色是版本的支持状态：<span class="wiki-tonekey is-eol">已停止维护</span><span class="wiki-tonekey is-live">仍在支持</span><span class="wiki-tonekey is-beta">测试版</span><span class="wiki-tonekey is-dev">开发版</span>；填实的是当前稳定版 {{ default_major }}。</p>
 </nav>
+{% for version in versions %}{% if version.is_default and version.source_notice %}<p class="wiki-note">{{ version.source_notice }}</p>{% endif %}{% endfor %}
 
 <form id="guc-search" class="guc-search" action="/wiki/guc/" method="get" role="search">
   <label class="sr-only" for="guc-q">搜索配置参数</label>
@@ -59,7 +60,7 @@
 <p class="wiki-empty" id="guc-empty" hidden>没有匹配的参数。<a href="/wiki/guc/">清除筛选</a></p>
 
 <h2>说明</h2>
-<p>库里共 {{ stats.parameters }} 个参数、{{ stats.versions }} 个大版本、{{ stats.snapshots }} 份逐版本快照；相邻大版本之间记录到 {{ stats.default_changes }} 次默认值变更与 {{ stats.changes }} 处实质变化（默认值、单位、生效上下文、类型、取值范围或枚举值），{{ stats.removed }} 个参数已经不在最新版本里。每行的「版本变动」是一排方格，一格一个大版本，与表头刻度逐格对齐；鼠标停在某一格上会写出它是哪一版、发生了什么。「默认值」一列取的是当前稳定版 {{ default_major }} 的 <code class="guc-mono">boot_val</code>，带单位的值换算成了可读形式；{{ default_major }} 里不存在的参数取它最后存在的那一版。数据来自 <a href="https://guc.pg.center" target="_blank" rel="noopener">guc.pg.center</a>，说明的中文取自本站手册译文，没有译文的按英文原文显示。</p>
+<p>库里共 {{ stats.parameters }} 个参数、{{ stats.versions }} 个大版本、{{ stats.snapshots }} 份逐版本快照；相邻大版本之间记录到 {{ stats.default_changes }} 次默认值变更与 {{ stats.changes }} 处实质变化（默认值、单位、生效上下文、类型、取值范围或枚举值），{{ stats.removed }} 个参数已经不在最新版本里。每行的「版本变动」是一排方格，一格一个大版本，与表头刻度逐格对齐；鼠标停在某一格上会写出它是哪一版、发生了什么。「默认值」一列取的是当前稳定版 {{ default_major }} 的 <code class="guc-mono">boot_val</code>，带单位的值换算成了可读形式；{{ default_major }} 里不存在的参数取它最后存在的那一版。早期采样基线来自 <a href="https://guc.pg.center" target="_blank" rel="noopener">guc.pg.center</a>；PG14–19 已按各版最新正式源码、运行采样与手册校准，实际构建与未采样项在详情中说明。中文取自本站手册译文，没有译文的按英文原文显示。</p>
 
 </div>
 {% endblock %}

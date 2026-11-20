@@ -1,5 +1,9 @@
 # 系统目录 `/wiki/catalog/`
 
+> 2026-11-20：PG19.0 与 PG14–18 最新小版本的固定来源、校准差异和发布验收见 [百科校准记录](wiki-calibration-20261120.md)。旧快照不能覆盖已有 `calibration` 证明；后续更新须固定新来源并经字段守卫预演。
+
+2026-11-20：默认浏览版本随 `core.Version.current` 指向 PG19，支持状态与实际采样构建分开。PG19 的运行采样仍为 beta4，PG14–18 的运行采样仍为上一小版本；本次仅修正本地显示逻辑，未改写来源或发布生产。最新校准范围、证据和待办见 [PG19 百科审计](wiki-release-audit-20261120.md)。下文旧采样记录不代表当前软件生命周期。
+
 百科第二个上线栏目：PostgreSQL 系统目录表、系统视图、统计视图与进度视图的跨大版本字段百科。
 数据来自 [cat.pg.center](https://cat.pg.center)（仓库 `pgsty/cat.pg.center`，本机 `~/pg.center/cat`），
 本站在此之上叠加两层：**中文**（从本站手册译文里采集）与 **PostgreSQL 20 开发版快照**（从本站 devel 手册推导）。
@@ -152,7 +156,7 @@ cat 到 19 beta 4 为止；20 由本站 devel 手册（`DocPage.version=0`）推
 
 ```
 /wiki/catalog/                    索引：导览 + 版本条 + 筛选 + 按类别分组的大表（含版本轨迹）
-/wiki/catalog/<name>/             详情，?v=<major> 切版本；默认 status='stable' 的那一版（当前 18）
+/wiki/catalog/<name>/             详情，?v=<major> 切版本；默认 core.Version.current 对应的已收录版本（当前 19）
 /wiki/catalog/changes/            302 → /wiki/catalog/changes/<默认版本>/
 /wiki/catalog/changes/<major>/    该版本相对上一版的变更；?from=<major> 改比较基准
 ```

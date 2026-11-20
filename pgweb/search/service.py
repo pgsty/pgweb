@@ -157,13 +157,14 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
     kinds = GROUP_META[state['kind']]['kinds'] if state['kind'] else []
     effective_kind = "CASE WHEN e.kind = 'option' AND e.subtype = 'connection' THEN 'conn' ELSE e.kind END"
     parameters = {
-        'version': state['version'], 'name': name, 'tokens': tokens,
+        'version': state['version'], 'wiki_version': str(state['version']), 'name': name, 'tokens': tokens,
         'prefix': connection.ops.prep_for_like_query(name) + '%',
         'literal': '%' + connection.ops.prep_for_like_query(literal) + '%',
         'filtered': bool(kinds), 'kinds': kinds, 'offset': offset, 'limit': limit,
         'popular': [normalize_name(n) for n in POPULAR],
     }
-    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source IN ('ext', 'errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'versions', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode'))"
+    source = ("((e.source = 'pg' AND e.version = %(version)s) OR e.source = 'ext' OR "
+              "(e.source NOT IN ('pg', 'ext') AND e.wiki_versions @> ARRAY[%(wiki_version)s]::text[]))"
               if 'pg' in state['sources'] else "e.source = 'ext'")
     if not name:
         where = 'true'
@@ -230,8 +231,14 @@ def search(raw='', scope='pg', kind='', offset=0, limit=PAGE_SIZE):
                .select_related('document__page').defer('vector', 'preview', 'document__page__content')}
     # A row can vanish between ranking and fetching while the catalogue is being rebuilt.
     result['results'] = [entry_data(entries[h['id']], state['term'], h['tier'], h['variants']) for h in hits if h['id'] in entries]
+    from .wiki_preview import result_summaries
+    summaries = result_summaries(entries.values(), state['version'])
     for item in result['results']:
-        if item['source'] != 'versions' and item['source'] in ('lock', 'hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'versions', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode') and state['version']:
+        if item['id'] in summaries:
+            description, signature = summaries[item['id']]
+            item['snippet'] = highlight(description, state['term'])
+            item['signature'] = signature
+        if item['source'] in ('errcode', 'catalog', 'guc', 'wait', 'sqlcmd', 'func', 'lock', 'hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode') and state['version']:
             item['url'] += '?v=' + str(int(state['version']))
     # Client categories overlap: count an entity once in All and in each applicable group.
     groups = {key: sum(counts.get(kind, 0) for kind in meta['kinds'])
@@ -292,6 +299,11 @@ def sqlcmd_preview(entry, wanted_major=''):
 
 
 def preview(entry, wanted_major=''):
+    if entry.source in ('errcode', 'catalog', 'guc', 'wait', 'func'):
+        from .wiki_preview import build
+        data = entry_data(entry)
+        data.update(build(entry, wanted_major, catalog()[0]))
+        return data
     if entry.source in ('hook', 'relopts', 'role', 'oid', 'type', 'indexam', 'plan', 'operator', 'opclass', 'fdw', 'tableam', 'psql', 'tool', 'conn', 'metric', 'storage', 'protocol', 'language', 'fts', 'auth', 'locale', 'decode'):
         from pgweb.wiki import topics
         from pgweb.wiki.encyclopedia import collection_state

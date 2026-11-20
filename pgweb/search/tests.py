@@ -343,6 +343,13 @@ class CatalogSearchTests(TestCase):
                                title='52.1. pg_demo', content=RELATION_PAGE)
         rebuild_version(18)
         import_catalog(wiki_tests.export())
+        from copy import deepcopy
+        from pgweb.wiki.models import CatalogRelation
+        for relation in CatalogRelation.objects.all():
+            if '12' in relation.versions:
+                relation.versions['18'] = deepcopy(relation.versions['12'])
+                relation.present_in.append('18')
+                relation.save(update_fields=['versions', 'present_in'])
         cls.report = rebuild_catalog()
 
     def test_every_relation_becomes_one_entry(self):
@@ -367,13 +374,24 @@ class CatalogSearchTests(TestCase):
         result = search('pg_demo')
         first = result['results'][0]
         self.assertEqual((first['source'], first['source_label'], first['url']),
-                         ('catalog', '本站词条', '/wiki/catalog/pg_demo/'))
+                         ('catalog', '本站词条', '/wiki/catalog/pg_demo/?v=18'))
         self.assertEqual(first['group'], 'relation')
         # 同一实体的手册条目折进同一条结果里。
         self.assertGreater(first['variants'], 1)
 
     def test_a_column_name_finds_the_relation(self):
         self.assertEqual(search('demoname')['results'][0]['name'], 'pg_demo')
+
+    def test_search_and_preview_links_keep_the_selected_version(self):
+        # A current-release change must not send an older scoped search to
+        # whichever version the Wiki detail happens to use by default.
+        rebuild_version(10)
+        for major in (10, 18):
+            with self.subTest(major=major):
+                hit = search('pg_demo', scope='pg' + str(major))['results'][0]
+                self.assertEqual(hit['url'], '/wiki/catalog/pg_demo/?v=' + str(major))
+                entry = SearchEntry.objects.get(pk=hit['id'])
+                self.assertEqual(preview(entry, str(major))['url'], hit['url'])
 
     def test_a_generic_word_does_not_resolve_to_a_relation(self):
         """pg_class 不能靠 class 这个词把手册条目挤下去。"""
@@ -383,12 +401,11 @@ class CatalogSearchTests(TestCase):
     def test_the_preview_keeps_the_manual_version_line(self):
         entry = SearchEntry.objects.get(source='catalog', name='pg_demo')
         detail = preview(entry)
-        self.assertIn('演示用的目录表', detail['html'])
+        self.assertIn('目录pg_demo记录演示对象', detail['html'])
         self.assertIn('demoname', detail['html'])
         self.assertEqual(detail['source_label'], '本站词条')
-        # 词条自己没有版本，但同一实体的手册页仍然列在版本行里。
-        self.assertEqual([item['version'] for item in detail['versions']], [18])
-        self.assertFalse(any(item['current'] for item in detail['versions']))
+        self.assertEqual([item['version'] for item in detail['versions']], [18, 12, 11, 10])
+        self.assertEqual([item['version'] for item in detail['versions'] if item['current']], [18])
 
     def test_rebuilding_replaces_the_previous_entries(self):
         from pgweb.search.indexer import rebuild_catalog

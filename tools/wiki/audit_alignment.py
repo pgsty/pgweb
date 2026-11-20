@@ -51,6 +51,8 @@ def plain(value):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', required=True, type=Path)
+    parser.add_argument('--errcode-root', type=Path, default=Path('~/pg.center/err').expanduser(),
+                        help='Optional pinned SQLSTATE source checkout; missing files are reported, not treated as matches.')
     args = parser.parse_args()
     args.output.mkdir(parents=True, exist_ok=True)
     import django
@@ -217,10 +219,14 @@ def main():
                            'source': code_by_id[code].condition_names}
                     # 9.0 translates the condition column; it is not an identifier conflict.
                     (condition_labels if version == '9.0' else condition_drift).append(row)
-        source_changes = []
-        source_root = Path('~/pg.center/err').expanduser()
+        source_changes, source_unavailable = [], []
+        source_root = args.errcode_root
         for code in entities['errcode']:
-            source = json.loads((source_root / 'data/errcodes' / (code.pk + '.json')).read_text())
+            source_file = source_root / 'data/errcodes' / (code.pk + '.json')
+            if not source_file.is_file():
+                source_unavailable.append({'code': code.pk, 'path': str(source_file)})
+                continue
+            source = json.loads(source_file.read_text())
             for key in ('condition_name', 'condition_names', 'introduced', 'removed',
                         'known_present_by', 'present_in_snapshots', 'preview_in_snapshots'):
                 if code.facts.get(key) != source.get(key):
@@ -230,8 +236,9 @@ def main():
         save('sqlstate.json', {'coverage_differences': sql_differences, 'condition_differences': condition_drift,
                                'condition_presentation_differences': condition_labels,
                                'class_text_drift': class_drift, 'source_fact_differences': source_changes,
+                               'source_unavailable': source_unavailable,
                                'evidence_gaps': gaps,
-                               'text_scope': '263 authored bilingual documents; appendix has condition identifiers, not equivalent prose. Keep evidence narratives and site summaries.'})
+                               'text_scope': 'Authored bilingual documents; appendix has condition identifiers, not equivalent prose. Keep evidence narratives and site summaries.'})
         summary = {'database': target, 'tables': {k: len(v) for k, v in snapshot.items()},
                    'manuals': len(manifest), 'manual_hash': hashlib.sha256(json.dumps(manifest, default=str).encode()).hexdigest(),
                    'references': {d: {'checked': sum(r['domain'] == d for r in refs),
@@ -243,7 +250,8 @@ def main():
                    'sqlstate': {'coverage_differences': len(sql_differences),
                                 'condition_differences': len(condition_drift), 'class_text_drift': len(class_drift),
                                 'condition_presentation_differences': len(condition_labels),
-                                'source_fact_differences': len(source_changes), 'evidence_gaps': len(gaps)}}
+                                'source_fact_differences': len(source_changes),
+                                'source_unavailable': len(source_unavailable), 'evidence_gaps': len(gaps)}}
         save('summary.json', summary)
         print(json.dumps(summary, ensure_ascii=False, indent=2))
 

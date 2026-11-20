@@ -21,7 +21,7 @@ class ConnectionGroupTests(TestCase):
                                                 kind='option', subtype='connection', entity_key='option:sslmode',
                                                 name='sslmode', name_key='sslmode', aliases=['sslmode'],
                                                 heading='Connection keywords', body='TLS negotiation.', preview='<p>TLS negotiation.</p>')
-        SearchEntry.objects.create(source='tool', key='pg-dump', kind='tool', entity_key='tool:pg_dump',
+        SearchEntry.objects.create(source='tool', wiki_versions=['18'], key='pg-dump', kind='tool', entity_key='tool:pg_dump',
                                    name='pg_dump', name_key='pg_dump', aliases=['pg_dump'],
                                    heading='Command-line Tools', body='', preview='', url='/wiki/tool/pg-dump/')
 
@@ -34,7 +34,7 @@ class ConnectionGroupTests(TestCase):
         self.addCleanup(cache.clear)
 
     def curated(self):
-        return SearchEntry.objects.create(source='conn', key='sslmode', kind='conn', entity_key='option:sslmode',
+        return SearchEntry.objects.create(source='conn', wiki_versions=['18'], key='sslmode', kind='conn', entity_key='option:sslmode',
                                           name='sslmode', name_key='sslmode', aliases=['sslmode'],
                                           heading='Connection Parameters', body='TLS negotiation.', preview='', url='/wiki/conn/sslmode/')
 

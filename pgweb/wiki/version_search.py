@@ -18,7 +18,7 @@ def rebuild_versions(dry_run=False):
     for row in search_rows():
         aliases = [row['branch'], 'pg' + row['branch'], 'postgres ' + row['branch'], row['name'].lower()]
         objects.append(SearchEntry(
-            source='versions', document=None, version=None, key=digest(row['branch']),
+            source='versions', document=None, version=None, wiki_versions=[row['branch']], key=digest(row['branch']),
             entity_key='version:' + row['branch'], kind='version', subtype='',
             name=row['name'], name_key=row['name'].lower(), aliases=aliases,
             anchor='', heading='版本发布 · PostgreSQL ' + row['branch'], signature=row['summary'],

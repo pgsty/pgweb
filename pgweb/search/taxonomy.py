@@ -53,7 +53,7 @@ GROUPS = (
     ('guide', '章节正文', ('guide',), '概念、教程与完整正文'),
 )
 GROUPS += (('am', 'Index AM', ('am',), 'btree、hash、GiST、GIN'),
-           ('version', '版本百科', ('version',), 'PostgreSQL 18、9.6、安全修复与升级'))
+           ('version', '版本百科', ('version',), 'PostgreSQL 19、9.6、安全修复与升级'))
 GROUPS += tuple((kind, label, (kind,), '名称或用途')
                 for key, model, table, label, kind, tone, unit, lead in DOMAINS
                 if kind not in {group[0] for group in GROUPS} and kind != 'operator')

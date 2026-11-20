@@ -26,6 +26,7 @@
   </ol>
   <p class="cat-verbar__note">收录了 {{ versions|length }} 个大版本，每个链到它相对上一版的变更清单。颜色是版本的支持状态：<span class="wiki-tonekey is-eol">已停止维护</span><span class="wiki-tonekey is-live">仍在支持</span><span class="wiki-tonekey is-beta">测试版</span><span class="wiki-tonekey is-dev">开发版</span>；填实的是当前稳定版 {{ default_major }}。</p>
 </nav>
+{% for version in versions %}{% if version.is_default and version.source_notice %}<p class="wiki-note">{{ version.source_notice }}</p>{% endif %}{% endfor %}
 
 <form id="catalog-search" class="cat-search" action="/wiki/catalog/" method="get" role="search">
   <label class="sr-only" for="catalog-q">搜索系统目录</label>
@@ -59,7 +60,7 @@
 <p class="wiki-empty" id="catalog-empty" hidden>没有匹配的关系。<a href="/wiki/catalog/">清除筛选</a></p>
 
 <h2>说明</h2>
-<p>库里共 {{ stats.relations }} 个关系、{{ stats.snapshots }} 份逐版本快照，最新一版合计 {{ stats.columns }} 个字段；相邻大版本之间记录到 {{ stats.structural_changes }} 处结构变化（字段增删、类型或属性改变、顺序调整）。「引入」一栏写的是本数据集里该关系最早出现的版本；标了「基线」的说明它在 {{ earliest_major }} 就已存在，更早的情况本数据集不覆盖。数据来自 <a href="https://cat.pg.center" target="_blank" rel="noopener">cat.pg.center</a>，字段说明的中文取自本站手册译文，没有译文的条目按原文显示。</p>
+<p>库里共 {{ stats.relations }} 个关系、{{ stats.snapshots }} 份逐版本快照，最新一版合计 {{ stats.columns }} 个字段；相邻大版本之间记录到 {{ stats.structural_changes }} 处结构变化（字段增删、类型或属性改变、顺序调整）。「引入」一栏写的是本数据集里该关系最早出现的版本；标了「基线」的说明它在 {{ earliest_major }} 就已存在，更早的情况本数据集不覆盖。早期采样基线来自 <a href="https://cat.pg.center" target="_blank" rel="noopener">cat.pg.center</a>；PG14–19 已按各版最新正式源码的运行目录逐字段核验，实际构建见详情。字段说明的中文取自本站手册译文，没有译文的条目按原文显示。</p>
 
 </div>
 {% endblock %}

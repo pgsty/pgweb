@@ -220,10 +220,13 @@
   {% if doc_versions %}
   <p>本站手册收录 {{ name }} 的版本：{% for item in doc_versions %}<a class="cat-docver" href="{{ item.url }}">{{ item.label }}</a>{% endfor %}</p>
   {% endif %}
+  {% if snapshot.calibration %}<p>本版事实依据 PostgreSQL {{ snapshot.calibration.release }} 正式源码、同版手册及所列校准记录；中文沿用已审阅译文。最后同步 {{ relation.imported_at|date:"Y-m-d" }}。</p>{% else %}
   <p>数据来自 <a href="https://cat.pg.center/catalog/{{ name }}/" target="_blank" rel="noopener">cat.pg.center</a>（仓库 <a href="https://github.com/pgsty/cat.pg.center" target="_blank" rel="noopener">pgsty/cat.pg.center</a>），中文取自本站手册译文，最后同步 {{ relation.imported_at|date:"Y-m-d" }}。</p>
+  {% endif %}
   <p>字段与版本数据有误请提交到 <a href="https://github.com/pgsty/cat.pg.center/issues" target="_blank" rel="noopener">数据仓库</a>；本站渲染或译文的问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
 </footer>
 
+{% include "wiki/calibration.html" %}
 </article>
 {% endblock %}
 {% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

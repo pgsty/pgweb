@@ -460,6 +460,13 @@ def localize(data, translator, source_commit):
                 metadata[major].setdefault('extension_sources', []).append(evidence)
             else:
                 after, evidence = translator.translate(before, major, preferred)
+            if out['kind'] == 'language' and isinstance(parent, dict):
+                if key == 'label' and before in ('Family', 'Trusted'):
+                    after = {'Family': '语言家族', 'Trusted': '受信任'}[before]
+                    evidence = {'method': 'authored domain label', 'key': sha('language:' + before)}
+                elif key == 'value' and parent.get('label') in ('Trusted', '可信', '受信任') and before in ('t', 'f'):
+                    after = '是' if before == 't' else '否'
+                    evidence = {'method': 'authored domain value', 'key': sha('language:trusted:' + before)}
             if key == 'label' and isinstance(parent, dict) and '/related/' in path:
                 link_path = urlsplit(parent.get('url', '')).path
                 file = link_path.rsplit('/', 1)[-1]

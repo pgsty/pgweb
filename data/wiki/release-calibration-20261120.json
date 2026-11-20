@@ -1,0 +1,1369 @@
+{
+  "versions": {
+    "14": {
+      "release": "14.25",
+      "tag": "REL_14_25",
+      "commit": "9adcf5f8847e0f485a390b1d3ea40688068d71bd",
+      "archive_sha256": "09af980eb3a5d0a8ad7a34b95031b1988bbcd430c87700a62d6234c0ed97ae4c",
+      "source_url": "https://ftp.postgresql.org/pub/source/v14.25/postgresql-14.25.tar.bz2",
+      "runtime_sha256": "1e1a686674f7fb6308383b380f5965e1a97ccc0ce04c1ad4d3f4d8fef0d2955d",
+      "manual_sha256": "9ea2ea0213e4533b47ccd4b4309603c1c5e920935de39e6b75e276699a8c4c71",
+      "date": "2026-11-20",
+      "catalog_count": 134,
+      "guc_runtime_count": 348,
+      "guc_source_only": [
+        "debug_deadlocks",
+        "extension_destdir",
+        "log_btree_build_stats",
+        "trace_lock_oidmin",
+        "trace_lock_table",
+        "trace_locks",
+        "trace_lwlocks",
+        "trace_userlocks",
+        "wal_debug"
+      ],
+      "func_count": 597,
+      "sql_count": 182,
+      "wait_count": 231,
+      "sqlstate_count": 260
+    },
+    "15": {
+      "release": "15.20",
+      "tag": "REL_15_20",
+      "commit": "6a84c5137e820f46f0123276f546eec5b9a56e70",
+      "archive_sha256": "30e65cbbb771a39b553ed2df7e65622e65647aed55dbc19bd0fe853ff0a08442",
+      "source_url": "https://ftp.postgresql.org/pub/source/v15.20/postgresql-15.20.tar.bz2",
+      "runtime_sha256": "cb701d3c1aa1357dc6f220aca9d56d0a55ec93d27e11a40129d435c587ca9c62",
+      "manual_sha256": "ea9a0da922750dfc6bf6c8f367c558cde77aa893a8dc3f02b5477635b531f4ec",
+      "date": "2026-11-20",
+      "catalog_count": 139,
+      "guc_runtime_count": 355,
+      "guc_source_only": [
+        "debug_deadlocks",
+        "extension_destdir",
+        "log_btree_build_stats",
+        "trace_lock_oidmin",
+        "trace_lock_table",
+        "trace_locks",
+        "trace_lwlocks",
+        "trace_userlocks",
+        "wal_debug"
+      ],
+      "func_count": 608,
+      "sql_count": 183,
+      "wait_count": 238,
+      "sqlstate_count": 261
+    },
+    "16": {
+      "release": "16.16",
+      "tag": "REL_16_16",
+      "commit": "c0534eb02de050ac1035ad7b3ad7c3f02980f153",
+      "archive_sha256": "9d5cd8633043b75740d5d59749c6b7365e6aeb53c47098b1a5e80bb18f87881a",
+      "source_url": "https://ftp.postgresql.org/pub/source/v16.16/postgresql-16.16.tar.bz2",
+      "runtime_sha256": "049a77b525839a5ac9acabd2025c5e2b3741776c33d678368d8d76e3ff391f07",
+      "manual_sha256": "14960525a11d6d41955121e35ffae12b5eb812b996eae5d8d0db8970471f6e80",
+      "date": "2026-11-20",
+      "catalog_count": 140,
+      "guc_runtime_count": 364,
+      "guc_source_only": [
+        "debug_deadlocks",
+        "extension_destdir",
+        "log_btree_build_stats",
+        "trace_lock_oidmin",
+        "trace_lock_table",
+        "trace_locks",
+        "trace_lwlocks",
+        "trace_userlocks",
+        "wal_debug"
+      ],
+      "func_count": 633,
+      "sql_count": 183,
+      "wait_count": 246,
+      "sqlstate_count": 261
+    },
+    "17": {
+      "release": "17.12",
+      "tag": "REL_17_12",
+      "commit": "702b3dc86d35bcc08c8e23cffa3c4d9fe9d32c85",
+      "archive_sha256": "9cf136a703d8ee2f83465c43be4e9e8e7930c82b0bfba13be7e2537be769ac55",
+      "source_url": "https://ftp.postgresql.org/pub/source/v17.12/postgresql-17.12.tar.bz2",
+      "runtime_sha256": "59dddaa193155fe90727917c2fc34453db67da3d6d9f4a041016b2963cf59050",
+      "manual_sha256": "bc438df24ab035627af345a1c190ce97d1457ffc950cb1782069edeba77f5f6c",
+      "date": "2026-11-20",
+      "catalog_count": 142,
+      "guc_runtime_count": 380,
+      "guc_source_only": [
+        "debug_deadlocks",
+        "extension_destdir",
+        "log_btree_build_stats",
+        "trace_lock_oidmin",
+        "trace_lock_table",
+        "trace_locks",
+        "trace_lwlocks",
+        "trace_userlocks",
+        "wal_debug"
+      ],
+      "func_count": 657,
+      "sql_count": 183,
+      "wait_count": 265,
+      "sqlstate_count": 261
+    },
+    "18": {
+      "release": "18.7",
+      "tag": "REL_18_7",
+      "commit": "f5c41f6681c910b3f69951bf6fb97c6d74605d25",
+      "archive_sha256": "441dfae4280cae3e0425e5f876f80559fb0731c140f1aae22b3e5a54d0411bfd",
+      "source_url": "https://ftp.postgresql.org/pub/source/v18.7/postgresql-18.7.tar.bz2",
+      "runtime_sha256": "0fc71b7a22eb19be8d62f589ee0e15656a9b4a5b8eedfb346e3c8cd87be888c0",
+      "manual_sha256": "e4edd25658298173b8fe94287f716c6ac18157c14e0eb1a348b884023df5bb78",
+      "date": "2026-11-20",
+      "catalog_count": 144,
+      "guc_runtime_count": 400,
+      "guc_source_only": [
+        "debug_copy_parse_plan_trees",
+        "debug_deadlocks",
+        "debug_raw_expression_coverage_test",
+        "debug_write_read_parse_plan_trees",
+        "log_btree_build_stats",
+        "trace_lock_oidmin",
+        "trace_lock_table",
+        "trace_locks",
+        "trace_lwlocks",
+        "trace_userlocks",
+        "wal_debug"
+      ],
+      "func_count": 675,
+      "sql_count": 183,
+      "wait_count": 274,
+      "sqlstate_count": 263
+    },
+    "19": {
+      "release": "19.0",
+      "tag": "REL_19_0",
+      "commit": "5c839a2a08b9b87a349be97371fac6c5a2873b10",
+      "archive_sha256": "a89fd70efbad6a08c7dbed8d4872e3af30170d9e5ca9dc7906523be95b4e692d",
+      "source_url": "https://ftp.postgresql.org/pub/source/v19.0/postgresql-19.0.tar.bz2",
+      "runtime_sha256": "0a1448328363ea36340abfff6960e7fa7ad001773c1638fecae1640ba7d4f715",
+      "manual_sha256": "ff03a1904275ee66b7af207108765919bd7b92cdbb4752d285e49bbeb6b96eb0",
+      "date": "2026-11-20",
+      "catalog_count": 150,
+      "guc_runtime_count": 420,
+      "guc_source_only": [
+        "debug_copy_parse_plan_trees",
+        "debug_deadlocks",
+        "debug_raw_expression_coverage_test",
+        "debug_write_read_parse_plan_trees",
+        "log_btree_build_stats",
+        "trace_lock_oidmin",
+        "trace_lock_table",
+        "trace_locks",
+        "trace_lwlocks",
+        "trace_userlocks",
+        "wal_debug"
+      ],
+      "func_count": 685,
+      "sql_count": 185,
+      "wait_count": 287,
+      "sqlstate_count": 263
+    }
+  },
+  "topics": {
+    "hook": {
+      "entities": 39,
+      "semantic_changes": []
+    },
+    "relopts": {
+      "entities": 58,
+      "semantic_changes": []
+    },
+    "role": {
+      "entities": 16,
+      "semantic_changes": []
+    },
+    "oid": {
+      "entities": 18,
+      "semantic_changes": []
+    },
+    "type": {
+      "entities": 116,
+      "semantic_changes": []
+    },
+    "indexam": {
+      "entities": 6,
+      "semantic_changes": []
+    },
+    "plan": {
+      "entities": 42,
+      "semantic_changes": []
+    },
+    "operator": {
+      "entities": 810,
+      "semantic_changes": []
+    },
+    "opclass": {
+      "entities": 327,
+      "semantic_changes": []
+    },
+    "fdw": {
+      "entities": 2,
+      "semantic_changes": [
+        [
+          "file_fdw",
+          "19",
+          [
+            "comparison_data"
+          ]
+        ]
+      ]
+    },
+    "tableam": {
+      "entities": 1,
+      "semantic_changes": []
+    },
+    "psql": {
+      "entities": 130,
+      "semantic_changes": []
+    },
+    "tool": {
+      "entities": 36,
+      "semantic_changes": [
+        [
+          "pg-combinebackup",
+          "19",
+          [
+            "comparison_data"
+          ]
+        ]
+      ]
+    },
+    "conn": {
+      "entities": 52,
+      "semantic_changes": []
+    },
+    "metric": {
+      "entities": 596,
+      "semantic_changes": []
+    },
+    "storage": {
+      "entities": 35,
+      "semantic_changes": []
+    },
+    "protocol": {
+      "entities": 73,
+      "semantic_changes": []
+    },
+    "language": {
+      "entities": 11,
+      "semantic_changes": []
+    },
+    "fts": {
+      "entities": 70,
+      "semantic_changes": []
+    },
+    "auth": {
+      "entities": 15,
+      "semantic_changes": []
+    },
+    "locale": {
+      "entities": 53,
+      "semantic_changes": []
+    },
+    "decode": {
+      "entities": 2,
+      "semantic_changes": []
+    }
+  },
+  "changes": {
+    "authentication_method": 15,
+    "catalog": 150,
+    "catalog_version": 6,
+    "collation_encoding": 53,
+    "command_tool": 36,
+    "connection_parameter": 52,
+    "data_type": 116,
+    "foreign_data_wrapper": 2,
+    "func": 689,
+    "func_version": 2,
+    "guc": 454,
+    "guc_version": 6,
+    "hook": 39,
+    "index_am": 6,
+    "lock_mode": 12,
+    "logical_decoding_plugin": 2,
+    "oid_type": 18,
+    "operator_class": 327,
+    "pg_operator_entry": 810,
+    "plan_node": 42,
+    "predefined_role": 16,
+    "procedural_language": 11,
+    "protocol_message": 73,
+    "psql_command": 130,
+    "relopt": 58,
+    "sqlcmd": 185,
+    "sqlstate": 264,
+    "sqlstate_class": 0,
+    "sqlstate_version": 1,
+    "statistics_metric": 596,
+    "storage_structure": 35,
+    "table_am": 1,
+    "text_search_component": 70,
+    "waitevent": 296,
+    "waitevent_version": 6
+  },
+  "preserved_pg20": {
+    "authentication_method": "25e3135aad81330e85eb1574b5b38e6e19543fb3ada0f5e60e35a8b67a940038",
+    "catalog": "610b7e16325e228b3874fb02c88df7098b40d3e8eb3adce515f90e7e923693c2",
+    "catalog_version": "c5db35e128bf6792ad6e56cd6c32561e6a6bce1cc4a23b592f202bbde9b3e9dc",
+    "collation_encoding": "79d784818eb2196e67b4e45e1dd47bacecc9723f128081237766305489b46fb9",
+    "command_tool": "6c1d160bb74ef947a81e1db25cd97e8c62d9f143485b15508f7c7a768a19e31b",
+    "connection_parameter": "19d77f85bb952757b67d51c3ac026b1e489bf162646b187249a868e2e8c255f0",
+    "data_type": "e7bb9354bf5cb495258ba3d38af02c37c0596e8477a1529ca16c533b538a0cde",
+    "foreign_data_wrapper": "83e8b022f6ea22a0531fc000abe4a617da30fcb8964b484f778cb2c3875de5d9",
+    "func": "2f84686ba568d820f4e300a21a68f34f25c323b7339573102a80adf971f08844",
+    "func_version": "9bdec2066bc1afb75f675e47b13b7f977e920030760103bdd09191a6bed92242",
+    "guc": "679870688eb17165a725731dcfae330afd1ac5ab57737250dbe399f231fa5502",
+    "guc_version": "b17f90dc758afd36b8e2e75f5e4eed97633e3b7915b961cbb301a905ebbe3b6b",
+    "hook": "8ab49a12db80da2cb8d447dea5e91b16957c21349a6e87c37c67ac495333f3fb",
+    "index_am": "b3bbcaafa4eecc647021e6240c6b465580c25149589adfbaabcf9162aad92a23",
+    "lock_mode": "1d0e446130930331761b6dc3973af901ad859669812f82182092dd09a3f48b05",
+    "logical_decoding_plugin": "ed51d9df1107e5d2ae2706d0862efc23b312431272d9a966b681af76100a5b1c",
+    "oid_type": "fc4ba51e9cae401908404d380432cc94839e47477122959a3667eaf99f52159e",
+    "operator_class": "d13e624a45c1c519b4dfc7dcd087ea973cfc82cb73a6fa71bd721535944610e5",
+    "pg_operator_entry": "d7989444c4aab92757772b26b6e77b03ac4f4ac96d34d5e2657c6837f7c95a65",
+    "plan_node": "7c4edb31aee2dbb60a76fa003d45a5e2df8960cbcb51769d6973c963d567bd20",
+    "predefined_role": "f180810ad6d2dba31778ddc196ab9fad4ff4fa9aeb804bdd643b8d8457876fe3",
+    "procedural_language": "869a3395eaccee1f764f0128ca89d1fc8d49624d02070ae3cf5dfd169234ec7e",
+    "protocol_message": "ed2d3c0e79e1078ce05f61d9448e7b4cdb2246216e24f45e19f3fdefc5638959",
+    "psql_command": "2e397c067aea34db85369e9674c958286cf1984d6ee1321809de58203ca866da",
+    "relopt": "73800a791316f49a4a7143155a5cd6a02854d1da53aeda65da66f63e5c2660de",
+    "sqlcmd": "d06c4d21aa562588a84392776aced62855662e8c77df04a3881e6b6c6b057e93",
+    "sqlstate": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "sqlstate_class": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "sqlstate_version": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "statistics_metric": "6db6ee1f0a8ce9717093f1465caefb9b68f4c2484d569827ace439c43b18a090",
+    "storage_structure": "bb9a963985d1879797b0e2d07e09c280aa320ca765d9376f211f03e8d6733f73",
+    "table_am": "18ce93f294c69fb3133ab377641dd3eb41961410eb272825c706f446f588bbfe",
+    "text_search_component": "e2f1eba6e8228067459c7047353bb683884b3eb465170a1613c293ff4af61970",
+    "waitevent": "c6b43ddd8c5bbfc77fc38514ba26461158b26a854437f0e72029dac5b973699b",
+    "waitevent_version": "50d70818708e01a29552c900ded19f1d089561e69873360bdb9b19de26d8549e"
+  },
+  "translated_signature_phrases": [
+    {
+      "major": "14",
+      "name": "max",
+      "english": [
+        "max ( see text ) → same as input type"
+      ],
+      "stored": [
+        "max ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "14",
+      "name": "min",
+      "english": [
+        "min ( see text ) → same as input type"
+      ],
+      "stored": [
+        "min ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "14",
+      "name": "stddev",
+      "english": [
+        "stddev ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "14",
+      "name": "stddev_pop",
+      "english": [
+        "stddev_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "14",
+      "name": "stddev_samp",
+      "english": [
+        "stddev_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "14",
+      "name": "variance",
+      "english": [
+        "variance ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "variance ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "14",
+      "name": "var_pop",
+      "english": [
+        "var_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "14",
+      "name": "var_samp",
+      "english": [
+        "var_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "15",
+      "name": "max",
+      "english": [
+        "max ( see text ) → same as input type"
+      ],
+      "stored": [
+        "max ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "15",
+      "name": "min",
+      "english": [
+        "min ( see text ) → same as input type"
+      ],
+      "stored": [
+        "min ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "15",
+      "name": "stddev",
+      "english": [
+        "stddev ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "15",
+      "name": "stddev_pop",
+      "english": [
+        "stddev_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "15",
+      "name": "stddev_samp",
+      "english": [
+        "stddev_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "15",
+      "name": "variance",
+      "english": [
+        "variance ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "variance ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "15",
+      "name": "var_pop",
+      "english": [
+        "var_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "15",
+      "name": "var_samp",
+      "english": [
+        "var_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "16",
+      "name": "any_value",
+      "english": [
+        "any_value ( anyelement ) → same as input type"
+      ],
+      "stored": [
+        "any_value ( anyelement ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "16",
+      "name": "max",
+      "english": [
+        "max ( see text ) → same as input type"
+      ],
+      "stored": [
+        "max ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "16",
+      "name": "min",
+      "english": [
+        "min ( see text ) → same as input type"
+      ],
+      "stored": [
+        "min ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "16",
+      "name": "stddev",
+      "english": [
+        "stddev ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "16",
+      "name": "stddev_pop",
+      "english": [
+        "stddev_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "16",
+      "name": "stddev_samp",
+      "english": [
+        "stddev_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "16",
+      "name": "variance",
+      "english": [
+        "variance ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "variance ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "16",
+      "name": "var_pop",
+      "english": [
+        "var_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "16",
+      "name": "var_samp",
+      "english": [
+        "var_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "17",
+      "name": "any_value",
+      "english": [
+        "any_value ( anyelement ) → same as input type"
+      ],
+      "stored": [
+        "any_value ( anyelement ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "17",
+      "name": "max",
+      "english": [
+        "max ( see text ) → same as input type"
+      ],
+      "stored": [
+        "max ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "17",
+      "name": "min",
+      "english": [
+        "min ( see text ) → same as input type"
+      ],
+      "stored": [
+        "min ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "17",
+      "name": "stddev",
+      "english": [
+        "stddev ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "17",
+      "name": "stddev_pop",
+      "english": [
+        "stddev_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "17",
+      "name": "stddev_samp",
+      "english": [
+        "stddev_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "17",
+      "name": "variance",
+      "english": [
+        "variance ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "variance ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "17",
+      "name": "var_pop",
+      "english": [
+        "var_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "17",
+      "name": "var_samp",
+      "english": [
+        "var_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "18",
+      "name": "any_value",
+      "english": [
+        "any_value ( anyelement ) → same as input type"
+      ],
+      "stored": [
+        "any_value ( anyelement ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "18",
+      "name": "max",
+      "english": [
+        "max ( see text ) → same as input type"
+      ],
+      "stored": [
+        "max ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "18",
+      "name": "min",
+      "english": [
+        "min ( see text ) → same as input type"
+      ],
+      "stored": [
+        "min ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "18",
+      "name": "stddev",
+      "english": [
+        "stddev ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "18",
+      "name": "stddev_pop",
+      "english": [
+        "stddev_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "18",
+      "name": "stddev_samp",
+      "english": [
+        "stddev_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "18",
+      "name": "variance",
+      "english": [
+        "variance ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "variance ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "18",
+      "name": "var_pop",
+      "english": [
+        "var_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "18",
+      "name": "var_samp",
+      "english": [
+        "var_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "19",
+      "name": "any_value",
+      "english": [
+        "any_value ( anyelement ) → same as input type"
+      ],
+      "stored": [
+        "any_value ( anyelement ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "19",
+      "name": "max",
+      "english": [
+        "max ( see text ) → same as input type"
+      ],
+      "stored": [
+        "max ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "19",
+      "name": "min",
+      "english": [
+        "min ( see text ) → same as input type"
+      ],
+      "stored": [
+        "min ( 见说明 ) → 与输入类型相同"
+      ]
+    },
+    {
+      "major": "19",
+      "name": "stddev",
+      "english": [
+        "stddev ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "19",
+      "name": "stddev_pop",
+      "english": [
+        "stddev_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "19",
+      "name": "stddev_samp",
+      "english": [
+        "stddev_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "stddev_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "19",
+      "name": "variance",
+      "english": [
+        "variance ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "variance ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "19",
+      "name": "var_pop",
+      "english": [
+        "var_pop ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_pop ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    },
+    {
+      "major": "19",
+      "name": "var_samp",
+      "english": [
+        "var_samp ( numeric_type ) → double precision for real or double precision, otherwise numeric"
+      ],
+      "stored": [
+        "var_samp ( numeric_type ) → 对于 real 或 double precision 输入，返回 double precision；否则返回 numeric"
+      ]
+    }
+  ],
+  "artifacts": {
+    "before": [
+      {
+        "table": "authentication_method",
+        "key": "slug",
+        "rows": 15,
+        "sha256": "ec0a2de489fe8883269ca624a3b2efac6d0059a97bb1d8047168b860e403d78c",
+        "pg20_sha256": "25e3135aad81330e85eb1574b5b38e6e19543fb3ada0f5e60e35a8b67a940038"
+      },
+      {
+        "table": "catalog",
+        "key": "name",
+        "rows": 155,
+        "sha256": "338713d14c7c41079f558fc409c6d4d207750febbe671ba9fe365ca0a06f19c9",
+        "pg20_sha256": "610b7e16325e228b3874fb02c88df7098b40d3e8eb3adce515f90e7e923693c2"
+      },
+      {
+        "table": "catalog_version",
+        "key": "major",
+        "rows": 24,
+        "sha256": "e473688f75f03f31aa4444dec01728d82448e5301862de79902bb5c4ab1ec08d",
+        "pg20_sha256": "c5db35e128bf6792ad6e56cd6c32561e6a6bce1cc4a23b592f202bbde9b3e9dc"
+      },
+      {
+        "table": "collation_encoding",
+        "key": "slug",
+        "rows": 53,
+        "sha256": "a7e8322d6813e956372578ba4fcd505e9e5d81d15c6a5fcf7e876a68d276bc90",
+        "pg20_sha256": "79d784818eb2196e67b4e45e1dd47bacecc9723f128081237766305489b46fb9"
+      },
+      {
+        "table": "command_tool",
+        "key": "slug",
+        "rows": 37,
+        "sha256": "41e62c296a764ecc6fb091e3e4c87cefc35d7594d2869fe592e08e91f987d7c1",
+        "pg20_sha256": "6c1d160bb74ef947a81e1db25cd97e8c62d9f143485b15508f7c7a768a19e31b"
+      },
+      {
+        "table": "connection_parameter",
+        "key": "slug",
+        "rows": 55,
+        "sha256": "312b615689eff28895ce2358189a86e851ee6ef5bea88a7bccafff698f1dd147",
+        "pg20_sha256": "19d77f85bb952757b67d51c3ac026b1e489bf162646b187249a868e2e8c255f0"
+      },
+      {
+        "table": "data_type",
+        "key": "slug",
+        "rows": 121,
+        "sha256": "f7ef5bc55e57b948e94d749205892ba8919ece37bbd8b8f6d47ad23ee7e6cb48",
+        "pg20_sha256": "e7bb9354bf5cb495258ba3d38af02c37c0596e8477a1529ca16c533b538a0cde"
+      },
+      {
+        "table": "foreign_data_wrapper",
+        "key": "slug",
+        "rows": 2,
+        "sha256": "0480a6d6e9b95450ac78708342c92e92b77691f900f01dda53d0473cffc72c87",
+        "pg20_sha256": "83e8b022f6ea22a0531fc000abe4a617da30fcb8964b484f778cb2c3875de5d9"
+      },
+      {
+        "table": "func",
+        "key": "slug",
+        "rows": 711,
+        "sha256": "e656ed60257dce57cd2695d89cc41a445a62a46b62a4ed17e401a305138cc03f",
+        "pg20_sha256": "2f84686ba568d820f4e300a21a68f34f25c323b7339573102a80adf971f08844"
+      },
+      {
+        "table": "func_version",
+        "key": "major",
+        "rows": 27,
+        "sha256": "069590ea320b69b45ce925d3501fdfafba0896a6d2f7b4c4722ec0103584595a",
+        "pg20_sha256": "9bdec2066bc1afb75f675e47b13b7f977e920030760103bdd09191a6bed92242"
+      },
+      {
+        "table": "guc",
+        "key": "name",
+        "rows": 492,
+        "sha256": "5cdea9abf26928a5602625d7788230ec7af87f5270f27036dbbc9dbb5013c3b0",
+        "pg20_sha256": "679870688eb17165a725731dcfae330afd1ac5ab57737250dbe399f231fa5502"
+      },
+      {
+        "table": "guc_version",
+        "key": "major",
+        "rows": 24,
+        "sha256": "3926573ca3d2ce9493327d0ca1809943e91a43b1fa1e9dc4845d43301dbfcb98",
+        "pg20_sha256": "b17f90dc758afd36b8e2e75f5e4eed97633e3b7915b961cbb301a905ebbe3b6b"
+      },
+      {
+        "table": "hook",
+        "key": "slug",
+        "rows": 39,
+        "sha256": "e45f3b15d60efb23c12979c51c22e39a26913833183d0efa878fc437ba47ea3e",
+        "pg20_sha256": "8ab49a12db80da2cb8d447dea5e91b16957c21349a6e87c37c67ac495333f3fb"
+      },
+      {
+        "table": "index_am",
+        "key": "slug",
+        "rows": 6,
+        "sha256": "2aef0c10759df5ec2d51a84182cea4b8454669435e69ef8e6d55f2ddde8a79f5",
+        "pg20_sha256": "b3bbcaafa4eecc647021e6240c6b465580c25149589adfbaabcf9162aad92a23"
+      },
+      {
+        "table": "lock_mode",
+        "key": "slug",
+        "rows": 12,
+        "sha256": "315d49f66eacf8f7f969b3a2fade897a9ffbd0cf0a98f0a768e02c77f4d8b18c",
+        "pg20_sha256": "1d0e446130930331761b6dc3973af901ad859669812f82182092dd09a3f48b05"
+      },
+      {
+        "table": "logical_decoding_plugin",
+        "key": "slug",
+        "rows": 2,
+        "sha256": "8420f45889163045698be3991a01b53fcd4774923d536794ddede804a84857ac",
+        "pg20_sha256": "ed51d9df1107e5d2ae2706d0862efc23b312431272d9a966b681af76100a5b1c"
+      },
+      {
+        "table": "oid_type",
+        "key": "slug",
+        "rows": 18,
+        "sha256": "932f538aeda941887e485cf06c975c0e71b3f011c4fef1aa16e47c931133103e",
+        "pg20_sha256": "fc4ba51e9cae401908404d380432cc94839e47477122959a3667eaf99f52159e"
+      },
+      {
+        "table": "operator_class",
+        "key": "slug",
+        "rows": 344,
+        "sha256": "fb024f0b1dc2a45c16176caa4b914b35a180308a8593815e6d321df4ac081e41",
+        "pg20_sha256": "d13e624a45c1c519b4dfc7dcd087ea973cfc82cb73a6fa71bd721535944610e5"
+      },
+      {
+        "table": "pg_operator_entry",
+        "key": "slug",
+        "rows": 865,
+        "sha256": "9d1fe4d761c74ff0e0efdcc5a5d2da5da1482e8739f8221efc8e5a3891162740",
+        "pg20_sha256": "d7989444c4aab92757772b26b6e77b03ac4f4ac96d34d5e2657c6837f7c95a65"
+      },
+      {
+        "table": "plan_node",
+        "key": "slug",
+        "rows": 42,
+        "sha256": "c97e7f35722bc203b1d2f6dee91379224e9d5216e401d42fcfa6ad350f9a8c56",
+        "pg20_sha256": "7c4edb31aee2dbb60a76fa003d45a5e2df8960cbcb51769d6973c963d567bd20"
+      },
+      {
+        "table": "predefined_role",
+        "key": "slug",
+        "rows": 16,
+        "sha256": "83c500a7571ae240bc866a203c1fa731aa70cc58ca47742bc08588da53235cf2",
+        "pg20_sha256": "f180810ad6d2dba31778ddc196ab9fad4ff4fa9aeb804bdd643b8d8457876fe3"
+      },
+      {
+        "table": "procedural_language",
+        "key": "slug",
+        "rows": 11,
+        "sha256": "53b9a3818a5c1ca919a0daa4cb02454b80dd1e2250f6fe6c5b4d3ca235ab9808",
+        "pg20_sha256": "869a3395eaccee1f764f0128ca89d1fc8d49624d02070ae3cf5dfd169234ec7e"
+      },
+      {
+        "table": "protocol_message",
+        "key": "slug",
+        "rows": 73,
+        "sha256": "a8784d8b3383b65eee3185f5bfee37716dfde6b15c222203c267844758d0858f",
+        "pg20_sha256": "ed2d3c0e79e1078ce05f61d9448e7b4cdb2246216e24f45e19f3fdefc5638959"
+      },
+      {
+        "table": "psql_command",
+        "key": "slug",
+        "rows": 130,
+        "sha256": "4d7d1bd1e767297a5d32bdab570617ad88a74b2e60a7e181f877a46f0d49308e",
+        "pg20_sha256": "2e397c067aea34db85369e9674c958286cf1984d6ee1321809de58203ca866da"
+      },
+      {
+        "table": "relopt",
+        "key": "slug",
+        "rows": 60,
+        "sha256": "a805f653f394e5edc091d4ac791ab69dbc172ea3b1934fe0685c6025ad0d4a03",
+        "pg20_sha256": "73800a791316f49a4a7143155a5cd6a02854d1da53aeda65da66f63e5c2660de"
+      },
+      {
+        "table": "sqlcmd",
+        "key": "slug",
+        "rows": 187,
+        "sha256": "b476ad8f71c3895402ce49772f7cd71092eef16ac1b9fd6e0cbe63a399047f5a",
+        "pg20_sha256": "d06c4d21aa562588a84392776aced62855662e8c77df04a3881e6b6c6b057e93"
+      },
+      {
+        "table": "sqlstate",
+        "key": "sqlstate",
+        "rows": 265,
+        "sha256": "b3e909e9f81d4446c60b220cbdca254bdabd2eac70976b8d24e48eec444c9acb",
+        "pg20_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      {
+        "table": "sqlstate_class",
+        "key": "code",
+        "rows": 44,
+        "sha256": "67d6f71a27589a148556474b00db44f391525115580bed33c59a1a821d90556d",
+        "pg20_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      {
+        "table": "sqlstate_version",
+        "key": "major",
+        "rows": 17,
+        "sha256": "86057ecf8f2218de3400a6392a95d083e2e51147da4d84f8c7f6b73f3bd0a90c",
+        "pg20_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      {
+        "table": "statistics_metric",
+        "key": "slug",
+        "rows": 620,
+        "sha256": "2d2320dc8d1ef3c5c1a2fc530c7ceb55963391fa1bc9c68e57a93b0a2444694a",
+        "pg20_sha256": "6db6ee1f0a8ce9717093f1465caefb9b68f4c2484d569827ace439c43b18a090"
+      },
+      {
+        "table": "storage_structure",
+        "key": "slug",
+        "rows": 35,
+        "sha256": "e117f880f0c1b07b223ccd7ba874cd8a4617d4ec407e61a1a5e4da5e7ee6ac91",
+        "pg20_sha256": "bb9a963985d1879797b0e2d07e09c280aa320ca765d9376f211f03e8d6733f73"
+      },
+      {
+        "table": "table_am",
+        "key": "slug",
+        "rows": 1,
+        "sha256": "faf1892ff8086712ff9f6837da8f9538634f186499948c983c4f94eda2f2d486",
+        "pg20_sha256": "18ce93f294c69fb3133ab377641dd3eb41961410eb272825c706f446f588bbfe"
+      },
+      {
+        "table": "text_search_component",
+        "key": "slug",
+        "rows": 70,
+        "sha256": "91f39dc02332eca6d29b612e292ac97728168c63c91d7e8a5b015a21ea05b624",
+        "pg20_sha256": "e2f1eba6e8228067459c7047353bb683884b3eb465170a1613c293ff4af61970"
+      },
+      {
+        "table": "waitevent",
+        "key": "key",
+        "rows": 303,
+        "sha256": "9f24aa4a391031f660377d66ee64f60d19a56bf3aa9dac26ef8086c7f5a001da",
+        "pg20_sha256": "c6b43ddd8c5bbfc77fc38514ba26461158b26a854437f0e72029dac5b973699b"
+      },
+      {
+        "table": "waitevent_version",
+        "key": "major",
+        "rows": 18,
+        "sha256": "1628fbbe8101a63c9b69b44835e3f8f0edf775107b593d1fcebfffc19a42100c",
+        "pg20_sha256": "50d70818708e01a29552c900ded19f1d089561e69873360bdb9b19de26d8549e"
+      }
+    ],
+    "after-reviewed": [
+      {
+        "table": "authentication_method",
+        "key": "slug",
+        "rows": 15,
+        "sha256": "cd530ecfadd0d3e52da2200be3495ae64fb42c58cb2adea80b4b124abc62ba83",
+        "pg20_sha256": "25e3135aad81330e85eb1574b5b38e6e19543fb3ada0f5e60e35a8b67a940038"
+      },
+      {
+        "table": "catalog",
+        "key": "name",
+        "rows": 155,
+        "sha256": "910426708255c7222095297a80f4fad8a4fff79f2a0fb9c94313058154de778e",
+        "pg20_sha256": "610b7e16325e228b3874fb02c88df7098b40d3e8eb3adce515f90e7e923693c2"
+      },
+      {
+        "table": "catalog_version",
+        "key": "major",
+        "rows": 24,
+        "sha256": "a2c291b06b07c6cc003390bc8cba86ec203757684f2d846ae59347c4603e186e",
+        "pg20_sha256": "c5db35e128bf6792ad6e56cd6c32561e6a6bce1cc4a23b592f202bbde9b3e9dc"
+      },
+      {
+        "table": "collation_encoding",
+        "key": "slug",
+        "rows": 53,
+        "sha256": "91629349b89882de7531b2811f71b9d03f3a189d6f39c04f0c1b0d88272350c5",
+        "pg20_sha256": "79d784818eb2196e67b4e45e1dd47bacecc9723f128081237766305489b46fb9"
+      },
+      {
+        "table": "command_tool",
+        "key": "slug",
+        "rows": 37,
+        "sha256": "50722e50e649cc4b21c07f659dcd4bcfda77cb58219edb6aae846b665c03c6f4",
+        "pg20_sha256": "6c1d160bb74ef947a81e1db25cd97e8c62d9f143485b15508f7c7a768a19e31b"
+      },
+      {
+        "table": "connection_parameter",
+        "key": "slug",
+        "rows": 55,
+        "sha256": "b864b26ec830b3965afaeb20abe0c73efc58fc00bc9ac31f63b1215bd1d967ee",
+        "pg20_sha256": "19d77f85bb952757b67d51c3ac026b1e489bf162646b187249a868e2e8c255f0"
+      },
+      {
+        "table": "data_type",
+        "key": "slug",
+        "rows": 121,
+        "sha256": "2be64305cb18c3bf87f64e3f9ff2b1d92ae617041449c5c5752782b06e6cd0c4",
+        "pg20_sha256": "e7bb9354bf5cb495258ba3d38af02c37c0596e8477a1529ca16c533b538a0cde"
+      },
+      {
+        "table": "foreign_data_wrapper",
+        "key": "slug",
+        "rows": 2,
+        "sha256": "8086be86a867249824edadaf056f8ad59b0e21056834578eb39ce833b9932fa9",
+        "pg20_sha256": "83e8b022f6ea22a0531fc000abe4a617da30fcb8964b484f778cb2c3875de5d9"
+      },
+      {
+        "table": "func",
+        "key": "slug",
+        "rows": 711,
+        "sha256": "84b35abe5de42c44abab4d652944bb5dceb4c513070294c4b594faaad09025c6",
+        "pg20_sha256": "2f84686ba568d820f4e300a21a68f34f25c323b7339573102a80adf971f08844"
+      },
+      {
+        "table": "func_version",
+        "key": "major",
+        "rows": 27,
+        "sha256": "3ceab50fe89e309f0208af2a41d626efef008349d6b9231076db066c3d043cac",
+        "pg20_sha256": "9bdec2066bc1afb75f675e47b13b7f977e920030760103bdd09191a6bed92242"
+      },
+      {
+        "table": "guc",
+        "key": "name",
+        "rows": 492,
+        "sha256": "0dc60c36045d8d57cf1d3a8c1578eb0624945ad9a591c31f83adbaf4f124b934",
+        "pg20_sha256": "679870688eb17165a725731dcfae330afd1ac5ab57737250dbe399f231fa5502"
+      },
+      {
+        "table": "guc_version",
+        "key": "major",
+        "rows": 24,
+        "sha256": "761f5f6300b1161f6af1e7deb6e5b9cd5c39039037b1c573f38249b79348698c",
+        "pg20_sha256": "b17f90dc758afd36b8e2e75f5e4eed97633e3b7915b961cbb301a905ebbe3b6b"
+      },
+      {
+        "table": "hook",
+        "key": "slug",
+        "rows": 39,
+        "sha256": "16fb26fc4dd30ae8b9caa3f100a6f4bb0653b3ccd8d6f068642fb11865c3b424",
+        "pg20_sha256": "8ab49a12db80da2cb8d447dea5e91b16957c21349a6e87c37c67ac495333f3fb"
+      },
+      {
+        "table": "index_am",
+        "key": "slug",
+        "rows": 6,
+        "sha256": "80f09757e5a677e06690989477ee9fb6eaa96aa22a9b09697f6bee5247d502e8",
+        "pg20_sha256": "b3bbcaafa4eecc647021e6240c6b465580c25149589adfbaabcf9162aad92a23"
+      },
+      {
+        "table": "lock_mode",
+        "key": "slug",
+        "rows": 12,
+        "sha256": "5a1334c04ef54d22b973a97819a4f6bf7e443633cf1d9c22891e097fc35fa74a",
+        "pg20_sha256": "1d0e446130930331761b6dc3973af901ad859669812f82182092dd09a3f48b05"
+      },
+      {
+        "table": "logical_decoding_plugin",
+        "key": "slug",
+        "rows": 2,
+        "sha256": "5d1233050b07410ea2da3ab3466f0752746076acb4381ebf8edb84ad567732fe",
+        "pg20_sha256": "ed51d9df1107e5d2ae2706d0862efc23b312431272d9a966b681af76100a5b1c"
+      },
+      {
+        "table": "oid_type",
+        "key": "slug",
+        "rows": 18,
+        "sha256": "cc0a6433b2e4b2ee23d7154f019977bc4edf744a834fd2b65b8a8e8647c7f7af",
+        "pg20_sha256": "fc4ba51e9cae401908404d380432cc94839e47477122959a3667eaf99f52159e"
+      },
+      {
+        "table": "operator_class",
+        "key": "slug",
+        "rows": 344,
+        "sha256": "814a0c4fcca9abc5052cef063e84bbb9174b224ad3edb4b6794df26c9855d6f5",
+        "pg20_sha256": "d13e624a45c1c519b4dfc7dcd087ea973cfc82cb73a6fa71bd721535944610e5"
+      },
+      {
+        "table": "pg_operator_entry",
+        "key": "slug",
+        "rows": 865,
+        "sha256": "7f78895d24b25334790b20937bd6c345c4bbc57a70f6234661e980ac79f9eae2",
+        "pg20_sha256": "d7989444c4aab92757772b26b6e77b03ac4f4ac96d34d5e2657c6837f7c95a65"
+      },
+      {
+        "table": "plan_node",
+        "key": "slug",
+        "rows": 42,
+        "sha256": "98f48a20097fc6bbf572777130554b9106b5748d8b27ccb5884af0ab3e7fbd78",
+        "pg20_sha256": "7c4edb31aee2dbb60a76fa003d45a5e2df8960cbcb51769d6973c963d567bd20"
+      },
+      {
+        "table": "predefined_role",
+        "key": "slug",
+        "rows": 16,
+        "sha256": "007215b7d586fa6de57aad3c68e40b8b2eaadde674eb8b3c72a8ae459d1c8747",
+        "pg20_sha256": "f180810ad6d2dba31778ddc196ab9fad4ff4fa9aeb804bdd643b8d8457876fe3"
+      },
+      {
+        "table": "procedural_language",
+        "key": "slug",
+        "rows": 11,
+        "sha256": "550109984ddfda834ea320fcd8ee299cbaa411fd60ca26a5d8f5e9de0e44d179",
+        "pg20_sha256": "869a3395eaccee1f764f0128ca89d1fc8d49624d02070ae3cf5dfd169234ec7e"
+      },
+      {
+        "table": "protocol_message",
+        "key": "slug",
+        "rows": 73,
+        "sha256": "9564c4961c5e4a04d112a3de1834a569ee4cb74ece383e44803e7fa875a72e73",
+        "pg20_sha256": "ed2d3c0e79e1078ce05f61d9448e7b4cdb2246216e24f45e19f3fdefc5638959"
+      },
+      {
+        "table": "psql_command",
+        "key": "slug",
+        "rows": 130,
+        "sha256": "36b66de8745ffaf852a003bf6b14b9884ceeead67e67d8928ba76049751b677e",
+        "pg20_sha256": "2e397c067aea34db85369e9674c958286cf1984d6ee1321809de58203ca866da"
+      },
+      {
+        "table": "relopt",
+        "key": "slug",
+        "rows": 60,
+        "sha256": "45417d6837c3dc9ed4413f246c16a70051d789c20ea2e6c0ff92840358404e3c",
+        "pg20_sha256": "73800a791316f49a4a7143155a5cd6a02854d1da53aeda65da66f63e5c2660de"
+      },
+      {
+        "table": "sqlcmd",
+        "key": "slug",
+        "rows": 187,
+        "sha256": "33e366f7e6e8ba4b49e57685e51645436f9f64685466352fdbb5fbc08e132790",
+        "pg20_sha256": "d06c4d21aa562588a84392776aced62855662e8c77df04a3881e6b6c6b057e93"
+      },
+      {
+        "table": "sqlstate",
+        "key": "sqlstate",
+        "rows": 265,
+        "sha256": "e3950aec9511a08ef8c732cfa2b743ef8e7d15b40e3c2e6ddba7fd4de61846dd",
+        "pg20_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      {
+        "table": "sqlstate_class",
+        "key": "code",
+        "rows": 44,
+        "sha256": "67d6f71a27589a148556474b00db44f391525115580bed33c59a1a821d90556d",
+        "pg20_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      {
+        "table": "sqlstate_version",
+        "key": "major",
+        "rows": 17,
+        "sha256": "3277cb0bb83db2311d71118eec3d7ef664c89b1f932e40842fefda3fb1010d7d",
+        "pg20_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"
+      },
+      {
+        "table": "statistics_metric",
+        "key": "slug",
+        "rows": 620,
+        "sha256": "193e08126c4a089e6a195ee04ada9897e7ec13993b275d4116b7476490ebcfdc",
+        "pg20_sha256": "6db6ee1f0a8ce9717093f1465caefb9b68f4c2484d569827ace439c43b18a090"
+      },
+      {
+        "table": "storage_structure",
+        "key": "slug",
+        "rows": 35,
+        "sha256": "51cc089c035ae8cc6458b5fa9a8d96ec008f074d3478a0da3080d84fbc0193db",
+        "pg20_sha256": "bb9a963985d1879797b0e2d07e09c280aa320ca765d9376f211f03e8d6733f73"
+      },
+      {
+        "table": "table_am",
+        "key": "slug",
+        "rows": 1,
+        "sha256": "4ba6c206ee42e1189eebb775d611078e7b8d4db0bed96cefadfc6fc2ce04eea6",
+        "pg20_sha256": "18ce93f294c69fb3133ab377641dd3eb41961410eb272825c706f446f588bbfe"
+      },
+      {
+        "table": "text_search_component",
+        "key": "slug",
+        "rows": 70,
+        "sha256": "58a37e963fc04634d6d2dbd9d67e804da7e86eced1a2e2f796f0998403b3d412",
+        "pg20_sha256": "e2f1eba6e8228067459c7047353bb683884b3eb465170a1613c293ff4af61970"
+      },
+      {
+        "table": "waitevent",
+        "key": "key",
+        "rows": 303,
+        "sha256": "a669101edf74dbac0bef0fe1601e5c5670eae7b60a54acee6216cf1520f13f04",
+        "pg20_sha256": "c6b43ddd8c5bbfc77fc38514ba26461158b26a854437f0e72029dac5b973699b"
+      },
+      {
+        "table": "waitevent_version",
+        "key": "major",
+        "rows": 18,
+        "sha256": "bcd43df9c501fc69b028128cbaf9695ecfb93785f5ce5abe0f3c0d1221f10259",
+        "pg20_sha256": "50d70818708e01a29552c900ded19f1d089561e69873360bdb9b19de26d8549e"
+      }
+    ]
+  },
+  "status": "local applied; production pending"
+}

@@ -43,7 +43,7 @@
         data-present="{{ row.present_tokens }}" data-text="{{ row.text }}">
       <th class="guc-row__name" scope="row"><a href="{{ row.url }}"><code class="guc-mono">{{ row.name }}</code></a></th>
       <td class="guc-row__type">{{ row.vartype_label }}</td>
-      <td class="guc-row__ctx"><span class="guc-ctx" title="{{ row.context_label }}：{{ row.context_note }}">{{ row.context_label }}</span></td>
+      <td class="guc-row__ctx"><span class="guc-ctx"{% if row.context_note %} title="{{ row.context_label }}：{{ row.context_note }}"{% endif %}>{{ row.context_label|default:"未记录" }}</span></td>
       <td class="guc-row__def">{% if row.boot_human %}<code class="guc-mono">{{ row.boot_human }}</code>{% else %}<span class="guc-none">—</span>{% endif %}</td>
       <td class="guc-row__line">
         <span class="wiki-strip" role="img" aria-label="版本变动：{{ row.first }} 起{% if row.removed %}，于 {{ row.removed_in }} 移除{% else %}，现存至 {{ row.last }}{% endif %}">{% for cell in row.strip %}<span class="wiki-cell wiki-cell--{{ cell.state }}" title="{{ cell.label }}"></span>{% endfor %}</span>

@@ -43,7 +43,7 @@ class CenterCatalogSyncTests(SimpleTestCase):
                                     last_version='19', present_in=['19'])
         rows = guc.facts_of(parameter, '19', {'human': '1'}, [version], None)
         facts = {r['label']: r['value'] for r in rows}
-        self.assertEqual(facts['文档版本'], '19 rc1')
+        self.assertEqual(facts['采样文档版本'], '19 rc1')
         self.assertEqual(facts['实测版本'], '19beta4')
 
     def test_historical_default_empty_state_names_the_selected_version(self):

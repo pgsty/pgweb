@@ -1,5 +1,7 @@
 # 版本比较的数据来源与校准
 
+2026-11-20：当前数据库为 358 份快照、16,895 条有效记录，PG19 已转正为 19.0。本文 2026-09-26 的来源清单与仓库快照保留为历史证据；**不能直接重导旧 `data/compare/releases.json.gz`**。后续增量须使用目标数据库自身的当前完整导出与固定正式源码，见 [19.0 发布记录](docs-publication-19.0-20261119.md)。
+
 `/docs/compare/` 的事实来源是 PostgreSQL 官方发布说明。中文正文取自 PGSQL.CC 的原生 `DocPage`，英文正文取自 PG.CENTER 独立 `center` 数据库中的英文手册；统一的条目身份、分类与提交关系取自固定版本的上游英文 SGML。
 
 数据库保存每份发行版的原始记录、独立语言正文与提交关系；同一修复在不同版本出现的记录全部保留，比较时再选择并合并。`data/compare/releases.json.gz` 是可审核的传输与导出格式，请求读取已启用的数据库数据集。表结构、幂等导入、版本记录和恢复流程见 [version-compare-storage.md](version-compare-storage.md)。

@@ -1,0 +1,1569 @@
+{
+  "date": "2026-11-20",
+  "site": "pgsql.cc",
+  "mode": "read-only audit; local display/code fixes only; not deployed",
+  "targets": {
+    "14": "14.25",
+    "15": "15.20",
+    "16": "16.16",
+    "17": "17.12",
+    "18": "18.7",
+    "19": "19.0"
+  },
+  "current_major": "19",
+  "database_equal": true,
+  "tables": {
+    "hook": {
+      "rows": 39,
+      "sha256": "acd73888485d9b59ad12f279c07dde84b144c498cae64849d1bf9c54479c49c6"
+    },
+    "relopt": {
+      "rows": 60,
+      "sha256": "c0d1dcbedfecee0d6ecf7a45553226b903a31b710221fcf3571b2979d20f2d8f"
+    },
+    "predefined_role": {
+      "rows": 16,
+      "sha256": "17b77c757f5896cb39d442fdda3ff97d43bb8530b3e7b88642ee5e5b20f611ba"
+    },
+    "oid_type": {
+      "rows": 18,
+      "sha256": "da0297bb106ec338dcd33e55da374fac49ec1c8277164077ff179f61499f6a2e"
+    },
+    "sqlstate_class": {
+      "rows": 44,
+      "sha256": "349c8e58a7a2741e75b3df545196d6bdf0ef57cc92e5de774d02c8c12ed22741"
+    },
+    "sqlstate_version": {
+      "rows": 17,
+      "sha256": "4962dc1ab5ba4997c31c24502bba668f19f7478d567369185891b92c2819597c"
+    },
+    "sqlstate": {
+      "rows": 265,
+      "sha256": "a2593798201d8125a4a6624492d4978c5f02037c8c3b1449dcd9239aaed26b93"
+    },
+    "catalog_version": {
+      "rows": 24,
+      "sha256": "44cf1270d82e2c45745bd48f75205a3ce126571e7aae48c975c5e3d3943ac7cc"
+    },
+    "catalog": {
+      "rows": 155,
+      "sha256": "b3610f3a1d83f61bc11c1e7ee02e6188b00a074e2a805f4c4afe8f6a1064ebc0"
+    },
+    "guc_version": {
+      "rows": 24,
+      "sha256": "fc66f1051f32b94d130ac76e91a2df5a87ef5f16767877aa5d6f4ddba4e807ff"
+    },
+    "guc": {
+      "rows": 492,
+      "sha256": "4dec438d44e7a7ee90d50a60d08c1ab2e0fc2eefdddf155b62fb67209fa5c9ff"
+    },
+    "waitevent_version": {
+      "rows": 18,
+      "sha256": "bdbc6688491ce0f5d87868e451de04a99955ef4818e56beacda777b392bdbfe0"
+    },
+    "waitevent": {
+      "rows": 303,
+      "sha256": "0613c50549f96181701de3230dd14c82c056c3d4ea35a54850a11fe2fae9615c"
+    },
+    "sqlcmd": {
+      "rows": 187,
+      "sha256": "8a1b8a0e44d39807f0b55906429e29fb62779f205a489b94bcff9c3e097b179b"
+    },
+    "func_version": {
+      "rows": 27,
+      "sha256": "4e893d937ec6f6194be6ee17d6082ebe29d3ec43c35f80a9e987c0d07f1b5a9e"
+    },
+    "func": {
+      "rows": 711,
+      "sha256": "769467143fea27942a1df8f1589e8f5b01503d227aa06813db3c52e3faacf978"
+    },
+    "lock_mode": {
+      "rows": 12,
+      "sha256": "5eba9742e01234d91a24208e4976a3ed74cf7949dbdc5e8562b54901e0358f08"
+    },
+    "data_type": {
+      "rows": 121,
+      "sha256": "13e41bc16934507ff4a4d0aa6d076de845a179b00c77108068f371794cb4b4a9"
+    },
+    "index_am": {
+      "rows": 6,
+      "sha256": "d944e56cb69cfd0247732fc018f0df715d31ed5c225d70df04c6f6e0235aa1c1"
+    },
+    "plan_node": {
+      "rows": 42,
+      "sha256": "acc442e357239584cc6a19a150daee37e1f2ae56cdcf7946c1e01011a3b07f6b"
+    },
+    "pg_operator_entry": {
+      "rows": 865,
+      "sha256": "c47fab28b8834ac047c21524ad555a39eda64e079c0317ea672a5e8762145411"
+    },
+    "operator_class": {
+      "rows": 344,
+      "sha256": "cee346b538d628877e7a4c7024906ea495a60b431923cf767533a310800c51ff"
+    },
+    "foreign_data_wrapper": {
+      "rows": 2,
+      "sha256": "4be5e93d42548d63c42111c251b54af6a929beadab39450e7364b07b9e673aa3"
+    },
+    "table_am": {
+      "rows": 1,
+      "sha256": "13a290b1e0e54d8e999189b331539f1a4ca9e16da833c1ece4ca4171e3ec7d8e"
+    },
+    "psql_command": {
+      "rows": 130,
+      "sha256": "e4c8300cf4286a228aa9ca80cff8ccd9ad68d0ffd2d521df3f98b4455a63f5c5"
+    },
+    "command_tool": {
+      "rows": 37,
+      "sha256": "e367ae72e60e6610fb568d0a9cca3084fb798216e64c7752a024e6ef1d6bcd11"
+    },
+    "connection_parameter": {
+      "rows": 55,
+      "sha256": "ecd760a2981dd671700d2a10f605b8ca215b7d13259ca178b3dc0039bb40b7db"
+    },
+    "statistics_metric": {
+      "rows": 620,
+      "sha256": "4a2f48ce1d9de042751cb7eb16b716bd739d99b0f1f297848ef77cfd4acd62cd"
+    },
+    "storage_structure": {
+      "rows": 35,
+      "sha256": "07bef9bfd58f87c81342bc8c5a78942e82560d9caa16740e3ceaa9716d3e6168"
+    },
+    "protocol_message": {
+      "rows": 73,
+      "sha256": "c120149d7157e1775e0d4a555e552311c2e628b091a2de75b6e2cba8a1b9aef2"
+    },
+    "procedural_language": {
+      "rows": 11,
+      "sha256": "7f3e445bae3b564f40c81330029fb8dfaa96a39a20debc3d5322d58960ccccc3"
+    },
+    "text_search_component": {
+      "rows": 70,
+      "sha256": "48c53506432561d8eea091c3e579f61172b07c0f19f3d6677388bce1bd05ce0b"
+    },
+    "authentication_method": {
+      "rows": 15,
+      "sha256": "ac5986bff7afbb5a519ab45abf4ba07ca7c8b9142864feff1a62696e936c4181"
+    },
+    "collation_encoding": {
+      "rows": 53,
+      "sha256": "7a7ce72df5ff413cce289da103211defdac8b481d786f1b06198953c0034b543"
+    },
+    "logical_decoding_plugin": {
+      "rows": 2,
+      "sha256": "056b560036d0414ad6dcdcef3aa64439a0ccc96a4779d704da0662fc7afe83e0"
+    }
+  },
+  "domains": {
+    "hook": {
+      "entities": 39,
+      "snapshots": {
+        "14": 28,
+        "15": 30,
+        "16": 31,
+        "17": 31,
+        "18": 34,
+        "19": 38
+      },
+      "source_releases": {
+        "14": {
+          "14": 28
+        },
+        "15": {
+          "15": 30
+        },
+        "16": {
+          "16": 31
+        },
+        "17": {
+          "17": 31
+        },
+        "18": {
+          "18": 34
+        },
+        "19": {
+          "19 Beta 4": 38
+        }
+      }
+    },
+    "relopts": {
+      "entities": 60,
+      "snapshots": {
+        "14": 51,
+        "15": 52,
+        "16": 52,
+        "17": 52,
+        "18": 56,
+        "19": 58
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 51
+        },
+        "15": {
+          "15.19": 52
+        },
+        "16": {
+          "16.15": 52
+        },
+        "17": {
+          "17.11": 52
+        },
+        "18": {
+          "18.6": 56
+        },
+        "19": {
+          "19 beta 4": 58
+        }
+      }
+    },
+    "role": {
+      "entities": 16,
+      "snapshots": {
+        "14": 11,
+        "15": 12,
+        "16": 14,
+        "17": 15,
+        "18": 16,
+        "19": 16
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 11
+        },
+        "15": {
+          "15.19": 12
+        },
+        "16": {
+          "16.15": 14
+        },
+        "17": {
+          "17.11": 15
+        },
+        "18": {
+          "18.6": 16
+        },
+        "19": {
+          "19beta4": 16
+        }
+      }
+    },
+    "oid": {
+      "entities": 18,
+      "snapshots": {
+        "14": 16,
+        "15": 16,
+        "16": 16,
+        "17": 16,
+        "18": 16,
+        "19": 18
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 16
+        },
+        "15": {
+          "15.19": 16
+        },
+        "16": {
+          "16.15": 16
+        },
+        "17": {
+          "17.11": 16
+        },
+        "18": {
+          "18.6": 16
+        },
+        "19": {
+          "19beta4": 18
+        }
+      }
+    },
+    "type": {
+      "entities": 121,
+      "snapshots": {
+        "14": 114,
+        "15": 114,
+        "16": 114,
+        "17": 114,
+        "18": 114,
+        "19": 116
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 114
+        },
+        "15": {
+          "15.19": 114
+        },
+        "16": {
+          "16.15": 114
+        },
+        "17": {
+          "17.11": 114
+        },
+        "18": {
+          "18.6": 114
+        },
+        "19": {
+          "19rc1": 116
+        }
+      }
+    },
+    "indexam": {
+      "entities": 6,
+      "snapshots": {
+        "14": 6,
+        "15": 6,
+        "16": 6,
+        "17": 6,
+        "18": 6,
+        "19": 6
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 6
+        },
+        "15": {
+          "15.19": 6
+        },
+        "16": {
+          "16.15": 6
+        },
+        "17": {
+          "17.11": 6
+        },
+        "18": {
+          "18.6": 6
+        },
+        "19": {
+          "19rc1": 6
+        }
+      }
+    },
+    "plan": {
+      "entities": 42,
+      "snapshots": {
+        "14": 42,
+        "15": 42,
+        "16": 42,
+        "17": 42,
+        "18": 42,
+        "19": 42
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 42
+        },
+        "15": {
+          "15.19": 42
+        },
+        "16": {
+          "16.15": 42
+        },
+        "17": {
+          "17.11": 42
+        },
+        "18": {
+          "18.6": 42
+        },
+        "19": {
+          "19rc1": 42
+        }
+      }
+    },
+    "operator": {
+      "entities": 865,
+      "snapshots": {
+        "14": 804,
+        "15": 799,
+        "16": 799,
+        "17": 799,
+        "18": 799,
+        "19": 805
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 804
+        },
+        "15": {
+          "15.19": 799
+        },
+        "16": {
+          "16.15": 799
+        },
+        "17": {
+          "17.11": 799
+        },
+        "18": {
+          "18.6": 799
+        },
+        "19": {
+          "19rc1": 805
+        }
+      }
+    },
+    "opclass": {
+      "entities": 344,
+      "snapshots": {
+        "14": 323,
+        "15": 323,
+        "16": 323,
+        "17": 323,
+        "18": 323,
+        "19": 327
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 323
+        },
+        "15": {
+          "15.19": 323
+        },
+        "16": {
+          "16.15": 323
+        },
+        "17": {
+          "17.11": 323
+        },
+        "18": {
+          "18.6": 323
+        },
+        "19": {
+          "19rc1": 327
+        }
+      }
+    },
+    "fdw": {
+      "entities": 2,
+      "snapshots": {
+        "14": 2,
+        "15": 2,
+        "16": 2,
+        "17": 2,
+        "18": 2,
+        "19": 2
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 2
+        },
+        "15": {
+          "15.19": 2
+        },
+        "16": {
+          "16.15": 2
+        },
+        "17": {
+          "17.11": 2
+        },
+        "18": {
+          "18.6": 2
+        },
+        "19": {
+          "19rc1": 2
+        }
+      }
+    },
+    "tableam": {
+      "entities": 1,
+      "snapshots": {
+        "14": 1,
+        "15": 1,
+        "16": 1,
+        "17": 1,
+        "18": 1,
+        "19": 1
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 1
+        },
+        "15": {
+          "15.19": 1
+        },
+        "16": {
+          "16.15": 1
+        },
+        "17": {
+          "17.11": 1
+        },
+        "18": {
+          "18.6": 1
+        },
+        "19": {
+          "19rc1": 1
+        }
+      }
+    },
+    "psql": {
+      "entities": 130,
+      "snapshots": {
+        "14": 116,
+        "15": 118,
+        "16": 120,
+        "17": 120,
+        "18": 130,
+        "19": 130
+      },
+      "source_releases": {
+        "14": {
+          "14.25": 116
+        },
+        "15": {
+          "15.20": 118
+        },
+        "16": {
+          "16.16": 120
+        },
+        "17": {
+          "17.12": 120
+        },
+        "18": {
+          "18.7": 130
+        },
+        "19": {
+          "19rc2": 130
+        }
+      }
+    },
+    "tool": {
+      "entities": 37,
+      "snapshots": {
+        "14": 33,
+        "15": 33,
+        "16": 32,
+        "17": 35,
+        "18": 35,
+        "19": 35
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 31,
+          "14.25": 2
+        },
+        "15": {
+          "15.19": 30,
+          "15.20": 3
+        },
+        "16": {
+          "16.15": 29,
+          "16.16": 3
+        },
+        "17": {
+          "17.11": 31,
+          "17.12": 4
+        },
+        "18": {
+          "18.6": 31,
+          "18.7": 4
+        },
+        "19": {
+          "19rc1": 31,
+          "19rc2": 4
+        }
+      }
+    },
+    "conn": {
+      "entities": 55,
+      "snapshots": {
+        "14": 37,
+        "15": 37,
+        "16": 41,
+        "17": 42,
+        "18": 51,
+        "19": 52
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 37
+        },
+        "15": {
+          "15.19": 37
+        },
+        "16": {
+          "16.15": 41
+        },
+        "17": {
+          "17.11": 42
+        },
+        "18": {
+          "18.6": 51
+        },
+        "19": {
+          "19rc2": 52
+        }
+      }
+    },
+    "metric": {
+      "entities": 620,
+      "snapshots": {
+        "14": 433,
+        "15": 448,
+        "16": 484,
+        "17": 491,
+        "18": 514,
+        "19": 581
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 433
+        },
+        "15": {
+          "15.19": 448
+        },
+        "16": {
+          "16.15": 484
+        },
+        "17": {
+          "17.11": 491
+        },
+        "18": {
+          "18.6": 514
+        },
+        "19": {
+          "19rc1": 581
+        }
+      }
+    },
+    "storage": {
+      "entities": 35,
+      "snapshots": {
+        "14": 35,
+        "15": 35,
+        "16": 35,
+        "17": 35,
+        "18": 35,
+        "19": 35
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 35
+        },
+        "15": {
+          "15.19": 35
+        },
+        "16": {
+          "16.15": 35
+        },
+        "17": {
+          "17.11": 35
+        },
+        "18": {
+          "18.6": 35
+        },
+        "19": {
+          "19rc1": 35
+        }
+      }
+    },
+    "protocol": {
+      "entities": 73,
+      "snapshots": {
+        "14": 68,
+        "15": 73,
+        "16": 72,
+        "17": 72,
+        "18": 72,
+        "19": 72
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 68
+        },
+        "15": {
+          "15.19": 73
+        },
+        "16": {
+          "16.15": 72
+        },
+        "17": {
+          "17.11": 72
+        },
+        "18": {
+          "18.6": 72
+        },
+        "19": {
+          "19rc1": 72
+        }
+      }
+    },
+    "language": {
+      "entities": 11,
+      "snapshots": {
+        "14": 11,
+        "15": 9,
+        "16": 9,
+        "17": 9,
+        "18": 9,
+        "19": 9
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 11
+        },
+        "15": {
+          "15.19": 9
+        },
+        "16": {
+          "16.15": 9
+        },
+        "17": {
+          "17.11": 9
+        },
+        "18": {
+          "18.6": 9
+        },
+        "19": {
+          "19rc1": 9
+        }
+      }
+    },
+    "fts": {
+      "entities": 70,
+      "snapshots": {
+        "14": 64,
+        "15": 64,
+        "16": 64,
+        "17": 64,
+        "18": 66,
+        "19": 70
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 64
+        },
+        "15": {
+          "15.19": 64
+        },
+        "16": {
+          "16.15": 64
+        },
+        "17": {
+          "17.11": 64
+        },
+        "18": {
+          "18.6": 66
+        },
+        "19": {
+          "19rc1": 70
+        }
+      }
+    },
+    "auth": {
+      "entities": 15,
+      "snapshots": {
+        "14": 14,
+        "15": 14,
+        "16": 14,
+        "17": 14,
+        "18": 15,
+        "19": 14
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 14
+        },
+        "15": {
+          "15.19": 14
+        },
+        "16": {
+          "16.15": 14
+        },
+        "17": {
+          "17.11": 14
+        },
+        "18": {
+          "18.6": 15
+        },
+        "19": {
+          "19rc1": 14
+        }
+      }
+    },
+    "locale": {
+      "entities": 53,
+      "snapshots": {
+        "14": 48,
+        "15": 48,
+        "16": 50,
+        "17": 52,
+        "18": 53,
+        "19": 52
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 48
+        },
+        "15": {
+          "15.19": 48
+        },
+        "16": {
+          "16.15": 50
+        },
+        "17": {
+          "17.11": 52
+        },
+        "18": {
+          "18.6": 53
+        },
+        "19": {
+          "19rc1": 52
+        }
+      }
+    },
+    "decode": {
+      "entities": 2,
+      "snapshots": {
+        "14": 2,
+        "15": 2,
+        "16": 2,
+        "17": 2,
+        "18": 2,
+        "19": 2
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 2
+        },
+        "15": {
+          "15.19": 2
+        },
+        "16": {
+          "16.15": 2
+        },
+        "17": {
+          "17.11": 2
+        },
+        "18": {
+          "18.6": 2
+        },
+        "19": {
+          "19rc1": 2
+        }
+      }
+    },
+    "catalog": {
+      "entities": 155,
+      "snapshots": {
+        "14": 134,
+        "15": 139,
+        "16": 140,
+        "17": 142,
+        "18": 144,
+        "19": 150
+      },
+      "source_releases": {
+        "14": {
+          "14.24": 134
+        },
+        "15": {
+          "15.19": 139
+        },
+        "16": {
+          "16.15": 140
+        },
+        "17": {
+          "17.11": 142
+        },
+        "18": {
+          "18.6": 144
+        },
+        "19": {
+          "19beta4": 150
+        }
+      }
+    },
+    "guc": {
+      "entities": 492,
+      "snapshots": {
+        "14": 357,
+        "15": 364,
+        "16": 373,
+        "17": 389,
+        "18": 411,
+        "19": 431
+      },
+      "source_releases": {
+        "14": {
+          "(see version table / provenance)": 357
+        },
+        "15": {
+          "(see version table / provenance)": 364
+        },
+        "16": {
+          "(see version table / provenance)": 373
+        },
+        "17": {
+          "(see version table / provenance)": 389
+        },
+        "18": {
+          "(see version table / provenance)": 411
+        },
+        "19": {
+          "(see version table / provenance)": 431
+        }
+      }
+    },
+    "waitevent": {
+      "entities": 303,
+      "snapshots": {
+        "14": 231,
+        "15": 238,
+        "16": 246,
+        "17": 265,
+        "18": 274,
+        "19": 287
+      },
+      "source_releases": {
+        "14": {
+          "(see version table / provenance)": 231
+        },
+        "15": {
+          "(see version table / provenance)": 238
+        },
+        "16": {
+          "(see version table / provenance)": 246
+        },
+        "17": {
+          "(see version table / provenance)": 265
+        },
+        "18": {
+          "(see version table / provenance)": 274
+        },
+        "19": {
+          "(see version table / provenance)": 287
+        }
+      }
+    },
+    "func": {
+      "entities": 711,
+      "snapshots": {
+        "14": 597,
+        "15": 608,
+        "16": 633,
+        "17": 657,
+        "18": 675,
+        "19": 685
+      },
+      "source_releases": {
+        "14": {
+          "(see version table / provenance)": 597
+        },
+        "15": {
+          "(see version table / provenance)": 608
+        },
+        "16": {
+          "(see version table / provenance)": 633
+        },
+        "17": {
+          "(see version table / provenance)": 657
+        },
+        "18": {
+          "(see version table / provenance)": 675
+        },
+        "19": {
+          "(see version table / provenance)": 685
+        }
+      }
+    },
+    "sql": {
+      "entities": 187,
+      "snapshots": {
+        "14": 182,
+        "15": 183,
+        "16": 183,
+        "17": 183,
+        "18": 183,
+        "19": 185
+      },
+      "source_releases": {
+        "14": {
+          "(see version table / provenance)": 182
+        },
+        "15": {
+          "(see version table / provenance)": 183
+        },
+        "16": {
+          "(see version table / provenance)": 183
+        },
+        "17": {
+          "(see version table / provenance)": 183
+        },
+        "18": {
+          "(see version table / provenance)": 183
+        },
+        "19": {
+          "(see version table / provenance)": 185
+        }
+      }
+    },
+    "sqlstate": {
+      "entities": 265,
+      "snapshots": {
+        "14": 260,
+        "15": 261,
+        "16": 261,
+        "17": 261,
+        "18": 263,
+        "19": 263
+      },
+      "source_releases": {
+        "14": {
+          "(see version table / provenance)": 260
+        },
+        "15": {
+          "(see version table / provenance)": 261
+        },
+        "16": {
+          "(see version table / provenance)": 261
+        },
+        "17": {
+          "(see version table / provenance)": 261
+        },
+        "18": {
+          "(see version table / provenance)": 263
+        },
+        "19": {
+          "(see version table / provenance)": 263
+        }
+      }
+    },
+    "lock": {
+      "entities": 12,
+      "snapshots": {
+        "14": 12,
+        "15": 12,
+        "16": 12,
+        "17": 12,
+        "18": 12,
+        "19": 12
+      },
+      "source_releases": {
+        "14": {
+          "14": 12
+        },
+        "15": {
+          "15": 12
+        },
+        "16": {
+          "16": 12
+        },
+        "17": {
+          "17": 12
+        },
+        "18": {
+          "18": 12
+        },
+        "19": {
+          "19 beta4": 12
+        }
+      }
+    },
+    "versions": {
+      "entities": 31,
+      "snapshots": {
+        "14": null,
+        "15": null,
+        "16": null,
+        "17": null,
+        "18": null,
+        "19": null
+      },
+      "source_releases": {}
+    }
+  },
+  "verified_archives": {
+    "14": {
+      "release": "14.25",
+      "sha256": "09af980eb3a5d0a8ad7a34b95031b1988bbcd430c87700a62d6234c0ed97ae4c",
+      "upstream_checksum_verified": true
+    },
+    "15": {
+      "release": "15.20",
+      "sha256": "30e65cbbb771a39b553ed2df7e65622e65647aed55dbc19bd0fe853ff0a08442",
+      "upstream_checksum_verified": true
+    },
+    "16": {
+      "release": "16.16",
+      "sha256": "9d5cd8633043b75740d5d59749c6b7365e6aeb53c47098b1a5e80bb18f87881a",
+      "upstream_checksum_verified": true
+    },
+    "17": {
+      "release": "17.12",
+      "sha256": "9cf136a703d8ee2f83465c43be4e9e8e7930c82b0bfba13be7e2537be769ac55",
+      "upstream_checksum_verified": true
+    },
+    "18": {
+      "release": "18.7",
+      "sha256": "441dfae4280cae3e0425e5f876f80559fb0731c140f1aae22b3e5a54d0411bfd",
+      "upstream_checksum_verified": true
+    },
+    "19": {
+      "release": "19.0",
+      "sha256": "a89fd70efbad6a08c7dbed8d4872e3af30170d9e5ca9dc7906523be95b4e692d",
+      "upstream_checksum_verified": true
+    }
+  },
+  "semantic_checks": {
+    "14": {
+      "sqlstate": {
+        "source": 260,
+        "stored": 260,
+        "missing": [],
+        "extra": [],
+        "condition_mismatches": []
+      },
+      "hooks": {
+        "headers": 740,
+        "source": 28,
+        "stored": 28,
+        "missing": [],
+        "extra": [],
+        "signature_mismatches": []
+      },
+      "wait": {
+        "manual": 231,
+        "stored": 231,
+        "missing": [],
+        "extra": []
+      },
+      "catalog": {
+        "documented_relations_compared": 120,
+        "notation_only": [
+          "pg_statistic: stakindN etc. expand to numbered fields"
+        ]
+      },
+      "func": {
+        "manual": 597,
+        "stored": 597,
+        "missing": [],
+        "extra": [],
+        "signatures": []
+      },
+      "sql": {
+        "manual": 182,
+        "stored": 182,
+        "missing": [],
+        "extra": [],
+        "synopsis": [],
+        "syntax_prose_markup_differences": 45
+      },
+      "guc": {
+        "documented": 356,
+        "stored": 357,
+        "missing": [],
+        "type_differences": [],
+        "type_not_stated_in_manual": [
+          {
+            "name": "recovery_target",
+            "manual": "",
+            "stored": "string"
+          }
+        ]
+      }
+    },
+    "15": {
+      "sqlstate": {
+        "source": 261,
+        "stored": 261,
+        "missing": [],
+        "extra": [],
+        "condition_mismatches": []
+      },
+      "hooks": {
+        "headers": 754,
+        "source": 30,
+        "stored": 30,
+        "missing": [],
+        "extra": [],
+        "signature_mismatches": []
+      },
+      "wait": {
+        "manual": 238,
+        "stored": 238,
+        "missing": [],
+        "extra": []
+      },
+      "catalog": {
+        "documented_relations_compared": 125,
+        "notation_only": [
+          "pg_statistic: stakindN etc. expand to numbered fields"
+        ]
+      },
+      "func": {
+        "manual": 608,
+        "stored": 608,
+        "missing": [],
+        "extra": [],
+        "signatures": []
+      },
+      "sql": {
+        "manual": 183,
+        "stored": 183,
+        "missing": [],
+        "extra": [],
+        "synopsis": [],
+        "syntax_prose_markup_differences": 48
+      },
+      "guc": {
+        "documented": 363,
+        "stored": 364,
+        "missing": [],
+        "type_differences": [],
+        "type_not_stated_in_manual": [
+          {
+            "name": "recovery_target",
+            "manual": "",
+            "stored": "string"
+          }
+        ]
+      }
+    },
+    "16": {
+      "sqlstate": {
+        "source": 261,
+        "stored": 261,
+        "missing": [],
+        "extra": [],
+        "condition_mismatches": []
+      },
+      "hooks": {
+        "headers": 769,
+        "source": 31,
+        "stored": 31,
+        "missing": [],
+        "extra": [],
+        "signature_mismatches": []
+      },
+      "wait": {
+        "manual": 246,
+        "stored": 246,
+        "missing": [],
+        "extra": []
+      },
+      "catalog": {
+        "documented_relations_compared": 126,
+        "notation_only": [
+          "pg_statistic: stakindN etc. expand to numbered fields"
+        ]
+      },
+      "func": {
+        "manual": 633,
+        "stored": 633,
+        "missing": [],
+        "extra": [],
+        "signatures": []
+      },
+      "sql": {
+        "manual": 183,
+        "stored": 183,
+        "missing": [],
+        "extra": [],
+        "synopsis": [],
+        "syntax_prose_markup_differences": 48
+      },
+      "guc": {
+        "documented": 372,
+        "stored": 373,
+        "missing": [],
+        "type_differences": [],
+        "type_not_stated_in_manual": [
+          {
+            "name": "recovery_target",
+            "manual": "",
+            "stored": "string"
+          }
+        ]
+      }
+    },
+    "17": {
+      "sqlstate": {
+        "source": 261,
+        "stored": 261,
+        "missing": [],
+        "extra": [],
+        "condition_mismatches": []
+      },
+      "hooks": {
+        "headers": 788,
+        "source": 31,
+        "stored": 31,
+        "missing": [],
+        "extra": [],
+        "signature_mismatches": []
+      },
+      "wait": {
+        "manual": 265,
+        "stored": 265,
+        "missing": [],
+        "extra": []
+      },
+      "catalog": {
+        "documented_relations_compared": 128,
+        "notation_only": [
+          "pg_statistic: stakindN etc. expand to numbered fields"
+        ]
+      },
+      "func": {
+        "manual": 657,
+        "stored": 657,
+        "missing": [],
+        "extra": [],
+        "signatures": []
+      },
+      "sql": {
+        "manual": 183,
+        "stored": 183,
+        "missing": [],
+        "extra": [],
+        "synopsis": [],
+        "syntax_prose_markup_differences": 48
+      },
+      "guc": {
+        "documented": 387,
+        "stored": 389,
+        "missing": [],
+        "type_differences": [],
+        "type_not_stated_in_manual": [
+          {
+            "name": "recovery_target",
+            "manual": "",
+            "stored": "string"
+          }
+        ]
+      }
+    },
+    "18": {
+      "sqlstate": {
+        "source": 263,
+        "stored": 263,
+        "missing": [],
+        "extra": [],
+        "condition_mismatches": []
+      },
+      "hooks": {
+        "headers": 812,
+        "source": 34,
+        "stored": 34,
+        "missing": [],
+        "extra": [],
+        "signature_mismatches": []
+      },
+      "wait": {
+        "manual": 274,
+        "stored": 274,
+        "missing": [],
+        "extra": []
+      },
+      "catalog": {
+        "documented_relations_compared": 130,
+        "notation_only": [
+          "pg_statistic: stakindN etc. expand to numbered fields"
+        ]
+      },
+      "func": {
+        "manual": 675,
+        "stored": 675,
+        "missing": [],
+        "extra": [],
+        "signatures": []
+      },
+      "sql": {
+        "manual": 183,
+        "stored": 183,
+        "missing": [],
+        "extra": [],
+        "synopsis": [],
+        "syntax_prose_markup_differences": 48
+      },
+      "guc": {
+        "documented": 410,
+        "stored": 411,
+        "missing": [],
+        "type_differences": [],
+        "type_not_stated_in_manual": [
+          {
+            "name": "recovery_target",
+            "manual": "",
+            "stored": "string"
+          }
+        ]
+      }
+    },
+    "19": {
+      "sqlstate": {
+        "source": 263,
+        "stored": 263,
+        "missing": [],
+        "extra": [],
+        "condition_mismatches": []
+      },
+      "hooks": {
+        "headers": 835,
+        "source": 38,
+        "stored": 38,
+        "missing": [],
+        "extra": [],
+        "signature_mismatches": []
+      },
+      "wait": {
+        "manual": 287,
+        "stored": 287,
+        "missing": [],
+        "extra": []
+      },
+      "catalog": {
+        "documented_relations_compared": 136,
+        "notation_only": [
+          "pg_statistic: stakindN etc. expand to numbered fields"
+        ]
+      },
+      "func": {
+        "manual": 685,
+        "stored": 685,
+        "missing": [],
+        "extra": [],
+        "signatures": []
+      },
+      "sql": {
+        "manual": 185,
+        "stored": 185,
+        "missing": [],
+        "extra": [],
+        "synopsis": [],
+        "syntax_prose_markup_differences": 50
+      },
+      "guc": {
+        "documented": 430,
+        "stored": 431,
+        "missing": [],
+        "type_differences": [],
+        "type_not_stated_in_manual": [
+          {
+            "name": "recovery_target",
+            "manual": "",
+            "stored": "string"
+          }
+        ]
+      }
+    }
+  },
+  "links": {
+    "raw_references": 120009,
+    "raw_failures": 601,
+    "raw_unique_targets": 150,
+    "rendered_pages_checked": 426,
+    "rendered_affected_pages": 402,
+    "visible_broken_targets": 130,
+    "visible_broken_link_instances": 629,
+    "missing_page_targets": 106,
+    "missing_pages": 26,
+    "missing_anchor_targets": 24,
+    "repair_candidates_verified": 130,
+    "affected_pages_by_domain": {
+      "auth": 28,
+      "conn": 74,
+      "guc": 10,
+      "indexam": 12,
+      "language": 14,
+      "plan": 84,
+      "protocol": 106,
+      "storage": 54,
+      "tableam": 2,
+      "type": 18
+    }
+  },
+  "public_http": {
+    "requests": 290,
+    "statuses": {
+      "200": 254,
+      "404": 36
+    }
+  },
+  "limits": [
+    "No fresh PostgreSQL runtime instances were sampled.",
+    "Snapshot links were scanned; relative URLs and external remote targets were not exhaustively crawled.",
+    "Source file hash changes identify review scope, not semantic errors.",
+    "PG20 remains pinned; source fact narratives were not relabelled as GA."
+  ],
+  "evidence_files": {
+    "local/inventory.json": "1083ee80fa65c794c2a475a0f46cfb04edc356831451b8e5bc0861c1bfdf950d",
+    "production/inventory.json": "a7700a18b8a8c338a8ca4b4ca5cee74794726a962d828a9008ce0956edb06744",
+    "manual-semantics.json": "513da2e6f394324c1bf2ae3337ae5d2e11c46c7b8d959474973941f787828785",
+    "source-semantic.json": "828a21cbfd01e3e2b26a9850a357f5099278be3d30f2736a8e5e76e04ef313d0",
+    "source-file-checks.json": "b61af99679829c57e2c25300b435b14ea170d74ad3bdbbcbee5248c181443727",
+    "http.json": "94230d2621a8e7e6f71afe19f406a001ce2ea9d7d9afeb87cd1c70627f9107df",
+    "rendered-link-failures.json": "db8d832a58ffd2a00bbc424fe06c6904924a592b09285dbd65731b85d167ad38",
+    "search-api.json": "1f39ed65440c568c888f09e42f925dec33482994a92857379ba6d013cbce7a12",
+    "guc-type-qualification.json": "5158f86f258f123766c119e87eac0ed4845fcfbb9ad7d10d23adafaac38afbb5",
+    "local-final-checks.json": "5386d52b2ad8e80baf7b613d99bc3840d0ebaf8d7a725a3e6e8d25daa71189c6",
+    "scope-audit.json": "3c013bd357976d1b22c9f6368577f9337bafc2ad5793d7bcad4e2770b4bb855f",
+    "tests.log": "75f3b121f7e27120d2b3fcf1fc2b3800f88fbeb5675e447080226ac6daf8ea5a",
+    "final-tests.log": "d9a51def47f815362d87c16f7b9ea74c2e97d476a5381a357dff3b98408c72a5",
+    "search-tests.log": "e1db03e625343bf4c810c7882ad34cc63b6044df13407e06a31de92ab7136b9e"
+  },
+  "search_scope": {
+    "status": "confirmed_unfixed",
+    "cause": "Version restrictions currently apply only to manual rows; no snapshot membership filter for Wiki rows.",
+    "unfiltered_candidates_without_snapshot": {
+      "14": 708,
+      "15": 657,
+      "16": 569,
+      "17": 494,
+      "18": 387,
+      "19": 246
+    },
+    "examples": [
+      {
+        "scope": "pg19",
+        "query": "abstime",
+        "source": "type",
+        "present_in": [
+          "10",
+          "11"
+        ],
+        "public_url": "/wiki/type/abstime/?v=19",
+        "local_url": "/wiki/type/abstime/?v=19",
+        "public_request": "https://pgsql.cc/search/api/?scope=pg19&q=abstime"
+      },
+      {
+        "scope": "pg14",
+        "query": "pg_stat_io",
+        "source": "catalog",
+        "present_in": [
+          "16",
+          "17",
+          "18",
+          "19",
+          "20"
+        ],
+        "public_url": "/wiki/catalog/pg_stat_io/",
+        "local_url": "/wiki/catalog/pg_stat_io/?v=14",
+        "public_request": "https://pgsql.cc/search/api/?scope=pg14&q=pg_stat_io"
+      },
+      {
+        "scope": "pg19",
+        "query": "servicefile",
+        "source": "conn",
+        "present_in": [
+          "20"
+        ],
+        "public_url": "/wiki/conn/servicefile/?v=19",
+        "local_url": "/wiki/conn/servicefile/?v=19",
+        "public_request": "https://pgsql.cc/search/api/?scope=pg19&q=servicefile"
+      }
+    ]
+  },
+  "validation": {
+    "wiki_regression_run": 284,
+    "import_routes_lifecycle_run": 77,
+    "search_regression_run": 53,
+    "runs_overlap": true,
+    "django_check": "passed",
+    "migration_check": "no changes",
+    "local_default_checks": "catalog/guc/waitevent/func default to 19",
+    "local_search_link_checks": 12,
+    "deployed": false
+  }
+}

@@ -236,10 +236,13 @@
   {% if doc_versions %}
   <p>本站手册收录 {{ name }} 的版本：{% for item in doc_versions %}<a class="guc-docver" href="{{ item.url }}">{{ item.label }}</a>{% endfor %}</p>
   {% endif %}
+  {% if snapshot.calibration %}<p>本版事实依据 PostgreSQL {{ snapshot.calibration.release }} 正式源码、同版手册及所列校准记录；中文沿用已审阅译文。最后同步 {{ parameter.imported_at|date:"Y-m-d" }}。</p>{% else %}
   <p>参数事实来自 {% if origin_url %}<a href="{{ origin_url }}" target="_blank" rel="noopener">guc.pg.center</a>{% else %}guc.pg.center{% endif %}（仓库 <a href="https://github.com/pgsty/guc.pg.center" target="_blank" rel="noopener">pgsty/guc.pg.center</a>），说明的中文取自本站手册译文，最后同步 {{ parameter.imported_at|date:"Y-m-d" }}。</p>
-  <p>参数事实或版本数据有误请提交到 <a href="https://github.com/pgsty/guc.pg.center/issues" target="_blank" rel="noopener">数据仓库</a>；本站渲染或译文的问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
+  {% endif %}
+  <p>参数事实或版本数据有误请提交到 <a href="https://github.com/pgsty/guc.pg.center/issues" target="_blank" rel="noopener">数据仓库</a>；译文问题提交到 <a href="https://github.com/pgsty/pgdoc/issues" target="_blank" rel="noopener">pgsty/pgdoc</a>；本站展示问题提交到 <a href="https://github.com/pgsty/pgweb/issues" target="_blank" rel="noopener">pgsty/pgweb</a>。</p>
 </footer>
 
+{% include "wiki/calibration.html" %}
 </article>
 {% endblock %}
 {% block extrascript %}<script src="/media/js/wiki.js?{{gitrev}}" defer></script>{% endblock %}

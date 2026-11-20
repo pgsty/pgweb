@@ -1,0 +1,10 @@
+<div class="docsearch-preview__body">
+  <p><strong>PostgreSQL {{ major }}</strong></p>
+  {% if missing %}<p>该版本的采样中没有此条目，请选择已收录的版本。</p>
+  {% else %}
+  {% if body %}{{ body|safe }}{% elif description %}<p>{{ description }}</p>{% endif %}
+  {% if facts %}<dl class="ds-ext-facts">{% for label,value in facts %}<div><dt>{{ label }}</dt><dd>{{ value }}</dd></div>{% endfor %}</dl>{% endif %}
+  {% for signature in signatures %}<pre><code>{{ signature }}</code></pre>{% endfor %}
+  {% if shared_evidence %}<p>定义按所选版本核对；详细案例保留各自记录的运行版本。</p>{% endif %}
+  {% endif %}
+</div>

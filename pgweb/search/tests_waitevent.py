@@ -77,7 +77,7 @@ class WaitEventSearchTests(TestCase):
             first = results[0]
             self.assertEqual(first['name'], 'BufferContent', query)
             self.assertEqual((first['source'], first['source_label']), ('wait', '本站词条'), query)
-            self.assertEqual(first['url'], '/wiki/waitevent/lwlock/BufferContent/', query)
+            self.assertEqual(first['url'], '/wiki/waitevent/lwlock/BufferContent/?v=18', query)
             self.assertEqual((first['kind'], first['group']), ('waitevent', 'waitevent'), query)
             self.assertEqual(first['kind_label'], '等待事件', query)
 
@@ -99,9 +99,8 @@ class WaitEventSearchTests(TestCase):
         entry = SearchEntry.objects.get(source='wait', name='BufferContent')
         detail = preview(entry)
         self.assertEqual(detail['source_label'], '本站词条')
-        self.assertEqual(detail['url'], '/wiki/waitevent/lwlock/BufferContent/')
-        # 词条自己没有版本，手册也没有逐事件的定义行。
-        self.assertEqual(detail['versions'], [])
+        self.assertEqual(detail['url'], '/wiki/waitevent/lwlock/BufferContent/?v=18')
+        self.assertEqual([item['version'] for item in detail['versions'] if item['current']], [18])
         self.assertIn('等待访问共享内存中的数据页。', detail['html'])
 
     def test_the_scope_includes_the_column(self):

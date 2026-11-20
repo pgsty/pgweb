@@ -1,5 +1,9 @@
 # 等待事件 `/wiki/waitevent/`
 
+> 2026-11-20：PG19.0 与 PG14–18 最新小版本的固定来源、校准差异和发布验收见 [百科校准记录](wiki-calibration-20261120.md)。旧快照不能覆盖已有 `calibration` 证明；后续更新须固定新来源并经字段守卫预演。
+
+2026-11-20：默认浏览版本随 `core.Version.current` 指向 PG19；旧 `REL_19_BETA4` 来源继续保留并提示待校准，不能通过改标签伪装成 GA 采样。六个目标版本的事件清单已与现行手册核对，17–19 另与正式源码清单核对；本地显示修正尚未部署。详见 [PG19 百科审计](wiki-release-audit-20261120.md)。
+
 百科第三个上线栏目：PostgreSQL 核心等待事件（`pg_stat_activity.wait_event_type` / `wait_event`）的跨大版本百科。
 权威源是 [wait.pg.center](https://wait.pg.center)（仓库 `pgsty/wait.pg.center`，本机 `~/pg.center/wait`），它覆盖 13 – 18 并带双语档案；
 本站在此之上补齐 **9.6 – 12、19 与 20** 的事件清单（来自本站手册译文与上游文档/源码），并把 9.0 – 9.5 如实标为"尚无等待事件机制"。

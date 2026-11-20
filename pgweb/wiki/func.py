@@ -16,16 +16,17 @@ from django.db.models import JSONField, Q
 from django.db.models.expressions import RawSQL
 
 from .ruler import mark_ticks
+from .lifecycle import release_versions
 from .manuals import manual_slug
 from .func_common import signature_key
 from .models import (FUNC_GROUP_EYEBROW, FUNC_GROUP_LABEL, FUNC_GROUP_ORDER,
                      FuncVersion, PgFunction)
 
 
-CACHE_KEY = 'pgweb:wiki:func-index:wiki'
-VERSION_CACHE_KEY = 'pgweb:wiki:func-versions:wiki'
+CACHE_KEY = 'pgweb:wiki:func-index:lifecycle-v1'
+VERSION_CACHE_KEY = 'pgweb:wiki:func-versions:lifecycle-v1'
 DOC_CACHE_KEY = 'pgweb:wiki:func-docpages:v2'
-CHANGES_CACHE_KEY = 'pgweb:wiki:func-changes:{}:wiki'
+CHANGES_CACHE_KEY = 'pgweb:wiki:func-changes:{}:lifecycle-v1'
 CACHE_SECONDS = 300
 
 ROOT = '/wiki/func/'
@@ -143,15 +144,15 @@ def versions():
     if rows is None:
         stored = list(FuncVersion.objects.all())
         default = stable_major(stored)
-        rows = mark_ticks([version_data(version, version.major == default) for version in stored])
+        rows = mark_ticks(release_versions([version_data(version, version.major == default) for version in stored]))
         cache.set(VERSION_CACHE_KEY, rows, CACHE_SECONDS)
     return rows
 
 
 def stable_major(stored):
-    """默认版本是 status='stable' 的那一版（当前 18），没有就取最后一个正式版。
+    """当前发行版不在采样中时的兜底：stable，其次最后一个正式版。
 
-    只有 `versions()` 建缓存时算一次，算完就记在版本条的 `is_default` 上。
+    `versions()` 建缓存时先给出候选，再由 release_versions 优先选择当前发行版。
     """
     for version in stored:
         if version.status == 'stable':
@@ -183,6 +184,8 @@ def pick_major(wanted, present, order=None):
 
 
 def notice_of(version):
+    if version and version.get('source_notice'):
+        return version['source_notice']
     if version and version['preview']:
         return PREVIEW_TEMPLATE.format(version['label'])
     if version and version['devel']:

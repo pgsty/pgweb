@@ -23,5 +23,6 @@
   {% endif %}
   {% if neighbours %}<section class="wiki-section"><h2>同类条目</h2><ul class="topic-neighbours">{% for row in neighbours %}<li><a href="{{ row.url }}"><code>{{ row.name }}</code></a><span>{{ row.name_zh }}</span></li>{% endfor %}</ul></section>{% endif %}
   <p class="topic-footnote"><a href="{{ root }}?v={{ major }}">返回{{ topic.name }}</a> · 此条目的收录范围为 PostgreSQL {{ first.major }} 至 {{ last.major }}；起点不一定是实际引入版本。</p>
+{% include "wiki/calibration.html" %}
 </article>
 {% endblock %}

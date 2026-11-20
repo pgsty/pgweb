@@ -27,6 +27,7 @@
   </ol>
   <p class="we-verbar__note">收录了 {{ versions|length }} 个大版本。点线框的 9.0 – 9.5 尚无等待事件机制，{{ earliest_major }} 起引入。其余颜色是版本的支持状态：<span class="wiki-tonekey is-eol">已停止维护</span><span class="wiki-tonekey is-live">仍在支持</span><span class="wiki-tonekey is-beta">测试版</span><span class="wiki-tonekey is-dev">开发版</span>；填实的是当前稳定版 {{ default_major }}。</p>
 </nav>
+{% for version in versions %}{% if version.is_default and version.source_notice %}<p class="wiki-note">{{ version.source_notice }}</p>{% endif %}{% endfor %}
 
 <form id="waitevent-search" class="we-search" action="/wiki/waitevent/" method="get" role="search">
   <label class="sr-only" for="waitevent-q">搜索等待事件</label>
@@ -61,7 +62,7 @@
 <p class="wiki-empty" id="waitevent-empty" hidden>没有匹配的等待事件。<a href="/wiki/waitevent/">清除筛选</a></p>
 
 <h2>说明</h2>
-<p>库里共 {{ stats.events }} 个等待事件、{{ stats.snapshots }} 份逐版本快照，相邻大版本之间记录到 {{ stats.changes }} 处变动（新增、移除、更名、类型变动与描述更新）；其中 {{ stats.dossiers }} 个事件有图谱档案，写明触发机制、诊断 SQL、处置步骤与源码证据。「引入」一栏写的是该事件在本数据集里最早出现的版本；标了「起点」的说明它在 {{ earliest_major }} 就已存在，那一版也正是等待事件机制本身的起点。图谱数据来自 <a href="https://wait.pg.center" target="_blank" rel="noopener">wait.pg.center</a>，中文说明采用同版本手册及审阅译文；诊断档案保留原记录版本。</p>
+<p>库里共 {{ stats.events }} 个等待事件、{{ stats.snapshots }} 份逐版本快照，相邻大版本之间记录到 {{ stats.changes }} 处变动（新增、移除、更名、类型变动与描述更新）；其中 {{ stats.dossiers }} 个事件有图谱档案，写明触发机制、诊断 SQL、处置步骤与源码证据。「引入」一栏写的是该事件在本数据集里最早出现的版本；标了「起点」的说明它在 {{ earliest_major }} 就已存在，那一版也正是等待事件机制本身的起点。图谱数据来自 <a href="https://wait.pg.center" target="_blank" rel="noopener">wait.pg.center</a>，PG14–19 的事件清单已按各版最新正式源码与手册核对。中文说明采用同版本手册及审阅译文；诊断档案保留原记录版本。</p>
 
 </div>
 {% endblock %}

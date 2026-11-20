@@ -183,6 +183,7 @@ def errcode_entry(code, text, card):
     body = '\n'.join(v for v in (summary, zh_name, text.get('description', '') if text else '', klass, code.severity_label) if v)
     return {
         'key': digest('errcode\0' + code.sqlstate), 'entity_key': 'error:' + name_key, 'kind': 'error',
+        'wiki_versions': list(code.present_in),
         'subtype': code.klass.code, 'name': code.sqlstate, 'name_key': name_key,
         'aliases': sorted(aliases), 'anchor': '', 'heading': 'Class ' + klass + ' · SQL 状态码',
         'signature': code.condition_name + ('（' + zh_name + '）' if zh_name else ''),
@@ -251,6 +252,7 @@ def catalog_entry(relation):
             '<code>' + escape(column) + '</code>' for column in columns) + '</p>')
     return {
         'key': digest('catalog\0' + name), 'entity_key': 'relation:' + name_key,
+        'wiki_versions': list(relation.present_in),
         'kind': 'relation', 'subtype': relation.kind, 'name': name, 'name_key': name_key,
         'aliases': sorted(aliases), 'anchor': '',
         'heading': relation.kind_label + ' · 系统目录',
@@ -330,6 +332,7 @@ def guc_entry(parameter):
             for item in track) + '</dl>')
     return {
         'key': digest('guc\0' + name), 'entity_key': 'guc:' + name_key, 'kind': 'guc',
+        'wiki_versions': list(parameter.present_in),
         'subtype': parameter.group_slug, 'name': name, 'name_key': name_key,
         'aliases': sorted(aliases), 'anchor': '',
         'heading': '配置参数' + (' · ' + parameter.category_zh if parameter.category_zh else ''),
@@ -408,6 +411,7 @@ def waitevent_entry(event):
         parts.append('<h3>诊断 SQL</h3><p class="ds-ext-desc">' + escape(sql[0]) + '</p>')
     return {
         'key': digest('waitevent\0' + event.key), 'entity_key': 'waitevent:' + event.key,
+        'wiki_versions': list(event.present_in),
         'kind': 'waitevent', 'subtype': event.type_slug, 'name': name, 'name_key': name_key,
         'aliases': sorted(aliases), 'anchor': '',
         'heading': event.type_label + ' · 等待事件',
@@ -475,6 +479,7 @@ def sqlcmd_entry(command):
             escape('\n'.join(command.synopsis.splitlines()[:12])))
     return {
         'key': digest('sqlcmd\0' + command.slug), 'entity_key': 'sql:' + name_key,
+        'wiki_versions': list(command.present_in),
         'kind': 'sql', 'subtype': command.group, 'name': name, 'name_key': name_key,
         'aliases': aliases, 'anchor': '', 'heading': 'SQL 命令 · ' + command.group_label,
         'signature': purpose,
@@ -552,6 +557,7 @@ def func_entry(function, texts=None):
         parts.append('<h3>签名（最新收录版本）</h3><pre>' + escape('\n'.join(texts[:8])) + '</pre>')
     return {
         'key': digest('func\0' + function.slug), 'entity_key': 'function:' + name_key,
+        'wiki_versions': list(function.present_in),
         'kind': 'function', 'subtype': function.group, 'name': name, 'name_key': name_key,
         'aliases': sorted(aliases), 'anchor': '',
         'heading': '函数' + (' · ' + group_label if group_label else ''),
@@ -609,7 +615,7 @@ def rebuild_locks(dry_run=False):
             escape(mode.summary), escape(scope), escape(mode.name_zh), escape(mode.url))
         vector = (SearchVector(Value(index_text(' '.join([mode.name, *aliases]))), config='simple', weight='A') +
                   SearchVector(Value(index_text(body)), config='simple', weight='B'))
-        objects.append(SearchEntry(source='lock', document=None, version=None,
+        objects.append(SearchEntry(source='lock', document=None, version=None, wiki_versions=list(mode.versions),
             key=digest('lock\0' + mode.slug), entity_key='lock:' + mode.slug, kind='lock',
             subtype=mode.scope, name=mode.name, name_key=name_key, aliases=aliases, anchor='',
             heading='锁模式 · ' + scope, signature=mode.name_zh, body=body, preview=preview,
@@ -661,7 +667,7 @@ def rebuild_topics(dry_run=False, kinds=None):
             url = topics.row_url(kind, row)
             preview = '<p>{}</p><p><a href="{}">查看逐版本说明与来源</a></p>'.format(
                 escape(row['summary']), escape(url))
-            objects.append(SearchEntry(source=kind, document=None, version=None,
+            objects.append(SearchEntry(source=kind, document=None, version=None, wiki_versions=list(row['versions']),
                                        key=digest(kind + '\0' + row['slug']), entity_key=topics.entity_key(kind, row),
                                        kind=spec['kind'], subtype='', name=row['name'], name_key=normalize_name(row['name']),
                                        aliases=aliases, anchor='', heading=spec['name'] + ' · ' + row['category'],

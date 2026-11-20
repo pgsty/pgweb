@@ -67,7 +67,7 @@ def manual_pages(major):
              [entry(['demo_level'], 'GUC-DEMO-LEVEL', 'enum', LEVEL_BODY)])]),
         'runtime-config-resource.html': page([
             ('RUNTIME-CONFIG-RESOURCE-MEMORY', '19.4.1. 内存',
-             [entry(['demo_size'], 'GUC-DEMO-SIZE', 'integer', SIZE_BODY)])]),
+             [entry(['demo_size'], 'GUC-DEMO-SIZE', 'int' if major == '10' else 'integer', SIZE_BODY)])]),
         'runtime-config-client.html': page([
             ('RUNTIME-CONFIG-CLIENT-OTHER', '19.11.4. 其他默认值',
              # 10 的手册 <dt> 没有 id：只能按参数名认。

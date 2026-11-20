@@ -32,6 +32,7 @@ class SearchEntry(models.Model):
     source = models.CharField(max_length=8, default='pg')
     document = models.ForeignKey(IndexedPage, related_name='entries', null=True, blank=True, on_delete=models.CASCADE)
     version = models.DecimalField(max_digits=3, decimal_places=1, null=True, blank=True)
+    wiki_versions = ArrayField(models.TextField(), default=list, blank=True)
     key = models.CharField(max_length=64)
     entity_key = models.TextField()
     kind = models.CharField(max_length=16)
@@ -60,6 +61,7 @@ class SearchEntry(models.Model):
             models.Index(fields=('version', 'kind', 'name_key'), name='docsearch_scope_kind'),
             models.Index(fields=('name_key',), name='docsearch_name_prefix', opclasses=('text_pattern_ops',)),
             GinIndex(fields=('aliases',), name='docsearch_aliases'),
+            GinIndex(fields=('wiki_versions',), name='docsearch_wiki_versions'),
             GinIndex(fields=('vector',), name='docsearch_vector'),
             GinIndex(fields=('name_key',), name='docsearch_spelling', opclasses=('gin_trgm_ops',)),
             models.Index(fields=('entity_key',), name='docsearch_entity'),

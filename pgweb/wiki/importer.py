@@ -671,6 +671,8 @@ def import_snapshot(snapshot, prune=False):
             report['unchanged'] += 1
             continue
         defaults = {field: item[field] for field in CODE_FIELDS}
+        from .snapshot import guard_calibration
+        guard_calibration(ErrorCode, item)
         defaults['klass_id'] = item['class_code']
         _, created = ErrorCode.objects.update_or_create(sqlstate=state, defaults=defaults)
         report['added' if created else 'updated'] += 1
