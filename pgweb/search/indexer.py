@@ -638,9 +638,10 @@ def rebuild_topics(dry_run=False, kinds=None):
     objects, report = [], {}
     for kind in kinds:
         spec = topics.TOPICS[kind]
-        rows = list(spec['model'].objects.all().values())
-        report[kind] = len(rows)
+        rows = spec['model'].objects.all().values().iterator(chunk_size=1)
+        report[kind] = 0
         for row in rows:
+            report[kind] += 1
             aliases = sorted({normalize_name(value) for value in
                               [row['name'], row['slug'], row['name_zh'], *row['aliases']] if value})
             texts = [row['summary'], row['name_zh'], row['category']]
