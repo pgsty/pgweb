@@ -36,15 +36,20 @@ def main():
                 raise ValueError('Requires PGSQL.CC pgweb database and role')
         for model in sorted(apps.get_app_config('wiki').get_models(), key=lambda m: m._meta.db_table):
             table, key = model._meta.db_table, model._meta.pk.attname
-            rows = list(model.objects.order_by(key).values())
-            raw = b''.join(encoded(row) + b'\n' for row in rows)
-            (args.output / (table + '.jsonl.gz')).write_bytes(gzip.compress(raw, mtime=0))
-            pinned = {str(row[key]): row['versions']['20'] for row in rows
-                      if isinstance(row.get('versions'), dict) and '20' in row['versions']}
-            if table.endswith('_version'):
-                pinned.update({str(row[key]): row for row in rows if row.get('major') == '20'})
-            manifest.append({'table': table, 'key': key, 'rows': len(rows),
-                             'sha256': hashlib.sha256(raw).hexdigest(),
+            digest, pinned, count = hashlib.sha256(), {}, 0
+            with (args.output / (table + '.jsonl.gz')).open('wb') as target:
+                with gzip.GzipFile(filename='', mode='wb', fileobj=target, mtime=0) as compressed:
+                    for row in model.objects.order_by(key).values().iterator(chunk_size=1):
+                        raw = encoded(row) + b'\n'
+                        compressed.write(raw)
+                        digest.update(raw)
+                        count += 1
+                        if isinstance(row.get('versions'), dict) and '20' in row['versions']:
+                            pinned[str(row[key])] = row['versions']['20']
+                        if table.endswith('_version') and row.get('major') == '20':
+                            pinned[str(row[key])] = row
+            manifest.append({'table': table, 'key': key, 'rows': count,
+                             'sha256': digest.hexdigest(),
                              'pg20_sha256': hashlib.sha256(encoded(pinned)).hexdigest()})
     (args.output / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
     print(json.dumps({'tables': len(manifest), 'rows': sum(r['rows'] for r in manifest)}))
