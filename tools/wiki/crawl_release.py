@@ -45,12 +45,16 @@ def main():
         assert 'text/html' in response.headers.get('content-type', ''), path
         return path, response.text, crawler.get_date(response.headers.get('last-modified'))
     with ThreadPoolExecutor(max_workers=3) as pool:
-        for count, (path, html, lastmod) in enumerate(pool.map(fetch, paths), 1):
-            crawler.page = crawler.parse_html(html)
-            crawler.save_page(path, lastmod, 0.8, False)
-            if count % 200 == 0:
-                conn.commit()
-                print('Indexed', count, 'of', len(paths), flush=True)
+        count = 0
+        # Bound pending HTML results; Executor.map otherwise queues the entire site.
+        for start in range(0, len(paths), 12):
+            for path, html, lastmod in pool.map(fetch, paths[start:start + 12]):
+                crawler.page = crawler.parse_html(html)
+                crawler.save_page(path, lastmod, 0.8, False)
+                count += 1
+                if count % 200 == 0:
+                    conn.commit()
+                    print('Indexed', count, 'of', len(paths), flush=True)
     conn.commit()
     with conn.cursor() as cursor:
         cursor.execute('SELECT count(*) FROM webpages WHERE site=1 AND suburl=ANY(%s)', [paths])
