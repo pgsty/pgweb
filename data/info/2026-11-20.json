@@ -1,0 +1,414 @@
+{
+  "date": "2026-11-20",
+  "origin": "PGSQL.CC 值班采集；截稿 2026-11-21 09:12:06 Asia/Shanghai；PostgreSQL.org、Planet、PGNexus #322–336、厂商原文及 HN 线索；扩展回看 2026-11-07 起",
+  "items": [
+    {
+      "tier": 1,
+      "title": "并发重建索引补上表达式回调期间的保护",
+      "summary": "PostgreSQL 已合入并发重建索引的完整性修复。第一阶段计算索引表达式和谓词时，会以表所有者身份调用函数；此前已处理的索引却已关闭，回调便可能删除这些索引，或再次重建新索引，随后触发断言或内部错误，甚至提交已删除索引的状态。补丁将相关关系保持打开，直到取得会话级锁，由现有检查阻止这类 DDL。提交注明回补至 PostgreSQL 15；这是已合入的修复，尚不能视为已发布小版本具备的行为。",
+      "url": "https://github.com/postgres/postgres/commit/d94964f14f39936d69c6b8d3fc5020f0fdae1617",
+      "author": "Michael Paquier",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "pg_rewind 修复回放完毕仍无法开放只读连接",
+      "summary": "完成 pg_rewind 后，备库即使回放了全部可用 WAL，也可能一直拒绝只读连接，直到源端产生更多日志。已合入的修复定位到最小恢复点：原实现读取 WAL 插入位置，在页面边界可能指向下一页头之后，备库没有新记录可供推进。补丁改用文件复制完成后的 WAL 刷盘位置，既覆盖复制数据所需日志，又避免等待尚不存在的记录。提交注明回补至 PostgreSQL 15，影响主备回切后的服务恢复，仍须等待包含补丁的版本。",
+      "url": "https://github.com/postgres/postgres/commit/4a26e36f87f6f30a93bfe1b95264b4b12d6b9ac3",
+      "author": "ChangAo Chen",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "高可用"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "Tiger Lake 正式提供 PostgreSQL 到湖仓的持续同步",
+      "summary": "Tiger Lake 正式提供湖仓同步，将 Tiger Cloud 的普通表和 TimescaleDB 超表持续写入 Apache Iceberg。初始快照后，通过逻辑复制同步增删改，并识别列存压缩产生的内部搬移，避免把维护操作当作业务变更。正式版扩展了 REST 目录支持，提供变更日志模式、复制监控和丢失复制槽后的缺口补齐。Snowflake 与 Databricks 需通过变更日志合并数据；新增列也有约束，接入前应核对目标端能力。",
+      "url": "https://www.tigerdata.com/blog/tiger-lake-ga",
+      "author": "Naveen Sukumar、Ramon Guiu、Vineeth Pothulapati",
+      "source": "Tiger Data",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "Iceberg",
+        "湖仓"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "归档型 PostgreSQL 副本的低负载也会拉高延迟",
+      "summary": "ClickHouse 工程师实测了通过 WAL 归档维持的 PostgreSQL 只读副本：低写入量凑不满日志段，更新可能等到归档超时才可见；负载过高又会让上传积压，延迟因此呈 U 形。测试围绕归档超时、重试间隔和 WAL-G 进程开销逐项调整，展示把延迟压至数秒的路径。同时，频繁切段会增加跨可用区传输、重复下载解压和副本 CPU 消耗。这些结论针对归档型副本，不能直接套到流式复制，也不能只看延迟而忽略带宽账单。",
+      "url": "https://clickhouse.com/blog/tuning-postgres-read-replicas",
+      "author": "Colton Shepard",
+      "source": "ClickHouse",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "WAL",
+        "性能"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Front 用统一 SQL 指标框架替换重复分析脚本",
+      "summary": "Front 披露了从 Elasticsearch 迁往 ClickHouse 的分析架构：旧系统要为每个指标的卡片、表格和时序图分别编写脚本，新框架把约 70 个指标定义为可组合部件，由查询生成器统一产生 SQL。迁移期间两套系统持续双写，逐项比较结果；可变会话数据通过版本折叠引擎处理删除与合并。厂商称，一个客户在相同 30 秒查询窗口内可查询的历史由 11 天扩大到约一个半月。案例重点是统一指标语义与校验流程，性能收益来自其特定负载。",
+      "url": "https://clickhouse.com/blog/front-elasticsearch-clickhouse",
+      "author": "ClickHouse",
+      "source": "ClickHouse",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分析",
+        "迁移",
+        "ClickHouse"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "nginx2root 暴露协议与代理路径的内存安全缺陷",
+      "summary": "Cloudflare 对 nginx2root 的五个内存破坏漏洞进行了代码分析，并复现其中四个。问题涉及 HTTP/2 流控、HTTP/2 与 HTTP/3 连接回收、DNS 解析及邮件代理，部分配置下可由未认证请求触发工作进程代码执行。修复已进入 nginx 1.30.7 和 1.31.9；升级后须替换运行中的二进制，仅重载配置不够。反向代理可隔离部分协议攻击，但 DNS 和邮件路径仍取决于实际配置，发行版用户也需核对软件包版本。",
+      "url": "https://blog.cloudflare.com/nginx2root/",
+      "author": "Daniele Molteni",
+      "source": "Cloudflare",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "nginx"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "递归查询的 SEARCH/CYCLE 补齐两类结果修复",
+      "summary": "已合入补丁修复辅助列顺序与 DISTINCT 交互导致的错值、错误计划或断言；两项提交均注明回补至 PostgreSQL 15。",
+      "url": "https://github.com/postgres/postgres/commit/d27418375d64663c920d81b0814d389a33d621db",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "正确性"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "pg_upgrade 修复 template0 的 ICU 规则丢失",
+      "summary": "升级时补复制 daticurules，并让查询与日志缓冲区适应较长规则；修复已合入，提交注明回补至 PostgreSQL 16。",
+      "url": "https://github.com/postgres/postgres/commit/32dd742b075e999fa358570bc13778b93f8025d4",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级",
+        "排序规则"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "开发版用索引加速订阅端批量删表",
+      "summary": "已合入的改动按关系 OID 查订阅映射；作者在十万条映射、删除一千张表的测试中测得十倍提速，删除整个订阅仍走堆扫描。",
+      "url": "https://github.com/postgres/postgres/commit/72146c7db15773ba0660c7c7e0284e3b1116ae2f",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "性能"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Aurora PostgreSQL 快速配置可原位迁入 VPC",
+      "summary": "现有集群保留数据和端点，切换会短暂断开连接；应用需具备 VPC 路径，并重新核对 DNS、证书与重连行为。",
+      "url": "https://aws.amazon.com/blogs/database/from-instant-aurora-postgresql-databases-to-production-ready-in-your-vpc/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库",
+        "网络"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "S3 通用桶读取请求基线提升至每秒 1.1 万次",
+      "summary": "AWS 将 GET/HEAD 请求能力从每秒 5,500 次翻倍，现有应用自动受益；分散到多个前缀仍有助于独立扩展吞吐。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-s3-increases-read-request-rate/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "对象存储",
+        "性能"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "Ruby 修复字符串与正则表达式的七个内存缺陷",
+      "summary": "3.3.14、3.4.13 和 4.0.10 修复大小写转换及正则路径漏洞，部分已有代码执行验证；已结束维护的 3.2 及更早版本不获修复。",
+      "url": "https://www.ruby-lang.org/en/news/2026/11/18/multiple-vulnerabilities-in-regexp-and-string/",
+      "author": "",
+      "source": "Ruby",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "Ruby"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "PHP 修复会话文件部分覆盖导致的对象注入",
+      "summary": "默认文件会话在写入中断后可能混合新旧内容；补丁先截断旧文件，阻止后续反序列化利用残留尾部，执行代码仍需满足应用条件。",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-fm2m-fjf5-v3cp",
+      "author": "",
+      "source": "PHP",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "PHP"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "ElastiCache 为自托管推理提供共享 KV 缓存",
+      "summary": "通过 LMCache 接入推理引擎，使用同可用区的 RDMA 与内存、NVMe 分层复用前缀；厂商称特定负载成本最多降低 40%。",
+      "url": "https://aws.amazon.com/blogs/database/announcing-distributed-kv-caching-for-self-hosted-llms-with-amazon-elasticache/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "推理",
+        "缓存"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "JSONPath 日期解析修复格式缓存串用模式",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/47ca0f45e6fed487d9c3b83db0e7c6a631c1cfb7",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "正确性"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "psql 修复提示符缺少闭合分隔符时的越界读取",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/e7e1835e6b026589c8d0650dda4cd1ec8e0e29ea",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "pg_receivewal 修复压缩收尾失败后的资源泄漏",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/0cb41ee8070fb0930d2ead13e19304d11d405636",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "MultiXact 补清已中止成员以避免更新断言失败",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/67c10344ddbd1073f1b7aafb09d1b196a48735a1",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "并发"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "MERGE 修复触发器可更新视图的可空标记",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/17550c8a71419c7020dad41502eebfecf89729bc",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "32 位构建修复大表可见性映射长度溢出",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/0bfb84006e3ef2f6826e91e374b5379cc4d4a481",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "存储"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "苏格兰聚会演示 Radar 的无代理诊断快照",
+      "summary": "",
+      "url": "https://vyruss.org/blog/postgres-scot-nov-2026-call-for-presentations-for-dec.html",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "诊断",
+        "社区"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Aurora DSQL 允许跨洲部署强一致多地域集群",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aurora-dsql-intercontinental-multi-region-clusters/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "分布式"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "RDS Oracle 可先升级同地域副本再切换主库",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/rds-oracle-replica-first-patching/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "升级"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "RDS Db2 新增表与用户等对象级审计策略",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-rds-db2-supports-object-level-audit-policies/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "审计"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "AWS Backup 为 DynamoDB 增加小时级增量备份",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-backup-incremental-backups-dynamodb/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "备份"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch EKS 插件可在采集端过滤遥测",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cloudwatch-eks-otel-addon-filtering/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 26
+    }
+  ]
+}
