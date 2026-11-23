@@ -1,0 +1,423 @@
+{
+  "date": "2026-11-21",
+  "origin": "PGSQL.CC 主动采编；PostgreSQL 官方提交与 Planet；PGNexus #323–336；项目原文、厂商 RSS 与 HN 线索；截稿 2026-11-22 07:26:28 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "MergeAppend 异步子计划正式合入开发分支",
+      "summary": "PostgreSQL 开发分支已合入 MergeAppend 异步执行支持，此前方案讨论进入实现阶段。合并多个有序远程结果时，执行器会先同时发出可异步子计划的首轮请求，再收集结果建立归并堆，以减少逐个等待远端首行的开销。适用子计划主要是 postgres_fdw 的有序扫描，插入 Sort 节点的路径不能使用。输出仍保持排序；稳定执行阶段最多只有一个待完成请求。新增开关默认开启，这次提交不代表功能已随 PostgreSQL 19 发布。",
+      "url": "https://github.com/postgres/postgres/commit/11591f273e6a26fb55728b410538fa2627b19b28",
+      "author": "Alexander Pyhalov、Etsuro Fujita",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "查询执行",
+        "FDW"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "哈希索引修复撕裂页面阻断恢复的问题",
+      "summary": "PostgreSQL 已合入哈希索引恢复修复，处理完整页面镜像尚未重放时提前读取损坏桶页的问题。删除、移动与压缩相关日志的重放原本会读取主桶页以取得清理锁，但该记录本身并不修改桶页，也未携带它的完整镜像。如果磁盘页撕裂而修复镜像位于后面的 WAL，崩溃恢复或从基础备份启动的备库就可能报无效页面。新代码在热备查询尚不能运行时跳过这次读取与加锁，待达到一致状态再执行。提交注明回补至 PostgreSQL 15。",
+      "url": "https://github.com/postgres/postgres/commit/8becd1123c98cd9338678c6c2d4ae6b4d56a6fb9",
+      "author": "Greg Burd、Vignesh C",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "恢复",
+        "索引"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "备库提升期间的进程崩溃不再被误判为启动成功",
+      "summary": "PostgreSQL 修复了备库完成提升时与后端崩溃交错发生的竞态。主进程发现崩溃并通知启动进程退出后，后者可能已经走到正常退出末尾，仍返回成功状态；旧逻辑因此清除故障标志，未重置共享内存或执行崩溃恢复就继续运行，关闭自动重启时也可能没有停机。已合入的补丁保留启动进程曾被要求终止的状态，即使退出码为零，也继续按崩溃路径完成重启或停机。该问题影响受支持分支，提交注明回补至 PostgreSQL 15。",
+      "url": "https://github.com/postgres/postgres/commit/83cefb7b738c32a66a91537aa502d99891a63b11",
+      "author": "Ayush Tiwari",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "高可用",
+        "内核",
+        "恢复"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "规划器修复并行路径被提前释放导致的崩溃",
+      "summary": "PostgreSQL 规划器已合入一项对象生命周期修复。规划过程中，某个关系生成的路径可能被另一个关系复用，而两种路径筛选函数采用的比较规则并不完全相同：Gather 路径被接受时，其引用的并行子路径仍可能被另一轮筛选淘汰并释放，留下悬空指针，最终触发崩溃或异常规划失败。补丁检查路径原属的关系，不再释放由其他关系拥有的被拒路径，避免破坏仍在使用的引用。提交注明回补至 PostgreSQL 15；触发条件与代价比较的边界情况有关。",
+      "url": "https://github.com/postgres/postgres/commit/9b5d4e3331753b3399e84965093109cac8f364bf",
+      "author": "Jeevan Chalke",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "规划器",
+        "并行查询"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "MERGE 修复并发更新后返回过期源数据",
+      "summary": "PostgreSQL 已修复 MERGE 的并发返回值错误。目标行起初与来源匹配，等待另一事务更新后却不再满足连接条件时，语句可能转入 NOT MATCHED BY SOURCE 分支；旧实现的 RETURNING 仍使用原先非空的来源值，而该分支的源字段应全部为空。补丁在分支切换时构造全空来源元组，再计算返回表达式，避免返回过期匹配结果。修复针对执行期并发重检查，区别于此前视图可空标记问题，提交注明回补至 PostgreSQL 17。",
+      "url": "https://github.com/postgres/postgres/commit/b291954ea5a4855ded56c334859d7de9fea372eb",
+      "author": "Tender Wang、Dean Rasheed",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "并发",
+        "正确性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "DuckDB 2.0.1 收紧凭据范围并修复数据丢失",
+      "summary": "DuckDB 2.0.1 发布，修复凭据作用域按前缀匹配导致凭据发往错误主机或存储桶的问题，现在要求完整名称匹配，显式端口也必须写入范围。版本同时规避部分 Linux 内核延迟释放内存后静默清零的问题，并修复读取旧数据库文件时遗漏含空值行等缺陷。升级还需检查写入语义：UPDATE FROM 与 MERGE 恢复为每次匹配都更新目标行，重复匹配可能产生不确定的最终值与重复返回行，应用应确保来源唯一或更新值一致。",
+      "url": "https://duckdb.org/2026/11/20/announcing-duckdb-201",
+      "author": "DuckDB 团队",
+      "source": "DuckDB",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全",
+        "发布",
+        "数据完整性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "libpq 与备份客户端拒绝畸形服务端结果",
+      "summary": "两项已合入修复补齐列数检查，避免连接属性探测、基础备份和时间线历史响应中的缺失字段触发空指针崩溃。",
+      "url": "https://github.com/postgres/postgres/commit/892cfb4cbfe0e37cc492f0e750e80cfa6394d26d",
+      "author": "s1ko、Chao Li",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "客户端",
+        "备份"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "增量排序修复动态 LIMIT 改变时的内存错误",
+      "summary": "重扫描从无界排序变为有界排序时重新选择内存上下文，避免在不支持单独释放元组的上下文里执行释放操作。",
+      "url": "https://github.com/postgres/postgres/commit/65507f0daa8fa08a2319b37ec1b65d3f044d3b8f",
+      "author": "David Rowley",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "排序"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "JIT 修复多列哈希碰撞导致的性能退化",
+      "summary": "合并哈希前先截断为 32 位，消除负值符号扩展造成的碰撞，修复已合入并注明回补至 PostgreSQL 18。",
+      "url": "https://github.com/postgres/postgres/commit/9107a0feafb6b1782f096c3231a79087a6a4bfac",
+      "author": "David Rowley",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JIT",
+        "性能"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "MERGE 跨分区更新修复触发器过渡表",
+      "summary": "移动行的旧值与新值归入 UPDATE 过渡表，并从 INSERT、DELETE 过渡表排除，保持与普通更新一致。",
+      "url": "https://github.com/postgres/postgres/commit/1e676702cac06e3d51942cc69efc282663515fba",
+      "author": "Tender Wang",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "触发器",
+        "分区"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "时间线历史文件写入失败将终止 WAL 流接收",
+      "summary": "pg_basebackup 与 pg_receivewal 不再忽略写入失败，避免继续生成缺少恢复必需文件的备份或归档。",
+      "url": "https://github.com/postgres/postgres/commit/5dce44589444704a917b2d2f70c99d9ae357da73",
+      "author": "Chao Li",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "WAL"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "WAIT FOR LSN 修复页边界上的额外等待",
+      "summary": "目标位于 WAL 页头内或其末端时归一到页起点，避免已追平的备库仍等待后续无关日志；修复已合入并注明回补至 PostgreSQL 19。",
+      "url": "https://github.com/postgres/postgres/commit/24723e7cf397fc0f79b0b14412831db36882a29a",
+      "author": "Alexander Korotkov、Xuneng Zhou",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "复制",
+        "一致性"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "向量搜索要分别验证租户授权与过滤后召回",
+      "summary": "文章用 RLS 与检索实验区分越权防护和近似索引漏召回，并指出调用者可修改的会话参数不能单独充当可信租户身份。",
+      "url": "https://vibhorkumar.wordpress.com/2026/11/21/relevance-is-not-permission-filter-first-vector-search-in-postgresql/",
+      "author": "Vibhor Kumar",
+      "source": "Vibhor Kumar",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "向量检索",
+        "多租户",
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "MSK 支持原地迁移到 Express 节点",
+      "summary": "Kafka 3.9 KRaft 集群可保留端点与消费位点分批迁移，旧节点退出前允许验证和回退，迁移期间两类节点均计费。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-msk-standard-brokers-to-express-brokers-in-place-upgrade/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka",
+        "迁移"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "gopgext 用 TinyGo 实验原生 PostgreSQL 扩展",
+      "summary": "",
+      "url": "https://github.com/jespino/gopgext/blob/b6cf5e3a88a10ac9b5cf29aa5dc80ca58ce3db2f/README.md",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "Go"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "Straum 用逻辑复制持续维护外部聚合结果",
+      "summary": "",
+      "url": "https://github.com/janbjorge/straum/blob/05958715bb687e07d78f0a1030452d26a39d0601/README.md",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "聚合"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "RDS Oracle 主端点可随计划切换保持连接地址",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/rds-oracle-primary-endpoint-v2/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Oracle",
+        "高可用"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Neptune 无服务器新建实例改用 Graviton4",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-neptune-serverless-r8g-generally-available/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "图数据库"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Glue 数据质量规则可覆盖整个目录及后来新增的表",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/glue-catalog-data-quality-monitoring/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据质量",
+        "数据湖"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "DynamoDB 向量检索新增范围与复合条件过滤",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/dynamodb-vector-filters/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量检索"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 为私网端点提供原生健康检查",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/route-53-private-endpoint-health-checks/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DNS",
+        "高可用"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 新增可用区亲和路由与分级回退",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/route-53-affinity-routing/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DNS",
+        "网络"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch 将 PromQL 单次查询窗口扩大到 30 天",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cloudwatch-promql-query-30days/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "监控"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 预置模式可批量读取一万条 SQS FIFO 消息",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-lambda-10K-batch-size-SQSFIFO/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "消息队列"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "EventBridge 可验证 Webhook 并直接接入事件总线",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-eventbridge-webhook-events/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "事件驱动"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "S3 Vectors 每向量可过滤元数据增至 40 KB",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-s3-vectors-raises-filterable-metadata-40kb-per-vector/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "向量检索"
+      ],
+      "position": 26
+    }
+  ]
+}
