@@ -1,0 +1,418 @@
+{
+  "date": "2026-11-22",
+  "origin": "editor22; cutoff 2026-11-23T23:30:10Z; PostgreSQL/Planet; official engineering blogs and releases; chronicle 2026-11-09..22; active web research",
+  "items": [
+    {
+      "tier": 1,
+      "title": "页级追踪将 PostgreSQL 锁争用定位到可见性映射",
+      "summary": "在 512 个并发客户端的实验中，暂时取消提交持久化等待后，BufferContent 占活跃客户端采样的 93.92%。作者随后另用同步提交和正常高可用配置，通过 perf 捕获完整页标识，将争用定位到 stock 表的可见性映射页。一张映射页覆盖大量堆页，不同行更新也可能争用同一把锁。排查此类瓶颈需要追踪关系分叉与页号；增加磁盘 IOPS 或并发数未必有效，异步提交结果也不能当作同等可靠性的性能比较。",
+      "url": "https://dev.to/franckpachot/beyond-disk-and-wal-what-limits-postgresql-scaling-2ij0",
+      "author": "Franck Pachot",
+      "source": "DEV Community",
+      "source_date": "2026-11-17",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "可见性映射",
+        "并发"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "JSONB 查询可用表达式统计修正行数估计",
+      "summary": "JSONB 过滤条件缺乏统计时，规划器可能严重低估结果行数。Franck Pachot 用十万条文档复现了估计 1 行、实际返回 12518 行的偏差，导致连接反复扫描内表。为过滤路径及其类型建立表达式索引并执行 ANALYZE 后，估计恢复准确，计划改用哈希连接。复合索引仍只提供各表达式的单独统计；字段存在相关性时，可用扩展统计描述联合分布，即使不保留索引，也能改善估计，避免为了统计收益承担额外索引维护成本。",
+      "url": "https://dev.to/franckpachot/jsonb-performance-declare-access-patterns-to-postgresql-query-planner-2cip",
+      "author": "Franck Pachot",
+      "source": "DEV Community",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "JSONB",
+        "查询优化",
+        "统计信息"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_stash_advice 固定连接顺序仍需升级复核",
+      "summary": "维表中的数据倾斜可能让规划器选错连接顺序。Laurenz Albe 用 PostgreSQL 19 的订单案例演示，仅约束先查订单再连接商品，就把该实验的执行时间从约 405 毫秒降至 10 毫秒，同时保留扫描和连接算法的选择空间。随后可按查询标识保存建议，让应用无需修改 SQL。建议库会定期写入文件并在重启时恢复，但 pg_dump 与 pg_upgrade 都不会迁移这些内容；大版本升级需要重新评估计划，再显式转移仍有价值的建议。",
+      "url": "https://www.cybertec-postgresql.com/en/pg-stash-advice-for-plan-stability/",
+      "author": "Laurenz Albe",
+      "source": "CYBERTEC",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "查询优化",
+        "执行计划",
+        "升级"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "内存表访问方法补齐重启后的空表重建",
+      "summary": "Mats Kindahl 的表访问方法实验推进到重启处理：共享内存里的数据已经消失，系统目录却仍保存旧句柄，原实现甚至会在删除或清空表时触发 PANIC。新实现将这类内存表标为 UNLOGGED，拒绝改为持久表；失效句柄可以安全跳过，首次访问则在锁保护下创建新的空存储。这里的内存表在正常或异常重启后都会丢失数据，与普通非日志堆表的正常停机行为不同。文章把存储生命周期、目录元数据与并发初始化连起来，为自定义表访问方法补齐边界。",
+      "url": "https://dbmsdrops.kindahl.net/2026/11/22/building-a-table-access-method-part-9/",
+      "author": "Mats Kindahl",
+      "source": "Database Drops",
+      "source_date": "2026-11-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "表访问方法",
+        "共享内存",
+        "扩展"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Redis 8.12 转为正式版并修复数据正确性问题",
+      "summary": "Redis 8.12.0 正式发布，将此前候选版中的压缩位图、集合成员过期和有序集合原子移动纳入稳定版本，并为大型有序集合引入更省内存的 B+ 树编码。此次相对 RC3 的变化还涉及数据正确性：修复 AArch64 上大型稠密位图计数错误、压缩复制异常，以及 JSON 数组插入校验失败前已部分修改数据的问题；字段持久化命令在复制和 AOF 回放中忽略已过期字段的缺陷也已修正。使用候选版或相关功能的部署可据此安排回归验证。",
+      "url": "https://github.com/redis/redis/releases/tag/8.12.0",
+      "author": "Redis",
+      "source": "Redis",
+      "source_date": "2026-11-22",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "Redis",
+        "发布",
+        "数据完整性"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "VillageSQL 0.0.8 稳定扩展协议并收紧升级条件",
+      "summary": "VillageSQL 0.0.8 将扩展接口协议 5 定为稳定协议，让自定义类型可用于预编译语句，并区分二进制值与统一编码的文本。新 SDK 构建的扩展函数抛出 C++ 异常时，只终止当前语句，服务器继续运行；安装过程崩溃也不会留下半写入的扩展。但新版本不加载协议 4 扩展，旧实例装有此类扩展时直接升级会无法启动。官方给出的路径是先导出数据，在新数据目录安装兼容扩展后恢复，扩展作者也需要重新编译；自定义索引仍处于预览阶段。",
+      "url": "https://villagesql.com/blog/008/",
+      "author": "Adam Levin",
+      "source": "VillageSQL",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "扩展",
+        "升级"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 复制关系存储时减少全页 WAL",
+      "summary": "开发分支已合入优化：堆表和 B 树主分叉省略页内空洞，其他布局仅在边界合法且区域全零时省略，延续此前复制路径的数据保护规则。",
+      "url": "https://github.com/postgres/postgres/commit/ecb260853526019a1340ba8a6b4c6de27a07d69b",
+      "author": "Melanie Plageman",
+      "source": "PostgreSQL",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "WAL",
+        "内核"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Vercel 上的 PostgreSQL 连接池需核算两层容量",
+      "summary": "实例内驱动池与服务端连接池共同决定容量，排障应分别测量取连接等待和事务时长，避免扩容实例时成倍放大连接数。",
+      "url": "https://devfieldnotes.dev/guides/postgresql-connection-pooling-vercel-nextjs",
+      "author": "Uzair Aslam",
+      "source": "Dev Fieldnotes",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "连接池",
+        "运维"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "HorizonDB 执行计划可区分本地 SSD 与远端读取",
+      "summary": "EXPLAIN 的 SSDCACHE 选项显示本地 SSD 命中与未命中；SSD 命中仍计入共享缓冲区读取，不能与 shared hit 混为一谈。",
+      "url": "https://dev.to/franckpachot/explain-analyze-shows-the-horizondb-ssd-cache-hitsmisses-1mh4",
+      "author": "Franck Pachot",
+      "source": "DEV Community",
+      "source_date": "2026-11-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "可观测性",
+        "存储"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "MySQL 长 OR 列表可能耗在逐项条件重检",
+      "summary": "MySQL 8.4 案例显示，等值 OR 列表线性检查而 IN 可二分查找，范围优化内存超限改走全索引扫描还会放大成本。",
+      "url": "https://www.percona.com/blog/why-mysql-or-is-slower-than-in/",
+      "author": "Jinyou Ma",
+      "source": "Percona",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "性能"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "FSx ONTAP 第三代提高单文件系统吞吐上限",
+      "summary": "厂商称最多 12 对高可用节点可达 216 GB/s、860 万 IOPS，首批覆盖美国弗吉尼亚北部、俄亥俄和俄勒冈区域。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-fsx-for-netapp-ontap-third-generation/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "CloudWatch Omni 接入 Azure 四类遥测数据",
+      "summary": "连接 Entra 租户后，可汇集资源日志、指标、虚拟网络流日志和应用追踪，并按订阅、区域、资源或标签筛选采集范围。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-cloudwatch-omni-microsoft-azure/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性",
+        "多云"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Network Firewall 预览集中管理互联网防火墙",
+      "summary": "公开预览将策略和 NAT 集中到互联网网关，免去逐个 VPC 子网修改路由，并可自动覆盖后来创建的 VPC。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/network-firewall-automated-internet/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络",
+        "安全"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "托管 Prometheus 支持申请二十亿活跃时序",
+      "summary": "AWS 单工作区上限扩至 20 亿活跃时序和合计 30 万条记录、告警规则，需要申请额度提升，并非默认配额。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amp-supports-2b-metrics-300k-rules/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Prometheus",
+        "可观测性"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Nordic PGDay 2027 征稿截至 1 月 8 日",
+      "summary": "",
+      "url": "https://2027.nordicpgday.org/cfp/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-22",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "活动"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "RDS Db2 可原位重命名数据库，无需备份恢复",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-rds-db2-supports-rename-databases/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Db2"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "MSK 标准节点支持 Kafka 4.2 与队列消费",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-msk-standard-version-42/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kafka"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "EventBridge 增强型自定义总线可直投 MSK",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-eventbridge-msk-target/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "事件流"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 按需事件函数超时上限增至 30 分钟",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-lambda-30-minute-ondemand-event-functions/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "无服务器"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 事件函数状态可自动发送到 EventBridge",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-lambda-function-state-events/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "可观测性"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "EKS 观测插件新增自定义 OTLP 与 Prometheus 采集",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cloudwatch-eks-addon-custom-telemetry/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "ECS 动作日志扩展到任务、容器实例与容量提供方",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-ecs-action-logs-expanded-troubleshooting/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "容器",
+        "运维"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Route 53 私有高级托管区可启用公网 DNS 回退",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/route-53-public-dns-fallback/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "DNS"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "AWS 密钥 CSI 驱动可借助角色访问跨账户密钥",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/secrets-store-csi-driver-assumerole/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes",
+        "安全"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "VPC Lattice 新增共享资源的 TCP 连接指标",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/vpc-lattice-cloudwatch-metrics/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络",
+        "可观测性"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "FreshPorts 修正 UTF-8 文件的重复编码",
+      "summary": "",
+      "url": "https://news.freshports.org/2026/11/21/galene-fixing-double-encoded-port-files/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "字符编码"
+      ],
+      "position": 26
+    }
+  ]
+}
