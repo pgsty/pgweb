@@ -1,0 +1,416 @@
+{
+  "date": "2026-11-23",
+  "origin": "PGSQL.CC 主动采编；PostgreSQL 官方提交与 Planet；PGNexus #325–338；项目原文、厂商 RSS、Google Cloud 发布说明与 HN；截稿 2026-11-24 07:30:10 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "逻辑解码消息新增子事务标识，修正回滚归属",
+      "summary": "PostgreSQL 开发分支调整逻辑解码消息回调，新增发送消息的事务或子事务 XID。此前流式解码把子事务中的消息标成顶层事务，接收端遇到子事务回滚时无法将该消息一并丢弃。新接口让输出插件保留顶层事务上下文，同时识别消息的实际归属，pgoutput 也据此发送正确标识。由于回调参数变化打破插件二进制接口，这次选择只修改开发分支，不回补稳定版；维护自定义输出插件的团队需要适配新签名。",
+      "url": "https://github.com/postgres/postgres/commit/7bb8cc295b538df21d854e55e12a32dbbd8609b1",
+      "author": "Zhijie Hou、Masahiko Sawada",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "内核",
+        "兼容性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "MERGE 补齐目标列依赖，已有对象需重建",
+      "summary": "PostgreSQL 已合入 MERGE 依赖跟踪修复。普通 INSERT 和 UPDATE 会登记写入目标列的依赖，以阻止相关列被随意删除或改型，但 MERGE 动作此前遗漏了这一步。补丁为每个插入和更新动作的目标列建立同样的保护，提交注明回补至引入 MERGE 的 PostgreSQL 15。需要注意，修复不会自动补全既有规则和 SQL 标准函数体中的依赖；这些对象须重新创建，不能仅升级程序就认为历史定义也已得到保护。",
+      "url": "https://github.com/postgres/postgres/commit/2df3d9e2b042dd8cebb65ccbbb515ff583443a9f",
+      "author": "Henson Choi",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "MERGE",
+        "依赖"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "pg_restore 修复解包 tar 后的大对象恢复",
+      "summary": "PostgreSQL 已修复 tar 转储解包后恢复大对象失败的问题。tar 归档按设计可解包成目录格式，但其目录清单记下了错误的大对象列表文件名，导致 pg_restore 找不到恢复所需文件，并影响并行恢复时的大小估算。补丁在读取端直接构造正确文件名，不再依赖这项错误记录，因此也能处理已经生成的旧归档。提交注明回补至 PostgreSQL 15；使用解包归档恢复的流程应把大对象纳入演练，不能仅以普通表恢复成功判断备份完整。",
+      "url": "https://github.com/postgres/postgres/commit/732c475ff803de84136fc79860d535187d9f6986",
+      "author": "Nathan Bossart",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份",
+        "恢复",
+        "大对象"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "btree_gist 修复极端日期与距离溢出",
+      "summary": "PostgreSQL 的 btree_gist 已合入极端值处理修复。包含无穷日期的索引此前可能无法继续插入或执行近邻检索；相距很远的有限浮点数与时间戳也可能在计算距离时溢出，即使出错条目最终不会被返回。补丁调整索引惩罚值和距离计算，让检索能够跨过这些边界，并把同号无穷时间戳之间的距离改为零，避免相同值造成索引膨胀。提交注明回补至 PostgreSQL 15；部分直接距离运算符仍可能报告溢出，不应把索引内部处理与 SQL 运算完全等同。",
+      "url": "https://github.com/postgres/postgres/commit/15b3dc140d9109e37082454bc5041a9e6bddbd8e",
+      "author": "Nitin Motiani",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "索引",
+        "正确性"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "容器并行查询需按并发峰值配置共享内存",
+      "summary": "作者在 Linux 容器中实测 PostgreSQL 并行哈希查询，说明“无法扩展共享内存段”可能是 /dev/shm 已满，而非数据盘空间不足。文中负载使用 256 MB 时单查询通过，四并发却反复失败；扩大到 1 GB 后，四并发连续十一轮通过，观测峰值约 623 MB。查询失败会清理共享段，因此事后查看空闲空间容易漏掉峰值。容量应按实际并发测试，调整 shared_buffers 或锁表上限不能代替排查。",
+      "url": "https://now-next.nl/en/insights/postgresql-could-not-resize-shared-memory-segment/",
+      "author": "Chris van Eijk",
+      "source": "Now-Next",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "容器",
+        "并行查询"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Cloudflare 用主动 DNS 探测约束发布",
+      "summary": "Cloudflare 介绍把 DNS 传播时延纳入发布门禁的方法。一次调度故障曾让记录更新滞后数小时，而服务健康检查仍显示正常。团队将 Flamingo 探测框架扩展到 DNS，持续写入带时间戳的 TXT 记录，再从各数据中心查询权威节点和公共解析器，直接衡量用户能否读到新值。权威查询与递归解析分别设置新鲜度阈值，结合服务目标的错误预算消耗决定继续发布还是回退。这让发布验证覆盖配置传播链路，而不只检查进程存活。",
+      "url": "https://blog.cloudflare.com/probing-dns-at-cloudflare/",
+      "author": "Cloudflare",
+      "source": "Cloudflare 博客",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "DNS",
+        "可靠性",
+        "发布"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "开发分支修复异常后检查点被长期阻塞",
+      "summary": "批量写入完成时改用两次重做指针检查，避免保存点捕获同步登记错误后遗留延迟标志；本次不回补稳定版。",
+      "url": "https://github.com/postgres/postgres/commit/9931482364a938af876307e84ae88ff4839838b0",
+      "author": "Shihao Zhong、Michael Paquier",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "检查点",
+        "内核"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "MERGE 补修跨分区路径的源值返回",
+      "summary": "继 21 日并发重检查修复后，再覆盖移动行时经插入路径计算 RETURNING 的遗漏，确保源字段为空；注明回补至 PG17。",
+      "url": "https://github.com/postgres/postgres/commit/19db7e5b36e33c80a032e0e811176ad3b115b0ca",
+      "author": "Tender Wang、Dean Rasheed",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "MERGE",
+        "分区"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "Readyset 监控要区分缓存命中与上游执行",
+      "summary": "Percona 给出 PMM 接入方法：直接采集内置指标，并分别观察查询路由、缓存模式和复制滞后，避免只看数据库端负载。",
+      "url": "https://www.percona.com/blog/how-to-monitor-readyset-with-percona-monitoring-and-management/",
+      "author": "Tibor Korocz",
+      "source": "Percona",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "监控",
+        "缓存"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Aurora MySQL 无服务器上限提高到 384 ACU",
+      "summary": "上限从 256 提升至 384 ACU，要求受支持引擎与平台版本 4；旧平台须先安排平台升级。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aurora-serverless-mysql-supports-384-acu/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "MySQL",
+        "扩容"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "CloudFront 支持向源站复用 HTTP/2 连接",
+      "summary": "自定义源站和 VPC 源站可复用连接，减少握手与并发连接开销；不支持时仍可退回 HTTP/1.1。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/01/amazon-cloudfront-http2-origins/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "CDN",
+        "网络"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "AWS WAF 新增 API 发现与专用防护规则",
+      "summary": "从日志和配置识别未登记或遗留 API，并为对象级越权、认证攻击及接口探测提供托管规则。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/api-security-with-waf/",
+      "author": "AWS",
+      "source": "AWS",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全",
+        "API"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Shirudo 用 eBPF 为待修补服务加临时防护",
+      "summary": "OpenAI 与 Cisco 开源运行时，支持先观察再批准、签名加载与 TPM 记录；演示在不中断 Elasticsearch 的条件下拦截利用。",
+      "url": "https://openai.com/index/introducing-shirudo/",
+      "author": "OpenAI、Cisco",
+      "source": "OpenAI",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "安全",
+        "eBPF"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "PGAIBench 复测数据库代理的变更防护",
+      "summary": "949 次运行发现 13 次有害变更；独立审查加克隆演练在事后回放中拦下 12 次，结果属于样本内验证。",
+      "url": "https://postgres.ai/blog/20261123-pgaibench",
+      "author": "Nikolay Samokhvalov",
+      "source": "Postgres.ai",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "数据库",
+        "评测"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "Cloud.gov 停止新建 PG14，存量须在明年二月前升级",
+      "summary": "",
+      "url": "https://docs.cloud.gov/news/2026/11/23/PostgreSQL-Deprecation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 正式支持禁止查询转为按需计费",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/default-configuration#reservation-controls",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "成本"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Unity Catalog 预览表列变更的下游影响分析",
+      "summary": "",
+      "url": "https://docs.databricks.com/aws/en/release-notes/product/2026/november#impact-analysis-in-unity-catalog-lineage-beta",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "数据治理"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Global Accelerator 可保留 NLB TLS 客户端地址",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/global-accelerator-client-ip-nlb-tls/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "CodeDeploy 可在部署期间暂停自动扩缩组干扰进程",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-codedeploy-suspend-asg-processes/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "部署"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "FSx API 纳入 ONTAP 快照、克隆与复制管理",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-fsx-for-netapp-ontap-additional-resources/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "Systems Manager 自动化可调用 Azure 与 GCP",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/systems-manager-multicloud-automation/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "运维"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Filestore 可用区型正式支持 100 GiB 起步",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/filestore/docs/service-tiers#small-instances",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "NetApp Volumes 年底停发旧邮件组维护通知",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/netapp/volumes/docs/release-notes#November_23_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "运维"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "Cloud Run 正式支持 Python 3.15 与 Node.js 26",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/run/docs/release-notes#November_23_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "运行时"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Inspector 用运行时可达性信息辅助漏洞排优先级",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/inspector-runtime-reachability/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "安全"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "GKE 1.39 升级前须迁出 Policy Controller",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/kubernetes-engine/docs/deprecations/policy-controller",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 26
+    }
+  ]
+}
