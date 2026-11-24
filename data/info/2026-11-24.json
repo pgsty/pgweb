@@ -1,0 +1,408 @@
+{
+  "date": "2026-11-24",
+  "origin": "PGSQL.CC 主动采编；PostgreSQL 官方、Planet、PGNexus #326–339、项目与厂商原文；截稿 2026-11-25 07:34:57 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "并行 GIN、BRIN 建索引修复旧快照错查",
+      "summary": "普通建索引遇到已做 HOT 更新的旧行版本时，需要阻止更早的事务快照使用新索引。并行 GIN、BRIN 构建此前未把工作进程发现的断链标记传回主进程，旧快照可能漏行，甚至查到不应可见的新值。已合入的修复统一汇总该标记，并加入可重复读隔离测试；GIN 修复已回补至 PG18，BRIN 至 PG17。这是发布后的代码修正，不能据此认为现有正式安装包已经包含补丁，运维应继续跟踪后续维护版本。",
+      "url": "https://github.com/postgres/postgres/commit/bae27968b76d3b2b804e5ffb088181ed34b9b4c2",
+      "author": "Lukas Fittl",
+      "source": "PostgreSQL",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引",
+        "并行",
+        "正确性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "备库逻辑槽修复启用解码时的起点竞态",
+      "summary": "备库启用逻辑解码时，状态可能先于 WAL 回放位置更新；恢复结束处还可能先切状态、后写入记录。若此时并发创建逻辑槽，其起始位置会落在启用记录之前，随后解码因意外状态变更而失败。新修复把槽的 restart_lsn 下界推进到最近启用记录的结束位置，并在同一控制锁下记录恢复结束时的日志位置。修改已合入开发分支并回补 PG19，针对的是启用解码与建槽重叠的窗口，便于依赖备库解码的链路核对故障条件。",
+      "url": "https://github.com/postgres/postgres/commit/4931dab89d35c13a5c2e3e1fe8b31b338a965c73",
+      "author": "Zhijie Hou",
+      "source": "PostgreSQL",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "备库"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "逻辑复制冲突日志表开始记录已解决冲突",
+      "summary": "此前仅有表结构的逻辑复制冲突日志，在开发分支新增了实际写入逻辑：记录远端事务、提交位置与时间，以及冲突行的副本标识和本地事务元数据。只有已解决、按 LOG 级别报告的冲突入表；会中止事务的错误仍只写服务器日志。为避免大行撑破分配上限，新设计不保存完整元组，过大的键值明确标记为省略；存在两阶段预备事务时，也会拒绝可能互相等待的删订阅操作。此次进展使冲突历史可用 SQL 查询，尚不是 PG19 已发布功能。",
+      "url": "https://github.com/postgres/postgres/commit/6a0a66b3e7ac394c499708b790effea9a564ef0d",
+      "author": "Dilip Kumar、Nisha Moond、Zhijie Hou",
+      "source": "PostgreSQL",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "可观测性"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "Distributed E-Maj 将一致回滚扩展到多个数据库",
+      "summary": "E-Maj 原本对预定义表组记录数据变更，并允许回到事先设置的稳定标记。Distributed E-Maj 0.9.1 将这一能力扩展到多个数据库，通过配套客户端协调标记与回滚，使分散在不同库中的表组回到共同的一致状态。这为跨库批处理出错后的整体撤销提供了更细粒度的实验路径。项目明确本次公开版本仅供测试，要求配合 E-Maj 5.0.1，支持 PostgreSQL 14–19；评估时应同时检查参与数据库的权限、日志与回滚流程。",
+      "url": "https://pgxn.org/dist/dist_emaj/0.9.1/",
+      "author": "Philippe Beaudoin",
+      "source": "PGXN",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "回滚",
+        "分布式"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "大页预留可在创建 PostgreSQL 容器前估算",
+      "summary": "Kubernetes 调度前就要确定大页额度，启动后再测量往往意味着重建 Pod。Jobin Augustine 从 PostgreSQL 共享内存结构推导估算式，计入连接槽、锁表、WAL 缓冲及 PG18 异步 I/O 等开销。作者在 x86-64 的 PG16–18 上验证 345 组配置，完整公式与实例结果相差不超过一个 2 MB 页；PG19 与 ARM 尚未验证。预加载扩展仍需单独计量，启动后应核对实际用量和大页启用状态。",
+      "url": "https://www.percona.com/blog/pre-calculating-hugepages-for-postgresql/",
+      "author": "Jobin Augustine",
+      "source": "Percona",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内存",
+        "Kubernetes",
+        "容量规划"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "MariaDB 13.1 转为稳定版，13.2 进入候选阶段",
+      "summary": "MariaDB 发布 13.1.2 稳定版与 13.2.1 候选版。13.1 将 DENY 权限例外、JSON 箭头操作符、自动范围分区及优化器上下文记录等能力带入正式滚动版本，升级需注意 utf8 默认转为 utf8mb4。13.2 则开放 ANY_VALUE、聚合 FILTER、原子的建表替换与 InnoDB 二进制日志半同步复制等测试。追求长期维护的部署仍可选择 12.3 LTS，候选版适合提前验证应用兼容性。",
+      "url": "https://mariadb.org/mariadb-server-13-1-is-now-stable-and-13-2-reaches-release-candidate/",
+      "author": "Frédéric Descamps",
+      "source": "MariaDB Foundation",
+      "source_date": "2026-11-24",
+      "image": "https://mariadb.org/wp-content/uploads/2026/11/mariadb_13.png",
+      "domain": "db",
+      "tags": [
+        "版本发布",
+        "兼容性"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "CLUSTER 与 REPACK 修正禁用扫描路径的选择",
+      "summary": "修复已回补 PG18：禁用排序或顺序扫描后，优先选可用索引路径，避免意外排序占用临时磁盘。",
+      "url": "https://github.com/postgres/postgres/commit/927939e924a0cb5ab400df32212ced0d72b02869",
+      "author": "",
+      "source": "PostgreSQL",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "维护",
+        "执行计划"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "Hackorum 统计揭示 PG19 后期修复工作量增长",
+      "summary": "新统计显示 PG19 有 3,787 次提交，其中 1,075 次涉及旧版本回补；变更行数按各提交累计，含撤销操作。",
+      "url": "https://percona.community/blog/2026/11/24/the-numbers-of-postgres-19/",
+      "author": "",
+      "source": "Percona Community",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发流程"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "删除七成数据后，VACUUM 仍不等于文件缩容",
+      "summary": "百万行实测区分可复用空洞与文件压缩，并对比 HOT 更新和 fillfactor 对索引膨胀的影响。",
+      "url": "https://www.alekseialeinikov.com/en/blog/topics/data/postgresql-vacuum-and-bloat-production-guide",
+      "author": "",
+      "source": "Aleksei Aleinikov",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "VACUUM",
+        "膨胀"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "DBOS 工作流可把删除历史留在 ClickHouse",
+      "summary": "案例使用私有预览中的 WalShadow 软删除保留审计记录；查询活动工作流时需过滤删除标记。",
+      "url": "https://clickhouse.com/blog/dbos-clickhouse-managed-postgres-durable-workflows",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "工作流",
+        "CDC"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "托管 OpenSearch 3.9 增加半精度向量与量化",
+      "summary": "新增 16 位向量存储及 2 位、4 位标量量化，并允许按用户和角色共享检测器等资源。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-opensearch-opensearch-3-9/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "向量检索"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "RDS SQL Server 单实例数据库上限增至 500",
+      "summary": "适用于至少 4 vCPU 的指定非突发规格；镜像式多可用区及标准版多可用区等部署仍维持原限制。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/rds-sqlserver-supports-500-databases-per-instance/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "多租户"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "CloudFormation 新增 206 类资源的声明式管理",
+      "summary": "覆盖 88 项服务；Cloud Control API 同步支持，并另提供 224 类资源的只读发现与检查。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cloudformation-coverage-expansion/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "基础设施即代码"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "vSAN 原生 S3 对象存储正式可用",
+      "summary": "VCF 9.1.2 提供桶配额与租户隔离，首版覆盖核心 S3 操作，适合自行管理数据保护与版本的应用。",
+      "url": "https://blogs.vmware.com/cloud-foundation/2026/11/24/announcing-ga-of-vsan-object-storage/",
+      "author": "",
+      "source": "VMware",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "对象存储"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "开发版修正编码与损坏数据等错误的 SQLSTATE",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/9ebc9a458c38465cd9609814cfc9ca3a2f46fef5",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "错误处理"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "PG19 的 COPY FROM 可指定跳过多行表头",
+      "summary": "",
+      "url": "https://www.depesz.com/2026/11/24/missed-in-postgresql-19-support-multi-line-headers-in-copy-from-command/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "数据导入"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Semantius 开放云服务测试并提供自托管部署",
+      "summary": "",
+      "url": "https://www.semantius.com/blog/early-access",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "miniPG 将完整 PostgreSQL 封装为跨平台单文件工具",
+      "summary": "",
+      "url": "https://progrium.xyz/articles/2026/single-binary-postgres/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开发工具"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "RDS 测试环境开放 PG19，实例最多保留 60 天",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/postgresql-19-amazon-rds-database-preview-environment/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "云数据库"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "Otaria 将 MariaDB 时态查询与闪回脚本收进界面",
+      "summary": "",
+      "url": "https://mariadb.org/meet-otaria-the-mariadb-client-that-stops-treating-mariadb-like-mysql/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "客户端"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "S3 与 FSx 支持同地域服务端复制，无需中转",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/s3-access-points-server-side-copy-fsx/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-22",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "存储"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "ACM 新增用于双向 TLS 的 Amazon N2 证书",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/acm-amazon-n2-certificates/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "证书"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "Private CA 可按证书域名、用途和有效期限制签发",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-private-ca-x509-iam-keys/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "权限"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "StackSets 可用自定义执行角色收紧跨账户部署权限",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/stacksets-custom-execution-roles/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "部署"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch 查询工作室可保存复用 PromQL 与 SQL",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-cloudwatch-query-studio-saved-queries/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-21",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "监控"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "EKS 观测插件内置 Karpenter 与 KEDA 指标面板",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/cloudwatch-eks-kubernetes-tools/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 26
+    }
+  ]
+}
