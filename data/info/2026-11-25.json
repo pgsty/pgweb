@@ -1,0 +1,417 @@
+{
+  "date": "2026-11-25",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org / Planet / PostgreSQL Git；PGNexus #327–340；项目原文与 RSS；HN；截稿 2026-11-26 07:32:03 Asia/Shanghai",
+  "items": [
+    {
+      "tier": 1,
+      "title": "逻辑解码改用事务消息起始 LSN，避免恢复时漏变更",
+      "summary": "PostgreSQL 主干修正了事务性逻辑消息的日志位置语义：过去消息使用 WAL 记录的结束 LSN，可能与紧随其后的数据变更共用位置。消费者若处理完消息就崩溃，再按保存的位置恢复，便可能跳过下一条变更。新实现统一使用起始 LSN；非事务消息仍保留结束位置。由于下游可能已经持久化旧位置，补丁明确不回补既有版本。维护 CDC 消费者的团队需要核对断点恢复语义，不能假定升级小版本就会获得这一变化。",
+      "url": "https://github.com/postgres/postgres/commit/4255812efdbcf7f1acf6be2211e1b5b11c4d4240",
+      "author": "Atsushi Torikoshi",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑解码",
+        "CDC",
+        "数据完整性"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 修复逻辑复制发送端丢失唤醒",
+      "summary": "逻辑复制已有 WAL 可读却迟迟不前进，可能源于发送端检查日志位置与加入等待队列之间的竞态。PostgreSQL 新提交指出，若日志恰在这个间隙到达，条件变量通知会被错过，发送进程便要等下一次事件才醒来；同步逻辑复制还可能拖住等待确认的事务提交。修复让发送端先登记等待，再复查主库刷盘或备库重放位置，满足条件即重新判断。提交注明回补至引入该机制的 PostgreSQL 16，排查无明显负载的复制停顿时可关注这一修复。",
+      "url": "https://github.com/postgres/postgres/commit/bc85373ff1344c03abf0d74e698b3631936ca3c7",
+      "author": "Fujii Masao",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "内核",
+        "延迟"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "哈希连接实测：消除落盘未必缩短查询时间",
+      "summary": "Hollis Varden 在 PostgreSQL 18.6 上用两张各 200 万行的表测试哈希连接，关闭并行，取预热后三次执行的中位数。work_mem 为 4 MB 时分成 16 批并写临时文件，约耗时 420 毫秒；增至 64 MB 后单批完成、没有落盘，反而约需 514 毫秒。测试在 M5 笔记本与SSD 上进行，作者公开了脚本和原始数据。结果提醒调优者同时观察耗时、批数与内存，不能把“没有临时文件”直接当作更快的证明。",
+      "url": "https://explainmeasured.com/posts/hash-joins-statistics-index-upkeep-pg18/",
+      "author": "Hollis Varden",
+      "source": "Explain, Measured",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "性能",
+        "哈希连接",
+        "内存"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "pglayers 为 PG19 正式版提供 62 个扩展层",
+      "summary": "pglayers 发布基于 PostgreSQL 19 正式版的扩展镜像，提供两种架构构建和 Full、Azure 两种组合。快照含 62 个 PG19 扩展层，Full 全部收录，Azure 组合含 24 个；测试覆盖独立依赖、跨层隔离、SQL 功能与 CloudNativePG 集成。PG19 集合仍缺 DocumentDB、pg_duckdb 等组件。升级需核对扩展兼容性，再按大版本流程迁移，修改镜像标签并不等于完成升级。",
+      "url": "https://pglayers.github.io/blog/2026-11-25-postgresql-19-support.html",
+      "author": "Ismaël Mejía",
+      "source": "pglayers",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "PG19",
+        "容器"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "Percona 开源 PDS，并支持本地启动控制面",
+      "summary": "继实验预览后，Percona 将 Database Service 代码以 Apache 2.0 许可证公开，提供 Docker 与 kind 本地开发步骤，无需先准备 AWS 环境。PDS 基于 OpenEverest 和数据库 Operator，管理 Kubernetes 上的 PostgreSQL、MySQL，提供实例创建、扩缩、备份恢复及监控。本次进展让团队能检查实现、验证流程并参与开发；项目仍处于实验性 Alpha 阶段。",
+      "url": "https://www.percona.com/blog/percona-database-service-open-source/",
+      "author": "Andrey Glazkov",
+      "source": "Percona",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "开源",
+        "Kubernetes",
+        "数据库运维"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "Linux NFS 服务端堆溢出漏洞公布研究细节",
+      "summary": "OpenSec 公布 CVE-2026-99362 的研究报告：启用 NFSv4.1 或 4.2 且网络可达的 Linux 内核文件服务存在未认证堆越界写，可能导致宕机或执行代码。上游修复在接受会话槽位前检查应答空间，避免把完整响应写进不足的缓存；研究方还展示了远程提权结果。使用 NFS 承载共享存储、构建目录或集群卷的团队，应核对发行版对应补丁并安排重启；修复前可将 2049 端口访问限制到可信存储网络，同时评估业务连接影响。",
+      "url": "https://opensec.in/blog/nfs2root-cve-2026-99362",
+      "author": "OpenSec",
+      "source": "OpenSec",
+      "source_date": "2026-11-25",
+      "image": "https://opensec.in/blog/media/ddf81bad-ef8d-43da-8d5b-bbb9d0a5f9a3.jpg",
+      "domain": "infra",
+      "tags": [
+        "安全",
+        "Linux",
+        "存储"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "PostgreSQL 简化 LIKE 与正则选择率估算",
+      "summary": "主干优先用直方图和高频值统计匹配率，统计不足时采用固定缺省值，保留前缀匹配与索引优化逻辑。",
+      "url": "https://github.com/postgres/postgres/commit/31878ccc2cd5642a5d2a1a39dedb79e9a18c8a07",
+      "author": "",
+      "source": "PostgreSQL Git",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "规划器"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "迁移检查清单强调 DDL 排队也会阻塞业务",
+      "summary": "DataEgret 从读写锁、表重写、约束验证和逻辑复制梳理迁移风险，建议同时设置锁等待与语句超时并演练回退。",
+      "url": "https://dataegret.com/2026/11/postgresql-ddl-dml-migration-checklist/",
+      "author": "",
+      "source": "DataEgret",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "DDL",
+        "运维"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "PgBouncer 完成四项 Security Slam 安全检查",
+      "summary": "项目补齐安全说明、依赖与治理资料等基础建设；签名发布和逐次变更静态检查仍在后续计划中。",
+      "url": "https://peter.eisentraut.org/blog/2026/11/25/pgbouncer-visits-the-cncf-security-slam",
+      "author": "",
+      "source": "Peter Eisentraut",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "PgBouncer",
+        "安全"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "Neon 解析共享存储下只读副本的独立伸缩",
+      "summary": "副本直接从 Safekeeper 接收 WAL，共用 Pageserver 数据并保留本地缓存；要求读到刚写入数据的请求仍应走主库。",
+      "url": "https://neon.com/blog/rethinking-read-replicas-for-the-lakebase-architecture",
+      "author": "",
+      "source": "Neon",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "只读副本",
+        "架构"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "ClickHouse 按测试覆盖关系筛选昂贵检查",
+      "summary": "覆盖数据用于选择 sanitizer 测试，变更及近期失败用例仍运行；普通构建和合并后全套检查保留，厂商称每个 PR 节省约 40 机器小时。",
+      "url": "https://clickhouse.com/blog/how-well-is-clickhouse-tested",
+      "author": "",
+      "source": "ClickHouse",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "测试",
+        "工程"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "AWS IAM 扩大可信身份传播的接入范围",
+      "summary": "联合登录与 Roles Anywhere 可保留终端身份，供 IAM 条件和 CloudTrail 审计使用，覆盖角色凭据背后的真实调用者。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-iam/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "身份",
+        "审计"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "Cloudflare 为站点提供面向代理的搜索入口",
+      "summary": "站点可开放可发现的结构化检索接口，返回原文 Markdown 片段而非生成回答，并继续受既有 WAF 和机器人规则约束。",
+      "url": "https://blog.cloudflare.com/search-for-agents/",
+      "author": "",
+      "source": "Cloudflare",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "搜索",
+        "开发工具"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Anthropic 用线上影子请求验证 API 的 Rust 迁移",
+      "summary": "同一次模型调用结果送入新旧实现比较，避免生成差异干扰；厂商称每请求 CPU 消耗降低约 70%，首令牌延迟中位数降低约 20%。",
+      "url": "https://www.anthropic.com/research/migrating-api-to-rust",
+      "author": "",
+      "source": "Anthropic",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "Rust",
+        "测试"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 修正 INCLUDE 索引的键列遍历边界",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/99d5d6ec65f0e9c50ba5c190ee4a01d0d608e0d7",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "索引"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "psql 修复关闭自动提交时 REPACK 被错误包进事务",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/14644e123839e5fe2d63797c9c0d16626ff9c420",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "psql"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "PG 备份工具在关闭文件失败后仍尝试清理临时文件",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/650925dad03ae3f5048e234d167c9f15df1e9853",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 防止时间转换失败引发空指针崩溃",
+      "summary": "",
+      "url": "https://github.com/postgres/postgres/commit/93e2b79f5f66ee305338bd956e70a96c9d114ac7",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "小数常量比较可能让 bigint 索引变成全表扫描",
+      "summary": "",
+      "url": "https://explainmeasured.com/posts/joins-casts-toast-pg18/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "SQL",
+        "索引"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "MariaDB 用历史安装库缩小性能回归排查范围",
+      "summary": "",
+      "url": "https://mariadb.org/building-a-mariadb-performance-history-library-with-hetzner-sponsorship-and-taf/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "性能"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "MariaDB 受支持版本的软件源迁往镜像站",
+      "summary": "",
+      "url": "https://mariadb.org/archive-mariadb-org-is-for-history-not-for-production/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "运维"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Lambda 预览用持久函数编排隔离 MicroVM 任务",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/lambda-durable-microvm/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "计算"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "CloudWatch Omni 告警可触发 PagerDuty 事件",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-cloudwatch-omni-pagerduty/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "监控"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "AWS IoT 规则 HTTP 出口采用专用 IPv6 地址段",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-iot-core-dedicated-ipv6-ranges/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "AWS IoT 配额用量可监控并设置逼近上限告警",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/aws-iot-core-quota-usage-monitoring/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "监控"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "HyperPod 可检测 Slurm 训练卡住并重新排队",
+      "summary": "",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-sagemaker-hyperpod-slurm-hung-jobs/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "训练",
+        "运维"
+      ],
+      "position": 26
+    }
+  ]
+}
