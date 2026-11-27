@@ -1,0 +1,406 @@
+{
+  "date": "2026-11-26",
+  "origin": "PGSQL.CC 主动采集；PostgreSQL.org / Planet / PGNexus #328–341；官方项目与厂商原文；截稿 2026-11-27 07:30:51 Asia/Shanghai；扩展回看 2026-11-13 起",
+  "items": [
+    {
+      "tier": 1,
+      "title": "开发版修正冲突日志表删除时的意外级联",
+      "summary": "PostgreSQL 开发分支修正了逻辑复制冲突日志表的删除行为。此前删除订阅或把日志目标改回服务器日志，会强制级联删除依赖该表的视图、函数等对象，甚至涉及其他用户持有的对象。新提交让删除订阅遵循显式的 CASCADE 或 RESTRICT 选项，修改日志目标则始终检查依赖并拒绝意外删除，同时调整清理顺序，避免回滚后复制进度被重置。这是此前冲突日志功能合入后的安全性修补，尚不代表已发布版本具备该功能。",
+      "url": "https://git.postgresql.org/gitweb/?p=postgresql.git;a=commitdiff;h=b8bf28800559a9ad71360fb2384d4b9981d24fa8",
+      "author": "Zsolt Parragi、Nisha Moond、Dilip Kumar",
+      "source": "PostgreSQL 提交记录",
+      "source_date": "2026-11-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "逻辑复制",
+        "内核"
+      ],
+      "position": 1
+    },
+    {
+      "tier": 1,
+      "title": "几乎全为 NULL 的列会让统计估算反复跳变",
+      "summary": "Radim Marek 在 PostgreSQL 18.7 上复现了稀疏列的统计波动：当 99.8% 的行为空值时，默认采样实际只得到约 60 个非空值，是否碰巧抽到重复值就可能改变不同值数量的估算分支。同一数据连续执行 ANALYZE，连接计划也会随之切换。提高单列统计目标能降低波动，却会增加整表分析成本；固定 n_distinct 可以稳定一项估算，但需随业务变化维护，且不会冻结其他统计信息或保证选择最快的计划。",
+      "url": "https://boringsql.com/posts/analyze-mostly-null-column/",
+      "author": "Radim Marek",
+      "source": "boringSQL",
+      "source_date": "2026-11-26",
+      "image": "https://boringsql.com/og-images/analyze-mostly-null-column-og.jpg",
+      "domain": "pg",
+      "tags": [
+        "统计信息",
+        "查询优化"
+      ],
+      "position": 2
+    },
+    {
+      "tier": 1,
+      "title": "PostgreSQL 共享内存同步需区分屏障与原子性",
+      "summary": "PostgreSQL 的多个进程共享内存，源代码中的读写顺序并不总是其他 CPU 观察到的顺序。Jan Nidzwetzki 用编译结果和内核实例解释编译器重排、CPU 内存模型、读写屏障与全屏障的区别，并对照 x86 和 ARM 的实现。文章进一步说明，原子读写保证单个操作不可分割，并不自动约束相邻访问；volatile 也不能替代同步。维护扩展或无锁共享结构时，应核对读写双方的配对屏障，或使用已有锁与具备适当屏障语义的原子操作。",
+      "url": "https://jnidzwetzki.github.io/2026/11/26/memory-ordering-postgresql.html",
+      "author": "Jan Kristof Nidzwetzki",
+      "source": "Jan Nidzwetzki",
+      "source_date": "2026-11-26",
+      "image": "https://jnidzwetzki.github.io/assets/img/memory-barriers/header_thumbnail.png",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "并发"
+      ],
+      "position": 3
+    },
+    {
+      "tier": 1,
+      "title": "函数继承 search_path 会影响恢复与维护任务",
+      "summary": "应用会话里正常运行的函数，换到自动分析、恢复工具或逻辑复制进程中，可能因搜索路径不同而找不到对象。Christophe Pettus 逐项比较这些调用环境，并展示索引创建失败、恢复漏装数据和订阅反复报错的实例。可行修复包括显式限定对象模式、给函数绑定安全路径，或改用创建时解析的 SQL 函数体；给 SQL 函数添加 SET 子句还可能阻止内联。文章也提醒，旧库升级不会自动撤销 public 的历史创建权限，维护团队应一并检查。",
+      "url": "https://thebuild.com/blog/all-your-gucs-in-a-row-search_path/",
+      "author": "Christophe Pettus",
+      "source": "thebuild.com",
+      "source_date": "2026-11-25",
+      "image": "https://thebuild.com/media/media/99a7dee451ba40dba7e3105eff78d2e1.png",
+      "domain": "pg",
+      "tags": [
+        "运维",
+        "安全"
+      ],
+      "position": 4
+    },
+    {
+      "tier": 1,
+      "title": "ParadeDB 将过滤条件与向量纳入同一索引",
+      "summary": "ParadeDB 公布原生向量检索的实现，将文本、可过滤字段和向量存入同一索引。查询先把过滤结果转换为位图，再决定是否读取和计算候选向量，减少高选择性过滤下的无效计算；构建阶段采用流式 k-means 控制训练内存。相关能力从 0.27.0 起可用，目前主要面向数据加载后较少更新的集合，持续更新支持仍在开发。厂商同时给出了可复现的吞吐、召回率和内存测试，比较结果受硬件、网络及召回目标差异影响。",
+      "url": "https://www.paradedb.com/blog/filter-aware-vector-search",
+      "author": "Ming Ying、Ruchir Raj、Walter Woodall",
+      "source": "ParadeDB",
+      "source_date": "2026-11-19",
+      "image": "https://www.paradedb.com/blog/filter-aware-vector-search/images/opengraph-image.png",
+      "domain": "pg",
+      "tags": [
+        "扩展",
+        "向量检索"
+      ],
+      "position": 5
+    },
+    {
+      "tier": 1,
+      "title": "5 TB 分支创建实测揭示共享存储恢复边界",
+      "summary": "Scott Mead 在 Lakebase Postgres 上把同一数据库从 22 GB 扩到 5 TB，每个规模重复创建 12 次分支。5 TB 分支创建中位数约 4.47 秒，源于共享历史页面、只保存后续写入；历史时间点分支也很快，但首次读取旧页面曾出现秒级延迟。该测试测量的是创建接口，不等于独立备份恢复 5 TB 的完整耗时。",
+      "url": "https://pgcraftsman.io/posts/restoring-5-tb-of-postgres-in-5-seconds/",
+      "author": "Scott Mead",
+      "source": "pgcraftsman.io",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "恢复",
+        "分支"
+      ],
+      "position": 6
+    },
+    {
+      "tier": 2,
+      "title": "pg_upgrade 修复 PG18 非继承非空约束误拦截",
+      "summary": "版本门槛写错会把合法的 NO INHERIT 约束判为升级障碍；修复已提交，标注回补至 PG18。",
+      "url": "https://git.postgresql.org/gitweb/?p=postgresql.git;a=commitdiff;h=388f2db2994e216f15f004c4addbe4851871f954",
+      "author": "",
+      "source": "PostgreSQL 提交记录",
+      "source_date": "2026-11-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "升级"
+      ],
+      "position": 7
+    },
+    {
+      "tier": 2,
+      "title": "输入校验函数修复类型名缓存沿用错误",
+      "summary": "pg_input_is_valid 每次重新解析类型名，以响应参数及搜索路径变化；提交标注回补至 PG16。",
+      "url": "https://git.postgresql.org/gitweb/?p=postgresql.git;a=commitdiff;h=496311a7e37efa7b54e276443ff3a1e92fa4b546",
+      "author": "",
+      "source": "PostgreSQL 提交记录",
+      "source_date": "2026-11-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 8
+    },
+    {
+      "tier": 2,
+      "title": "索引表达式补齐复合类型依赖检查",
+      "summary": "修复特殊索引存储类型下的依赖漏检，避免 ALTER 触发断言或错误拒绝；回补至 PG15。",
+      "url": "https://git.postgresql.org/gitweb/?p=postgresql.git;a=commitdiff;h=3b60740cc25ed5595980c469ce0403c6a1533d62",
+      "author": "",
+      "source": "PostgreSQL 提交记录",
+      "source_date": "2026-11-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核",
+        "索引"
+      ],
+      "position": 9
+    },
+    {
+      "tier": 2,
+      "title": "RDS PostgreSQL 开放十一月安全小版本升级",
+      "summary": "现支持 18.7、17.12、16.16、15.20 和 14.25，可结合维护窗口、分阶段策略或蓝绿部署安排更新。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/amazon-rds-postgresql-18-7-17-12-16-16-15-20-14-25/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全",
+        "云数据库"
+      ],
+      "position": 10
+    },
+    {
+      "tier": 2,
+      "title": "Databasus 3.73 支持 PG19 备份与恢复验证",
+      "summary": "版本说明把 PostgreSQL 19 纳入备份、恢复和验证流程，提供 amd64 与 arm64 镜像。",
+      "url": "https://github.com/databasus/databasus/releases/tag/v3.73.0",
+      "author": "",
+      "source": "Databasus",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "备份"
+      ],
+      "position": 11
+    },
+    {
+      "tier": 2,
+      "title": "SproutMe 用 DuckDB 加速本地与 CI 集成测试",
+      "summary": "厂商案例称测试步骤从 10.65 分钟降至 0.76 分钟；生产仍用 BigQuery，测试以固定样本和预期输出核对转换结果。",
+      "url": "https://duckdb.org/2026/11/24/sproutme-faster-pipeline-testing",
+      "author": "",
+      "source": "DuckDB",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "测试"
+      ],
+      "position": 12
+    },
+    {
+      "tier": 2,
+      "title": "AWS 正式提供托管 Envoy 负载均衡",
+      "summary": "可沿用 Envoy 配置、扩展及控制平面，平台负责代理容量和补丁，并为 Kubernetes 提供远程基础设施适配。",
+      "url": "https://aws.amazon.com/about-aws/whats-new/2026/11/elastic-load-balancing-for-envoy-generally-available/",
+      "author": "",
+      "source": "AWS",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 13
+    },
+    {
+      "tier": 2,
+      "title": "Kubernetes 1.38 预告收紧运行时兼容要求",
+      "summary": "计划默认通过 CRI 获取 cgroup 驱动，并调整部分 Pod 的交换空间限制；版本尚未发布，升级前需核对最终说明。",
+      "url": "https://kubernetes.io/blog/2026/11/23/kubernetes-v1-38-sneak-peek/",
+      "author": "",
+      "source": "Kubernetes",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "infra",
+      "tags": [
+        "Kubernetes"
+      ],
+      "position": 14
+    },
+    {
+      "tier": 3,
+      "title": "PostgreSQL 修复超深表达式报错时的栈溢出",
+      "summary": "",
+      "url": "https://git.postgresql.org/gitweb/?p=postgresql.git;a=commitdiff;h=b4548161b94567d8e57bf0efdb8005623e1639da",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-26",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "内核"
+      ],
+      "position": 15
+    },
+    {
+      "tier": 3,
+      "title": "CloudNativePG 补齐六项安全实践徽章",
+      "summary": "",
+      "url": "https://cloudnative-pg.io/blog/securityslam-2026-badges/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "安全"
+      ],
+      "position": 16
+    },
+    {
+      "tier": 3,
+      "title": "Supabase Realtime 在广播积压过大时终止频道",
+      "summary": "",
+      "url": "https://github.com/supabase/realtime/releases/tag/v2.177.6",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "实时推送"
+      ],
+      "position": 17
+    },
+    {
+      "tier": 3,
+      "title": "Supabase 将迁移与故障排查资料汇入开放知识库",
+      "summary": "",
+      "url": "https://supabase.com/blog/introducing-supabase-knowledge-base",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-23",
+      "image": "",
+      "domain": "pg",
+      "tags": [
+        "文档"
+      ],
+      "position": 18
+    },
+    {
+      "tier": 3,
+      "title": "ElastiCache 可用 15 秒指标定位 Valkey 短时尖峰",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/monitor-valkey-clusters-with-opentelemetry-metrics-in-amazon-elasticache/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-19",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "监控"
+      ],
+      "position": 19
+    },
+    {
+      "tier": 3,
+      "title": "SecOps 的 Snowflake 查询操作收紧 SQL 输入",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/chronicle/docs/soar/marketplace-integrations/release-notes#November_24_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "安全"
+      ],
+      "position": 20
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery Storage API v1beta1 宣布 2027 年停用",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/release-notes#November_25_2026",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "兼容性",
+        "迁移"
+      ],
+      "position": 21
+    },
+    {
+      "tier": 3,
+      "title": "Aurora DSQL 开放 SQL 审计日志导出",
+      "summary": "",
+      "url": "https://aws.amazon.com/blogs/database/how-to-use-amazon-aurora-dsql-audit-logs/",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-18",
+      "image": "",
+      "domain": "db",
+      "tags": [
+        "审计",
+        "数据库"
+      ],
+      "position": 22
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 跨云连接正式覆盖全部地域",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/cross-cloud-connections",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-25",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "查询"
+      ],
+      "position": 23
+    },
+    {
+      "tier": 3,
+      "title": "BigQuery 预览 Databricks 与 Spark SQL 迁移",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/bigquery/docs/migration/databricks-sql",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-24",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "迁移"
+      ],
+      "position": 24
+    },
+    {
+      "tier": 3,
+      "title": "Secure Source Manager 将更换部分公网端点地址",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/secure-source-manager/docs/public-network-integrations",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-20",
+      "image": "",
+      "domain": "cloud",
+      "tags": [
+        "网络"
+      ],
+      "position": 25
+    },
+    {
+      "tier": 3,
+      "title": "托管 Airflow 可用代理预查升级所需 DAG 改动",
+      "summary": "",
+      "url": "https://docs.cloud.google.com/composer/docs/composer-3/upgrade-environments",
+      "author": "",
+      "source": "",
+      "source_date": "2026-11-26",
+      "image": "",
+      "domain": "ai",
+      "tags": [
+        "运维"
+      ],
+      "position": 26
+    }
+  ]
+}
